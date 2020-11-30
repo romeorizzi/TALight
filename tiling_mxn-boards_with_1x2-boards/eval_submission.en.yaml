@@ -1,138 +1,30 @@
-#!/usr/bin/python3
-#import TAlight  dove collocare le funzioni scritte una volta per tutte a bagaglio comune dei problemi.
-import sys
-from colorama import init
-init()
-#from termcolor import cprint
-import argparse
-parser = argparse.ArgumentParser(description="evaluate one single submission file (the stream received from stdin as default) for one specific (goal,subtask) pair", epilog="Enjoy the program! :)", fromfile_prefix_chars='@')
-parser.add_argument("goal", metavar='goal', type=int, choices=[1, 2],
-                    help="goal=1,2 per specificare il goal per il quale la submission è intesa")
-parser.add_argument("subtask", metavar='subtask', type=int, choices=[1, 2, 3],
-                    help="subtask=1,2,3 per specificare il subtask del goal per il quale la submission è intesa")
-group = parser.add_mutually_exclusive_group()
-group.add_argument("-q", "--quiet", action="store_true",
-                   help="impone che non venga scritto nè su stdout nè su stderr")
-parser.add_argument("-v", "--verbosity", type=int, choices=[0, 1, 2], default=2, metavar='LEVEL',
-                    help="to set a partial feedback-level")
-parser.add_argument("-l", "--local", action="store_true",
-                    help="local versus on server")
-args = parser.parse_args()
-
-def internal_error(message):  # this function should go in a problem-independent library
-   #cprint("Internal error (never fault of the problem solver, detectable with local testing):", 'red', 'on_cyan', attrs=['bold'])
-   #cprint(message, 'on_cyan')
-   print("Internal error (never fault of the problem solver, detectable with local testing):")
-   print(message)
-   sys.exit(2)
-            
-def format_error(goal, subtask, message = None):  # this function should go in a problem-independent library
-   """Format error. This is fault of the problem solver (on a side that often it is not relevant at all, only a lack of care in the programming issue). Either it must be served here in the checkers writing parsing code (takes a lot of time and load on the problem maker. Also: it makes lenghtly adapting old problems), or format defined and assessed via yaml file). Most of the times (all CMS-like problems) we can obtain, for each goal, a template solution which manages input/output and only calls a function out from a simple yaml file + small script in a minimal language defined by us"""
-   #cprint(f"Format error.", 'red', 'on_cyan', attrs=['bold'], end=" ")
-   #cprint("You should review the format of the file you have submitted for [problem={problem_short}, goal={goal}, subtask={subtask}]. (You can do it in local, also taking profit of the format checking script made available to you.\n", 'on_cyan')
-   print(f"Format error.", end=" ")
-   print("You should review the format of the file you have submitted for [problem={problem_short}, goal={goal}, subtask={subtask}]. (You can do it in local, also taking profit of the format checking script made available to you.\n")
-   if message != None:
-      #cprint("More precisely, pay attention to this:", 'on_cyan')
-      print("More precisely, pay attention to this:")
-      print(message)
-   sys.exit(0)
-
-def solution_error(goal, subtask, message = None):  # this function should go in a problem-independent library
-   """True feedback on the problem. There are errors in the solution submitted. This is fault of the problem solver."""
-   #cprint("True feedback on your solution for [problem={problem_short}, goal={goal}, subtask={subtask}]. The solution submitted contains  errors.\n", 'red', 'on_cyan', attrs=['bold'])
-   print("True feedback on your solution for [problem={problem_short}, goal={goal}, subtask={subtask}]. The solution submitted contains  errors.\n")
-   if message != None:
-      #cprint("More precisely, pay attention to this:", 'on_cyan')
-      print("More precisely, pay attention to this:")
-      print(message)
-   sys.exit(0)
-
-def solution_OK(goal, subtask, message = None):  # this function should go in a problem-independent library
-   #cprint("OK. Your solution to [problem={problem_short}, goal={goal}, subtask={subtask}] is a feasible one.", 'green', attrs=['bold'])
-   print("OK. Your solution to [problem={problem_short}, goal={goal}, subtask={subtask}] is a feasible one.")
-   if message != None:
-      print(message)
-   sys.exit(0)
-
-def solution_perfect(goal, subtask, lesson = None, next_challenge = None):  # this function should go in a problem-independent library
-   #cprint(f"OK. Your solution to [problem={problem_short}, goal={goal}, subtask={subtask}] is perfect!", 'green', attrs=['bold'])
-   print(f"OK. Your solution to [problem={problem_short}, goal={goal}, subtask={subtask}] is perfect!")
-   if lesson != None:
-      #cprint("What have we learned:", 'red')
-      print("What have we learned:")
-      print(lesson)
-   if next_challenge != None:
-      #cprint("What next:", 'red')
-      print("What next:")
-      print(next_challenge)
-   sys.exit(0)
-
-
-# PROBLEM SPECIFIC PART:   
-problem_short = "tiling_mxn_by_1x2"   
-M=20
-N=20
-
-def is_tilable(m, n):
-   return 1 - (m%2)*(n%2)
-
-def offer_a_random_tiling(m,n):
-    print(f"In caso ti serva un aiuto, o dove tu sia incredulo esso esista, ti ho messo un tiling della griglia {m}x{n} nel file  generated-files/tiling_{m}x{n}.txt")
-    tiling=f"In questo file di testo (file ASCII) trovi un tiling della griglia ({m},{n}):"
-
-    tiling +="""
-    ta.send_file(tiling, filename=f"tiling_{num_offered_tilings}.txt")
-
-
-def check_decision(goal, subtask):
-   """
-   Se subtask=1 si chiede di verificare solo la prima riga di risposte (per griglie con m=1, ossia di una sola riga).
-   Se subtask=2 si chiede di verificare solo le prime due righe di risposte (per m=1 e m=2).
-   Se subtask=3 vanno verificate tutte le MxN risposte.
-   """
-   global M
-   if subtask <= 2:
-      M = subtask
-   for i in range(1,M+1):
-      try:
-         risp_line_full = sys.stdin.readline()
-         risp_line = risp_line_full.rstrip()
-      except EOFError:
-         format_error(goal, subtask, f"Your file has only {i-1} lines instead of {N}")
-      if len(risp_line) != N:
-         if len(risp_line_full)-len(risp_line) == 1:
-           format_error(goal, subtask, f"La riga {i} del tuo file (al netto del singolo carattere nascosto che tu impieghi per andare a capo) presenta {len(risp_line)} caratteri invece di {N}")
-         else:  
-           format_error(goal, subtask, f"La riga {i} del tuo file (al netto dei {len(risp_line_full)-len(risp_line)} caratteri nascosti che tu impieghi per andare a capo) presenta {len(risp_line)} caratteri invece di {N}")
-      for j in range(1,N+1):
-         if risp_line[j-1] not in {"0","1"}:
-            format_error(goal, subtask, f"Nella riga {i} del tuo file, il carattere in posizione {j} non è nè uno '0' nè un '1'")
-         if int(risp_line[j-1]) != is_tilable(i, j):
-            if is_tilable(i, j):
-               solution_error(goal, subtask, f"Nella riga {i} del tuo file, il carattere in posizione {j} è uno '{risp_line[j-1]}' mentre invece la griglia {i}x{j} è tilable")
-            else:
-               solution_error(goal, subtask, f"Nella riga {i} del tuo file, il carattere in posizione {j} è uno '{risp_line[j-1]}' mentre invece la griglia {i}x{j} non è tilable")
-
-   if M==1:          
-        solution_perfect(goal, subtask, "Una griglia di una sola riga (m=1) è tilable se e solo se ha un numero pari di colonne.", "E se invece la griglia avesse due righe? Questa è la domanda del prossimo subtask.")
-   elif M==2:          
-        solution_perfect(goal, subtask, "Hai capito come funziona con griglie di al più due righe.", "Per simmetria, conosci già il vero anche per griglie di al più due colonne. Riesci ora a generalizzare per griglie arbitrarie?")
-   else:          
-        solution_perfect(goal, subtask, "Hai portato a casa la buona caratterizzazione. Essa potrebbe essere così espressa:\n\n   la griglia mxn è tilable se e solo se almeno uno tra m ed n è pari.", "Nel goal 2 ti chiediamo di fornire dimostrazione/evidenza del lato 'se' della buona caratterizzazione sopra espressa/congetturata. Prova a sottomettere la tua dimostrazione per la condizione sufficiente.\n Il goal 3 concerne il 'solo se' e non è supportato dal nostro servizio di feedback automatico per questa ragione che è bene comprendere:\n   mentre un modo naturale per certificare la tilability (ossia fornire un tiling) risulta inestricabilmente definito e proposto insieme col problema stesso (il problema è naturalmente in NP), e risulta così definito un efficace linguaggio per convincere del 'sì', non è mai stato invece definito un linguaggio di 'nò'. Non vi è accordo a priori, implicito od esplicito, su come argomentare l'eventuale NON esistenza di un tiling. In questo caso (problema in P) un modo di convincere un matematico già sovra-umano come Rè Artù deve sicuramente sistere, ma se lo avessimo proposto avremmo spoilerato da subito il problema. In altri casi potremo invece farlo senza spoilerare interamente il problema. In altri casi disperiamo che un certificato compatto di 'nò' possa esistere (per problemi NP-completi sarebbe sul tavolo la questione NP versus coNP).")
-
-def check_tiling(goal, subtask):
-   """
-   Se subtask=1 si chiede di verificare solo la prima riga di risposte, oppure m=2, e si chiede di verificare solo le prime due righe di risposte.
-   Altrimenti vanno verificate tutte le MxN risposte
-   """
-   pass
-
-
-if args.goal==2 and args.subtask > 2:
-   internal_error(f"{sys.argv[0]} called with option goal={args.goal} and option subtask={args.subtask}. However goal={args.goal} has no subtask={args.subtask}")
-
-if args.goal==1:
-   check_decision(args.goal, args.subtask)
-else:
-   check_tiling(args.goal, args.subtask)
+---
+- {
+  files: 1,
+  parameters: {
+    goal: [int, 1, 2],
+    subtask: [int, 1,3],
+  }
+}
+- {
+too-few-lines: "Your file has only {i-1} lines instead of {N}.",
+wrong-line-length-single-newline-char: "Disregarding its single newline character, the {i}-th line of your file has {len(risp_line)} characters instead of {N}.",
+wrong-line-length-more-newline-chars: "Disregarding its {len(risp_line_full)-len(risp_line)} newline characters, the {i}-th line of your file has {len(risp_line)} characters instead of {N}.",
+wrong-char-bool: "The {j}-th character of the {i}-th line in your file is neither a 0 nor a 1, but a {risp_line[j-1]}.",
+wrong0-answ: "The {j}-th character of the {i}-th line in your file is a {risp_line[j-1]}, however the {i}x{j}-board is tilable.",
+wrong1-answ: "The {j}-th character of the {i}-th line in your file is a {risp_line[j-1]}, however the {i}x{j}-board is not tilable.",
+perfect1-1-lesson: "A board with one single row (m=1) is tilable if and only if it has an even number of columns.",
+perfect1-1-challenge: "What about boards with 2 rows (m=2)? This is the qustion in the next subtask.",
+perfect1-2-lesson: "You got it how it works with boards of at most two rows.",
+perfect1-2-challenge: "By symmetry, you alredy know the truth also for boards of at most two coumns. Can you generalize this to arbitrary mxn-grids?",
+perfect1-3-lesson: "You achieved the good characterization. It could be xpressed as follows:\n\n   the mxn-board is tilable if and only if at least one among m and n is even.",
+perfect1-3-challenge: "Goal 2 asks you to produce a proof/evidence of the 'if' side of the good characterization above stated/conjectured. Try to obtain compelling evidence by offering tilings. Clarly, a finite number of tilings will never suffice to make a proof, but you have a proof if you find a general construction method.\n Goal 3 concerns the 'only if' side and is not supported by our authomatic feedback services. It is important and pertinent to comprehend the reason why:\n   whereas a natural way to certify tilability (i.e., providing a tiling) is by necessity defined together with the very problem (the problem is naturally in NP), and as such a compact and efficient language to convince for the 'yes' is given at the very start, no language to asses the 'nò' has been ever agreed upon. In the statement of the problem there is no implicit or explicit agreement or suggestion on how to prove that a tiling does not exists. A way to convince of the 'no' a super-human mathematician like King Artur must exists for sure for every problem in P (and this one is). However, if we had proposed it here we would have spoiled the problem. With other problems in P we could have done without spoilering the problem entirely. And for NP-complete problems we know such language can not exist unless NP=coNP.",
+goal2-task3: "{sys.argv[0]} called with option goal={args.goal} and option subtask={args.subtask}. However goal={args.goal} has no subtask={args.subtask}.",
+out-of-range-m-n: "The submitted file states m={m} and n={n}. Both parameters should be in the range [0,20]",
+wrong-char-card-point: "The {j}-th character of the {i}-th line in your file is not among 'N','S','W','E'. It is a '{risp_line[j-1]}'.",
+wrong-S: "Your tiling is faulty: The {j}-th character of the {i}-th line in your file is an 'S'. This can not be since there is not an 'N' above it.",
+wrong-E: "Your tiling is faulty: Your tiling is faulty: The {j}-th character of the {i}-th line in your file is an 'E'. This can not be since there is not a 'W' at its left.",
+wrong-W: "Your tiling is faulty: Your tiling is faulty: The {j}-th character of the {i}-th line in your file is a 'W'. This can not be since there is not an 'E' at its right.",
+wrong-N: "Your tiling is faulty: Your tiling is faulty: The {j}-th character of the {i}-th line in your file is an 'N'. This can not be since there is not an 'S' below it.",
+perfect2-challenge: None,
+}
