@@ -1,0 +1,30 @@
+# CMS
+.inode
+**/input
+**/output
+
+# backups
+*~
+*.bak
+
+# LaTex
+*.pdf
+*.aux
+*.log
+
+# Byte-compiled / optimized / DLL files
+a.out
+__pycache__/
+*.py[cod]
+*$py.class
+
+# management of this report in action
+TEMA_OGGI*
+
+# archives
+*.zip
+*.tgz
+*.tar.gz
+*.tar
+*.7z
+
