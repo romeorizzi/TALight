@@ -1,0 +1,30 @@
+---
+- {
+  files: 1,
+  parameters: {
+    goal: [int, 1, 2],
+    subtask: [int, 1,3],
+  }
+}
+- {
+too-few-lines: "Your file has only {i-1} lines instead of {N}",
+wrong-line-length-single-newline-char: "La riga {i} del tuo file (al netto del singolo carattere nascosto che tu impieghi per andare a capo) presenta {len(risp_line)} caratteri invece di {N}",
+wrong-line-length-more-newline-chars: "La riga {i} del tuo file (al netto dei {len(risp_line_full)-len(risp_line)} caratteri nascosti che tu impieghi per andare a capo) presenta {len(risp_line)} caratteri invece di {N}",
+wrong-char-bool: "Nella riga {i} del tuo file, il carattere in posizione {j} non è nè 0 nè 1 ma {risp_line[j-1]}",
+wrong0-answ: "Nella riga {i} del tuo file, il carattere in posizione {j} è uno '{risp_line[j-1]}' mentre invece la griglia {i}x{j} è tilable",
+wrong1-answ: "Nella riga {i} del tuo file, il carattere in posizione {j} è uno '{risp_line[j-1]}' mentre invece la griglia {i}x{j} non è tilable",
+perfect1-1-lesson: "Una griglia di una sola riga (m=1) è tilable se e solo se ha un numero pari di colonne.",
+perfect1-1-challenge: "E se invece la griglia avesse due righe? Questa è la domanda del prossimo subtask.",
+perfect1-2-lesson: "Hai capito come funziona con griglie di al più due righe.",
+perfect1-2-challenge: "Per simmetria, conosci già il vero anche per griglie di al più due colonne. Riesci ora a generalizzare per griglie arbitrarie?",
+perfect1-3-lesson: "Hai portato a casa la buona caratterizzazione. Essa potrebbe essere così espressa:\n\n   la griglia mxn è tilable se e solo se almeno uno tra m ed n è pari.",
+perfect1-3-challenge: "Nel goal 2 ti chiediamo di fornire dimostrazione/evidenza del lato 'se' della buona caratterizzazione sopra espressa/congetturata. Prova a sottomettere la tua dimostrazione per la condizione sufficiente.\n Il goal 3 concerne il 'solo se' e non è supportato dal nostro servizio di feedback automatico per questa ragione che è bene comprendere:\n   mentre un modo naturale per certificare la tilability (ossia fornire un tiling) risulta inestricabilmente definito e proposto insieme col problema stesso (il problema è naturalmente in NP), e risulta così definito un efficace linguaggio per convincere del 'sì', non è mai stato invece definito un linguaggio di 'nò'. Non vi è accordo a priori, implicito od esplicito, su come argomentare l'eventuale NON esistenza di un tiling. In questo caso (problema in P) un modo di convincere un matematico già sovra-umano come Rè Artù deve sicuramente sistere, ma se lo avessimo proposto avremmo spoilerato da subito il problema. In altri casi potremo invece farlo senza spoilerare interamente il problema. In altri casi disperiamo che un certificato compatto di 'nò' possa esistere (per problemi NP-completi sarebbe sul tavolo la questione NP versus coNP).",
+goal2-task3: "{sys.argv[0]} called with option goal={args.goal} and option subtask={args.subtask}. However goal={args.goal} has no subtask={args.subtask}.",
+out-of-range-m-n: "The submitted file states m={m} and n={n}. Both parameters should be in the range [0,20]",
+wrong-char-card-point: "Nella riga {i} del tuo file, il carattere in posizione {j} non è uno tra 'N','S','W','E' ma un '{risp_line[j-1]}'.",
+wrong-S: "Nella riga {i} del tuo file, il carattere in posizione {j} non può essere 'S' dato che non vi è un 'N' sopra di lui.",
+wrong-E: "Nella riga {i} del tuo file, il carattere in posizione {j} non può essere 'E' dato che non vi è un 'W' alla sua sinistra.",
+wrong-W: "Nella riga {i} del tuo file, il carattere in posizione {j} non può essere 'W' dato che non vi è un 'E' alla sua destra.",
+wrong-N: "Nella riga {i} del tuo file, il carattere in posizione {j} non può essere 'N' dato che non vi è un 'S' sotto di lui.",
+perfect2-challenge: None,
+}
