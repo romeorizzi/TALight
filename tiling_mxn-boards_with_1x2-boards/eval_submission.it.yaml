@@ -1,11 +1,5 @@
+%YAML 1.2
 ---
-- {
-  files: 1,
-  parameters: {
-    goal: [int, 1, 2],
-    subtask: [int, 1,3],
-  }
-}
 - {
 too-few-lines: "Il tuo file ha solo {i-1} righe invece di {N}.",
 wrong-line-length-single-newline-char: "La riga {i} del tuo file (al netto del singolo carattere nascosto che tu impieghi per andare a capo) presenta {len(risp_line)} caratteri invece di {N}.",

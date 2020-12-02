@@ -1,9 +1,0 @@
-- codeproblem: tiling_mxn-boards_with_1x2-boards
-- statement_languages: [it, en]
-- services:
-  - goals:
-    - evaluator: eval_submission.py
-    - languages: [it, en]
-  - queries:
-    - evaluator: yield_random_tiling.py
-    - languages: None

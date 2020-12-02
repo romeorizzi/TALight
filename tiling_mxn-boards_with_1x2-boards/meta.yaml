@@ -1,0 +1,16 @@
+%YAML 1.2
+---
+codename: tiling_mxn-boards_with_1x2-boards
+attachments_folder: "attachments_folder"
+services:
+  goals:
+    evaluator: eval_submission.py
+    args:
+      lang: [it, en]
+      goal: [1, 2]
+      subtask: [1,2,3]
+  queries:
+    evaluator: yield_random_tiling.py
+    args:
+      m: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+      n: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
