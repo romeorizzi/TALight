@@ -1,0 +1,9 @@
+codename: sum
+attachments_folder: att
+services:
+  observe:
+    evaluator: observe.py
+  solve:
+    evaluator: solve.py
+    args:
+      subtask: (small|big)
