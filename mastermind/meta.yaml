@@ -1,19 +1,19 @@
-YAML 1.2
----
 codename: mastermind
 attachments_folder: attachments_folder
 services:
   score:
     evaluator: score_tentative_code.py
-    languages: [it, en]
+    args:
+      languages: (it|en)
   check_scoring:
     evaluator: check_scoring.py
-    languages: [it, en]
+    args:
+      languages: (it|en)
   play:
     evaluator: mastermind_player.py 
   goals:
     evaluator: eval_submission.py
     args:
-      lang: [it, en]
-      goal: [1, 2]
-      subtask: [1,2,3]
+      lang: (it|en)
+      goal: (1|2)
+      subtask: (1|2|3)
