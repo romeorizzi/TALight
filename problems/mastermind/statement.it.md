@@ -88,13 +88,13 @@ a fronte di questa azione il server elabora un codice segreto, dove $m$ d $n$ sa
 
 
 ==Subtask==
-Subtask 1: $n=4$, $m=5$ nessuna limitazione sul numero di tentativi
-Subtask 2: $n=4$, $m=5$ hai a disposizione al più 10 tentativi
-Subtask 3: $n=4$, $m=5$ hai a disposizione al più 6 tentativi
-Subtask 4: $n\leq 4$, $m\leq 5$ minimizza il numero di tentativi nel caso peggiore
-Subtask 5: $n\leq 4$, $m\leq 5$ minimizza il numero di tentativi nel caso medio, sotto ipotesi di codice random con distribuzione di probabilità uniforme.
-Subtask 6: $n\leq 4$, $m\leq 5$ gioco ottimo contro avversario altrettanto ottimo.
-Subtask 7: nessuna limitazione sul numero di tentativi
-Subtask 8: hai a disposizione al più $mn$ tentativi
-Subtask 9: hai a disposizione al più $m+n\log n$ tentativi
+Subtask 1: $n=4$, $m=5$, nessuna limitazione sul numero di tentativi
+Subtask 2: $n=4$, $m=5$, hai a disposizione al più 10 tentativi
+Subtask 3: $n=4$, $m=5$, hai a disposizione al più 6 tentativi
+Subtask 4: $n\leq 4$, $m\leq 5$, minimizza il numero di tentativi nel caso peggiore
+Subtask 5: $n\leq 4$, $m\leq 5$, minimizza il numero di tentativi nel caso medio, sotto ipotesi di codice random con distribuzione di probabilità uniforme.
+Subtask 6: $n\leq 4$, $m\leq 5$, gioco ottimo contro avversario altrettanto ottimo.
+Subtask 7: $n=4$, $m=5$, nessuna limitazione sul numero di tentativi
+Subtask 8: $n=4$, $m=5$, hai a disposizione al più $mn$ tentativi
+Subtask 9: $n=4$, $m=5$, hai a disposizione al più $m+n\log n$ tentativi
  

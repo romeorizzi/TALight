@@ -4,11 +4,11 @@ services:
   score:
     evaluator: score_tentative_code.py
     args:
-      languages: (it|en)
+      lang: (it|en)
   check_scoring:
     evaluator: check_scoring.py
     args:
-      languages: (it|en)
+      lang: (it|en)
   play:
     evaluator: mastermind_player.py 
   goals:
