@@ -1,5 +1,7 @@
 # Uova di Pasqua (uova)
 
+![image](../figs/eggs.jpeg)
+
 Ogni anno Willy Wonka produce delle uova di Pasqua da lacio dall'ascnsore di vetro.
 Il lancio può avvenire da uno qualsiasi di 100 diversi livelli. Le uova di una stessa annata sono tutte uguali, nel senso che per tutte il minimo livello di rottura è lo stesso. Le uova potrebbero non rompersi quando lanciata da livello alcuno, ma, se si rompono da un crto livello, allora si rompono anche quando lanciate dai livelli supriori. 
 Ogni anno Willy ci riserva due delle uova della produzione perchè noi si stabilisca il minimo piano di rottura, o si stabilisca la loro indistruttibilità.

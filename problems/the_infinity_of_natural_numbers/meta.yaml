@@ -1,0 +1,7 @@
+codename: the_infinity_of_natural_numbers
+attachments_folder: att
+services:
+  bigger_and_bigger:
+    evaluator: bigger_and_bigger.py 
+  rationals_are_dense_into_reals:
+    evaluator: rationals_are_dense_into_reals.py 
