@@ -4,16 +4,26 @@ services:
   score:
     evaluator: score_tentative_code.py
     args:
-      lang: (it|en)
+      lang:
+        regex: (en|it)
+        default: it
   check_scoring:
     evaluator: check_scoring.py
     args:
-      lang: (it|en)
+      lang:
+        regex: (en|it)
+        default: it
   play:
     evaluator: mastermind_player.py 
   goals:
     evaluator: eval_submission.py
     args:
-      lang: (it|en)
-      goal: (1|2)
+      lang:
+        regex: (en|it)
+        default: it
+      goal:
+        regex: (1|2)
+        default: 1
       subtask: (1|2|3)
+        regex: (1|2|3)
+        default: 1

@@ -3,7 +3,16 @@ attachments_folder: att
 services:
   observe:
     evaluator: observe.py
+    args:
+      lang:
+        regex: (en|it)
+        default: it
   solve:
     evaluator: solve.py
     args:
-      subtask: (small|big)
+      lang:
+        regex: (en|it)
+        default: it
+      subtask:
+        regex: (small|big)
+        default: small

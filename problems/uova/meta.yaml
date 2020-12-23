@@ -1,0 +1,42 @@
+codename: uova
+attachments_folder: att
+services:
+  confirm_min_lanci:
+    evaluator: confirm_min_lanci.py
+    args:
+      lang:
+        regex: (en|it)
+        default: it
+      min:
+        regex: ([1-9][0-9]{0,1}|100)
+        default: 100
+      n_piani:
+        regex: ([1-9][0-9]{0,1}|100)
+        default: 100
+      n_uova:
+        regex: ([1-9][0-9]{0,1}|100)
+        default: 100
+  opt_move:
+    evaluator: opt_move.py
+    args:
+      lang:
+        regex: (en|it)
+        default: it
+      n_piani:
+        regex: ([1-9][0-9]{0,1}|100)
+        default: 100
+      n_uova:
+        regex: ([1-9][0-9]{0,1}|100)
+        default: 100
+  check_table:
+    evaluator: opt_move.py
+    args:
+      lang:
+        regex: (en|it)
+        default: it
+      n_piani:
+        regex: ([1-9][0-9]{0,1}|100)
+        default: 100
+      n_uova:
+        regex: ([1-9][0-9]{0,1}|100)
+        default: 100
