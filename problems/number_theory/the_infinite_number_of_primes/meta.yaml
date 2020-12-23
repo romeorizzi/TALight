@@ -1,0 +1,21 @@
+codename: the_infinite_number_of_primes
+attachments_folder: att
+services:
+  check_my_task1_machine:
+    evaluator: task1_checker.py 
+    args:
+      lang:
+        regex: (en|it)
+        default: en
+  check_my_task2_machine:
+    evaluator: task2_checker.py 
+    args:
+      lang:
+        regex: (en|it)
+        default: en
+  check_my_task3_machine:
+    evaluator: task3_checker.py 
+    args:
+      lang:
+        regex: (en|it)
+        default: en
