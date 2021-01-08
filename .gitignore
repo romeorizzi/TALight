@@ -28,3 +28,4 @@ TEMA_OGGI*
 *.tar
 *.7z
 
+/.vs/*
