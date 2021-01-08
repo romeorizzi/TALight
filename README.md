@@ -18,8 +18,8 @@ Among its commitments in our vision come:
 5. possible for teachers to share and collaborate on these didactical projects
 6. no installation required, nither for the problem solvers nor for the problem makers.
 
-Miriamo al promuovere lo sviluppo distribuito e condiviso di percorsi didattici funzionali alle proprie esigenze e finalita`. Se diverrà` facile per i docenti (e loro studenti) contribuire con problemi, cio` consentirà` la realizzazione di un repository di percorsi didattici per problemi che possa venire costituito e popolato di problemi in modo distribuito e condiviso, in vari contesti e discipline.
+Miriamo al promuovere lo sviluppo distribuito e condiviso di percorsi didattici funzionali alle proprie esigenze e finalità. Se diverrà facile per i docenti (e loro studenti) contribuire con problemi, ciò consentirà la realizzazione di un repository di percorsi didattici per problemi che possa venire costituito e popolato di problemi in modo distribuito e condiviso, in vari contesti e discipline.
 TAlight non richiede alcuna installazione.
 TAlight consente di affrontare in locale sia la soluzione che il design, la realizzazione, e testing in locale di un problema.
 Al momnto del deployment di servizi sul problema il docente dovrà disporre di un web server modesto facilmente approntabile senza spese. 
-In futuro potremmo mirare a fornire noi stessi dei servizi di hosting gratuiti che forniranno ambienti per percorsi didattici spndibili in esercitazioni, lezioni, gare, o allenamento aperto. I problemi potranno cosi` essere condivisi e percorsi didattici basati su problemi potranno essere realizzati in una rete collaborativa, come specifici a particolari esigenze e percorsi svolti in scuole lontane ed altrimenti isolate.
+In futuro potremmo mirare a fornire noi stessi dei servizi di hosting gratuiti che forniranno ambienti per percorsi didattici spndibili in esercitazioni, lezioni, gare, o allenamento aperto. I problemi potranno così essere condivisi e percorsi didattici basati su problemi potranno essere realizzati in una rete collaborativa, come specifici a particolari esigenze e percorsi svolti in scuole lontane ed altrimenti isolate.
