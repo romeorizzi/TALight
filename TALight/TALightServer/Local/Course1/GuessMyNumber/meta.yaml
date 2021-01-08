@@ -1,0 +1,5 @@
+﻿name: "Indovina numero"
+description: "Indovina il numero del server"
+services:
+  game:
+    evaluator: "game.py"

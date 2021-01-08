@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TALight", "TALight\TALight.csproj", "{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8FDD4A28-7532-480E-B1F7-AD820990E851} = {8FDD4A28-7532-480E-B1F7-AD820990E851}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TALightServer", "TALightServer\TALightServer.csproj", "{8FDD4A28-7532-480E-B1F7-AD820990E851}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TALightObjects", "TALightObjects\TALightObjects.csproj", "{06F6ECCD-0985-4326-B15F-6819AA1212BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TALightTest", "TALightTest\TALightTest.csproj", "{DDC54B55-CB64-4393-8210-6875D1DC4770}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}.Debug|x64.ActiveCfg = Debug|x64
+		{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}.Debug|x64.Build.0 = Debug|x64
+		{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}.Release|x64.ActiveCfg = Release|x64
+		{56306DB1-A1C9-42C4-A0C2-62B57042ADC7}.Release|x64.Build.0 = Release|x64
+		{8FDD4A28-7532-480E-B1F7-AD820990E851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FDD4A28-7532-480E-B1F7-AD820990E851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FDD4A28-7532-480E-B1F7-AD820990E851}.Debug|x64.ActiveCfg = Debug|x64
+		{8FDD4A28-7532-480E-B1F7-AD820990E851}.Debug|x64.Build.0 = Debug|x64
+		{8FDD4A28-7532-480E-B1F7-AD820990E851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FDD4A28-7532-480E-B1F7-AD820990E851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FDD4A28-7532-480E-B1F7-AD820990E851}.Release|x64.ActiveCfg = Release|x64
+		{8FDD4A28-7532-480E-B1F7-AD820990E851}.Release|x64.Build.0 = Release|x64
+		{06F6ECCD-0985-4326-B15F-6819AA1212BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F6ECCD-0985-4326-B15F-6819AA1212BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F6ECCD-0985-4326-B15F-6819AA1212BC}.Debug|x64.ActiveCfg = Debug|x64
+		{06F6ECCD-0985-4326-B15F-6819AA1212BC}.Debug|x64.Build.0 = Debug|x64
+		{06F6ECCD-0985-4326-B15F-6819AA1212BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F6ECCD-0985-4326-B15F-6819AA1212BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F6ECCD-0985-4326-B15F-6819AA1212BC}.Release|x64.ActiveCfg = Release|x64
+		{06F6ECCD-0985-4326-B15F-6819AA1212BC}.Release|x64.Build.0 = Release|x64
+		{DDC54B55-CB64-4393-8210-6875D1DC4770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC54B55-CB64-4393-8210-6875D1DC4770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC54B55-CB64-4393-8210-6875D1DC4770}.Debug|x64.ActiveCfg = Debug|x64
+		{DDC54B55-CB64-4393-8210-6875D1DC4770}.Debug|x64.Build.0 = Debug|x64
+		{DDC54B55-CB64-4393-8210-6875D1DC4770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC54B55-CB64-4393-8210-6875D1DC4770}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDC54B55-CB64-4393-8210-6875D1DC4770}.Release|x64.ActiveCfg = Release|x64
+		{DDC54B55-CB64-4393-8210-6875D1DC4770}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4BBE1FBE-DD20-49BF-A74A-156393F7BA4E}
+	EndGlobalSection
+EndGlobal

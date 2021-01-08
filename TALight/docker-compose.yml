@@ -1,0 +1,26 @@
+﻿version: '3.7'
+
+services:
+  reverseproxy:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+     - '80:80'
+    restart: always
+      
+  api:
+    depends_on:
+     - reverseproxy
+    build:
+      context: .
+      dockerfile: DockerfileDeploy
+    environment:
+     - TOKEN=rgeoijgeriojertgoij3456987ertikjodfgkljnmigertujheatioujh
+    volumes:
+     - './logs:/app/Logs'
+     - './local:/app/Local'
+    expose:
+     - '5000'
+    restart: always
+    

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TALight": {
+      "commandName": "Project",
+      "commandLineArgs": "-h localhost -p 44315 -c test"
+    }
+  }
+}
