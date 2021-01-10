@@ -5,14 +5,14 @@ services:
     evaluator: observe.py
     args:
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
   solve:
     evaluator: solve.py
     args:
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
       subtask:
-        regex: (small|big)
+        regex: ^(small|big)$
         default: small

@@ -12,7 +12,7 @@ for _ in range(TC):
     if small:
         n = randrange(10**2)
     else:
-        n = ranrange(2**64)
+        n = randrange(2**64)
     print("?", n)
     a, b = map(int, input().strip().split(" "))
     if a + b != n:
