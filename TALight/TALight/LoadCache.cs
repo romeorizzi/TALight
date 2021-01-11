@@ -11,13 +11,20 @@ namespace TALight
 
         internal void Load(string filename)
         {
-            string yml = File.ReadAllText(filename);
+            if (File.Exists(filename))
+            {
+                string yml = File.ReadAllText(filename);
 
-            IDeserializer deserializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .Build();
+                IDeserializer deserializer = new DeserializerBuilder()
+                .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                .Build();
 
-            s = deserializer.Deserialize<Setting>(yml);
+                s = deserializer.Deserialize<Setting>(yml);
+            }
+            else
+            {
+                s = new Setting();
+            }
         }
 
         internal void Save(string filename)
