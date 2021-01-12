@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Prototype RTAL</title>
+<script>
+class RTAL {
+    constructor(url, problem, service, args = {}, callback) {
+        let self = this;
+        this.ready = false;
+        this.ws = new WebSocket(url);
+        this.ws.onmessage = (function(e) {
+            if(self.ready) {
+                let fs = new FileReader();
+                fs.onload = (function(r) {
+                    callback(r.target.result);
+                });
+                fs.readAsText(e.data);
+            } else {
+                let res = JSON.parse(e.data);
+                if(res.command == "ConnectionBegin") {
+                    self.ready = true;
+                }
+            }
+        });
+        this.ws.onopen = (function() {
+            let req = {
+                "magic": "rtal",
+                "version": 1,
+                "command": {
+                    "ConnectionRequest": {
+                        "codename": problem,
+                        "service": service,
+                        "args": args
+                    }
+                }
+            };
+            self.ws.send(JSON.stringify(req));
+        });
+    }
+
+    isReady() {
+        return this.ready;
+    }
+
+    send(text) {
+        let encoder = new TextEncoder();
+        let encoded = encoder.encode(text + "\n");
+        this.ws.send(new Blob([encoded]));
+    }
+}
+
+function logger_write(text) {
+    let logger = document.getElementById("log");
+    logger.innerHTML += text;
+    logger.scrollTop = logger.scrollHeight;
+}
+
+function cb(e) {
+    logger_write("> " + e);
+}
+
+let rtal = new RTAL("ws://127.0.0.1:8080/", "sum", "solve", {"subtask": "small"}, cb);
+
+function sender(obj) {
+    if(event.keyCode == 13) {
+        rtal.send(obj.value);
+        logger_write("< " + obj.value + "\n");
+        obj.value = "";
+    }
+}
+</script>
+<style>
+#log {
+    resize: none;
+    width: 100%;
+    height: 500px;
+}
+</style>
+</head>
+<body>
+<div id="cnt">
+    <textarea id="log" readonly></textarea>
+    <input type="text" class="search" onkeydown="sender(this);"/>
+</div>
+</body>
+</html>
