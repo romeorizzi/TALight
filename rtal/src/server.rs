@@ -7,7 +7,7 @@ use log::{error, info, warn};
 use proto::{Command, Packet};
 use sha2::{Digest, Sha512};
 use std::collections::HashMap;
-use std::fs::{read_dir, read_to_string};
+use std::fs::{canonicalize, read_dir, read_to_string};
 use std::net::TcpListener;
 use std::net::TcpStream;
 use std::path::PathBuf;
@@ -53,9 +53,13 @@ fn main() {
         Ok(x) => x,
         Err(x) => crash!("Cannot listen on [{}:{}]: {}", opts.bind_address, opts.listen_port, x),
     };
+    let dir_abs = match canonicalize(&opts.directory) {
+        Ok(x) => x,
+        Err(x) => crash!("Cannot obtain absolute path of {}: {}", opts.directory.to_str().unwrap_or("NULL"), x),
+    };
     info!("Rust Turing Arena Light up and running!");
     for client in listener.incoming() {
-        let directory = opts.directory.clone();
+        let directory = dir_abs.clone();
         spawn(move || {
             let client = match client {
                 Ok(x) => x,

@@ -7,12 +7,17 @@ mod util;
 use clap::Clap;
 use log::{error, info};
 use regex::Regex;
+use rustls::{ClientSession, StreamOwned};
 use sha2::{Digest, Sha512};
 use std::collections::HashMap;
 use std::fs;
 use std::io::{Read, Write};
+use std::net::{TcpStream, ToSocketAddrs};
 use std::process::{self, exit, Stdio};
-use tungstenite::{client, error, Message, WebSocket};
+use std::sync::Arc;
+use tungstenite::stream::Stream;
+use tungstenite::{error, Message, WebSocket};
+use url::{Origin, Url};
 
 #[derive(Clap, Debug)]
 struct CliArgs {
@@ -65,9 +70,52 @@ struct GetCommand {
 fn main() {
     pretty_env_logger::init();
     let opts = CliArgs::parse();
-    let (mut ws, _) = match client::connect(opts.server) {
+    let url = match Url::parse(&opts.server) {
         Ok(x) => x,
-        Err(x) => crash!("{}", x),
+        Err(x) => crash!("{} is not a valid URL: {}", &opts.server, x),
+    };
+    let mut ws = match url.origin() {
+        Origin::Opaque(_) => crash!("{} is not a valid URL", url),
+        Origin::Tuple(proto, host, port) => match proto.as_str() {
+            "ws" | "wss" => {
+                let addrs = match (host.to_string(), port).to_socket_addrs() {
+                    Ok(x) => x,
+                    Err(x) => crash!("DNS resolve error: {}", x),
+                };
+                let mut sock = None;
+                for addr in addrs {
+                    if let Ok(s) = TcpStream::connect(addr) {
+                        sock = Some(s);
+                        break;
+                    };
+                }
+                let sock = match sock {
+                    Some(x) => x,
+                    None => crash!("Cannot connect to {}", url),
+                };
+                let ws = match proto.as_str() {
+                    "ws" => tungstenite::client::client::<Stream<TcpStream, StreamOwned<ClientSession, TcpStream>>, Url>(url, Stream::Plain(sock)),
+                    "wss" => {
+                        let mut config = rustls::ClientConfig::new();
+                        config.root_store.add_server_trust_anchors(&webpki_roots::TLS_SERVER_ROOTS);
+                        let shost = host.to_string();
+                        let domain = match webpki::DNSNameRef::try_from_ascii_str(&shost) {
+                            Ok(x) => x,
+                            Err(x) => crash!("{} is not a valid ASCII domain: {}", host, x),
+                        };
+                        let client = rustls::ClientSession::new(&Arc::new(config), domain);
+                        let stream = StreamOwned::new(client, sock);
+                        tungstenite::client::client::<Stream<TcpStream, StreamOwned<ClientSession, TcpStream>>, Url>(url, Stream::Tls(stream))
+                    }
+                    _ => unreachable!(),
+                };
+                match ws {
+                    Ok(x) => x.0,
+                    Err(x) => crash!("Connection failed: {}", x),
+                }
+            }
+            _ => crash!("{} is not a valid protocol", proto),
+        },
     };
     match opts.subcommand {
         SubCommand::List(mut cmd) => {

@@ -1,6 +1,6 @@
 use crate::fail;
 use log::error;
-use native_tls;
+use rustls::{ClientSession, StreamOwned};
 use std::io::ErrorKind;
 use std::io::Read;
 use std::io::Write;
@@ -12,7 +12,6 @@ use std::time::Duration;
 use std::time::Instant;
 use tungstenite::error::Error::Io;
 use tungstenite::protocol::WebSocket;
-use tungstenite::stream::NoDelay;
 use tungstenite::stream::Stream;
 use tungstenite::Message::Binary;
 
@@ -20,26 +19,36 @@ const TICK_DURATION_MS: u64 = 10;
 const TIMEOUT_MS: u64 = 60 * 1000;
 const BUFFER_SIZE: usize = 1 << 20;
 
-pub trait ReadTimeout {
+pub trait StreamOp {
     fn set_read_timeout(&mut self, dur: Option<Duration>) -> std::io::Result<()>;
+    fn set_nodelay(&mut self, toggle: bool) -> std::io::Result<()>;
 }
 
-impl ReadTimeout for TcpStream {
+impl StreamOp for TcpStream {
     fn set_read_timeout(&mut self, dur: Option<Duration>) -> std::io::Result<()> {
         TcpStream::set_read_timeout(self, dur)
     }
+    fn set_nodelay(&mut self, toggle: bool) -> std::io::Result<()> {
+        TcpStream::set_nodelay(self, toggle)
+    }
 }
 
-impl ReadTimeout for Stream<TcpStream, native_tls::TlsStream<TcpStream>> {
+impl StreamOp for Stream<TcpStream, StreamOwned<ClientSession, TcpStream>> {
     fn set_read_timeout(&mut self, dur: Option<Duration>) -> std::io::Result<()> {
         match &mut *self {
             Stream::Plain(x) => x.set_read_timeout(dur),
             Stream::Tls(x) => x.get_mut().set_read_timeout(dur),
         }
     }
+    fn set_nodelay(&mut self, toggle: bool) -> std::io::Result<()> {
+        match &mut *self {
+            Stream::Plain(x) => TcpStream::set_nodelay(x, toggle),
+            Stream::Tls(x) => TcpStream::set_nodelay(x.get_mut(), toggle),
+        }
+    }
 }
 
-pub fn connect_streams<T: Read + Write + NoDelay + ReadTimeout, R: 'static + Read + Send, W: Write>(ws: &mut WebSocket<T>, mut pout: R, mut pin: W, echo: bool) {
+pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: Write>(ws: &mut WebSocket<T>, mut pout: R, mut pin: W, echo: bool) {
     match ws.get_mut().set_read_timeout(Some(Duration::from_millis(TICK_DURATION_MS))) {
         Ok(()) => {}
         Err(x) => fail!("Cannot set_read_timeout: {}", x),
@@ -110,7 +119,7 @@ pub fn connect_streams<T: Read + Write + NoDelay + ReadTimeout, R: 'static + Rea
     };
 }
 
-pub fn connect_process<T: Read + Write + NoDelay + ReadTimeout>(ws: &mut WebSocket<T>, mut ps: process::Child, echo: bool) {
+pub fn connect_process<T: Read + Write + StreamOp>(ws: &mut WebSocket<T>, mut ps: process::Child, echo: bool) {
     let stdin = match ps.stdin.take() {
         Some(x) => x,
         None => fail!("Cannot take control of stdin"),
