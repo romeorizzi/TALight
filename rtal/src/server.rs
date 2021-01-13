@@ -16,6 +16,7 @@ use std::process::{exit, Stdio};
 use std::thread::spawn;
 use tungstenite::error::Error;
 use tungstenite::error::Error::ConnectionClosed;
+use tungstenite::handshake::server::{ErrorResponse, Request, Response};
 use tungstenite::protocol::WebSocket;
 use tungstenite::Message::{Binary, Text};
 
@@ -65,15 +66,23 @@ fn main() {
                 Ok(x) => x,
                 Err(x) => fail!("Error on incoming connection: {}", x),
             };
-            let address = match client.peer_addr() {
+            let mut address = match client.peer_addr() {
                 Ok(x) => format!("{:?}", x),
                 Err(_) => String::from("NULL"),
             };
-            info!("[{}] Client connected", address);
-            let mut client = match tungstenite::server::accept(client) {
-                Ok(x) => x,
-                Err(x) => fail!("[{}] Error on WebSocket negotiation: {}", address, x),
+            let header_cb = |request: &Request, response: Response| -> Result<Response, ErrorResponse> {
+                if let Some(x) = request.headers().get("x-forwarded-for") {
+                    if let Ok(x) = x.to_str() {
+                        address = x.to_string();
+                    }
+                }
+                Ok(response)
             };
+            let mut client = match tungstenite::server::accept_hdr(client, header_cb) {
+                Ok(x) => x,
+                Err(x) => fail!("Error on WebSocket negotiation: {}", x),
+            };
+            info!("[{}] Client connected", address);
             loop {
                 let msg = match client.read_message() {
                     Ok(x) => x,
