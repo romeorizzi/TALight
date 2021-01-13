@@ -11,7 +11,7 @@ use rustls::{ClientSession, StreamOwned};
 use sha2::{Digest, Sha512};
 use std::collections::HashMap;
 use std::fs;
-use std::io::{Read, Write};
+use std::io::{ErrorKind, Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 use std::process::{self, exit, Stdio};
 use std::sync::Arc;
@@ -196,6 +196,7 @@ fn main() {
                 let response = match ws.read_message() {
                     Ok(x) => x,
                     Err(error::Error::AlreadyClosed) | Err(error::Error::ConnectionClosed) => break,
+                    Err(error::Error::Io(x)) if x.kind() == ErrorKind::ConnectionAborted => break,
                     Err(x) => crash!("Cannot receive response: {}", x),
                 };
                 match response {
@@ -255,17 +256,20 @@ fn close_connection<T: Read + Write>(mut ws: WebSocket<T>) {
     match ws.close(None) {
         Ok(()) => {}
         Err(error::Error::AlreadyClosed) | Err(error::Error::ConnectionClosed) => {}
+        Err(error::Error::Io(x)) if x.kind() == ErrorKind::ConnectionAborted => {}
         Err(x) => crash!("{}: {}", ERROR_STRING, x),
     }
     loop {
         match ws.write_pending() {
             Ok(()) => {}
             Err(error::Error::AlreadyClosed) | Err(error::Error::ConnectionClosed) => break,
+            Err(error::Error::Io(x)) if x.kind() == ErrorKind::ConnectionAborted => break,
             Err(x) => crash!("{}: {}", ERROR_STRING, x),
         }
         match ws.read_message() {
             Ok(_) => {}
             Err(error::Error::AlreadyClosed) | Err(error::Error::ConnectionClosed) => break,
+            Err(error::Error::Io(x)) if x.kind() == ErrorKind::ConnectionAborted => break,
             Err(x) => crash!("{}: {}", ERROR_STRING, x),
         }
     }

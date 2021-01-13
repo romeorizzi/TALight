@@ -57,7 +57,7 @@ function logger_write(text) {
 }
 
 function cb(e) {
-    logger_write("> " + e);
+    logger_write("< " + e);
 }
 
 let rtal = new RTAL("ws://127.0.0.1:8080/", "sum", "solve", {"subtask": "small"}, cb);
@@ -65,7 +65,7 @@ let rtal = new RTAL("ws://127.0.0.1:8080/", "sum", "solve", {"subtask": "small"}
 function sender(obj) {
     if(event.keyCode == 13) {
         rtal.send(obj.value);
-        logger_write("< " + obj.value + "\n");
+        logger_write("> " + obj.value + "\n");
         obj.value = "";
     }
 }
