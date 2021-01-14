@@ -1,6 +1,9 @@
 # What is TAlight
 
-Are you a teacher or passionate about transmitting some problem solving competence or challenge?
+Are you a teacher or passionate about transmitting some problem solving competences/technique/methods or proposing an interesting and instructive challenge?
+TAlight offers you the perfect tool for you to make up your favourite problem into a full fledged didactical inclusive Montessorian toy, allowing to organize and offer smooth interactive didactical paths around it and automatic feedback services to promote autonomous exploration and learning.
+Also the social dimension is empowered:
+
 Do you want to become a problem maker but know only one programming language?
 
 TAlight is a minimal but powerful system for the design, the condivision, the experimentation and the use of interactive didactical problems which offer rich immidiate feedback services to the problem solver (the student or trainee).
