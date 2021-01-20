@@ -29,9 +29,11 @@ struct CliArgs {
     bind_address: String,
     #[clap(short('p'), long, about = "Listen port", default_value = "8080")]
     listen_port: u16,
+    #[clap(short, long, about = "Connection timeout (in seconds)", default_value = "60")]
+    timeout: f64,
 }
 
-fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, args: HashMap<String, String>) {
+fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, args: HashMap<String, String>, timeout_ms: u64) {
     let mut eval = process::Command::new(&evaluator);
     let process_name = evaluator.to_str().unwrap_or("NULL".into()).to_string();
     evaluator.pop();
@@ -42,7 +44,7 @@ fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, args
     eval.stdin(Stdio::piped());
     eval.stdout(Stdio::piped());
     match eval.spawn() {
-        Ok(x) => util::connect_process(ws, x, false),
+        Ok(x) => util::connect_process(ws, x, false, timeout_ms),
         Err(x) => fail!("Cannot spawn evaluator process {}: {}", process_name, x),
     };
 }
@@ -58,6 +60,7 @@ fn main() {
         Ok(x) => x,
         Err(x) => crash!("Cannot obtain absolute path of {}: {}", opts.directory.to_str().unwrap_or("NULL"), x),
     };
+    let timeout_ms = (opts.timeout * 1000.0) as u64;
     info!("Rust Turing Arena Light up and running!");
     for client in listener.incoming() {
         let directory = dir_abs.clone();
@@ -182,7 +185,7 @@ fn main() {
                                                         Err(x) => fail!("[{}] Error flushing response: {}", address, x),
                                                     };
                                                     info!("[{}] Connection began with problem \"{}\", service \"{}\"", address, meta.codename, req.service);
-                                                    handle_connection(&mut client, evaluator, args);
+                                                    handle_connection(&mut client, evaluator, args, timeout_ms);
                                                     break;
                                                 }
                                             } else {

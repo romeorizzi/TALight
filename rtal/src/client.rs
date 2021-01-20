@@ -47,8 +47,10 @@ struct ListCommand {
 
 #[derive(Clap, Debug)]
 struct ConnectCommand {
-    #[clap(short, about = "Echo messages on console")]
+    #[clap(short, long, about = "Echo messages on console")]
     echo: bool,
+    #[clap(short, long, about = "Connection timeout (in seconds)", default_value = "3600")]
+    timeout: f64,
     #[clap(about = "Remote problem to connect to")]
     problem: String,
     #[clap(about = "Service wanted", default_value = "solve")]
@@ -175,13 +177,13 @@ fn main() {
                 program.stdout(Stdio::piped());
                 program.stdin(Stdio::piped());
                 match program.spawn() {
-                    Ok(x) => util::connect_process(&mut ws, x, cmd.echo),
+                    Ok(x) => util::connect_process(&mut ws, x, cmd.echo, (cmd.timeout * 1000.0) as u64),
                     Err(x) => crash!("Cannot spawn {}: {}", &cmd.program[0], x),
                 };
             } else {
                 let stdin = std::io::stdin();
                 let stdout = std::io::stdout();
-                util::connect_streams(&mut ws, stdin, stdout, false);
+                util::connect_streams(&mut ws, stdin, stdout, false, (cmd.timeout * 1000.0) as u64);
             }
         }
         SubCommand::Get(cmd) => {

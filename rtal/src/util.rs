@@ -16,7 +16,6 @@ use tungstenite::stream::Stream;
 use tungstenite::Message::Binary;
 
 const TICK_DURATION_MS: u64 = 10;
-const TIMEOUT_MS: u64 = 60 * 1000;
 const BUFFER_SIZE: usize = 1 << 20;
 
 pub trait StreamOp {
@@ -48,7 +47,7 @@ impl StreamOp for Stream<TcpStream, StreamOwned<ClientSession, TcpStream>> {
     }
 }
 
-pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: Write>(ws: &mut WebSocket<T>, mut pout: R, mut pin: W, echo: bool) {
+pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: Write>(ws: &mut WebSocket<T>, mut pout: R, mut pin: W, echo: bool, timeout_ms: u64) {
     match ws.get_mut().set_read_timeout(Some(Duration::from_millis(TICK_DURATION_MS))) {
         Ok(()) => {}
         Err(x) => fail!("Cannot set_read_timeout: {}", x),
@@ -75,7 +74,7 @@ pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: 
         let msg = match ws.read_message() {
             Ok(x) => x,
             Err(Io(x)) if x.kind() == ErrorKind::WouldBlock || x.kind() == ErrorKind::TimedOut => {
-                if Instant::now().duration_since(start) >= Duration::from_millis(TIMEOUT_MS) {
+                if Instant::now().duration_since(start) >= Duration::from_millis(timeout_ms) {
                     break;
                 }
                 match rx.try_recv() {
@@ -119,7 +118,7 @@ pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: 
     };
 }
 
-pub fn connect_process<T: Read + Write + StreamOp>(ws: &mut WebSocket<T>, mut ps: process::Child, echo: bool) {
+pub fn connect_process<T: Read + Write + StreamOp>(ws: &mut WebSocket<T>, mut ps: process::Child, echo: bool, timeout_ms: u64) {
     let stdin = match ps.stdin.take() {
         Some(x) => x,
         None => fail!("Cannot take control of stdin"),
@@ -128,7 +127,7 @@ pub fn connect_process<T: Read + Write + StreamOp>(ws: &mut WebSocket<T>, mut ps
         Some(x) => x,
         None => fail!("Cannot take control of stdout"),
     };
-    connect_streams(ws, stdout, stdin, echo);
+    connect_streams(ws, stdout, stdin, echo, timeout_ms);
     match ps.kill() {
         _ => {}
     }
