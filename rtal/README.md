@@ -74,5 +74,11 @@ Combining the problem specific information you got above by issuing `rtal list s
 rtal connect -a subtask=small sum solve
 ```
 
-Problem `sum` also exemplifies, with its service observe, how to interact with a service through a browser rather than through the terminal.
+Problem `sum` also exemplifies how to interact with a service through a browser rather than through the terminal.
 In this way and by resorting on HTML/CCS/JavaScript technology, nice applets running on the problem solver site can be designed for more user friendly interactions.
+Just look in the `applets` directory of the project and run
+
+```bash
+~/TAlight/applets$ google-chrome sum-protoapplet.html
+```
+In this file, it is easy to spot out and substitute the hardcoded problem-specific parts and get an analogous page for a first browser mediated interaction also for other problems. One can start from here in order to develop ad-hoc applets specific to other problems.
