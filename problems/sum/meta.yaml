@@ -2,23 +2,32 @@ codename: sum
 attachments_folder: att
 services:
   sum:
-    evaluator: sum_onserver.py
+    evaluator: sum_server.py
     args:
       lang:
         regex: ^(en|it)$
         default: it
       numbers:
-        regex: ^(small|big)$
-        default: small
+        regex: ^(onedigit|twodigits|big)$
+        default: twodigits
       obj:
         regex: ^(any|max_product)$
         default: any
-  sum_and_product:
-    evaluator: sum_and_product_onserver.py
+  sum_and_difference:
+    evaluator: sum_and_difference_server.py
     args:
       lang:
         regex: ^(en|it)$
         default: it
       numbers:
-        regex: ^(small|big)$
-        default: small
+        regex: ^(onedigit|twodigits|big)$
+        default: onedigit
+  sum_and_product:
+    evaluator: sum_and_product_server.py
+    args:
+      lang:
+        regex: ^(en|it)$
+        default: it
+      numbers:
+        regex: ^(onedigit|twodigits|big)$
+        default: onedigit

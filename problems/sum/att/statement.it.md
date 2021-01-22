@@ -30,48 +30,42 @@ S> # ho troppo carico ora per tenere in piedi questa piacevolissima conversazion
 S> ! :)
 ```
 
-Esempio di interazione che prende avvio da terminale ma poi richiede coinvolgimento di programma P in locale:
-
-```t
-S> # buongiorno!
-S> ? 42
-L> 11 31
-S> y vero! 42=11+31
-S> ? 22
-L> # clone streams my_excutable_program
-L> 22 0
-L> Ctrl-D
-S> ? 33
-P> ! 33 0
-```
-
-
 ## Servizi offerti
 
-I servizi offerti per questo problema, e relativi parametri di utilizzo,
-sono rilevabili dall'apposito comando di `TAlight`:
+Assumendo di aver collocato nella propria variabile di ambiente `PATH` la cartella `$TAlight/rtal/target/debug/rtal`, dove $TAlight indichi il percorso al repo git dove TAlight è stato collocato,
+l'elenco dei servizi offerti per il problema `sum` può essere ottenuto invocando a riga di comando il comando:
+```bash
+> rtal list sum
+```
+
+Leggendo l'output di questo comando scopriamo che i servizi offerti sono tre: `sum`, `sum_and_difference` e `sum_and_product`.
+Il servizio `sum` si presta alla conduzione del dialogo di cui sopra.
+Il servizio `sum_and_difference` conduce un analogo dialogo dove il server, ad ogni query, prescrive non solo la somma ma anche il prodotto dei due numeri, ora univoci, da ritornargli.
+In `sum_and_product` il server prescrive somma e prodotto dei due numeri da determinare.
+
+Per ottenere informazioni più di dettaglio, quali i parametri di utilizzo dei servizi, si immetta:
 
 ```bash
-> rtal/target/debug/rtal list sum -v
+> rtal list sum -v
 ```
 Leggendo ed interpretando l'output di questo comando scopriamo diverse cose.
-I servizi offerti sono due: `sum` e `sum_and_product`.
-Un'informazione non direttamente deducibile è che il primo servizio è inteso a condurre il dialogo di cui sopra, mentre il secondo conduce un analogo dialogo dove il server, ad ogni query, prescrive non solo la somma ma anche il prodotto dei due numeri da ritornargli.
-Scopriamo che attualmente entrambi i servizi prevedono il supporto per due lingue (italiano ed inglese) e consentono la richiesta di lavorare con numeri più grossi (non meglio specificato il range) attraverso il parametro `numbers`. Si noti che `small` è il valore di default per questo parametro. Settando opportunamente il valore di default per il parametro `lang` nel file `meta.yaml` del problema il docente imposta la lingua di default. Anche un problem-solver (studente) potrà operare questa modifica e personalizzazione se lavora in locale, ossia lanciando il server `rtald` in locale e modificando il file `meta.yaml` nella sua copia del problema `sum` che si è scaricato in locale.
-Lasciamo a tè l'esplorazione su come vadano interpretate le ulteriori informazioni reperite dal file `meta.yaml`. Un punto importante è: `TAlight` è stato progettato per promuovere possibilità di esplorazione autonoma e ciò che noi chiamiamo brake-on-through-to-the-other-side, ossia la transizione da problem-solver a problem-maker.
+Scopriamo ad esempio che il servizio `sum` prevede il supporto per due lingue (italiano ed inglese) e consente, attraverso il parametro `numbers`, la richiesta di lavorare con numeri di una sola cifra oppure più grossi (non meglio specificato il range), mentre `twodigits` è il valore di default per questo parametro.
+La lingua di default è l'italiano. Tutti i valori di default sono settati dal docente nel file `meta.yaml` del problema. Anche un problem-solver (studente) potrà operare questa modifica e personalizzazione se ha scaricato l'intero problema in locale: lanciato il server `rtald` in locale e modificando il file `meta.yaml` nella sua copia del problema `sum` potrà riconfigurare ogni comportamento ed esplorare nuove possibilità.
+Lasciamo a tè di riscontrare come vadano interpretate le ulteriori informazioni reperite dal file `meta.yaml`. Un punto importante è: `TAlight` è stato progettato per promuovere possibilità di esplorazione autonoma e ciò che noi chiamiamo brake-on-through-to-the-other-side, ossia la transizione da problem-solver a problem-maker.
 
-Quando hai compreso la challenge che spesso resta sottostante ad un servizio, individuando un tuo metodo generale, puoi costruire un tuo bot che sostenga in tua vece il dialogo col server.
+Quando hai compreso la challenge che spesso resta sottostante ad un servizio, ed individuato un tuo metodo generale per la soluzione del problema, puoi costruire un tuo bot che sostenga in tua vece il dialogo col server.
 
 Puoi poi metterlo in campo con:
 
 ```bash
-rtal connect -a numbers=small sum sum_and_product  -- sum_and_product_mysolution.py
+rtal connect -a numbers=big sum sum_and_product  -- sum_and_product_mysolution.py
 ```
-Se vuoi poi osservare da vicino come avvenga l'interazione tra il tuo bot `sum_and_product_mysolution.py` ed il servizio `sum_and_product` da noi offerto per il problema `sum`, ti basta aggiungere il paramtro `-e` come segue: 
+Ovviamente il file `sum_and_product_mysolution.py` dovrà avere i permessi settati per poter essere eseguito, non è invece importante il linguaggio che hai scelto per produrre un tale eseguibile.
+Se vuoi puoi osservare da vicino come avvenga l'interazione tra il tuo bot `sum_and_product_mysolution.py` ed il servizio `sum_and_product` da noi offerto per il problema `sum`, ti basta aggiungere il paramtro `-e` come segue: 
 
 
 ```bash
-rtal connect -e -a numbers=small sum sum_and_product  -- sum_and_product_mysolution.py
+rtal connect -e -a numbers=big sum sum_and_product  -- sum_and_product_mysolution.py
 ```
 
 Menzioniamo infine che nella cartelle `applets` del progetto `TAlight`, il file `sum-protoapplet.html` esemplifica le basi su come realizzare l'interazione entro un browser. Puoi vederlo in azione ad esempio con

@@ -73,15 +73,16 @@ From this you understand that two services (`sum` and `sum_and_product`) are up 
 Combining the problem specific information you got above by issuing `rtal list sum -v` with the TAlight core instructions you get with `rtal connect --help` you could decide to try the following service:
 
 ```bash
-rtal connect -a numbers=small sum sum_and_product
+rtal connect -a numbers=big sum sum_and_product
 ```
 
 ```bash
-rtal connect -a numbers=small sum sum -- sum_mysolution.py
+rtal connect -a numbers=big sum sum -- sum_mysolution.py
 ```
 
 In the first case you will enjoy a direct interaction with the server through the terminal (this can be enough or anyhow play helpful to find out about the service and the protocol of the interaction).
-In the second case you connect your local solution program or bot `sum_mysolution.py` to the server to check out how your method you have therein encoded performs. 
+In the second case you connect your local solution program or bot `sum_mysolution.py` to the server to check out how your method you have therein encoded performs.
+Clearly the file `sum_mysolution.py` must have the correct permissions in order to be executed on your local system. In other words the file must be an excutable, but otherwise any programming language could have been used to produced it. 
 If you want to observe the interaction between you bot and the server you can issue:
 
 ```bash
