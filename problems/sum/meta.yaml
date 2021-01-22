@@ -1,18 +1,24 @@
 codename: sum
 attachments_folder: att
 services:
-  observe:
-    evaluator: observe.py
+  sum:
+    evaluator: sum_onserver.py
     args:
       lang:
         regex: ^(en|it)$
         default: it
-  solve:
-    evaluator: solve.py
+      numbers:
+        regex: ^(small|big)$
+        default: small
+      obj:
+        regex: ^(any|max_product)$
+        default: any
+  sum_and_product:
+    evaluator: sum_and_product_onserver.py
     args:
       lang:
         regex: ^(en|it)$
         default: it
-      subtask:
+      numbers:
         regex: ^(small|big)$
         default: small

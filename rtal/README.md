@@ -61,17 +61,31 @@ target/debug/rtal list sum -v
 to get something like
 ```bash
 - sum
-  * observe
+  * sum
     # lang [it] { ^(en|it)$ }
-  * solve
-    # subtask [small] { ^(small|big)$ }
+    # obj [any] { ^(any|max_product)$ }
+    # numbers [small] { ^(small|big)$ }
+  * sum_and_product
+    # numbers [small] { ^(small|big)$ }
     # lang [it] { ^(en|it)$ }
 ```
-From this you understand that two services (`observe` and `solve`) are up for this problem on your local machine. If you want to talk with another service use the `-s` option that was mentioned when you run `rtal --help`. (And consider placing the directories of these binaries in your path environment variable. We assume this to be the case to shorten the commands to the essential.)
+From this you understand that two services (`sum` and `sum_and_product`) are up for this problem on your local machine. If you want to talk with another server made available online use the `-s` option that was mentioned when you run `rtal --help`. (And consider placing the directory of these two binaries in your path environment variable. We assume this to be the case to shorten the commands to the essential.)
 Combining the problem specific information you got above by issuing `rtal list sum -v` with the TAlight core instructions you get with `rtal connect --help` you could decide to try the following service:
 
 ```bash
-rtal connect -a subtask=small sum solve
+rtal connect -a numbers=small sum sum_and_product
+```
+
+```bash
+rtal connect -a numbers=small sum sum -- sum_mysolution.py
+```
+
+In the first case you will enjoy a direct interaction with the server through the terminal (this can be enough or anyhow play helpful to find out about the service and the protocol of the interaction).
+In the second case you connect your local solution program or bot `sum_mysolution.py` to the server to check out how your method you have therein encoded performs. 
+If you want to observe the interaction between you bot and the server you can issue:
+
+```bash
+rtal connect -e -a numbers=small sum sum -- sum_mysolution.py
 ```
 
 Problem `sum` also exemplifies how to interact with a service through a browser rather than through the terminal.

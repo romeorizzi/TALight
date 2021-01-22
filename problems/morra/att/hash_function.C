@@ -6,3 +6,7 @@ uint64_t rabin_karp(const char* data) {
     }
     return hash;
 }
+
+// 257ULL --> 257
+// hash = ( hash * 257 + ord(data[i]) ) & ((1 << 64) -1)
+
