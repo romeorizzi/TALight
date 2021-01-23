@@ -42,21 +42,52 @@ To list the problems available, and thus check that both the client and the serv
 ```bash
 ./target/debug/rtal list
 ```
-In the list of available problems at least the example problem `sum` should appear. 
+In the list of available problems at least the example problem `sum` should appear.
+
+
+## SETUP OF THE PATH ENVIRONMENT VARIABLE
+
+Having to remember and digit the whole path `~/TAlight/target/debug/rtal list` in order to access the `TAlight` services will soon appear too lengthly.
+To avoid this, we suggest a convenint way to make them directly accessible. 
+
+From the terminal,
+lounch the following commands
+```bash
+mkdir ~/.bin
+cd ~/.bin
+ln -s ~/TAlight/rtal/target/debug/rtald ~/.bin/
+ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
+```
+
+Then, add the following line at the end of your `~/.bashrc` file.
+
+```bash
+export PATH="$PATH:$HOME/.bin"
+```
+
+Remember that this update will be effective only for terminals you open after having modifyied the `~/.bashrc` file.
+If you want older terminals to get the update then you can issue from them the command
+```bash
+source .bashrc
+```
+
+## Getting some help with `rtal` and `rtald`
 
 Two examples on how to invocate the help sections
 
 ```bash
-./target/debug/rtal --help
+rtal --help
 ```
 
 ```bash
-./target/debug/rtal list --help
+rtal list --help
 ```
+
+## Exploring the services available for a problem
 
 To explore the services available for the example problem `sum` try issuing
 ```bash
-target/debug/rtal list sum -v
+rtal list sum -v
 ```
 to get something like
 ```bash
@@ -72,7 +103,7 @@ to get something like
     # lang [it] { ^(en|it)$ }
     # numbers [onedigit] { ^(onedigit|twodigits|big)$ }
 ```
-From this you understand that three services (`sum`, `sum_and_difference`, and `sum_and_product`) are up for this problem on your local machine. If you want to talk with another server made available online use the `-s` option that is mentioned when you run `rtal --help`. (And consider placing the directory of these two binaries in your `PATH` environment variable. We assume this to be the case to shorten the commands to the essential. Another possibility is to copy the `rtal` and `rtald` binaries in the `/bin` directory of your system.)
+From this you understand that three services (`sum`, `sum_and_difference`, and `sum_and_product`) are up for this problem on your local machine. If you want to talk with another server made available online use the `-s` option that is mentioned when you run `rtal --help`.
 Combining the problem specific information you got above by issuing `rtal list sum -v` with the TAlight core instructions you get with `rtal connect --help` you could decide to try the following service:
 
 ```bash

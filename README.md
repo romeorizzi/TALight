@@ -30,12 +30,27 @@ git checkout git@github.com:romeorizzi/TAlight.git
 ```
 to download the content of this repo. Of course, you can achieve the sam result by any other means if you prefer. 
 
+## OBTAIN THE BINARIES
+
+TAlight consists of two programs, the `rtal` client, and the `rtald` server.
+After downloading this TAlight project public repo, you can either choose to use the binaries made available for your platform (not yet made available at present) or compile them from the source code.
+How to make these two binaries and the basic on how to use them is explained in the file `rtal/README.md` of this repo.
+
 ## SETUP OF THE PATH ENVIRONMENT VARIABLE
 
-Add the following line at the end of your `~/.bashrc` file.
+From the terminal,
+lounch the following commands
+```bash
+mkdir ~/.bin
+cd ~/.bin
+ln -s ~/TAlight/rtal/target/debug/rtald ~/.bin/
+ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
+```
+
+Then, add the following line at the end of your `~/.bashrc` file.
 
 ```bash
-PATH="$HOME/TAlight/rtal/target/debug:$PATH"
+export PATH="$PATH:$HOME/.bin"
 ```
 
 Remember that this update will be effective only for terminals you open after having modifyied the `~/.bashrc` file.
@@ -44,39 +59,33 @@ If you want older terminals to get the update then you can issue from them the c
 source .bashrc
 ```
 
-## SETUP
-
-The TAlight consists of two programs, the `rtal` client, and the `rtald` server.
-After downloading this TAlight project public repo, you can either choose to use the binaries made available for your platform (not yet made available at present) or compile them from the source code.
-How to make these two binaries and the basic on how to use them is explained in the file `rtal/README.md` of this repo.
-
 ## GENERAL USAGE
 
-Once the two executable `rtal` (the rust implemntation of the TA-light client) and `rtald` (the rust implementation of the TA-light daemon) are placed in their directory (`$HOME/TAlight/rtal/target/debug`) then you can already use `TAlight` both in local and in connection to an external server exposing TAlight problems and other material for a course or didactic path.
+Once the two executable `rtal` (the rust implemntation of the TA-light client) and `rtald` (the rust implementation of the TA-light daemon) are placed in their directory (`~/TAlight/rtal/target/debug`) then you can already use `TAlight` both in local and in connection to an external server exposing TAlight problems and other material for a course or didactic path.
 Whether you are a problem solver (usually a student) or a problem maker (usually a teacher, or a senior student), a general truth and assumption in `TAlight` is that working first in local, whenever possibile, is the best way to experiment, learn and develop. You go out in the wide when ready. Active learning is better organized as a multistage process.
 
 After downloading this repo you already have on your machine 
 a set of working test problems to experiment with, and this section offers you a tutorial on them.
 To operate with problems in local, and in this case placed in the   
-`$HOME/TAlight/problems` directory, then you first lounch the `TAlight` daemond with the following command from a terminal:
+`~/TAlight/problems` directory, then you first lounch the `TAlight` daemond with the following command from a terminal:
 
 ```bash
-RUST_LOG=info rtald -d $HOME/TAlight/problems
+RUST_LOG=info rtald -d ~/TAlight/problems
 ```
 We refer to the file `rtal/README.md` of this repo to know more on this and for a more detailed tutorial. Also, both `rtal` and `rtald` have detailed `--help` sections.
 Either way, if you are a problem maker or just interested in offering trough the internet the services for a collection of problems, you can find out how to use the needed option parameters of `rtald` that allow you to expose the service in the wide rather than just in local.
 Still, when creating and experimenting, you will launch `rtald` as above and operate with no need for an internet connection. Only at deploy time you will publish your problems and services on some server where `rtald` is up and running to serve requests coming from the outside.
 
-Now that `rtald` is activated and serving the services associated with the problems in the directory `$HOME/TAlight/problems`, to enjoy and explore these services you need to open another terminal (I prefer vertically splitting my terminator so that I quickly perceive what is going on while experimenting) to send requests with your client `rtal`.
+Now that `rtald` is activated and serving the services associated with the problems in the directory `~/TAlight/problems`, to enjoy and explore these services you need to open another terminal (I prefer vertically splitting my terminator so that I quickly perceive what is going on while experimenting) to send requests with your client `rtal`.
 To list the problems available, and thus check that both the client and the server are working, try the following command:
 ```bash
-./target/debug/rtal list
+rtal list
 ```
 In the list of available problems at least the example problem `sum` should appear. 
 
 To explore the services available for the example problem `sum` try issuing
 ```bash
-target/debug/rtal list sum -v
+rtal list sum -v
 ```
 From the lines of explanation obtained from this command you understand that three services (`sum`, `sum_and_difference`, and `sum_and_product`) are up for this problem on your local machine. If you want to talk with another server made available online use the `-s` option that is mentioned when you run `rtal --help`.
 

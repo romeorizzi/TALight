@@ -65,4 +65,4 @@ for _ in range(TC):
 tmpstr=api["got-bored"]
 print(eval(f"f'{tmpstr}'"))
 #print("! (I got bored)")
-exit(1)
+exit(0)
