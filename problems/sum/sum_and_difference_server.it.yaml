@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+open-channel: "# Servirò: problem=sum, service=sum_and_difference, numbers={ENV_numbers}, lang={ENV_lang}."
+over-sum: "n infatti, {a}+{b}={a+b} > {x+y}."
+under-sum: "n infatti, {a}+{b}={a+b} < {x+y}."
+right-sum: "y infatti, {a}+{b}={n}"
+too-apart: "n infatti, |{a}-{b}|={abs(a-b)} > {x-y}."
+too-close: "n infatti, |{a}-{b}|={abs(a-b)} < {x-y}."
+ok: "y infatti, {a}+{b}={x+y} e |{a}-{b}| = {x-y}."
+got-bored: "! (Mi sono annoiato)"

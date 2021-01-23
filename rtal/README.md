@@ -35,7 +35,7 @@ Thus, if for example you have just compiled the binaries and are sitting in the 
 ```bash
 RUST_LOG=info ./target/debug/rtald -d ../problems/
 ```
-That terminal will now be the place where the server `rtald` updates you on about the requests of service it receives and what is going on with them.
+That terminal will now be the place where the server `rtald` updates you about the requests of service it receives and what is going on with them.
 
 Open another terminal (I prefer vertically splitting my terminator so that I quickly perceive what is going on while experimenting) to send requests with your client `rtal`.
 To list the problems available, and thus check that both the client and the server are working, try the following command:
@@ -61,15 +61,18 @@ target/debug/rtal list sum -v
 to get something like
 ```bash
 - sum
+  * sum_and_difference
+    # numbers [onedigit] { ^(onedigit|twodigits|big)$ }
+    # lang [it] { ^(en|it)$ }
   * sum
-    # lang [it] { ^(en|it)$ }
     # obj [any] { ^(any|max_product)$ }
-    # numbers [small] { ^(small|big)$ }
-  * sum_and_product
-    # numbers [small] { ^(small|big)$ }
+    # numbers [twodigits] { ^(onedigit|twodigits|big)$ }
     # lang [it] { ^(en|it)$ }
+  * sum_and_product
+    # lang [it] { ^(en|it)$ }
+    # numbers [onedigit] { ^(onedigit|twodigits|big)$ }
 ```
-From this you understand that two services (`sum` and `sum_and_product`) are up for this problem on your local machine. If you want to talk with another server made available online use the `-s` option that was mentioned when you run `rtal --help`. (And consider placing the directory of these two binaries in your path environment variable. We assume this to be the case to shorten the commands to the essential.)
+From this you understand that three services (`sum`, `sum_and_difference`, and `sum_and_product`) are up for this problem on your local machine. If you want to talk with another server made available online use the `-s` option that is mentioned when you run `rtal --help`. (And consider placing the directory of these two binaries in your `PATH` environment variable. We assume this to be the case to shorten the commands to the essential. Another possibility is to copy the `rtal` and `rtald` binaries in the `/bin` directory of your system.)
 Combining the problem specific information you got above by issuing `rtal list sum -v` with the TAlight core instructions you get with `rtal connect --help` you could decide to try the following service:
 
 ```bash
@@ -83,7 +86,7 @@ rtal connect -a numbers=big sum sum -- sum_mysolution.py
 In the first case you will enjoy a direct interaction with the server through the terminal (this can be enough or anyhow play helpful to find out about the service and the protocol of the interaction).
 In the second case you connect your local solution program or bot `sum_mysolution.py` to the server to check out how your method you have therein encoded performs.
 Clearly the file `sum_mysolution.py` must have the correct permissions in order to be executed on your local system. In other words the file must be an excutable, but otherwise any programming language could have been used to produced it. 
-If you want to observe the interaction between you bot and the server you can issue:
+If you want to observe the interaction between your bot and the server you can issue:
 
 ```bash
 rtal connect -e -a numbers=small sum sum -- sum_mysolution.py
@@ -96,4 +99,4 @@ Just look in the `applets` directory of the project and run
 ```bash
 ~/TAlight/applets$ google-chrome sum-protoapplet.html
 ```
-In this file, it is easy to spot out and substitute the hardcoded problem-specific parts and get an analogous page for a first browser mediated interaction also for other problems. One can start from here in order to develop ad-hoc applets specific to other problems.
+In this file, it is easy to spot out and substitute the hardcoded problem-specific parts and get an analogous page for a first browser mediated interaction also for other problems. One can start from here in order to develop ad-hoc applets specific to other problems and offer fun active learnig opportunities also to kids that do not yet know how to code.

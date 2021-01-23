@@ -1,0 +1,9 @@
+%YAML 1.2
+---
+open-channel: "# Servirò: problem=sum, service=sum, numbers={ENV_numbers}, obj={ENV_obj}, lang={ENV_lang}."
+too-much: "n infatti, {a}+{b}={a+b} > {n}."
+too-little: "n infatti, {a}+{b}={a+b} < {n}."
+right-sum: "y infatti, {a}+{b}={n}"
+not-balanced: "n infatti, {a-1}+{b+1}={n} e {a-1}*{b+1}={(a-1)*(b+1)} > {a*b}={a}*{b}."
+max-product: "y infatti, x={a} e y={b} hanno prodotto massimo tra le coppie di interi con x+y={n}. Sai il perchè? Hai una dimostrazione per la tua intuizione?"
+got-bored: "! (Mi sono annoiato)"
