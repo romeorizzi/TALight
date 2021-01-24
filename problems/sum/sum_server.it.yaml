@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-open-channel: "# Servirò: problem=sum, service=sum, numbers={ENV_numbers}, obj={ENV_obj}, lang={ENV_lang}."
+open-channel: "# Servirò: problem=sum, service=sum, numbers={ENV_numbers}, obj={ENV_obj}, num_questions={ENV_num_questions}, lang={ENV_lang}."
 too-much: "n infatti, {a}+{b}={a+b} > {n}."
 too-little: "n infatti, {a}+{b}={a+b} < {n}."
 right-sum: "y infatti, {a}+{b}={n}"

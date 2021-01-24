@@ -5,23 +5,27 @@ import yaml
 from sys import exit
 from random import randrange
 
-TC = 10
-
 ENV_lang = environ["TAL_lang"]
 ENV_numbers = environ["TAL_numbers"]
+ENV_num_questions = int(environ["TAL_num_questions"])
 
 with open("sum_and_product_server." + ENV_lang + ".yaml", 'r') as stream:
     try:
-        api = yaml.safe_load(stream)
+        messages_book = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
         print(exc)
 
-tmpstr=api["open-channel"]
-print(eval(f"f'{tmpstr}'"))
-#print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV_numbers}, lang={ENV_lang}.")
+def print_lang(message_code, *args,**kwargs):
+  tmpstr=messages_book[message_code]
+  print(eval(f"f'{tmpstr}'"),*args,**kwargs)
+
+
+
+print_lang("open-channel")        
+#English: print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV_numbers}, num_questions={ENV_num_questions}, lang={ENV_lang}.")
 
 gen_new_pair = True    
-for _ in range(TC):
+for _ in range(ENV_num_questions):
     if gen_new_pair:
         if ENV_numbers == "onedigit":
             x = randrange(10)
@@ -40,29 +44,25 @@ for _ in range(TC):
     a, b = map(int, spoon.split(" "))
     gen_new_pair = False
     if a+b > x+y:
-       tmpstr=api["over-sum"]
-       print(eval(f"f'{tmpstr}'"))
-       #print(f"n indeed, {a}+{b}={a+b} > {x+y}.")
+       print_lang("over-sum")        
+       #English: print(f"n indeed, {a}+{b}={a+b} > {x+y}.")
     elif a+b < x+y:    
-       tmpstr=api["under-sum"]
-       print(eval(f"f'{tmpstr}'"))
-       #print(f"n indeed, {a}+{b}={a+b} < {x+y}.")
+       print_lang("under-sum")        
+       #English: print(f"n indeed, {a}+{b}={a+b} < {x+y}.")
     elif a*b > x*y:    
-       tmpstr=api["over-product"]
-       print(eval(f"f'{tmpstr}'"))
-       #print(f"n indeed, {a}*{b}={a*b} > {x*y}.")
+       print_lang("over-product")        
+       #English: print(f"n indeed, {a}*{b}={a*b} > {x*y}.")
     elif a*b < x*y:    
-       tmpstr=api["under-product"]
-       print(eval(f"f'{tmpstr}'"))
-       #print(f"n indeed, {a}*{b}={a*b} < {x*y}.")
+       print_lang("under-product")        
+       #English: print(f"n indeed, {a}*{b}={a*b} < {x*y}.")
     else:
         assert (a + b == x+y) and (a * b == x*y)
-        tmpstr=api["ok"]
-        print(eval(f"f'{tmpstr}'"))
-        #print(f"y indeed, {a}+{b}={x+y} and {a}*{b}={x*y}.")
+        print_lang("ok")        
+        #English: print(f"y indeed, {a}+{b}={x+y} and {a}*{b}={x*y}.")
         gen_new_pair = True
 
 tmpstr=api["got-bored"]
 print(eval(f"f'{tmpstr}'"))
-#print("! (I got bored)")
+print_lang()        
+#English: print("! (I got bored)")
 exit(0)

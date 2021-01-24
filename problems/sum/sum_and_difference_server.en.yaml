@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-open-channel: "# I will serve: problem=sum, service=sum_and_difference, numbers={ENV_numbers}, lang={ENV_lang}."
+open-channel: "# I will serve: problem=sum, service=sum_and_difference, numbers={ENV_numbers}, num_questions={ENV_num_questions}, lang={ENV_lang}."
 over-sum: "n indeed, {a}+{b}={a+b} > {x+y}."
 under-sum: "n indeed, {a}+{b}={a+b} < {x+y}."
 right-sum: "y indeed, {a}+{b}={n}"
