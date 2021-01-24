@@ -1,5 +1,5 @@
 codename: sum
-attachments_folder: att
+attachments_folder: public
 services:
   sum:
     evaluator: sum_server.py
@@ -14,7 +14,7 @@ services:
         regex: ^(any|max_product)$
         default: any
       num_questions:
-        regex: ([1-9]|[1-2][0-9]|30)
+        regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
   sum_and_difference:
     evaluator: sum_and_difference_server.py
@@ -26,7 +26,7 @@ services:
         regex: ^(onedigit|twodigits|big)$
         default: onedigit
       num_questions:
-        regex: ([1-9]|[1-2][0-9]|30)
+        regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
   sum_and_product:
     evaluator: sum_and_product_server.py
@@ -38,5 +38,5 @@ services:
         regex: ^(onedigit|twodigits|big)$
         default: onedigit
       num_questions:
-        regex: ([1-9]|[1-2][0-9]|30)
+        regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10

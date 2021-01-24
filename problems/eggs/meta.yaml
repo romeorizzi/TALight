@@ -1,5 +1,5 @@
 codename: eggs
-attachments_folder: att
+attachments_folder: public
 services:
   confirm_min_lanci:
     evaluator: confirm_min_throws_server.py
@@ -8,13 +8,13 @@ services:
         regex: (en|it)
         default: it
       min:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_floors:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
   opt_move:
     evaluator: opt_move_server.py
@@ -23,10 +23,10 @@ services:
         regex: (en|it)
         default: it
       n_floors:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
   check_table:
     evaluator: check_table_server.py
@@ -35,10 +35,10 @@ services:
         regex: (en|it)
         default: it
       n_floors:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
   play:
     evaluator: play_server.py
@@ -47,10 +47,10 @@ services:
         regex: (en|it)
         default: it
       n_floors:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
   play_murphy:
     evaluator: play_murphy_server.py
@@ -59,8 +59,8 @@ services:
         regex: (en|it)
         default: it
       n_floors:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
-        regex: ([1-9][0-9]{0,1}|100)
+        regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
