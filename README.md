@@ -112,8 +112,14 @@ In particular, this is certainly true with the problems of this tutorial that ar
 Moreover, working in local prompts you to action, makes for a more concrete understanding, and fosters your experimental attitudes and skills which is one of the goals of `TAlight`.
 As a problem solver, the time to connect to the internet comes only when you want to work on problems that (in full or in part) are not openly published (competitions, exams, didactic reasons, privacy reasons, copyright reasons, ...) or to multiplayer problems or games.
 As a problem maker, you should consider offering the services for a problem from an internet server when your aim is to manage a competition, scouting selection, exam, or you want to offer a challenge through the internet with some control on the flow of information (for example when with your problems you want to instruct and fideize clients to a product). Or possibly when you want to offer a very user friendly and attractive service.
+
 When creating a problem and designing, implementing and experimenting its services within `TAlight` you do not need to offer these services online through an internet server. You can experiment them in local and share them by other means with other problem solvers or makers and collaborators to that project. Each of these recipients will have the possibility to make them alive in local with the open source `TAlight` platform.
 In good conclusion, you need modality 2 almost only to offer a service on the web for problems where some services to the problem solver require pieces that for some reason you do not want to make public. Though the example problems are fully public (you download them as a whole with this repo), still their directory structure is organized as they were not. In the public directory of a problem it is customary to place links to all the materials of the problem that can be made public without spoilering in any way the problem (as for its intended use). 
+
+In the case of the problems of this tutorial the whole of the materials comprising them is included in the directory with their names.
+Nonetheless, one of the first uses of the `rtal` client you will see in this tutorial is how to get the public material for a problem.
+
+
 
 ## STARTING THE TAlight DAEMON
 
@@ -200,7 +206,40 @@ Just look in the `applets` directory of the project and run
 ```
 In this file, it is easy to spot out and substitute the hardcoded problem-specific parts and get an analogous page for a first browser mediated interaction also for other problems. One can start from here in order to develop ad-hoc applets specific to other problems and offer fun active learnig opportunities also to kids that do not yet know how to code.
 
+##
 
+Here is how to use the `rtal` client in order to get the public material for a problem.
+
+```bash
+rtal get eggs 
+```
+After issuing this program you will find a file named `eggs.tar` in your current directory. If you untar this file a directory `eggs` will hatch. Inside this directory you will find all the material of the problem that the problem solver has decided to make public (simply putting symlinks to those files and folders in the directory public).
+Notice that among th materials that the good problem solver has decided not to make public is the file `correct_table.txt`. Do you see the reason why?
+Launch
+
+```bash
+diff -r eggs ~/TAlight/problems/eggs/public 
+```
+to see other differences and ask yourself the reason why.
+
+Yes, problem `eggs` is the next problem of our tutorial.
+But, before leaving problem `sum`,
+visualize its statement.
+We suggest you to use your browser. To do so, first set up your browser so that it can correctly visualize plain Markdown files sitting on your local machine.
+In the case of `chrome` how to do this is explained [here](https://imagecomputing.net/damien.rohmer/teaching/general/markdown_viewer/index.html).
+Then,
+```bash
+rtal get sum
+tar -xvf sum.tar
+google-chrome sum/statement/statement.it.md
+```
+Of course, you could have visualized this file even before asking for the `public` folder of problem `sum`, since the whole of problem `sum`, including its `public` directory and its `statement` where already sittinf on your machine as part of the `TAlight` repo (or you could have browsed this Markdown document from there, in the intrenet). We are however happy that you read this document for last, both as a problem solver and as a problem maker.
+Then,
+to grow as a problem maker, run
+```bash
+diff -r sum ~/TAlight/problems/sum/public 
+```
+and ask yourself the reasons for these more refined differences.
 
 
 ## Vision (pezzi in Italiano)

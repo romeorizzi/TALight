@@ -2,7 +2,7 @@ codename: sum
 attachments_folder: public
 services:
   sum:
-    evaluator: sum_server.py
+    evaluator: services/sum_server.py
     args:
       lang:
         regex: ^(en|it)$
@@ -16,8 +16,11 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
+      colored_feedback:
+        regex: ^(yes|no)$
+        default: yes
   sum_and_difference:
-    evaluator: sum_and_difference_server.py
+    evaluator: services/sum_and_difference_server.py
     args:
       lang:
         regex: ^(en|it)$
@@ -28,8 +31,11 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
+      colored_feedback:
+        regex: ^(yes|no)$
+        default: yes
   sum_and_product:
-    evaluator: sum_and_product_server.py
+    evaluator: services/sum_and_product_server.py
     args:
       lang:
         regex: ^(en|it)$
@@ -40,3 +46,6 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
+      colored_feedback:
+        regex: ^(yes|no)$
+        default: yes

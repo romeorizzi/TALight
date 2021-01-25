@@ -1,8 +1,8 @@
 codename: eggs
 attachments_folder: public
 services:
-  confirm_min_lanci:
-    evaluator: confirm_min_throws_server.py
+  confirm_min_throws:
+    evaluator: services/confirm_min_throws_server.py
     args:
       lang:
         regex: (en|it)
@@ -16,8 +16,11 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      colored_feedback:
+        regex: ^(yes|no)$
+        default: yes
   opt_move:
-    evaluator: opt_move_server.py
+    evaluator: services/opt_move_server.py
     args:
       lang:
         regex: (en|it)
@@ -28,8 +31,11 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      colored_feedback:
+        regex: ^(yes|no)$
+        default: yes
   check_table:
-    evaluator: check_table_server.py
+    evaluator: services/check_table_server.py
     args:
       lang:
         regex: (en|it)
@@ -40,8 +46,11 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      colored_feedback:
+        regex: ^(yes|no)$
+        default: yes
   play:
-    evaluator: play_server.py
+    evaluator: services/play_server.py
     args:
       lang:
         regex: (en|it)
@@ -52,8 +61,11 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      colored_feedback:
+        regex: ^(yes|no)$
+        default: yes
   play_murphy:
-    evaluator: play_murphy_server.py
+    evaluator: services/play_murphy_server.py
     args:
       lang:
         regex: (en|it)
@@ -64,3 +76,6 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      colored_feedback:
+        regex: ^(yes|no)$
+        default: yes
