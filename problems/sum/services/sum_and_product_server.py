@@ -15,14 +15,33 @@ with open("sum_and_product_server." + ENV_lang + ".yaml", 'r') as stream:
     except yaml.YAMLError as exc:
         print(exc)
 
-def print_lang(message_code, *args,**kwargs):
-  tmpstr=messages_book[message_code]
-  print(eval(f"f'{tmpstr}'"),*args,**kwargs)
+def print_lang(*args,**kwargs):
+  message1, *other_messages = args
+  msg1_code, *msg1_colors = message1
+  msg1_str=eval(f"f'{messages_book[msg1_code]}'")
+  msg1_code, *msg1_rendering = message1
+  msg1_attrs = []
+  if type(msg1_rendering[-1]) == list:
+      msg1_attrs = msg1_rendering[-1]
+      msg1_colors = msg1_rendering[:-1]
+  else:
+      msg1_colors = msg1_rendering      
+  if len(other_messages)==0:
+    if ENV_colored_feedback:
+      cprint(msg1_str, *msg1_colors, attrs=msg1_attrs, **kwargs)
+    else:
+      print(msg1_str, **kwargs)
+  else:
+    if ENV_colored_feedback:
+      cprint(msg1_str, *msg1_colors, attrs=msg1_attrs, end="")
+    else:
+      print(msg1_str, end="")  
+    print_lang(*other_messages, **kwargs)
 
 
 
-print_lang("open-channel")        
-#English: print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV_numbers}, num_questions={ENV_num_questions}, lang={ENV_lang}.")
+print_lang(["open-channel", "magenta", "on_blue"])        
+#English: print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV_numbers}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
 
 gen_new_pair = True    
 for _ in range(ENV_num_questions):
@@ -36,33 +55,31 @@ for _ in range(ENV_num_questions):
         else:
             x = randrange(2**32)
             y = randrange(2**32)
-    print("?", x+y, x*y)
+    cprint("? {x+y} {x*y}", "yellow", "on_blue", ["bold"])
     spoon = input().strip()
     while spoon[0] == '#':
-        print(spoon)
+        cprint(spoon, 'magenta', 'on_blue')
         spoon = input().strip()
     a, b = map(int, spoon.split(" "))
     gen_new_pair = False
     if a+b > x+y:
-       print_lang("over-sum")        
-       #English: print(f"n indeed, {a}+{b}={a+b} > {x+y}.")
+       print_lang(["no_answ", "red", "on_blue", ["blink"]], ["over-sum", "yellow", "on_blue", ["underline"]])        
+       #English: print(f"No! indeed, {a}+{b}={a+b} > {x+y}.")
     elif a+b < x+y:    
-       print_lang("under-sum")        
-       #English: print(f"n indeed, {a}+{b}={a+b} < {x+y}.")
+       print_lang(["no_answ", "red", "on_blue", ["blink"]], ["under-sum", "yellow", "on_blue", ["underline"]])        
+       #English: print(f"No! indeed, {a}+{b}={a+b} < {x+y}.")
     elif a*b > x*y:    
-       print_lang("over-product")        
-       #English: print(f"n indeed, {a}*{b}={a*b} > {x*y}.")
+       print_lang(["no_answ", "red", "on_blue", ["blink"]], ["over-product", "yellow", "on_blue", ["underline"]])        
+       #English: print(f"No! indeed, {a}*{b}={a*b} > {x*y}.")
     elif a*b < x*y:    
-       print_lang("under-product")        
-       #English: print(f"n indeed, {a}*{b}={a*b} < {x*y}.")
+       print_lang(["no_answ", "red", "on_blue", ["blink"]], ["under-product", "yellow", "on_blue", ["underline"]])        
+       #English: print(f"No! indeed, {a}*{b}={a*b} < {x*y}.")
     else:
         assert (a + b == x+y) and (a * b == x*y)
-        print_lang("ok")        
-        #English: print(f"y indeed, {a}+{b}={x+y} and {a}*{b}={x*y}.")
+        print_lang(["ok_answ", "green", "on_blue"], ["ok", "grey", "on_blue"])        
+        #English: print(f"OK! indeed, {a}+{b}={x+y} and {a}*{b}={x*y}.")
         gen_new_pair = True
 
-tmpstr=api["got-bored"]
-print(eval(f"f'{tmpstr}'"))
-print_lang()        
+print_lang(["got-bored", "magenta", "on_blue"])        
 #English: print("! (I got bored)")
 exit(0)

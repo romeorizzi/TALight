@@ -18,7 +18,7 @@ services:
         default: 100
       colored_feedback:
         regex: ^(yes|no)$
-        default: yes
+        default: no
   opt_move:
     evaluator: services/opt_move_server.py
     args:
@@ -33,7 +33,7 @@ services:
         default: 100
       colored_feedback:
         regex: ^(yes|no)$
-        default: yes
+        default: no
   check_table:
     evaluator: services/check_table_server.py
     args:
@@ -48,7 +48,7 @@ services:
         default: 100
       colored_feedback:
         regex: ^(yes|no)$
-        default: yes
+        default: no
   play:
     evaluator: services/play_server.py
     args:
@@ -63,7 +63,7 @@ services:
         default: 100
       colored_feedback:
         regex: ^(yes|no)$
-        default: yes
+        default: no
   play_murphy:
     evaluator: services/play_murphy_server.py
     args:
@@ -78,4 +78,4 @@ services:
         default: 100
       colored_feedback:
         regex: ^(yes|no)$
-        default: yes
+        default: no
