@@ -16,9 +16,6 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
-      colored_feedback:
-        regex: ^(yes|no)$
-        default: no
   opt_move:
     evaluator: services/opt_move_server.py
     args:
@@ -31,9 +28,6 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
-      colored_feedback:
-        regex: ^(yes|no)$
-        default: no
   check_table:
     evaluator: services/check_table_server.py
     args:
@@ -46,9 +40,6 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
-      colored_feedback:
-        regex: ^(yes|no)$
-        default: no
   play:
     evaluator: services/play_server.py
     args:
@@ -61,9 +52,6 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
-      colored_feedback:
-        regex: ^(yes|no)$
-        default: no
   play_murphy:
     evaluator: services/play_murphy_server.py
     args:
@@ -76,6 +64,3 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
-      colored_feedback:
-        regex: ^(yes|no)$
-        default: no

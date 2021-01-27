@@ -9,7 +9,7 @@ from multilanguage import *
 ENV_lang = environ["TAL_lang"]
 ENV_numbers = environ["TAL_numbers"]
 ENV_num_questions = int(environ["TAL_num_questions"])
-ENV_colored_feedback = (environ["TAL_colored_feedback"] == "yes")
+ENV_colored_feedback = (environ["TAL_ISATTY"] == "1")
 
 set_colors(ENV_colored_feedback)
 messages_book = select_book_and_lang("sum_and_product_server", ENV_lang)

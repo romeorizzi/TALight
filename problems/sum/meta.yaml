@@ -16,9 +16,6 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
-      colored_feedback:
-        regex: ^(yes|no)$
-        default: no
   sum_and_difference:
     evaluator: services/python/sum_and_difference_server.py
     args:
@@ -31,9 +28,6 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
-      colored_feedback:
-        regex: ^(yes|no)$
-        default: no
   sum_and_product:
     evaluator: services/python/sum_and_product_server.py
     args:
@@ -46,6 +40,3 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
-      colored_feedback:
-        regex: ^(yes|no)$
-        default: no

@@ -8,9 +8,9 @@ colored_print = None
 numNO = 0
 numOK = 0
 
-def set_colors(ENV_colored_feedback):
+def set_colors(with_colors):
     global colored_print
-    colored_print = ENV_colored_feedback
+    colored_print = with_colors
     
 def select_book_and_lang(service_name, ENV_lang):
     messages_book_file = service_name + "." + ENV_lang + ".yaml"
