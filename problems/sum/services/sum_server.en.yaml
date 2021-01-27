@@ -1,11 +1,8 @@
 %YAML 1.2
 ---
 open-channel: "# I will serve: problem=sum, service=sum, numbers={ENV_numbers}, obj={ENV_obj}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."
-ok_answ: "OK! "
-no_answ: "No! "
 too-much: "indeed, {a}+{b}={a+b} > {s}."
 too-little: "indeed, {a}+{b}={a+b} < {s}."
 right-sum: "indeed, {a}+{b}={s}"
 not-balanced: "indeed, even {a-1}+{b+1}={s} and {a-1}*{b+1}={(a-1)*(b+1)} > {a*b}={a}*{b}."
 max-product: "indeed, x={a} and y={b} have maximum product among the integer numbers with x+y={s}. Do you know why? Do you have a proof for your intuition?"
-got-bored: "! (I got bored)"

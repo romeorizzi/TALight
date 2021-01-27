@@ -1,12 +1,9 @@
 %YAML 1.2
 ---
 open-channel: "# I will serve: problem=sum, service=sum_and_product, numbers={ENV_numbers}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."
-ok_answ: "OK! "
-no_answ: "No! "
 over-sum: "indeed, {a}+{b}={a+b} > {x+y}."
 under-sum: "indeed, {a}+{b}={a+b} < {x+y}."
 right-sum: "indeed, {a}+{b}={n}"
 over-product: "indeed, {a}*{b}={a*b} > {x*y}."
 under-product: "indeed, {a}*{b}={a*b} < {x*y}."
 ok: "indeed, {a}+{b}={x+y} and {a}*{b}={x*y}."
-got-bored: "! (I got bored)"
