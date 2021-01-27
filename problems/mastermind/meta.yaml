@@ -1,5 +1,5 @@
 codename: mastermind
-attachments_folder: attachments_folder
+public_folder: attachments_folder
 services:
   score:
     evaluator: score_tentative_code.py

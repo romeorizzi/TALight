@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 codename: tiling_mxn-boards_with_1x2-boards
-attachments_folder: attachments_folder
+public_folder: attachments_folder
 services:
   goals:
     evaluator: eval_submission.py

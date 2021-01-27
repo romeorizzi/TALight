@@ -1,5 +1,5 @@
 codename: sum
-attachments_folder: public
+public_folder: public
 services:
   sum:
     evaluator: services/python/sum_server.py
