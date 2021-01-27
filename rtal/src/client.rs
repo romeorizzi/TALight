@@ -51,6 +51,8 @@ struct ListCommand {
 struct ConnectCommand {
     #[clap(short, long, about = "Echo messages on console")]
     echo: bool,
+    #[clap(short, long, about = "Disable colored output")]
+    no_color: bool,
     #[clap(short, long, about = "Connection timeout (in seconds)", default_value = "3600")]
     timeout: f64,
     #[clap(about = "Remote problem to connect to")]
@@ -178,7 +180,7 @@ fn main() {
                 codename: cmd.problem,
                 service: cmd.service,
                 args: args,
-                isatty: cmd.program.len() == 0,
+                isatty: !cmd.no_color && cmd.program.len() == 0,
             });
             match send_and_wait(&mut ws, request) {
                 proto::Command::ConnectionBegin => {}
