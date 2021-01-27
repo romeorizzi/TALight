@@ -5,16 +5,18 @@ mod proto;
 mod util;
 
 use clap::Clap;
+use fwdansi::write_ansi;
 use log::{error, info};
 use regex::Regex;
 use rustls::{ClientSession, StreamOwned};
 use sha2::{Digest, Sha512};
 use std::collections::HashMap;
 use std::fs;
-use std::io::{ErrorKind, Read, Write};
+use std::io::{self, ErrorKind, Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 use std::process::{self, exit, Stdio};
 use std::sync::Arc;
+use termcolor::{ColorChoice, StandardStream};
 use tungstenite::stream::Stream;
 use tungstenite::{error, Message, WebSocket};
 use url::{Origin, Url};
@@ -67,6 +69,20 @@ struct GetCommand {
     problem: String,
     #[clap(short, long, about = "Path to output the attachments [default: <problemname>.tar]")]
     output: Option<String>,
+}
+
+struct ColorStdout {
+    stream: StandardStream,
+}
+
+impl Write for ColorStdout {
+    fn write(&mut self, data: &[u8]) -> io::Result<usize> {
+        write_ansi(&mut self.stream, data).map(|_| data.len())
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        self.stream.flush()
+    }
 }
 
 fn main() {
@@ -162,6 +178,7 @@ fn main() {
                 codename: cmd.problem,
                 service: cmd.service,
                 args: args,
+                isatty: cmd.program.len() == 0,
             });
             match send_and_wait(&mut ws, request) {
                 proto::Command::ConnectionBegin => {}
@@ -182,7 +199,7 @@ fn main() {
                 };
             } else {
                 let stdin = std::io::stdin();
-                let stdout = std::io::stdout();
+                let stdout = StandardStream::stdout(ColorChoice::Auto);
                 util::connect_streams(&mut ws, stdin, stdout, false, (cmd.timeout * 1000.0) as u64);
             }
         }

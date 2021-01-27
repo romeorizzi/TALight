@@ -33,7 +33,7 @@ struct CliArgs {
     timeout: f64,
 }
 
-fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, args: HashMap<String, String>, timeout_ms: u64) {
+fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, args: HashMap<String, String>, timeout_ms: u64, tty: bool) {
     let mut eval = process::Command::new(&evaluator);
     let process_name = evaluator.to_str().unwrap_or("NULL".into()).to_string();
     evaluator.pop();
@@ -41,6 +41,7 @@ fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, args
     for (argname, argvalue) in args {
         eval.env("TAL_".to_string() + &argname, argvalue);
     }
+    eval.env("TAL_ISATTY", if tty { "1" } else { "0" });
     eval.stdin(Stdio::piped());
     eval.stdout(Stdio::piped());
     match eval.spawn() {
@@ -185,7 +186,7 @@ fn main() {
                                                         Err(x) => fail!("[{}] Error flushing response: {}", address, x),
                                                     };
                                                     info!("[{}] Connection began with problem \"{}\", service \"{}\"", address, meta.codename, req.service);
-                                                    handle_connection(&mut client, evaluator, args, timeout_ms);
+                                                    handle_connection(&mut client, evaluator, args, timeout_ms, req.isatty);
                                                     break;
                                                 }
                                             } else {

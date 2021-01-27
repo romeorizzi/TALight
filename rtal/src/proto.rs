@@ -31,6 +31,7 @@ pub struct ConnectionRequest {
     pub codename: String,
     pub service: String,
     pub args: HashMap<String, String>,
+    pub isatty: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default)]
