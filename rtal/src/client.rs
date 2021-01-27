@@ -199,7 +199,9 @@ fn main() {
                 };
             } else {
                 let stdin = std::io::stdin();
-                let stdout = StandardStream::stdout(ColorChoice::Auto);
+                let stdout = ColorStdout {
+                    stream: StandardStream::stdout(ColorChoice::Auto),
+                };
                 util::connect_streams(&mut ws, stdin, stdout, false, (cmd.timeout * 1000.0) as u64);
             }
         }
