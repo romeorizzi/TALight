@@ -164,22 +164,21 @@ Either way, you should get something like
     # numbers [onedigit] { ^(onedigit|twodigits|big)$ }
     # num_questions [10] { ^([1-9]|[1-2][0-9]|30)$ }
     # lang [it] { ^(en|it)$ }
-    # colored_feedback [no] { ^(yes|no)$ }
-  * sum_and_product
-    # numbers [onedigit] { ^(onedigit|twodigits|big)$ }
-    # colored_feedback [no] { ^(yes|no)$ }
-    # num_questions [10] { ^([1-9]|[1-2][0-9]|30)$ }
-    # lang [it] { ^(en|it)$ }
   * sum
     # lang [it] { ^(en|it)$ }
-    # colored_feedback [no] { ^(yes|no)$ }
     # obj [any] { ^(any|max_product)$ }
     # numbers [twodigits] { ^(onedigit|twodigits|big)$ }
     # num_questions [10] { ^([1-9]|[1-2][0-9]|30)$ }
+  * sum_and_product
+    # lang [it] { ^(en|it)$ }
+    # num_questions [10] { ^([1-9]|[1-2][0-9]|30)$ }
+    # numbers [onedigit] { ^(onedigit|twodigits|big)$ }
 ```
 From this you understand that three services (`sum`, `sum_and_difference`, and `sum_and_product`) are up for this problem on your local machine. All three services will conduct a dialogue where you (or a bot you designed to act in your place) will be asked 10 questions (all instances of a problem defined by the service). Indeed, 10 is the default value for the parameter `num_questions`. You can specify a different value for this parameter (in the next example it is set to 13) but it can take only integers in the interval $[1,30]$ as specified by the regexp `^([1-9]|[1-2][0-9]|30)$` reported above.
 To know how to interpret (if a problem solver) or write (if a problem maker) these regexps, we refer you to [regexp syntax](https://docs.rs/regex/1.4.3/regex/#syntax).
-You can also change the default values of the parameters by editing the meta.yaml file in the directory of the problem. For example, try setting to `on` the parameter `colored_feedback` to obtain a more effective look on the feedback you receive from the server (it is turned off in the out-of-the-factory settings since it could still give problems on Windows platforms).
+You can also change the default values of the parameters by editing the `meta.yaml` file in the directory of the problem. For example, try changing the default value for the `lang` parameter as specifyied in the `meta.yaml` file.
+Not all parameters that `rtal` sends to the deamon to adapt the behavior of the services are specified in the `meta.yaml`.
+For example, for all problems you can ask that the feedback is sent to you in black and white even when `rtal` detects that your `tty` supports the use of the colors. You can enforce the suppressing of the colors in any case with the `-no-color` flag (`-n` is its short form). You get to know about these service-agnostic flags and parameters by issuing `rtal connect --help`.
 
 Combining the problem specific information you got above by issuing `rtal list sum -v` with the TAlight core instructions you get with `rtal connect --help` you could decide to try one of the following two services:
 
