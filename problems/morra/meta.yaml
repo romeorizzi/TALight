@@ -1,5 +1,5 @@
 codename: morra
-attachments_folder: att
+public_folder: att
 services:
   play:
     evaluator: player.py

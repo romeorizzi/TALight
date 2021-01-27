@@ -1,5 +1,5 @@
 codename: eggs
-attachments_folder: public
+public_folder: public
 services:
   confirm_min_throws:
     evaluator: services/confirm_min_throws_server.py

@@ -207,7 +207,7 @@ fn main() {
                                                 Ok(x) => x,
                                                 Err(x) => fail!("[{}] Requested invalid problem: {}", address, x),
                                             };
-                                            att.push(meta.attachments_folder);
+                                            att.push(meta.public_folder);
                                             let mut archive = tar::Builder::new(Vec::new());
                                             let attpath = att.to_str().unwrap_or("NULL").to_string();
                                             match archive.append_dir_all(meta.codename, att) {
