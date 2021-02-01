@@ -1,1 +1,1 @@
-../statement.en.md
+statement.en.md

@@ -1,1 +1,1 @@
-../statement.it.md
+statement.it.md
