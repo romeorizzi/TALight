@@ -7,6 +7,30 @@ services:
       lang:
         regex: (en|it)
         default: it
-      n_rounds:
-        regex: [1-9][0-9]{0,2}
+      num_rounds:
+        regex: ^([1-9][0-9]{0,2}|100)$
         default: 10
+      hash:
+        regex: ^(rabin_karp|SHA-1)$
+        default: rabin_karp
+  compute_hash:
+    args:
+      lang:
+        regex: (en|it)
+        default: it
+      clean_string: ^[[:alnum:]]{4,70}$
+      hash:
+        regex: ^(rabin_karp|SHA-1)$
+        default: rabin_karp
+  verify_hash:
+    args:
+      lang:
+        regex: (en|it)
+        default: it
+      num_checks:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 100
+      hash:
+        regex: ^(rabin_karp|SHA-1)$
+        default: rabin_karp
+  
