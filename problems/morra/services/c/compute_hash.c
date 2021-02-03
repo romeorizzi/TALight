@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <cstring>
+#include <string.h>
 #include <inttypes.h>
 
 uint64_t rabin_karp(const char* ASCII_string) {
@@ -22,7 +22,14 @@ int main() {
    else {
      char str[100];
      printf("Poichè non hai specificato il parametro 'clean_string', ti chiediamo di immettere ora la stringa in chiaro, di cui computare l'hash:\n");
-     scanf("%s",str);
+     // scanf("%s",str);  but safer w.r.t. possible attacks:
+     fgets(str,100,stdin);
+     if(str[strlen(str)-1] == '\n')
+       str[strlen(str)-1] = '\0';
+     if(strlen(str)>64) {
+       fprintf(stderr, "Hai immesso una stringa più lunga di 64 caratteri.\n");
+       exit(0);
+     }
      printf("h(%s)=\n", str);
      uint64_t h = rabin_karp(str);
      printf("%" PRIu64 "\n", h);

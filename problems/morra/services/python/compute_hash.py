@@ -3,9 +3,8 @@
 from os import environ
 from sys import exit
 
-#ENV_lang = environ["TAL_lang"]
-#ENV_s = environ["TAL_clean_string"]
-ENV_s = None
+ENV_lang = environ.get("TAL_lang")
+ENV_s = environ.get("TAL_white_string")
 
 def rabin_karp(ASCII_string):
     hash = 0
