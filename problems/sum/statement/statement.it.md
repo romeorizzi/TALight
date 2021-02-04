@@ -12,8 +12,8 @@ Un problema curato in `TAlight` è un giocattolo ben congegnato che viene con de
 
 Indipendentemente dal fatto che siano inviate dal server (S) al dispositivo in locale (L) oppure viceversa, le righe che iniziano col carattere cancelletto '#' sono commenti, e possono essere inviate in modo del tutto asincrono.
 Quando il server invia una riga che inizia col carattere '!' comunica la chiusura del canale per terminare un'interazione che si è svolta nel rispetto del protocollo sotteso, la riga può proseguire con un commento.
-L'interazione può essere altresì interrotta da S quando L non rispetta il protocollo o le tempistiche, o in caso di problemi di connessione. Se riscontrate comportamenti che si discostano da questi segnalateceli opportunament documentati e circostanziati.
-Voi problem solvers, o il bot che dovesse agire in vostra vece, sul canale potete fare quello che volete, per meglio sperimentare, il che include la possibilità di commettere errori. Se l'errore comporta una violazione del protocollo il server chiuderà il canale senza garantire ulteriore feedback. Lo saprete perchè l'ultima riga ricevuta da S non inizia in '!'. 
+L'interazione può essere altresì interrotta da S quando L non rispetta il protocollo o le tempistiche, o in caso di problemi di connessione. Se riscontrate comportamenti che si discostano da questi segnalateceli opportunamente documentati e circostanziati.
+Voi problem solvers, o il bot che dovesse agire in vostra vece, sul canale potete fare quello che volete, per meglio sperimentare, il che include la possibilità di commettere errori. Se l'errore comporta una violazione del protocollo il server chiuderà il canale senza garantire ulteriore feedback. Lo saprete perché l'ultima riga ricevuta da S non inizia in '!'. 
 
 ## problema `sum`, cenni sul protocollo sotteso
 

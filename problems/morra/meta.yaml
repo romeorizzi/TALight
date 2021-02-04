@@ -2,11 +2,42 @@ codename: morra
 public_folder: att
 services:
   play:
-    evaluator: player.py
+    evaluator: services/python/play_server.py
     args:
       lang:
         regex: (en|it)
         default: it
-      n_rounds:
-        regex: [1-9][0-9]{0,2}
+      num_rounds:
+        regex: ^([1-9][0-9]{0,2}|100)$
         default: 10
+      hash_type:
+        regex: ^(rabin_karp|SHA-1)$
+        default: rabin_karp
+  compute_hash:
+    evaluator: services/python/compute_hash_server.py
+    args:
+      lang:
+        regex: (en|it)
+        default: it
+      white_string:
+        regex: ^([[:alnum:]]|_){4,100}$
+        default: None
+      hash_type:
+        regex: ^(rabin_karp|SHA-1)$
+        default: rabin_karp
+  verify_hash:
+    evaluator: services/python/verify_hash_server.py
+    args:
+      lang:
+        regex: (en|it)
+        default: it
+      num_checks:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 100
+      hash_type:
+        regex: ^(rabin_karp|SHA-1)$
+        default: rabin_karp
+      length:
+        regex: ^(rabin_karp|SHA-1)$
+        default: 64
+  
