@@ -1,27 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <inttypes.h>
 
-uint64_t rabin_karp(const char* ASCII_string) {
-    uint64_t hash = 0;
-    size_t size = strlen(ASCII_string);
-    for(size_t i = 0; i < size; i++) {
-        hash = hash * 257ULL + ASCII_string[i];
-    }
-    return hash;
-}
+#include "hash_rabin_karp.h"
+
 
 int main() {
-   char* ENV_s = getenv("TAL_clean_string");
-   if(ENV_s!=NULL) {
-     printf("h(%s)=\n", ENV_s);
-     uint64_t h = rabin_karp(ENV_s);
+   char* ENV_lang = getenv("TAL_lang");
+   char* ENV_white_string = getenv("TAL_white_string");
+   char* ENV_hash_type = getenv("TAL_hash_type");
+   int   ENV_colored_feedback = (getenv("TAL_ISATTY") == "1");
+
+   // Da aggiugere libreria per supporto dei colori e multilinga ...
+   
+   if(ENV_white_string!=NULL) {
+     uint64_t h = rabin_karp(ENV_white_string);
      printf("%" PRIu64 "\n", h);
    }
    else {
      char str[100];
-     printf("Poichè non hai specificato il parametro 'clean_string', ti chiediamo di immettere ora la stringa in chiaro, di cui computare l'hash:\n");
+     printf("Poichè non hai specificato il parametro 'white_string', ti chiediamo di immettere ora la stringa in chiaro, di cui computare l'hash:\n");
      // scanf("%s",str);  but safer w.r.t. possible attacks:
      fgets(str,100,stdin);
      if(str[strlen(str)-1] == '\n')
@@ -30,9 +28,8 @@ int main() {
        fprintf(stderr, "Hai immesso una stringa più lunga di 64 caratteri.\n");
        exit(0);
      }
-     printf("h(%s)=\n", str);
      uint64_t h = rabin_karp(str);
-     printf("%" PRIu64 "\n", h);
+     printf("h(%s) = %" PRIu64 "\n", str, h);
    }
    exit(0);
 }

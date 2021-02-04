@@ -1,0 +1,6 @@
+%YAML 1.2
+---
+open-channel: "# I will serve: problem=morra, service=compute_hash, white_string={ENV_white_string}, hash={ENV_hash_type}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."
+ask-for-white-string: "Since the parameter white_string was not specified in this call, we now ask you to insert the string in white, of which to compute the hash:"
+give-only-hash: "{rabin_karp(ENV_white_string)}"
+give-hash-verbose: "h({str}) = {rabin_karp(str)}"

@@ -1,34 +1,50 @@
 # What is TAlight
 
-Are you a teacher or passionate about transmitting some problem solving competences/technique/methods or proposing an interesting and instructive challenge?
+Are you a teacher/student/researcher/executive passionate about transmitting some problem solving competences/techniques/methods/skills? Do you want to acquire new competences or really promote them? Would you like to promote your discoveries or products? Would you like to propose an interesting and instructive challenge, or organize a selection or recruiting campaign?
 TAlight offers you the perfect tool for you to make up your favorite problem into a full fledged didactic inclusive Montessori toy, allowing to organize and offer smooth interactive didactic paths around it and automatic feedback services to promote autonomous exploration and learning.
-Also the social dimension is empowered:
+Also the social and collaborative dimension is empowered in our TAlight approach and vision.
 
-Do you want to become a problem maker but know only one programming language?
+Do you want to acquire new competences? Then we refer to you as a _problem solver_. If you can find out the content for you under TAlight, then both an active in-depth learning experience and pure fun are assured. 
 
-TAlight is a minimal but powerful system for the design, the sharing, the experimentation and the use of interactive didactic problems which offer rich ongoing instant feedback services to the problem solver (the student or trainee).
+Do you want to transmit competences or assess them? Do you want to share or spread active knowledge on a subject or a complex tool or product? Then you should consider becoming a _problem maker_ and forge your content in the form of compelling problems and services.
 
-Most problems in TAlight are of an algorithmic nature.
-This repository offers TAlight plus some example problems working under TAlight.
-These problems prompt and stimulate the student and are meant also to show how making new interesting problem under TAlight is in their and in your reach.
-TAlight is meant to be simple to work with.
-Among its commitments in our vision come:
+> Do you want to become a problem maker but know only one programming language?
 
-1. no one left behind: the feedback provided to the students should be rich and stimulating
-2. brake on through to the other side: when solving problems and interacting with the system, problem solvers should grow autonomous and get the desire and competence to become a problem maker
-3. to be a problem maker the knowledge f one single programming language of your choice (and just the basics of it) should be enough
-4. possible to design didactic projects articulated on problems meant as Montessori games
-5. possible for teachers to share and collaborate on these didactic projects
+TAlight is a minimal but powerful system for the design, the sharing, the experimentation and the use of interactive didactic problems which offer rich ongoing instant feedback services to the problem solver (the student, or trainee, or employee, or fellow research colleague).
+
+Right now, most problems already available in TAlight are of an algorithmic nature. This is mainly because of our own background and because algorithms often represent the ultimate form of archetypal knowledge. However, we would not set/state limits as for now on what can be done and welcome any kind of sensibility and new muses. 
+This repository offers the TAlight core plus some example problems working under it.
+These problems prompt and stimulate the problem solver but are mainly meant to illustrate how making new interesting problems under TAlight is in your and in their reach. Also in their is an important point in our vision.
+TAlight is meant to be simple to work with and highly democratic.
+Among its commitments, in our vision come:
+
+1. no one left behind: the feedback provided to the students should be rich and stimulating.
+2. brake on through to the other side: when solving problems and interacting with the system, problem solvers should grow autonomous and get the desire and competence to become problem makers on their own. In fact, this will be the true mark on how much they have learned and grown.
+3. to be a problem maker the knowledge of one single programming language of your choice (and just the basics of it) should be enough. Our ambitions are high, we know that competences, experience, and knowledge can go much beyond the mere tools.
+4. possible to design didactic projects articulated on problems meant as Montessori games.
+5. possible for teachers to share and collaborate on these didactic projects.
 6. no installation required, neither for the problem solvers nor for the problem makers.
 
 ## DOWNLOAD
 
+If for some reason you do not have and do not want to install `git` on the machine you have currently at hand, then you can anyhow download and test TAlight both in connection to TAlight problems served in the cloud and/or those contained in the tutorial we offer here in this battery included repo. In this way you might find out what TAlight might offer you before installing anything, or you can use it or show it to others on a laboratory or public library machine on which you have no installation rights.
+How to do this is explained only at the end of this section because we highly recommend you to get to know `git` and how much it can offer you, and then proceed downloading this repo through git, so that you will remain connected with this open source projects and have the opportunity to easily update. The reasons for you to get into `git` are: not only `git` offers you important facilities (free and robust) like backups and working directories that you can in simplicity share among your devices, and powerful and intrinsically safe time machines over them and on your work, but it is the portal to the world of open source projects (it was designed by Linus Torvalds in order to scale up its projects concerning the development of the Linux operating system to a wide collaborative dimension). Not only TAlight is open source software, but we foresee and foster that problem makers from different countries/regions (but maybe of a same discipline) might collaborate on more or less open didactic projects.
+
+### How to get `git` and its power
+
+...
+
+### Assuming you have `git` installed on your machine
+
 Open a shell, go to your home directory, and enter:
 
 ```bash
-git checkout git@github.com:romeorizzi/TAlight.git
+git clone git@github.com:romeorizzi/TAlight
 ```
-to download the content of this repo. Of course, you can achieve the sam result by any other means if you prefer. 
+to download the content of this repo. Of course, you can achieve the same result by any other means if you prefer, like .
+You can also download and/or place the TAlight folder in any other directory of your preference.
+In the following we assume `~/TAlight` is the path to the folder on your system. Of course, you are free to rename it at your will or place it elsewhre.
+For example, if you use programs like Github Desktop to manage your git repositories, you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TAlight` in the following instructions. Just replace `~/TAlight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
 
 ## OBTAIN THE BINARIES
 
@@ -36,7 +52,7 @@ TAlight consists of two programs, the `rtal` client, and the `rtald` server.
 After downloading this TAlight project public repo, you can either choose to use the binaries made available for your platform (not yet made available at present) or compile them from the source code.
 How to make these two binaries and the basic on how to use them is explained in the file `rtal/README.md` of this repo.
 
-In the following we assume that the files `~/TAlight/rtal/target/debug/rtal` and `~/TAlight/rtal/target/debug/rtald` exist on your machine and have excution permission.
+In the following we assume that the files `~/TAlight/rtal/target/debug/rtal` and `~/TAlight/rtal/target/debug/rtald` exist (possibly with a different placement, as explained above) on your machine and have execution permission.
 You can check this with
 
 ```bash
@@ -53,8 +69,16 @@ which should also list out the parameters and subcommands of these `TAlight` com
 ## SETUP OF THE PATH ENVIRONMENT VARIABLE
 
 Having to remember and digit the whole path `~/TAlight/rtal/target/debug/` in order to use the `TAlight` commands will soon appear too lengthy.
+
+To solve this, if you are on Unix/Linux/Mac, you can enter the following command in the terminal:
+```bash
+PATH=$PATH:/Users/MariaCamilla/Documents/GitHub/TAlight/rtal/target/debug/
+```
+You will have to do this on every terminal from which you want to issue TAlight commands.
+
+
 There are many ways to solve this nuisance, like copying the binaries into a directory listed into the `PATH` environment variable on your system, or adding the path `~/TAlight/rtal/target/debug/` to your `PATH` environment variable.
-Here we suggest a convenint way to make the `TAlight` commands directly accessible, it can be applied on any platform that allows for simlinks (or hardlinks). We word it out step by step for Unix/Linux/Mac: 
+Here we suggest a convenient way to make the `TAlight` commands directly accessible, it can be applied on any platform that allows for simlinks (or hardlinks). We word it out step by step for Unix/Linux/Mac: 
 
 
 From the terminal,

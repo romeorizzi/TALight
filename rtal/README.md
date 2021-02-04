@@ -27,7 +27,7 @@ However, using the debug version (binaries placed in the `~/TAlight/rtal/target/
 
 ### Debug build
 
-To build this project in debug mode issue the command:
+To build this project in debug mode, first move to the directory `rtal` of this repo as downloaded on your local machine, and then issue the command:
 ```bash
 cargo build
 ```
@@ -35,7 +35,7 @@ You'll then find the built binaries in `target/debug/`.
 
 ### Release build
 
-To build this project in debug mode issue the command:
+To build this project in release mode, first move to the directory `rtal` of this repo as downloaded on your local machine, and then issue the command:
 ```bash
 cargo build --release
 ```
