@@ -80,22 +80,26 @@ fn main() {
     };
     dir.pop();
     for (name, service) in meta.services.iter() {
-        dir.push(&service.evaluator);
-        #[cfg(not(target_family = "unix"))]
-        match metadata(&dir) {
-            Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
-            Ok(x) if !x.is_file() => error!(stdout, "Evaluator of service \"{}\" is not a file", name),
-            Ok(_) => {}
-        };
-        #[cfg(target_family = "unix")]
-        match metadata(&dir) {
-            Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
-            Ok(x) if !x.is_file() => error!(stdout, "Evaluator of service \"{}\" is not a file", name),
-            Ok(x) if x.mode() & 0o111 != 0o111 => error!(stdout, "Evaluator of service \"{}\" is not executable", name),
-            Ok(x) if x.mode() & 0o444 != 0o444 => warn!(stdout, "Evaluator of service \"{}\" is not readable", name),
-            Ok(_) => {}
-        };
-        dir.pop();
+        if service.evaluator.len() > 0 {
+            dir.push(&service.evaluator[0]);
+            #[cfg(not(target_family = "unix"))]
+            match metadata(&dir) {
+                Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
+                Ok(x) if !x.is_file() => error!(stdout, "Evaluator of service \"{}\" is not a file", name),
+                Ok(_) => {}
+            };
+            #[cfg(target_family = "unix")]
+            match metadata(&dir) {
+                Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
+                Ok(x) if !x.is_file() => error!(stdout, "Evaluator of service \"{}\" is not a file", name),
+                Ok(x) if x.mode() & 0o111 != 0o111 => error!(stdout, "Evaluator of service \"{}\" is not executable", name),
+                Ok(x) if x.mode() & 0o444 != 0o444 => warn!(stdout, "Evaluator of service \"{}\" is not readable", name),
+                Ok(_) => {}
+            };
+            dir.pop();
+        } else {
+            error!(stdout, "Evaluator of service \"{}\" is empty", name);
+        }
         if let Some(args) = &service.args {
             for (argname, arg) in args.iter() {
                 if !arg.regex.is_match(&arg.default) {

@@ -14,7 +14,7 @@ pub struct Meta {
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Service {
-    pub evaluator: String,
+    pub evaluator: Vec<String>,
     pub args: Option<HashMap<String, Arg>>,
 }
 
