@@ -12,6 +12,10 @@ path="src/client.rs"
 name="rtald"
 path="src/server.rs"
 
+[[bin]]
+name="rtalc"
+path="src/check.rs"
+
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 serde_yaml = "0.8"

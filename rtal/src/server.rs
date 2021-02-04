@@ -21,7 +21,6 @@ use tungstenite::protocol::WebSocket;
 use tungstenite::Message::{Binary, Text};
 
 #[derive(Clap)]
-#[clap(name = "Rust Turing Arena Light Server")]
 struct CliArgs {
     #[clap(short, long, about = "Problems root directory", default_value = ".")]
     directory: PathBuf,
