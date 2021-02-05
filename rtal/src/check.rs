@@ -81,22 +81,22 @@ fn main() {
     dir.pop();
     for (name, service) in meta.services.iter() {
         if service.evaluator.len() > 0 {
-            dir.push(&service.evaluator[0]);
+            let mut eval = dir.clone();
+            eval.push(&service.evaluator[0]);
             #[cfg(not(target_family = "unix"))]
-            match metadata(&dir) {
+            match metadata(&eval) {
                 Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
                 Ok(x) if !x.is_file() => error!(stdout, "Evaluator of service \"{}\" is not a file", name),
                 Ok(_) => {}
             };
             #[cfg(target_family = "unix")]
-            match metadata(&dir) {
+            match metadata(&eval) {
                 Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
                 Ok(x) if !x.is_file() => error!(stdout, "Evaluator of service \"{}\" is not a file", name),
                 Ok(x) if x.mode() & 0o111 != 0o111 => error!(stdout, "Evaluator of service \"{}\" is not executable", name),
                 Ok(x) if x.mode() & 0o444 != 0o444 => warn!(stdout, "Evaluator of service \"{}\" is not readable", name),
                 Ok(_) => {}
             };
-            dir.pop();
         } else {
             error!(stdout, "Evaluator of service \"{}\" is empty", name);
         }
