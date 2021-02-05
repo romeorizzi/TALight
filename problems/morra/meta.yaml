@@ -37,4 +37,9 @@ services:
       hash_type:
         regex: ^(rabin_karp|sha1|sha256|sha512)$
         default: rabin_karp
-  
+      alphabet_white_string:
+        regex: ^(safely_printable|ascii_letters|digits|punctuation|ascii_uppercase|ascii_lowercase)$
+        default: safely_printable
+      length_white_string:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 64  

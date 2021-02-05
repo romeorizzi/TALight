@@ -1,0 +1,7 @@
+%YAML 1.2
+---
+open-channel: "# Servirò: problem=morra, service=verify_hash, num_checks={ENV_num_checks}, alphabet_white_string={ENV_alphabet_white_string}, length_white_string={ENV_length_white_string}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."
+prompt: "Prego, computa ed immetti lo hash della stringa:"
+put-white-string: "{white_string}"
+give-only-hash: "{hash_value(ENV_white_string,ENV_hash_type)}"
+give-hash-verbose: "infatti, h({white_string}) = {hash_value(white_string,ENV_hash_type)}"
