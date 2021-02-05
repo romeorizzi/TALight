@@ -21,7 +21,6 @@ use tungstenite::protocol::WebSocket;
 use tungstenite::Message::{Binary, Text};
 
 #[derive(Clap)]
-#[clap(name = "Rust Turing Arena Light Server")]
 struct CliArgs {
     #[clap(short, long, about = "Problems root directory", default_value = ".")]
     directory: PathBuf,
@@ -33,8 +32,11 @@ struct CliArgs {
     timeout: f64,
 }
 
-fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, args: HashMap<String, String>, timeout_ms: u64, tty: bool) {
+fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, evaluator_args: &[String], args: HashMap<String, String>, timeout_ms: u64, tty: bool) {
     let mut eval = process::Command::new(&evaluator);
+    for arg in evaluator_args {
+        eval.arg(arg);
+    }
     let process_name = evaluator.to_str().unwrap_or("NULL".into()).to_string();
     evaluator.pop();
     eval.current_dir(evaluator);
@@ -154,7 +156,10 @@ fn main() {
                                                 Err(x) => fail!("[{}] Requested invalid problem: {}", address, x),
                                             };
                                             if let Some(service) = meta.services.get(&req.service) {
-                                                evaluator.push(&service.evaluator);
+                                                if service.evaluator.len() == 0 {
+                                                    fail!("[{}] Missing evaluator for {} {}", address, meta.codename, req.service);
+                                                }
+                                                evaluator.push(&service.evaluator[0]);
                                                 let mut error = None;
                                                 let mut args: HashMap<String, String> = HashMap::new();
                                                 if let Some(meta_args) = &service.args {
@@ -186,7 +191,7 @@ fn main() {
                                                         Err(x) => fail!("[{}] Error flushing response: {}", address, x),
                                                     };
                                                     info!("[{}] Connection began with problem \"{}\", service \"{}\"", address, meta.codename, req.service);
-                                                    handle_connection(&mut client, evaluator, args, timeout_ms, req.isatty);
+                                                    handle_connection(&mut client, evaluator, &service.evaluator[1..], args, timeout_ms, req.isatty);
                                                     break;
                                                 }
                                             } else {

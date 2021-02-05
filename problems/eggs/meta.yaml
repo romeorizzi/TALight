@@ -2,7 +2,7 @@ codename: eggs
 public_folder: public
 services:
   confirm_min_throws:
-    evaluator: services/confirm_min_throws_server.py
+    evaluator: [services/confirm_min_throws_server.py]
     args:
       lang:
         regex: (en|it)
@@ -17,7 +17,7 @@ services:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
   opt_move:
-    evaluator: services/opt_move_server.py
+    evaluator: [services/opt_move_server.py]
     args:
       lang:
         regex: (en|it)
@@ -29,7 +29,7 @@ services:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
   check_table:
-    evaluator: services/check_table_server.py
+    evaluator: [services/check_table_server.py]
     args:
       lang:
         regex: (en|it)
@@ -41,7 +41,7 @@ services:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
   play:
-    evaluator: services/play_server.py
+    evaluator: [services/play_server.py]
     args:
       lang:
         regex: (en|it)
@@ -53,7 +53,7 @@ services:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
   play_murphy:
-    evaluator: services/play_murphy_server.py
+    evaluator: [services/play_murphy_server.py]
     args:
       lang:
         regex: (en|it)

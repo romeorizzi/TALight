@@ -2,21 +2,21 @@ codename: mastermind
 public_folder: attachments_folder
 services:
   score:
-    evaluator: score_tentative_code.py
+    evaluator: [score_tentative_code.py]
     args:
       lang:
         regex: (en|it)
         default: it
   check_scoring:
-    evaluator: check_scoring.py
+    evaluator: [check_scoring.py]
     args:
       lang:
         regex: (en|it)
         default: it
   play:
-    evaluator: mastermind_player.py 
+    evaluator: [mastermind_player.py] 
   goals:
-    evaluator: eval_submission.py
+    evaluator: [eval_submission.py]
     args:
       lang:
         regex: (en|it)
