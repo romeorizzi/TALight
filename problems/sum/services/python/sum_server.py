@@ -21,7 +21,7 @@ def print_lang(msg_code, *msg_rendering, **kwargs):
 
         
 
-print_lang("open-channel", "green", "on_blue")        
+print_lang("open-channel", "green")        
 #English: print(f"# I will serve: problem=sum, service=sum, numbers={ENV_numbers}, obj={ENV_obj}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
 
 gen_new_s = True    
@@ -33,7 +33,7 @@ for _ in range(ENV_num_questions):
             s = randrange(100)
         else:
             s = randrange(2**64)
-    TAcprint(f"? {s}", "yellow", "on_blue", ["bold"])
+    TAcprint(f"? {s}", "yellow", ["bold"])
     spoon = input().strip()
     while spoon[0] == '#':
         spoon = input().strip()
@@ -41,11 +41,11 @@ for _ in range(ENV_num_questions):
     gen_new_s = False
     if a+b > s:
         TAcNO() 
-        print_lang("too-much", "yellow", "on_blue", ["underline"])        
+        print_lang("too-much", "yellow", ["underline"])        
         #English: print(f"indeed, {a}+{b}={a+b} > {s}.")
     elif a+b < s:
         TAcNO() 
-        print_lang("too-little", "yellow", "on_blue", ["underline"])        
+        print_lang("too-little", "yellow", ["underline"])        
         #English: print(f"indeed, {a}+{b}={a+b} < {s}.")
     else: # a + b == n
         if ENV_obj == "max_product":
@@ -53,16 +53,16 @@ for _ in range(ENV_num_questions):
                 a,b = b,a
             if a-b > 1:
                 TAcNO() 
-                print_lang("not-balanced", "yellow", "on_blue", ["underline"])        
+                print_lang("not-balanced", "yellow", ["underline"])        
                 #English: print(f"indeed, {a-1}+{b+1}={s} and {a-1}*{b+1}={(a-1)*(b+1)} > {a*b}={a}*{b}.")
             else:
                 gen_new_s = True
                 TAcOK()
-                print_lang("max-product", "grey", "on_blue")        
+                print_lang("max-product", "grey")        
                 #English: print(f"indeed, x={a} and y={b} have maximum product among the integer numbers with x+y={s}. Do you know why? Do you have a proof for your intuition?")
         else:
             TAcOK()
-            print_lang("right-sum", "grey", "on_blue")        
+            print_lang("right-sum", "grey")        
             #English: print(f"indeed, {a}+{b}={s}")
             gen_new_s = True
             

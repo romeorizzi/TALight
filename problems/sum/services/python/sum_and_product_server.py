@@ -20,7 +20,7 @@ def print_lang(msg_code, *msg_rendering, **kwargs):
 
 
 
-print_lang("open-channel", "green", "on_blue")        
+print_lang("open-channel", "green")        
 #English: print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV_numbers}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
 
 gen_new_pair = True    
@@ -35,7 +35,7 @@ for _ in range(ENV_num_questions):
         else:
             x = randrange(2**32)
             y = randrange(2**32)
-    TAcprint(f"? {x+y} {x*y}", "yellow", "on_blue", ["bold"])
+    TAcprint(f"? {x+y} {x*y}", "yellow", ["bold"])
     spoon = input().strip()
     while spoon[0] == '#':
         spoon = input().strip()
@@ -43,24 +43,24 @@ for _ in range(ENV_num_questions):
     gen_new_pair = False
     if a+b > x+y:
         TAcNO() 
-        print_lang("over-sum", "yellow", "on_blue", ["underline"])        
+        print_lang("over-sum", "yellow", ["underline"])        
         #English: print(f"indeed, {a}+{b}={a+b} > {x+y}.")
     elif a+b < x+y:    
         TAcNO() 
-        print_lang("under-sum", "yellow", "on_blue", ["underline"])        
+        print_lang("under-sum", "yellow", ["underline"])        
         #English: print(f"indeed, {a}+{b}={a+b} < {x+y}.")
     elif a*b > x*y:    
         TAcNO() 
-        print_lang("over-product", "yellow", "on_blue", ["underline"])        
+        print_lang("over-product", "yellow", ["underline"])        
         #English: print(f"indeed, {a}*{b}={a*b} > {x*y}.")
     elif a*b < x*y:    
         TAcNO() 
-        print_lang("under-product", "yellow", "on_blue", ["underline"])        
+        print_lang("under-product", "yellow", ["underline"])        
         #English: print(f"indeed, {a}*{b}={a*b} < {x*y}.")
     else:
         TAcOK() 
         assert (a + b == x+y) and (a * b == x*y)
-        print_lang("ok", "grey", "on_blue")        
+        print_lang("ok", "grey")        
         #English: print(f"indeed, {a}+{b}={x+y} and {a}*{b}={x*y}.")
         gen_new_pair = True
 

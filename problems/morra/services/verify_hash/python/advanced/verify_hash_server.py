@@ -24,30 +24,29 @@ def print_lang(msg_code, *msg_rendering, **kwargs):
 
         
 
-print_lang("open-channel", "green", "on_blue")        
-#English: print(f"# I will serve: problem=morra, service=verify_hash, num_checks={ENV_num_checks}, alphabet_white_string={ENV_alphabet_white_string}, length_white_string={ENV_length_white_string}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
+print_lang("open-channel", "green")        
+#English: print(f"# I will serve: problem=morra, service=verify_hash, num_checks={ENV_num_checks}, hash_type={ENV_hash_type}, alphabet_white_string={ENV_alphabet_white_string}, length_white_string={ENV_length_white_string}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
 
 for i in range(1,ENV_num_checks+1):
     if ENV_alphabet_white_string == "safely_printable":
         alphabet_string = string.ascii_letters + string.digits + string.punctuation
     else:
         alphabet_string = getattr(string, ENV_alphabet_white_string)
-    alphabet_string = alphabet_string.replace("/","0")    
     white_string = ''.join(random.choices(alphabet_string, k=ENV_length_white_string))
-    print_lang("prompt", "yellow", "on_blue")
+    print_lang("prompt", "yellow")
     #English: print("Please, compute and send me the hash of the following string:");
-    print_lang("put-white-string", "yellow", "on_blue", ["bold"])
+    print_lang("put-white-string", "yellow", ["bold"])
     #All-languages: print("{white_string}");
     hash_str_submitted=input()
     hash_str_true=hash_value(white_string,ENV_hash_type)
     if hash_str_submitted==hash_str_true:
         TAcOK()
-        print_lang("give-hash-verbose", "grey", "on_blue")
-        #English: print(f"indeed, h({white_string}) = {hash_value(white_string),ENV_hash_type}")
+        print_lang("give-hash-verbose", "grey")
+        #English: print(f"indeed, h({white_string}) = {hash_value(white_string,ENV_hash_type)}")
     else:
         TAcNO()
-        print_lang("give-hash-verbose", "yellow", "on_blue", ["underline"])
-        #English: print(f"indeed, h({white_string}) = {hash_value(white_string),ENV_hash_type}")
+        print_lang("give-hash-verbose", "yellow", ["underline"])
+        #English: print(f"indeed, h({white_string}) = {hash_value(white_string,ENV_hash_type)}")
         exit(0)
     
 exit(0)

@@ -20,10 +20,9 @@ Quando il server invia una riga che inizia col carattere '!' comunica la chiusur
 L'interazione può essere altresì interrotta da S quando L non rispetta il protocollo o le tempistiche, o in caso di problemi di connessione. Se riscontrate comportamenti che si discostano da questi segnalateceli opportunamente documentati e circostanziati.
 Voi problem solvers, o il bot che dovesse agire in vostra vece, sul canale siete ovviamente liberi di sperimentare, il che include la possibilità di commettere errori. Se l'errore comporta una violazione del protocollo il server chiuderà il canale senza garantire ulteriore feedback. Lo saprete perché l'ultima riga ricevuta da S non inizia in '!'.
 
-Per proporre un giro di morra S invia una riga col solo carattere '?'.
-In seguito, senza un ordine stabilito, ciascun $X \in \{S,L\}$ genera una stringa random di $60$ caratteri, e invia sul canale l'hash di un messaggio $m_X$ che inizia con le due cifre $m\in [0,4]$ ed $s\in [0,8]$, ciascuna seguita da un carattere di underscore '_', cui segue la stringa random di 60 caratteri generata al momento.
-Dopo aver ricevuto l'hash prodotto dall'avversario, ciascun giocatore espone in chiaro il proprio messaggio $m_X$ di cui aveva precedentemente inviato l'hash. In questo modo è possibile verificare, da parte di entrambi i giocatori, che le giocate di morra sono state una indipendente dall'altra.
-Viene accreditato un punto a quel giocatore che ha offerto un $s$ pari alla somma $X_S + X_L$ dei due $X$ prodotti, uno da sè stesso e l'altro dall'avversario.
+Ciscuna mano del gioco comincia con S che invia una riga col solo carattere '?'. In seguito, ciascun $X \in \{S,L\}$ genera una stringa random $R_X$ di $60$ caratteri e due cifre $m_X\in [0,4]$ ed $s_X\in [0,8]$ ed invia sul canale l'hash $h(t_X)$ di una stringa $t_X=m_X\_s_X\_R_X$ di $64$ caratteri, che inizia con le due cifre $m_X$ ed $s_X$, ciascuna seguita da un carattere di underscore, e termina con la stringa random $R_X$ di $60$ caratteri generata al momento.
+Dopo aver ricevuto l'hash prodotto dall'avversario, ciascun giocatore $X \in \{S,L\}$ espone sul canale la propria stringa $t_X$ ora in chiaro. In questo modo è assicurato che nessun giocatore possa sfruttato informazioni ricevute dall'avvrsario prima di impegnare la sua giocata per quel turno, ed entrambi i giocatori potranno facilmente verificare che lo hash del testo in chiaro dell'avversario coincide con la giocata anticipata in busta.
+A seguito della mano viene accreditato un punto ad ogni giocatore $X$ per il quale $s_X = $m_S + m_L$.
 
 
 ## Esempio di interazione

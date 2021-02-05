@@ -2,7 +2,7 @@ codename: morra
 public_folder: public
 services:
   play:
-    evaluator: [services/python/play_server.py]
+    evaluator: [services/play/python/advanced/play_server.py]
     args:
       lang:
         regex: (en|it)
@@ -14,7 +14,7 @@ services:
         regex: ^(rabin_karp|sha1|sha256|sha512)$
         default: rabin_karp
   compute_hash:
-    evaluator: [services/python/compute_hash_server.py]
+    evaluator: [services/compute_hash/python/advanced/compute_hash_server.py]
     args:
       lang:
         regex: (en|it)
@@ -26,7 +26,7 @@ services:
         regex: ^(rabin_karp|sha1|sha256|sha512)$
         default: rabin_karp
   verify_hash:
-    evaluator: [services/python/verify_hash_server.py]
+    evaluator: [services/verify_hash/python/advanced/verify_hash_server.py]
     args:
       lang:
         regex: (en|it)

@@ -1,0 +1,5 @@
+%YAML 1.2
+---
+open-channel: "# Servirò: problem=morra, service=play, num_rounds={ENV_num_rounds}, hash_type={ENV_hash_type}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."
+you-cheated: "Non barare: h({white_str_yours}) = {should_be} != {hash_str_yours}."
+summary: "Tuo punteggio: {score_yours}. Mio punteggio: {score_mine}. Hai barato {cheated} volte."

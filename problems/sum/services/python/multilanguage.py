@@ -39,34 +39,16 @@ def TAcprint(msg_text, *msg_rendering, **kwargs):
 def TAcNO():
     global numNO
     numNO += 1
-    TAcprint("No! ", "red", "on_blue", ["blink"], end="")
+    TAcprint("No! ", "red", ["blink", "bold"], end="")
 
 def TAcOK():
     global numOK
     numOK += 1
-    TAcprint("OK! ", "green", "on_blue", end="")
+    TAcprint("OK! ", "green", ["bold"], end="")
 
 def TAcGotBored():
-    TAcprintprint("! (I got bored)", "green", "on_blue")
+    TAcprintprint("! (I got bored)", "white")
 
 def TAcFinished():
-    TAcprint(f"! (We have finished) Correct answers: {numOK}/{numOK+numNO}", "green", "on_blue")
-
-
-# OLD STUFF:
-
-def old_print_lang(*args,**kwargs):
-  message1, *other_messages = args
-  msg1_code, *msg1_rendering = message1
-  msg1_text=eval(f"f'{messages_book[msg1_code]}'")
-  if 'end' in kwargs:
-      backup_end = kwargs['end']
-  else:
-      backup_end = None      
-  if len(other_messages)>0:
-    kwargs['end'] = ""
-  TAcprint(msg1_text, *msg1_rendering, **kwargs)
-  if len(other_messages)>0:
-      kwargs['end'] = backup_end
-      print_lang(*other_messages, **kwargs)
+    TAcprint(f"! (We have finished) Correct answers: {numOK}/{numOK+numNO}", "white")
 

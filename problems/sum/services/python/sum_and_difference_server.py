@@ -20,7 +20,7 @@ def print_lang(msg_code, *msg_rendering, **kwargs):
 
 
 
-print_lang("open-channel", "green", "on_blue")        
+print_lang("open-channel", "green")        
 #English: print(f"# I will serve: problem=sum, service=sum_and_difference, numbers={ENV_numbers}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
 
 gen_new_pair = True    
@@ -37,7 +37,7 @@ for _ in range(ENV_num_questions):
             y = randrange(2**64)
     if x < y:
         x,y = y,x
-    TAcprint(f"? {x+y} {x-y}", "yellow", "on_blue", ["bold"])
+    TAcprint(f"? {x+y} {x-y}", "yellow", ["bold"])
     spoon = input().strip()
     while spoon[0] == '#':
         spoon = input().strip()
@@ -45,24 +45,24 @@ for _ in range(ENV_num_questions):
     gen_new_pair = False
     if a+b > x+y:
         TAcNO() 
-        print_lang("over-sum", "yellow", "on_blue", ["underline"])        
+        print_lang("over-sum", "yellow", ["underline"])        
         #English: print(f"indeed, {a}+{b}={a+b} > {x+y}.")
     elif a+b < x+y:    
         TAcNO() 
-        print_lang("under-sum", "yellow", "on_blue", ["underline"])        
+        print_lang("under-sum", "yellow", ["underline"])        
         #English: print(f"indeed, {a}+{b}={a+b} < {x+y}.")
     elif abs(a-b) > x-y:    
         TAcNO() 
-        print_lang("too-apart", "yellow", "on_blue", ["underline"])        
+        print_lang("too-apart", "yellow", ["underline"])        
         #English: print(f"indeed, |{a}-{b}|={abs(a-b)} > {x-y}.")
     elif abs(a-b) < x-y:    
         TAcNO() 
-        print_lang("too-close", "yellow", "on_blue", ["underline"])        
+        print_lang("too-close", "yellow", ["underline"])        
         #English: print(f"indeed, |{a}-{b}|={abs(a-b)} < {x-y}.")
     else:
         TAcOK() 
         assert (a + b == x+y) and (abs(a-b) == x-y)
-        print_lang("ok", "grey", "on_blue")        
+        print_lang("ok", "grey")        
         #English: print(f"indeed, {a}+{b} = {x+y} and |{a}-{b}| = {x-y}.")
         gen_new_pair = True
 
