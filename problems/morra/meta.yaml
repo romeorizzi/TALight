@@ -1,5 +1,5 @@
 codename: morra
-public_folder: att
+public_folder: public
 services:
   play:
     evaluator: [services/python/play_server.py]
@@ -11,7 +11,7 @@ services:
         regex: ^([1-9][0-9]{0,2}|100)$
         default: 10
       hash_type:
-        regex: ^(rabin_karp|SHA-1)$
+        regex: ^(rabin_karp|sha1|sha256|sha512)$
         default: rabin_karp
   compute_hash:
     evaluator: [services/python/compute_hash_server.py]
@@ -23,7 +23,7 @@ services:
         regex: ^([[:alnum:]]|_){4,100}$
         default: None
       hash_type:
-        regex: ^(rabin_karp|SHA-1)$
+        regex: ^(rabin_karp|sha1|sha256|sha512)$
         default: rabin_karp
   verify_hash:
     evaluator: [services/python/verify_hash_server.py]
@@ -37,7 +37,4 @@ services:
       hash_type:
         regex: ^(rabin_karp|sha1|sha256|sha512)$
         default: rabin_karp
-      length:
-        regex: ^(rabin_karp|SHA-1)$
-        default: 64
   
