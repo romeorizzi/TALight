@@ -1,4 +1,3 @@
-codename: number_theory.infinity_of_N
 public_folder: public
 services:
   bigger_and_bigger:

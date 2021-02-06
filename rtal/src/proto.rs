@@ -65,13 +65,13 @@ impl Packet {
 }
 
 impl Problem {
-    pub fn from(meta: &crate::problem::Meta) -> Problem {
+    pub fn from(meta: &crate::problem::Meta, codename: &str) -> Problem {
         let mut services = HashMap::new();
         for (name, service) in &meta.services {
             services.insert(name.clone(), Service { args: service.args.clone() });
         }
         Problem {
-            codename: meta.codename.clone(),
+            codename: codename.into(),
             services: services,
         }
     }
