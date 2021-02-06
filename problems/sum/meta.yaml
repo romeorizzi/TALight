@@ -2,7 +2,7 @@ codename: sum
 public_folder: public
 services:
   sum:
-    evaluator: [services/python/sum_server.py]
+    evaluator: [services/sum/python/advanced/sum_server.py]
     args:
       lang:
         regex: ^(en|it)$
@@ -17,7 +17,7 @@ services:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
   sum_and_difference:
-    evaluator: [services/python/sum_and_difference_server.py]
+    evaluator: [services/sum_and_difference/python/advanced/sum_and_difference_server.py]
     args:
       lang:
         regex: ^(en|it)$
@@ -29,7 +29,7 @@ services:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
   sum_and_product:
-    evaluator: [services/python/sum_and_product_server.py]
+    evaluator: [services/sum_and_product/python/advanced/sum_and_product_server.py]
     args:
       lang:
         regex: ^(en|it)$
