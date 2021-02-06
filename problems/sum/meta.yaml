@@ -1,4 +1,3 @@
-codename: sum
 public_folder: public
 services:
   sum:

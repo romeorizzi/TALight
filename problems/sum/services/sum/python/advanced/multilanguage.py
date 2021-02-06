@@ -1,1 +1,1 @@
-/home/romeo/TAlight/TAlib/python/multilanguage.py
+../../../../../../TAlib/python/multilanguage.py

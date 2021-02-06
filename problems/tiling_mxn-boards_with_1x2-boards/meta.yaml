@@ -1,6 +1,5 @@
 %YAML 1.2
 ---
-codename: tiling_mxn-boards_with_1x2-boards
 public_folder: attachments_folder
 services:
   goals:

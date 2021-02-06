@@ -7,7 +7,6 @@ pub const META: &str = "meta.yaml";
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Meta {
-    pub codename: String,
     pub public_folder: PathBuf,
     pub services: HashMap<String, Service>,
 }

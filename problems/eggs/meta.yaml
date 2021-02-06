@@ -1,4 +1,3 @@
-codename: eggs
 public_folder: public
 services:
   confirm_min_throws:

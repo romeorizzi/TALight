@@ -1,4 +1,3 @@
-codename: morra
 public_folder: public
 services:
   play:

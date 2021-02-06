@@ -7,7 +7,7 @@ use log::{error, info, warn};
 use proto::{Command, Packet};
 use sha2::{Digest, Sha512};
 use std::collections::HashMap;
-use std::fs::{canonicalize, read_dir, read_to_string};
+use std::fs::{self, canonicalize, read_dir, read_to_string};
 use std::net::TcpListener;
 use std::net::TcpStream;
 use std::path::PathBuf;
@@ -116,7 +116,11 @@ fn main() {
                                                 Ok(x) => x,
                                                 Err(_) => continue,
                                             };
-                                            if let Ok(metadata) = dir.metadata() {
+                                            let codename = match dir.file_name().into_string() {
+                                                Ok(x) => x,
+                                                Err(_) => continue,
+                                            };
+                                            if let Ok(metadata) = fs::metadata(dir.path()) {
                                                 if metadata.is_dir() {
                                                     let mut meta = dir.path();
                                                     meta.push(problem::META);
@@ -134,7 +138,7 @@ fn main() {
                                                             continue;
                                                         }
                                                     };
-                                                    dirs.problems.push(proto::Problem::from(&problem));
+                                                    dirs.problems.push(proto::Problem::from(&problem, &codename));
                                                 }
                                             }
                                         }
@@ -146,7 +150,7 @@ fn main() {
                                 Command::ConnectionRequest(req) if req.codename.contains("..") => Command::ConnectionDenied("Invalid problem codename".into()),
                                 Command::ConnectionRequest(req) => {
                                     let mut directory = directory.clone();
-                                    directory.push(req.codename);
+                                    directory.push(&req.codename);
                                     let mut evaluator = directory.clone();
                                     directory.push(problem::META);
                                     match read_to_string(&directory) {
@@ -157,7 +161,7 @@ fn main() {
                                             };
                                             if let Some(service) = meta.services.get(&req.service) {
                                                 if service.evaluator.len() == 0 {
-                                                    fail!("[{}] Missing evaluator for {} {}", address, meta.codename, req.service);
+                                                    fail!("[{}] Missing evaluator for {} {}", address, req.codename, req.service);
                                                 }
                                                 evaluator.push(&service.evaluator[0]);
                                                 let mut error = None;
@@ -190,7 +194,7 @@ fn main() {
                                                         Ok(()) => {}
                                                         Err(x) => fail!("[{}] Error flushing response: {}", address, x),
                                                     };
-                                                    info!("[{}] Connection began with problem \"{}\", service \"{}\"", address, meta.codename, req.service);
+                                                    info!("[{}] Connection began with problem \"{}\", service \"{}\"", address, req.codename, req.service);
                                                     handle_connection(&mut client, evaluator, &service.evaluator[1..], args, timeout_ms, req.isatty);
                                                     break;
                                                 }
@@ -204,7 +208,7 @@ fn main() {
                                 Command::AttachmentRequest(req) if req.contains("..") => Command::AttachmentDenied("Invalid problem codename".into()),
                                 Command::AttachmentRequest(req) => {
                                     let mut directory = directory.clone();
-                                    directory.push(req);
+                                    directory.push(&req);
                                     let mut att = directory.clone();
                                     directory.push(problem::META);
                                     match read_to_string(&directory) {
@@ -216,7 +220,7 @@ fn main() {
                                             att.push(meta.public_folder);
                                             let mut archive = tar::Builder::new(Vec::new());
                                             let attpath = att.to_str().unwrap_or("NULL").to_string();
-                                            match archive.append_dir_all(meta.codename, att) {
+                                            match archive.append_dir_all(req, att) {
                                                 Ok(()) => {}
                                                 Err(x) => fail!("[{}] Error while creating archive from {}: {}", address, attpath, x),
                                             };
