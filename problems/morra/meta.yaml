@@ -5,7 +5,7 @@ services:
     evaluator: [services/play/python/advanced/play_server.py]
     args:
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
       num_rounds:
         regex: ^([1-9][0-9]{0,2}|100)$
@@ -17,7 +17,7 @@ services:
     evaluator: [services/compute_hash/python/advanced/compute_hash_server.py]
     args:
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
       white_string:
         regex: ^([[:alnum:]]|_){4,100}$
@@ -29,7 +29,7 @@ services:
     evaluator: [services/verify_hash/python/advanced/verify_hash_server.py]
     args:
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
       num_checks:
         regex: ^([1-9][0-9]{0,2}|100)$
