@@ -268,6 +268,69 @@ diff -r sum ~/TAlight/problems/sum/public
 and ask yourself the reasons for these more refined differences.
 
 
+## PROBLEMS WORKING AT PRESENT
+
+1. `sum`
+2. `morra`
+
+## TO THE PROBLEM MAKER
+
+Clearly, problem making is an art. More than we can say is alrady in your hearth abd passion. Our only intention here in this section is to smooth your way to acquire our tools.
+
+Take a problem you have to:
+
+1. think about the comptnce you want to transmit and see if you can pose challenges that make it alive and try to go deep on it.
+
+2. compose a document containing the statement of the problem, and think of services that coud support, guide, stimulate the problem solver.  
+
+3. summarize these services into the meta.yaml file in the root of the folder of the problem.
+
+If you lounch:
+
+```t
+tree ~/TAlight/problems/sum 
+```
+you will discover the main dirctories usually comprising the problem folder.
+These are:
+
+1. `statement`  is the folder were we keep the statement which can be in any format you might prefer (.txt, .tex, .pdf, .doc, .mp4, .mov, ...) and produced with your preferred tools. This folder can contain docs in various languages, and also multimedia.    
+
+2. `services` is the folder were we organize and obtain the executable codes providing the services. It usually contains one subdirctory for every service.
+    In the examples of the tutorial at the next level we have directories for varius languages since we want to show to the problem maker that and how he can use the programming language he prefers. There is no need to write more than one code for a same language. One single code in a language of your choice will serve all students (irrespectively of the programming languages they use, if any).
+
+3. `meta.yaml` contains a list of the services with informations on the excutaable to call to satisfy a request and on the possible parameters for these calls.
+It is a good idea to begin compiling this file while organizing the statement and taking decision on the problm you want to propose and its services.
+The incormation here collected is what is returned by commands like
+
+```t
+rtal list morra -v
+```
+
+Please, compare the output of this command and what written in the file `meta.yaml`.
+Also, try to modify some f its line, like for example substituiting
+the lines
+```t
+  sum_and_difference:
+    evaluator: [services/sum_and_difference/python/advanced/sum_and_difference_server.py]
+```
+with the lines
+```t
+  sum_and_difference:
+    evaluator: [services/sum_and_difference/python/simple/sum_and_difference_server.py]
+```
+in the `~/TAlight/problems/sum/meta.yaml` file 
+
+This should allow you to test the simpler versions of codes that serve the intended service. See how simple serving a problem can be before entering in the (only superficial) obfuscations coming with colored outputting and multilingual support.
+As you can see, both for problem `sum` and for problem `morra` all services are implemented both in a simple and in an advanced manner. Starting from the simple and then looking at the advanced should help your way through to all the little proficiency needed on the tchica level, and ready to express yourself on the creative side of problem making.
+
+There is also a service for checking whether a `meta.yaml` file is fit:
+
+```t
+rtalc ~/TAlight/problems/sum
+```
+it should out no line of error since/when this file is ok. 
+
+
 ## Vision (pezzi in Italiano)
 
 Miriamo al promuovere lo sviluppo distribuito e condiviso di percorsi didattici funzionali alle proprie esigenze e finalità. Se diverrà facile per i docenti (e loro studenti) contribuire con problemi, ciò consentirà la realizzazione di un repository di percorsi didattici per problemi che possa venire costituito e popolato di problemi in modo distribuito e condiviso, in vari contesti e discipline.
