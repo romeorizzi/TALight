@@ -1,4 +1,4 @@
-codename: infinity_of_N
+codename: number_theory.infinity_of_N
 public_folder: public
 services:
   bigger_and_bigger:
@@ -9,7 +9,7 @@ services:
         default: it
       num_rounds:
         regex: ^([1-9][0-9]{0,3}|1000)$
-        default: 10
+        default: 20
   rationals_are_dense_into_reals:
     evaluator: [services/archimede/python/simple/archimede_server.py]
     args:
