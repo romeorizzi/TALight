@@ -41,46 +41,73 @@ Among its commitments, in our vision come:
 </details>
 </details>
 
-## DOWNLOAD
+## How to get TAlight running on your machine
 
-If for some reason you do not have and do not want to install `git` on the machine you have currently at hand, then you can anyhow download and test TAlight both in connection to TAlight problems served in the cloud and/or those contained in the tutorial we offer here in this battery included repo. In this way you might find out what TAlight might offer you before installing anything, or you can use it or show it to others on a laboratory or public library machine on which you have no installation rights.
-How to do this is explained only at the end of this section because we highly recommend you to get to know `git` and how much it can offer you, and then proceed downloading this repo through git, so that you will remain connected with this open source projects and have the opportunity to easily update. The reasons for you to get into `git` are: not only `git` offers you important facilities (free and robust) like backups and working directories that you can in simplicity share among your devices, and powerful and intrinsically safe time machines over them and on your work, but it is the portal to the world of open source projects (it was designed by Linus Torvalds in order to scale up its projects concerning the development of the Linux operating system to a wide collaborative dimension). Not only TAlight is open source software, but we foresee and foster that problem makers from different countries/regions (but maybe of a same discipline) might collaborate on more or less open didactic projects.
+There are more solutions, the simplest ones are less rewarding, hence we leave them for last.
+You are reading the `README.md` file of an open source project that aims at fostering a wide collaboration network and your skills included the collaborative ones. `Git` is the empowering technology to get the best from open source projects.
+Therefore, though not necessary if you want to play on your own, we warmly suggest you to first get `git` installed on your machine.  
 
-### How to get `git` and its power
+<details><summary><strong>How to get Git and its power</strong></summary>
 
-...
+Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) of the [Git Community](https://git-scm.com/community) will give you the best updated instructions on how to install this game changer on your machine. If your are a Windows user, we limit ourselves to remark their suggestions ("We’ll learn more about those things a little later, but suffice it to say they’re things you want.") to get the command line version of Git as well as the GUI.
 
-### Assuming you have `git` installed on your machine
+Even if you do not make any other more advanced use of git, having it installed will allow you to conveniently maintain your local version updated by just launching the command
 
-Open a shell, go to your home directory, and enter:
+```t
+git pull
+```
+from any directory of the repo.
 
+However, we also advise you to get at least a rough idea of what git has to offer you. Again, the [Documentation page of the Git community](https://git-scm.com/doc) is an ideal place where to get directions.
+
+The main reasons for you to get into `git` are: not only `git` offers you important facilities (free and robust) like backups and working directories that you can in simplicity share among your devices, and powerful and intrinsically safe time machines over them and on your work, but it offers you the means to share and collaborate on your projects and, in fact, it is the portal to the world of open source projects (Git was designed by Linus Torvalds in order to scale up its projects concerning the development of the Linux operating system to a wide collaborative dimension).
+Not only TAlight is open source software, but we foresee and foster that problem makers from different countries/regions (but maybe of a same discipline) might collaborate on more or less open didactic projects.
+</details> 
+
+___
+Now, the best and simplest option you have is to download this repo through git, so that you will remain connected with this open source projects and have the opportunity to easily update.
+
+<details><summary><strong>Download this repo (assuming you have `git`)</strong></summary>
+Assuming you have `git` installed on your machine:
+
+1. open a shell (that is, a terminal, or cmd, or power shell)
+2. go to your home directory, and enter:
 ```bash
 git clone git@github.com:romeorizzi/TAlight
 ```
-to download the content of this repo. Of course, you can achieve the same result by any other means if you prefer, like .
-You can also download and/or place the TAlight folder in any other directory of your preference.
-In the following we assume `~/TAlight` is the path to the folder on your system. Of course, you are free to rename it at your will or place it elsewhre.
-For example, if you use programs like Github Desktop to manage your git repositories, you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TAlight` in the following instructions. Just replace `~/TAlight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
+to download the content of this repo.
+Of course, you can achieve the same result by any other means if you prefer.
+
+You can also download and/or place the TAlight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
+</details> 
+
+___
+
+If for some reason you do not have and do not want to install `git` on the machine you have currently at hand, then you can anyhow download and test TAlight both in connection to TAlight problems served in the cloud and/or those contained in the tutorial we offer here in this battery included repo. In this way you might find out what TAlight might offer you before installing anything, or you can use it or show it to others on a laboratory or public library machine on which you have no installation rights.
+<details>
+Press the green button at the top of this GitHub page (the page of the repo).
+Choose to download a compressed file, then uncompress it on your machine and locate it accordingly to your preferences. The only thing that will be missing will be the hidden `.git` directory.
+</details> 
+
+Whatever was your way out to it, in the following we assume that `~/TAlight` is the path to this TAlight repo on your system. Of course, you are free to rename it at your will or place it elsewhere as long as you interpret the following instructions accordingly. For example, if you use programs like Github Desktop to manage your git repositories, you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TAlight` in the following instructions. Just replace `~/TAlight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
+
 
 ## OBTAIN THE BINARIES
 
-TAlight consists of two programs, the `rtal` client, and the `rtald` server. Both are needed both for the problem solver and for the problem maker. For the problem maker, it also offers the `rtalc` checker.
+TAlight consists of two programs, the `rtal` client, and the `rtald` server. Both are needed both by the problem solver and by the problem maker. The problem maker will also use the `rtalc` checker.
 After downloading this TAlight project public repo, you can either choose to use the binaries made available for your platform (not yet made available at present) or compile them from the source code.
 How to make these two binaries and the basic on how to use them is explained in the file `rtal/README.md` of this repo.
 
 In the following we assume that the files `~/TAlight/rtal/target/debug/rtal` and `~/TAlight/rtal/target/debug/rtald` exist (possibly with a different placement, as explained above) on your machine and have execution permission.
-You can check this with
+You can check this by asking them to display out their main help page.
 
 ```bash
 ~/TAlight/rtal/target/debug/rtal --help
-```
-and
-
-```bash
 ~/TAlight/rtal/target/debug/rtald --help
+~/TAlight/rtal/target/debug/rtalc --help
 ```
 
-which should also list out the parameters and subcommands of these `TAlight` commands.
+These pages will list out the parameters and subcommands of these three `TAlight` commands.
 
 ## SETUP OF THE PATH ENVIRONMENT VARIABLE
 
@@ -134,7 +161,10 @@ rtald --help
 
 ## TUTORIAL (How to use TAlight)
 
-In the examples we offer in this tutorial we assume the use of a POSIX-like shell. 
+In all the examples we offer in this tutorial we assume the use of a POSIX-like shell.
+Even if you aim at the problem maker role we suggest you to first exploit the first of these two tutorials currently available.
+
+<details><summary><strong>START UP TUTORIAL</strong></summary>
 
 #### PREAMBLE
 
@@ -286,14 +316,9 @@ diff -r sum ~/TAlight/problems/sum/public
 ```
 and ask yourself the reasons for these more refined differences.
 
+</details>
 
-## PROBLEMS WORKING AT PRESENT
-
-1. `sum`
-2. `morra`
-3. `infinity_of_N`
-
-## TO THE PROBLEM MAKER
+<details><summary><strong>TUTORIAL FOR THE PROBLEM MAKER</strong></summary>
 
 Clearly, problem making is an art. More than we can say is already in your hearth and passion. Our only intention here in this section is to smooth your way to acquire our tools.
 
@@ -349,6 +374,15 @@ There is also a service for checking whether a `meta.yaml` file is fit:
 rtalc ~/TAlight/problems/sum
 ```
 it should out no line of error since/when this file is ok. 
+
+</details>
+
+
+## PROBLEMS WORKING AT PRESENT
+
+1. `sum`
+2. `morra`
+3. `infinity_of_N`
 
 
 ## Vision (pezzi in Italiano)

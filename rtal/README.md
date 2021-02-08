@@ -1,13 +1,15 @@
 # Rust Turing Arena Light
 
 This is a Rust implementation of the Turing Arena Light specification.
-It offers two main programs:
+It offers two main programs plus other utilities mainly meant for the problem maker:
 
 1. `rtal` (the rust implementation of the TA-light client)
 
 2. `rtald` (the rust implementation of the TA-light daemon)
 
-This document explains how to build up these two main `TAlight` commands for your architecture.
+3. `rtalc` (the rust implementation of a checker of the consistency of the `meta.yaml` file listing the services of a problem)
+
+This document explains how to build up all these `TAlight` commands for your architecture.
 Do not scare because:
 
 1. the process is simple and you will be followed step as step;
