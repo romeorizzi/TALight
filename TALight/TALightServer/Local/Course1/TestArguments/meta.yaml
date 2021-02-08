@@ -1,9 +1,0 @@
-codename: Argomenti
-attachments_folder: att
-services:
-  print:
-    evaluator: solve.py
-    args:
-      num: 
-        regex: ([0-9]*)
-        default: 0

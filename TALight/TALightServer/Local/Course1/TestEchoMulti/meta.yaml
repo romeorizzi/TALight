@@ -1,4 +1,0 @@
-﻿codename: "TestEchoMulti"
-services:
-  goals:
-    evaluator: checker.py

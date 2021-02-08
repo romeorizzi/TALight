@@ -1,0 +1,29 @@
+public_folder: public
+services:
+  common_multiple:
+    evaluator: [services/common_multiple/python/simple/common_multiple_server.py]
+    args:
+      lang:
+        regex: ^(en|it)$
+        default: it
+      num_naturals:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 3
+  common_non_multiple:
+    evaluator: [services/common_non_multiple/python/simple/common_non_multiple_server.py]
+    args:
+      lang:
+        regex: ^(en|it)$
+        default: it
+      num_rounds:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 3
+  extract_prime:
+    evaluator: [services/extract_prime/python/simple/extract_prime_server.py]
+    args:
+      lang:
+        regex: ^(en|it)$
+        default: it
+      n:
+        regex: ^(twodigits|fourdigits|big)$
+        default: twodigits
