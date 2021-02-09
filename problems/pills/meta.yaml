@@ -1,0 +1,91 @@
+public_folder: public
+services:
+  check_risp:
+    evaluator: [services/python/simple/check_risp_server.py]
+    flags:
+      list_them_out_if_right
+      more_or_less_hint_if_wrong
+      with_evidence_if_more
+      add_extrahint_if_less
+    args:
+      num_pills:
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 5
+      risp:
+        regex: ^([1-9][0-9]{0,50})$
+        default: 100
+      answ_mod:
+        regex: ^([1-9][0-9]{0,10})$
+        default: 1000000007
+      sorting_criterion:
+        regex: ^(dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
+      lang:
+        regex: (en|it)
+        default: it
+  score_risp:
+    evaluator: [services/python/simple/score_risp_server.py]
+    args:
+      answ_mod:
+        regex: ^([1-9][0-9]{0,10})$
+        default: 1000000007
+      lang:
+        regex: (en|it)
+        default: it
+  check_list:
+    evaluator: [services/python/simple/check_list_server.py]
+    flags:
+      spot_wrong_consec_if_sorted
+      tell_shortest_missing_prefix
+      give_one_missing
+    args:
+      num_pills:
+        regex: ^([1-9]|1[0-9]{0,1}|20)$
+        default: 5
+      sorting_criterion:
+        regex: ^(None|dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
+      lang:
+        regex: (en|it)
+        default: it
+  score_list:
+    evaluator: [services/python/simple/score_list_server.py]
+    args:
+      sorting_criterion:
+        regex: ^(None|dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
+      lang:
+        regex: (en|it)
+        default: it
+  check_next:
+    evaluator: [services/python/simple/check_next_sol.py]
+    flags:
+      tell_first_mistake
+    args:
+      current_sol:
+        regex:  ^(I|H){1,1000}$
+        default: I
+      next_sol:
+        regex:  ^(I|H){1,1000}$
+        default: HH
+      sorting_criterion:
+        regex: ^(dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
+      lang:
+        regex: (en|it)
+        default: it
+  score_next:
+    evaluator: [services/python/simple/score_next_sol_server.py]
+    args:
+      sorting_criterion:
+        regex: ^(dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
+      lang:
+        regex: (en|it)
+        default: it
+  recognize:
+    evaluator: [services/python/simple/recognize_server.py]
+    args:
+      lang:
+        regex: (en|it)
+        default: it
