@@ -132,7 +132,7 @@ L> 60
 S> # good shot!
 S> 1000
 L> 2000
-S> ok! vero! 42=11+31
+S> ok! right! 42=11+31
 S> ! I throw the sponge. Nice play :)
 ```
 As you see, lines starting with '#' should be treated as comments and are just ignored by the two main agents in the conversation (the bots).
@@ -154,7 +154,7 @@ L> 60
 S> # good shot!
 S> 1000
 L> 2000
-S> ok! vero! 42=11+31
+S> ok! right! 42=11+31
 S> ! I throw the sponge. Nice play :)
 ```
 </details>
