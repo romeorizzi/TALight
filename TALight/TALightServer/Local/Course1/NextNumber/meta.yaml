@@ -1,4 +1,0 @@
-codename: NextNumber
-services:
-  goals:
-    evaluator: solve.py

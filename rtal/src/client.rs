@@ -171,10 +171,13 @@ fn main() {
             let mut args: HashMap<String, String> = HashMap::new();
             for arg in cmd.service_args {
                 let sarg: Vec<_> = arg.split("=").collect();
-                if sarg.len() != 2 {
+                if sarg.len() == 1 {
+                    args.insert(sarg[0].into(), "1".into());
+                } else if sarg.len() == 2 {
+                    args.insert(sarg[0].into(), sarg[1].into());
+                } else {
                     crash!("Incorrect format for service argument \"{}\"", arg);
                 }
-                args.insert(sarg[0].into(), sarg[1].into());
             }
             let request = proto::Command::ConnectionRequest(proto::ConnectionRequest {
                 codename: cmd.problem,

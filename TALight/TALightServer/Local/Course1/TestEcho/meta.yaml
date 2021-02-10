@@ -1,7 +1,0 @@
-﻿codename: "TestEcho"
-description: "TestEcho"
-services:
-  goals:
-    evaluator: "checker.py"
-  queries:
-    evaluator: "checker2.py"
