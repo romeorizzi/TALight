@@ -47,20 +47,20 @@ There are more solutions, the simplest ones are less rewarding, hence we leave t
 You are reading the `README.md` file of an open source project that aims at fostering a wide collaboration network and your skills included the collaborative ones. `Git` is the empowering technology to get the best from open source projects.
 Therefore, though not necessary if you want to play on your own, we warmly suggest you to first get `git` installed on your machine.  
 
-<details><summary><strong>How to get Git and its power</strong></summary>
+<details><summary><strong>How to get git and its power</strong></summary>
 
-Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) of the [Git Community](https://git-scm.com/community) will give you the best updated instructions on how to install this game changer on your machine. If your are a Windows user, we limit ourselves to remark their suggestions ("We’ll learn more about those things a little later, but suffice it to say they’re things you want.") to get the command line version of Git as well as the GUI.
+Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) of the [Git Community](https://git-scm.com/community) will give you the best updated instructions on how to install this game changer on your machine. If your are a Windows user, we limit ourselves to remark their suggestions ("We’ll learn more about those things a little later, but suffice it to say they’re things you want.") to get the command line version of git as well as the GUI.
 
-Even if you do not make any other more advanced use of git, having it installed will allow you to conveniently maintain your local version updated by just launching the command
+Even if you do not make any other more advanced use of git, having it installed will simplify other steps in the installation process to follow and, more importantly, will allow you to better connect to this repo or other reports (possibly of TAlight problems). Even if you do not intend to contribute to their ongoing development, this means that it will be easy for you to maintain updated your local version of their contents and get the new exercises and/or features currently under development. To get the updates just launch the command
 
 ```t
 git pull
 ```
-from any directory of the repo.
+from any directory of the repo. (In case you have overwritten some files of the repo then a conflict arises. This prevents the downloading of the new content (otherwise your modifications will go lost). If you are stucked in this situation and do not want to delete your modified files before pulling the official version of the repo, then you can simply move your modified files to some other folder or rename them with new names so that the conflict (the risk of loosing work you have done) will be resolved.) 
 
 However, we also advise you to get at least a rough idea of what git has to offer you. Again, the [Documentation page of the Git community](https://git-scm.com/doc) is an ideal place where to get directions.
 
-The main reasons for you to get into `git` are: not only `git` offers you important facilities (free and robust) like backups and working directories that you can in simplicity share among your devices, and powerful and intrinsically safe time machines over them and on your work, but it offers you the means to share and collaborate on your projects and, in fact, it is the portal to the world of open source projects (Git was designed by Linus Torvalds in order to scale up its projects concerning the development of the Linux operating system to a wide collaborative dimension).
+The main reasons for you to get into `git` are: not only `git` offers you important facilities (free and robust) like backups and working directories that you can in simplicity share among your devices, and powerful and intrinsically safe time machines over them and on your work, but it offers you the means to share and collaborate on your projects and, in fact, it is the portal to the world of open source projects (git was designed by Linus Torvalds in order to scale up its projects concerning the development of the Linux operating system to a wide collaborative dimension).
 Not only TAlight is open source software, but we foresee and foster that problem makers from different countries/regions (but maybe of a same discipline) might collaborate on more or less open didactic projects.
 </details> 
 
