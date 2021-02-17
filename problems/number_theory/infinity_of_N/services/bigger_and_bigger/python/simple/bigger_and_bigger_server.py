@@ -6,6 +6,8 @@ from random import randrange
 ENV_num_rounds = int(environ["TAL_num_rounds"])
 
 print(f"# I will serve: problem=infinity_of_N, service=bigger_and_bigger, num_rounds={ENV_num_rounds}.")
+print("# Hello! Let's play to whom shoots the biggest natural number.")
+print("# I'll be the one to start, and then we take turns. You will be given the chance for the last word (always just a number).")
 
 my_n = randrange(20)
 for _ in range(ENV_num_rounds):

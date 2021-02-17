@@ -33,6 +33,9 @@ def decimals_of_reciprocal_of(n, length):
 
                    
 print(f"# I will serve: problem=infinity_of_N, service=archimede, num_rounds={ENV_num_rounds}.")
+print("# Hello! You are in charge of convincing me that rationals are dense into the real.")
+print("#  We cast this in the form of a game:")
+print("#     I offer you a positive real and you should reply with a natural whose inverse is strictly smaller than the real.")
 
 my_real_int_part = random.randrange(20)
 my_real_dec_part = random_decimal_string_smaller_than("9")

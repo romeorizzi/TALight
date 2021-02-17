@@ -73,7 +73,7 @@ Assuming you have `git` installed on your machine:
 1. open a shell (that is, a terminal, or cmd, or power shell)
 2. go to your home directory, and enter:
 ```bash
-git clone git@github.com:romeorizzi/TAlight
+git clone https://github.com/romeorizzi/TAlight.git
 ```
 to download the content of this repo.
 Of course, you can achieve the same result by any other means if you prefer.
