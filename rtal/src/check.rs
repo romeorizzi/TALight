@@ -102,8 +102,10 @@ fn main() {
         }
         if let Some(args) = &service.args {
             for (argname, arg) in args.iter() {
-                if !arg.regex.is_match(&arg.default) {
-                    error!(stdout, "Default argument for \"{}\" for service \"{}\" does not match its regex", argname, name);
+                if let Some(def) = &arg.default {
+                    if !arg.regex.is_match(def) {
+                        error!(stdout, "Default argument for \"{}\" for service \"{}\" does not match its regex", argname, name);
+                    }
                 }
             }
         }

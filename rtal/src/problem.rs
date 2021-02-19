@@ -21,5 +21,5 @@ pub struct Service {
 pub struct Arg {
     #[serde(with = "serde_regex")]
     pub regex: Regex,
-    pub default: String,
+    pub default: Option<String>,
 }

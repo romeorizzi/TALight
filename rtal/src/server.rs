@@ -174,8 +174,10 @@ fn main() {
                                                             } else {
                                                                 error = Some(format!("{} is not a valid value for parameter {}", cval, argname))
                                                             }
+                                                        } else if let Some(arg) = &argstruct.default {
+                                                            args.insert(argname.into(), arg.clone());
                                                         } else {
-                                                            args.insert(argname.into(), argstruct.default.clone());
+                                                            error = Some(format!("Mandatory parameter {} not specified", argname));
                                                         }
                                                     }
                                                 }

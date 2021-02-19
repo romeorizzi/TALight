@@ -157,9 +157,17 @@ fn main() {
                         if let Some(args) = servargs.args {
                             for (argname, arg) in args {
                                 if cmd.verbose >= 2 {
-                                    println!("    # {} [{}] {{ {} }}", argname, arg.default, arg.regex);
+                                    if let Some(def) = arg.default {
+                                        println!("    # {} [{}] {}", argname, def, arg.regex);
+                                    } else {
+                                        println!("    # {} {}", argname, arg.regex);
+                                    }
                                 } else {
-                                    println!("    # {} [{}]", argname, arg.default);
+                                    if let Some(def) = arg.default {
+                                        println!("    # {} [{}]", argname, def);
+                                    } else {
+                                        println!("    # {}", argname);
+                                    }
                                 }
                             }
                         }
