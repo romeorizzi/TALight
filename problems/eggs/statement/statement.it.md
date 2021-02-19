@@ -3,12 +3,13 @@
 ![image](../figs/eggs.jpeg)
 
 Quest'anno Willy Wonka ha prodotto delle uova di Pasqua speciali, progettate appositamente per essere lanciate dall'ascensore di vetro.
-Il lancio può avvenire da uno qualsiasi di $100$ diversi piani, numerati da $1$ a $100$. Sappiamo che le uova presentano tutte lo stesso piano di rottura: se un uovo si rompe quando lanciato da un certo piano allora anche tutte le altre uova si rompono se lanciate da quel piano o da piani superiori. Ma potrebbe anche essere il caso che le uova non si rompano quando lanciate da piano alcuno. 
-Willy ci riserva due delle uova della produzione perché noi si stabilisca il minimo piano di rottura delle uova, oppure si stabilisca la loro infrangibilità.
+Il lancio può avvenire da uno qualsiasi di $100$ diversi piani, numerati da $1$ a $100$. Sappiamo che le uova presentano tutte lo stesso piano di rottura: se un uovo si rompe quando lanciato da un certo piano allora tutte le altre uova si rompono anche esse se lanciate da quel piano o da piani superiori. 
+Willy ci riserva due delle uova della produzione perché noi si stabilisca il minimo piano di rottura delle uova, oppure si stabilisca la loro infrangibilità (potrebbe anche essere il caso che le uova non si rompano qualsiasi sia il piano da cui vengono lanciate).
 
 Quale è il minimo numero di lanci che dobbiamo fare per assicurare la risposta corretta? Ossia: quale è il più piccolo numero $m$ tale che esista una strategia che assicura di giungere sempre a conoscere il piano di rottura impiegando al più $m$ lanci?
 
 Più in generale, ti proponiamo di studiare la funzione $m=m(u,n)$ dove $n$ è il numero di piani e $u$ è il numero di uova inizialmente messe a disposizione da Willy.
+
 
 ## Servizi offerti
 
@@ -90,6 +91,12 @@ Per inserire un tuo bot che giochi al posto tuo la sintassi corretta è:
 Il bot deve essere un eseguibile coi permessi di esecuzione settati, ma può essere stato scritto in un qualsiasi linguaggio.
 
 
+## Adds up all'esercizio
+
+1. Come cambiano le cose se ciò che vogliamo minimizzare è il numero atteso di lanci assumendo che ogni possibili verità sia equiprobabile?
+
+2. Si assuma che la quantità da minimizzare sia il numero di missioni dell'ascensore di vetro. Una missione parte con l'imbarcare tutte le uova a disposizione e nel rilasciarle una ad una in fase di salita. Possiamo prevedere inoltre un parametro che limiti la capacità dell'ascensore.
+ 
 
 #### Gioca tu nel ruolo di Murphy
 

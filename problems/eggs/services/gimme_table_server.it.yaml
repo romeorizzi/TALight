@@ -1,0 +1,3 @@
+%YAML 1.2
+---
+open-channel: "# Servirò: problem=eggs, service=gimme_table, n_eggs={ENV_n_eggs}, n_floors={ENV_n_floors}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."

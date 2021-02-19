@@ -1,0 +1,5 @@
+%YAML 1.2
+---
+open-channel: "# Servirò: problem=eggs, service=gimme_table, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."
+too-few-rows: "Il tuo file ha solo {i-1} righe invece di {N}."
+too-few-columns: "Il tuo file ha solo {i-1} righe invece di {N}."

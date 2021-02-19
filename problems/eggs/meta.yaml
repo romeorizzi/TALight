@@ -3,9 +3,6 @@ services:
   confirm_min_throws:
     evaluator: [services/confirm_min_throws_server.py]
     args:
-      lang:
-        regex: (en|it)
-        default: it
       min:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
@@ -15,51 +12,66 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      lang:
+        regex: (en|it)
+        default: it
+  check_table:
+    evaluator: [services/check_table_server.py]
+    flags:
+      eggs_from_zero
+      floors_from_zero
+    args:
+      lang:
+        regex: (en|it)
+        default: it
+  gimme_table:
+    evaluator: [services/gimme_table_server.py]
+    flags:
+      eggs_from_zero
+      floors_from_zero
+    args:
+      n_floors:
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 10
+      n_eggs:
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 2
+      lang:
+        regex: (en|it)
+        default: it
   opt_move:
     evaluator: [services/opt_move_server.py]
     args:
-      lang:
-        regex: (en|it)
-        default: it
       n_floors:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
-  check_table:
-    evaluator: [services/check_table_server.py]
-    args:
       lang:
         regex: (en|it)
         default: it
-      n_floors:
-        regex: ^([1-9][0-9]{0,1}|100)$
-        default: 100
-      n_eggs:
-        regex: ^([1-9][0-9]{0,1}|100)$
-        default: 100
   play:
     evaluator: [services/play_server.py]
     args:
-      lang:
-        regex: (en|it)
-        default: it
       n_floors:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      lang:
+        regex: (en|it)
+        default: it
   play_murphy:
     evaluator: [services/play_murphy_server.py]
     args:
-      lang:
-        regex: (en|it)
-        default: it
       n_floors:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      lang:
+        regex: (en|it)
+        default: it
