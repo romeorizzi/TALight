@@ -10,6 +10,7 @@ use log::{error, info};
 use regex::Regex;
 use rustls::{ClientSession, StreamOwned};
 use sha2::{Digest, Sha512};
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::fs;
 use std::io::{self, ErrorKind, Read, Write};
@@ -139,11 +140,12 @@ fn main() {
     };
     match opts.subcommand {
         SubCommand::List(mut cmd) => {
-            let res = match send_and_wait(&mut ws, proto::Command::ListRequest) {
+            let mut res = match send_and_wait(&mut ws, proto::Command::ListRequest) {
                 proto::Command::ListResponse(x) => x,
                 _ => crash!("Invalid response for problem list request"),
             };
             cmd.verbose += if cmd.filter.is_some() { 1 } else { 0 };
+            res.problems.sort();
             for problem in res.problems {
                 if let Some(filter) = &cmd.filter {
                     if !filter.is_match(&problem.codename) {
@@ -152,9 +154,11 @@ fn main() {
                 }
                 println!("- {}", problem.codename);
                 if cmd.verbose >= 1 {
-                    for (servname, servargs) in problem.services {
+                    let services: BTreeMap<_, _> = problem.services.into_iter().collect();
+                    for (servname, servargs) in services {
                         println!("  * {}", servname);
                         if let Some(args) = servargs.args {
+                            let args: BTreeMap<_, _> = args.into_iter().collect();
                             for (argname, arg) in args {
                                 if cmd.verbose >= 2 {
                                     if let Some(def) = arg.default {

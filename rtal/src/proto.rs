@@ -1,5 +1,6 @@
 use crate::problem::Arg;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
 pub const MAGIC: &str = "rtal";
@@ -74,5 +75,25 @@ impl Problem {
             codename: codename.into(),
             services: services,
         }
+    }
+}
+
+impl PartialEq for Problem {
+    fn eq(&self, other: &Problem) -> bool {
+        self.codename.eq(&other.codename)
+    }
+}
+
+impl Eq for Problem {}
+
+impl PartialOrd for Problem {
+    fn partial_cmp(&self, other: &Problem) -> Option<Ordering> {
+        self.codename.partial_cmp(&other.codename)
+    }
+}
+
+impl Ord for Problem {
+    fn cmp(&self, other: &Problem) -> Ordering {
+        self.codename.cmp(&other.codename)
     }
 }
