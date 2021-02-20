@@ -14,17 +14,13 @@ ENV_colored_feedback = (environ["TAL_ISATTY"] == "1")
 set_colors(ENV_colored_feedback)
 messages_book = select_book_and_lang("gimme_table_server", ENV_lang)
         
-def print_lang(msg_code, *msg_rendering, **kwargs):
-    msg_text=eval(f"f'{messages_book[msg_code]}'")
-    TAcprint(msg_text, *msg_rendering, **kwargs)
-
-
+def render_feedback(msg_code, msg_English_rendition):
+    if messages_book == None:
+        return msg_English_rendition
+    return eval(f"f'{messages_book[msg_code]}'")
         
 
-print_lang("open-channel", "green")        
-#English: print(f"# I will serve: problem=eggs, service=gimme_table, n_eggs={ENV_n_eggs}, n_floors={ENV_n_floors}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
-
-#print(f"# I will serve: problem=eggs, service=gimme_table, n_eggs={ENV_n_eggs}, n_floors={ENV_n_floors}, lang={ENV_lang}.")
+TAcprint(render_feedback("open-channel", f"# I will serve: problem=eggs, service=gimme_table, n_eggs={ENV_n_eggs}, n_floors={ENV_n_floors}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."), "green")
 
 # INITIALIZATON: allocation, base cases, sentinels
 table = [ [0] + [IMPOSSIBLE] * ENV_n_floors ]

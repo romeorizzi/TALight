@@ -15,15 +15,13 @@ ENV_colored_feedback = (environ["TAL_ISATTY"] == "1")
 set_colors(ENV_colored_feedback)
 messages_book = select_book_and_lang("confirm_min_throws_server", ENV_lang)
         
-def print_lang(msg_code, *msg_rendering, **kwargs):
-    msg_text=eval(f"f'{messages_book[msg_code]}'")
-    TAcprint(msg_text, *msg_rendering, **kwargs)
-
-
+def render_feedback(msg_code, msg_English_rendition):
+    if messages_book == None:
+        return msg_English_rendition
+    return eval(f"f'{messages_book[msg_code]}'")
         
 
-print_lang("open-channel", "green")        
-#English: print(f"# I will serve: problem=eggs, service=confirm_min_throws, n_min={ENV_min}, n_eggs={ENV_n_eggs}, n_floors={ENV_n_floors}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
+TAcprint(render_feedback("open-channel", f"# I will serve: problem=eggs, service=confirm_min_throws, n_min={ENV_min}, n_eggs={ENV_n_eggs}, n_floors={ENV_n_floors}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."), "green")        
 
 # INITIALIZATON: allocation, base cases, sentinels
 table = [ [0] + [IMPOSSIBLE] * ENV_n_floors ]
@@ -41,5 +39,5 @@ for u in range(1,1+ENV_n_eggs):
                 table[u][f] = 1+max(table[u][f-first_launch_floor],table[u-1][first_launch_floor-1])
 
 print(f"When you are given {ENV_n_eggs} eggs and the floors are {ENV_n_floors} then there exists a policy that guarantees you to find out the truth in strictly less than {table[ENV_n_eggs][ENV_n_floors]} launches.\nThis is optimal.\nA possible first move for such an optimal strategy is to launch one egg from floor {best_launch_floor}.")
-    #English: print(f"When you are given {ENV_n_eggs} eggs and the floors are {ENV_n_floors} then there exists a policy that guarantees you to find out the truth in strictly less than {table[ENV_n_eggs][ENV_n_floors]} launches.\nThis is optimal.\nA possible first move for such an optimal strategy is to launch one egg from floor {best_launch_floor}.")
+
 exit(0)

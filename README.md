@@ -201,6 +201,7 @@ To operate with problems you have on your local machine, you first activate the 
 When starting the daemon, it is a good idea to first turn on logging, by setting the environment variable `RUST_LOG=info`.
 <details><summary>How to correctly set the environment variable `RUST_LOG=info`</summary>
 
+We first show you a way to do it that works on the standard shells of Linux or Mac (`bash`, `sh` or `zsh`). It therefore works also on Windows sinc we assume you operate from the terminal you have installed together with `git`. It can also work on every terminal that allows you to switch to a bash shell by means of a `bash` command invocation.  
 Insert the following command in the terminal from where you intend to launch the daemon `rtald` and monitor its interactions and working: 
 ```bash
 export RUST_LOG=info

@@ -1,27 +1,50 @@
 #!/usr/bin/env python3
 
 from sys import stderr, exit
-import yaml
-from termcolor import colored, cprint
 
+yaml_is_installed = True
+try:
+    import yaml
+except Exception as e:
+    yaml_is_installed = False
+    print("# Recoverable Error: ", end="", file=stderr)
+    print(e, file=stderr)
+    print("# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.\n# (To enjoy a feedback in a supported language install the python package yaml. The languages supported by a problem service appear as the options for the lang parameter listed by the command `rtal list`)", file=stderr)
+
+termcolor_is_installed = True
+try:
+    from termcolor import colored, cprint
+except Exception as e:
+    termcolor_is_installed = False
+    print("# Recoverable Error: ", end="", file=stderr)
+    print(e, file=stderr)
+    print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor.)", file=stderr)
+    
 colored_print = None
 numNO = 0
 numOK = 0
 
 def set_colors(with_colors):
     global colored_print
-    colored_print = with_colors
+    colored_print = with_colors and termcolor_is_installed
     
 def select_book_and_lang(service_name, ENV_lang):
     messages_book_file = service_name + "." + ENV_lang + ".yaml"
-    with open(messages_book_file, 'r') as stream:
-      try:
+    if not yaml_is_installed:
+        return None
+    try:
+      with open(messages_book_file, 'r') as stream:
+        try:
           messages_book = yaml.safe_load(stream)
-      except yaml.YAMLError as exc:
-          print(f"problem: The messages_book file `{messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file)", file=stderr)
+        except yaml.YAMLError as exc:
+          print(f"# Recoverable Error: The messages_book file `{messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file)\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
           print(exc, file=stderr)
-          exit(1)
-    return messages_book 
+          return None
+    except IOError as ioe:
+          print(f"# Recoverable Error: The messages_book file `{messages_book_file}` for multilingual feedback could not be accessed.\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
+          print(ioe, file=stderr)
+          return None
+    return messages_book
 
 def TAcprint(msg_text, *msg_rendering, **kwargs):
   if type(msg_rendering[-1]) == list:

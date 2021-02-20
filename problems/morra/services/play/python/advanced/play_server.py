@@ -16,14 +16,13 @@ ENV_colored_feedback = (environ.get("TAL_ISATTY") == "1")
 set_colors(ENV_colored_feedback)
 messages_book = select_book_and_lang("play_server", ENV_lang)
         
-def print_lang(msg_code, *msg_rendering, **kwargs):
-    msg_text=eval(f"f'{messages_book[msg_code]}'")
-    TAcprint(msg_text, *msg_rendering, **kwargs)
-
+def render_feedback(msg_code, msg_English_rendition):
+    if messages_book == None:
+        return msg_English_rendition
+    return eval(f"f'{messages_book[msg_code]}'")
         
 
-print_lang("open-channel", "green")        
-#English: print(f"# I will serve: problem=morra, service=play, num_rounds={ENV_num_rounds}, hash_type={ENV_hash_type}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
+TAcprint(render_feedback("open-channel", f"# I will serve: problem=morra, service=play, num_rounds={ENV_num_rounds}, hash_type={ENV_hash_type}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."), "green")        
 
 score_mine = 0
 score_yours = 0
@@ -46,8 +45,7 @@ for i in range(1,ENV_num_rounds+1):
     should_be = str(hash_value(white_str_yours,ENV_hash_type))
     if hash_str_yours != should_be:
         TAcprint("No! ", "red", ["blink", "bold"], end="")
-        print_lang("you-cheated", "yellow", ["underline"])        
-        #English: print(f"You tried to cheat: h({white_str_yours}) = {should_be} != {hash_str_yours}.")
+        TAcprint(render_feedback("you-cheated", f"You tried to cheat: h({white_str_yours}) = {should_be} != {hash_str_yours}."), "yellow", ["underline"])
         score_mine += 10
         cheated += 1
     else:
@@ -58,7 +56,6 @@ for i in range(1,ENV_num_rounds+1):
         if s == m + m_yours:
             score_mine += 1                  
 
-print_lang("summary", "white", ["underline"])        
-#English: print(f"Your score: {score_yours}. My score: {score_mine}. You cheated {cheated} times.")
+TAcprint(render_feedback("summary", f"Your score: {score_yours}. My score: {score_mine}. You cheated {cheated} times."), "white", ["underline"])        
             
 exit(0)

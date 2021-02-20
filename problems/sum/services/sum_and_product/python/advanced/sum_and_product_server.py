@@ -14,14 +14,13 @@ ENV_colored_feedback = (environ["TAL_ISATTY"] == "1")
 set_colors(ENV_colored_feedback)
 messages_book = select_book_and_lang("sum_and_product_server", ENV_lang)
         
-def print_lang(msg_code, *msg_rendering, **kwargs):
-    msg_text=eval(f"f'{messages_book[msg_code]}'")
-    TAcprint(msg_text, *msg_rendering, **kwargs)
+def render_feedback(msg_code, msg_English_rendition):
+    if messages_book == None:
+        return msg_English_rendition
+    return eval(f"f'{messages_book[msg_code]}'")
 
 
-
-print_lang("open-channel", "green")        
-#English: print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV_numbers}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}.")
+TAcprint(render_feedback("open-channel", f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV_numbers}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."), "green")        
 
 gen_new_pair = True    
 for _ in range(ENV_num_questions):
@@ -43,25 +42,20 @@ for _ in range(ENV_num_questions):
     gen_new_pair = False
     if a+b > x+y:
         TAcNO() 
-        print_lang("over-sum", "yellow", ["underline"])        
-        #English: print(f"indeed, {a}+{b}={a+b} > {x+y}.")
+        TAcprint(render_feedback("over-sum", f"indeed, {a}+{b}={a+b} > {x+y}."), "yellow", ["underline"])
     elif a+b < x+y:    
         TAcNO() 
-        print_lang("under-sum", "yellow", ["underline"])        
-        #English: print(f"indeed, {a}+{b}={a+b} < {x+y}.")
+        TAcprint(render_feedback("under-sum", f"indeed, {a}+{b}={a+b} < {x+y}."), "yellow", ["underline"])  
     elif a*b > x*y:    
         TAcNO() 
-        print_lang("over-product", "yellow", ["underline"])        
-        #English: print(f"indeed, {a}*{b}={a*b} > {x*y}.")
+        TAcprint(render_feedback("over-product", f"indeed, {a}*{b}={a*b} > {x*y}."), "yellow", ["underline"])        
     elif a*b < x*y:    
         TAcNO() 
-        print_lang("under-product", "yellow", ["underline"])        
-        #English: print(f"indeed, {a}*{b}={a*b} < {x*y}.")
+        TAcprint(render_feedback("under-product", f"indeed, {a}*{b}={a*b} < {x*y}."), "yellow", ["underline"])        
     else:
         TAcOK() 
         assert (a + b == x+y) and (a * b == x*y)
-        print_lang("ok", "grey")        
-        #English: print(f"indeed, {a}+{b}={x+y} and {a}*{b}={x*y}.")
+        TAcprint(render_feedback("ok", f"indeed, {a}+{b}={x+y} and {a}*{b}={x*y}."), "grey")        
         gen_new_pair = True
 
 TAcFinished()
