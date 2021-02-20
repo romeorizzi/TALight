@@ -133,6 +133,8 @@ mkdir ~/.bin
 cd ~/.bin
 ln -s ~/TAlight/rtal/target/debug/rtald ~/.bin/
 ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
+ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
+ln -s ~/TAlight/TAL_utils/TA_send_txt_file.py ~/.bin/ 
 ```
 
 Then, add the following line at the end of your `~/.bashrc` file.
@@ -196,20 +198,69 @@ Nonetheless, one of the first uses of the `rtal` client you will see in this tut
 ## STARTING THE TAlight DAEMON
 
 To operate with problems you have on your local machine, you first activate the `TAlight` daemon `rtald` on your machine to serve requests coming from your machine itself (modality 1).
-When starting the daemon, it is a good idea to also turn on logging, by setting the environment variable `RUST_LOG=info`.
+When starting the daemon, it is a good idea to first turn on logging, by setting the environment variable `RUST_LOG=info`.
+<details><summary>How to correctly set the environment variable `RUST_LOG=info`</summary>
+
+Insert the following command in the terminal from where you intend to launch the daemon `rtald` and monitor its interactions and working: 
+```bash
+export RUST_LOG=info
+```
+
+You can check that the environment variable is set with:  
+```bash
+echo $RUST_LOG
+```
+If it is correctly set than you get the string "info" in the following line, otherwise you get an empty line if the variable is not set. 
+
+The simplest and most effective way to unset all environment variables set up for the current terminal after its instantiation? Just close the terminal and open another one. But usually there is no need for a refresh.
+Actually, if you want this convenient setup to be the default, then add the following line at the end of your `~/.bashrc` file.
+
+```bash
+export RUST_LOG=info
+```
+
+This is exactly the same kind of operation you did with the configuration of the `PATH` environment variable.
+Now every time you instantiate a new terminale it will come to life with the `RUST_LOG` environment variable correctly defined. (You can check this as shown above.) 
+</details>
+
+
 Both in modality 1 and in modality 2, you must specify to the daemon the directory containing the `TAlight` problems it should take care of. It is assumed that this directory is located on your local file system and each problem is a direct subdirectory of it.
-In the case of the problems comprising this tutorial they are placed in the `~/TAlight/problems` directory. Therefore, you activate (in modality 1) the `TAlight` daemon with the following command from a terminal:
+In the case of the problems comprising this tutorial they are placed in the `~/TAlight/problems` directory. Therefore, you activate (in modality 1) the `TAlight` daemon with the following command from a terminal where the `RUST_LOG` environment variable has been set:
 
 ```bash
 RUST_LOG=info rtald -d ~/TAlight/problems
 ```
 The `rtald` daemon is now active and ready to serve requests concerning the problems present in the directory `~/TAlight/problems`.
-The terminal where you issued its activation will now be the place where the server `rtald` updates you about the requests of service it receives and what is going on with them.
+The terminal where you issued its activation will now be the place where the server `rtald` updates you about the requests of service it receives and what is going on with them. If `RUST_LOG` was not set, then you will only get the error messages of the problem service server (the one called when you issued a request through the `rtal` client), if it crashes or malfunctions, but if the environment variable was set you will have access to further feedback that can help you out. 
+
 The help page of the `rtald` command lists its optional parameters that allow you to expose the service in the wide rather than just in local (modality 2).
 Still, when creating and experimenting, you will launch `rtald` as above and operate with no need for an internet connection. Only at deploy time (and if the intended use asks for it) you will expose services for your problems to requests coming from the outside (modality 2).
 One way to stop the daemon is to `Ctrl-C` when the focus is on this terminal.
 
-Since the previous terminal is now the downstream channel of the daemon you have activated, in order to enjoy and explore the services it offers you need to open another terminal (I prefer vertically splitting my terminator so that I quickly perceive what is going on while experimenting) to send requests with your client `rtal` to the running daemon.
+Anyhow, now that the `rtald` daemon is active and ready to serve our requests for a collection of problems, we are going to access the services available for these problems through the `rtal` client.  
+ 
+Since the previous terminal is now the downstream channel of the daemon you have activated, in order to enjoy and explore the services it gives you access to, you need to open another terminal. Better yet, rather than opening another terminal, I actually suggest you to vertically split the terminal into two, let the left panel to the visualization of this logging, and issue the `rtal` client commands in the right panel so that you will keep constantly aware of the interactions between the two (expecially useful for the problem maker).
+
+<details><summary>How to split a terminal into two or more</summary>
+
+On Linux, the easiest way to do this is to use `Terminator` as your terminal. It also manages with high simplicity the possibility to multicast your typings on preselected subsets of the variuous panels you have open (though not needed here, this is a feature missing in all other tools here mentioned). In the web it is easy to find good tutorials and videos presenting the functionalities of Terminator and how to access them.
+
+To [install Terminator on Linux](https://dev.to/xeroxism/how-to-install-terminator-a-linux-terminal-emulator-on-steroids-1m3h):
+```bash
+sudo add-apt-repository ppa:gnome-terminator
+sudo apt-get update
+sudo apt-get install terminator
+```
+
+On Mac, the best solution is [iTerm2](https://iterm2.com/), but if you have other suggestions ...
+
+On Windows, the best solution is [ConEmu](https://conemu.github.io/), but if you have other suggestions ...
+
+Actually, if you want to invest more on this, a more powerful solution is [Tmux](https://dev.to/srbruning/making-your-terminal-more-productive-with-tmux-2497) on all three platforms. Not only this has the extra benefit to be platform independent (bringing Linux, Mac, and Windows on a common ground) but it also allows you to manage sessions.
+Indeed, Tmux is a [terminal multiplexer](https://linuxhint.com/tmux_vs_screen/) like `screen`, that may sit on any other basic terminal of your preference. While `Tmux` does not allow session sharing with other users it is however more user-friendly than `screen` and, for this reason, among the two we recommend `Tmux`. TMux is highly configurable, also allowing for projects whose editing is simplified by a [tmux sessions manager](https://github.com/tmuxinator/tmuxinator).
+
+</details>
+
 First, to list the problems available, and thus check that both the client and the server are working, try the following command:
 ```bash
 rtal list
@@ -233,19 +284,19 @@ For this first `rtal` problem-set specific request, and for all the others that 
 Either way, you should get something like
 ```bash
 - sum
-  * sum_and_difference
-    # numbers [onedigit] { ^(onedigit|twodigits|big)$ }
-    # num_questions [10] { ^([1-9]|[1-2][0-9]|30)$ }
-    # lang [it] { ^(en|it)$ }
   * sum
-    # lang [it] { ^(en|it)$ }
-    # obj [any] { ^(any|max_product)$ }
-    # numbers [twodigits] { ^(onedigit|twodigits|big)$ }
-    # num_questions [10] { ^([1-9]|[1-2][0-9]|30)$ }
+    # lang [it] ^(en|it)$
+    # num_questions [10] ^([1-9]|[1-2][0-9]|30)$
+    # numbers [twodigits] ^(onedigit|twodigits|big)$
+    # obj [any] ^(any|max_product)$
+  * sum_and_difference
+    # lang [it] ^(en|it)$
+    # num_questions [10] ^([1-9]|[1-2][0-9]|30)$
+    # numbers [onedigit] ^(onedigit|twodigits|big)$
   * sum_and_product
-    # lang [it] { ^(en|it)$ }
-    # num_questions [10] { ^([1-9]|[1-2][0-9]|30)$ }
-    # numbers [onedigit] { ^(onedigit|twodigits|big)$ }
+    # lang [it] ^(en|it)$
+    # num_questions [10] ^([1-9]|[1-2][0-9]|30)$
+    # numbers [onedigit] ^(onedigit|twodigits|big)$
 ```
 From this you understand that three services (`sum`, `sum_and_difference`, and `sum_and_product`) are up for this problem on your local machine. All three services will conduct a dialogue where you (or a bot you designed to act in your place) will be asked 10 questions (all instances of a problem defined by the service). Indeed, 10 is the default value for the parameter `num_questions`. You can specify a different value for this parameter (in the next example it is set to 13) but it can take only integers in the interval $[1,30]$ as specified by the regexp `^([1-9]|[1-2][0-9]|30)$` reported above.
 To know how to interpret (if a problem solver) or write (if a problem maker) these regexps, we refer you to [regexp syntax](https://docs.rs/regex/1.4.3/regex/#syntax).
