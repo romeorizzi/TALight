@@ -12,7 +12,7 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import exit, argv
+from sys import stderr, exit, argv
 import string 
 import random
 

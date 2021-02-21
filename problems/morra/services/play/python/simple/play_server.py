@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from os import environ
-from sys import exit
+from sys import stderr, exit
 import string 
 import random
 

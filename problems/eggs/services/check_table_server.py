@@ -4,11 +4,13 @@
 problem="eggs"
 service="check_table"
 args_list = [
+    ('eggs_from_zero',bool),
+    ('floors_from_zero',bool),
     ('lang',str),
     ('ISATTY',bool),
 ]
 
-from sys import exit, argv
+from sys import stderr, exit, argv
 from random import randrange
 from math import inf as IMPOSSIBLE
 
@@ -30,7 +32,9 @@ def get_line():
         return None, key 
     return None, "GEN_COMMENT"
 
-def represents_int(s):
+def represents_int(s, extended=False):
+    if extended and s=="inf":
+        return True
     try: 
         int(s)
         return True
@@ -42,12 +46,19 @@ while first_line == None:
     first_line, cmd = get_line()
 
 last_floor = len(first_line)
-table_submitted = [ [0] + [IMPOSSIBLE] * last_floor ]
+table_submitted = [] if ENV['eggs_from_zero'] else [ [0] + [IMPOSSIBLE] * last_floor ]
 
-if not all(represents_int(_) for _ in first_line):
-    print(f"# Error (in the table format): All entries in your table should be integers. Just checked your first row.")
+if ENV['eggs_from_zero']:
+    print(f"len(first_line)={len(first_line)}",file=err)
+    print(f"first_line={first_line}",file=err)
+    if not all(represents_int(_,True) for _ in first_line):
+        print("# Error (in the table format): All entries in the first row of your table should be extended integers (either naturals or 'inf').")
     exit(1)
-table_submitted.append([0] + list(map(int, first_line)))
+    table_submitted.append(([] if ENV['floors_from_zero'] else [0]) + first_line)
+else:    
+    if not all(represents_int(_) for _ in first_line):
+        print("# Error (in the table format): All entries in the first row of your table should be integers (actually, natural numbers).")
+    table_submitted.append(([] if ENV['floors_from_zero'] else [0]) + list(map(int, first_line)))
 
 next_line, cmd = get_line() 
 while cmd != "END":

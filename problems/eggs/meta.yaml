@@ -16,18 +16,18 @@ services:
         default: it
   check_table:
     evaluator: [services/check_table_server.py]
-    flags:
-      eggs_from_zero
-      floors_from_zero
     args:
+      eggs_from_zero:
+        regex: (0|1)
+        default: 0
+      floors_from_zero:
+        regex: (0|1)
+        default: 0
       lang:
         regex: (en|it)
         default: it
   gimme_table:
     evaluator: [services/gimme_table_server.py]
-    flags:
-      eggs_from_zero
-      floors_from_zero
     args:
       n_floors:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -35,6 +35,12 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 2
+      eggs_from_zero:
+        regex: (0|1)
+        default: 0
+      floors_from_zero:
+        regex: (0|1)
+        default: 0
       lang:
         regex: (en|it)
         default: it
@@ -47,6 +53,9 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      tell_min_spoiler:
+        regex: (0|1)
+        default: 0
       lang:
         regex: (en|it)
         default: it

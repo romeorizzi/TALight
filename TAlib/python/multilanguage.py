@@ -2,7 +2,6 @@
 
 from sys import stderr, exit
 from os import environ
-from pathlib import Path
 
 yaml_is_installed = True
 try:
@@ -48,9 +47,9 @@ class Env:
 class Lang:
     def __init__(self, ENV, myfeval):
         self.myfeval = myfeval
+        self.ENV=ENV
         self.messages_book = None
-        self.service_name = Path(ENV.service_server_fullname).stem
-        self.messages_book_file = self.service_name + "." + ENV["lang"] + ".yaml"
+        self.messages_book_file = ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml"
         if yaml_is_installed:
             try:
               with open(self.messages_book_file, 'r') as stream:
@@ -68,7 +67,7 @@ class Lang:
             arg_val = ENV[arg_name]
             self.opening_msg += f", {arg_name}={arg_val}"
         if self.messages_book == None:
-            self.opening_msg += f".\n# The feedback_source is code of the service server ({service_server_fullname})"
+            self.opening_msg += f".\n# The feedback_source is code of the service server ({ENV.service_server_fullname})"
         else:
             self.opening_msg += f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder."
 

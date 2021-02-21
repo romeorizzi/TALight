@@ -2,7 +2,7 @@
 
 # METADATA OF THIS TAL_SERVICE:
 problem="morra"
-service="compute_hash_server"
+service="compute_hash"
 args_list = [
     ('hash_type',str),
     ('white_string',str),
@@ -10,7 +10,7 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import exit, argv
+from sys import stderr, exit, argv
 import string 
 import random
 

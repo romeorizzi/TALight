@@ -6,11 +6,13 @@ service="gimme_table"
 args_list = [
     ('n_eggs',int),
     ('n_floors',int),
+    ('eggs_from_zero',bool),
+    ('floors_from_zero',bool),
     ('lang',str),
     ('ISATTY',bool),
 ]
 
-from sys import exit, argv
+from sys import stderr, exit, argv
 from random import randrange
 from math import inf as IMPOSSIBLE
 
@@ -36,9 +38,14 @@ for u in range(1,1+ENV['n_eggs']):
             table[u][f] = min(table[u][f],1+max(table[u][f-first_launch_floor],table[u-1][first_launch_floor-1]))
 
 # PRINTING OUT THE TABLE:
-fmt = f"%{1+len(str(table[-1][-1]))}d"
+width=max(4,1+len(str(table[1][-1]))) if ENV['eggs_from_zero'] else 1+len(str(table[0][-1]))
+fmt = f"%{width}d"
+if ENV['eggs_from_zero']:
+    print(fmt % 0, end=" "*(width-3)) if ENV['floors_from_zero'] else print("", end=(" "*(width-3)))
+    for _ in range(1,len(table[0])): print("inf", end=(" "*(width-3)))
+    print()
 for row in table[1:]:
-    for ele in row[1:]:
-        print(fmt % ele, end=" ")
+    for ele in row if ENV['floors_from_zero'] else row[1:]:
+        print(fmt % ele, end="")
     print()    
 exit(0)
