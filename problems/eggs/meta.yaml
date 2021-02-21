@@ -5,13 +5,12 @@ services:
     args:
       min:
         regex: ^([1-9][0-9]{0,1}|100)$
-        default: 100
       n_floors:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
-        default: 100
+        default: 2
       lang:
         regex: (en|it)
         default: it

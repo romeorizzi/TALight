@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-open-channel: "# Servirò: problem=sum, service=sum_and_product, numbers={ENV_numbers}i, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."
+open-channel: "# Servirò: problem={problem}, service={service}"
 over-sum: "infatti, {a}+{b}={a+b} > {x+y}."
 under-sum: "infatti, {a}+{b}={a+b} < {x+y}."
 right-sum: "infatti, {a}+{b}={n}"

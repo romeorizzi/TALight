@@ -4,18 +4,18 @@ from os import environ
 from sys import exit
 from random import randrange
 
-ENV_numbers = environ["TAL_numbers"]
-ENV_obj = environ["TAL_obj"]
-ENV_num_questions = int(environ["TAL_num_questions"])
+ENV.numbers = environ["TAL_numbers"]
+ENV.obj = environ["TAL_obj"]
+ENV.num_questions = int(environ["TAL_num_questions"])
 
-print(f"# I will serve: problem=sum, service=sum, numbers={ENV_numbers}, obj={ENV_obj}, num_questions={ENV_num_questions}.")
+print(f"# I will serve: problem=sum, service=sum, numbers={ENV.numbers}, obj={ENV.obj}, num_questions={ENV.num_questions}.")
 
 gen_new_s = True    
-for _ in range(ENV_num_questions):
+for _ in range(ENV.num_questions):
     if gen_new_s:
-        if ENV_numbers == "onedigit":
+        if ENV.numbers == "onedigit":
             s = randrange(10)
-        elif ENV_numbers == "twodigits":
+        elif ENV.numbers == "twodigits":
             s = randrange(100)
         else:
             s = randrange(2**64)
@@ -30,7 +30,7 @@ for _ in range(ENV_num_questions):
     elif a+b < s:
         print(f"No! indeed, {a}+{b}={a+b} < {s}.")
     else: # a + b == n
-        if ENV_obj == "max_product":
+        if ENV.obj == "max_product":
             if a < b:
                 a,b = b,a
             if a-b > 1:

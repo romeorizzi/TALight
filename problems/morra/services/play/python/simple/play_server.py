@@ -7,10 +7,10 @@ import random
 
 from hash_and_cipher import hash_value
 
-ENV_num_rounds = int(environ.get("TAL_num_rounds"))
-ENV_hash_type = environ.get("TAL_hash_type")
+ENV.num_rounds = int(environ.get("TAL_num_rounds"))
+ENV.hash_type = environ.get("TAL_hash_type")
 
-print(f"# I will serve: problem=morra, service=play, num_rounds={ENV_num_rounds}, hash_type={ENV_hash_type}.")
+print(f"# I will serve: problem=morra, service=play, num_rounds={ENV.num_rounds}, hash_type={ENV.hash_type}.")
 
 """
 With a different protocol we could attempt to take profit of a possible ingenuity on the side of the problem solver: 
@@ -27,13 +27,13 @@ score_mine = 0
 score_yours = 0
 cheated = 0
 #prev_secret_str_yours = None
-for i in range(1,ENV_num_rounds+1):
+for i in range(1,ENV.num_rounds+1):
     print("?")
     m = random.randrange(5)
     s = m + random.randrange(5)
     alphabet_string = string.ascii_letters + string.digits
     white_string_mine = chr(m+ord("0")) + "_" + chr(s+ord("0")) + "_" + ''.join(random.choices(alphabet_string, k=60))
-    hash_str_mine = str(hash_value(white_string_mine,ENV_hash_type))
+    hash_str_mine = str(hash_value(white_string_mine,ENV.hash_type))
     print(f"{hash_str_mine}")
     hash_str_yours = input().strip()
     while hash_str_yours[0] == '#':
@@ -43,7 +43,7 @@ for i in range(1,ENV_num_rounds+1):
     while white_str_yours[0] == '#':
         white_str_yours = input().strip()
     #prev_secret_str_yours = white_str_yours[4:]     
-    should_be = str(hash_value(white_str_yours,ENV_hash_type))
+    should_be = str(hash_value(white_str_yours,ENV.hash_type))
     if hash_str_yours != should_be:
         print(f"No! You tried to cheat: h({white_str_yours}) = {should_be} != {hash_str_yours}.")
         score_mine += 10

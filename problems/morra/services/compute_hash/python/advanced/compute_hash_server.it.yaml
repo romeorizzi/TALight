@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-open-channel: "# Servirò: problem=morra, service=compute_hash, white_string={ENV_white_string}, hash_type={ENV_hash_type}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."
+open-channel: "# Servirò: problem={problem}, service={service}"
 ask-for-white-string: "Poichè non hai specificato il parametro white_string, ti chiediamo di immettere ora la stringa in chiaro, di cui computare lo hash:"
-give-only-hash: "{hash_value(ENV_white_string,ENV_hash_type)}"
-give-hash-verbose: "h({white_str}) = {hash_value(white_str,ENV_hash_type)}"
+give-only-hash: "{hash_value(ENV.white_string,ENV.hash_type)}"
+give-hash-verbose: "h({white_str}) = {hash_value(white_str,ENV.hash_type)}"

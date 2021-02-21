@@ -2,7 +2,7 @@
 
 # METADATA OF THIS TAL_SERVICE:
 problem="eggs"
-service="gimme_table"
+service="opt_move"
 args_list = [
     ('n_eggs',int),
     ('n_floors',int),
@@ -32,13 +32,12 @@ for u in range(ENV.n_eggs):
 for u in range(1,1+ENV.n_eggs):
     for f in range(1,1+ENV.n_floors):
         table[u][f] = IMPOSSIBLE
+        best_launch_floor = None
         for first_launch_floor in range(1,1+f):
-            table[u][f] = min(table[u][f],1+max(table[u][f-first_launch_floor],table[u-1][first_launch_floor-1]))
+            if table[u][f] > 1+max(table[u][f-first_launch_floor],table[u-1][first_launch_floor-1]):
+                best_launch_floor = first_launch_floor
+                table[u][f] = 1+max(table[u][f-first_launch_floor],table[u-1][first_launch_floor-1])
 
-# PRINTING OUT THE TABLE:
-fmt = f"%{1+len(str(table[-1][-1]))}d"
-for row in table[1:]:
-    for ele in row[1:]:
-        print(fmt % ele, end=" ")
-    print()    
+print(f"When you are given {ENV.n_eggs} eggs and the floors are {ENV.n_floors} then there exists a policy that guarantees you to find out the truth in no more than than {table[ENV.n_eggs][ENV.n_floors]} launches.\nThis is optimal.\nA possible first move for such an optimal strategy is to launch one egg from floor {best_launch_floor}.")
+
 exit(0)

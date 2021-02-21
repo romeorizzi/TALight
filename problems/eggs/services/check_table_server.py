@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 
-from os import environ
-from sys import exit
+# METADATA OF THIS TAL_SERVICE:
+problem="eggs"
+service="check_table"
+args_list = [
+    ('lang',str),
+    ('ISATTY',bool),
+]
+
+from sys import exit, argv
+from random import randrange
 from math import inf as IMPOSSIBLE
 
-from multilanguage import *
+from multilanguage import Env, Lang, TALcolors
+ENV =Env(args_list, problem, service, argv[0])
+TAc =TALcolors(ENV)
+LANG=Lang(ENV, lambda fstring: eval(f"f'{fstring}'"))
+TAc.print(LANG.opening_msg, "green")
 
-ENV_lang = environ["TAL_lang"]
-ENV_colored_feedback = (environ["TAL_ISATTY"] == "1")
-
-set_colors(ENV_colored_feedback)
-messages_book = select_book_and_lang("check_table_server", ENV_lang)
-        
-def render_feedback(msg_code, msg_English_rendition):
-    if messages_book == None:
-        return msg_English_rendition
-    return eval(f"f'{messages_book[msg_code]}'")
-
-
-TAcprint(render_feedback("open-channel", f"# I will serve: problem=eggs, service=check_table, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."), "green")        
+# START CODING YOUR SERVICE:
 
 print('# waiting for a rectangular table of natural numbers. Insert line "# END" to close the table.')
 def get_line():
@@ -77,7 +77,7 @@ def entry_should_be(n_eggs,n_floors):
 
 def check_entry(n_eggs,n_floors):
     if table_submitted[n_eggs][n_floors] != entry_should_be(n_eggs,n_floors):
-        print(f"! We disagree: according to your table, you need {table_submitted[n_eggs][n_floors]} launches when given {n_eggs} eggs and {n_floors} floors. In my opinion the minimum number of launches needed in the worst case is {entry_should_be(n_eggs,n_floors)}.")
+        print(f"! We disagree: according to your table, you need {table_submitted[n_eggs][n_floors]} launches when given {n_eggs} eggs and {n_floors} floors. In our opinion the minimum number of launches needed in the worst case is {entry_should_be(n_eggs,n_floors)}.")
         exit(0)
 
 for n_eggs in range(len(table_submitted)):

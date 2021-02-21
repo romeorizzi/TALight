@@ -1,34 +1,33 @@
 #!/usr/bin/env python3
 
-from os import environ
-from sys import exit
+# METADATA OF THIS TAL_SERVICE:
+problem="sum"
+service="sum_and_difference"
+args_list = [
+    ('num_questions',int),
+    ('numbers',str),
+    ('lang',str),
+    ('ISATTY',bool),
+]
+
+from sys import exit, argv
 from random import randrange
 
-from multilanguage import *
+from multilanguage import Env, Lang, TALcolors
+ENV =Env(args_list, problem, service, argv[0])
+TAc =TALcolors(ENV)
+LANG=Lang(ENV, lambda fstring: eval(f"f'{fstring}'"))
+TAc.print(LANG.opening_msg, "green")
 
-ENV_lang = environ["TAL_lang"]
-ENV_numbers = environ["TAL_numbers"]
-ENV_num_questions = int(environ["TAL_num_questions"])
-ENV_colored_feedback = (environ["TAL_ISATTY"] == "1")
-
-set_colors(ENV_colored_feedback)
-messages_book = select_book_and_lang("sum_and_difference_server", ENV_lang)
-        
-def render_feedback(msg_code, msg_English_rendition):
-    if messages_book == None:
-        return msg_English_rendition
-    return eval(f"f'{messages_book[msg_code]}'")        
-
-
-TAcprint(render_feedback("open-channel", f"# I will serve: problem=sum, service=sum_and_difference, numbers={ENV_numbers}, num_questions={ENV_num_questions}, colored_feedback={ENV_colored_feedback}, lang={ENV_lang}."), "green")        
+# START CODING YOUR SERVICE: 
 
 gen_new_pair = True    
-for _ in range(ENV_num_questions):
+for _ in range(ENV.num_questions):
     if gen_new_pair:
-        if ENV_numbers == "onedigit":
+        if ENV.numbers == "onedigit":
             x = randrange(10)
             y = randrange(10)
-        elif ENV_numbers == "twodigits":
+        elif ENV.numbers == "twodigits":
             x = randrange(100)
             y = randrange(100)
         else:
@@ -36,29 +35,29 @@ for _ in range(ENV_num_questions):
             y = randrange(2**64)
     if x < y:
         x,y = y,x
-    TAcprint(f"? {x+y} {x-y}", "yellow", ["bold"])
+    TAc.print(f"? {x+y} {x-y}", "yellow", ["bold"])
     spoon = input().strip()
     while spoon[0] == '#':
         spoon = input().strip()
     a, b = map(int, spoon.split(" "))
     gen_new_pair = False
     if a+b > x+y:
-        TAcNO() 
-        TAcprint(render_feedback("over-sum", f"indeed, {a}+{b}={a+b} > {x+y}."), "yellow", ["underline"])
+        TAc.NO() 
+        TAc.print(LANG.render_feedback("over-sum", f"indeed, {a}+{b}={a+b} > {x+y}."), "yellow", ["underline"])
     elif a+b < x+y:    
-        TAcNO() 
-        TAcprint(render_feedback("under-sum", f"indeed, {a}+{b}={a+b} < {x+y}."), "yellow", ["underline"])
+        TAc.NO() 
+        TAc.print(LANG.render_feedback("under-sum", f"indeed, {a}+{b}={a+b} < {x+y}."), "yellow", ["underline"])
     elif abs(a-b) > x-y:    
-        TAcNO() 
-        TAcprint(render_feedback("too-apart", f"indeed, |{a}-{b}|={abs(a-b)} > {x-y}."), "yellow", ["underline"])
+        TAc.NO() 
+        TAc.print(LANG.render_feedback("too-apart", f"indeed, |{a}-{b}|={abs(a-b)} > {x-y}."), "yellow", ["underline"])
     elif abs(a-b) < x-y:    
-        TAcNO() 
-        TAcprint(render_feedback("too-close", f"indeed, |{a}-{b}|={abs(a-b)} < {x-y}."), "yellow", ["underline"])
+        TAc.NO() 
+        TAc.print(LANG.render_feedback("too-close", f"indeed, |{a}-{b}|={abs(a-b)} < {x-y}."), "yellow", ["underline"])
     else:
-        TAcOK() 
+        TAc.OK() 
         assert (a + b == x+y) and (abs(a-b) == x-y)
-        TAcprint(render_feedback("ok", f"indeed, {a}+{b} = {x+y} and |{a}-{b}| = {x-y}."), "grey")
+        TAc.print(LANG.render_feedback("ok", f"indeed, {a}+{b} = {x+y} and |{a}-{b}| = {x-y}."), "grey")
         gen_new_pair = True
 
-TAcFinished()
+TAc.Finished()
 exit(0)
