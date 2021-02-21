@@ -22,12 +22,12 @@ TAc.print(LANG.opening_msg, "green")
 # START CODING YOUR SERVICE: 
 
 gen_new_pair = True    
-for _ in range(ENV.num_questions):
+for _ in range(ENV['num_questions']):
     if gen_new_pair:
-        if ENV.numbers == "onedigit":
+        if ENV['numbers'] == "onedigit":
             x = randrange(10)
             y = randrange(10)
-        elif ENV.numbers == "twodigits":
+        elif ENV['numbers'] == "twodigits":
             x = randrange(100)
             y = randrange(100)
         else:

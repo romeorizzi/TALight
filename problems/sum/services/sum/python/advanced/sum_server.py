@@ -23,11 +23,11 @@ TAc.print(LANG.opening_msg, "green")
 # START CODING YOUR SERVICE: 
 
 gen_new_s = True    
-for _ in range(ENV.num_questions):
+for _ in range(ENV['num_questions']):
     if gen_new_s:
-        if ENV.numbers == "onedigit":
+        if ENV['numbers'] == "onedigit":
             s = randrange(10)
-        elif ENV.numbers == "twodigits":
+        elif ENV['numbers'] == "twodigits":
             s = randrange(100)
         else:
             s = randrange(2**64)
@@ -44,7 +44,7 @@ for _ in range(ENV.num_questions):
         TAc.NO() 
         TAc.print(LANG.render_feedback("too-little", f"indeed, {a}+{b}={a+b} < {s}."), "yellow", ["underline"])        
     else: # a + b == n
-        if ENV.obj == "max_product":
+        if ENV['obj'] == "max_product":
             if a < b:
                 a,b = b,a
             if a-b > 1:

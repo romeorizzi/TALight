@@ -6,7 +6,7 @@ from pathlib import Path
 
 yaml_is_installed = True
 try:
-    import yaml
+    import ruamel.yaml
 except Exception as e:
     yaml_is_installed = False
     print("# Recoverable Error: ", end="", file=stderr)
@@ -30,28 +30,32 @@ class Env:
         self.args_list = args_list
         #self.args = { key : val for key, val in args_list }
         self.service_server_fullname = service_server_fullname
+        self.arg = {}
         for name, val_type in args_list:
             if val_type == str:
-                exec(f'self.{name} = environ["TAL_{name}"]')
+                self.arg[name] = environ[f"TAL_{name}"]
             elif val_type == int:
-                exec(f'self.{name} = int(environ["TAL_{name}"])')
+                self.arg[name] = int(environ[f"TAL_{name}"])
             elif val_type == bool:
-                exec(f'self.{name} = (environ["TAL_{name}"] == "1")')
+                self.arg[name] = environ[f"TAL_{name}"] == "1"
             else:
                 print(f"# Unrecoverable Error: type {val_type} not yet supported in args list. Used to interpret arg {name}.", file=stderr)
                 exit(1)
+    def __getitem__(self, key):
+        return self.arg.get(key)
+
 
 class Lang:
     def __init__(self, ENV, myfeval):
         self.myfeval = myfeval
         self.messages_book = None
         self.service_name = Path(ENV.service_server_fullname).stem
-        self.messages_book_file = self.service_name + "." + ENV.lang + ".yaml"
+        self.messages_book_file = self.service_name + "." + ENV["lang"] + ".yaml"
         if yaml_is_installed:
             try:
               with open(self.messages_book_file, 'r') as stream:
                 try:
-                    yaml_book = yaml.safe_load(stream)
+                    yaml_book = ruamel.yaml.safe_load(stream)
                     self.messages_book = yaml_book
                 except yaml.YAMLError as exc:
                     print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file)\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
@@ -61,12 +65,12 @@ class Lang:
                 print(ioe, file=stderr)
         self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={ENV.problem}, service={ENV.service}")
         for arg_name, _ in ENV.args_list:
-            arg_val = eval(f"ENV.{arg_name}")
+            arg_val = ENV[arg_name]
             self.opening_msg += f", {arg_name}={arg_val}"
         if self.messages_book == None:
             self.opening_msg += f".\n# The feedback_source is code of the service server ({service_server_fullname})"
         else:
-            self.opening_msg += f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder."   
+            self.opening_msg += f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder."
 
 
     def render_feedback(self, msg_code, msg_English_rendition):
@@ -75,10 +79,10 @@ class Lang:
         return self.myfeval(self.messages_book[msg_code])
 
 
-                
-class TALcolors:                
+
+class TALcolors:
     def __init__(self, ENV):
-        self.colored_print = ENV.ISATTY and termcolor_is_installed
+        self.colored_print = ENV["ISATTY"] and termcolor_is_installed
         self.numNO = 0
         self.numOK = 0
 
@@ -107,4 +111,3 @@ class TALcolors:
 
     def Finished(self):
         self.print(f"! (We have finished) Correct answers: {numOK}/{numOK+numNO}", "white")
-

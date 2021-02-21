@@ -24,13 +24,13 @@ TAc.print(LANG.opening_msg, "green")
 
 
 # INITIALIZATON: allocation, base cases, sentinels
-table = [ [0] + [IMPOSSIBLE] * ENV.n_floors ]
-for u in range(ENV.n_eggs):
-    table.append([0] + [None] * ENV.n_floors)
+table = [ [0] + [IMPOSSIBLE] * ENV['n_floors'] ]
+for u in range(ENV['n_eggs']):
+    table.append([0] + [None] * ENV['n_floors'])
 
 # INDUCTTVE STEP: the min-max recursion with nature playing against
-for u in range(1,1+ENV.n_eggs):
-    for f in range(1,1+ENV.n_floors):
+for u in range(1,1+ENV['n_eggs']):
+    for f in range(1,1+ENV['n_floors']):
         table[u][f] = IMPOSSIBLE
         for first_launch_floor in range(1,1+f):
             table[u][f] = min(table[u][f],1+max(table[u][f-first_launch_floor],table[u-1][first_launch_floor-1]))

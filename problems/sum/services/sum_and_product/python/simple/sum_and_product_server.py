@@ -4,18 +4,18 @@ from os import environ
 from sys import exit
 from random import randrange
 
-ENV.numbers = environ["TAL_numbers"]
-ENV.num_questions = int(environ["TAL_num_questions"])
+ENV['numbers'] = environ["TAL_numbers"]
+ENV['num_questions'] = int(environ["TAL_num_questions"])
 
-print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV.numbers}, num_questions={ENV.num_questions}.")
+print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV['numbers']}, num_questions={ENV['num_questions']}.")
 
 gen_new_pair = True    
-for _ in range(ENV.num_questions):
+for _ in range(ENV['num_questions']):
     if gen_new_pair:
-        if ENV.numbers == "onedigit":
+        if ENV['numbers'] == "onedigit":
             x = randrange(10)
             y = randrange(10)
-        elif ENV.numbers == "twodigits":
+        elif ENV['numbers'] == "twodigits":
             x = randrange(100)
             y = randrange(100)
         else:
