@@ -214,14 +214,6 @@ echo $RUST_LOG
 If it is correctly set than you get the string "info" in the following line, otherwise you get an empty line if the variable is not set. 
 
 The simplest and most effective way to unset all environment variables set up for the current terminal after its instantiation? Just close the terminal and open another one. But usually there is no need for a refresh.
-Actually, if you want this convenient setup to be the default, then add the following line at the end of your `~/.bashrc` file.
-
-```bash
-export RUST_LOG=info
-```
-
-This is exactly the same kind of operation you did with the configuration of the `PATH` environment variable.
-Now every time you instantiate a new terminale it will come to life with the `RUST_LOG` environment variable correctly defined. (You can check this as shown above.) 
 </details>
 
 

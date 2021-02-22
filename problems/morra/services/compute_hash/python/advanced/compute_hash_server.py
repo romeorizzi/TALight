@@ -19,7 +19,7 @@ from hash_and_cipher import hash_value
 from multilanguage import Env, Lang, TALcolors
 ENV =Env(args_list, problem, service, argv[0])
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, lambda fstring: eval(f"f'{fstring}'"))
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
         

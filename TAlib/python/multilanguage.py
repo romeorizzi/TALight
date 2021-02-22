@@ -45,9 +45,10 @@ class Env:
 
 
 class Lang:
-    def __init__(self, ENV, myfeval):
+    def __init__(self, ENV, TAc, myfeval):
         self.myfeval = myfeval
         self.ENV=ENV
+        self.TAc=TAc
         self.messages_book = None
         self.messages_book_file = ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml"
         if yaml_is_installed:
@@ -70,6 +71,7 @@ class Lang:
             self.opening_msg += f".\n# The feedback_source is code of the service server ({ENV.service_server_fullname})"
         else:
             self.opening_msg += f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder."
+        TAc.print(self.opening_msg, "yellow", ["underline"], file=stderr)
 
 
     def render_feedback(self, msg_code, msg_English_rendition):
