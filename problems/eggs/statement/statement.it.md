@@ -14,7 +14,7 @@ Più in generale, ti proponiamo di studiare la funzione $m=m(u,n)$ dove $n$ è i
 ## Servizi offerti
 
 ```
-> rtal -a min=m -a n_floors=n -a n_eggs=u connect confirm_min_throws
+> rtal connect -a min=m -a n_floors=n -a n_eggs=u eggs confirm_min_throws
 ```
 con $m$, $n$ ed $u$ numeri naturali compresi tra $1$ e $100$ (con $u$ di default a $2$ ed $n$ a $100$) ritorna:
   $0$ se $m$ è il valore corretto per il minor numero possibile di lanci che, ove ben spesi, consentano di determinare sempre il piano di rottura.
@@ -23,22 +23,50 @@ con $m$, $n$ ed $u$ numeri naturali compresi tra $1$ e $100$ (con $u$ di default
 
 
 ```
-> rtal -a n_floors=n -a n_eggs=u opt_move
+> rtal connect -a n_floors=n -a n_eggs=u eggs opt_move
 ```
 con $n$ ed $u$ numeri naturali compresi tra $1$ e $100$ (con $u$ di default a $2$ ed $n$ a $100$) ritorna un numero che corrisponde ad un piano dal quale non è sbagliato lanciare il primo uovo.
 
 #### Verifica della tabella delle risposte
 
+In questo servizio veniamo a scoprire la nostra priam TALutil.
+Se lanciamo il segunte servizio:
+
 ```
-> rtal -a n_floors=n -a n_eggs=u check_table < table.txt
+> rtal connect eggs check_table
 ```
-con $u$ ed $n$ numeri naturali compresi tra $1$ e $100$ (con $u$ di default a $2$ ed $n$ a $100$) controlla la correttezza della tabella contenuta nel file `table.txt`. La tabella ha $u$ righe ciascuna di $n$ numeri interi separati da spazio.
-Nella riga $i$ e colonna $j$ è scritto $m(i,j)$, ossia il più piccolo numero $m$ per cui, quando si parta con $i$ uova su un palazzo di $j$ piani, esista una strategia che consenta di determinare il piano critico impiegando al più $m$ lanci nel caso peggiore.
+ci viene chiesto di inserire una tabella rettangolare di numeri naturali. Possiamo scegliere noi il numero di righe $U$ (quando non vogliamo introdurre ulteriori righe inseriamo la stringa "#end" per chiudere la fase di immissione) ed il numero di colonne $N$ (lo stabilisce la prima riga). Il servizio controlla che la tabella ricomprenda precisamente i numeri $m=m(u,n)$ con $u$ ed $n$ numeri naturali compresi tra $1$ e $100$.
+Se la tabella è grande potrete procedere di Ctrl-C da file e Ctrl-Shift-V sul terminale (sul terminale le combinazioni per il copy&paste sono  e Ctrl-Shift-C e Ctrl-Shift-V).
+Il servizio di default richiede che nella tabella i numeri siano dgli interi separati da spazi. Ma potete impostare altri separatori (anche stringhe) avvalendovi dei paramtri del servizio.
+Potreste quindi mandare la tabella scritta in formato .csv.
+Nella riga $i$ e colonna $j$ della tablla è scritto $m(i,j)$, ossia il più piccolo numero $m$ per cui, quando si parta con $i$ uova su un palazzo di $j$ piani, esista una strategia che consenta di determinare il piano critico impiegando al più $m$ lanci nel caso peggiore.
+
+Potete prima testare il servizio con tabelle molto piccle che potet immettere a mano, e poi gestire tabelle più grandi con (Shift)-Ctrl-C Shift-Ctrl-V. 
+Ma quando $U$ ed $N$ dovessro essere grandi anche il copia incolla non sarà adatto.
+Supponiamo che la tabella sia contenuta nel file `bots/python/table_2_100.txt`. Possiamo allora inviarlo al servizio con l'aiuto della TALutil `TA_send_txt_file` come segue:
+
+```bash
+rtal connect -e -a separator=, eggs check_table -- ~/TAlight/TAL_utils/TA_send_txt_file.py table_2_100.csv
+```
+
+Un altro servizio che, in qusto problema, sfrutta questa stssa TALutil è:
+
+
+```bash
+rtal connect -e eggs eval_strategy_table -- ~/TAlight/TAL_utils/TA_send_txt_file.py strategy_table.csv
+```
+
+oppure
+
+```bash
+rtal connect -e -aseparator=, eggs eval_strategy_table -- ~/TAlight/TAL_utils/TA_send_txt_file.py strategy_table.csv
+```
+
 
 #### Gioco interattivo
 
 ```
-> rtal connect play --n_floors=n --n_eggs=u
+> rtal connect -a n_floors=n -a n_eggs=u eggs play
 ```
 con $n$ ed $u$ numeri naturali compresi tra $1$ e $100$ (con $u$ di default a $2$ ed $n$ a $100$) avvia una possibile storia che si svolge secondo il protocollo così esemplificato (negli esempi di interazione, le righe che iniziano con "S> " sono quelle inviate dal server, mentre quelle inviate dal tuo dispositivo locale sono prefissate con "L> "):
 
@@ -86,7 +114,7 @@ S> !Correct! The critical floor is 2. This time it took you 3 lounches to find i
 Per inserire un tuo bot che giochi al posto tuo la sintassi corretta è:
 
 ```
-> rtal connect --n_floors=n --n_eggs=u play  -- mybot.py
+> rtal connect eggs --n_floors=n --n_eggs=u play  -- mybot.py
 ```
 Il bot deve essere un eseguibile coi permessi di esecuzione settati, ma può essere stato scritto in un qualsiasi linguaggio.
 
@@ -95,13 +123,12 @@ Il bot deve essere un eseguibile coi permessi di esecuzione settati, ma può ess
 
 1. Come cambiano le cose se ciò che vogliamo minimizzare è il numero atteso di lanci assumendo che ogni possibili verità sia equiprobabile?
 
-2. Si assuma che la quantità da minimizzare sia il numero di missioni dell'ascensore di vetro. Una missione parte con l'imbarcare tutte le uova a disposizione e nel rilasciarle una ad una in fase di salita. Possiamo prevedere inoltre un parametro che limiti la capacità dell'ascensore.
  
 
-#### Gioca tu nel ruolo di Murphy
+#### Gioca tu nel ruolo di Natura
 
 ```
-> rtal connect --n_floors=n --n_eggs=u play_murphy
+> rtal connect -a n_floors=100 -a n_eggs=3 eggs play_nature
 ```
 Esempio
 ```

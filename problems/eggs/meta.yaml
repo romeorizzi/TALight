@@ -12,19 +12,22 @@ services:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 2
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
   check_table:
     evaluator: [services/check_table_server.py]
     args:
       eggs_from_zero:
-        regex: (0|1)
+        regex: ^(0|1)$
         default: 0
       floors_from_zero:
-        regex: (0|1)
+        regex: ^(0|1)$
         default: 0
+      separator:
+        regex: ^(None|[^#])$
+        default: None
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
   gimme_table:
     evaluator: [services/gimme_table_server.py]
@@ -36,13 +39,13 @@ services:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 2
       eggs_from_zero:
-        regex: (0|1)
+        regex: ^(0|1)$
         default: 0
       floors_from_zero:
-        regex: (0|1)
+        regex: ^(0|1)$
         default: 0
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
   opt_move:
     evaluator: [services/opt_move_server.py]
@@ -53,11 +56,14 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      egg_launcher_goal:
+        regex: ^(minmax|minmax_minavg|minavg_minmax)$
+        default: minmax
       tell_min_spoiler:
-        regex: (0|1)
+        regex: ^(0|1)$
         default: 0
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
   play:
     evaluator: [services/play_server.py]
@@ -68,11 +74,17 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      egg_launcher_goal:
+        regex: ^(minmax|minmax_minavg|minavg_minmax)$
+        default: minmax
+      nature:
+        regex: ^(adversial|indifferent)$
+        default: indifferent
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
         default: it
-  play_murphy:
-    evaluator: [services/play_murphy_server.py]
+  play_nature:
+    evaluator: [services/play_nature_server.py]
     args:
       n_floors:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -80,6 +92,21 @@ services:
       n_eggs:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 100
+      egg_launcher_goal:
+        regex: ^(minmax|minmax_minavg|minavg_minmax)$
+        default: minmax
+      nature:
+        regex: ^(adversial|indifferent)$
+        default: indifferent
       lang:
-        regex: (en|it)
+        regex: ^(en|it)$
+        default: it
+  eval_strategy_table:
+    evaluator: [services/eval_strategy_table_server.py]
+    args:
+      separator:
+        regex: ^(None|[^#])$
+        default: None
+      lang:
+        regex: ^(en|it)$
         default: it
