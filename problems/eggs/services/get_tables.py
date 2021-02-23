@@ -1,1 +1,1 @@
-../../../TAlib/python/get_tables.py
+../../../TAL_lib/python/get_tables.py

@@ -1,1 +1,1 @@
-../../../../../../TAlib/python/multilanguage.py
+../../../../../../TAL_lib/python/multilanguage.py

@@ -4,6 +4,7 @@ from os import environ
 from sys import stderr, exit
 from random import randrange
 
+ENV={}
 ENV['numbers'] = environ["TAL_numbers"]
 ENV['obj'] = environ["TAL_obj"]
 ENV['num_questions'] = int(environ["TAL_num_questions"])

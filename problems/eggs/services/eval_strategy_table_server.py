@@ -21,17 +21,17 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
 
-def check_entry_integer(row_index,col_index,val):
-    if type(val) != int:
-        print(f"# Error (in the table format): the entry ({row_index},{col_index}) in your table represents the floor from which to throw the first of {row_index} eggs when the floors are {col_index} (numbered from 1 to {col_index}). As such entry ({row_index},{col_index}) should be a natural number. However, the value {val} is a non integer float with decimal part.")
+def check_entry_integer(row_index_name,col_index_name,entry_val):
+    if type(entry_val) != int:
+        print(f"# Error (in the table format): the entry ({row_index_name},{col_index_name}) in your table represents the floor from which to throw the first of {row_index_name} eggs when the floors are {col_index_name} (numbered from 1 to {col_index_name}). As such entry ({row_index_name},{col_index_name}) should be a natural number. However, the value {entry_val} is a non integer float with decimal part.")
         exit(1)        
 
-def check_entry_range(row_index,col_index,val):
-    if val < 1 or val > col_index:
-        print(f"# Error (in the table format): the entry ({row_index},{col_index}) in your table represents the floor from which to throw the first of {row_index} eggs when the floors are {col_index} (numbered from 1 to {col_index}). As such entry ({row_index},{col_index}) should be a natural in the interval [1,{col_index}]. However, the value {val} does not belong to that interval.")
+def check_entry_range(row_index_name,col_index_name,entry_val):
+    if entry_val < 1 or entry_val > col_index_name:
+        print(f"# Error (in the table format): the entry ({row_index_name},{col_index_name}) in your table represents the floor from which to throw the first of {row_index_name} eggs when the floors are {col_index_name} (numbered from 1 to {col_index_name}). As such entry ({row_index_name},{col_index_name}) should be a natural in the interval [1,{col_index_name}]. However, the value {entry_val} does not belong to that interval.")
         exit(1)
 
-strategy_table=get_one_numeric_table(sep=None if ENV['separator']=="None" else ENV['separator'], row_names_start_from=0, checks=[check_entry_integer, check_entry_range])
+strategy_table=get_one_numeric_table(sep=None if ENV['separator']=="None" else ENV['separator'], should_be_int=False, row_names_start_from=1, col_names_start_from=1, checks=[check_entry_integer, check_entry_range]) # we set should_be_int=False because we wanted to provide a more specific error message to the problem-solver, as managed in the handler check_entry_integer
 print(f"Ok! Your table makes sense in every single entry! I can hence proceed evaluating the 'strategy' it represents.")
 
 N_eggs = len(strategy_table)
@@ -75,6 +75,6 @@ for truth in range(1, 2+N_floors):
     tot_launches += launches
     tot_missions += missions 
 
-print(f"Here are the scores of your strategy when run over all possible truths:\nmax_launches = {max_launches}\navg_launches = {tot_launches/(N_floors+1)}\nmax_missions = {max_missions}\navg_missions = {tot_missions/(N_floors+1)}")
+print(f"Here is the scoring profile of your strategy when run over all possible truths:\n   - max_launches = {max_launches}\n   - avg_launches = {tot_launches/(N_floors+1)}\n   - max_missions = {max_missions}\n   - avg_missions = {tot_missions/(N_floors+1)}")
 
 exit(0)

@@ -5,6 +5,7 @@ from sys import stderr, exit
 
 from hash_and_cipher import hash_value
 
+ENV={}
 ENV['white_string'] = environ.get("TAL_white_string")
 ENV['hash_type'] = environ.get("TAL_hash_type")
     

@@ -23,7 +23,7 @@ def get_line():
     return None, "GEN_COMMENT"
     
 
-def get_one_numeric_table(sep=None, row_names_start_from=0, col_names_start_from=0, checks=[]):
+def get_one_numeric_table(sep=None, should_be_int=False, should_be_nat=False, row_names_start_from=0, col_names_start_from=0, checks=[]):
     """ When sep=None, the fields are separated by sequences of white characters. When sep="," then a .csv format is assumed, but you can specify use other separator characters or string. A "#" starts a comment for the rest of the line.   
        Examples:
        >[tk.strip() for tk in "wfwqf,   wqfwqfq, wfwfq".split(None)]
@@ -52,9 +52,19 @@ def get_one_numeric_table(sep=None, row_names_start_from=0, col_names_start_from
     if any(_== None for _ in table_submitted[-1]):
         print(f"# Error (in the table format): All entries in your table should be numbers. Just check row {len(table_submitted)-1+row_names_start_from} in your file for a first occurrence of a type mismatch.")
         exit(1)
-    for n_floors, entry in zip(range(1,1+len(table_submitted[-1])), table_submitted[-1]):
-        for check in checks:
-            check(1,n_floors,entry)
+    def one_by_one_check():
+        for col, val in zip(range(len(table_submitted[-1])), table_submitted[-1]):
+            if should_be_int or should_be_nat:
+                if type(val) != int:
+                    print(f"# Error (in the table format): the entry ({len(table_submitted)-1+row_names_start_from},{col+col_names_start_from}) in your table should be an integer number. However, the value {val} is a non integer float with decimal part.")
+                    exit(1)        
+            if should_be_nat:
+                if val<0:
+                    print(f"# Error (in the table format): the entry ({len(table_submitted)-1+row_names_start_from},{col+row_names_start_from}) in your table should be a natural (i.e., non-negative) number. However, you entered the {val}<0 for that entry.")
+                    exit(1)        
+            for check in checks:
+                check(row_index_name=len(table_submitted)-1+row_names_start_from, col_index_name=col+col_names_start_from, entry_val=val)
+    one_by_one_check()
 
     next_line, cmd = get_line() 
     while cmd != "END":
@@ -66,11 +76,9 @@ def get_one_numeric_table(sep=None, row_names_start_from=0, col_names_start_from
                 exit(1)
             table_submitted.append(list(map(convert2number, next_line)))
             if any(_== None for _ in table_submitted[-1]):
-                print(f"# Error (in the table format): All entries in your table should be {str(numeric_type)}. Just check row {len(table_submitted)} in your file for a first occurrence of a type mismatch.")
+                print(f"# Error (in the table format): All entries in your table should be numbers. Just check row {len(table_submitted)-1+row_names_start_from} in your file for a first occurrence of a type mismatch.")
                 exit(1)
-                for n_floors, entry in zip(range(1,1+len(table_submitted[-1])), table_submitted[-1]):
-                    for check in checks:
-                        check(1,n_floors,entry)
+            one_by_one_check()
 
         next_line, cmd = get_line()
     print("# FILE GOT")

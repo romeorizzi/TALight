@@ -7,6 +7,7 @@ import random
 
 from hash_and_cipher import hash_value
 
+ENV={}
 ENV['num_rounds'] = int(environ.get("TAL_num_rounds"))
 ENV['hash_type'] = environ.get("TAL_hash_type")
 

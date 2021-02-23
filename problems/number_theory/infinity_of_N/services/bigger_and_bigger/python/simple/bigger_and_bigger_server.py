@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from sys import stderr, exit
 from os import environ
 from random import randrange
 
