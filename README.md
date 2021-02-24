@@ -132,7 +132,7 @@ lounch the following commands
 mkdir ~/.bin
 cd ~/.bin
 ln -s ~/TAlight/rtal/target/debug/rtald ~/.bin/
-ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
+ln -s ~/TAlight/rtal/target/debug/rtalc ~/.bin/
 ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
 ln -s ~/TAlight/TAL_utils/TA_send_txt_file.py ~/.bin/ 
 ```
@@ -249,6 +249,23 @@ On Mac, the best solution is [iTerm2](https://iterm2.com/), but if you have othe
 
 On Windows, the best solution is [ConEmu](https://conemu.github.io/), but if you have other suggestions ...
 
+<details><summary>Avvio all'uso di ConEmu</summary>
+
+Dopo aver pigiato il tasto "Download" offerto sulla [pagina ufficiale di ConEmu)](https://conemu.github.io/), seleziona "ConEmu Preview+Alpha, Installer (32-bit, 64-bit)" come raffigurato di seguito:
+![image](./figs/ConEmu_download.png)
+e procedi con l'installazione.
+
+Al momento dell'utilizzo di ConEmu (in particolar modo a partire dal paragrafo della repo denominato "STARTING THE TAlight DAEMON") assicurarsi di aprire bash di Git (non la shell cmd che ha i suoi ben noti limiti) nel seguente modo:
+
++ digita sulla tastiera "Win+Shift+W" (o scegliere l'opzione "Finestra nuova console")
+![image](./figs/new_console1.png)
+
++ assicurati di avere nella selezione per la nuova console la bash di GIT e spuntare l'opzione per dividere lo schermo
+![image](./figs/new_console2.png)
+In questo modo si avrà una finestra divisa in due terminali. Mi è stato riferito che il combo bash di GIT + ConEmu migliora di molto l'esprienza d'uso del terminale per utenti Windows.
+
+</summary>
+
 Actually, if you want to invest more on this, a more powerful solution is [Tmux](https://dev.to/srbruning/making-your-terminal-more-productive-with-tmux-2497) on all three platforms. Not only this has the extra benefit to be platform independent (bringing Linux, Mac, and Windows on a common ground) but it also allows you to manage sessions.
 Indeed, Tmux is a [terminal multiplexer](https://linuxhint.com/tmux_vs_screen/) like `screen`, that may sit on any other basic terminal of your preference. While `Tmux` does not allow session sharing with other users it is however more user-friendly than `screen` and, for this reason, among the two we recommend `Tmux`. TMux is highly configurable, also allowing for projects whose editing is simplified by a [tmux sessions manager](https://github.com/tmuxinator/tmuxinator).
 
@@ -318,11 +335,24 @@ rtal connect -e -a numbers=small sum sum -- sum_mysolution.py
 
 Problem `sum` also exemplifies how to interact with a service through a browser rather than through the terminal.
 In this way and by resorting on HTML/CCS/JavaScript technology, nice applets running on the problem solver site can be designed for more user friendly interactions.
-Just look in the `applets` directory of the project and run
+Just look in the `applets` directory of the project (`~/TAlight/applets`) and open the file `sum-protoapplet.html` in a browser.
 
+<details><summary>How to open a file on your local machine in a browser</summary>
+
+On Linux:
 ```bash
 ~/TAlight/applets$ google-chrome sum-protoapplet.html
 ```
+On Mac:
+```bash
+~/TAlight/applets$ open -a "Google Chrome" sum-protoapplet.html
+```
+On Windows, Linux, Mac: open a browser and in the URL field at the top insert:
+```t
+file:///home/romeo/TAlight/applets/sum-protoapplet.html
+```
+</details>
+
 In this file, it is easy to spot out and substitute the hardcoded problem-specific parts and get an analogous page for a first browser mediated interaction also for other problems. One can start from here in order to develop ad-hoc applets specific to other problems and offer fun active learning opportunities also to kids that do not yet know how to code.
 
 ##
