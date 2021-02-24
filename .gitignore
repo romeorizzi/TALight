@@ -6,6 +6,7 @@
 # backups
 *~
 *.bak
+**/.DS_Store
 
 # LaTex
 *.pdf
