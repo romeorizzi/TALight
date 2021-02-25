@@ -32,14 +32,13 @@ struct CliArgs {
     timeout: f64,
 }
 
-fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, evaluator_args: &[String], args: HashMap<String, String>, timeout_ms: u64, tty: bool) {
+fn handle_connection(ws: &mut WebSocket<TcpStream>, meta_dir: PathBuf, evaluator: &str, evaluator_args: &[String], args: HashMap<String, String>, timeout_ms: u64, tty: bool) {
     let mut eval = process::Command::new(&evaluator);
     for arg in evaluator_args {
         eval.arg(arg);
     }
-    let process_name = evaluator.to_str().unwrap_or("NULL".into()).to_string();
-    evaluator.pop();
-    eval.current_dir(evaluator);
+    eval.current_dir(&meta_dir);
+    eval.env("TAL_META_DIR", meta_dir.to_str().unwrap_or("NULL"));
     for (argname, argvalue) in args {
         eval.env("TAL_".to_string() + &argname, argvalue);
     }
@@ -48,7 +47,7 @@ fn handle_connection(ws: &mut WebSocket<TcpStream>, mut evaluator: PathBuf, eval
     eval.stdout(Stdio::piped());
     match eval.spawn() {
         Ok(x) => util::connect_process(ws, x, false, timeout_ms),
-        Err(x) => fail!("Cannot spawn evaluator process {}: {}", process_name, x),
+        Err(x) => fail!("Cannot spawn evaluator process {:?}: {}", evaluator, x),
     };
 }
 
@@ -151,7 +150,7 @@ fn main() {
                                 Command::ConnectionRequest(req) => {
                                     let mut directory = directory.clone();
                                     directory.push(&req.codename);
-                                    let mut evaluator = directory.clone();
+                                    let meta_dir = directory.clone();
                                     directory.push(problem::META);
                                     match read_to_string(&directory) {
                                         Ok(x) => {
@@ -163,8 +162,8 @@ fn main() {
                                                 if service.evaluator.len() == 0 {
                                                     fail!("[{}] Missing evaluator for {} {}", address, req.codename, req.service);
                                                 }
-                                                evaluator.push(&service.evaluator[0]);
                                                 let mut error = None;
+                                                let evaluator = &service.evaluator;
                                                 let mut args: HashMap<String, String> = HashMap::new();
                                                 if let Some(meta_args) = &service.args {
                                                     for (argname, argstruct) in meta_args {
@@ -197,7 +196,7 @@ fn main() {
                                                         Err(x) => fail!("[{}] Error flushing response: {}", address, x),
                                                     };
                                                     info!("[{}] Connection began with problem \"{}\", service \"{}\"", address, req.codename, req.service);
-                                                    handle_connection(&mut client, evaluator, &service.evaluator[1..], args, timeout_ms, req.isatty);
+                                                    handle_connection(&mut client, meta_dir, &evaluator[0], &service.evaluator[1..], args, timeout_ms, req.isatty);
                                                     break;
                                                 }
                                             } else {

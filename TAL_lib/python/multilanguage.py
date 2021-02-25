@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from sys import stderr, exit
+from sys import stderr, exit, argv
 from os import environ
+from os.path import join, split
 
 yaml_is_installed = True
 try:
@@ -24,6 +25,8 @@ except Exception as e:
 
 class Env:
     def __init__(self, args_list, problem, service, service_server_fullname):
+        self.base_path = environ["TAL_META_DIR"]
+        self.exe_path = split(argv[0])[0]
         self.problem = problem
         self.service = service
         self.args_list = args_list
@@ -50,7 +53,7 @@ class Lang:
         self.ENV=ENV
         self.TAc=TAc
         self.messages_book = None
-        self.messages_book_file = ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml"
+        self.messages_book_file = join(ENV.base_path, ENV.exe_path, ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
         if yaml_is_installed:
             try:
               with open(self.messages_book_file, 'r') as stream:

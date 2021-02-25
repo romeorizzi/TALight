@@ -268,7 +268,7 @@ In questo modo si avrà una finestra divisa in due terminali. Mi è stato riferi
 
 Actually, if you want to invest more on this, a more powerful solution is [Tmux](https://dev.to/srbruning/making-your-terminal-more-productive-with-tmux-2497) on all three platforms. Not only this has the extra benefit to be platform independent (bringing Linux, Mac, and Windows on a common ground) but it also allows you to manage sessions.
 Indeed, Tmux is a [terminal multiplexer](https://linuxhint.com/tmux_vs_screen/) like `screen`, that may sit on any other basic terminal of your preference. While `Tmux` does not allow session sharing with other users it is however more user-friendly than `screen` and, for this reason, among the two we recommend `Tmux`. TMux is highly configurable, also allowing for projects whose editing is simplified by a [tmux sessions manager](https://github.com/tmuxinator/tmuxinator).
-
+</summary>
 </details>
 
 First, to list the problems available, and thus check that both the client and the server are working, try the following command:
@@ -282,6 +282,51 @@ If you want to know more about the `list` subcommand of `rtal` you can, as for a
 ```bash
 rtal list --help
 ```
+</summary>
+</details>
+
+<details><summary>How to customize your prompt</summary>
+We want to customize the prompt with the aim to make it more useful.   
+![image](./figs/bash.png)  
+For example we want to show the path or the time.
+
+ We need to open and modify the file `./bashrc` hence we use the command:   
+ ```
+ vi ./baschrc
+ ```  
+ 
+ Will appear a file like this:  
+ 
+![image](./figs/bashrc.png)  
+ 
+ so we press i and add the line:   
+ ```export PS1=" your_customization $"``` 
+ where your_customization is a combination, as you prefer, of :   
+
+*   `\ d` date
+*   `\ t` time
+*   `\ h` host name
+*   `\ #` number of commad
+*   `\ u` username
+*   `\ W `current directory
+*   `\ w` directory and complete path
+ 
+after your choice and the addition of the line press and digit:  
+
+ 1. `esc`  
+ 2. `:w` and enter: this allows us to save what we wrote   
+ 3. `:q` and enter: that allows us to exit  
+ to show the new prompt we use source `~/.bashrc`
+   
+ 
+ Some examples:
+ 
+ * ```export PS1="\d \h \u@\W $"```the prompt dispalys date, host ,username and the current directory in this way:   
+![image](./figs/example1.png)
+ *   ```export PS1="\t\u@\w $" ``` the prompt dispalys time, username and complete path in this way:  
+   ![image](./figs/example2.png)
+</summary>
+</details>
 
 ## Exploring the services available for a problem
 
