@@ -111,4 +111,4 @@ class TALcolors:
         self.print("! (I got bored)", "white")
 
     def Finished(self):
-        self.print(f"! (We have finished) Correct answers: {numOK}/{numOK+numNO}", "white")
+        self.print(f"! (We have finished) Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
