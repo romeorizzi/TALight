@@ -83,6 +83,7 @@ fn main() {
         if service.evaluator.len() > 0 {
             let mut eval = dir.clone();
             eval.push(&service.evaluator[0]);
+            // TODO: might be on PATH
             #[cfg(not(target_family = "unix"))]
             match metadata(&eval) {
                 Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
