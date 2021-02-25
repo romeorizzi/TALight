@@ -33,36 +33,31 @@ for _ in range(ENV['num_questions']):
             s = randrange(2**64)
     TAc.print(f"? {s}", "yellow", ["bold"])
     spoon = input().strip()
-    if spoon=='':
-        gen_new_s = False
+    while spoon[0] == '#':
+        spoon = input().strip()
+    a, b = map(int, spoon.split(" "))
+    gen_new_s = False
+    if a+b > s:
         TAc.NO() 
-        TAc.print(LANG.render_feedback("wrong-input-two", f"Attenzione non hai inserito alcun numero"), "red", ["underline"])
-    else:
-        while spoon[0] == '#':
-            spoon = input().strip()
-        a, b = map(int, spoon.split(" "))
-        gen_new_s = False
-        if a+b > s:
-            TAc.NO() 
-            TAc.print(LANG.render_feedback("too-much", f"indeed, {a}+{b}={a+b} > {s}."), "yellow", ["underline"])        
-        elif a+b < s:
-            TAc.NO() 
-            TAc.print(LANG.render_feedback("too-little", f"indeed, {a}+{b}={a+b} < {s}."), "yellow", ["underline"])        
-        else: # a + b == n
-            if ENV['obj'] == "max_product":
-                if a < b:
-                    a,b = b,a
-                if a-b > 1:
-                    TAc.NO() 
-                    TAc.print(LANG.render_feedback("not-balanced", f"indeed, {a-1}+{b+1}={s} and {a-1}*{b+1}={(a-1)*(b+1)} > {a*b}={a}*{b}."), "yellow", ["underline"])        
-                else:
-                    gen_new_s = True
-                    TAc.OK()
-                    TAc.print(LANG.render_feedback("max-product", f"indeed, x={a} and y={b} have maximum product among the integer numbers with x+y={s}. Do you know why? Do you have a proof for your intuition?"), "grey")
+        TAc.print(LANG.render_feedback("too-much", f"indeed, {a}+{b}={a+b} > {s}."), "yellow", ["underline"])        
+    elif a+b < s:
+        TAc.NO() 
+        TAc.print(LANG.render_feedback("too-little", f"indeed, {a}+{b}={a+b} < {s}."), "yellow", ["underline"])        
+    else: # a + b == n
+        if ENV['obj'] == "max_product":
+            if a < b:
+                a,b = b,a
+            if a-b > 1:
+                TAc.NO() 
+                TAc.print(LANG.render_feedback("not-balanced", f"indeed, {a-1}+{b+1}={s} and {a-1}*{b+1}={(a-1)*(b+1)} > {a*b}={a}*{b}."), "yellow", ["underline"])        
             else:
-                TAc.OK()
-                TAc.print(LANG.render_feedback("right-sum", f"indeed, {a}+{b}={s}"), "grey")        
                 gen_new_s = True
+                TAc.OK()
+                TAc.print(LANG.render_feedback("max-product", f"indeed, x={a} and y={b} have maximum product among the integer numbers with x+y={s}. Do you know why? Do you have a proof for your intuition?"), "grey")
+        else:
+            TAc.OK()
+            TAc.print(LANG.render_feedback("right-sum", f"indeed, {a}+{b}={s}"), "grey")        
+            gen_new_s = True
             
 TAc.Finished()
 exit(0)
