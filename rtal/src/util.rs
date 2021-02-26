@@ -10,6 +10,7 @@ use std::sync::mpsc::{self, TryRecvError};
 use std::thread::spawn;
 use std::time::Duration;
 use std::time::Instant;
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 use tungstenite::error::Error::Io;
 use tungstenite::protocol::WebSocket;
 use tungstenite::stream::Stream;
@@ -47,7 +48,20 @@ impl StreamOp for Stream<TcpStream, StreamOwned<ClientSession, TcpStream>> {
     }
 }
 
+fn ignore_result<T, E>(_: Result<T, E>) {}
+
+macro_rules! cwrite {
+    ($stream:expr, $color:expr, $($arg:tt)+) => {
+        {
+            ignore_result($stream.set_color(ColorSpec::new().set_bold(true).set_fg(Some($color))));
+            ignore_result(write!(&mut $stream, $($arg)+));
+            ignore_result($stream.set_color(ColorSpec::new().set_bold(false).set_fg(None)));
+        }
+    }
+}
+
 pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: Write>(ws: &mut WebSocket<T>, mut pout: R, mut pin: W, echo: bool, timeout_ms: u64) {
+    let mut stdout = StandardStream::stdout(ColorChoice::Auto);
     match ws.get_mut().set_read_timeout(Some(Duration::from_millis(TICK_DURATION_MS))) {
         Ok(()) => {}
         Err(x) => fail!("Cannot set_read_timeout: {}", x),
@@ -83,7 +97,7 @@ pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: 
                     Ok(x) => {
                         start = Instant::now();
                         if echo {
-                            print!("> {}", String::from_utf8_lossy(&x));
+                            cwrite!(stdout, Color::Green, "{}", String::from_utf8_lossy(&x));
                         }
                         match ws.write_message(Binary(x)) {
                             Ok(()) => continue,
@@ -98,7 +112,7 @@ pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: 
             Binary(x) => {
                 start = Instant::now();
                 if echo {
-                    print!("< {}", String::from_utf8_lossy(&x));
+                    cwrite!(stdout, Color::Yellow, "{}", String::from_utf8_lossy(&x));
                 }
                 match pin.write_all(&x) {
                     Ok(()) => continue,
