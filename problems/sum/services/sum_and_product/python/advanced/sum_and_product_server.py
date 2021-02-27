@@ -13,6 +13,7 @@ args_list = [
 from sys import stderr, exit, argv
 from random import randrange
 
+from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 ENV =Env(args_list, problem, service, argv[0])
 TAc =TALcolors(ENV)
@@ -34,10 +35,7 @@ for _ in range(ENV['num_questions']):
             x = randrange(2**32)
             y = randrange(2**32)
     TAc.print(f"? {x+y} {x*y}", "yellow", ["bold"])
-    spoon = input().strip()
-    while spoon[0] == '#':
-        spoon = input().strip()
-    a, b = map(int, spoon.split(" "))
+    a, b = TALinput(["int", "int"], ignore_lines_starting_with="#")
     gen_new_pair = False
     if a+b > x+y:
         TAc.NO() 
