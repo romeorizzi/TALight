@@ -39,3 +39,13 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
+  help:
+    evaluator: [python, services/help/help_server.py]
+    args:
+      page:
+        regex: ^(sum|sum_and_difference|sum_and_product)$
+        default: sum
+      lang:
+        regex: ^(en|it)$
+        default: it
+

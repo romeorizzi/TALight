@@ -1,0 +1,50 @@
+%YAML 1.2
+---
+open-channel: "# Servirò: problem={problem}, service={service}"
+sum: [
+    ["\nPROBLEMA SUM, SERVIZIO SUM\n\n", "red", ["bold", "underline"]],
+    ["protocollo del servizio -le regole:\n", "red"],
+     "   1. che il mittente sia il service server oppure il service client, le righe che iniziano con '#' vengono considerate commenti e non sortiscono effetto alcuno ai fini dell'interazione.\n",
+     "   2. tutte le altre linee che il server ti invia cominciano col carattere '?' seguito da spazio, poi un numero naturale s che chiude la riga. Ogniqualvolta ricevi una tale riga sei tenuto a rispondere con una riga che contenga due numeri naturali, x e y, separati da spazio.\n\n",
+    ["goal:", "red"],
+     " fai un punto per ogni risposta (x,y) con x+y=s. Idealmente, vorresti massimizzare il numero di punti raccolti. Quando x+y non dà s, e il numero totale di risposte consegnate non ha ancora raggiunto il tetto, allora ti verrà riproposta la precedente domanda (lo stesso numero s viene riproposto) per darti possibilità di riscatto.\n\n",
+    ["argomenti:\n", "red"],
+    ["   numbers: ", "green"],
+     "usa questo parametro per selezionare la taglia del numero s\n",
+    ["   obj: ", "green"],
+     "usa questo parametro per specify whether the goal is achieved by any pair of numbers x and y with x+y=s or only by those that also maximize the product x*y\n",
+    ["   num_questions: ", "green"],
+     "questo parametro stabilisce il numero di domande che verranno poste\n",
+    ["   lang: ", "green"],
+     "questo parametro consente di selezionare la lingua in cui il servizio esprime il proprio feedback.\n",
+]
+sum_and_difference: [ 
+    ["\nPROBLEMA SUM, SERVIZIO SUM_AND_DIFFERENCE\n\n", "red", ["bold", "underline"]],
+    ["protocollo del servizio -le regole:\n", "red"],
+     "   1. che il mittente sia il service server oppure il service client, le righe che iniziano con '#' vengono considerate commenti e non sortiscono effetto alcuno ai fini dell'interazione.\n",
+     "   2. tutte le altre linee che il server ti invia cominciano col carattere '?' seguito da spazio, poi un numero naturale s di nuovo seguito da spazio, e infine un numero naturale $d$ che chiude la riga. Ogniqualvolta ricevi una tale riga sei tenuto a rispondere con una riga che contenga due numeri naturali, x e y, separati da spazio.\n\n",
+    ["goal:", "red"],
+     " fai un punto per ogni risposta (x,y) per cui x+y=s e |x-y|=d valgano entrambe. Idealmente, vorresti massimizzare il numero di punti raccolti. Quando la tua risposta non è corretta, e il numero totale di risposte consegnate non ha ancora raggiunto il tetto, allora ti verrà riproposta la precedente domanda (la stessa coppia (s,d) viene riproposta) per darti possibilità di riscatto.\n\n",
+    ["argomenti:\n", "red"],
+    ["   numbers: ", "green"],
+     "usa questo parametro per selezionare la taglia dei numeri x e y che sei chiamato ad sprimere\n",
+    ["   num_questions: ", "green"],
+     "questo parametro stabilisce il numero di domande che verranno poste\n",
+    ["   lang: ", "green"],
+     "questo parametro consente di selezionare la lingua in cui il servizio esprime il proprio feedback.\n",
+]
+sum_and_product: [ 
+    ["\nPROBLEMA SUM, SERVIZIO SUM_AND_PRODUCT\n\n", "red", ["bold", "underline"]],
+    ["protocollo del servizio -le regole:\n", "red"],
+     "   1. che il mittente sia il service server oppure il service client, le righe che iniziano con '#' vengono considerate commenti e non sortiscono effetto alcuno ai fini dell'interazione.\n",
+     "   2. tutte le altre linee che il server ti invia cominciano col carattere '?' seguito da spazio, poi un numero naturale s di nuovo seguito da spazio, e infine un numero naturale $p$ che chiude la riga. Ogniqualvolta ricevi una tale riga sei tenuto a rispondere con una riga che contenga due numeri naturali, x e y, separati da spazio.\n\n",
+    ["goal:", "red"],
+     " fai un punto per ogni risposta (x,y) per cui x+y=s e xy=p valgano entrambe. Idealmente, vorresti massimizzare il numero di punti raccolti. Quando la tua risposta non è corretta, e il numero totale di risposte consegnate non ha ancora raggiunto il tetto, allora ti verrà riproposta la precedente domanda (la stessa coppia (s,p) viene riproposta) per darti possibilità di riscatto.\n\n",
+    ["argomenti:\n", "red"],
+    ["   numbers: ", "green"],
+     "usa questo parametro per selezionare la taglia dei numeri x e y che sei chiamato ad sprimere\n",
+    ["   num_questions: ", "green"],
+     "questo parametro stabilisce il numero di domande che verranno poste\n",
+    ["   lang: ", "green"],
+     "questo parametro consente di selezionare la lingua in cui il servizio esprime il proprio feedback.\n",
+] 

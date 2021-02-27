@@ -1,0 +1,50 @@
+%YAML 1.2
+---
+open-channel: "# I will serve: problem={problem}, service={service}"
+sum: [
+    ["\nPROBLEM SUM, SERVICE SUM\n\n", "red", ["bold", "underline"]],
+    ["protocol rules:\n", "red"],
+     "   1. when the server sends you a line beginning with '#' you can simply ignore it.\n",
+     "   2. all other lines sent to you by the server begin with '?' followed by a space and then a natural number s, which closes the line. Whenever you receive such a line you should write a line containing just two natural numbers, x and y, separated by a space.\n\n",
+    ["goal:", "red"],
+     " you gain a point whenever your replay (x,y) is such that x+y=s. You want to maximize the number of points collected. Whenever x+y differs from s, and the total number of questions has not been reached yet, then the same question will be repeated to offer you a second chance, i.e., you will be assigned again the previous number s.\n\n",
+    ["arguments:\n", "red"],
+    ["   numbers: ", "green"],
+     "use this parameter to select the size of number s\n",
+    ["   obj: ", "green"],
+     "use this parameter to specify whether the goal is achieved by any pair of numbers x and y with x+y=s or only by those that also maximize the product x*y\n",
+    ["   num_questions: ", "green"],
+     "this parameter sets the number of questions that will be posed\n",
+    ["   lang: ", "green"],
+     "this parameter allows you to select the language in which the service server expresses its feedback.\n",
+]
+sum_and_difference: [ 
+    ["\nPROBLEM SUM, SERVICE SUM_AND_DIFFERENCE\n\n", "red", ["bold", "underline"]],
+    ["protocol rules:\n", "red"],
+     "   1. when the server sends you a line beginning with '#' you can simply ignore it.\n",
+     "   2. all other lines sent to you by the server begin with '?' followed by a space, then a natural number s followed by a space, and finally a natural number d which closes the line. Whenever you receive such a line you should write a line containing just two natural numbers, x and y, separated by a space.\n\n",
+    ["goal:", "red"],
+     " you gain a point whenever your replay (x,y) is such that x+y=s AND |x-y|=d. You want to maximize the number of points collected. Whenever your pair (x,y) does not make for the point, and the total number of questions has not been reached yet, then the same question will be repeated to offer you a second chance, i.e., you will be assigned again the previous pair of numbers (s,d).\n\n",
+    ["arguments:\n", "red"],
+    ["   numbers: ", "green"],
+     "use this parameter to select the size of the numbers x and y you should produce\n",
+    ["   num_questions: ", "green"],
+     "this parameter sets the number of questions that will be posed\n",
+    ["   lang: ", "green"],
+     "this parameter allows you to select the language in which the service server expresses its feedback.\n",
+]
+sum_and_product: [ 
+    ["\nPROBLEM SUM, SERVICE SUM_AND_PRODUCT\n\n", "red", ["bold", "underline"]],
+    ["protocol rules:\n", "red"],
+     "   1. when the server sends you a line beginning with '#' you can simply ignore it.\n",
+     "   2. all other lines sent to you by the server begin with '?' followed by a space, then a natural number s followed by a space, and finally a natural number p which closes the line. Whenever you receive such a line you should write a line containing just two natural numbers, x and y, separated by a space.\n\n",
+    ["goal:", "red"],
+     " you gain a point whenever your replay (x,y) is such that x+y=s AND xy=p. You want to maximize the number of points collected. Whenever your pair (x,y) does not make for the point, and the total number of questions has not been reached yet, then the same question will be repeated to offer you a second chance, i.e., you will be assigned again the previous pair of numbers (s,d).\n\n",
+    ["arguments:\n", "red"],
+    ["   numbers : ", "green"],
+     "use this parameter to select the size of the numbers x and y you should produce\n",
+    ["   num_questions: ", "green"],
+     "this parameter sets the number of questions that will be posed\n",
+    ["   lang: ", "green"],
+     "this parameter allows you to select the language in which the service server expresses its feedback.\n",
+] 

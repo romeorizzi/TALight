@@ -4,15 +4,6 @@ from sys import stderr, exit, argv
 from os import environ
 from os.path import join, split
 
-yaml_is_installed = True
-try:
-    import ruamel.yaml
-except Exception as e:
-    yaml_is_installed = False
-    print("# Recoverable Error: ", end="", file=stderr)
-    print(e, file=stderr)
-    print("# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.\n# (To enjoy a feedback in a supported language install the python package yaml. The languages supported by a problem service appear as the options for the lang parameter listed by the command `rtal list`)", file=stderr)
-
 termcolor_is_installed = True
 try:
     from termcolor import colored, cprint
@@ -22,7 +13,15 @@ except Exception as e:
     print(e, file=stderr)
     print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor.)", file=stderr)
 
+err_ruamel = None
+yaml_is_installed = True
+try:
+    import ruamel.yaml
+except Exception as e:
+    yaml_is_installed = False
+    err_ruamel = e
 
+            
 class Env:
     def __init__(self, args_list, problem, service, service_server_fullname):
         self.base_path = environ["TAL_META_DIR"]
@@ -30,7 +29,6 @@ class Env:
         self.problem = problem
         self.service = service
         self.args_list = args_list
-        #self.args = { key : val for key, val in args_list }
         self.service_server_fullname = service_server_fullname
         self.arg = {}
         for name, val_type in args_list:
@@ -48,24 +46,42 @@ class Env:
 
 
 class Lang:
-    def __init__(self, ENV, TAc, myfeval):
+    def __init__(self, ENV, TAc, myfeval, book_required=False):
         self.myfeval = myfeval
         self.ENV=ENV
         self.TAc=TAc
         self.messages_book = None
         self.messages_book_file = join(ENV.base_path, ENV.exe_path, ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
-        if yaml_is_installed:
+        if not yaml_is_installed:
+            if book_required:
+                print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine): the service {ENV.service} you required strongly relies on a .yaml file. As long as the 'ruamel' package is not installed in the environment where the 'rtald' daemon runs, this service can not be operated.", file=stderr)
+                exit(1)
+            else:
+                print("# Recoverable Error: ", end="", file=stderr)
+                print(err_ruamel, file=stderr)
+                print("# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue (as long as you can understand the little needed English).\n# (To enjoy a feedback in a supported language install the python package 'ruamel'. The languages supported by a problem service appear as the options for the lang parameter listed by the command `rtal list`)", file=stderr)
+        else:
             try:
               with open(self.messages_book_file, 'r') as stream:
                 try:
                     yaml_book = ruamel.yaml.safe_load(stream)
                     self.messages_book = yaml_book
                 except yaml.YAMLError as exc:
-                    print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file)\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
-                    print(exc, file=stderr)
+                    if book_required:
+                        print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine): the messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file). The service {ENV.service} you required for problem {ENV.problem} strictly requires this .yaml file. As long as the 'ruamel' package is not installed in the environment where the 'rtald' daemon runs, this service can not be operated.", file=stderr)
+                        print(exc, file=stderr)
+                        exit(1)
+                    else:
+                        print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file)\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
+                        print(exc, file=stderr)
             except IOError as ioe:
-                print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
-                print(ioe, file=stderr)
+                if book_required:
+                    print(f"Internal error (please, report it to those responsible): The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.\n The service {ENV.service} you required for problem {ENV.problem} strictly requires to have access to this .yaml file.", file=stderr)
+                    print(ioe, file=stderr)
+                    exit(1)
+                else:
+                    print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
+                    print(ioe, file=stderr)
         self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={ENV.problem}, service={ENV.service}")
         for arg_name, _ in ENV.args_list:
             arg_val = ENV[arg_name]
@@ -86,9 +102,9 @@ class Lang:
 
 class TALcolors:
     def __init__(self, ENV):
-        self.colored_print = ENV["ISATTY"] and termcolor_is_installed
         self.numNO = 0
         self.numOK = 0
+        self.colored_print = ENV["ISATTY"] and termcolor_is_installed
 
     def print(self, msg_text, *msg_rendering, **kwargs):
       if type(msg_rendering[-1]) == list:
