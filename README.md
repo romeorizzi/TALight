@@ -64,9 +64,9 @@ Knowing how to properly access a problem served from the cloud is at the basis t
 ___
 The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, we suggest you to first explore the problems of this collection as deployed by this server. In this stage of the tutorial we illustrate the basic tools through which you can conduct this sort of exploration.
 
-<details><summary>What do you need before you start and how to get it</summary>
+<details><summary>The two things you need before starting this first exploration as a problem solver and how to get them</summary>
 
-You need to have a terminal or a terminal emulator (with a shell like bash or zsh). If you are on Linux or Mac you already have it.
+<strong>Thing 1:</strong> You need to have a terminal or a terminal emulator (with a shell like bash or zsh). If you are on Linux or Mac you already have it.
 
 <details><summary>What if you are on Windows</summary>
 
@@ -83,17 +83,44 @@ Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Instal
 
 </details>
 
-Second and last thing you need: the TALight command `rtal` executable binary specific to your platform (either Linux, or Mac, or Windows).
+___
+<strong>Thing 2:</strong> The second and last thing you need is the TALight command `rtal` executable binary specific to your platform (either Linux, or Mac, or Windows).
 
 You have two options on how to get it:
 
-1. download the compiled binaries made available for your platform (SERVICE NOT YET READY). 
+1. **Option 1:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in the file `rtal/README.md` of this repo.
 
-2. if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#OBTAIN-THE-BINARIES) is explained in the file `rtal/README.md` of this repo.
 
-</details>
+2. **Option 2:** download the already compiled binary made available for your platform and set them in.
 
-___
+<details><summary>How to download the binary and place and test it properly</summary>
+
+Here the phases are: downloading, placing and uncompressing, testing and giving convenient accessibility. 
+
+<details><summary>How to download the binary</summary>
+
+Go to [the binaries download page](https://github.com/romeorizzi/TAlight/releases/) and choose the correct `rtal` binary for your platform and download the compressed file. For Mac you have one single choice, for Linux you have two choices depending on whether your CPU is Intel or AMD, in the case of Windows you have two choices depending on whether the system is set up for a 64 bits architecture (almost always) rather than a 32 bits one.
+Place the downloaded file in the folder you prefer. If you have already cloned or downloaded this repo then we suggest you to place it in a folder named `TAlight/rtal/target/debug` within the copy of this repo on your local machine (to create subfolders you can use the `mkdir` command).
+After having placed the file which is correct for your platform on your local machine, proceed as follows.
+
+<strong>Linux/Mac:</strong>
+You downloaded a .xz file (the `.xz` extension stands for files compressed with LZMA/LZMA2 compression algorithm). To uncompress this file issue the following command from a terminal: 
+```bash
+tar xvf filename.tar.xz
+```
+If in your case the `tar` command does not recognize the file, be told that tar supports .xz from version 1.22 onwards. If this is the case, please, update your version if older (check this with `tar --version`). Otherwise, try with a second download (after downloading with a different name or in a different folder, you can also check with the `diff` command whether the content of the two downloads are the same; if they are, you can then exclude a transmission problem). If you get here, contact us for help.
+
+<strong>Windows:</strong>
+You downloaded a .zip file. To uncompress this file use any utility like 7-Zip or WinZip, or issue a command like `unzip` from a terminal: 
+```bash
+unzip filename.zip
+```
+If all your attempts to unzip the file fail, try with a second download (after downloading with a different name or in a different folder, you can also check with the `diff` command whether the two downloads of the file are identical; if they are, you can then exclude a transmission problem). Also, crosscheck the dimension of the file against the one reported at the [download site](https://github.com/romeorizzi/TAlight/releases/). If you get here, contact us for help.
+
+</details> 
+
+<details><summary>Testing and giving convenient accessibility (as assumed in the following)</summary>
+
 Open a terminal and place yourself in the directory containing the `rtal` executable binary. At this point, if you enter
 
 ```bash
@@ -101,6 +128,51 @@ ls -l rtal*
 ```
 
 then you should see the binary (on Windows it should be `rtal.exe` while on Linux and Mac it should be just `rtal`) and a summary of data about the file, including its permissions (if on Linux or Mac, in Windows the permissions are not included in the file but rather attached to them). In the following, we assume the binary has execution permission.
+
+You can check it works by issuing:
+
+```bash
+./rtal --help
+```
+
+At this point we suggest you to make this binary accessible by creating (if not already existing) `.bin` subfolder of your home folder, place a symbolic link to the binary from these, and adding this folder into your PATH environment variable.
+
+Alcune cosette che devo ricontrollare su Windows:
+```bash
+
+da terminale con bash devo scrivere  rtal oppure rtal.exe  ? 
+
+.bashrc works on windows? (mi pareva di sì ma da ricontrollare)
+
+E comunque:
+
+Attenzione al separatore diverso (; invece di :) ed all oscena possibilità di usare spazi:
+
+SET "PATH=%PATH%;C:\Program Files\AzCopy"
+
+Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
+
+DESCRIPTION SHORT:
+You have to put your .exe file's path into enviroment variable path. Go to "My computer -> properties -> advanced -> environment variables -> Path" and edit path by adding .exe's directory into path.
+
+DESCRIPTION LONG:
+Windows 10, 8.1, 8
+
+Open start menu,
+
+Type Edit environment variables
+Open the option Edit the system environment variables
+Click Environment variables... button
+There you see two boxes, in System Variables box find path variable
+Click Edit
+a window pops up, click New
+Type the Directory path of your .exe or batch file (Directory means exclude the file name from path)
+Click Ok on all open windows and start a new terminal (the previously open one will not be affcted by the change).
+```
+
+In case you get error messages complaining about the fact that `rtal` has non been found then check your path.
+In case you get error messages complaining you do not have the proper permissions to execute it then you are likely on Windows and should instruct it (or learn how) to launch the terminal as administrator.
+In case you get error messages complaining the fact that the rtal file you just downloaded is not executable then you should tell your system that it should regard it as an executable. If on Linux/Mac this is once again an issue of permissions. In any case, here are the instructions to fix things in this last case.
 
 <details><summary>How do I give executable permissions in Linux or Mac?</summary>
 
@@ -118,10 +190,17 @@ Use `man chmod` to get the help page for the command, where to find out about ot
 To change object access properties you can right-click the object, go into properties, and then security. If you're signed in as an administrator, you'll be able to modify access properties such as the read, write, and execute permissions.
 </details>
 
+</details>
+
+</details>
+
+</details>
+
 ___
+We assume you have the terminal and an `rtal` executable properly placed and working as explained above.
 From here, try out the following actions.
 
-To see the list of currently available problems:
+To see the list of problems currently available on our tutorial collection server:
 
 ```bash 
 rtal -s wss://talight.tk/tutorial list
@@ -231,7 +310,7 @@ If the archive is zipped (you can understand this since the extension will be ei
 tar -xvzf sum.tgz
 ```
 
-On Windows you can also use any utility like 7-Zip.
+On Windows you can also use any utility like 7-Zip or WinZip.
 
 </details>
 
@@ -342,7 +421,7 @@ In the following we assume that `~/TAlight` is the path to this TAlight repo as 
 
 Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
 
-<strong>If you are Windows user keek this in mind in interpreting all instructions to follow.</strong>
+<strong>If you are Windows user keep this in mind in interpreting all instructions to follow.</strong>
 
 
 ## OBTAIN THE BINARIES
@@ -368,7 +447,9 @@ Having to remember and digit the whole path `~/TAlight/rtal/target/debug/` in or
 
 <details>
 <summary>To solve this ...</summary>
+
 To solve this, if you are on Unix/Linux/Mac, you can enter the following command in the terminal:
+
 ```bash
 PATH=$PATH:/Users/MariaCamilla/Documents/GitHub/TAlight/rtal/target/debug/
 ```
@@ -452,9 +533,10 @@ Nonetheless, one of the first uses of the `rtal` client you will see in this tut
 
 To operate with problems you have on your local machine, you first activate the `TAlight` daemon `rtald` on your machine to serve requests coming from your machine itself (modality 1).
 When starting the daemon, it is a good idea to first turn on logging, by setting the environment variable `RUST_LOG=info`.
+
 <details><summary>How to correctly set the environment variable `RUST_LOG=info`</summary>
 
-We first show you a way to do it that works on the standard shells of Linux or Mac (`bash`, `sh` or `zsh`). It therefore works also on Windows sinc we assume you operate from the terminal you have installed together with `git`. It can also work on every terminal that allows you to switch to a bash shell by means of a `bash` command invocation.  
+We first show you a way to do it that works on the standard shells of Linux or Mac (`bash`, `sh` or `zsh`). It therefore works also on Windows since we assume you operate from the terminal you have installed together with `git`. It can also work on every terminal that allows you to switch to a bash shell by means of a `bash` command invocation.  
 Insert the following command in the terminal from where you intend to launch the daemon `rtald` and monitor its interactions and working: 
 ```bash
 export RUST_LOG=info
@@ -474,8 +556,16 @@ Both in modality 1 and in modality 2, you must specify to the daemon the directo
 In the case of the problems comprising this tutorial they are placed in the `~/TAlight/problems` directory. Therefore, you activate (in modality 1) the `TAlight` daemon with the following command from a terminal where the `RUST_LOG` environment variable has been set:
 
 ```bash
+rtald -d ~/TAlight/problems
+```
+
+If the variable `RUST_LOG` was unset you can still set it now, and specifically for this execution of `rtald` with:
+
+```bash
 RUST_LOG=info rtald -d ~/TAlight/problems
 ```
+This second possibility holds only for the `bash` shell and will not work for the `zsh` you are given by default if you are on Mac. (You can however launch another shell, like the `bash`, from other shells. On the `zsh` of Mac just enter th command `bash` and, after this, the `bash` is operating on that terminal. At this point the secon option is available also for you, on that terminal.)
+
 The `rtald` daemon is now active and ready to serve requests concerning the problems present in the directory `~/TAlight/problems`.
 The terminal where you issued its activation will now be the place where the server `rtald` updates you about the requests of service it receives and what is going on with them. If `RUST_LOG` was not set, then you will only get the error messages of the problem service server (the one called when you issued a request through the `rtal` client), if it crashes or malfunctions, but if the environment variable was set you will have access to further feedback that can help you out. 
 
@@ -753,8 +843,9 @@ it should out no line of error since/when this file is ok.
 ## PROBLEMS WORKING AT PRESENT
 
 1. `sum`
-2. `morra`
+2. `eggs`
 3. `infinity_of_N`
+4. `morra`
 
 
 ## Vision (pezzi in Italiano)
