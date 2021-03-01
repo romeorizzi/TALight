@@ -99,7 +99,8 @@ Here the phases are: downloading, placing and uncompressing, testing and giving 
 
 <details><summary>How to download the binary</summary>
 
-Go to [the binaries download page](https://github.com/romeorizzi/TAlight/releases/) and choose the correct `rtal` binary for your platform and download the compressed file. For Mac you have one single choice, for Linux you have two choices depending on whether your CPU is Intel or AMD, in the case of Windows you have two choices depending on whether the system is set up for a 64 bits architecture (almost always) rather than a 32 bits one.
+Go to [the binaries download page](https://github.com/romeorizzi/TAlight/releases/) and choose the correct `rtal` binary for your platform and download the compressed file. For Mac you have one single option (64 bits) and the binary should work equally well on an Intel or an AMD processor. The same with Windows, but here you have two options (32 bits versus 64 bits) and you can [see here](https://support.microsoft.com/en-us/windows/32-bit-and-64-bit-windows-frequently-asked-questions-c6ca9541-8dce-4d48-0415-94a3faa2e13d) for instructions on how to find out which one of the two is the right one for your machine (nowadays 64 bits almost always). In the case of Linux we assume the 64 bits but you have to choose between the Intel-AMD architecture or the ARM architecture (usually meant for servers).
+
 Place the downloaded file in the folder you prefer. If you have already cloned or downloaded this repo then we suggest you to place it in a folder named `TAlight/rtal/target/debug` within the copy of this repo on your local machine (to create subfolders you can use the `mkdir` command).
 After having placed the file which is correct for your platform on your local machine, proceed as follows.
 
@@ -108,14 +109,14 @@ You downloaded a .xz file (the `.xz` extension stands for files compressed with 
 ```bash
 tar xvf filename.tar.xz
 ```
-If in your case the `tar` command does not recognize the file, be told that tar supports .xz from version 1.22 onwards. If this is the case, please, update your version if older (check this with `tar --version`). Otherwise, try with a second download (after downloading with a different name or in a different folder, you can also check with the `diff` command whether the content of the two downloads are the same; if they are, you can then exclude a transmission problem). If you get here, contact us for help.
+If in your case the `tar` command does not recognize the file, be told that tar supports .xz from version 1.22 onwards. Update your version if older (check this with `tar --version`). Otherwise, try with a second download (after downloading with a different name or in a different folder, you can also check with the `diff` command whether the content of the two downloads are the same; if they are, you can then exclude a transmission problem). If you get here, contact us for help.
 
 <strong>Windows:</strong>
 You downloaded a .zip file. To uncompress this file use any utility like 7-Zip or WinZip, or issue a command like `unzip` from a terminal: 
 ```bash
 unzip filename.zip
 ```
-If all your attempts to unzip the file fail, try with a second download (after downloading with a different name or in a different folder, you can also check with the `diff` command whether the two downloads of the file are identical; if they are, you can then exclude a transmission problem). Also, crosscheck the dimension of the file against the one reported at the [download site](https://github.com/romeorizzi/TAlight/releases/). If you get here, contact us for help.
+If all your attempts to unzip the file fail, try with a second download (after downloading with a different name or in a different folder, you can also check with the `diff` command whether the two downloads of the file are identical; if they are, you can then exclude a transmission problem). If you get here, contact us for help.
 
 </details> 
 
