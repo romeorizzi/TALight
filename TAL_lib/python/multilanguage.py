@@ -72,22 +72,24 @@ class Lang:
                         print(exc, file=stderr)
                         exit(1)
                     else:
-                        print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file)\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
+                        print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file).", file=stderr)
                         print(exc, file=stderr)
+                        print(f"# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
             except IOError as ioe:
                 if book_required:
                     print(f"Internal error (please, report it to those responsible): The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.\n The service {ENV.service} you required for problem {ENV.problem} strictly requires to have access to this .yaml file.", file=stderr)
                     print(ioe, file=stderr)
                     exit(1)
                 else:
-                    print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.\n# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
+                    print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.", file=stderr)
                     print(ioe, file=stderr)
+                    print(f"# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
         self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={ENV.problem}, service={ENV.service}")
         for arg_name, _ in ENV.args_list:
             arg_val = ENV[arg_name]
             self.opening_msg += f", {arg_name}={arg_val}"
         if self.messages_book == None:
-            self.opening_msg += f".\n# The feedback_source is code of the service server ({ENV.service_server_fullname})"
+            self.opening_msg += f".\n# The feedback_source is the one hardcoded in the service server ({ENV.service_server_fullname})"
         else:
             self.opening_msg += f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder."
         TAc.print(self.opening_msg, "yellow", ["underline"], file=stderr)

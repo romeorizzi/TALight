@@ -1,76 +1,70 @@
 public_folder: public
 services:
-  check_risp:
-    evaluator: [python, services/python/simple/check_risp_server.py]
+  check_a_sol:
+    evaluator: [python, services/check_a_sol_server.py]
+    args:
+      one_solution:
+        regex:  ^(I|H){0,1000}$
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(en|it)$
+        default: it
+  check_num_sol:
+    evaluator: [python, services/check_num_sol_server.py]
     args:
       num_pills:
-        regex: ^([1-9][0-9]{0,1}|100)$
-        default: 5
+        regex: ^(0|[1-9][0-9]{0,1}|100)$
       risp:
         regex: ^([1-9][0-9]{0,50})$
-        default: 100
-      answ_mod:
-        regex: ^([1-9][0-9]{0,10})$
+      ok_if_congruent_modulus:
+        regex: ^(0|[1-9][0-9]{0,10})$
         default: 1000000007
-      sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
-      list_them_out_if_right:
-        regexp: ^(0|1)$
-        default: 0
       more_or_less_hint_if_wrong:
-        regexp: ^(0|1)$
+        regex: ^(0|1)$
         default: 0
-      with_evidence_if_more:
-        regexp: ^(0|1)$
-        default: 0
-      add_extrahint_if_less:
-        regexp: ^(0|1)$
+      silent:
+        regex: ^(0|1)$
         default: 0
       lang:
         regex: ^(en|it)$
         default: it
-  score_risp:
-    evaluator: [python, services/python/simple/score_risp_server.py]
+  evaluate_num_sol:
+    evaluator: [python, services/python/simple/evaluate_num_sol_server.py]
     args:
-      answ_mod:
+      answ_modulus:
         regex: ^([1-9][0-9]{0,10})$
         default: 1000000007
       lang:
         regex: ^(en|it)$
         default: it
-  check_list:
-    evaluator: [python, services/python/simple/check_list_server.py]
+  check_solutions_set:
+    evaluator: [python, services/python/simple/check_solutions_set_server.py]
+    args:
+      feedback:
+        regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
+        default: yes_no
+      lang:
+        regex: ^(en|it)$
+        default: it
+  check_solutions_list:
+    evaluator: [python, services/python/simple/check_solutions_list_server.py]
     args:
       num_pills:
         regex: ^([1-9]|1[0-9]{0,1}|20)$
         default: 5
       sorting_criterion:
-        regex: ^(None|dislike_half_pills|dislike_integer_pills)$
+        regex: ^(dislike_half_pills|dislike_integer_pills)$
         default: dislike_half_pills
-      spot_wrong_consec_if_sorted:
-        regexp: ^(0|1)$
-        default: 0
-      tell_shortest_missing_prefix:
-        regexp: ^(0|1)$
-        default: 0
-      give_one_missing:
-        regexp: ^(0|1)$
-        default: 0
+      feedback:
+        regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
+        default: yes_no
       lang:
         regex: ^(en|it)$
         default: it
-  score_list:
-    evaluator: [python, services/python/simple/score_list_server.py]
-    args:
-      sorting_criterion:
-        regex: ^(None|dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
-      lang:
-        regex: ^(en|it)$
-        default: it
-  check_next:
-    evaluator: [python, services/python/simple/check_next_sol.py]
+  check_next_sol_gen:
+    evaluator: [python, services/python/simple/check_next_sol_gen_server.py]
     args:
       current_sol:
         regex:  ^(I|H){1,1000}$
@@ -81,17 +75,14 @@ services:
       sorting_criterion:
         regex: ^(dislike_half_pills|dislike_integer_pills)$
         default: dislike_half_pills
-      tell_first_mistake:
-        regexp: ^(0|1)$
-        default: 0
-      tell_first_mistake:
-        regexp: ^(0|1)$
+      tell_maximal_correct_feedback:
+        regex: ^(0|1)$
         default: 0
       lang:
         regex: ^(en|it)$
         default: it
-  score_next:
-    evaluator: [python, services/python/simple/score_next_sol_server.py]
+  evaluate_next_sol_gen:
+    evaluator: [python, services/python/simple/evaluate_next_sol_gen_server.py]
     args:
       sorting_criterion:
         regex: ^(dislike_half_pills|dislike_integer_pills)$
@@ -99,9 +90,45 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-  recognize:
-    evaluator: [python, services/python/simple/recognize_server.py]
+  check_rank_of_sol:
+    evaluator: [python, services/check_rank_of_sol.py]
     args:
+      one_solution:
+        regex:  ^(I|H){0,1000}$
+      sorting_criterion:
+        regex: ^(dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
+      lang:
+        regex: ^(en|it)$
+        default: it
+  check_sol_of_rank:
+    evaluator: [python, services/check_sol_of_rank.py]
+    args:
+      num_pills:
+        regex: ^([1-9][0-9]{0,1}|100)$
+      rank:
+        regex: ^([1-9]|1[0-9]{0,1}|20)$
+      sorting_criterion:
+        regex: ^(dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
+      lang:
+        regex: ^(en|it)$
+        default: it
+  evaluate_rank_of_sol:
+    evaluator: [python, services/evaluate_rank_of_sol.py]
+    args:
+      sorting_criterion:
+        regex: ^(dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
+      lang:
+        regex: ^(en|it)$
+        default: it
+  evaluate_sol_of_rank:
+    evaluator: [python, services/evaluate_sol_of_rank.py]
+    args:
+      sorting_criterion:
+        regex: ^(dislike_half_pills|dislike_integer_pills)$
+        default: dislike_half_pills
       lang:
         regex: ^(en|it)$
         default: it

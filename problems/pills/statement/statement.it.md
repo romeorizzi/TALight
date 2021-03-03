@@ -22,19 +22,21 @@ La primissima questione che vorremmo tu affrontassi è
 <summary><strong>Servizi offerti</strong></summary>
 <H4>Servizi offerti</H4>
 
-```
-> rtal connect -a num_pills=3 -a risp=4 pills check_risp
-```
-
-Dopo aver verificato che la logica ti torna con delle sottomissioni spot a questo servizio, potrai realizzare un tuo bot che sostenga un dialogo di domande e risposte al seguente servizio. Per comprendere il protocollo prova prima a sostenere tu stesso dei dialoghi:
+Puoi chiedere verifica di quale possa essere il numero di trattamenti per un certo $N$ attraverso chiamate del tipo:
 
 ```
-> rtal connect pills score_risp
+> rtal connect -a num_pills=3 -a risp=4 pills check_num_sol
+```
+
+Dopo aver verificato che la logica ti torna con delle sottomissioni spot a questo servizio, potrai realizzare un tuo bot che sostenga un dialogo di domande e risposte. L'efficienza computazionale della logica risolutiva che avrai inserito al suo interno potrà così essere valutata dal seguente servizio. Per comprendere il protocollo prova prima a sostenere tu stesso dei dialoghi anche di un solo paio di domande:
+
+```
+> rtal connect pills evaluate_num_sol
 ```
 e poi chiama lo stesso servizio come segue per ridirigere il dialogo sul tuo bot ed ottenerne validazione e valutazione delle performance:
 
 ```
-> rtal connect pills score_risp -a mybot_risp.py
+> rtal connect pills evaluate_num_sol -a mybot_risp.py
 ```
 Quì `mybot_risp.py` potrà essere un qualsiasi eseguibile (un codice binario o anche un'interpretato) che gira sulla tua macchina.
 
@@ -52,7 +54,8 @@ Puoi inoltre richiamare la schermata di aiuto sulle varie possibilità del coman
 </details>
 
 ___
-Successivamente, vorremmo tu ti avvalessi dello stesso schema ricorsivo che hai utilizzato per affrontare il punto precedente al fine di
+Proposte successive:
+vorremmo tu ti avvalessi dello stesso schema ricorsivo impiegato per affrontare il punto precedente al fine di ottenere una soluzione ricorsiva al seguente task:
 
 #### Dato $N$, produrre la lista di tutti i possibili modi di svuotare un flacone di $N$ pillole.
 <details>
@@ -60,17 +63,21 @@ Successivamente, vorremmo tu ti avvalessi dello stesso schema ricorsivo che hai 
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect -a num_pills=3 -a=spot_wrong_consec_if_sorted pills check_list
+> rtal connect -a num_pills=3 -a=spot_wrong_consec_if_sorted pills check_solutions_list
 ```
 
+Potrai quindi controllare se dovresti considerare e venire a conoscere tecniche ed approcci algoritmici più efficaci (ossia asintoticamente più veloci) con:
+
 ```
-> rtal connect -a num_pills=3 pills score_list
+> rtal connect pills evaluate_solutions_list
 ```
+
+Se visualizzi i possibili argomenti del servizio come insegnato sopra scoprirai che puoi scegliere tra due tipologie di ordinamento naturale sostanzialmente diversi (nota che non sono uno l'inverso dell'altro). 
 
 </details>
 
 ___
-Proposte successive:
+Per il listing ti proponiamo di ricercare anche un approccio iterativo:
 
 #### *Next:* dato un trattamento, sapresti produrre direttamente il prossimo trattamento nella tua lista?
 <details>
@@ -78,42 +85,35 @@ Proposte successive:
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect -a current_sol=IIHIH -a next_sol=IIHHI pills check_next
+> rtal connect -a current_sol=IIHIHH -a next_sol=IIHHIH pills check_nextcheck_next_sol_gen
 ```
-```
-> rtal connect -a sorting_criterion=dislike_integer_pills pills score_next
-```
+Di nuovo, se visualizzi i possibili argomenti del servizio scoprirai che puoi ancora scegliere tra le stesse due tipologie di ordinamento già proposte. 
 </details>
 
 ___
+Ma per affrontare efficientemente e pur sempre in semplicità il ranking e l'unranking (combinando i quali otterresti il computo della prossima soluzione) ti suggeriamo di tornare ad un approccio ricorsivo.
+
 #### *Ranking:* dato un trattamento, sapresti dire in che posizione si colloca entro la tua lista senza percorrerla?
 <details>
 <summary><strong>Servizi offerti</strong></summary>
 <H4>Servizi offerti</H4>
+Ormai saprai cercare da solo, avvalendoti di comandi quali
+```
+> rtal list pills -v
+```
+i servizi offerti e relativi parametri. Questo vale anche per altri problemi entro TALight: ove un esplorazione diretta dei servizi, magari corroborata da un paio di interazioni di prova al terminale non sia sufficiente, forniamo allora un ulteriore servizio di help
+```
+> rtal list help
+```
+che ha come parametri la specifica di eventuali pagine di aiuto, tipicamente dedicate ai servizi del problema che possano beneficiarne. 
 
-```
-> rtal connect -a num_pills=3 -a risp=4 pills check_risp
-```
 </details>
 
 ___
-<details>
 #### *Unranking:* dato $N$ ed un $i$, sapresti produrre direttamente il trattamento $i$-esimo nella tua lista?
-<summary><strong>Servizi offerti</strong></summary>
-<H4>Servizi offerti</H4>
-
-```
-> rtal connect -a num_pills=3 -a risp=4 pills check_risp
-```
-</details>
-
-___
 <details>
-#### *Recognizing:* data una stringa sull'alfabeto $\{H,I\}$, sapresti riconoscere se essa codifica un possibile trattamento (per un qualche $N$)?
 <summary><strong>Servizi offerti</strong></summary>
 <H4>Servizi offerti</H4>
-
-```
-> rtal connect pills recognize
-```
+Ormai sarai autonomo nel raccogliere le possibilità offerte.
 </details>
+
