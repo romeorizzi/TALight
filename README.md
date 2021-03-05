@@ -631,7 +631,9 @@ rtal list --help
 
 <details><summary>How to customize your prompt</summary>
 We want to customize the prompt with the aim to make it more useful.   
-![image](./figs/bash.png)  
+  
+![image](./figs/bash.png)     
+
 For example we want to show the path or the time.
 
  We need to open and modify the file `./bashrc` hence we use the command:   
