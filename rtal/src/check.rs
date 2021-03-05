@@ -86,17 +86,17 @@ fn main() {
             // TODO: might be on PATH
             #[cfg(not(target_family = "unix"))]
             match metadata(&eval) {
-                Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
+                //Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
                 Ok(x) if !x.is_file() => error!(stdout, "Evaluator of service \"{}\" is not a file", name),
-                Ok(_) => {}
+                _ => {}
             };
             #[cfg(target_family = "unix")]
             match metadata(&eval) {
-                Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
+                //Err(x) => error!(stdout, "Service \"{}\" evaluator missing: {}", name, x),
                 Ok(x) if !x.is_file() => error!(stdout, "Evaluator of service \"{}\" is not a file", name),
                 Ok(x) if x.mode() & 0o111 != 0o111 => error!(stdout, "Evaluator of service \"{}\" is not executable", name),
                 Ok(x) if x.mode() & 0o444 != 0o444 => warn!(stdout, "Evaluator of service \"{}\" is not readable", name),
-                Ok(_) => {}
+                _ => {}
             };
         } else {
             error!(stdout, "Evaluator of service \"{}\" is empty", name);
