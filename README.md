@@ -66,6 +66,30 @@ The whole problem collection of this multistage tutorial is hosted in the cloud 
 
 <details><summary>The two things you need before starting this first exploration as a problem solver and how to get them</summary>
 
+In order to ask for the services of a TALight server you need the two things listd here below. If you do not have them you can get them has explained and this is most advisable because you will get a better experience. However, if you do not have any right to install things on the machine you have at your disposal, or if you are on something like a smartphone, then you can still have access to the servics of a TALight server in the cloud through a browser. In practice, throught the browser you will access a client in the cloud that will connect to our web service server `wss://talight.tk/tutorial`.
+
+<details>How to access a repl TALight client in the cloud supporting your preferred programming language<summary></summary>
+
+See if your language is already present in the following list. If not, ask us to add it. Otherwise just click on the link and get to the client. 
+
+1. [python](https://repl.it/@RomeoRizziUniVR/rtalpython#README.txt)
+2. [cpp](https://repl.it/@RomeoRizziUniVR/rtalcpp#README.txt)
+3. [c](https://repl.it/@RomeoRizziUniVR/rtalc#README.txt)
+
+<strong>What to do once you are on the rtal repl for your preferred programming language?</>
+
+Aprire la shell e da linea di comando si richiedano i servizi TALight tramite il comando rtal come da primi esempi sequenti:
+
+./rtal -s wss://talight.tk/tutorial help
+./rtal -s wss://talight.tk/tutorial list
+./rtal -s wss://talight.tk/tutorial list sum -v
+./rtal -s wss://talight.tk/tutorial connect --help
+./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
+./rtal -s wss://talight.tk/tutorial connect sum sum
+
+
+</details>
+
 <strong>Thing 1:</strong> You need to have a terminal or a terminal emulator (with a shell like bash or zsh). If you are on Linux or Mac you already have it.
 
 <details><summary>What if you are on Windows</summary>
@@ -198,7 +222,7 @@ To change object access properties you can right-click the object, go into prope
 </details>
 
 ___
-We assume you have the terminal and an `rtal` executable properly placed and working as explained above.
+We assume that, in one way or the othe, you now have the terminal and an `rtal` executable properly placed and working as explained above.
 From here, try out the following actions.
 
 To see the list of problems currently available on our tutorial collection server:
@@ -221,12 +245,6 @@ To get more specific help on an `rtal` subcommand:
 rtal -s wss://talight.tk/tutorial help connect
 ```
 
-To list the currently available problems:
-
-```bash 
-rtal -s wss://talight.tk/tutorial list
-```
-
 To list the services of a deployed problem, like e.g. problem sum:
 
 ```bash 
@@ -237,6 +255,11 @@ To verbose out the format for the arguments supported by a problem service:
 
 ```bash 
 rtal -s wss://talight.tk/tutorial list -v sum
+```
+
+Avendo quindi compre che il problema `sum` offre un servizio di `help`  quali siano le opzioni disponibili per quel parametro potremmo andare a scoprire informazioni più specifiche riguardo ai servizi del problema con:
+```bash
+./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
 ```
 
 To request a service:
