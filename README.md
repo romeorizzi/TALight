@@ -66,17 +66,18 @@ The whole problem collection of this multistage tutorial is hosted in the cloud 
 
 <details><summary>The two things you need before starting this first exploration as a problem solver and how to get them</summary>
 
-In order to ask for the services of a TALight server you need the two things listd here below. If you do not have them you can get them has explained and this is most advisable because you will get a better experience. However, if you do not have any right to install things on the machine you have at your disposal, or if you are on something like a smartphone, then you can still have access to the servics of a TALight server in the cloud through a browser. In practice, throught the browser you will access a client in the cloud that will connect to our web service server `wss://talight.tk/tutorial`.
+Well, to a certain extent a functioning browser is all what you need.
+Seriosly: if you only have a smartphone, or no permission to install anything on the available PC, or even if you only want to give a look but are also certain you are not going to write any code, then reaching some TALight services from the browser migh actually be the best option for you to start with. In practice, throught the browser you will access a client in the cloud that will connect to our web service server `wss://talight.tk/tutorial`.
 
-<details>How to access a repl TALight client in the cloud supporting your preferred programming language<summary></summary>
+<details><summary>How to access a repl TALight client in the cloud supporting your preferred programming language</summary>
 
-See if your language is already present in the following list. If not, ask us to add it. Otherwise just click on the link and get to the client. 
+Choose your preferred programming language from the following list. If it is missing, ask us to add it if you are willing to interact also by writing some code, or choose any item in the list if a direct interaction with no coding is all what you or your students might be interested into. 
 
 1. [python](https://repl.it/@RomeoRizziUniVR/rtalpython#README.txt)
 2. [cpp](https://repl.it/@RomeoRizziUniVR/rtalcpp#README.txt)
 3. [c](https://repl.it/@RomeoRizziUniVR/rtalc#README.txt)
 
-<strong>What to do once you are on the rtal repl for your preferred programming language?</>
+<strong>What to do once you are on the rtal repl for your preferred programming language?</strong>
 
 Aprire la shell e da linea di comando si richiedano i servizi TALight tramite il comando rtal come da primi esempi sequenti:
 
@@ -89,6 +90,11 @@ Aprire la shell e da linea di comando si richiedano i servizi TALight tramite il
 
 
 </details>
+
+In order to ask for the services of a TALight server you need the two things listed here below. If you do not have them you can get them has explained and this is most advisable because you will get a better experience.
+
+
+
 
 <strong>Thing 1:</strong> You need to have a terminal or a terminal emulator (with a shell like bash or zsh). If you are on Linux or Mac you already have it.
 
@@ -222,7 +228,7 @@ To change object access properties you can right-click the object, go into prope
 </details>
 
 ___
-We assume that, in one way or the othe, you now have the terminal and an `rtal` executable properly placed and working as explained above.
+We assume that, in one way or the other, you now have the terminal and an `rtal` executable properly placed and working as explained above.
 From here, try out the following actions.
 
 To see the list of problems currently available on our tutorial collection server:
@@ -814,7 +820,7 @@ Take a problem you have to:
 
 1. think about the competence you want to transmit and see if you can pose challenges that make it alive and try to go deep on it.
 
-2. compose a document containing the statement of the problem, and think of services that could support, guide, stimulate the problem solver.  
+2. compose a document containing the statement of the problem, and think of services that could support, guide, stimulate the problem solver.
 
 3. summarize these services into the meta.yaml file in the root of the folder of the problem.
 
