@@ -3,8 +3,8 @@ services:
   check_a_sol:
     evaluator: [python, services/check_a_sol_server.py]
     args:
-      one_solution:
-        regex:  ^(I|H){0,1000}$
+      input_formula:
+        regex:  ^(\(|\)){0,1000}$
       silent:
         regex: ^(0|1)$
         default: 0
@@ -14,7 +14,7 @@ services:
   check_num_sol:
     evaluator: [python, services/check_num_sol_server.py]
     args:
-      num_pills:
+      num_pairs:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
       risp:
         regex: ^([1-9][0-9]{0,50})$
@@ -53,12 +53,12 @@ services:
   check_solutions_list:
     evaluator: [python, services/python/simple/check_solutions_list_server.py]
     args:
-      num_pills:
+      num_pairs:
         regex: ^([1-9]|1[0-9]{0,1}|20)$
         default: 5
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
       feedback:
         regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
         default: yes_no
@@ -69,12 +69,12 @@ services:
     evaluator: [python, services/python/simple/check_next_sol_gen_server.py]
     args:
       current_sol:
-        regex:  ^(I|H){1,1000}$
+        regex:  ^(\(|\)){0,1000}$
       next_sol:
-        regex:  ^(I|H){1,1000}$
+        regex:  ^(\(|\)){0,1000}$
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
       tell_maximal_correct_feedback:
         regex: ^(0|1)$
         default: 0
@@ -85,32 +85,32 @@ services:
     evaluator: [python, services/python/simple/evaluate_next_sol_gen_server.py]
     args:
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
       lang:
         regex: ^(en|it)$
         default: it
   check_rank_of_sol:
     evaluator: [python, services/check_rank_of_sol.py]
     args:
-      one_solution:
-        regex:  ^(I|H){0,1000}$
+      one_formula:
+        regex:  ^(\(|\)){0,1000}$
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
       lang:
         regex: ^(en|it)$
         default: it
   check_sol_of_rank:
     evaluator: [python, services/check_sol_of_rank.py]
     args:
-      num_pills:
+      num_pairs:
         regex: ^([1-9][0-9]{0,1}|100)$
       rank:
         regex: ^([1-9]|1[0-9]{0,1}|20)$
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
       lang:
         regex: ^(en|it)$
         default: it
@@ -118,8 +118,8 @@ services:
     evaluator: [python, services/evaluate_rank_of_sol.py]
     args:
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
       lang:
         regex: ^(en|it)$
         default: it
@@ -127,8 +127,8 @@ services:
     evaluator: [python, services/evaluate_sol_of_rank.py]
     args:
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
       lang:
         regex: ^(en|it)$
         default: it
