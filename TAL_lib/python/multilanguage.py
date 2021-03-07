@@ -23,21 +23,23 @@ except Exception as e:
 
             
 class Env:
-    def __init__(self, args_list, problem, service, service_server_fullname):
-        self.base_path = environ["TAL_META_DIR"]
+    def __init__(self, problem, service, args_list):
+        self.service_server_fullname = argv[0]
         self.exe_path = split(argv[0])[0]
+        self.meta_dir = environ["TAL_META_DIR"]
         self.problem = problem
         self.service = service
         self.args_list = args_list
-        self.service_server_fullname = service_server_fullname
         self.arg = {}
         for name, val_type in args_list:
             if val_type == str:
                 self.arg[name] = environ[f"TAL_{name}"]
+            elif val_type == bool:
+                self.arg[name] = (environ[f"TAL_{name}"] == "1")
             elif val_type == int:
                 self.arg[name] = int(environ[f"TAL_{name}"])
-            elif val_type == bool:
-                self.arg[name] = environ[f"TAL_{name}"] == "1"
+            elif val_type == float:
+                self.arg[name] = float(environ[f"TAL_{name}"])
             else:
                 print(f"# Unrecoverable Error: type {val_type} not yet supported in args list. Used to interpret arg {name}.", file=stderr)
                 exit(1)
@@ -51,7 +53,7 @@ class Lang:
         self.ENV=ENV
         self.TAc=TAc
         self.messages_book = None
-        self.messages_book_file = join(ENV.base_path, ENV.exe_path, ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
+        self.messages_book_file = join(ENV.meta_dir, ENV.exe_path, ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
         if not yaml_is_installed:
             if book_required:
                 print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine): the service {ENV.service} you required strongly relies on a .yaml file. As long as the 'ruamel' package is not installed in the environment where the 'rtald' daemon runs, this service can not be operated.", file=stderr)

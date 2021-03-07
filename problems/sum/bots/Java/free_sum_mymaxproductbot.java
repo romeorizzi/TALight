@@ -1,4 +1,4 @@
-public class sum_mymaxproductbot {
+public class free_sum_mymaxproductbot {
 
 
     public static void main(String[] args) {

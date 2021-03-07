@@ -86,7 +86,7 @@ Aprire la shell e da linea di comando si richiedano i servizi TALight tramite il
 ./rtal -s wss://talight.tk/tutorial list sum -v
 ./rtal -s wss://talight.tk/tutorial connect --help
 ./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
-./rtal -s wss://talight.tk/tutorial connect sum sum
+./rtal -s wss://talight.tk/tutorial connect sum free_sum
 
 
 </details>
@@ -271,27 +271,27 @@ Avendo quindi compre che il problema `sum` offre un servizio di `help`  quali si
 To request a service:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect sum sum
+rtal -s wss://talight.tk/tutorial connect sum free_sum
 ```
 
 To request a service specifying a non-default value for a parameter:
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -a obj=max_product sum sum
+rtal -s wss://talight.tk/tutorial connect -a obj=max_product sum free_sum
 ```
 
 To turn off the colors in the feedback (in case your situation does not support for it and our automatic detection mechanism for this limit has failed, then strange strings (called escape sequences in jargon) will clutter the feedback):
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -n -aobj=max_product sum sum
+rtal -s wss://talight.tk/tutorial connect -n -aobj=max_product sum free_sum
 ```
 
 To connect a bot of yours to play on your behalf:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
 ```
 <strong>If you are on Windows than you should write:</strong>
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum sum -- python ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- python ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
 ```
 <strong>This is because only `.exe` files can be executed on Windows, scripts can not even if their first line is the correct she-bang.
 
@@ -302,13 +302,13 @@ Of course, you can also use this second and longer form of the command also on L
 Ok, that bot did not behave that well because it was a simple one, but you can try the `sum_mymaxproductbot.py` in the same directory (of this report that you have cloned in local). Or you can assign to `sum_mysimplebot.py` a simpler task:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e sum sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e sum free_sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
 ```
 
 When you succeed teaching a competence (like when you succeed instructing a bot to do something) then you get confirmed to have acquired that competence in the deep. Therefore, the submission of a bot offers a means to assess the competence. We might thus offer you an evaluation on your submissions. Apart for checking what is going on, you might then prefer to turn off the full report on the interaction between your bot and the program written by the problem maker who designed the service. In this case, just drop the `-e` flag:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect sum sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect sum free_sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
 ```
 
 Since problem `sum` offers an `help` service, you can also get immediate directions about the problem by asking to this service, selecting the specific page through the use of arguments:
@@ -734,24 +734,95 @@ You can also change the default values of the parameters by editing the `meta.ya
 Not all parameters that `rtal` sends to the daemon to adapt the behavior of the services are specified in the `meta.yaml`.
 For example, for all problems you can ask that the feedback is sent to you in black and white even when `rtal` detects that your `tty` supports the use of the colors. You can enforce the suppressing of the colors in any case with the `-no-color` flag (`-n` is its short form). You get to know about these service-agnostic flags and parameters by issuing `rtal connect --help`.
 
-Combining the problem specific information you got above by issuing `rtal list sum -v` with the TAlight core instructions you get with `rtal connect --help` you could decide to try one of the following two services:
+Combining the problem specific information you got above by issuing `rtal list sum -v` with the TAlight core instructions you get with `rtal connect --help` you could decide to try one of the following services:
+
+```bash
+rtal connect sum free_sum
+```
 
 ```bash
 rtal connect -a num_questions=13 -a numbers=big sum sum_and_product
 ```
 
-```bash
-rtal connect -a numbers=big sum sum -- sum_mysolution.py
-```
-
-In the first case you will enjoy a direct interaction with the server through the terminal (this can be enough or anyhow play helpful to find out about the service and the protocol of the interaction).
-In the second case you connect your local solution program or bot `sum_mysolution.py` to the server to check out how your method you have therein encoded performs.
-Clearly the file `sum_mysolution.py` must have the correct permissions in order to be executed on your local system. In other words the file must be an executable, but otherwise any programming language could have been used to produced it. 
-If you want to observe the interaction between your bot and the server you can issue:
+Connecting to the services in this direct way you will enjoy a direct interaction with the server through the terminal. This can help you to find out about the service and the protocol of the interaction.
+Actively experiment also with the arguments of the service, they are thought to help you and sometimes they are also meant to offer an excalation on a problem that starts simple to better approach your curiosity and open mindness. For example:
 
 ```bash
-rtal connect -e -a numbers=small sum sum -- sum_mysolution.py
+rtal connect -a numbers=big sum free_sum
 ```
+
+or
+
+```bash
+rtal connect -a obj=max_product sum free_sum
+```
+
+After you have got what competence the problem is trying to address, and the protocol for your interaction with it, you can then go for making a bot exhibiting that competence on your behalf.
+
+The plug in of the bot follows this simple template/mechanism:
+
+```bash
+rtal connect <problem> <service> -- <my_executable_bot>
+```
+
+where the bot containing your solution is assumed to ultimately be an executable command on your machine. It is also assumed that your bot exchanges with the outside world through the stdin and stdout (and stderr if you want to debug it) streams.
+(The standard but not required assumption is that it is also located on your machine and that you have forged it yourself.)
+
+For example, if you have written your bot in python (or pick up one already done bots from this repo, under the `bots` folder for the problem of your interest), then a working plug in could be the following:
+
+
+```bash
+rtal connect -e sum free_sum -- python free_sum_mysimplebot.py
+```
+
+Actually, if you are on Linux/Max and the python script `free_sum_mysimplebot.py` is given excution permission, as it is the case in the repo you have cloned (again, better cloning than downloading, but you can also assign these permissions with the `chmod` command of the shell), then you could more simply write:
+
+```bash
+rtal connect -e sum free_sum -- free_sum_mysimplebot.py
+```
+
+The `-e` flag at the beginning is there because right now you want to assist to the interaction occurring between your bot and the service server. Try omitting it for the service call to proceed silent.
+
+And try out a few other interactions, like the ones triggered by one of the following problem service invocations: 
+
+```bash
+rtal connect -e -a numbers=big sum free_sum -- python free_sum_mysimplebot.py
+```
+
+```bash
+rtal connect -a obj=max_product sum free_sum -- python free_sum_mymaxproductbot.py
+```
+
+```bash
+rtal connect -a numbers=big -a obj=max_product sum free_sum -- python free_sum_mymaxproductbot.py
+```
+
+In all these examples the bot had been written in python, but it could be just a binary with permission to be executed on your local system. For example:
+
+```bash
+rtal connect -e sum free_sum -- free_sum_mysimplebot
+```
+
+Where the excutable binary `free_sum_mysimplebot` could have been obtained by compilation of a source code written in any programming language of your choice like for example C, c++, Rust, or Java. 
+
+#### Fork the TALight repl for your preferred programming language and work from there
+
+This is also a very convenient option to work, within your preferred programming language, on the problems of a TALight collection of problems or didactical path or syllabus for a course made available to you. 
+
+1. Open an account (a free one will suffice) on the amazing service [https://repl.it](https://repl.it).
+
+2. Experiment what this amazing environment can offer you and customize it.
+
+3. go on our TALlight repl for those programming languages you like, and fork them to make them your own. In this way you will end up with a rather personalized environment offering you in one single place both your preferred programming language, the binaries comprising the TALight platform, the problems for that collection/syllabus.
+
+Of course, you will need to update the binaries and the problem collection when they move ahead (which happens rather fast in this first year of actual experimentation in our own courses). One simple way to do this is to return to the original repl and fork it again (you need to manage the recovery of the bots and solutions you have developed from the previous fork. The best way is to download them in local (one click) and then to update this version in local update after update). Then you will updload (or even just copy and paste) an old solution in the currently last and active fork of yours when you need it (mainly when you want to use it as a template to minimize your editing or when you want to come back to it to improve it or complete it to the most difficult tasks and goals, maybe incorporating into it a new technique you have just learned).
+
+Here are our mother repls from which to fork, organized by programming language and syllabus:
+
+
+
+
+#### Applets for the browser (enhanced visualizations for specific problems/games)
 
 Problem `sum` also exemplifies how to interact with a service through a browser rather than through the terminal.
 In this way and by resorting on HTML/CCS/JavaScript technology, nice applets running on the problem solver site can be designed for more user friendly interactions.
@@ -878,7 +949,8 @@ it should out no line of error since/when this file is ok.
 2. `eggs`
 3. `infinity_of_N`
 4. `morra`
-
+5. `pills`
+6. `parentheses`
 
 ## Vision (pezzi in Italiano)
 

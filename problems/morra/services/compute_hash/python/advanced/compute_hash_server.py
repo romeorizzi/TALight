@@ -17,7 +17,7 @@ import random
 from hash_and_cipher import hash_value
 
 from multilanguage import Env, Lang, TALcolors
-ENV =Env(args_list, problem, service, argv[0])
+ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

@@ -17,7 +17,7 @@ services:
       num_pills:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
       risp:
-        regex: ^([1-9][0-9]{0,50})$
+        regex: ^(0|[1-9][0-9]{0,50})$
       ok_if_congruent_modulus:
         regex: ^(0|[1-9][0-9]{0,10})$
 #        default: 0

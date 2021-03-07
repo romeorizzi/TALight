@@ -14,7 +14,7 @@ from random import randrange
 
 from get_tables import get_one_numeric_table
 from multilanguage import Env, Lang, TALcolors
-ENV =Env(args_list, problem, service, argv[0])
+ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")

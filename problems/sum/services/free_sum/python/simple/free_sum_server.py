@@ -9,7 +9,7 @@ ENV['numbers'] = environ["TAL_numbers"]
 ENV['obj'] = environ["TAL_obj"]
 ENV['num_questions'] = int(environ["TAL_num_questions"])
 
-print(f"# I will serve: problem=sum, service=sum, numbers={ENV['numbers']}, obj={ENV['obj']}, num_questions={ENV['num_questions']}.")
+print(f"# I will serve: problem=sum, service=free_sum, numbers={ENV['numbers']}, obj={ENV['obj']}, num_questions={ENV['num_questions']}.")
 
 gen_new_s = True    
 for _ in range(ENV['num_questions']):

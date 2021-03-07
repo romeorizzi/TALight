@@ -1,7 +1,7 @@
 public_folder: public
 services:
   sum:
-    evaluator: [python, services/sum/python/advanced/sum_server.py]
+    evaluator: [python, services/free_sum/python/advanced/free_sum_server.py]
     args:
       numbers:
         regex: ^(onedigit|twodigits|big)$
@@ -43,7 +43,7 @@ services:
     evaluator: [python, services/help/help_server.py]
     args:
       page:
-        regex: ^(sum|sum_and_difference|sum_and_product)$
+        regex: ^(sum|free_sum|sum_and_difference|sum_and_product)$
         default: sum
       lang:
         regex: ^(en|it)$
