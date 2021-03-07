@@ -1,6 +1,6 @@
 public_folder: public
 services:
-  sum:
+  free_sum:
     evaluator: [python, services/free_sum/python/advanced/free_sum_server.py]
     args:
       numbers:
