@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sys import stderr, exit, argv
+from sys import stdout, stderr, exit, argv
 from os import environ
 from os.path import join, split
 
@@ -41,7 +41,8 @@ class Env:
             elif val_type == float:
                 self.arg[name] = float(environ[f"TAL_{name}"])
             else:
-                print(f"# Unrecoverable Error: type {val_type} not yet supported in args list. Used to interpret arg {name}.", file=stderr)
+                for out in [stdout, stderr]:
+                    print(f"# Unrecoverable Error: type {val_type} not yet supported in args list. Used to interpret arg {name}.", file=out)
                 exit(1)
     def __getitem__(self, key):
         return self.arg.get(key)
@@ -56,7 +57,8 @@ class Lang:
         self.messages_book_file = join(ENV.meta_dir, ENV.exe_path, ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
         if not yaml_is_installed:
             if book_required:
-                print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine): the service {ENV.service} you required strongly relies on a .yaml file. As long as the 'ruamel' package is not installed in the environment where the 'rtald' daemon runs, this service can not be operated.", file=stderr)
+                for out in [stdout, stderr]:
+                    print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine): the service {ENV.service} you required strongly relies on a .yaml file. As long as the 'ruamel' package is not installed in the environment where the 'rtald' daemon runs, this service can not be operated. I close the channel.", file=out)
                 exit(1)
             else:
                 print("# Recoverable Error: ", end="", file=stderr)
@@ -70,8 +72,9 @@ class Lang:
                     self.messages_book = yaml_book
                 except yaml.YAMLError as exc:
                     if book_required:
-                        print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine): the messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file). The service {ENV.service} you required for problem {ENV.problem} strictly requires this .yaml file. As long as the 'ruamel' package is not installed in the environment where the 'rtald' daemon runs, this service can not be operated.", file=stderr)
-                        print(exc, file=stderr)
+                        for out in [stdout, stderr]:
+                            print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine): the messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file). The service {ENV.service} you required for problem {ENV.problem} strictly requires this .yaml file. As long as the 'ruamel' package is not installed in the environment where the 'rtald' daemon runs, this service can not be operated.", file=out)
+                            print(exc, file=out)
                         exit(1)
                     else:
                         print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file).", file=stderr)
@@ -79,8 +82,9 @@ class Lang:
                         print(f"# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
             except IOError as ioe:
                 if book_required:
-                    print(f"Internal error (please, report it to those responsible): The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.\n The service {ENV.service} you required for problem {ENV.problem} strictly requires to have access to this .yaml file.", file=stderr)
-                    print(ioe, file=stderr)
+                    for out in [stdout, stderr]:
+                        print(f"Internal error (please, report it to those responsible): The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.\n The service {ENV.service} you required for problem {ENV.problem} strictly requires to have access to this .yaml file.", file=out)
+                        print(ioe, file=out)
                     exit(1)
                 else:
                     print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.", file=stderr)
@@ -98,7 +102,9 @@ class Lang:
 
 
     def render_feedback(self, msg_code, msg_English_rendition):
-        if self.messages_book == None:
+        if self.messages_book != None and msg_code not in self.messages_book:
+            print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book")
+        if self.messages_book == None or msg_code not in self.messages_book:
             return msg_English_rendition
         return self.myfeval(self.messages_book[msg_code])
 

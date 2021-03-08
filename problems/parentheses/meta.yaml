@@ -32,7 +32,7 @@ services:
         regex: ^(en|it)$
         default: it
   evaluate_num_sol:
-    evaluator: [python, services/python/simple/evaluate_num_sol_server.py]
+    evaluator: [python, services/evaluate_num_sol_server.py]
     args:
       answ_modulus:
         regex: ^([1-9][0-9]{0,10})$
@@ -42,7 +42,7 @@ services:
         regex: ^(en|it)$
         default: it
   check_solutions_set:
-    evaluator: [python, services/python/simple/check_solutions_set_server.py]
+    evaluator: [python, services/check_solutions_set_server.py]
     args:
       feedback:
         regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
@@ -51,7 +51,7 @@ services:
         regex: ^(en|it)$
         default: it
   check_solutions_list:
-    evaluator: [python, services/python/simple/check_solutions_list_server.py]
+    evaluator: [python, services/check_solutions_list_server.py]
     args:
       num_pairs:
         regex: ^([1-9]|1[0-9]{0,1}|20)$
@@ -66,7 +66,7 @@ services:
         regex: ^(en|it)$
         default: it
   check_next_sol_gen:
-    evaluator: [python, services/python/simple/check_next_sol_gen_server.py]
+    evaluator: [python, services/check_next_sol_gen_server.py]
     args:
       current_sol:
         regex:  ^(\(|\)){0,1000}$
@@ -82,7 +82,7 @@ services:
         regex: ^(en|it)$
         default: it
   evaluate_next_sol_gen:
-    evaluator: [python, services/python/simple/evaluate_next_sol_gen_server.py]
+    evaluator: [python, services/evaluate_next_sol_gen_server.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$

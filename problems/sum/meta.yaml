@@ -43,9 +43,15 @@ services:
     evaluator: [python, services/help/help_server.py]
     args:
       page:
-        regex: ^(sum|free_sum|sum_and_difference|sum_and_product)$
-        default: sum
+        regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
+        default: help
       lang:
         regex: ^(en|it)$
         default: it
+  synopsis:
+    evaluator: [python, services/help/synopsis_server.py]
+    args:
+      service:
+        regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
+        default: synopsis
 

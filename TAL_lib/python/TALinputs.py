@@ -16,6 +16,8 @@ def try_to_convert(tk, tk_type, regex):
         except (TypeError, ValueError):
             return None
     elif tk_type == str:
+        if tk.upper() == "END":
+            return "end"
         matched = re.match(regex, tk)
         if bool(matched):
             return tk
@@ -28,7 +30,7 @@ def try_to_convert(tk, tk_type, regex):
         
 
 
-def TALinput(tokens_type, ignore_lines_starting_with='#', regex="^((\S)+)$", regex_explained=None):
+def TALinput(tokens_type, regex="^((\S)+)$", regex_explained=None, ignore_lines_starting_with='#'):
     while True:
         spoon = input()
         if len(spoon) == 0:
@@ -47,9 +49,10 @@ def TALinput(tokens_type, ignore_lines_starting_with='#', regex="^((\S)+)$", reg
         if vals[-1] == None:
             if tk_type == str:
                 for out in [stdout, stderr]:
-                    print(f"Input error from the problem-solver:  when parsing the {i}-th token of your input line, namely the string:\n{tk}\nthe server was actually expecting a string matching the regex:\n{regex}\nbut the string you entered does not comply the regex.\n\nI am dropping the communication because of violation of the intended protocol between problem solver and problem maker.", file=out)
+                    print(f"Input error from the problem-solver:  when parsing the {i}-th token of your input line, namely the string:\n{tk}\nthe server was actually expecting a string matching the regex:\n{regex}\nbut the string you entered does not comply the regex.\n", file=out)
                     if regex_explained != None:
-                        print("In practice, the expected string should be {regex_explained}", file=out)
+                        print(f"In practice, the expected string should be either 'end' (to close the input) or {regex_explained}", file=out)
+                    print(f"\nI am dropping the communication because of violation of the intended protocol between problem solver and problem maker.", file=out)
             else:
                 for out in [stdout, stderr]:
                     print(f"Input error from the problem-solver: the server was expecting a token of type {tk_type} when it got the token '{tk}'.\n\nI am dropping the communication because of violation of the intended protocol between problem solver and problem maker.", file=out)
