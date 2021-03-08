@@ -18,6 +18,7 @@ a.out
 __pycache__/
 *.py[cod]
 *$py.class
+*.class
 
 # management of this report in action
 TEMA_OGGI*
