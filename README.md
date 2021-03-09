@@ -449,7 +449,7 @@ In the following we assume that `~/TAlight` is the path to this TAlight repo as 
 
 <strong>A note for Windows users</strong>
 
-Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
+Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
 
 <strong>If you are Windows user keep this in mind in interpreting all instructions to follow.</strong>
 
