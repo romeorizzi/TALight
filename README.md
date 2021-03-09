@@ -512,6 +512,7 @@ If you want older terminals to get the update then you can issue from them the c
 ```bash
 source .bashrc
 ```
+Instead, if you are on Windows, add the path `~/.bin` to your `PATH` environment variable.
 
 Again, you can check that the `TAlight` commands are now directly accessible with
 
