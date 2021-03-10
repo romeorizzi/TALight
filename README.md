@@ -449,7 +449,7 @@ In the following we assume that `~/TAlight` is the path to this TAlight repo as 
 
 <strong>A note for Windows users</strong>
 
-Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
+Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
 
 <strong>If you are Windows user keep this in mind in interpreting all instructions to follow.</strong>
 
@@ -487,7 +487,7 @@ You will have to do this on every terminal from which you want to issue TAlight 
 
 
 There are many ways to solve this nuisance, like copying the binaries into a directory listed into the `PATH` environment variable on your system, or adding the path `~/TAlight/rtal/target/debug/` to your `PATH` environment variable.
-Here we suggest a convenient way to make the `TAlight` commands directly accessible, it can be applied on any platform that allows for simlinks (or hardlinks). We word it out step by step for Unix/Linux/Mac: 
+Here we suggest a convenient way to make the `TAlight` commands directly accessible, it can be applied on any platform that allows for simlinks (or hardlinks). We word it out step by step **for Unix/Linux/Mac**: 
 
 
 From the terminal,
@@ -512,6 +512,16 @@ If you want older terminals to get the update then you can issue from them the c
 ```bash
 source .bashrc
 ```
+If you are **on Windows**: open the Git Bash, lounch the following commands
+```bash
+mkdir ~/.bin
+cd ~/.bin
+ln -s ~/TAlight/rtal/target/debug/rtald 
+ln -s ~/TAlight/rtal/target/debug/rtalc 
+ln -s ~/TAlight/rtal/target/debug/rtal 
+ln -s ~/TAlight/TAL_utils/TA_send_txt_file.py 
+```
+and then add the path `~/.bin` to your `PATH` environment variable.
 
 Again, you can check that the `TAlight` commands are now directly accessible with
 

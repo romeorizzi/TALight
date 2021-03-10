@@ -35,5 +35,5 @@ termcolor = "1"
 fwdansi = "1"
 
 [dependencies.tungstenite]
-version = "0.12"
+version = "0.13"
 default-features = false
