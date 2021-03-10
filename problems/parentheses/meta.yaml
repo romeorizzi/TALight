@@ -41,8 +41,8 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-  check_solutions_set:
-    evaluator: [python, services/check_solutions_set_server.py]
+  check_sol_set:
+    evaluator: [python, services/check_sol_set_server.py]
     args:
       feedback:
         regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
@@ -50,8 +50,8 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-  check_solutions_list:
-    evaluator: [python, services/check_solutions_list_server.py]
+  check_sol_list:
+    evaluator: [python, services/check_sol_list_server.py]
     args:
       num_pairs:
         regex: ^([1-9]|1[0-9]{0,1}|20)$

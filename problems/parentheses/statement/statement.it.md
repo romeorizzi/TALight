@@ -30,7 +30,7 @@ In questo problema, che mira a sviluppare/potenziare competenze nell'approccio r
 
 1. saper riconoscere se una formula di parentesi è ben formata.
 
-2. dato $n$, saper calcolare quante sono le formule con $n$ coppie di parentesi di parentesi che siano ben formate.
+2. dato $n$, saper calcolare quante sono le formule con $n$ coppie di parentesi che siano ben formate.
 
 3. listare tutte le formule ben formate per un certo $n$.
 
