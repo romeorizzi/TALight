@@ -2,9 +2,9 @@
 
 # METADATA OF THIS TAL_SERVICE:
 problem="pills"
-service="check_a_sol"
+service="check_one_sol_server"
 args_list = [
-    ('one_solution',str),
+    ('input_sol',str),
     ('silent',bool),
     ('lang',str),
     ('ISATTY',bool),
@@ -23,18 +23,18 @@ if not ENV['silent']:
 # START CODING YOUR SERVICE: 
 
 num_H_pills = 0
-for day, i in zip(ENV['one_solution'],range(1,len(ENV['one_solution'])+1)):
+for day, i in zip(ENV['input_sol'],range(1,len(ENV['input_sol'])+1)):
     if day == 'I':
         num_H_pills += 1
     else:
         if num_H_pills == 0:
-            TAc.print(ENV['one_solution'], "yellow", ["underline"])
+            TAc.print(ENV['input_sol'], "yellow", ["underline"])
             TAc.print(LANG.render_feedback("unfeasible", f"No. On the evening of day {i} there in no single half pill left in the bottle. Are you sure you have not swallowed a rat?"), "red", ["bold"])
             exit(0)
         num_H_pills -= 1
 
 if num_H_pills > 0:
-    TAc.print(ENV['one_solution'], "yellow", ["underline"])
+    TAc.print(ENV['input_sol'], "yellow", ["underline"])
     TAc.print(LANG.render_feedback("unfinished", f"No. You have not finished the treatment. When following your prescription string there are some half pills left in the bottle."), "red", ["bold"])
     exit(0)
 if not ENV['silent']:

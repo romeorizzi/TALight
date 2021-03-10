@@ -4,11 +4,11 @@ from sys import stderr, exit, argv
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from recognize import recognize
+from parentheses_lib import recognize
 
 # METADATA OF THIS TAL_SERVICE:
 problem="parentheses"
-service="check_a_sol"
+service="check_one_sol_server"
 args_list = [
     ('input_formula',str),
     ('silent',bool),

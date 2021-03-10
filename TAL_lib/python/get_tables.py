@@ -13,15 +13,6 @@ def convert2number(s):
     except (TypeError, ValueError):
         return None
 
-def get_line():
-    raw_line = input().strip()
-    if raw_line[0] != "#":            
-        return [tk.strip() for tk in raw_line.split("#")[0].split(sep)], None
-    key = raw_line[1:].strip().split()[0].upper()
-    if key == "END" or key == "NEXT":
-        return None, key 
-    return None, "GEN_COMMENT"
-    
 
 def get_one_numeric_table(sep=None, should_be_int=False, should_be_nat=False, row_names_start_from=0, col_names_start_from=0, checks=[]):
     """ When sep=None, the fields are separated by sequences of white characters. When sep="," then a .csv format is assumed, but you can specify use other separator characters or string. A "#" starts a comment for the rest of the line.   
@@ -31,13 +22,13 @@ def get_one_numeric_table(sep=None, should_be_int=False, should_be_nat=False, ro
        > [tk.strip() for tk in "wfwqf,   wqfwqfq, wfwfq".split(",")]
        returns ['wfwqf', 'wqfwqfq', 'wfwfq']
     """
-    print('# waiting for a rectangular table of numbers (a matrix). Insert a closing line "# END" after the last row of the table.')
+    print("# waiting for a rectangular table of numbers (a matrix). Insert a closing line '#end' after the last row of the table. Any other line beggining with the '#' character is ignored. You can use the 'TA_send_txt_file.py' util here to send us the lines of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file.")
     def get_line():
         raw_line = input().strip()
         if raw_line[0] != "#":            
             return [tk.strip() for tk in raw_line.split("#")[0].split(sep)], None
         key = raw_line[1:].strip().split()[0].upper()
-        if key == "END" or key == "NEXT":
+        if key.upper() == "END" or key.upper() == "NEXT":
             return None, key 
         return None, "GEN_COMMENT"
 
@@ -67,8 +58,8 @@ def get_one_numeric_table(sep=None, should_be_int=False, should_be_nat=False, ro
     one_by_one_check()
 
     next_line, cmd = get_line() 
-    while cmd != "END":
-        if cmd == "NEXT":
+    while cmd == None or cmd.upper() != "END":
+        if cmd != None and cmd.upper() == "NEXT":
             print("# Warning: I have asked for one single table! I will assume this line was a comment and proceed reading and loading the previous table line by line.")
         elif next_line != None:
             if len(next_line) != last_col+1:

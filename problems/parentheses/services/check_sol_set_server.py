@@ -6,8 +6,7 @@ from TALinputs import TALinput
 
 from get_lines import get_lines_from_stream
 
-from recognize import recognize
-from num_sol import num_sol
+from parentheses_lib import recognize, num_sol, unrank
 
 # METADATA OF THIS TAL_SERVICE:
 problem="parentheses"
@@ -25,6 +24,7 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
 
+print("# waiting for your set of well-formed formulas of parentheses. Please, each one of them should go on a different line. All these lines should have the same lenght. Insert a closing line '# END' after the last row of the table. Any other line beggining with the '#' character is ignored. If you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file.")
 input_solution_list = [list(TALinput([str], ignore_lines_starting_with='#', regex="^(\(|\))+$", regex_explained="any string of '(' and ')' characters."))[0]]
 input_solution_set = {input_solution_list[-1]}
 if not recognize(input_solution_list[-1], TAc, LANG):
@@ -35,7 +35,7 @@ while True:
     if line == 'end':
         break
     if not len(line) == len_lines:
-        TAc.print(LANG.render_feedback("different_lengths", "No. La formula di parentesi che hai appena introdotto è di lunghezza diversa dalla precedenti."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("different_lengths", "No. La formula di parentesi che hai appena introdotto è di lunghezza diversa dalle precedenti."), "red", ["bold"])
         exit(0)   
     if not recognize(line, TAc, LANG):
         exit(0)
@@ -55,20 +55,6 @@ if len(input_solution_list) < num_sol(n_pairs) and ENV['feedback'] == "yes_no":
     TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed formula."), "red", ["bold"])
     exit(0)
 
-def unrank(n_pairs, pos, sorting_criterion="loves_opening_par"):
-    if n_pairs == 0:
-        return ""
-    """(  ... )  ...
-           A      B
-    """    
-    count = 0
-    for n_pairs_in_A in range(n_pairs) if sorting_criterion=="loves_closing_par" else reversed(range(n_pairs)):
-        num_A = num_sol(n_pairs_in_A)
-        num_B = num_sol(n_pairs - n_pairs_in_A -1)
-        if count + num_A*num_B > pos:
-            break
-        count += num_A*num_B
-    return "(" + unrank(n_pairs_in_A, (pos-count) // num_B) + ")" + unrank(n_pairs - n_pairs_in_A -1, (pos-count) % num_B)
 
 for pos in range(num_sol(n_pairs)):
     #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, unrank(n_pairs, pos)={unrank(n_pairs, pos)}")
@@ -93,5 +79,5 @@ for pos in range(num_sol(n_pairs)):
             TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f"No. Your set is missing at least one well-formed formula.\nHere is the prefix of a well-formed formula and no formula in your set has this prefix:"), "red", ["bold"])
             TAc.print(minimal_missing_prefix, "yellow", ["bold"])
         exit(0)
-       
+
 exit(0)
