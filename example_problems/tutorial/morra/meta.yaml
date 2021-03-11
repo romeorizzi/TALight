@@ -1,0 +1,44 @@
+public_folder: public
+services:
+  play:
+    evaluator: [python, services/play/advanced/play_server.py]
+    args:
+      num_rounds:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 10
+      hash_type:
+        regex: ^(rabin_karp|sha1|sha256|sha512)$
+        default: rabin_karp
+      lang:
+        regex: ^(en|it)$
+        default: it
+  compute_hash:
+    evaluator: [python, services/compute_hash/advanced/compute_hash_server.py]
+    args:
+      white_string:
+        regex: ^([[:alnum:]]|_){4,100}$
+        default: None
+      hash_type:
+        regex: ^(rabin_karp|sha1|sha256|sha512)$
+        default: rabin_karp
+      lang:
+        regex: ^(en|it)$
+        default: it
+  verify_hash:
+    evaluator: [python, services/verify_hash/advanced/verify_hash_server.py]
+    args:
+      num_checks:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 100
+      hash_type:
+        regex: ^(rabin_karp|sha1|sha256|sha512)$
+        default: rabin_karp
+      alphabet_white_string:
+        regex: ^(safely_printable|ascii_letters|digits|punctuation|ascii_uppercase|ascii_lowercase)$
+        default: safely_printable
+      length_white_string:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 64  
+      lang:
+        regex: ^(en|it)$
+        default: it

@@ -287,11 +287,11 @@ rtal -s wss://talight.tk/tutorial connect -n -aobj=max_product sum free_sum
 To connect a bot of yours to play on your behalf:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 <strong>If you are on Windows than you should write:</strong>
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- python ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- python ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 <strong>This is because only `.exe` files can be executed on Windows, scripts can not even if their first line is the correct she-bang.
 
@@ -302,13 +302,13 @@ Of course, you can also use this second and longer form of the command also on L
 Ok, that bot did not behave that well because it was a simple one, but you can try the `sum_mymaxproductbot.py` in the same directory (of this report that you have cloned in local). Or you can assign to `sum_mysimplebot.py` a simpler task:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e sum free_sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e sum free_sum -- ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 
 When you succeed teaching a competence (like when you succeed instructing a bot to do something) then you get confirmed to have acquired that competence in the deep. Therefore, the submission of a bot offers a means to assess the competence. We might thus offer you an evaluation on your submissions. Apart for checking what is going on, you might then prefer to turn off the full report on the interaction between your bot and the program written by the problem maker who designed the service. In this case, just drop the `-e` flag:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect sum free_sum -- ~/TAlight/problems/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect sum free_sum -- ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 
 Since problem `sum` offers an `help` service, you can also get immediate directions about the problem by asking to this service, selecting the specific page through the use of arguments:
@@ -593,20 +593,20 @@ The simplest and most effective way to unset all environment variables set up fo
 
 
 Both in modality 1 and in modality 2, you must specify to the daemon the directory containing the `TAlight` problems it should take care of. It is assumed that this directory is located on your local file system and each problem is a direct subdirectory of it.
-In the case of the problems comprising this tutorial they are placed in the `~/TAlight/problems` directory. Therefore, you activate (in modality 1) the `TAlight` daemon with the following command from a terminal where the `RUST_LOG` environment variable has been set:
+In the case of the problems comprising this tutorial they are placed in the `~/TAlight/example_problems/tutorial` directory. Therefore, you activate (in modality 1) the `TAlight` daemon with the following command from a terminal where the `RUST_LOG` environment variable has been set:
 
 ```bash
-rtald -d ~/TAlight/problems
+rtald -d ~/TAlight/example_problems/tutorial
 ```
 
 If the variable `RUST_LOG` was unset you can still set it now, and specifically for this execution of `rtald` with:
 
 ```bash
-RUST_LOG=info rtald -d ~/TAlight/problems
+RUST_LOG=info rtald -d ~/TAlight/example_problems/tutorial
 ```
 This second possibility holds only for the `bash` shell and will not work for the `zsh` you are given by default if you are on Mac. (You can however launch another shell, like the `bash`, from other shells. On the `zsh` of Mac just enter th command `bash` and, after this, the `bash` is operating on that terminal. At this point the secon option is available also for you, on that terminal.)
 
-The `rtald` daemon is now active and ready to serve requests concerning the problems present in the directory `~/TAlight/problems`.
+The `rtald` daemon is now active and ready to serve requests concerning the problems present in the directory `~/TAlight/example_problems/tutorial`.
 The terminal where you issued its activation will now be the place where the server `rtald` updates you about the requests of service it receives and what is going on with them. If `RUST_LOG` was not set, then you will only get the error messages of the problem service server (the one called when you issued a request through the `rtal` client), if it crashes or malfunctions, but if the environment variable was set you will have access to further feedback that can help you out. 
 
 The help page of the `rtald` command lists its optional parameters that allow you to expose the service in the wide rather than just in local (modality 2).
@@ -868,7 +868,7 @@ Notice that among the materials that the good problem solver has decided not to 
 Launch
 
 ```bash
-diff -r eggs ~/TAlight/problems/eggs/public 
+diff -r eggs ~/TAlight/example_problems/tutorial/eggs/public 
 ```
 to see other differences and ask yourself the reason why.
 
@@ -887,7 +887,7 @@ Of course, you could have visualized this file even before asking for the `publi
 Then,
 to grow as a problem maker, run
 ```bash
-diff -r sum ~/TAlight/problems/sum/public 
+diff -r sum ~/TAlight/example_problems/tutorial/sum/public 
 ```
 and ask yourself the reasons for these more refined differences.
 
@@ -908,7 +908,7 @@ Take a problem you have to:
 If you lounch:
 
 ```t
-tree ~/TAlight/problems/sum 
+tree ~/TAlight/example_problems/tutorial/sum 
 ```
 you will discover the main directories usually comprising the problem folder.
 These are:
@@ -938,7 +938,7 @@ with the lines
   sum_and_difference:
     evaluator: [services/sum_and_difference/python/simple/sum_and_difference_server.py]
 ```
-in the `~/TAlight/problems/sum/meta.yaml` file 
+in the `~/TAlight/example_problems/tutorial/sum/meta.yaml` file 
 
 This should allow you to test the simpler versions of codes that serve the intended service. See how simple serving a problem can be before entering in the (only superficial) obfuscations coming with colored outputting and multilingual support.
 As you can see, both for problem `sum` and for problem `morra` all services are implemented both in a simple and in an advanced manner. Starting from the simple and then looking at the advanced should help your way through to all the little proficiency needed on the technical level, and ready to express yourself on the creative side of problem making.
@@ -946,9 +946,9 @@ As you can see, both for problem `sum` and for problem `morra` all services are 
 There is also a service for checking whether a `meta.yaml` file is fit:
 
 ```t
-rtalc ~/TAlight/problems/sum
+rtalc ~/TAlight/example_problems/tutorial/sum
 ```
-it should out no line of error since/when this file is ok. 
+it should out no line of error since/when this file is ok. The path it takes as argument is the path of the folder containing the `meta.yaml` file organizing the services of the problem. 
 
 </details>
 
