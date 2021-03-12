@@ -33,6 +33,7 @@ webpki-roots = "0.21"
 webpki = "0.21"
 termcolor = "1"
 fwdansi = "1"
+path-absolutize = "3"
 
 [dependencies.tungstenite]
 version = "0.13"

@@ -3,7 +3,8 @@
 mod problem;
 
 use clap::Clap;
-use std::fs::{canonicalize, metadata, read_to_string};
+use path_absolutize::Absolutize;
+use std::fs::{metadata, read_to_string};
 use std::io::Write;
 use std::path::PathBuf;
 use std::process::exit;
@@ -58,8 +59,8 @@ macro_rules! warn {
 fn main() {
     let mut stdout = StandardStream::stdout(ColorChoice::Auto);
     let opts = CliArgs::parse();
-    let mut dir = match canonicalize(opts.directory) {
-        Ok(x) => x,
+    let mut dir = match opts.directory.absolutize() {
+        Ok(x) => x.into_owned(),
         Err(x) => fail!(stdout, "Cannot canonicalize directory: {}", x),
     };
     dir.push(problem::META);

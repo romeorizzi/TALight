@@ -4,10 +4,11 @@ mod util;
 
 use clap::Clap;
 use log::{error, info, warn};
+use path_absolutize::Absolutize;
 use proto::{Command, Packet};
 use sha2::{Digest, Sha512};
 use std::collections::HashMap;
-use std::fs::{self, canonicalize, read_dir, read_to_string};
+use std::fs::{self, read_dir, read_to_string};
 use std::net::TcpListener;
 use std::net::TcpStream;
 use std::path::PathBuf;
@@ -58,8 +59,8 @@ fn main() {
         Ok(x) => x,
         Err(x) => crash!("Cannot listen on [{}:{}]: {}", opts.bind_address, opts.listen_port, x),
     };
-    let dir_abs = match canonicalize(&opts.directory) {
-        Ok(x) => x,
+    let dir_abs = match opts.directory.absolutize() {
+        Ok(x) => x.into_owned(),
         Err(x) => crash!("Cannot obtain absolute path of {}: {}", opts.directory.to_str().unwrap_or("NULL"), x),
     };
     let timeout_ms = (opts.timeout * 1000.0) as u64;
