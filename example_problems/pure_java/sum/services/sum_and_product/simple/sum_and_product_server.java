@@ -13,8 +13,6 @@ public class sum_and_product_server {
         int y = 0;
         Random randrange = new Random();
 
-        System.out.println("Hello world!\n\nHey mama, guarda come mi diverto ... \n");
-
         Map <String, String> map = System.getenv();
         for (Map.Entry <String, String> entry: map.entrySet()) {
 
@@ -51,15 +49,15 @@ public class sum_and_product_server {
             int b = Integer.parseInt(spoon.split(" ")[1]);
             gen_new_pair = false;
             if (a+b > x+y)
-                System.out.println("No! indeed, {a}+{b}={a+b} > {x+y}.");
+                System.out.println("No! indeed,"+a+ "+"+b+"="+(a+b)+">"+(x+y)+".");
             else if (a+b < x+y)
-                System.out.println("No! indeed, {a}+{b}={a+b} < {x+y}.");
+                System.out.println("No! indeed,"+a+ "+"+b+"="+(a+b)+"<"+(x+y)+".");
             else if (a*b > x*y)
-                System.out.println("No! indeed, {a}*{b}={a*b} > {x*y}.");
+                System.out.println("No! indeed,"+a+ "*"+b+"="+(a*b)+">"+(x*y)+".");
             else if (a*b < x*y)
-                System.out.println("No! indeed, {a}*{b}={a*b} < {x*y}.");
+                System.out.println("No! indeed,"+a+ "*"+b+"="+(a*b)+">"+(x*y)+".");
             else {
-                System.out.println("Ok! indeed, {a}+{b}={x+y} and {a}*{b}={x*y}.");
+                System.out.println("Ok! indeed,"+a+ "+"+b+"="+(a+b)+" and"+a+"*"+b+"="+(a*b)+".");
                 gen_new_pair = false;
             }
 
