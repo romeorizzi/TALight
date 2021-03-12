@@ -13,6 +13,8 @@ public class sum_and_product_server {
         int y = 0;
         Random randrange = new Random();
 
+        System.out.println("Hello world!\n\nHey mama, guarda come mi diverto ... \n");
+
         Map <String, String> map = System.getenv();
         for (Map.Entry <String, String> entry: map.entrySet()) {
 
