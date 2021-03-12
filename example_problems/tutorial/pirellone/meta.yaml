@@ -1,0 +1,63 @@
+public_folder: public
+services:
+  compact_solution:
+    evaluator: [python, services/compact_solution_server.py]
+    args:
+      m: ^([1-9][0-9]{0,1}|100|any)$
+        default: any
+      n: ^([1-9][0-9]{0,1}|100|any)$
+        default: any
+      goal: ^(m_plus_n|m_plus_n_half|min)$
+        default: m_plus_n
+      lang:
+        regex: ^(en|it)$
+        default: it
+  sub_closure:
+    evaluator: [python, services/sub_closure_server.py]
+    args:
+      m: ^([1-9][0-9]{0,1}|100|any)$
+        default: any
+      n: ^([1-9][0-9]{0,1}|100|any)$
+        default: any
+      goal: ^(any|min)$
+        default: min
+      lang:
+        regex: ^(en|it)$
+        default: it
+  check_counterexample:
+    evaluator: [python, services/check_counterexample_server.py]
+    args:
+      goal: ^(any|minimal)$
+        default: m_plus_n
+      lang:
+        regex: ^(en|it)$
+        default: it
+  check_sol:
+    evaluator: [python, services/check_sol_server.py]
+    args:
+      coding: ^(seq|subset)$
+        default: seq
+      lang:
+        regex: ^(en|it)$
+        default: it
+  eval_solve:
+    evaluator: [python, services/eval_solve_server.py]
+    args:
+      size: ^(small|medium|large)$
+        default: poly_time
+      with_NO_cert: ^(0|1)$
+        default: 1
+      lang:
+        regex: ^(en|it)$
+        default: it
+  trilly:
+    evaluator: [python, services/eval_solve_server.py]
+    args:
+      size: ^(small|medium|large|huge|unbearable)$
+      num_calls: ^([1-5]|any)$
+        default: 1
+      num_calls: ^([1-5]|any)$
+        default: 1
+      lang:
+        regex: ^(en|it)$
+        default: it

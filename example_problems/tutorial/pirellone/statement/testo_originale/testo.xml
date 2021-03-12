@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE EXAMPLE [
+<!ENTITY agrave "à">
+<!ENTITY eacute "é">
+<!ENTITY egrave "è">
+<!ENTITY igrave "ì">
+<!ENTITY ograve "ò">
+<!ENTITY ugrave "ù">
+<!ENTITY lt "<">
+]>
+<layout>
+<gara>Selezioni nazionali 2005</gara>
+<titolo>Luci al Pirellone</titolo>
+<short>pirellone</short>
+<diff>1</diff>
+<tempo>2</tempo>
+<!--Rizzi-->
+<problema>
+
+<p>
+Il Pirellone &egrave; un noto grattacielo di Milano, in cui le
+finestre sono disposte ordinatamente per <var>N</var> righe (piani) e
+<var>M</var> colonne. Le righe sono numerate da 1 a <var>N</var>
+(dall'alto in basso) e le colonne da 1 a <var>M</var> (da sinistra a
+destra).
+</p>
+
+<p>
+Non tutti i dipendenti spengono la luce dei loro uffici, la sera prima
+di uscire. Quindi alcune finestre rimangono illuminate e tocca al
+custode provvedere a spegnerle.
+</p>
+
+<p>
+Per facilitare il compito del custode, sono stati predisposti
+<var>N+M</var> interruttori speciali, con un funzionamento
+particolare.  Ci sono <var>N</var> interruttori di riga e <var>M</var>
+interruttori di colonna.  Quando il custode agisce
+sull'<var>i</var>-esimo interruttore di riga, tutte le luci accese
+dell'<var>i</var>-esima riga si spengono ma, allo stesso tempo, quelle
+spente si accendono! Analogamente alle righe, un interruttore di
+colonna spegne le luci accese di quella colonna e accende quelle
+spente.
+</p>
+
+
+<p>
+Aiuta il custode a decidere quali degli <var>N+M</var>
+interruttori azionare al fine di spegnere tutte le luci delle finestre
+del Pirellone. Data la configurazione iniziale di luci, il custode
+deve verificare se sia possibile spegnere le luci con gli interruttori
+speciali e, in tal caso, deve specificare anche su quali interruttori
+agire. Altrimenti, stabilisce che &egrave; necessario utilizzare gli
+interruttori tradizionali.
+</p>
+</problema>
+
+<input>
+<p>
+Il file <samp>input.txt</samp> contiene nella prima riga gli interi
+<var>N</var> e <var>M</var>, ovvero il numero di righe e di colonne
+del Pirellone, rispettivamente.
+</p>
+<p>
+Ognuna delle successive <var>N</var> righe contiene una sequenza di
+<var>M</var> valori 0 oppure 1, separati da uno spazio.  La sequenza
+contenuta nell'<var>i</var>-esima di tale righe rappresenta lo stato
+delle luci nell'<var>i</var>-esima riga (piano) del Pirellone. In
+particolare, il <var>j</var>-esimo valore in tale riga indica se la
+<var>j</var>-esima luce &egrave; accesa (valore = 1) oppure spenta
+(valore = 0).
+</p>
+</input>
+
+
+<output>
+<p>
+Il file <samp>output.txt</samp> deve contenere due linee per indicare
+su quali interruttori deve agire il custode.
+</p>
+
+<p>
+La prima linea contiene una sequenza di <var>N</var> valori (0 oppure
+1) separati da uno spazio, per rappresentare le operazioni che il
+custode deve effettuare sugli interruttori di riga.
+L'<var>i</var>-esimo valore della sequenza indica se il custode deve
+agire sull'interruttore dell'<var>i</var>-esima riga (valore = 1)
+oppure no (valore = 0).
+</p>
+
+<p>
+Analogamente, la seconda linea contiene una sequenza di <var>M</var>
+valori (0 oppure 1) separati da uno spazio, per rappresentare le
+operazioni che il custode deve effettuare sugli interruttori di
+colonna.  Il <var>j</var>-esimo valore della sequenza indica se il
+custode deve agire sull'interruttore della <var>j</var>-esima colonna
+oppure no.
+</p>
+
+<p>
+Nel caso in cui non sia possibile spegnere tutte le luci del Pirellone
+con gli interruttori speciali, tutti i valori delle due linee in
+<samp>output.txt</samp> devono essere uguali a 0.
+</p>
+</output>
+
+
+<assunzioni>
+<li><var> 1 &lt; N &lt; 500</var></li>
+<li><var> 1 &lt; M &lt; 500</var></li>
+<li> Il Pirellone ha almeno una luce accesa.</li>
+</assunzioni>
+
+<esempio>
+<li> 
+<input>
+5 5
+1 0 1 1 0
+0 1 0 0 1
+1 0 1 1 0
+0 1 0 0 1
+0 1 0 0 1
+</input>
+<output>
+1 0 1 0 0
+0 1 0 0 1
+</output>
+</li>
+<li> 
+<input>
+5 5
+1 0 1 1 0
+0 1 1 0 1
+1 0 1 1 0
+0 1 0 0 1
+0 0 1 0 1
+</input>
+<output>
+0 0 0 0 0
+0 0 0 0 0
+</output>
+</li>
+</esempio>
+
+
+</layout>
