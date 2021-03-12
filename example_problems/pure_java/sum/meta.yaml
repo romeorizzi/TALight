@@ -29,7 +29,9 @@ services:
         default: it
   sum_and_product:
     #evaluator: [python, services/sum_and_product/advanced/sum_and_product_server.py]
-    evaluator: [java, -cp, services/sum_and_product/simple, sum_and_product_server]
+    #evaluator: [java, -cp, services/sum_and_product/simple, sum_and_product_server]
+    evaluator: [java, -jar, services/sum_and_product/simple, sum_and_product_server.jar]
+#    evaluator: [java, -jar -cp, services/sum_and_product/simple, sum_and_product_server.jar]
     args:
       numbers:
         regex: ^(onedigit|twodigits|big)$
