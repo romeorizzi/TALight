@@ -31,8 +31,8 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-  evaluate_num_sol:
-    evaluator: [python, services/python/simple/evaluate_num_sol_server.py]
+  eval_num_sol:
+    evaluator: [python, services/python/simple/eval_num_sol_server.py]
     args:
       answ_modulus:
         regex: ^([1-9][0-9]{0,10})$
@@ -53,9 +53,6 @@ services:
   check_sol_list:
     evaluator: [python, services/python/simple/check_sol_list_server.py]
     args:
-      num_pills:
-        regex: ^([1-9]|1[0-9]{0,1}|20)$
-        default: 5
       sorting_criterion:
         regex: ^(loves_integer_pills|loves_half_pills)$
         default: loves_integer_pills
@@ -81,8 +78,8 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-  evaluate_next_sol_gen:
-    evaluator: [python, services/python/simple/evaluate_next_sol_gen_server.py]
+  eval_next_sol_gen:
+    evaluator: [python, services/python/simple/eval_next_sol_gen_server.py]
     args:
       sorting_criterion:
         regex: ^(loves_integer_pills|loves_half_pills)$
@@ -114,8 +111,8 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-  evaluate_rank_of_sol:
-    evaluator: [python, services/evaluate_rank_of_sol.py]
+  eval_rank_of_sol:
+    evaluator: [python, services/eval_rank_of_sol.py]
     args:
       sorting_criterion:
         regex: ^(dislike_half_pills|dislike_integer_pills)$
@@ -123,8 +120,8 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-  evaluate_sol_of_rank:
-    evaluator: [python, services/evaluate_sol_of_rank.py]
+  eval_sol_of_rank:
+    evaluator: [python, services/eval_sol_of_rank.py]
     args:
       sorting_criterion:
         regex: ^(dislike_half_pills|dislike_integer_pills)$

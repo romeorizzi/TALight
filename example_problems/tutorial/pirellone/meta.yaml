@@ -3,11 +3,14 @@ services:
   compact_solution:
     evaluator: [python, services/compact_solution_server.py]
     args:
-      m: ^([1-9][0-9]{0,1}|100|any)$
+      m:
+        regex: ^([1-9][0-9]{0,1}|100|any)$
         default: any
-      n: ^([1-9][0-9]{0,1}|100|any)$
+      n:
+        regex: ^([1-9][0-9]{0,1}|100|any)$
         default: any
-      goal: ^(m_plus_n|m_plus_n_half|min)$
+      goal:
+        regex: ^(m_plus_n|m_plus_n_half|min)$
         default: m_plus_n
       lang:
         regex: ^(en|it)$
@@ -15,11 +18,14 @@ services:
   sub_closure:
     evaluator: [python, services/sub_closure_server.py]
     args:
-      m: ^([1-9][0-9]{0,1}|100|any)$
+      m:
+        regex: ^([1-9][0-9]{0,1}|100|any)$
         default: any
-      n: ^([1-9][0-9]{0,1}|100|any)$
+      n:
+        regex: ^([1-9][0-9]{0,1}|100|any)$
         default: any
-      goal: ^(any|min)$
+      goal:
+        regex: ^(any|min)$
         default: min
       lang:
         regex: ^(en|it)$
@@ -27,15 +33,17 @@ services:
   check_counterexample:
     evaluator: [python, services/check_counterexample_server.py]
     args:
-      goal: ^(any|minimal)$
-        default: m_plus_n
+      goal:
+        regex: ^(any|minimal)$
+        default: any
       lang:
         regex: ^(en|it)$
         default: it
   check_sol:
     evaluator: [python, services/check_sol_server.py]
     args:
-      coding: ^(seq|subset)$
+      coding:
+        regex: ^(seq|subset)$
         default: seq
       lang:
         regex: ^(en|it)$
@@ -43,9 +51,11 @@ services:
   eval_solve:
     evaluator: [python, services/eval_solve_server.py]
     args:
-      size: ^(small|medium|large)$
-        default: poly_time
-      with_NO_cert: ^(0|1)$
+      size:
+        regex: ^(small|medium|large)$
+        default: medium
+      with_NO_cert:
+        regex: ^(0|1)$
         default: 1
       lang:
         regex: ^(en|it)$
@@ -53,11 +63,14 @@ services:
   trilly:
     evaluator: [python, services/eval_solve_server.py]
     args:
-      size: ^(small|medium|large|huge|unbearable)$
-      num_calls: ^([1-5]|any)$
+      size:
+        regex: ^(small|medium|large|huge|unbearable)$
+      num_calls:
+        regex: ^([1-5]|any)$
         default: 1
-      num_calls: ^([1-5]|any)$
-        default: 1
+      type_calls:
+        regex: ^(smaller_m|smaller_n|smaller_m_and_n)$
+        default: smaller_m
       lang:
         regex: ^(en|it)$
         default: it
