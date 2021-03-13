@@ -16,9 +16,9 @@ public class sum_and_product_server {
         Map <String, String> map = System.getenv();
         for (Map.Entry <String, String> entry: map.entrySet()) {
 
-            if(entry.getKey().equals("TAL_NUMBERS"))
+            if(entry.getKey().equals("TAL_numbers"))
                 numbers= entry.getValue();
-            if(entry.getKey().equals("TAL_NUM_QUESTIONS"))
+            if(entry.getKey().equals("TAL_num_questions"))
                 num_question= Integer.parseInt(entry.getValue());
 
         }
