@@ -25,15 +25,15 @@ TAc.print(LANG.opening_msg, "green")
 
 sep=None if ENV['separator']=="None" else ENV['separator']
 if ENV['eggs_from_zero']:
-    print('# waiting for a rectangular table of natural numbers. The first row (i.e., the 0 eggs row) may contain "inf" entries to represent that the truth can not be learned with 0 eggs. Insert a closing line "# END" after the last row of the table.')
+    print('# waiting for a rectangular table of natural numbers. The first row (i.e., the 0 eggs row) may contain "inf" entries to represent that the truth can not be learned with 0 eggs. Insert a closing line "#end" after the last row of the table.')
 else:
-    print('# waiting for a rectangular table of natural numbers. Insert a closing line "# END" after the last row of the table.')
+    print('# waiting for a rectangular table of natural numbers. Insert a closing line "#end" after the last row of the table.')
 def get_line():
     raw_line = input().strip()
     if raw_line[0] != "#":
         return [tk.strip() for tk in raw_line.split("#")[0].split(sep)], None
     key = raw_line[1:].strip().split()[0].upper()
-    if key == "END" or key == "NEXT":
+    if key == "end" or key == "next":
         return None, key 
     return None, "GEN_COMMENT"
 
@@ -71,8 +71,8 @@ else:
     table_submitted.append(([] if ENV['floors_from_zero'] else [0]) + list(map(int, first_line)))
 
 next_line, cmd = get_line() 
-while cmd != "END":
-    if cmd == "NEXT":
+while cmd != "end":
+    if cmd == "next":
         print("# Error: This service does not accept more than one single table.")
         exit(1)
     if next_line != None:

@@ -37,7 +37,7 @@ for _ in range(ENV['num_questions']):
     if x < y:
         x,y = y,x
     TAc.print(f"? {x+y} {x-y}", "yellow", ["bold"])
-    a, b = TALinput([int, int], ignore_lines_starting_with="#")
+    a, b = TALinput(int, 2)
     gen_new_pair = False
     if a+b > x+y:
         TAc.NO() 

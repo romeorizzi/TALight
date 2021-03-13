@@ -38,14 +38,17 @@ for i in range(1,len(argv)):
             print(line.strip())
     except IOError:
         print("File {argv[i]} exists on your local machine but is not accessible. Check the read permissions of the file.", file=stderr)
+        print(f"Correctly transmitted files: {i-1}/{len(argv)-1} files.", file=stderr)
         exit(1)
     finally:
         f.close()
         if i < len(argv)-1:
-            print("# NEXT")
+            print("#next")
         else:
-            print("# END")
+            if line.strip() != "#end":
+                print("#end")
         assert input() == "# FILE GOT" 
         print(f"File {argv[0]} has been correctly sent and received.", file=stderr)
-print(f"The TAlight util has correctly sent {len(argv)-1}/{len(argv)-1} files.", file=stderr)
+if len(argv) > 2:
+    print(f"The TAlight util has correctly sent {len(argv)-1}/{len(argv)-1} files.", file=stderr)
 

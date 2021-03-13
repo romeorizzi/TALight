@@ -27,6 +27,7 @@ def unrank(n_pairs, pos, sorting_criterion="loves_opening_par"):
 
 
 def recognize(formula_of_parentheses, TAc, LANG):
+    #print(f"formula_of_parentheses={formula_of_parentheses}")
     num_dangling_open = 0
     for day, i in zip(formula_of_parentheses,range(1,len(formula_of_parentheses)+1)):
         if day == '(':
@@ -34,7 +35,7 @@ def recognize(formula_of_parentheses, TAc, LANG):
         else:
             if num_dangling_open == 0:
                 TAc.print(formula_of_parentheses, "yellow", ["underline"])
-                TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthsis left to be closed. This formula is not well formed."), "red", ["bold"])
+                TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed."), "red", ["bold"])
                 return False
             num_dangling_open -= 1
 
