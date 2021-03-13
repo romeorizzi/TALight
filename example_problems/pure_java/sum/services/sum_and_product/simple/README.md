@@ -2,14 +2,11 @@
 
 javac hello_world.java
 
-How to call for the execution of the bytecode from the JVM:
+## How to call for the execution of the bytecode from the JVM:
 
 java hello_world
 
 Other examples:
-
-javac saluta.java
-java saluta
 
 javac free_sum_mysimplebot.java
 java free_sum_mysimplebot
