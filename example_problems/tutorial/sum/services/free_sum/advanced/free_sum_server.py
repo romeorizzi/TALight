@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+from sys import stderr, exit, argv
+from random import randrange
+
+from multilanguage import Env, Lang, TALcolors
+from TALinputs import TALinput
 
 # METADATA OF THIS TAL_SERVICE:
 problem="sum"
@@ -11,11 +16,6 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import stderr, exit, argv
-from random import randrange
-
-from TALinputs import TALinput
-from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
@@ -33,7 +33,7 @@ for _ in range(ENV['num_questions']):
         else:
             s = randrange(2**64)
     TAc.print(f"? {s}", "yellow", ["bold"])
-    a, b = TALinput(int, 2)
+    a, b = TALinput(int, 2, TAc=TAc)
     gen_new_s = False
     if a+b > s:
         TAc.NO() 
