@@ -4,4 +4,4 @@ open-channel: "# I will serve: problem={problem}, service={service}"
 prompt: "Please, compute and send me the hash of the string:"
 put-white-string: "{white_string}"
 give-only-hash: "{hash_value(ENV['white_string'],ENV['hash_type'])}"
-give-hash-verbose: "indeed, h({white_string}) = {hash_value(white_string,ENV['hash_type'])}"
+give-hash-verbose: 'indeed, h({white_string}) = {hash_value(white_string,ENV["hash_type"])}'

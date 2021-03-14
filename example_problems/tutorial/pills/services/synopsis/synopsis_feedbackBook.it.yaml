@@ -1,0 +1,5 @@
+%YAML 1.2
+---
+open-channel: "# Servirò: problem={problem}, service={service}"
+help-pages: "Indice delle pagine di Help:"
+services-list: "Lista dei Servizi:"

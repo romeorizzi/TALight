@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+from sys import stderr, exit, argv
+from random import randrange
+
+from multilanguage import Env, Lang, TALcolors
+from get_tables import get_one_numeric_table
 
 # METADATA OF THIS TAL_SERVICE:
 problem="eggs"
@@ -9,11 +14,6 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import stderr, exit, argv
-from random import randrange
-
-from get_tables import get_one_numeric_table
-from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
