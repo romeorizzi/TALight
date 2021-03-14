@@ -96,7 +96,7 @@ if not ENV['silent']:
 if (ENV['f_k'] == 'lazy_input'):
     TAc.print("\nInsert first CNF:", "green")
     clause = input()
-    if (not valid_cnf_string(clause,'^(\s*\(\s*(\s*!?\s*x[1-9])(\s*or\s*!?\s*x[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*x[1-9])(\s*or\s*!?\s*x[1-9])*\s*\))*\s*|lazy_input)')):
+    if (not valid_cnf_string(clause,'^(\s*\(\s*(\s*!?\s*x[1-9])(\s*or\s*!?\s*x[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*x[1-9])(\s*or\s*!?\s*x[1-9])*\s*\))*\s*)')):
         exit(1)
 else:
     clause = ENV['f_k']
@@ -104,7 +104,7 @@ else:
 if (ENV['f_3'] == 'lazy_input'):
     TAc.print("\nInsert second CNF:", "green")
     representing_formula = input()
-    if (not valid_cnf_string(representing_formula,'^(\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*|lazy_input)')):
+    if (not valid_cnf_string(representing_formula,'^(\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*)')):
         exit(1)
 else:
     representing_formula = ENV['f_3']
