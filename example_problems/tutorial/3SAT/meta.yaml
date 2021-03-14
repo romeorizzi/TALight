@@ -7,7 +7,7 @@ services:
         regex: ^((\s*!?\s*(x)[1-9])(\s*or\s*!?\s*(x)[1-9])*\s*|lazy_input)$
         default: lazy_input
       representing_formula: 
-        regex: ^((\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*|lazy_input)$
+        regex: ^(\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*|lazy_input)$
       lang:
         regex: ^(en|it)$
         default: it
