@@ -511,11 +511,10 @@ You will have to do this on every terminal from which you want to issue TAlight 
 
 
 There are many ways to solve this nuisance, like copying the binaries into a directory listed into the `PATH` environment variable on your system, or adding the path `~/TAlight/rtal/target/debug/` to your `PATH` environment variable.
-Here we suggest a convenient way to make the `TAlight` commands directly accessible, it can be applied on any platform that allows for simlinks (or hardlinks). We word it out step by step **for Unix/Linux/Mac**: 
+Here we suggest a convenient way to make the `TAlight` commands directly accessible, it can be applied on any platform that allows for simlinks (or hardlinks). We word it out step by step for Unix/Linux/Mac: 
 
 
-From the terminal,
-lounch the following commands
+From the terminal, lounch the following commands (if you are on Windows just lounch them on the `Git Bash`)
 ```bash
 mkdir ~/.bin
 cd ~/.bin
@@ -525,7 +524,7 @@ ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
 ln -s ~/TAlight/TAL_utils/TA_send_txt_file.py ~/.bin/ 
 ```
 
-Then, add the following line at the end of your `~/.bashrc` file.
+Then, (for Unix/Linux/Mac) add the following line at the end of your `~/.bashrc` file.
 
 ```bash
 export PATH="$PATH:$HOME/.bin"
@@ -536,16 +535,8 @@ If you want older terminals to get the update then you can issue from them the c
 ```bash
 source .bashrc
 ```
-If you are **on Windows**: open the Git Bash, lounch the following commands
-```bash
-mkdir ~/.bin
-cd ~/.bin
-ln -s ~/TAlight/rtal/target/debug/rtald 
-ln -s ~/TAlight/rtal/target/debug/rtalc 
-ln -s ~/TAlight/rtal/target/debug/rtal 
-ln -s ~/TAlight/TAL_utils/TA_send_txt_file.py 
-```
-and then add the path `~/.bin` to your `PATH` environment variable.
+
+For those with Windows, add the path `~/.bin` to your `PATH` environment variable.
 
 Again, you can check that the `TAlight` commands are now directly accessible with
 
