@@ -122,7 +122,7 @@ def check_sol(cnf, sol):
     return all([bool(disj.intersection(sol)) for disj in cnf])
 
 
-def random_kcnf(n_literals, n_conjuncts, k=3):
+def random_kcnf(n_literals,k=3):
     """Generate a random cnf
 
         Parameters
@@ -140,13 +140,15 @@ def random_kcnf(n_literals, n_conjuncts, k=3):
             A random cnf
         """
     result = []
-    for _ in range(n_conjuncts):
+    n=1
+    while (n <= n_literals):
         conj = set()
-        while (len(conj) < k):
-            index = random.randint(1, n_literals)
+        while (len(conj) < k and n <= n_literals):
             conj.add((
-                'x' + str(index),
+                'x' + str(n),
                 bool(random.randint(0, 2)),
             ))
+            n+=1
+
         result.append(conj)
     return result
