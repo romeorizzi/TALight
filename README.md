@@ -57,7 +57,8 @@ This section gives general instructions on how the problems sitting in a public 
 
 TALight intends to promote autonomous exploration. We wish these explorations might lead you to find out, discover, experiment and develop resources within you, in your machine, in the cloud, in your fellows, and in the community. But, to be more concrete rather than sound too visionary or idealistic, we exhibit now the intended use of the few basic commands which allow you to access the services of a problem and all other problem contents made available by the problem maker and the cloud hosting service.  
 
-Knowing how to properly access a problem served from the cloud is at the basis to advance to deal with problems cloned in local on your machine, which, in turn, will easily spring you to become a proficient problem maker.
+Knowing how to properly access a problem served from the cloud is at the basis to advance to deal with problems cloned in local on your machine. Playing with the problems in local will give you more freedom and control and enrich your opportunities for a wide and interconnected learning experience. Working on the problems cloned in local allows you to modify and adapt the problems themself to your needs and curiosities. Even if you do not modify the problms and leav them untouchd, still the habit to launch an `rtald` daemon dispatching the problem services for the problms sitting in local on your machine and addressing it rather than an opaque `rtald` daemon serving the cloud will give you full control and understanding on the dialogue that occurs between the solutions of the probelem solver and the service servers written by the problem maker.
+All this, besides possibly springing you to become a proficient problem solver, will also make it natural for you to digievolve to the next level up and experiment yourself as a problem maker.
 
 </details>
 
@@ -118,7 +119,7 @@ ___
 
 You have two options on how to get it:
 
-1. **Option 1:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in the file `rtal/README.md` of this repo.
+1. **Option 1 [generally recommended]:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in the file `rtal/README.md` of this repo.
 
 
 2. **Option 2:** download the already compiled binary made available for your platform and set them in.
@@ -370,6 +371,14 @@ Choose to download a compressed file, then uncompress it on your machine and loc
 
 However, if `git` is installed on the machine, then cloning the repo is possible. Cloning is always better than dowloading since not only it is more handy but also establishes a connection with the repo and you can more conveniently maintain your local copy updated.
 
+<strong>Attention (for Windows users):</strong> 
+This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
+This mans that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
+```bash
+git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+```
+
+
 <details><summary>To the problem maker</summary>
 
 Publishing a problem collection on a repo might empower the learning experience and enrich the learning opportunity. In particular, your possibility to test everything in local will be enanched. Not only you can now test your bots in local before sending them to the services in the cloud, but now you can also watch them more closely when both ends of this interaction sit on your local machine. Now you can also modify them and add prints to debug the communication protocol that the problem has defined for them to act within.
@@ -433,6 +442,14 @@ git clone https://github.com/romeorizzi/TAlight.git
 to clone the content of this repo.
 Of course, you can achieve the same result by any other means if you prefer.
 
+<strong>Attention (for Windows users): 
+This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
+This means that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
+```bash
+git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+```
+</strong>
+
 You can also clone and/or place the TAlight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
 
 Note: cloning is better than downloading since in this way you get connected to the repo. Even if you do not intend to contribute to the project, still this is handy since, in order to update to the current version, you can simply go (from a terminal) to any folder of the repo and enter:
@@ -444,7 +461,7 @@ git pull
 </details> 
 
 ___
-In the following we assume that `~/TAlight` is the path to this TAlight repo as cloned on your system. Of course, you are free to rename it at your will or place it elsewhere as long as you interpret the following instructions accordingly (do not be afraid: moving/renaming the home folder of a repo on your local maching will not disconnect it from the original repo in the cloud, you can still update it with `git clone` ven if you hav changed its name in local). For example, if you use programs like Github Desktop to manage your git repositories, you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TAlight` in the following instructions. Just replace `~/TAlight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
+In the following we assume that `~/TAlight` is the path to this TAlight repo as cloned on your system (<strong>if you are on Windows make sure to clone with the command `git clone https://github.com/romeorizzi/TAlight.git` launched from the git bash shell as explained above so that the symlinks present in the repo are dealt with correctly</strong>). Of course, you are free to rename it at your will or place it elsewhere as long as you interpret the following instructions accordingly (do not be afraid: moving/renaming the home folder of a repo on your local maching will not disconnect it from the original repo in the cloud, you can still update it with `git clone` ven if you hav changed its name in local). For example, if you use programs like Github Desktop to manage your git repositories, you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TAlight` in the following instructions. Just replace `~/TAlight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
 
 
 <strong>A note for Windows users</strong>
@@ -452,6 +469,13 @@ In the following we assume that `~/TAlight` is the path to this TAlight repo as 
 Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
 
 <strong>If you are Windows user keep this in mind in interpreting all instructions to follow.</strong>
+
+Also, if you are a Windows user be warned on what is the correct way to clone a repo containing also symlinks:
+
+    after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
+    ```bash
+    git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+    ```
 
 
 ## OBTAIN THE BINARIES
