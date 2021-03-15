@@ -11,7 +11,7 @@ except Exception as e:
     termcolor_is_installed = False
     print("# Recoverable Error: ", end="", file=stderr)
     print(e, file=stderr)
-    print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor.)", file=stderr)
+    print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on your local machine.)", file=stderr)
 
 err_ruamel = None
 yaml_is_installed = True
@@ -42,7 +42,7 @@ class Env:
                 self.arg[name] = float(environ[f"TAL_{name}"])
             else:
                 for out in [stdout, stderr]:
-                    print(f"# Unrecoverable Error: type {val_type} not yet supported in args list. Used to interpret arg {name}.", file=out)
+                    print(f"# Unrecoverable Error: type {val_type} not yet supported in args list (the set of supported types can be extended by communities of problem makers adding further elif clauses here above). Used to interpret arg {name}.", file=out)
                 exit(1)
     def __getitem__(self, key):
         return self.arg.get(key)
@@ -67,6 +67,7 @@ class Lang:
                 print("# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue (as long as you can understand the little needed English).\n# (To enjoy a feedback in a supported language install the python package 'ruamel'. The languages supported by a problem service appear as the options for the lang parameter listed by the command `rtal list`)", file=stderr)
         else:
             try:
+              print(f"self.messages_book_file={self.messages_book_file}")
               with open(self.messages_book_file, 'r') as stream:
                 try:
                     yaml_book = ruamel.yaml.safe_load(stream)

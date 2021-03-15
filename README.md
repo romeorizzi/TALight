@@ -521,7 +521,7 @@ cd ~/.bin
 ln -s ~/TAlight/rtal/target/debug/rtald ~/.bin/
 ln -s ~/TAlight/rtal/target/debug/rtalc ~/.bin/
 ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
-ln -s ~/TAlight/TAL_utils/TA_send_txt_file.py ~/.bin/ 
+ln -s ~/TAlight/TAL_utils/problem_solver/TA_send_txt_file.py ~/.bin/ 
 ```
 
 Then, (for Unix/Linux/Mac) add the following line at the end of your `~/.bashrc` file.
