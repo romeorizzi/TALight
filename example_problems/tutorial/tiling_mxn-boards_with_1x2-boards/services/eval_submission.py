@@ -107,33 +107,33 @@ def check_decision(goal, subtask):
          risp_line_full = sys.stdin.readline()
          risp_line = risp_line_full.rstrip()
       except EOFError:
-         tmpstr1=api[1]["too-few-lines"]
+         tmpstr1=api["too-few-lines"]
          format_error("too-few-lines", goal, subtask, eval(f"f'{tmpstr1}'"))
       if len(risp_line) != N:
          if len(risp_line_full)-len(risp_line) == 1:
-           tmpstr1=api[1]["wrong-line-length-single-newline-char"]
+           tmpstr1=api["wrong-line-length-single-newline-char"]
            format_error("wrong-line-length-single-newline-char", goal, subtask, eval(f"f'{tmpstr1}'"))
          else:  
-           tmpstr1=api[1]["wrong-line-length-more-newline-chars"]
+           tmpstr1=api["wrong-line-length-more-newline-chars"]
            format_error("wrong-line-length-more-newline-chars", goal, subtask, eval(f"f'{tmpstr1}'"))
       for j in range(1,N+1):
          if risp_line[j-1] not in {"0","1"}:
-            tmpstr1=api[1]["wrong-char-bool"]
+            tmpstr1=api["wrong-char-bool"]
             format_error("wrong-char-bool", goal, subtask, eval(f"f'{tmpstr1}'"))
          if int(risp_line[j-1]) != is_tilable(i, j):
             if is_tilable(i, j):
-               tmpstr1=api[1]["wrong0-answ"]
+               tmpstr1=api["wrong0-answ"]
                solution_error("wrong0-answ", goal, subtask, eval(f"f'{tmpstr1}'"))
             else:
-               tmpstr1=api[1]["wrong1-answ"]
+               tmpstr1=api["wrong1-answ"]
                solution_error("wrong1-answ", goal, subtask, eval(f"f'{tmpstr1}'"))
 
    if M==1:          
-        solution_perfect("perfect1-1-challenge", goal, subtask, api[1]["perfect1-1-lesson"], api[1]["perfect1-1-challenge"])
+        solution_perfect("perfect1-1-challenge", goal, subtask, api["perfect1-1-lesson"], api["perfect1-1-challenge"])
    elif M==2:          
-        solution_perfect("perfect1-2-challenge", goal, subtask, api[1]["perfect1-2-lesson"], api[1]["perfect1-2-challenge"])
+        solution_perfect("perfect1-2-challenge", goal, subtask, api["perfect1-2-lesson"], api["perfect1-2-challenge"])
    else:          
-        solution_perfect("perfect1-3-challenge", goal, subtask, api[1]["perfect1-3-lesson"], api[1]["perfect1-3-challenge"])
+        solution_perfect("perfect1-3-challenge", goal, subtask, api["perfect1-3-lesson"], api["perfect1-3-challenge"])
 
 def check_tiling(goal, subtask):
    """
@@ -146,7 +146,7 @@ def check_tiling(goal, subtask):
    m, n = map(int, sys.stdin.readline().split())
    
    if not ( (0 <= m <= 20) and (0 <= n <= 20)):
-      tmpstr1=api[1]["out-of-range-m-n"]
+      tmpstr1=api["out-of-range-m-n"]
       format_error("out-of-range-m-n", goal, subtask, eval(f"f'{tmpstr1}'"))
 
    booked = [False] * 20
@@ -155,42 +155,42 @@ def check_tiling(goal, subtask):
          risp_line_full = sys.stdin.readline()
          risp_line = risp_line_full.rstrip()
       except EOFError:
-         tmpstr1=api[1]["too-few-lines"]
+         tmpstr1=api["too-few-lines"]
          format_error("too-few-lines", goal, subtask, eval(f"f'{tmpstr1}'"))
       if len(risp_line) != n:
          if len(risp_line_full)-len(risp_line) == 1:
-           tmpstr1=api[1]["wrong-line-length-single-newline-char"]
+           tmpstr1=api["wrong-line-length-single-newline-char"]
            format_error("wrong-line-length-single-newline-char", goal, subtask, eval(f"f'{tmpstr1}'"))
          else:  
-           tmpstr1=api[1]["wrong-line-length-more-newline-chars"]
+           tmpstr1=api["wrong-line-length-more-newline-chars"]
            format_error("wrong-line-length-more-newline-chars", goal, subtask, eval(f"f'{tmpstr1}'"))
       for j in range(1,n+1):
          if booked[j-1] and risp_line[j-1] != "S":
             i = i-1
-            tmpstr1=api[1]["wrong-N"]
+            tmpstr1=api["wrong-N"]
             format_error("wrong-N", goal, subtask, eval(f"f'{tmpstr1}'"))
          if risp_line[j-1] not in {"N","S","W","E"}:
-            tmpstr1=api[1]["wrong-char-card-point"]
+            tmpstr1=api["wrong-char-card-point"]
             format_error("wrong-char-card-point", goal, subtask, eval(f"f'{tmpstr1}'"))
          if risp_line[j-1] == "S" and booked[j-1] == False:
-            tmpstr1=api[1]["wrong-S"]
+            tmpstr1=api["wrong-S"]
             format_error("wrong-S", goal, subtask, eval(f"f'{tmpstr1}'"))
          if risp_line[j-1] == "E" and (j==1 or risp_line[j-1] != "W"):
-            tmpstr1=api[1]["wrong-E"]
+            tmpstr1=api["wrong-E"]
             format_error("wrong-E", goal, subtask, eval(f"f'{tmpstr1}'"))
          if risp_line[j-1] == "W" and (j==n or risp_line[j+1] != "E"):
-            tmpstr1=api[1]["wrong-W"]
+            tmpstr1=api["wrong-W"]
             format_error("wrong-W", goal, subtask, eval(f"f'{tmpstr1}'"))
          if risp_line[j-1] == "N":
             if i==m:
-               tmpstr1=api[1]["wrong-N"]
+               tmpstr1=api["wrong-N"]
                format_error("wrong-N", goal, subtask, eval(f"f'{tmpstr1}'"))
             booked[j-1] == True
    solution_perfect("perfect2-challenge", goal, subtask)
    
       
         
-#tmpstr1=api[1]["goal2-task3"]
+#tmpstr1=api["goal2-task3"]
 #if args.goal==2 and args.subtask > 2:
 #   internal_error("goal2-task3", eval(f"f'{tmpstr1}'"))
 
