@@ -33,10 +33,6 @@ def valid_cnf_string(string, regex):
 def check_equivalence(cnf1, cnf2):
     literals1 = SAT_lib.get_literals(cnf1)
     literals2 = SAT_lib.get_literals(cnf2)
-    if(len(literals1 - literals2)> 0):
-        TAc.print("\n\nThe second cnf should at least have te literals that are in the first one\n"
-                  "In fact the second one doesn't have the literals:{}".format(literals1 - literals2),"green")
-        exit()
 
     new_literals = literals2 - literals1
     literals1 = list(literals1)
