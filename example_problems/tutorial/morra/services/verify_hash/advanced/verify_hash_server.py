@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
+from sys import stderr, exit, argv
+import string 
+import random
+
+from multilanguage import Env, Lang, TALcolors
+
+from hash_and_cipher import hash_value
 
 # METADATA OF THIS TAL_SERVICE:
 problem="morra"
-service="verify_hash_server"
+service="verify_hash"
 args_list = [
     ('num_checks',int),
     ('hash_type',str),
@@ -12,13 +19,6 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import stderr, exit, argv
-import string 
-import random
-
-from hash_and_cipher import hash_value
-
-from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
@@ -42,7 +42,7 @@ for i in range(1,ENV['num_checks']+1):
         TAc.print(LANG.render_feedback("give-hash-verbose", f"indeed, h({white_string}) = {hash_value(white_string,ENV['hash_type'])}"), "grey")
     else:
         TAc.NO()
-        TAc.print(LANG.render_feedback("give-hash-verbose", f"indeed, h({white_string}) = {hash_value(white_string,ENV['hash_type'])}"), "yellow", ["underline"])
+        TAc.print(LANG.render_feedback("give-hash-verbose", f'indeed, h({white_string}) = {hash_value(white_string,ENV["hash_type"])}'), "yellow", ["underline"])
         exit(0)
     
 exit(0)

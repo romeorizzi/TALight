@@ -74,3 +74,13 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+      lang:
+        regex: ^(en|it)$
+        default: it
+

@@ -1,6 +1,7 @@
 public_folder: public
 services:
   free_sum:
+    explain: "You are given a sum value and are asked to return two natural numbers having that sum. You can also pose yourself the challenge to return such a pair of numbers for which the product is largest possible."
     evaluator: [python, services/free_sum/advanced/free_sum_server.py]
     args:
       numbers:
@@ -12,10 +13,12 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
+        explain: "a number from 1 to 30, the number of questions posed to the problem solver"
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   sum_and_difference:
+    explain: "You are given the sum and difference of two natural numbers and your goal is to identify the two numbers."
     evaluator: [python, services/sum_and_difference/advanced/sum_and_difference_server.py]
     args:
       numbers:
@@ -24,10 +27,12 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
+        explain: "a number from 1 to 30, the number of questions posed to the problem solver"
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   sum_and_product:
+    explain: "You are given the sum and the product of two natural numbers and your goal is to identify the two numbers."
     evaluator: [python, services/sum_and_product/advanced/sum_and_product_server.py]
     args:
       numbers:
@@ -36,8 +41,9 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
+        explain: "a number from 1 to 30, the number of questions posed to the problem solver"
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   help:
     evaluator: [python, services/help/help_server.py]
@@ -49,9 +55,12 @@ services:
         regex: ^(en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/help/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_server.py]
     args:
       service:
-        regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
+        regex: ^((\S)+)$
         default: synopsis
+      lang:
+        regex: ^(en|it)$
+        default: it
 
