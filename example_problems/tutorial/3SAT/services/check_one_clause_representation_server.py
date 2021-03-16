@@ -56,37 +56,36 @@ def check_equivalence(cnf1, cnf2):
                     break
             if a and not found:
                 readable_ass = '\n#'.join(sorted(set(map(lambda x: "\t" + x[0] + " = " + str(x[1]), out_ass))))
-                TAc.print("# The two cnf are not equivalent", "red")
+                TAc.print("# Your 3CNF does not offer a representation of your clause as the prescribed property is not met.", "red")
                 TAc.print(
-                    "# For the assignment: \n# {} \n# there is not an assignment for the variables set: {} such that"
-                    "# the clause:\n#\t {}\n# and the representing formula:\n#\t{} \n# gives as output the same result.\n"
-                    "# In fact the first one returns True while the second one returns always False no matter what value "
-                    "we assign to the variables in the set: {}".
+                    "# Indeed, for the assignment: \n# {} \n# the clause evaluates to True but the 3CNF evaluates to False no matter how this assignment is extended on the variables in the set {}.\n".
                     format(readable_ass, new_literals, SAT_lib.to_string(cnf1).replace("and ", "and\n#\t"),
                            SAT_lib.to_string(cnf2).replace("and ", "and\n#\t"), new_literals), "yellow")
                 exit(1)
             if (found and not a):
                 readable_ass = '\n# '.join(sorted(set(map(lambda x: "\t" + x[0] + " = " + str(x[1]), ass))))
-                TAc.print("#  The two cnf are not equivalent", "red")
+                TAc.print("# Your 3CNF does not offer a representation of your clause as the prescribed property is not met.", "red")
                 TAc.print(
-                    "#  For the assignment: \n# {} \n# the clause:\n#\t{}\n# and the representing formula:\n#\t{} \n# are not equivalent.\n"
-                    "# In fact the first returns False while the second one returns True.".format(
-                        readable_ass, SAT_lib.to_string(cnf1).replace("and ", "and\n#\t"),
+                    "# Indeed, for the assignment: \n# {} \n# the clause evaluates to False but the 3CNF evaluates to True when this assignment is extended as follows on the variables in the set {}.\n".
+                    format(readable_ass, SAT_lib.to_string(cnf1).replace("and ", "and\n#\t"),
                         SAT_lib.to_string(cnf2).replace("and ", "and\n#\t")), "yellow")
+                print("Specificare anche la estensone delle y")
                 exit(1)
         else:
             a = SAT_lib.check_sol(cnf1, out_ass)
             b = SAT_lib.check_sol(cnf2, out_ass)
             if (a != b):
                 readable_ass = '\n# '.join(sorted(set(map(lambda x: "\t" + x[0] + " = " + str(x[1]), out_ass))))
-                TAc.print("# The two cnf are not equivalent", "red")
-                TAc.print("# For the assignment: \n#{} \n"
+                TAc.print("# Your 3CNF does not offer a representation of your clause as the prescribed property is not met.", "red")
+                TAc.print("# Indeed, for the assignment: \n#{} \n"
                           "# the clause:\n#\t{}\n# and the representing formula:\n#\t{} \n# gives as output a different result.\n"
                           "# In fact the first one returns {} while the second one returns {}.".
                           format(readable_ass, SAT_lib.to_string(cnf1).replace("and ", "and\n\t"),
                                  SAT_lib.to_string(cnf2).replace("and ", "and\n#\t"), a, b), "yellow")
+                print("DA RIVEDERE COME DA CASI SOPRA!!!")
                 exit(1)
-    TAc.print("\n# Congraturation!!!\nThe two cnf are equivalent", "green")
+    TAc.print("\n# Congratulation!!!", "green")
+    print("Your 3CNF offers a faithful representation of your clause in the sense that the following property holds for every truth assignment x* for the x variables: the clause evaluates to true under x* iif there exists a truth assignment y* of the y variables such that the 3CNF evaluates to true under (x*,y*).")
 
 
 ENV = Env(problem, service, args_list)

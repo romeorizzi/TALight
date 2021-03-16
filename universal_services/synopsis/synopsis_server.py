@@ -69,7 +69,7 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
             print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['explain'])}'"))
         if "example" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             TAc.print("   Example: ", ["bold"], end="")
-            print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['example'])}'"), ["bold"])
+            print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['example'])}'"))
         if "default" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             TAc.print("   Default Value: ", ["bold"], end="")
             print(str(meta_yaml_book['services'][ENV['service']]['args'][a]['default']))

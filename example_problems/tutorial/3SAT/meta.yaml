@@ -1,13 +1,18 @@
 public_folder: public
 services:
   check_one_clause_representation:
+#    explain: "can you represent a generic clause on a boolean variables vector x as a 3CNS formula on the same x and on an auxiliary y such that for every assigniment x* to x the clause evaluates true iff there exists an assigniment y* to y so that the 3CNF evaluats true for (x*,y*)?"
     evaluator: [python, services/check_one_clause_representation_server.py]
     args:
       clause: 
         regex: ^(\s*\(\s*(\s*!?\s*(x)[1-9])(\s*or\s*!?\s*(x)[1-9])*\s*\)\s*|lazy_input)$
+        explain: a disjunctive clause
+        example: (x1 or ! x3 or x5 or !x6)
         default: lazy_input
       representing_formula: 
         regex: ^(\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*|lazy_input)$
+        explain: a 3CNF foromula on variables x1, x2, ... and y1, y2, ... 
+        example: (x1 or ! x3 or y1) and ( y1 or x5 or !x6) and (!x1 or !y1)
         default: lazy_input
       lang:
         regex: ^(en|it)$
