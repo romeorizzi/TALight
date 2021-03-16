@@ -1,14 +1,14 @@
 public_folder: public
 services:
   compact_solution:
-    evaluator: [python, services/compact_solution_server.py]
+    evaluator: [python,services/compact_solution_server.py]
     args:
       m:
-        regex: ^([1-9][0-9]{0,1}|100|any)$
-        default: any
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 4
       n:
-        regex: ^([1-9][0-9]{0,1}|100|any)$
-        default: any
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 4
       goal:
         regex: ^(m_plus_n|m_plus_n_half|min)$
         default: m_plus_n
@@ -19,11 +19,11 @@ services:
     evaluator: [python, services/sub_closure_server.py]
     args:
       m:
-        regex: ^([1-9][0-9]{0,1}|100|any)$
-        default: any
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 3
       n:
-        regex: ^([1-9][0-9]{0,1}|100|any)$
-        default: any
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 3
       goal:
         regex: ^(any|min)$
         default: min
@@ -42,6 +42,9 @@ services:
   check_sol:
     evaluator: [python, services/check_sol_server.py]
     args:
+      instance:
+        regex: ^(my|any)$
+        default: any
       coding:
         regex: ^(seq|subset)$
         default: seq

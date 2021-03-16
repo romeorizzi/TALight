@@ -79,7 +79,7 @@ def check_equivalence(cnf1, cnf2):
                     "# For the assignment: \n#{} \n# the cnf1:\n#\t{}\n# and the cnf2:\n#\t{} \n# are not equivalent.".
                         format(readable_ass, SAT_lib.to_string(cnf1).replace("and ", "and\n#\t"),
                                SAT_lib.to_string(cnf2).replace("and ", "and\n#\t")), "yellow")
-                TAc.print("# In fact the first one returns False while the second ones returns True","red")
+                TAc.print("# In fact the first returns False while the second one returns True.","red")
                 exit(1)
         else:
             a = SAT_lib.check_sol(cnf1, out_ass)
