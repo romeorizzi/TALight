@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 import itertools
+import re
 
 
 def parse_input(string):
+    string = remove_duplicate_spaces(string)
     l = list(string.split(" "))
     return l
 
@@ -11,30 +13,41 @@ def is_subseq(s, T):
     it = iter(T)
     return all(any(c == ch for c in it) for ch in s)
 
+def remove_duplicate_spaces(T):
+    return re.sub(' +', ' ', T)
+
 def is_subseq_with_position(s, T):
-    num = 0
+
     pos = []
-    for ch in s:
-        for c in T:
-            if c == ch:
-                pos.append(T.index(c))
-                num+=1
-    if num == len(s):
+    c_i = 0
+    i = 0
+    while (c_i < len(T) and i < len(s)):
+        
+        if T[c_i] == s[i]: 
+            i+=1
+            pos.append(c_i)
+        c_i +=1
+    if i == len(s):
         return [True, pos]
     else:
         return [False, pos]
 
 def get_yes_certificate(T, pos):
     cert = ""
-    for i in T:
-        num_ciphers = len(str(i))
-        if T.index(i) == pos:
-            for i in range(0, num_ciphers):
+    index = 0
+    i = 0
+    while (i < len(T) and index < len(pos)):
+        num_ciphers = len(str(T[i]))
+        
+        if i == pos[index]:
+            index+=1
+            for _ in range(0, num_ciphers):
                 cert+= "^"
         else:
-            for i in range(0, num_ciphers):
+            for _ in range(0, num_ciphers):
                 cert+= " " 
         cert+= " "
+        i+=1
     return cert
 
     

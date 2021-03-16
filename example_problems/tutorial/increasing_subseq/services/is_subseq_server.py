@@ -5,7 +5,7 @@ import re
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from increasing_subsequence_lib import parse_input, is_subseq
+from increasing_subsequence_lib import parse_input, is_subseq_with_position, get_yes_certificate, remove_duplicate_spaces
 
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
@@ -29,7 +29,7 @@ string_s = ""
 if (ENV['T'] == 'lazy_input'):
     TAc.print("\nInsert T:", "green")
     string_T = input()
-    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string))
+    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_T))
     if ok:
         T = parse_input(string_T)
     else:
@@ -42,7 +42,7 @@ else:
 if (ENV['s'] == 'lazy_input'):
     TAc.print("\nInsert s:", "green")
     string_s = input()
-    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string))
+    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_s))
     if ok:
         s = parse_input(string_s)
     else:
@@ -59,8 +59,9 @@ if ret[0]:
 else:
     TAc.print("\n\nNO, s isn't subsequence of T\n", "red")
 
-if(ENV['YES_cert'] == '1'):
-    print(string_T)
+if(ENV['YES_cert'] == 1 and ret[0]):
+    print("YES CERTIFICATE")
+    print(remove_duplicate_spaces(string_T))
     print(get_yes_certificate(T, ret[1]))
 
 
