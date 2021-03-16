@@ -15,11 +15,25 @@ I seguenti subtask, oggetto di feedback, potranno guidarti nel conquistare la bu
 * [subtask 2:](https://per-ora-costruiamo-qusti-URL-a-mano-ma-sarebbe-utile-costruzione-dinamica-e/o-da-problm.yaml) decidere, $m = 2$
 * [subtask 3:](https://per-ora-costruiamo-qusti-URL-a-mano-ma-sarebbe-utile-costruzione-dinamica-e/o-da-problm.yaml) decidere, $m,n \leq 20$
 
-### Get feedback
-Puoi ottenere del feedback sia dalla riga di comando con:
+### Get feedback (i nostri servizi)
+
+Se hai una congettura, oppure dubbi, puoi ad esempio asserire che la griglia 3x2 ammetta un tiling:
+
 ```
-TAlight ask --problem=tiling_mxn_by_1x2 --goal=1 --subtask=SUBTASK_NUMBER file.txt 
+rtal connect tiling_mxn-boards_with_1x2-boards  -a m=3 -a n=5 is_tilable
 ```
+
+oppure che non lo ammetta:
+```
+rtal connect tiling_mxn-boards_with_1x2-boards  -a m=3 -a n=5 is_not_tilable
+```
+
+In entrambi i casi ti verrà semplicemente risposto se la tua asserzione è vera oppure no. Se esplori i parametri per i due servizi scoprirai che puoi anche richiedere dei suggerimenti qualora il tiling esista e ti sia difficile crederci.
+
+
+
+
+
 o via web, cliccando sul link del subtask quì sopra e sottomettendo lo stesso file.
 In entrambi i casi, sottometti un file `.txt` di 20 righe di 20 caratteri ciascuna (non contando i caratteri di newline). Tutti i caratteri sono 0 o 1, dove un 1 nella posizione j della riga i significa che la griglia ixj ammette un tiling.
 Per il subtask $st = 1,2$ ci limitiamo a controllare le prime $st$ righe, e le righe del tuo file potranno essere anche meno di 20.
