@@ -4,27 +4,77 @@ services:
     evaluator: [python, services/is_subseq_server.py]
     args:
       T:
-        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input)$
+        regex: ^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9})|lazy_input)$
         default: lazy_input
       s:
-        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input)$
+        regex: ^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9})|lazy_input)$
         default: lazy_input
       YES_cert:
         regex: ^(0|1)$
         default: 1
+	explain: "underline the subsequence as evidence of positive answers"
+#	123 34 45 36 3565 365 342 34 54 45 3434 34 45
+#       ^^^ ^^ ^^    ^^^^         ^^    ^^ 
       lang:
         regex: ^(en|it)$
         default: it
   eval_subseq:
+# from time import monotonic
+# start = monotonic()
+# ...
+# end = monotonic()
+# t = end - start # è un float, in secondi
     evaluator: [python, services/eval_subseq_server.py]
     args:
-      YES_cert:
+        check_longest_subseq:
+    evaluator: [python, services/check_longest_subseq_server.py]
+    args:
+      T:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input)$
+        default: lazy_input
+      max_len_min_k:
+        regex: ^(0|[1-9][0-9]{0,50}|lazy_input)$
+        default: lazy_input
+      feas_subseq:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
+        default: lazy_input
+      coloring:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
+        default: none
+      more_or_less_hint_if_wrong_max_len_min_k:
         regex: ^(0|1)$
+        default: 0
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(en|it)$
+        default: it
+  eval_longest_subseq:
+    evaluator: [python, services/eval_longest_subseq_server.py]
+    args:
+      yield:
+        regex: ^(max_len_min_k|a_max_subseq|a_min_col|both)$
+        default: max_len_min_k
+      feedback_level:
+        regex: ^(0|1|2)$
         default: 1
       lang:
         regex: ^(en|it)$
         default: it
-  check_num_s_in_all_different_T:
+      YES_cert:
+        regex: ^(0|1)$
+        default: 1
+	explain: "the evaluated bot is required to also output a certificate on every YES-instance"
+      lang:
+        regex: ^(en|it)$
+        default: it
+  check_num_occurrences_of_s_in_T:
+#	123 34 45 36 3565 365 342 34 54 45 3434 34 45
+#       ^^^ ^^ ^^    ^^^^         ^^    ^^ 
+#       ^^^ ^^ ^^    ^^^^         ^^               ^^ 
+#       ^^^ ^^ ^^    ^^^^                       ^^ ^^ 
+    explain: checks the number of different ways s occurs in T
     evaluator: [python, services/eval_subseq_server.py]
     args:
       len_T:
@@ -44,29 +94,7 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-
-# BEGIN: competenza gestione sottosequenze diverse di una stessa sequenza
-  check_num_subseq:
-    evaluator: [python, services/check_num_subseq_server.py]
-    args:
-      num_pairs:
-        regex: ^(0|[1-9][0-9]{0,1}|100)$
-      risp:
-        regex: ^(0|[1-9][0-9]{0,50})$
-      ok_if_congruent_modulus:
-        regex: ^(0|[1-9][0-9]{0,10})$
-#        default: 0
-        default: 1000000007
-      more_or_less_hint_if_wrong:
-        regex: ^(0|1)$
-        default: 0
-      silent:
-        regex: ^(0|1)$
-        default: 0
-      lang:
-        regex: ^(en|it)$
-        default: it
-  eval_num_subseq:
+  eval_num_occurrences_of_s_in_T:
     evaluator: [python, services/eval_num_subseq_server.py]
     args:
       answ_modulus:
@@ -76,6 +104,45 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
+  check_longest_increasing_subseq:
+    evaluator: [python, services/check_longest_increasing_subseq_server.py]
+    args:
+      T:
+        regex: ^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9})|lazy_input)$
+        default: lazy_input
+      max_len_min_k:
+        regex: ^(0|[1-9][0-9]{0,50}|lazy_input)$
+        default: lazy_input
+      explain: "insert what you believe to be the maximum length of an increasing subsequence"
+      feas_subseq:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
+        default: lazy_input
+      coloring:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
+        default: none
+      more_or_less_hint_if_wrong_max_len_min_k:
+        regex: ^(0|1)$
+        default: 0
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(en|it)$
+        default: it
+  eval_longest_increasing_subseq:
+    evaluator: [python, services/eval_longest_increasing_subseq_server.py]
+    args:
+      yield:
+        regex: ^(max_len_min_k|a_max_subseq|a_min_col|both)$
+        default: max_len_min_k
+      feedback_level:
+        regex: ^(0|1|2)$
+        default: 1
+      lang:
+        regex: ^(en|it)$
+        default: it
+# BEGIN: competenza gestione sottosequenze diverse di una stessa sequenza
+#        può avere senso come un esercizio a parte (di programmazione) 
   check_subseq_set:
     evaluator: [python, services/check_subseq_set_server.py]
     args:
@@ -85,6 +152,7 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
+# può avere senso come esercizio di programmazione, può essere accoppiato al successivo 
   check_subseq_list:
     evaluator: [python, services/check_subseq_list_server.py]
     args:
@@ -164,45 +232,7 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-
 # END: competenza gestione sottosequenze diverse di una stessa sequenza
-
-  check_longest_subseq:
-    evaluator: [python, services/check_longest_subseq_server.py]
-    args:
-      T:
-        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input)$
-        default: lazy_input
-      max_len_min_k:
-        regex: ^(0|[1-9][0-9]{0,50}|lazy_input)$
-        default: lazy_input
-      feas_subseq:
-        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
-        default: lazy_input
-      coloring:
-        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
-        default: none
-      more_or_less_hint_if_wrong_max_len_min_k:
-        regex: ^(0|1)$
-        default: 0
-      silent:
-        regex: ^(0|1)$
-        default: 0
-      lang:
-        regex: ^(en|it)$
-        default: it
-  eval_longest_subseq:
-    evaluator: [python, services/eval_longest_subseq_server.py]
-    args:
-      yield:
-        regex: ^(max_len_min_k|a_max_subseq|a_min_col|both)$
-        default: max_len_min_k
-      feedback_level:
-        regex: ^(0|1|2)$
-        default: 1
-      lang:
-        regex: ^(en|it)$
-        default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
     args:
