@@ -14,7 +14,7 @@ args_list = [
 
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), book_required=True)
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), book_required=False)
 TAc.print(LANG.opening_msg, "green")
 
 try:
@@ -46,39 +46,42 @@ except IOError as ioe:
 
 if ENV['service'] not in meta_yaml_book['services'].keys():
     for out in [stdout, stderr]:
-        TAc.print(f"\nSorry, '{ENV['service']}' does not appear among the names of the services currently supported for this problem.", "red", ["bold"], file=out)
+        TAc.print(LANG.render_feedback("wrong-service-name", f"\nSorry, '{ENV['service']}' does not appear among the services currently supported for the problem {problem}."), "red", ["bold"], file=out)
         TAc.print("\n\nList of all Services:", "red", ["bold", "underline"], end="  ", file=out)
         print(", ".join(meta_yaml_book['services'].keys()),end="\n\n")
     exit(0)
 
+TAc.print("\n"+ENV['service'], "yellow", ["bold"], end="")
+TAc.print(LANG.render_feedback("service-of", f'   (service of the {problem} problem)'), "yellow")
 
-TAc.print(f"\nSynopsis of the service {ENV['service']} of the problem {problem}:\n\n", "yellow")
-
-TAc.print(ENV['service'], "yellow", ["bold"])
 if "explain" in meta_yaml_book['services'][ENV['service']].keys():
     TAc.print("\nDescription:", "green", ["bold"])
-    print("   "+meta_yaml_book['services'][ENV['service']]["explain"])
+    print("   "+eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['explain'])}'"))
 if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
-    TAc.print(f"\nThe {len(meta_yaml_book['services'][ENV['service']]['args'])} arguments for the service {ENV['service']}:", "green", ["bold"])
-    for a in meta_yaml_book['services'][ENV['service']]['args']:
+    TAc.print(LANG.render_feedback("the-num-arguments", f'\nThe {len(meta_yaml_book["services"][ENV["service"]]["args"])} arguments of service {ENV["service"]}:'), "green", ["bold"])
+    for a,i in zip(meta_yaml_book['services'][ENV['service']]['args'],range(1,1+len(meta_yaml_book['services'][ENV['service']]['args']))):
+        TAc.print(str(i)+". ", "white", ["bold"], end="")
         TAc.print(a, "yellow", ["bold"])
-        print("   regex: ", end="")
-        TAc.print(meta_yaml_book['services'][ENV['service']]['args'][a]['regex'], ["bold"])
+        TAc.print("   regex: ", ["bold"], end="")
+        print(meta_yaml_book['services'][ENV['service']]['args'][a]['regex'])
         if "explain" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
-            TAc.print("Explanation: " + str(meta_yaml_book['services'][ENV['service']]['args'][a]['explain']), ["bold"])
+            TAc.print("   Explanation: ", ["bold"], end="")
+            print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['explain'])}'"))
         if "example" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
-            TAc.print("Example: " + str(meta_yaml_book['services'][ENV['service']]['args'][a]['example']), ["bold"])
+            TAc.print("   Example: ", ["bold"], end="")
+            print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['example'])}'"), ["bold"])
         if "default" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
-            TAc.print("Default Value: " + str(meta_yaml_book['services'][ENV['service']]['args'][a]['default']), ["bold"])
+            TAc.print("   Default Value: ", ["bold"], end="")
+            print(str(meta_yaml_book['services'][ENV['service']]['args'][a]['default']))
         else:
-            TAc.print(f"The argument {a} is mandatory.", ["bold"])
+            TAc.print(f"   The argument {a} is mandatory.", ["bold"])
 
-print("\nAll arguments of all TALight services take in only strings as possible values. As you can see, the family of string values allowed for an argument is described by means of a regex. We refer to the online service 'https://extendsclass.com/regex-tester.html' if in need of help in grasping the intended meaning of the regex.\n")            
+print(LANG.render_feedback("regex-cloud-resource", f"\nAll arguments of all TALight services take in only strings as possible values. As you can see, the family of string values allowed for an argument is described by means of a regex. We refer to the online service 'https://extendsclass.com/regex-tester.html' if in need of help in grasping the intended meaning of the regex.\n"))
 
 # Now printing the footing lines:
-TAc.print("Index of the Help Pages:", "red", ["bold", "underline"], end="  ")
+TAc.print(LANG.render_feedback("index-help-pages", 'Index of the Help Pages:'), "red", ["bold", "underline"], end="  ")
 print(meta_yaml_book['services']['help']['args']['page']['regex'][2:-2])
-TAc.print("List of all Services:", "red", ["bold", "underline"], end="  ")
+TAc.print(LANG.render_feedback("list-services", 'List of all Services:'), "red", ["bold", "underline"], end="  ")
 print(", ".join(meta_yaml_book['services'].keys()))
 
     
