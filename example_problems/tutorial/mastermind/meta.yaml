@@ -26,3 +26,13 @@ services:
       subtask: (1|2|3)
         regex: (1|2|3)
         default: 1
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+      lang:
+        regex: ^(en|it)$
+        default: it
+

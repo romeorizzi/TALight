@@ -4,8 +4,6 @@ from sys import stderr, exit, argv
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-from get_lines import get_lines_from_stream
-
 from parentheses_lib import recognize, num_sol, unrank
 
 # METADATA OF THIS TAL_SERVICE:
@@ -30,7 +28,7 @@ print("# waiting for your ordered list of well-formed formulas of parentheses.\n
 
 line = None
 while line == None:
-    line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\(|\))+$", regex_explained="any string of '(' and ')' characters.")
+    line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\(|\))+$", regex_explained="any string of '(' and ')' characters.", TAc=TAc)
     if line == "#end":
         TAc.print(LANG.render_feedback("at-least-one-line", f"No. You are required to enter at least one valid formula before closing."), "yellow")
     
@@ -42,7 +40,7 @@ len_lines = len(line)
 n_pairs = len_lines//2
 
 while True:
-    line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\(|\))+$", regex_explained="any string of '(' and ')' characters.")
+    line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\(|\))+$", regex_explained="any string of '(' and ')' characters.", TAc=TAc)
     if line in stopping_command_set:
         break
     if not len(line) == len_lines:

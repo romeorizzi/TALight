@@ -201,7 +201,7 @@ fn main() {
                                                     break;
                                                 }
                                             } else {
-                                                Command::ConnectionDenied("No such service".into())
+                                                Command::ConnectionDenied(format!("No such service \"{}\" is available for problem \"{}\"", &req.service, &req.codename))
                                             }
                                         }
                                         Err(_) => Command::ConnectionDenied("Invalid problem codename".into()),

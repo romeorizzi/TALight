@@ -57,7 +57,8 @@ This section gives general instructions on how the problems sitting in a public 
 
 TALight intends to promote autonomous exploration. We wish these explorations might lead you to find out, discover, experiment and develop resources within you, in your machine, in the cloud, in your fellows, and in the community. But, to be more concrete rather than sound too visionary or idealistic, we exhibit now the intended use of the few basic commands which allow you to access the services of a problem and all other problem contents made available by the problem maker and the cloud hosting service.  
 
-Knowing how to properly access a problem served from the cloud is at the basis to advance to deal with problems cloned in local on your machine, which, in turn, will easily spring you to become a proficient problem maker.
+Knowing how to properly access a problem served from the cloud is at the basis to advance to deal with problems cloned in local on your machine. Playing with the problems in local will give you more freedom and control and enrich your opportunities for a wide and interconnected learning experience. Working on the problems cloned in local allows you to modify and adapt the problems themself to your needs and curiosities. Even if you do not modify the problms and leav them untouchd, still the habit to launch an `rtald` daemon dispatching the problem services for the problms sitting in local on your machine and addressing it rather than an opaque `rtald` daemon serving the cloud will give you full control and understanding on the dialogue that occurs between the solutions of the probelem solver and the service servers written by the problem maker.
+All this, besides possibly springing you to become a proficient problem solver, will also make it natural for you to digievolve to the next level up and experiment yourself as a problem maker.
 
 </details>
 
@@ -118,7 +119,7 @@ ___
 
 You have two options on how to get it:
 
-1. **Option 1:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in the file `rtal/README.md` of this repo.
+1. **Option 1 [generally recommended]:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in the file `rtal/README.md` of this repo.
 
 
 2. **Option 2:** download the already compiled binary made available for your platform and set them in.
@@ -184,13 +185,18 @@ SET "PATH=%PATH%;C:\Program Files\AzCopy"
 Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
 
 DESCRIPTION SHORT:
-You have to put your .exe file's path into enviroment variable path. Go to "My computer -> properties -> advanced -> environment variables -> Path" and edit path by adding .exe's directory into path.
+You have to put your .exe file's path into enviroment variable path. To do this go to:
+   "My computer -> properties -> advanced -> environment variables -> Path"
+and edit path to adding .exe's directory into path.
+```
 
-DESCRIPTION LONG:
+<details><summary>DESCRIPTION LONG for how to set environment variables on Windows</summary>
+
 Windows 10, 8.1, 8
 
 Open start menu,
 
+```
 Type Edit environment variables
 Open the option Edit the system environment variables
 Click Environment variables... button
@@ -200,6 +206,7 @@ a window pops up, click New
 Type the Directory path of your .exe or batch file (Directory means exclude the file name from path)
 Click Ok on all open windows and start a new terminal (the previously open one will not be affcted by the change).
 ```
+</details>
 
 In case you get error messages complaining about the fact that `rtal` has non been found then check your path.
 In case you get error messages complaining you do not have the proper permissions to execute it then you are likely on Windows and should instruct it (or learn how) to launch the terminal as administrator.
@@ -293,7 +300,7 @@ rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- ~
 ```bash 
 rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- python ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
-<strong>This is because only `.exe` files can be executed on Windows, scripts can not even if their first line is the correct she-bang.
+<strong>This is because only `.exe` files can be executed on Windows, scripts can not (even if their first line is the correct she-bang).
 
 Of course, you can also use this second and longer form of the command also on Linux and Mac, but then it must be the case that the version of python set as default in your current environment is the correct one to run the bot. 
 </strong>
@@ -314,7 +321,7 @@ rtal -s wss://talight.tk/tutorial connect sum free_sum -- ~/TAlight/example_prob
 Since problem `sum` offers an `help` service, you can also get immediate directions about the problem by asking to this service, selecting the specific page through the use of arguments:
 
 ```bash 
-crtal -s wss://talight.tk/tutorial connect sum help -a sum_and_difference
+rtal -s wss://talight.tk/tutorial connect sum help -a sum_and_difference
 ```
 
 With:
@@ -369,6 +376,14 @@ Choose to download a compressed file, then uncompress it on your machine and loc
 
 
 However, if `git` is installed on the machine, then cloning the repo is possible. Cloning is always better than dowloading since not only it is more handy but also establishes a connection with the repo and you can more conveniently maintain your local copy updated.
+
+<strong>Attention (for Windows users):</strong> 
+This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
+This mans that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
+```bash
+git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+```
+
 
 <details><summary>To the problem maker</summary>
 
@@ -433,6 +448,14 @@ git clone https://github.com/romeorizzi/TAlight.git
 to clone the content of this repo.
 Of course, you can achieve the same result by any other means if you prefer.
 
+<strong>Attention (for Windows users): 
+This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
+This means that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
+```bash
+git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+```
+</strong>
+
 You can also clone and/or place the TAlight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
 
 Note: cloning is better than downloading since in this way you get connected to the repo. Even if you do not intend to contribute to the project, still this is handy since, in order to update to the current version, you can simply go (from a terminal) to any folder of the repo and enter:
@@ -444,14 +467,29 @@ git pull
 </details> 
 
 ___
-In the following we assume that `~/TAlight` is the path to this TAlight repo as cloned on your system. Of course, you are free to rename it at your will or place it elsewhere as long as you interpret the following instructions accordingly (do not be afraid: moving/renaming the home folder of a repo on your local maching will not disconnect it from the original repo in the cloud, you can still update it with `git clone` ven if you hav changed its name in local). For example, if you use programs like Github Desktop to manage your git repositories, you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TAlight` in the following instructions. Just replace `~/TAlight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
+In the following we assume that `~/TAlight` is the path to this TAlight repo as cloned on your system, i.e., we assumed that this repo has been cloned as a direct child of your home directory, which is the recommended choice. In case not then you should of course correspondingly adapt our explicit commands to your situation, both here and in the following.
+Of course, you are free to rename it at your will or place it elsewhere as long as you interpret all our instructions (also the following ones) accordingly (do not be afraid: moving/renaming the home folder of a repo on your local machine will not disconnect it from the original repo in the cloud, you can still update it with `git clone` even if you later change its name in local). For example, if you use programs like Github Desktop to manage your git repositories (we however suggest using the bash terminal), you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TAlight` in the following instructions. Just replace `~/TAlight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
 
 
-<strong>A note for Windows users</strong>
+<strong>Two notes of strict attention for Windows users</strong>
 
-Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
+1. be warned of what is the correct way to clone a git repo that contains symlinks:
+    after having opened the git bash as Administrator, you must launch the clone command including the parameter specifying that symlinks should be treated as such. More precisely:
+    ```bash
+    git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+    ```
 
-<strong>If you are Windows user keep this in mind in interpreting all instructions to follow.</strong>
+2. Windows uses '\\' instead of '/' (like Unix/Linux/Mac or also like in the URLs you access from your browser) in order to separate the names of the folders and subfolders encountered when walking along a path to a resource (file or folder) located in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial. In other words, you should adapt our instructions accordingly to this notice (and also further adapt these paths in case you have placed the `TAlight` cloned repo in a place other than the one we assume.
+Your home is where you get if you ask for it with
+
+```bash
+cd $HOME
+```
+or, more shortly, with
+```bash
+cd ~
+```
+
 
 
 ## OBTAIN THE BINARIES
@@ -478,52 +516,72 @@ Having to remember and digit the whole path `~/TAlight/rtal/target/debug/` in or
 <details>
 <summary>To solve this ...</summary>
 
-To solve this, if you are on Unix/Linux/Mac, you can enter the following command in the terminal:
+
+There are many ways to solve this nuisance, we list them out from the fastest fixes to the best ones:
+
+<details>
+<summary>add the path `$HOME/TAlight/rtal/target/debug/` to your `PATH` environment variable and define the `TAL_HOME` environment variable</summary>
+
+To do this, enter the following two command lines in the terminal (in case you are on Windows you should use the Git Bash):
 
 ```bash
-PATH=$PATH:/Users/MariaCamilla/Documents/GitHub/TAlight/rtal/target/debug/
+PATH=$PATH:$HOME/TAlight/rtal/target/debug/
+export TAL_HOME="$HOME/TAlight"
 ```
 You will have to do this on every terminal from which you want to issue TAlight commands.
 
+If you want this change to apply to all terminals you will light up in the future, them add the following two lines to your `~/.bashrc` file: 
 
-There are many ways to solve this nuisance, like copying the binaries into a directory listed into the `PATH` environment variable on your system, or adding the path `~/TAlight/rtal/target/debug/` to your `PATH` environment variable.
-Here we suggest a convenient way to make the `TAlight` commands directly accessible, it can be applied on any platform that allows for simlinks (or hardlinks). We word it out step by step **for Unix/Linux/Mac**: 
+```bash
+export PATH="$PATH:$HOME/TAlight/rtal/target/debug"
+export TAL_HOME="$HOME/TAlight"
+```
 
+Notice that this will not take effect on the terminals already open at the time you added the line and saved the new version of your `~/.bashrc` file.
+For example, it will not take effect on the terminal from which you edited the file or launched the editor. If you want to affect also one of these terminals just do:
 
-From the terminal,
-lounch the following commands
+```bash
+source ~/.bashrc
+```
+
+</details>
+
+<details>
+<summary>collect the symlinks to all your useful binaries into a folder made accessible through your `PATH` environment variable</summary>
+
+This is a more convenient solution and once the folder has been created you can use it also in the future and will help you mantaining your binaries organized.
+
+This approach can be applied on any platform that allows for simlinks (or hardlinks), like Unix/Linux/Mac/Windows: 
+
+From the terminal, lounch the following commands (if you are on Windows just lounch them on the `Git Bash`)
 ```bash
 mkdir ~/.bin
 cd ~/.bin
 ln -s ~/TAlight/rtal/target/debug/rtald ~/.bin/
 ln -s ~/TAlight/rtal/target/debug/rtalc ~/.bin/
 ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
-ln -s ~/TAlight/TAL_utils/TA_send_txt_file.py ~/.bin/ 
+ln -s ~/TAlight/TAL_utils/problem_solver/TA_send_txt_file.py ~/.bin/ 
 ```
 
-Then, add the following line at the end of your `~/.bashrc` file.
+Then, (for Unix/Linux/Mac) add the following lines at the end of your `~/.bashrc` file.
 
 ```bash
 export PATH="$PATH:$HOME/.bin"
+export TAL_HOME="$HOME/TAlight"
 ```
 
-Remember that this update will be effective only for terminals you open after having modifyied the `~/.bashrc` file.
+Again, remember that this update will be effective only for terminals you open after having modifyied the `~/.bashrc` file.
 If you want older terminals to get the update then you can issue from them the command
 ```bash
 source .bashrc
 ```
-If you are **on Windows**: open the Git Bash, lounch the following commands
-```bash
-mkdir ~/.bin
-cd ~/.bin
-ln -s ~/TAlight/rtal/target/debug/rtald 
-ln -s ~/TAlight/rtal/target/debug/rtalc 
-ln -s ~/TAlight/rtal/target/debug/rtal 
-ln -s ~/TAlight/TAL_utils/TA_send_txt_file.py 
-```
-and then add the path `~/.bin` to your `PATH` environment variable.
 
-Again, you can check that the `TAlight` commands are now directly accessible with
+For those with Windows, add the path `~/.bin` to your `PATH` environment variable. And also introduce a new environment variable `TAL_HOME` defined in analogy to what explicitly shown above for Unix/Linux/Mac.
+
+</details>
+
+
+Either way and again, you can check that the `TAlight` commands are now directly accessible with
 
 ```bash
 rtal --help
@@ -534,6 +592,8 @@ and
 rtald --help
 ```
 </details>
+
+Either way, when defining the `TAL_HOME` environment variable we assumed that this repo has been cloned as a direct child of your home directory, which is the recommended choice. In case not then you should of course correspondingly adapt our explicit commands to your situation, both here and in the following. 
 
 ## TUTORIAL (How to use TAlight)
 

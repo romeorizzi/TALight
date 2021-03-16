@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+wrong-service-name: "\nAhi, '{ENV['service']}' non appare nella lista dei servizi attualmente supportati dal problema {problem}."
+open-channel: '# Servirò: problem={problem}, service={service}'
+service-of: '   (servizio del problema {problem})'
+the-num-arguments: '\nIl servizio {ENV["service"]} ha {len(meta_yaml_book["services"][ENV["service"]]["args"])} argomenti:'
+help-pages: 'Indice delle pagine di Help:'
+services-list: 'Lista dei Servizi:'
+regex-cloud-resource: '\nGli argomenti di tutti i servizi TALight sono necessariamente stringhe (viate dal client "rtal" al daemon "rtald"). La famiglia di strighe ammesse come possibili valori di un argomento è descritta da una regular expression (regex) specificata nel file "meta.yaml" del problema. Se la regex ti mette in difficoltà ti consigliamo di avvalerti del supporto online "https://extendsclass.com/regex-tester.html".\n'
+"index-help-pages": 'Indice delle Help Pages:'
+"list-services": 'Lista dei servizi di {problem}:'
