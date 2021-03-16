@@ -11,33 +11,35 @@ Le regole ti verranno forse più chiare dopo qualche partita giocata online megl
 
 [un player esterno, online](http://www.webgamesonline.com/mastermind/index.php)
 
-## Competenza 1 - saper punteggiare correttamente un tentativo
+## Goal 1 - saper punteggiare correttamente un tentativo
 
 Assicuriamoci innanzitutto di aver compreso le regole del gioco:
 ove tu conoscessi il codice segreto e ti venisse esibito un tentativo, saprsti valutarlo restituendo il numero corretto di pioli neri e bianchi?
 
-Si assuma che il codice sia di $n$ cifre, dove ogni cifra è un numero da $1$ a $m$.
+Si assuma che il codice sia di $n$ cifre, dove ogni cifra è un numero naturale grande al più $m$.
 
 I seguenti subtask e servizi, oggetto di feedback, potranno confermarti di aver compreso correttamente le regole del gioco.
 
-* [servizio tell_score:] puoi sottomettere una coppia di codici (quello segreto e un tentativo), per richiedere quale sia la valutazione corretta per quella coppia.
+* [servizio:] ottieni_valutazione: puoi sottomettere una coppia di codici (quello segreto e un tentativo), per richiedere quale sia la valutazione corretta per quella coppia.
 
 ```t
-rtal connect mastermind -a secret_code="2 2 1 4" -a probing_code="2 3 1 3" tell_score 
+TAlight ask --problem=mastermind -check_evaluation m n codice_segreto codice_tentativo  
 ```
 
-* [servizio check_scoring_competence:] mira a convalidare la tua comptnza nel punteggiare un codice tentativo. Ti viene fornita una serie di coppie di codici (segreto e tentativo) e per ciascuna di esse esprimi la tua puntggiatura. Ti verrà segnalato ogni errore riscontrato.
+dove $m$ ed $n$ sono due numeri naturali positivi e `codice_segreto` e `codice_tentativo` sono due sequenze di $n$ numeri naturali nell'intrvallo $[0,m]$ separati da spazio.
+
+1. [subtask 1:](https://per-ora-costruiamo-qusti-URL-a-mano-ma-sarebbe-utile-costruzione-dinamica-e/o-da-problm.yaml) valuta tu un tentativo, $n=4$ e $m = 5$
+
+2. [subtask 2:](https://per-ora-costruiamo-qusti-URL-a-mano-ma-sarebbe-utile-costruzione-dinamica-e/o-da-problm.yaml) valuta tu un tentativo, $n$ ed $m$ generici
+
+### Get feedback
+Puoi ottenere del feedback sia dalla riga di comando con:
 
 ```t
-rtal connect mastermind -a num_questions=50 -a num_pegs=5 -a num_colors=8 check_scoring_competence
-```
-Oltre che poter sprimere tu stesso la competnza, a questo servizio potrai sottomettere un tuo bot che ti rapprsenti:
-
-```t
-rtal connect mastermind -a num_questions=50 -a num_pegs=5 -a num_colors=8 check_scoring_competence -- python mybot.py
+TAlight ask --problem=mastermind --goal=1 --subtask=SUBTASK_NUMBER  tuo_file_eseguibile 
 ```
 
-Il tuo file eseguibile sarà un programma che gioca per tè oppure un applt attraverso cui potrai giocare. In entrambi i casi dovrà rispettare il seguente protocollo di comunicazione:
+Il tuo file eseguibile sarà un programma che gioca per tè oppure un applt attraverso cui potrai giocare. In entrambi i casi dovrà rispettare il sguente protocollo di comunicazione:
 
 1. nella prima riga di `stdout` si scriva:
 START
@@ -55,9 +57,9 @@ START
    due interi $N$ e $B$ separati da spazi: $N=$il numero di pioli neri, $B=$il numero di pioli bianchi.
 
 
-## Competenza 2 - saper ricostruire il codice segreto
+## Goal 2 - saper ricostruire il codice segreto
 
-In questo caso il nostro servizio principale (e più atteso) si baserà su un'interazione tra tè stesso od un tuo programma che esguirai in locale (un applet entro il quale giocare tu oppure un programma che giochi per tè) ed un nostro codice sul server che giocherà nel ruolo del detentore del segreto.
+In questo caso il nostro feedback si baserà su un'interazione tra un tuo programma che esguirai in locale (un applet entro il quale giocare tu oppure un programma che giochi per tè) ed un nostro codice sul server.
 Una volta lanciato il comando:
 
 ```t
@@ -86,14 +88,14 @@ a fronte di questa azione il server elabora un codice segreto, dove $m$ d $n$ sa
      nel secondo caso si attenda la conferma od altro feedback.
 
 
-==Goals==
-Goal 1: $n=4$, $m=5$, nessuna limitazione sul numero di tentativi
-Goal 2: $n=4$, $m=5$, hai a disposizione al più 10 tentativi
-Goal 3: $n=4$, $m=5$, hai a disposizione al più 6 tentativi
-Goal 4: $n\leq 4$, $m\leq 5$, minimizza il numero di tentativi nel caso peggiore
-Goal 5: $n\leq 4$, $m\leq 5$, minimizza il numero di tentativi nel caso medio, sotto ipotesi di codice random con distribuzione di probabilità uniforme.
-Goal 6: $n\leq 4$, $m\leq 5$, gioco ottimo contro avversario altrettanto ottimo.
-Goal 7: $n=4$, $m=5$, nessuna limitazione sul numero di tentativi
-Goal 8: $n=4$, $m=5$, hai a disposizione al più $mn$ tentativi
-Goal 9: $n=4$, $m=5$, hai a disposizione al più $m+n\log n$ tentativi
+==Subtask==
+Subtask 1: $n=4$, $m=5$, nessuna limitazione sul numero di tentativi
+Subtask 2: $n=4$, $m=5$, hai a disposizione al più 10 tentativi
+Subtask 3: $n=4$, $m=5$, hai a disposizione al più 6 tentativi
+Subtask 4: $n\leq 4$, $m\leq 5$, minimizza il numero di tentativi nel caso peggiore
+Subtask 5: $n\leq 4$, $m\leq 5$, minimizza il numero di tentativi nel caso medio, sotto ipotesi di codice random con distribuzione di probabilità uniforme.
+Subtask 6: $n\leq 4$, $m\leq 5$, gioco ottimo contro avversario altrettanto ottimo.
+Subtask 7: $n=4$, $m=5$, nessuna limitazione sul numero di tentativi
+Subtask 8: $n=4$, $m=5$, hai a disposizione al più $mn$ tentativi
+Subtask 9: $n=4$, $m=5$, hai a disposizione al più $m+n\log n$ tentativi
  
