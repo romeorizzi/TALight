@@ -185,13 +185,18 @@ SET "PATH=%PATH%;C:\Program Files\AzCopy"
 Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
 
 DESCRIPTION SHORT:
-You have to put your .exe file's path into enviroment variable path. Go to "My computer -> properties -> advanced -> environment variables -> Path" and edit path by adding .exe's directory into path.
+You have to put your .exe file's path into enviroment variable path. To do this go to:
+   "My computer -> properties -> advanced -> environment variables -> Path"
+and edit path to adding .exe's directory into path.
+```
 
-DESCRIPTION LONG:
+<details><summary>DESCRIPTION LONG for how to set environment variables on Windows</summary>
+
 Windows 10, 8.1, 8
 
 Open start menu,
 
+```
 Type Edit environment variables
 Open the option Edit the system environment variables
 Click Environment variables... button
@@ -201,6 +206,7 @@ a window pops up, click New
 Type the Directory path of your .exe or batch file (Directory means exclude the file name from path)
 Click Ok on all open windows and start a new terminal (the previously open one will not be affcted by the change).
 ```
+</details>
 
 In case you get error messages complaining about the fact that `rtal` has non been found then check your path.
 In case you get error messages complaining you do not have the proper permissions to execute it then you are likely on Windows and should instruct it (or learn how) to launch the terminal as administrator.
@@ -294,7 +300,7 @@ rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- ~
 ```bash 
 rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- python ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
-<strong>This is because only `.exe` files can be executed on Windows, scripts can not even if their first line is the correct she-bang.
+<strong>This is because only `.exe` files can be executed on Windows, scripts can not (even if their first line is the correct she-bang).
 
 Of course, you can also use this second and longer form of the command also on Linux and Mac, but then it must be the case that the version of python set as default in your current environment is the correct one to run the bot. 
 </strong>
