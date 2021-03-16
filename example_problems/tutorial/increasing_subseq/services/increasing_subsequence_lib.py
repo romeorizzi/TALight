@@ -11,7 +11,33 @@ def is_subseq(s, T):
     it = iter(T)
     return all(any(c == ch for c in it) for ch in s)
 
+def is_subseq_with_position(s, T):
+    num = 0
+    pos = []
+    for ch in s:
+        for c in T:
+            if c == ch:
+                pos.append(T.index(c))
+                num+=1
+    if num == len(s):
+        return [True, pos]
+    else:
+        return [False, pos]
 
+def get_yes_certificate(T, pos):
+    cert = ""
+    for i in T:
+        num_ciphers = len(str(i))
+        if T.index(i) == pos:
+            for i in range(0, num_ciphers):
+                cert+= "^"
+        else:
+            for i in range(0, num_ciphers):
+                cert+= " " 
+        cert+= " "
+    return cert
+
+    
 def sub_sequences_num(T):
     combs = []
     seq_num = 0

@@ -8,7 +8,7 @@ from multilanguage import Env, Lang, TALcolors
 from increasing_subsequence_lib import parse_input, is_subseq
 
 # METADATA OF THIS TAL_SERVICE:
-problem="increasing_subsequcence"
+problem="increasing_subseq"
 service="is_subseq_server"
 args_list = [
     ('T',str),
@@ -23,36 +23,44 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 #if not ENV['silent']:
 #    TAc.print(LANG.opening_msg, "green")
 
+string_T = ""
+string_s = ""
 
 if (ENV['T'] == 'lazy_input'):
     TAc.print("\nInsert T:", "green")
-    string = input()
-    ok = bool(re.match(r"^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9}))$", string))
+    string_T = input()
+    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string))
     if ok:
-        T = parse_input(string)
+        T = parse_input(string_T)
     else:
         TAc.print("\n\nWRONG INPUT FORMAT\n", "red")
         exit(0)
 else:
-    T = parse_input(ENV['T'])
+    string_T = ENV['T']
+    T = parse_input(string_T)
 
 if (ENV['s'] == 'lazy_input'):
     TAc.print("\nInsert s:", "green")
-    string = input()
-    ok = bool(re.match(r"^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9}))$", string))
+    string_s = input()
+    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string))
     if ok:
-        s = parse_input(string)
+        s = parse_input(string_s)
     else:
         TAc.print("\n\nWRONG INPUT FORMAT\n", "red")
         exit(0)
 else:
-    s = parse_input(ENV['s'])
+    string_s = ENV['s']
+    s = parse_input(string_s)
 
-valid = is_subseq(s,T)
+ret = is_subseq_with_position(s,T)
 
-if valid:
-    TAc.print("\n\nYES, s is substring of T\n", "red")
+if ret[0]:
+    TAc.print("\n\nYES, s is subsequence of T\n", "red")
 else:
-    TAc.print("\n\nNO, s isn't substring of T\n", "red")
+    TAc.print("\n\nNO, s isn't subsequence of T\n", "red")
+
+if(ENV['YES_cert'] == '1'):
+    print(string_T)
+    print(get_yes_certificate(T, ret[1]))
 
 
