@@ -1,4 +1,0 @@
-%YAML 1.2
----
-open-channel: "# Servirò: problem={problem}, service={service}"
-ok: "La tua stringa è una formula ben formata di parentesi."

@@ -1,6 +1,8 @@
 %YAML 1.2
 ---
-open-channel: "# Servirò: problem={problem}, service={service}"
-ask-for-white-string: "Poichè non hai specificato il parametro white_string, ti chiediamo di immettere ora la stringa in chiaro, di cui computare lo hash:"
-give-only-hash: "{hash_value(ENV['white_string'],ENV['hash_type'])}"
-give-hash-verbose: "h({white_str}) = {hash_value(white_str,ENV['hash_type'])}"
+open-channel: '# Servirò: problem={problem}, service={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#THE PROBLEM SERVICE SPECIFIC SECTION:
+ask-for-white-string: 'Poichè non hai specificato il parametro white_string, ti chiediamo di immettere ora la stringa in chiaro, di cui computare lo hash:'
+give-only-hash: '{hash_value(ENV["white_string"],ENV["hash_type"])}'
+give-hash-verbose: 'h(ENV["white_string"]) = {hash_value(ENV["white_string"],ENV["hash_type"])}'

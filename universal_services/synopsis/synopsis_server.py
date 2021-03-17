@@ -46,7 +46,7 @@ except IOError as ioe:
 
 if ENV['service'] not in meta_yaml_book['services'].keys():
     for out in [stdout, stderr]:
-        TAc.print(LANG.render_feedback("wrong-service-name", f"\nSorry, '{ENV['service']}' does not appear among the services currently supported for the problem {problem}."), "red", ["bold"], file=out)
+        TAc.print(LANG.render_feedback("wrong-service-name", f"\nSorry, "{ENV['service']}" does not appear among the services currently supported for the problem {problem}.'), "red", ["bold"], file=out)
         TAc.print("\n\nList of all Services:", "red", ["bold", "underline"], end="  ", file=out)
         print(", ".join(meta_yaml_book['services'].keys()),end="\n\n")
     exit(0)

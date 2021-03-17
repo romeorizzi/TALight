@@ -1,9 +1,11 @@
 %YAML 1.2
 ---
-open-channel: "# Servirò: problem={problem}, service={service}"
-over-sum: "infatti, {a}+{b}={a+b} > {x+y}."
-under-sum: "infatti, {a}+{b}={a+b} < {x+y}."
-right-sum: "infatti, {a}+{b}={n}"
-over-product: "infatti, {a}*{b}={a*b} > {x*y}."
-under-product: "infatti, {a}*{b}={a*b} < {x*y}."
-ok: "infatti, {a}+{b}={x+y} e {a}*{b}={x*y}."
+open-channel: '# Servirò: problem={problem}, service={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#THE PROBLEM SERVICE SPECIFIC SECTION:
+over-sum: 'infatti, {a}+{b}={a+b} > {x+y}.'
+under-sum: 'infatti, {a}+{b}={a+b} < {x+y}.'
+right-sum: 'infatti, {a}+{b}={n}.'
+over-product: 'infatti, {a}*{b}={a*b} > {x*y}.'
+under-product: 'infatti, {a}*{b}={a*b} < {x*y}.'
+ok: 'infatti, {a}+{b}={x+y} e {a}*{b}={x*y}.'

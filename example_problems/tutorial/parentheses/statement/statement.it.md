@@ -24,7 +24,7 @@ Invece queste sono tutte quelle ok per $n=3$:
 
 Se ti restano dubbi su quali formule siano ben formate, prova il servizio `check_a_sol`.
 
-Ti invitiamo a lavorare con le mani: prova a identificare tutte quelle ok per $n=4$ oppure per $n=2$ (se hai dei dubbi o cerchi conferme sulla risposta, prova i servizi `check_num_sol` oppure `check_solutions_set`).
+Ti invitiamo a lavorare con le mani: prova a identificare tutte quelle ok per $n=4$ oppure per $n=2$ (se hai dei dubbi o cerchi conferme sulla risposta, prova i servizi `check_num_sol` oppure `check_sol_set`).
 
 In questo problema, che mira a sviluppare/potenziare competenze nell'approccio ricorsivo ai problemi, ti proponiamo di affrontare varie questioni come:
 
@@ -98,13 +98,13 @@ vorremmo tu ti avvalessi dello stesso schema ricorsivo impiegato per affrontare 
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect -a num_pairs=3 -a=spot_wrong_consec_if_sorted parentheses check_solutions_list
+> rtal connect -a num_pairs=3 -a=spot_wrong_consec_if_sorted parentheses check_sol_list
 ```
 
 Potrai quindi controllare se dovresti considerare e venire a conoscere tecniche ed approcci algoritmici più efficaci (ossia asintoticamente più veloci) con:
 
 ```
-> rtal connect parentheses evaluate_solutions_list
+> rtal connect parentheses evaluate_sol_list
 ```
 
 Se visualizzi i possibili argomenti del servizio come insegnato sopra scoprirai che puoi scegliere tra due tipologie di ordinamento naturale sostanzialmente diversi (nota che non sono uno l'inverso dell'altro). 

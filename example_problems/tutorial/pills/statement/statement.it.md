@@ -63,13 +63,13 @@ vorremmo tu ti avvalessi dello stesso schema ricorsivo impiegato per affrontare 
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect -a num_pills=3 -a=spot_wrong_consec_if_sorted pills check_solutions_list
+> rtal connect -a num_pills=3 -a=spot_wrong_consec_if_sorted pills check_sol_list
 ```
 
 Potrai quindi controllare se dovresti considerare e venire a conoscere tecniche ed approcci algoritmici più efficaci (ossia asintoticamente più veloci) con:
 
 ```
-> rtal connect pills evaluate_solutions_list
+> rtal connect pills evaluate_sol_list
 ```
 
 Se visualizzi i possibili argomenti del servizio come insegnato sopra scoprirai che puoi scegliere tra due tipologie di ordinamento naturale sostanzialmente diversi (nota che non sono uno l'inverso dell'altro). 

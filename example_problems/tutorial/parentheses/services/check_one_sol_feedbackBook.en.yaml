@@ -1,4 +1,0 @@
-%YAML 1.2
----
-open-channel: "# I will serve: problem={problem}, service={service}"
-ok: "Your string is a well-formed formula of parentheses."

@@ -1,41 +1,56 @@
 public_folder: public
 services:
   compact_solution:
+    explain: "We give you a 0/1-matrix and a sequence of swich row/cololum operations that eventually lead to the all 0 matrix. You are required to shorten this sequence."
     evaluator: [python,services/compact_solution_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 4
+        explain: "number of rows of the pirellone"
       n:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 4
+        explain: "number of columns of the pirellone"
       goal:
         regex: ^(m_plus_n|m_plus_n_half|min)$
         default: m_plus_n
+      verbose:
+        regex: ^(0|1)$
+        default: 0
+      please_do_it_for_me:
+        regex: ^(0|1)$
+        default: 0
       lang:
         regex: ^(en|it)$
         default: it
   sub_closure:
+    explain: "You are asked to prove that a 0/1-matrix containing a bad 0/1-submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/cololum operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us."
     evaluator: [python, services/sub_closure_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 3
+        explain: "number of rows of the big matrix"
       n:
         regex: ^([1-9][0-9]{0,1}|100)$
         default: 3
+        explain: "number of columns of the big matrix"
       goal:
         regex: ^(any|min)$
         default: min
       lang:
         regex: ^(en|it)$
         default: it
-  check_counterexample:
+  check_unsolvable:
     evaluator: [python, services/check_counterexample_server.py]
     args:
       goal:
-        regex: ^(any|minimal)$
+        regex: ^(any|minimal|minimum)$
         default: any
+      gimme_unsolvable_submatrix:
+        regex: ^(0|1)$
+        default: 0
       lang:
         regex: ^(en|it)$
         default: it

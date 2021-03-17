@@ -1,0 +1,39 @@
+public_folder: public
+services:
+  service_name:
+    explain: "You are given a sum value and are asked to return two natural numbers having that sum. You can also pose yourself the challenge to return such a pair of numbers for which the product is largest possible."
+    evaluator: [python, services/service_name/service_name_server.py]
+    args:
+      numbers:
+        regex: ^(onedigit|twodigits|big)$
+        default: twodigits
+      obj:
+        regex: ^(any|max_product)$
+        default: any
+      num_questions:
+        regex: ^([1-9]|[1-2][0-9]|30)$
+        default: 10
+        explain: "a number from 1 to 30, the number of questions posed to the problem solver"
+        example: 10
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  help:
+    evaluator: [python, services/help/help_server.py]
+    args:
+      page:
+        regex: ^(page_problem|page_service1|page_service2|page_service3|sum_and_product|help|synopsis)$
+        default: help
+      lang:
+        regex: ^(en|it)$
+        default: it
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+      lang:
+        regex: ^(en|it)$
+        default: it
+

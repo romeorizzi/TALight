@@ -1,7 +1,9 @@
 %YAML 1.2
 ---
-wrong-service-name: "\nSorry, '{ENV['service']}' does not appear among the services currently supported for the problem {problem}."
 open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+wrong-service-name: '\nSorry, "{ENV['service']}" does not appear among the services currently supported for the problem {problem}.'
 service-of: '   (service of the {problem} problem)'
 the-num-arguments: '\nThe {len(meta_yaml_book["services"][ENV["service"]]["args"])} arguments of service {ENV["service"]}:'
 help-pages: 'Index of the Help Pages:'

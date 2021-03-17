@@ -27,7 +27,7 @@ print("# waiting for your set of well-formed formulas of parentheses.\nPlease, e
 
 line = None
 while line == None:
-    line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\(|\))+$", regex_explained="any string of '(' and ')' characters.", TAc=TAc)
+    line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\(|\))*$", regex_explained="any string comprising of '(' and ')' characters.", TAc=TAc)
     if line == "#end":
         TAc.print(LANG.render_feedback("at-least-one-line", f"No. You are required to enter at least one valid formula before closing."), "yellow")
         
@@ -87,5 +87,6 @@ for pos in range(num_sol(n_pairs)):
             TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f"No. Your set is missing at least one well-formed formula.\nHere is the prefix of a well-formed formula and no formula in your set has this prefix:"), "red", ["bold"])
             TAc.print(minimal_missing_prefix, "yellow", ["bold"])
         exit(0)
-
+TAc.OK()
+TAc.print(f"Congrats! You have input all the well-formed formulas on {n_pairs} pairs of parentheses.", "green")
 exit(0)

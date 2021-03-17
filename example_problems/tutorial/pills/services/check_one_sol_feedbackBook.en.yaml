@@ -1,9 +1,0 @@
-%YAML 1.2
----
-open-channel: "# I will serve: problem={problem}, service={service}"
-over-sum: "indeed, {a}+{b}={a+b} > {x+y}."
-under-sum: "indeed, {a}+{b}={a+b} < {x+y}."
-right-sum: "indeed, {a}+{b}={n}"
-too-apart: "indeed, |{a}-{b}|={abs(a-b)} > {x-y}."
-too-close: "indeed, |{a}-{b}|={abs(a-b)} < {x-y}."
-ok: "y indeed, {a}+{b}={x+y} and |{a}-{b}| = {x-y}."

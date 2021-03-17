@@ -1,7 +1,9 @@
 %YAML 1.2
 ---
-open-channel: "# I will serve: problem={problem}, service={service}"
-prompt: "Please, compute and send me the hash of the string:"
-put-white-string: "{white_string}"
-give-only-hash: "{hash_value(ENV['white_string'],ENV['hash_type'])}"
-give-hash-verbose: 'indeed, h({white_string}) = {hash_value(white_string,ENV["hash_type"])}'
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#THE PROBLEM SERVICE SPECIFIC SECTION:
+prompt: 'Please, compute and send me the hash of the string:'
+put-white-string: '{white_string}'
+give-only-hash: '{hash_value(ENV["white_string"],ENV["hash_type"])}'
+give-hash-verbose: 'indeed, h({ENV["white_string"]}) = {hash_value(ENV["white_string"],ENV["hash_type"])}'

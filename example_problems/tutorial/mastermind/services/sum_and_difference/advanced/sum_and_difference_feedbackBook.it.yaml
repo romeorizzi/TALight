@@ -1,9 +1,0 @@
-%YAML 1.2
----
-open-channel: "# Servirò: problem={problem}, service={service}"
-over-sum: "infatti, {a}+{b}={a+b} > {x+y}."
-under-sum: "infatti, {a}+{b}={a+b} < {x+y}."
-right-sum: "infatti, {a}+{b}={n}"
-too-apart: "infatti, |{a}-{b}|={abs(a-b)} > {x-y}."
-too-close: "infatti, |{a}-{b}|={abs(a-b)} < {x-y}."
-ok: "infatti, {a}+{b}={x+y} e |{a}-{b}| = {x-y}."

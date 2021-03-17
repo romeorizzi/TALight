@@ -26,7 +26,7 @@ class Env:
     def __init__(self, problem, service, args_list):
         self.service_server_fullname = argv[0]
         self.exe_path = split(argv[0])[0]
-        self.meta_dir = environ["TAL_META_DIR"]
+        self.META_DIR = environ["TAL_META_DIR"]
         self.problem = problem
         self.service = service
         self.args_list = args_list
@@ -49,12 +49,12 @@ class Env:
 
 
 class Lang:
-    def __init__(self, ENV, TAc, myfeval, book_required=False):
-        self.myfeval = myfeval
+    def __init__(self, ENV, TAc, service_server_eval, book_required=False):
+        self.service_server_eval = service_server_eval
         self.ENV=ENV
         self.TAc=TAc
         self.messages_book = None
-        self.messages_book_file = join(ENV.meta_dir, ENV.exe_path, ENV.service + "_feedbackBook." + ENV['lang'] + ".yaml")
+        self.messages_book_file = join(ENV.META_DIR, ENV.exe_path, ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
         if not yaml_is_installed:
             if book_required:
                 for out in [stdout, stderr]:
@@ -72,7 +72,7 @@ class Lang:
                 try:
                     yaml_book = ruamel.yaml.safe_load(stream)
                     self.messages_book = yaml_book
-                except yaml.YAMLError as exc:
+                except BaseException as exc:
                     if book_required:
                         for out in [stdout, stderr]:
                             TAc.print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine):", "red", ["bold"])
@@ -82,7 +82,7 @@ class Lang:
                         exit(1)
                     else:
                         TAc.print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file).", "red", ["bold"], file=stderr)
-                        print(exc, file=stderr)
+                        #print(exc, file=stderr)
                         print(f"# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
             except IOError as ioe:
                 if book_required:
@@ -96,23 +96,32 @@ class Lang:
                     print(ioe, file=stderr)
                     print(f"# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
         self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={ENV.problem}, service={ENV.service}")
-        for arg_name, _ in ENV.args_list:
+        for arg_name, arg_type in ENV.args_list:
             arg_val = ENV[arg_name]
-            self.opening_msg += f", {arg_name}={arg_val}"
+            if arg_type == bool:
+                self.opening_msg += f", {arg_name}={'1' if arg_val else '0'} (i.e., {arg_val})"
+            else:
+                self.opening_msg += f", {arg_name}={arg_val}"
+        self.opening_msg += ".\n"
         if self.messages_book == None:
             self.opening_msg += f".\n# The feedback_source is the one hardcoded in the service server ({ENV.service_server_fullname})"
         else:
-            self.opening_msg += f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder."
+            self.opening_msg += self.render_Langinternal_feedback("feedback_source",f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder.")
         TAc.print(self.opening_msg, "yellow", ["underline"], file=stderr)
 
-
-    def render_feedback(self, msg_code, msg_English_rendition):
+    def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg):
         if self.messages_book != None and msg_code not in self.messages_book:
-            print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book")
+            self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book","red", file=stderr)
         if self.messages_book == None or msg_code not in self.messages_book:
-            return msg_English_rendition
-        return self.myfeval(self.messages_book[msg_code])
+            return rendition_of_the_hardcoded_msg
+        return self.service_server_eval(self.messages_book[msg_code])
 
+    def render_Langinternal_feedback(self, msg_code, rendition_of_the_hardcoded_msg):
+        if self.messages_book != None and msg_code not in self.messages_book:
+            self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book","red", file=stderr)
+        if self.messages_book == None or msg_code not in self.messages_book:
+            return rendition_of_the_hardcoded_msg
+        return eval(f"f'{self.messages_book[msg_code]}'")
 
 
 class TALcolors:
