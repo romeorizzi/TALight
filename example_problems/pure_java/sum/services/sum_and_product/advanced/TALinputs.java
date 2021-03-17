@@ -21,6 +21,7 @@ public class TALinputs {
     private char ignore_lines_starting_with='#';
 
     public List<Object> TALinput(String type,int num,TALcolors TAc) {
+
         List<Object> input = new ArrayList<>();
         String spoon =scan.nextLine();
         while(spoon.charAt(0)==ignore_lines_starting_with)
@@ -36,17 +37,19 @@ public class TALinputs {
             String [] vals = spoon.split(" ");
             if(num==vals.length) {
                 if(type.equals("int")) {
+
                     for(int i=0;i<num;i++) {
                         input.add(Integer.parseInt(vals[i]));
                     }
+
                 }
 
-                if(type.equals("string")) {
+                else if(type.equals("string")) {
                     for(int i=0;i<num;i++) {
                         input.add(vals[i]);
                     }
                 }
-                if(type.equals("float")) {
+                else if(type.equals("float")) {
                     for (int i = 0; i < num; i++) {
                         input.add(Float.parseFloat(vals[i]));
                     }

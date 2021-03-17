@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class Env {
     private Map<String, Object> item = new HashMap<>();
-    private Map<String, String> environment_variables = new HashMap<>();
+    private Map<String, String> environment_variables = System.getenv();
     private String meta_data = System.getenv("TAL_META_DIR");
     private String problem = "";
     private String service = "";
@@ -62,7 +62,7 @@ public class Env {
 
     public Object ENV(String var) {
         for (Map.Entry<String, Object> entry : item.entrySet()) {
-            if (entry.getKey().equals(var)) {
+            if (entry.getKey().equalsIgnoreCase(var)) {
                 return entry.getValue();
             }
         }
