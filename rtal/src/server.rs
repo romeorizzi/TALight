@@ -143,7 +143,7 @@ fn main() {
                                             }
                                         }
                                     } else {
-                                        fail!("[{}] Cannot read file system", address);
+                                        fail!("[{}] Cannot open directory {:?}", address, &directory);
                                     }
                                     Command::ListResponse(dirs)
                                 }
