@@ -46,10 +46,7 @@ public class sum_and_product_server {
             List<String> carFormat = new ArrayList<>();
             carFormat.add("bold");
             TAc.print("? "+sum +" "+ prod,"yellow",carFormat,null);
-            spoon = scan.nextLine();
-            while(spoon.charAt(0)=='#') {
-                spoon=scan.nextLine();
-            }
+
             List<Object> vars=new ArrayList<>();
             vars=TALinput.TALinput("int",2,TAc);
             int a=(int)vars.get(0);
