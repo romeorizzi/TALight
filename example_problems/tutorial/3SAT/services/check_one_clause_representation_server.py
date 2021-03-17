@@ -1,22 +1,30 @@
 #!/usr/bin/env python3
+from sys import stderr, exit, argv
+import re
+import itertools
+
+from multilanguage import Env, Lang, TALcolors
+
+import SAT_lib
 
 # METADATA OF THIS TAL_SERVICE:
 problem = "3SAT"
 service = "check_one_clause_representation"
 args_list = [
-    ('clause', str),
-    ('representing_formula', str),
+    ('C', str),
+    ('f', str),
+    ('goal', str),
     ('lang', str),
     ('ISATTY', bool),
 ]
 
-from sys import stderr, exit, argv
-import SAT_lib
-from multilanguage import Env, Lang, TALcolors
-import re
-import itertools
+ENV =Env(problem, service, args_list)
+TAc =TALcolors(ENV)
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+TAc.print(LANG.opening_msg, "green")
 
-
+# START CODING YOUR SERVICE: 
+    
 def valid_cnf_string(string, regex):
     matches = re.match(regex,
                        string)
@@ -85,31 +93,25 @@ def check_equivalence(cnf1, cnf2):
                 print("DA RIVEDERE COME DA CASI SOPRA!!!")
                 exit(1)
     TAc.print("\n# Congratulation!!!", "green")
-    print("Your 3CNF offers a faithful representation of your clause in the sense that the following property holds for every truth assignment x* for the x variables: the clause evaluates to true under x* iif there exists a truth assignment y* of the y variables such that the 3CNF evaluates to true under (x*,y*).")
+    print("Your 3CNF f offers a faithful representation of your clause C in the sense that the following property holds for every truth assignment x* for the x variables: C evaluates to true under x* iif there exists a truth assignment y* of the y variables such that f evaluates to true under (x*,y*).")
 
 
-ENV = Env(problem, service, args_list)
-TAc = TALcolors(ENV)
-LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-if not ENV['silent']:
-    TAc.print(LANG.opening_msg, "green")
-
-if (ENV['clause'] == 'lazy_input'):
+if (ENV['C'] == 'lazy_input'):
     TAc.print("\n# Insert clause:", "green")
     clause = input()
     if (not valid_cnf_string(clause, '^\s*\(\s*(\s*!?\s*(x)[1-9])(\s*or\s*!?\s*(x)[1-9])*\s*\)\s*$')):
         exit(1)
 else:
-    clause = ENV['clause']
+    clause = ENV['C']
 
-if (ENV['representing_formula'] == 'lazy_input'):
+if (ENV['f'] == 'lazy_input'):
     TAc.print("\n# Insert the representing formula:", "green")
     representing_formula = input()
     if (not valid_cnf_string(representing_formula,
                              '^\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*')):
         exit(1)
 else:
-    representing_formula = ENV['representing_formula']
+    representing_formula = ENV['f']
 
 cnf1 = SAT_lib.to_cnf(clause)
 cnf2 = SAT_lib.to_cnf(representing_formula)

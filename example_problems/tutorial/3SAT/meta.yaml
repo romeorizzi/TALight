@@ -1,31 +1,39 @@
 public_folder: public
 services:
   check_one_clause_representation:
-#    explain: "can you represent a generic clause on a boolean variables vector x as a 3CNS formula on the same x and on an auxiliary y such that for every assigniment x* to x the clause evaluates true iff there exists an assigniment y* to y so that the 3CNF evaluats true for (x*,y*)?"
+    explain: "can you represent a generic clause C on a vector x of k boolean variables as an h-CNF f on the same x and on an auxiliary boolean vector y so that, for every assignment x* to x, the clause C evaluates true iff there exists an assigniment y* to y so that the CNF evaluats true for (x*,y*)?"
     evaluator: [python, services/check_one_clause_representation_server.py]
     args:
-      clause: 
+      C: 
         regex: ^(\s*\(\s*(\s*!?\s*(x)[1-9])(\s*or\s*!?\s*(x)[1-9])*\s*\)\s*|lazy_input)$
-        explain: a disjunctive clause
+        explain: a disjunctive clause on k literals (k<=9)
         example: (x1 or ! x3 or x5 or !x6)
         default: lazy_input
-      representing_formula: 
+      f: 
         regex: ^(\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*|lazy_input)$
-        explain: a 3CNF foromula on variables x1, x2, ... and y1, y2, ... 
-        example: (x1 or ! x3 or y1) and ( y1 or x5 or !x6) and (!x1 or !y1)
+        explain: an h-CNF formula on variables x1, x2, ... and y1, y2, ... 
+        example: (x1 or ! x3 or y1) and ( y1 or x5 or !x6 or x8) and (!x1 or !y1)
         default: lazy_input
+      goal:
+        regex: ^(any|h_smaller_than_k|h_is_3)$
+        default: h_is_3
       lang:
         regex: ^(en|it)$
         default: it
   check_f_representation:
+    explain: "can you represent a generic CNF f on a vector x of boolean variable as a 3-CNF f_3 on the same x and on an auxiliary boolan vector y such that, for every assignment x* to x, the CNF f evaluates true iff there exists an assigniment y* to y so that the 3CNF evaluats true for (x*,y*)?"
     evaluator: [python, services/check_f_representation_server.py]
     args:
-      f_k: 
+      f: 
         regex: ^(\s*\(\s*(\s*!?\s*x[1-9])(\s*or\s*!?\s*x[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*x[1-9])(\s*or\s*!?\s*x[1-9])*\s*\))*\s*|lazy_input)$
         default: lazy_input
+        explain: a CNF formula on variables x1, x2, ...  
+        example: (x1 or ! x3 or y1) and ( y1 or x5 or !x6 or x8) and (!x1 or !y1)
       f_3: 
         regex: ^(\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*|lazy_input)$
         default: lazy_input
+        explain: a 3-CNF formula on variables x1, x2, ...  
+        example: (x1 or ! x3 or y1) and ( y1 or ! x3 or !x5) and (!x1 or !y1)
       lang:
         regex: ^(en|it)$
         default: it
