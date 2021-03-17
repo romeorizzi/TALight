@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class sum_and_product_server {
     public static void main(String[] args) {
+        TALinputs TALinput = new TALinputs();
         String problem = "sum";
         String service= "sum_and_product";
         Map<String,String>args_list=new HashMap<>();
@@ -49,8 +50,10 @@ public class sum_and_product_server {
             while(spoon.charAt(0)=='#') {
                 spoon=scan.nextLine();
             }
-            int a = Integer.parseInt(spoon.split(" ")[0]);
-            int b = Integer.parseInt(spoon.split(" ")[1]);
+            List<Object> vars=new ArrayList<>();
+            vars=TALinput.TALinput("int",2,TAc);
+            int a=(int)vars.get(0);
+            int b= (int)vars.get(1);
             gen_new_pair = false;
             if (a+b > x+y)
                 System.out.println("No! indeed,"+a+ "+"+b+"="+(a+b)+">"+(x+y)+".");

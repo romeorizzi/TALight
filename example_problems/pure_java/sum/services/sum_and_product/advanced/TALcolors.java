@@ -20,7 +20,9 @@ public class TALcolors {
     private String colors = "";
 
     String colored_print = System.getenv("ISATTY");
+    public TALcolors() {
 
+    }
     public void print(String msg_text, String color, List<String> characterFormats, String end) {
         colorOption co = new colorOption();
         if (characterFormats != null)

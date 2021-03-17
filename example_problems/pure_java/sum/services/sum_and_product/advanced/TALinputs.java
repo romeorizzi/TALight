@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication17;
+
 
 /**
  *
@@ -11,47 +11,57 @@ package javaapplication17;
  */
 import java.util.Scanner;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class sum_and_product_server {
+public class TALinputs {
+
     Scanner scan = new Scanner(System.in);
-    public Object try_to_convert(Object tk,Object tk_type,String regex) {
-       
-        
-        if (tk_type instanceof Integer)
-          return (Integer)tk;
-            
-        else  if (tk_type instanceof Float)
-                return (Float)tk;
-        else  if (tk_type instanceof String) {
-            if((tk.toString().toUpperCase().equals("END")))
-                return "end";
-            Matcher matcher = Pattern.compile(regex).matcher(regex);
-            boolean matched=matcher.matches();
-            if(matched)
-                return true;
-            else
-                return null;
+    private char ignore_lines_starting_with='#';
+
+    public List<Object> TALinput(String type,int num,TALcolors TAc) {
+        List<Object> input = new ArrayList<>();
+        String spoon =scan.nextLine();
+        while(spoon.charAt(0)==ignore_lines_starting_with)
+            spoon = scan.nextLine();
+
+
+        if(spoon.length()==0) {
+            System.out.println("You have entered an unexpected empty line. I assume you want to drop this TALight service call. See you next time ;))");
+            System.exit(0);
         }
-        else {
-           System.out.println("Internal error (please, report it to the problem maker): the TALinputs library does not support the " +tk_type +"token type. The problem maker should either extend the library or adapt to it.");     
-        }  System.exit(1);
-        return null;   
-    }
-    public void TALinput() {
-        while(true) {
-            char ignore_lines_starting_with='#';
-            String spoon = scan.nextLine();
-            if(spoon.length()==0) {
-               System.out.println("You have entered an unexpected empty line. I assume you want to drop this TALight service call. See you next time ;))");
-               System.exit(0);
+
+        if(spoon.charAt(0)!=ignore_lines_starting_with) {
+            String [] vals = spoon.split(" ");
+            if(num==vals.length) {
+                if(type.equals("int")) {
+                    for(int i=0;i<num;i++) {
+                        input.add(Integer.parseInt(vals[i]));
+                    }
+                }
+
+                if(type.equals("string")) {
+                    for(int i=0;i<num;i++) {
+                        input.add(vals[i]);
+                    }
+                }
+                if(type.equals("float")) {
+                    for (int i = 0; i < num; i++) {
+                        input.add(Float.parseFloat(vals[i]));
+                    }
+                }
+                else {
+                    TAc.print(type + "is not supported","red",null,null);
+                }
             }
-            if(spoon.charAt(0)!=ignore_lines_starting_with)
+            else {
+                TAc.print("the number of parameter that I expected is not equal to your number of parameters","red",null,null);
+            }
         }
+        return input;
     }
-    }
+}
     /*
    
 
