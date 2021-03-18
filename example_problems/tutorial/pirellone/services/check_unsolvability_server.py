@@ -2,7 +2,7 @@
 
 # METADATA OF THIS TAL_SERVICE:
 problem="pirellone"
-service="check_counterexample"
+service="check_unsolvability"
 args_list = [
     ('goal',str),
     ('lang',str),

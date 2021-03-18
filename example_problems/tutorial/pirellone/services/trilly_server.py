@@ -2,7 +2,7 @@
 
 # METADATA OF THIS TAL_SERVICE:
 problem="pirellone"
-service="check_sol"
+service="trilly"
 args_list = [
     ('size',str),
     ('num_calls',int),
