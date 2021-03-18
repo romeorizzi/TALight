@@ -159,30 +159,39 @@ Open a terminal and place yourself in the directory containing the `rtal` execut
 ls -l rtal*
 ```
 
-then you should see the binary (on Windows it should be `rtal.exe` while on Linux and Mac it should be just `rtal`) and a summary of data about the file, including its permissions (if on Linux or Mac, in Windows the permissions are not included in the file but rather attached to them). In the following, we assume the binary has execution permission.
+then you should see the binary and a summary of data about the file, including its permissions (if on Linux or Mac, in Windows the permissions are not included in the file but rather attached to them). In the following, we assume the binary has execution permission.
+The name of the binary will be `rtal` on Unix/Linux/Mac and `rtal.exe` on Windows (note: in the case of Windows the name of the binary when you make it is simply `rtal` like for the Unix based systems, but if you download it like explained here, then it is `rtal.exe` since you have been told that downloading it is not the first option and therefore, if you have taken this path, then you are likely to be either an unexprienced user or an user with no rights on his machine and end up in a "protected user" category).
 
-You can check it works by issuing:
+You can check the binary works by issuing:
 
 ```bash
 ./rtal --help
 ```
 
-At this point we suggest you to make this binary accessible by creating (if not already existing) `.bin` subfolder of your home folder, place a symbolic link to the binary from these, and adding this folder into your PATH environment variable.
+or
 
-Alcune cosette che devo ricontrollare su Windows:
 ```bash
+./rtal.exe --help
+```
 
-da terminale con bash devo scrivere  rtal oppure rtal.exe  ? 
+if you are on Windows and want to operate the downloaded binary.
 
-.bashrc works on windows? (mi pareva di sì ma da ricontrollare)
+At this point we suggest you to make this binary accessible also from other directories by creating (if not already existing) a `.bin` subfolder of your home folder, place a symbolic link to the binary from `.bin`, and adding this folder into your PATH environment variable editing the `~/.bashrc` file. If you are on Windows and could not install git with the Git Bash or any other shell, then you can update your PATH environment variable from a GUI of Windows. You can easily find instructions on how this goes in internet, the GUI interface depends on the version of Windows but the syntax remains the same from version to version of Windows.
+To get the syntax that works you can then try it first from the CMD. Be told that the syntax you are using it is different frmm that you will b using from a shell like bash. In particular:  
 
-E comunque:
+1. the separator of the the various paths listed within the `PATH` variable is `;` rather than `:`
 
-Attenzione al separatore diverso (; invece di :) ed all oscena possibilità di usare spazi:
+2. you use spaces without escaping them with `\`)
 
-SET "PATH=%PATH%;C:\Program Files\AzCopy"
+3. to refer to the current value of `PATH` (or any other environment variable) you write `%PATH%` rather than `$PATH`
+   So, for example, you could end up writing something like:
+```
+    SET "PATH=%PATH%;C:\Program Files\TAlight"
+```
 
-Like the browsers in parsing the URL field, Linux and Mac use '/' rather than '\' in order to separate the names of the directoris when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
+However, we suggest you to create the `TAlight` folder (where to place the `rtal` binary) in your home folder (you can find it with `cd %HOME%` or just `cd ~`).
+
+Like the browsers in parsing the URL field, any shell (and hence Linux and Mac) use '/' rather than '\' in order to separate the names of the directories when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
 
 DESCRIPTION SHORT:
 You have to put your .exe file's path into enviroment variable path. To do this go to:
@@ -563,7 +572,7 @@ ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
 ln -s ~/TAlight/TAL_utils/problem_solver/TA_send_txt_file.py ~/.bin/ 
 ```
 
-Then, (for Unix/Linux/Mac) add the following lines at the end of your `~/.bashrc` file.
+Then, (assuming you have the shell; for sure you have on Unix/Linux/Mac and also on Windows if you correctly installed `git` with the `Git Bash`) add the following lines at the end of your `~/.bashrc` file.
 
 ```bash
 export PATH="$PATH:$HOME/.bin"
@@ -576,7 +585,7 @@ If you want older terminals to get the update then you can issue from them the c
 source .bashrc
 ```
 
-For those with Windows, add the path `~/.bin` to your `PATH` environment variable. And also introduce a new environment variable `TAL_HOME` defined in analogy to what explicitly shown above for Unix/Linux/Mac.
+For those with Windows and without the shell, add the path `~/.bin` to your `PATH` environment variable. And also introduce a new environment variable `TAL_HOME` defined in analogy to what explicitly shown above for Unix/Linux/Mac. (Instructions on how these things should then be done are contained in the section with the instructions on how to just download the binaries).
 
 </details>
 
