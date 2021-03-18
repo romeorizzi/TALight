@@ -1,7 +1,7 @@
 public_folder: public
 services:
   play:
-    evaluator: [python, services/make_triangular/simple/make_triangular_server.py]
+    evaluator: [python, services/make_triangular/python/simple/make_triangular_server.py]
     args:
       lang:
         regex: ^(hardcoded|en|it)$
@@ -22,14 +22,3 @@ services:
 6. Dati G4' e  G3, un edge-coloring di G3, ottenere una 4-colorazione delle facce del planar embedding di G3 tale che ogni due facce adiacenti abbiano colore diverso. (Come sopra, usiamo i nodi di G4' come nomi delle facce nel planar embedding di G3). (il server lo fà | il server lo verifica)
 
 7. Dati G4' e  G3, un edge-coloring di G3, ottenere una 4-colorazione di G4'
-
-  synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
-    args:
-      service:
-        regex: ^((\S)+)$
-        default: synopsis
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-

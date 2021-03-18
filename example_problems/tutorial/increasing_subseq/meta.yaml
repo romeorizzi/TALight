@@ -13,7 +13,7 @@ services:
         regex: ^(0|1)$
         default: 1	      #explain: "underline the subsequence as evidence of positive answers"
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_subseq:
     evaluator: [python, services/eval_subseq_server.py]
@@ -40,7 +40,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_longest_subseq:
     evaluator: [python, services/eval_longest_subseq_server.py]
@@ -52,13 +52,13 @@ services:
         regex: ^(0|1|2)$
         default: 1
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
       YES_cert:
         regex: ^(0|1)$
         default: 1	#explain: "the evaluated bot is required to also output a certificate on every YES-instance"
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   check_num_occurrences_of_s_in_T:    #explain: checks the number of different ways s occurs in T
     evaluator: [python, services/eval_subseq_server.py]
@@ -78,7 +78,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_num_occurrences_of_s_in_T:
     evaluator: [python, services/eval_num_subseq_server.py]
@@ -88,7 +88,7 @@ services:
 #        default: 0
         default: 1000000007
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   check_longest_increasing_subseq:
     evaluator: [python, services/check_longest_increasing_subseq_server.py]
@@ -113,7 +113,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_longest_increasing_subseq:
     evaluator: [python, services/eval_longest_increasing_subseq_server.py]
@@ -125,7 +125,7 @@ services:
         regex: ^(0|1|2)$
         default: 1
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
 # BEGIN: competenza gestione sottosequenze diverse di una stessa sequenza
 #        può avere senso come un esercizio a parte (di programmazione) 
@@ -136,7 +136,7 @@ services:
         regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
         default: yes_no
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
 # può avere senso come esercizio di programmazione, può essere accoppiato al successivo 
   check_subseq_list:
@@ -149,7 +149,7 @@ services:
         regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
         default: yes_no
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   check_next_subseq_gen:
     evaluator: [python, services/check_next_subseq_gen_server.py]
@@ -165,7 +165,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_next_subseq_gen:
     evaluator: [python, services/eval_next_subseq_gen_server.py]
@@ -174,7 +174,7 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   check_rank_of_subseq:
     evaluator: [python, services/check_rank_of_subseq.py]
@@ -185,7 +185,7 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   check_subseq_of_rank:
     evaluator: [python, services/check_subseq_of_rank.py]
@@ -198,7 +198,7 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_rank_of_subseq:
     evaluator: [python, services/eval_rank_of_subseq.py]
@@ -207,7 +207,7 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_subseq_of_rank:
     evaluator: [python, services/eval_subseq_of_rank.py]
@@ -216,7 +216,7 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
 # END: competenza gestione sottosequenze diverse di una stessa sequenza
   synopsis:
@@ -226,6 +226,6 @@ services:
         regex: ^((\S)+)$
         default: synopsis
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
 

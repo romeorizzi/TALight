@@ -18,7 +18,7 @@ services:
         regex: ^(any|h_smaller_than_k|h_is_3)$
         default: h_is_3
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   check_f_representation:
     explain: "can you represent a generic CNF f on a vector x of boolean variable as a 3-CNF f_3 on the same x and on an auxiliary boolan vector y such that, for every assignment x* to x, the CNF f evaluates true iff there exists an assigniment y* to y so that the 3CNF evaluats true for (x*,y*)?"
@@ -35,7 +35,7 @@ services:
         explain: a 3-CNF formula on variables x1, x2, ...  
         example: (x1 or ! x3 or y1) and ( y1 or ! x3 or !x5) and (!x1 or !y1)
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_f_rep:
     evaluator: [python, services/eval_f_rep_server.py]
@@ -47,7 +47,7 @@ services:
         regex: ^(tiny|small|medium|large)$
         default: small
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -56,6 +56,6 @@ services:
         regex: ^((\S)+)$
         default: synopsis
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
 

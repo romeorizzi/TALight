@@ -22,7 +22,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   sub_closure:
     explain: "You are asked to prove that a 0/1-matrix containing a bad 0/1-submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/cololum operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us."
@@ -40,7 +40,7 @@ services:
         regex: ^(any|min)$
         default: min
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   check_unsolvable:
     evaluator: [python, services/check_counterexample_server.py]
@@ -52,7 +52,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   check_sol:
     evaluator: [python, services/check_sol_server.py]
@@ -64,7 +64,7 @@ services:
         regex: ^(seq|subset)$
         default: seq
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   eval_solve:
     evaluator: [python, services/eval_solve_server.py]
@@ -76,7 +76,7 @@ services:
         regex: ^(0|1)$
         default: 1
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   trilly:
     evaluator: [python, services/eval_solve_server.py]
@@ -90,7 +90,7 @@ services:
         regex: ^(smaller_m|smaller_n|smaller_m_and_n)$
         default: smaller_m
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -99,6 +99,6 @@ services:
         regex: ^((\S)+)$
         default: synopsis
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
 

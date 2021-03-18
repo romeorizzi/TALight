@@ -7,7 +7,7 @@ services:
         regex: ^([1-9][0-9]{0,3}|1000)$
         default: 20
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   rationals_are_dense_into_reals:
     evaluator: [python, services/archimede/simple/archimede_server.py]
@@ -16,7 +16,7 @@ services:
         regex: ^([1-9][0-9]{0,3}|1000)$
         default: 10
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   archimede:
     evaluator: [python, services/archimede/simple/archimede_server.py]
@@ -25,7 +25,7 @@ services:
         regex: ^([1-9][0-9]{0,3}|1000)$
         default: 10
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -34,6 +34,6 @@ services:
         regex: ^((\S)+)$
         default: synopsis
       lang:
-        regex: ^(en|it)$
+        regex: ^(hardcoded|en|it)$
         default: it
 
