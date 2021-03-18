@@ -11,7 +11,7 @@ args_list = [
 ]
 
 from sys import stderr, exit, argv
-from random import randrange
+import random
 import copy
 import pirellone_lib as pl
 from TALinputs import TALinput
@@ -27,15 +27,20 @@ TAc.print(LANG.opening_msg, "green")
 n=ENV['n'] 
 m=ENV['m'] 
 
-TAc.print("Instance: ", "yellow", ["bold"])
-pirellone0=pl.random_pirellone(10, 10, solvable=True)
+TAc.print(f"Instance {n}x{m}: ", "yellow", ["bold"])
+pirellone0=pl.random_pirellone(n, m, solvable=True)
+pirellone1=copy.deepcopy(pirellone0)
 pl.print_pirellone(pirellone0)
-pirellone=[[0 for j in range(0,m)] for i in range(0,n)]
-for i in range(0,n):
-    for j in range(0,m):
+TAc.print("Solution of the instance: ", "yellow", ["bold"])
+pl.stampa_lista(pl.soluzione_min(pirellone1,n,m))
+sub_n=random.randint(2, n-1)
+sub_m=random.randint(2, n-1)
+pirellone=[[0 for j in range(0,sub_m)] for i in range(0,sub_n)]
+for i in range(0,sub_n):
+    for j in range(0,sub_m):
         pirellone[i][j]=pirellone0[i][j]
 
-TAc.print(f"Solution of the submatrix {n}x{m} : ", "yellow", ["bold"])
+TAc.print(f"Solution of the submatrix {sub_n}x{sub_m} : ", "yellow", ["bold"])
 solu=input()
 solu=solu.split()
 pl.off_lista(pirellone,solu,TAc,LANG)

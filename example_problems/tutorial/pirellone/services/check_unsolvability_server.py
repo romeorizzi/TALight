@@ -34,23 +34,23 @@ if n!=len(p) or m!=len(p[0]):
     TAc.print("NOT RIGHT DIMENSION", "red", ["bold"])
     exit(0)
 
-if ENV['goal']=='minimal':
+if ENV['goal']=='minimum' or ENV['goal']=='any':
     if m>2 or n>2:
         TAc.NO() 
-        TAc.print("Not minimal", "red", ["bold"])
+        TAc.print("Not minimum matrix", "red", ["bold"])
     else:
         if pl.is_solvable(p, n, m):
             TAc.NO() 
             TAc.print("Solvable!", "red", ["bold"])
         else:
             TAc.OK()
-            TAc.print("Correct: not solvable and minimal", "green", ["bold"])
+            TAc.print("Correct: not solvable and minimum", "green", ["bold"])
 else:
     if pl.is_solvable(p, n, m):
             TAc.NO() 
             TAc.print("Solvable!", "red", ["bold"])
     else:
         TAc.OK()
-        TAc.print("Correct but not minimal", "green", ["bold"])
+        TAc.print("Correct but not minimum", "green", ["bold"])
     
 exit(0)
