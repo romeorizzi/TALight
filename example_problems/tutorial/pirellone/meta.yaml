@@ -63,8 +63,8 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  eval_solve:
-    evaluator: [python, services/eval_solve_server.py]
+  eval_sol:
+    evaluator: [python, services/eval_sol_server.py]
     args:
       size:
         regex: ^(small|medium|large)$
@@ -76,16 +76,14 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   trilly:
-    evaluator: [python, services/eval_solve_server.py]
+    evaluator: [python, services/trilly_server.py]
     args:
       size:
         regex: ^(small|medium|large|huge|unbearable)$
+        default: medium
       num_calls:
-        regex: ^([1-5]|any)$
-        default: 1
-      type_calls:
-        regex: ^(smaller_m|smaller_n|smaller_m_and_n)$
-        default: smaller_m
+        regex: ^([1-9]{0,1})$
+        default: 2
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
