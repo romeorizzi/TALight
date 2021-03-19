@@ -1,23 +1,20 @@
 public_folder: public
 services:
   compact_solution:
-    explain: "We give you a 0/1-matrix and a sequence of swich row/cololum operations that eventually lead to the all 0 matrix. You are required to shorten this sequence."
+    #explain: "We give you a 0/1-matrix and a sequence of switch rows/columns operations that eventually lead to the all 0 matrix. You are required to shorten this sequence."
     evaluator: [python,services/compact_solution_server.py]
     args:
       m:
-        regex: ^([1-9][0-9]{0,1}|100)$
+        regex: ^([1-9][0-9]{0,1})$
         default: 4
-        explain: "number of rows of the pirellone"
+        #explain: "number of columns of the pirellone."
       n:
-        regex: ^([1-9][0-9]{0,1}|100)$
+        regex: ^([1-9][0-9]{0,1})$
         default: 4
-        explain: "number of columns of the pirellone"
+        #explain: "number of rows of the pirellone."
       goal:
         regex: ^(m_plus_n|m_plus_n_half|min)$
         default: m_plus_n
-      verbose:
-        regex: ^(0|1)$
-        default: 0
       please_do_it_for_me:
         regex: ^(0|1)$
         default: 0
@@ -25,49 +22,49 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   sub_closure:
-    explain: "You are asked to prove that a 0/1-matrix containing a bad 0/1-submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/cololum operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us."
+    #explain: "You are asked to prove that a 0/1-matrix containing a bad 0/1-submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/cololum operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us."
     evaluator: [python, services/sub_closure_server.py]
     args:
       m:
-        regex: ^([1-9][0-9]{0,1}|100)$
-        default: 3
-        explain: "number of rows of the big matrix"
+        regex: ^([1-9][0-9]{0,1})$
+        default: 10
+        #explain: "number of rows of the big matrix"
       n:
-        regex: ^([1-9][0-9]{0,1}|100)$
-        default: 3
-        explain: "number of columns of the big matrix"
+        regex: ^([1-9][0-9]{0,1})$
+        default: 10
+        #explain: "number of columns of the big matrix"
       goal:
         regex: ^(any|min)$
         default: min
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_unsolvable:
-    evaluator: [python, services/check_counterexample_server.py]
+  check_unsolvability:
+    evaluator: [python, services/check_unsolvability_server.py]
     args:
       goal:
         regex: ^(any|minimal|minimum)$
         default: any
-      gimme_unsolvable_submatrix:
-        regex: ^(0|1)$
-        default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_sol:
+    #explain:"You can check a solution of a random or your instance."
     evaluator: [python, services/check_sol_server.py]
     args:
       instance:
         regex: ^(my|any)$
         default: any
+        #explain:"My: i give my instace, any: random instance."
       coding:
         regex: ^(seq|subset)$
         default: seq
+        #explain:"seq: list of commands for example r1 c3 r4, subset is two string of 1,0 that indicate which switch is on or off. "
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  eval_solve:
-    evaluator: [python, services/eval_solve_server.py]
+  eval_sol:
+    evaluator: [python, services/eval_sol_server.py]
     args:
       size:
         regex: ^(small|medium|large)$
@@ -79,16 +76,14 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   trilly:
-    evaluator: [python, services/eval_solve_server.py]
+    evaluator: [python, services/trilly_server.py]
     args:
       size:
         regex: ^(small|medium|large|huge|unbearable)$
+        default: medium
       num_calls:
-        regex: ^([1-5]|any)$
-        default: 1
-      type_calls:
-        regex: ^(smaller_m|smaller_n|smaller_m_and_n)$
-        default: smaller_m
+        regex: ^([1-9]{0,1})$
+        default: 2
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
