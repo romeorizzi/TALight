@@ -38,6 +38,9 @@ services:
         regex: ^([1-9][0-9]{0,10})$
 #        default: 0
         default: 1000000007
+      goal:
+        regex: ^(correct|fast|low_memory)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -84,6 +87,9 @@ services:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
+      goal:
+        regex: ^(correct|fast)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -98,8 +104,8 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_sol_of_rank:
-    evaluator: [python, services/check_sol_of_rank.py]
+  check_unrank:
+    evaluator: [python, services/check_unrank.py]
     args:
       num_pairs:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -117,15 +123,21 @@ services:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
+      goal:
+        regex: ^(correct|fast)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  eval_sol_of_rank:
-    evaluator: [python, services/eval_sol_of_rank.py]
+  eval_unrank:
+    evaluator: [python, services/eval_unrank.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
+      goal:
+        regex: ^(correct|fast)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
