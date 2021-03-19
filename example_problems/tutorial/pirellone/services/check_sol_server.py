@@ -20,20 +20,21 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
-TAc.print("Rows:", "yellow", ["bold"])
+TAc.print(LANG.render_feedback("insert-num-rows", 'Insert num rows:'), "yellow", ["bold"])
 n=int(input())
-TAc.print("Columns:", "yellow", ["bold"])
+TAc.print("Insert num columns:", "yellow", ["bold"])
 m=int(input())
 
-if ENV['instance']=='any':
+if ENV['instance']=='random':
     TAc.print("Istance: ", "yellow", ["bold"])
     pirellone=pl.random_pirellone(n, m, solvable=True)
     pl.print_pirellone(pirellone)
-elif ENV['instance']=='my':
+elif ENV['instance']=='mine':
     TAc.print("Instance to check:", "yellow", ["bold"])
     pirellone=[]
-    for i in range(0,n):
-        row = list(map(int,input().strip().split()))[:n] 
+    for i in range(n):
+        row = TALinput(bool, num_tokens=m)
+        #row = list(map(int,input().strip().split()))[:m] 
         pirellone.append(row)   
 
 if ENV['coding']=='seq':
