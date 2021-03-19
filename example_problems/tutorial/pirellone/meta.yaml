@@ -1,17 +1,17 @@
 public_folder: public
 services:
   compact_solution:
-    #explain: "We give you a 0/1-matrix and a sequence of switch rows/columns operations that eventually lead to the all 0 matrix. You are required to shorten this sequence."
+    explain: "We give you a 0/1-matrix and a sequence of switch rows/columns operations that eventually lead to the all 0 matrix. You are required to shorten this sequence."
     evaluator: [python,services/compact_solution_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
-        #explain: "number of columns of the pirellone."
+        explain: "Number of rows of the pirellone."
       n:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
-        #explain: "number of rows of the pirellone."
+        explain: "Number of columns of the pirellone."
       goal:
         regex: ^(m_plus_n|m_plus_n_half|min)$
         default: m_plus_n
@@ -22,17 +22,17 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   sub_closure:
-    #explain: "You are asked to prove that a 0/1-matrix containing a bad 0/1-submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/cololum operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us."
+    explain: "You are asked to prove that a 0/1-matrix containing a bad 0/1-submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/cololum operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us."
     evaluator: [python, services/sub_closure_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 10
-        #explain: "number of rows of the big matrix"
+        explain: "Number of rows of the big matrix."
       n:
         regex: ^([1-9][0-9]{0,1})$
         default: 10
-        #explain: "number of columns of the big matrix"
+        explain: "Number of columns of the big matrix."
       goal:
         regex: ^(any|min)$
         default: min
@@ -41,6 +41,7 @@ services:
         default: it
   check_unsolvability:
     evaluator: [python, services/check_unsolvability_server.py]
+    eplain: "You have to insert a matrix that you think is unsolvable."
     args:
       goal:
         regex: ^(any|minimal|minimum)$
@@ -49,17 +50,20 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_sol:
-    #explain:"You can check a solution of a random or your instance."
+    explain: "You can check a solution of yours for an instance (yours or generated at random)."
     evaluator: [python, services/check_sol_server.py]
     args:
       instance:
-        regex: ^(my|any)$
-        default: any
-        #explain:"My: i give my instace, any: random instance."
+        regex: ^(mine|random)$
+        default: random
+        explain: "Mine: i give my instace, random: random instance."
+      seed:
+        regex: ^(\d{3,8})$
+        default: 000
       coding:
         regex: ^(seq|subset)$
         default: seq
-        #explain:"seq: list of commands for example r1 c3 r4, subset is two string of 1,0 that indicate which switch is on or off. "
+        explain: "seq: list of commands for example r1 c3 r4, subset is two string of 1,0 that indicate which switch is on or off. "
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

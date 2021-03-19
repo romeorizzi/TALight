@@ -3,8 +3,8 @@
 problem="pirellone"
 service="sub_closure"
 args_list = [
-    ('n',int), 
-    ('m',int),
+    ('m',int), 
+    ('n',int),
     ('goal',str),
     ('lang',str),
     ('ISATTY',bool),
@@ -24,20 +24,20 @@ TAc.print(LANG.opening_msg, "green")
 # START CODING YOUR SERVICE: 
 
 
-n=ENV['n'] 
 m=ENV['m'] 
+n=ENV['n'] 
 
-TAc.print(f"Instance {n}x{m}: ", "yellow", ["bold"])
-pirellone0=pl.random_pirellone(n, m, solvable=True)
+TAc.print(f"Instance {m}x{n}: ", "yellow", ["bold"])
+pirellone0=pl.random_pirellone(m, n, solvable=True)
 pirellone1=copy.deepcopy(pirellone0)
 pl.print_pirellone(pirellone0)
 TAc.print("Solution of the instance: ", "yellow", ["bold"])
-pl.stampa_lista(pl.soluzione_min(pirellone1,n,m))
+pl.stampa_lista(pl.soluzione_min(pirellone1,m,n))
 sub_n=random.randint(2, n-1)
-sub_m=random.randint(2, n-1)
-pirellone=[[0 for j in range(0,sub_m)] for i in range(0,sub_n)]
-for i in range(0,sub_n):
-    for j in range(0,sub_m):
+sub_m=random.randint(2, m-1)
+pirellone=[[0 for j in range(0,sub_n)] for i in range(0,sub_m)]
+for i in range(0,sub_m):
+    for j in range(0,sub_n):
         pirellone[i][j]=pirellone0[i][j]
 
 TAc.print(f"Solution of the submatrix {sub_n}x{sub_m} : ", "yellow", ["bold"])
