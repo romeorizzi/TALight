@@ -3,8 +3,9 @@ services:
   check_one_sol:
     evaluator: [python, services/check_one_sol_server.py]
     args:
-      input_sol:
-        regex:  ^(I|H){0,1000}$
+      input_formula:
+        regex: ^(\[|\]|\w|-){0,1000}$
+        example: "[][][--][]"
       silent:
         regex: ^(0|1)$
         default: 0
@@ -14,10 +15,12 @@ services:
   check_num_sol:
     evaluator: [python, services/check_num_sol_server.py]
     args:
-      num_pills:
+      n:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
+        explain: it allows you to specify the length of the corridor  
       risp:
         regex: ^(0|[1-9][0-9]{0,50})$
+        explain: it allows you to specify your conjectured answer  
       ok_if_congruent_modulus:
         regex: ^(0|[1-9][0-9]{0,10})$
 #        default: 0
@@ -32,7 +35,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_num_sol:
-    evaluator: [python, services/python/simple/eval_num_sol_server.py]
+    evaluator: [python, services/eval_num_sol_server.py]
     args:
       answ_modulus:
         regex: ^([1-9][0-9]{0,10})$
@@ -45,7 +48,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_sol_set:
-    evaluator: [python, services/python/simple/check_sol_set_server.py]
+    evaluator: [python, services/check_sol_set_server.py]
     args:
       feedback:
         regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
@@ -54,11 +57,11 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_sol_list:
-    evaluator: [python, services/python/simple/check_sol_list_server.py]
+    evaluator: [python, services/check_sol_list_server.py]
     args:
       sorting_criterion:
-        regex: ^(loves_integer_pills|loves_half_pills)$
-        default: loves_integer_pills
+        regex: ^(loves_short_tiles|loves_long_tiles)$
+        default: loves_short_tiles
       feedback:
         regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
         default: yes_no
@@ -66,15 +69,15 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_next_sol_gen:
-    evaluator: [python, services/python/simple/check_next_sol_gen_server.py]
+    evaluator: [python, services/check_next_sol_gen_server.py]
     args:
       current_sol:
-        regex:  ^(I|H){1,1000}$
+        regex:  ^(\(|\)){0,1000}$
       next_sol:
-        regex:  ^(I|H){1,1000}$
+        regex:  ^(\(|\)){0,1000}$
       sorting_criterion:
-        regex: ^(loves_integer_pills|loves_half_pills)$
-        default: loves_integer_pills
+        regex: ^(loves_short_tiles|loves_long_tiles)$
+        default: loves_short_tiles
       tell_maximal_correct_feedback:
         regex: ^(0|1)$
         default: 0
@@ -82,11 +85,11 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_next_sol_gen:
-    evaluator: [python, services/python/simple/eval_next_sol_gen_server.py]
+    evaluator: [python, services/eval_next_sol_gen_server.py]
     args:
       sorting_criterion:
-        regex: ^(loves_integer_pills|loves_half_pills)$
-        default: loves_integer_pills
+        regex: ^(loves_short_tiles|loves_long_tiles)$
+        default: loves_short_tiles
       goal:
         regex: ^(correct|fast)$
         default: correct
@@ -96,24 +99,24 @@ services:
   check_rank_of_sol:
     evaluator: [python, services/check_rank_of_sol.py]
     args:
-      one_solution:
-        regex:  ^(I|H){0,1000}$
+      one_formula:
+        regex:  ^(\(|\)){0,1000}$
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_short_tiles|loves_long_tiles)$
+        default: loves_short_tiles
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_unrank:
     evaluator: [python, services/check_unrank.py]
     args:
-      num_pills:
+      num_pairs:
         regex: ^([1-9][0-9]{0,1}|100)$
       rank:
         regex: ^([1-9]|1[0-9]{0,1}|20)$
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_short_tiles|loves_long_tiles)$
+        default: loves_short_tiles
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -121,8 +124,8 @@ services:
     evaluator: [python, services/eval_rank_of_sol.py]
     args:
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_short_tiles|loves_long_tiles)$
+        default: loves_short_tiles
       goal:
         regex: ^(correct|fast)$
         default: correct
@@ -133,8 +136,8 @@ services:
     evaluator: [python, services/eval_unrank.py]
     args:
       sorting_criterion:
-        regex: ^(dislike_half_pills|dislike_integer_pills)$
-        default: dislike_half_pills
+        regex: ^(loves_short_tiles|loves_long_tiles)$
+        default: loves_short_tiles
       goal:
         regex: ^(correct|fast)$
         default: correct

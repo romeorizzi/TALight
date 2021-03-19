@@ -1,0 +1,16 @@
+Tiles (piastrelle)
+
+Pippo has a corridor of dimensions 1 x N with tiles. He has only tiles with dimensions 1 x 1 and 1 x 2. As this is the corridor for the entrance of his home, he would like it to be the most beautiful possible, therefore he must know all the possible arrangements of the ties he can use to complete the task.
+
+Input file
+The program must read a file called input.txt which has a single integer number N, the size of the corridor.
+
+Output file
+The program must write a file named output.txt. Every of the K lines printed must show a possible arrangement in the following form:
+The tiles 1 x 1 are represented by [O] (Capital letter 'o')
+The tiles 1 x 2 are represented by [OOOO] (Four capital letters 'o')
+The tiles are not separated by any character
+The rows must be in lexicograhic order: first the ones that start with 1 x 1 then those with 1 x 2
+
+Note
+In the first example, Poldo can eat the sandwiches 6, 5, 3 (thus three sanwiches). In teh second example Poldo can eat the sandwiches 9, 8, 5, 4 (frout sandwiches) so that he maintains his diet.
