@@ -67,7 +67,7 @@ class Lang:
                 print("# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue (as long as you can understand the little needed English).\n# (To enjoy a feedback in a supported language install the python package 'ruamel'. The languages supported by a problem service appear as the options for the lang parameter listed by the command `rtal list`)", file=stderr)
         else:
             try:
-              print(f"self.messages_book_file={self.messages_book_file}")
+              #print(f"self.messages_book_file={self.messages_book_file}")
               with open(self.messages_book_file, 'r') as stream:
                 try:
                     yaml_book = ruamel.yaml.safe_load(stream)

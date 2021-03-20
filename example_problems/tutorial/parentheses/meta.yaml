@@ -18,6 +18,7 @@ services:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
       risp:
         regex: ^(0|[1-9][0-9]{0,50})$
+        explain: "what you conjecture to be the number of well-formed formulas on <num_pairs> parentheses"
       ok_if_congruent_modulus:
         regex: ^(0|[1-9][0-9]{0,10})$
 #        default: 0
@@ -40,6 +41,9 @@ services:
         default: 1000000007
       goal:
         regex: ^(correct|fast|low_memory)$
+        default: correct
+      code_lang: 
+        regex: ^(python|java|nodejs|compiled)$
         default: correct
       lang:
         regex: ^(hardcoded|en|it)$
@@ -90,6 +94,9 @@ services:
       goal:
         regex: ^(correct|fast)$
         default: correct
+      code_lang: 
+        regex: ^(python|java|nodejs|compiled)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -126,6 +133,9 @@ services:
       goal:
         regex: ^(correct|fast)$
         default: correct
+      code_lang: 
+        regex: ^(python|java|nodejs|compiled)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -137,6 +147,9 @@ services:
         default: loves_opening_par
       goal:
         regex: ^(correct|fast)$
+        default: correct
+      code_lang: 
+        regex: ^(python|java|nodejs|compiled)$
         default: correct
       lang:
         regex: ^(hardcoded|en|it)$

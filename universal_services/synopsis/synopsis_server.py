@@ -34,13 +34,13 @@ try:
         meta_yaml_book = ruamel.yaml.safe_load(stream)
     except:
         for out in [stdout, stderr]:
-            TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file "{messages_book_file}" could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
+            TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file "{meta_yaml_file}" could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
             print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
             print(ioe, file=out)
         exit(1)
 except IOError as ioe:
     for out in [stdout, stderr]:
-        TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file of the problem {problem} could not be accessed for the required information. The file should have been: {self.messages_book_file}'), "red", ["bold"], file=out)
+        TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file of the problem {problem} could not be accessed for the required information. The file should have been: {meta_yaml_file), "red", ["bold"], file=out)
         print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
         print(ioe, file=out)
     exit(1)
