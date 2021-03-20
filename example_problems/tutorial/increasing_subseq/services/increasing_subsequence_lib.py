@@ -2,6 +2,7 @@
 
 import itertools
 import re
+import random
 
 
 def parse_input(string):
@@ -17,7 +18,6 @@ def remove_duplicate_spaces(T):
     return re.sub(' +', ' ', T)
 
 def is_subseq_with_position(s, T):
-
     pos = []
     c_i = 0
     i = 0
@@ -81,7 +81,67 @@ def ordered_sub_sequences(T):
     return tmp
 
 
+def generate_random_seq(lenght, max):
+    T = []
+    for i in range(0, lenght):
+        T.append(random.randint(0,max))
+    return T
 
+def get_rand_subseq(T):
+    s=[]
+    min = random.randint(0,len(T) - 1)
+    while (min < len(T)):
+        s.append(T[min])
+        min = random.randint(min + 1,len(T)+1)
+    return s
 
+def get_not_subseq(T, s, max):
+    tmp = s[:]
+    while is_subseq_with_position(tmp, T)[0]:
+        tmp.append(random.randint(0, max))
+    return tmp
+
+def get_n_subseq_all_diff(n):
+    return (2**n) - 1
+
+def LS(A , ordering):
+    L = list()
+    for i in range(0, len(A)):
+        L.append(list())
+
+    L[0].append(A[0])
+
+    for i in range(1, len(A)):
+        for j in range(0, i):
+            if ordering == 'increasing':
+                if (A[j] > A[i]) and (len(L[i]) < len(L[j])):
+                    L[i] = []
+                    L[i].extend(L[j])
+            elif ordering == 'decreasing':
+                if (A[j] < A[i]) and (len(L[i]) < len(L[j])):
+                    L[i] = []
+                    L[i].extend(L[j])
+        L[i].append(A[i])
+    return L
+
+def find_ls(l):
+    lung = 0
+    index = []
+    ret = []
+    for i in l:
+        if len(i) > lung:
+            index.clear()
+            lung = len(i)
+            index.append(l.index(i))
+        elif len(i) == lung:
+            index.append(l.index(i))
+    for i in index:
+        if (l[i] not in ret):
+            ret.append(l[i])
+    return ret
    
+
+def remove_duplicate_list(s):
+    s = list(dict.fromkeys(s))
+    return s
  
