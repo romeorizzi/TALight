@@ -25,21 +25,21 @@ times=[]
 import my_sol as ms
 for i in range(5):
     if ENV['size']=='small':
-        n=3
         m=3
-        pirellone=pl.random_pirellone(n, m, solvable=True)
+        n=3
+        pirellone=pl.random_pirellone(m, n, solvable=True)
     if ENV['size']=='medium':
-        n=5
         m=5
-        pirellone=pl.random_pirellone(n, m, solvable=True)
+        n=5
+        pirellone=pl.random_pirellone(m, n, solvable=True)
     if ENV['size']=='large':
-        n=8
         m=8
-        pirellone=pl.random_pirellone(n, m, solvable=True)
+        n=8
+        pirellone=pl.random_pirellone(m, n, solvable=True)
 
     pirellone1=copy.deepcopy(pirellone)
     a=time.perf_counter() 
-    sol_to_ver=ms.my_soluzione(pirellone1, n, m)
+    sol_to_ver=ms.my_soluzione(pirellone1, m, n)
     b=time.perf_counter() 
     times.append(b-a)
 

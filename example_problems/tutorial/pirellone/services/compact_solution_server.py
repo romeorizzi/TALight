@@ -4,8 +4,8 @@
 problem="pirellone"
 service="compact_solution"
 args_list = [
-    ('n',int), 
-    ('m',int),
+    ('m',int), 
+    ('n',int),
     ('goal',str),
     ('please_do_it_for_me',bool),
     ('lang',str),
@@ -24,13 +24,13 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
-n=ENV['n'] 
 m=ENV['m'] 
+n=ENV['n'] 
 goal=ENV['goal']  
 doit=ENV['please_do_it_for_me'] 
 
 TAc.print("Instance: ", "yellow", ["bold"])
-istanza=pl.random_pirellone(n, m, solvable=True)
+istanza=pl.random_pirellone(m, n, solvable=True)
 pirellone0=copy.deepcopy(istanza)
 pirellone1=copy.deepcopy(istanza)
 pirellone2=copy.deepcopy(istanza)
@@ -38,19 +38,19 @@ pl.print_pirellone(istanza)
 
 
 TAc.print("Too long solution: ", "yellow", ["bold"])
-shortsol=pl.soluzione(pirellone0,n,m)
-longsol=pl.solution_toolong(shortsol,n,m)
+shortsol=pl.soluzione(pirellone0,m,n)
+longsol=pl.solution_toolong(shortsol,m,n)
 pl.stampa_lista(longsol)
 
 TAc.print("Short solution: ", "yellow", ["bold"])
 solu=input()
 solu=solu.split()
 
-sol_togive=pl.soluzione_min(pirellone2,n,m)
+sol_togive=pl.soluzione_min(pirellone2,m,n)
 if goal=="m_plus_n":
-    g=m+n
+    g=n+m
 elif goal=="m_plus_n_half":
-    g=round((m+n)/2)
+    g=round((n+m)/2)
 elif goal=="min":
     g=len(sol_togive)
     
