@@ -28,7 +28,7 @@ m=ENV['m']
 n=ENV['n'] 
 
 TAc.print(f"Instance {m}x{n}: ", "yellow", ["bold"])
-pirellone0=pl.random_pirellone(m, n, solvable=True)
+pirellone0,_=pl.random_pirellone(m, n, solvable=True)
 pirellone1=copy.deepcopy(pirellone0)
 pl.print_pirellone(pirellone0)
 TAc.print("Solution of the instance: ", "yellow", ["bold"])

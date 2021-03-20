@@ -23,25 +23,22 @@ TAc.print(LANG.opening_msg, "green")
 if ENV['size']=='small':
     m=3
     n=3
-    pirellone=pl.random_pirellone(m, n, solvable=True)
 if ENV['size']=='medium':
     m=5
     n=5
-    pirellone=pl.random_pirellone(m, n, solvable=True)
 if ENV['size']=='large':
     m=8
     n=8
-    pirellone=pl.random_pirellone(m, n, solvable=True)
 if ENV['size']=='huge':
     m=12
     n=12
-    pirellone=pl.random_pirellone(m, n, solvable=True)
 if ENV['size']=='unbearable':
     m=15
     n=15
-    pirellone=pl.random_pirellone(m, n, solvable=True)
+    
+pirellone,seed=pl.random_pirellone(m, n, solvable=True)
 empty=[[0 for j in range(0,len(pirellone[0]))] for i in range(0,len(pirellone))]
-TAc.print("Instance: ", "yellow", ["bold"])
+TAc.print("Instance (of seed = {seed}): ", "yellow", ["bold"])
 pl.print_pirellone(pirellone)
 for _ in range(ENV['num_calls']):
     TAc.print("Step: ", "yellow", ["bold"])

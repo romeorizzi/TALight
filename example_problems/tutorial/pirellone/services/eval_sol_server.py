@@ -27,16 +27,13 @@ for i in range(5):
     if ENV['size']=='small':
         m=3
         n=3
-        pirellone=pl.random_pirellone(m, n, solvable=True)
     if ENV['size']=='medium':
         m=5
         n=5
-        pirellone=pl.random_pirellone(m, n, solvable=True)
     if ENV['size']=='large':
         m=8
         n=8
-        pirellone=pl.random_pirellone(m, n, solvable=True)
-
+    pirellone,_=pl.random_pirellone(m, n, solvable=True)
     pirellone1=copy.deepcopy(pirellone)
     a=time.perf_counter() 
     sol_to_ver=ms.my_soluzione(pirellone1, m, n)
