@@ -34,10 +34,8 @@ elif ENV['instance']=='mine':
     TAc.print("Instance to check:", "yellow", ["bold"])
     pirellone=[]
 
-    for i in range(n):
-        row = TALinput(bool, num_tokens=m)
-        #row = list(map(int,input().strip().split()))[:m] 
-
+    for i in range(m):
+        row = TALinput(int, num_tokens=n)
         pirellone.append(row)   
 
 if ENV['coding']=='seq':

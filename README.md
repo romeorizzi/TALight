@@ -637,6 +637,21 @@ In the case of the problems of this tutorial the whole of the materials comprisi
 Nonetheless, one of the first uses of the `rtal` client you will see in this tutorial is how to get the public material for a problem.
 
 
+## MAKE SURE YOUR DEFAULT PYTHON IS PYTHON3
+
+Use
+```bash
+python --version
+```
+to make sure that python3 is the defaut python on your machine. 
+If not, then it is time (and needed) that you make python3 the default. 
+
+if you are on Ubuntu, this can be achieved with:
+
+```bash
+sudo apt install python-is-python3 
+```
+
 
 ## STARTING THE TAlight DAEMON
 
