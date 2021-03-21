@@ -11,7 +11,7 @@ args_list = [
 
 from sys import stderr, exit, argv
 import pirellone_lib as pl
-import time
+from time import monotonic
 import copy
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
@@ -35,9 +35,9 @@ for i in range(5):
         n=8
     pirellone,_=pl.random_pirellone(m, n, solvable=True)
     pirellone1=copy.deepcopy(pirellone)
-    a=time.perf_counter() 
+    a=monotonic()
     sol_to_ver=ms.my_soluzione(pirellone1, m, n)
-    b=time.perf_counter() 
+    b=monotonic() 
     times.append(b-a)
 
 TAc.print("Time: ", "yellow", ["bold"])

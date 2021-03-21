@@ -44,9 +44,9 @@ if ENV['coding']=='seq':
     solu=solu.split()
     pl.off_lista(pirellone,solu,TAc, LANG)
 elif ENV['coding']=='subset':
-    TAc.print(LANG.render_feedback("rows","Rows solution: "), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("rows-sol","Rows solution: "), "yellow", ["bold"])
     rs = TALinput(int, num_tokens=m)
-    TAc.print(LANG.render_feedback("col","Columns solution: "), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("col-sol","Columns solution: "), "yellow", ["bold"])
     cs = TALinput(int, num_tokens=n)
     pl.off(pirellone,rs,cs,TAc, LANG)
 

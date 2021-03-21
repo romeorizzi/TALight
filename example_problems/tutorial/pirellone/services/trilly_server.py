@@ -12,7 +12,6 @@ args_list = [
 
 from sys import stderr, exit, argv
 import pirellone_lib as pl
-from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
@@ -38,15 +37,12 @@ if ENV['size']=='unbearable':
     
 pirellone,seed=pl.random_pirellone(m, n, solvable=True)
 empty=[[0 for j in range(0,len(pirellone[0]))] for i in range(0,len(pirellone))]
-TAc.print("Instance (of seed = {seed}): ", "yellow", ["bold"])
+TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
 pl.print_pirellone(pirellone)
 for _ in range(ENV['num_calls']):
-    TAc.print("Step: ", "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("step","Step: "), "yellow", ["bold"])
     pl.soluzione_min_step(pirellone,m,n)
     if empty==pirellone:      
-        TAc.print("Finished ", "green", ["bold"])
+        TAc.print(LANG.render_feedback("end","Finished "), "green", ["bold"])
         exit(0)
-
-
-
 exit(0)
