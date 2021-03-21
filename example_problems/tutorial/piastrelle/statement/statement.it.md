@@ -13,7 +13,7 @@ Qusti sarebbero i possibili modi di piastrellare il bagno quando $N=4$.
 [--][--]
 ```
 
-Se ti restano dubbi su cosa sia una piastrellatura valida e di come abbiamo stabilito di rappresentarla, prova il servizio `check_a_sol`.
+Se ti restano dubbi su cosa sia una piastrellatura valida e di come abbiamo stabilito di rappresentarla, prova il servizio `check_one_sol`.
 
 Ti invitiamo a lavorare con le mani: prova a identificare tutte le piastrellature possibili per $N=5$ oppure per $N=3$ o $N=2$ (se hai dei dubbi o cerchi conferme sulla risposta, prova i servizi `check_num_sol` oppure `check_sol_set`).
 
@@ -35,7 +35,7 @@ Potresti cominciare prima affinando e poi formalizzando in codice la tua capacit
 Per allenarti potresti sperimentare il seguente servizio:
 
 ```
-> rtal connect -a input_formula="[][--]" piastrelle check_a_sol
+> rtal connect -a input_formula="[][--]" piastrelle check_one_sol
 ```
 
 La primissima questione che vorremmo tu affrontassi è
@@ -129,7 +129,6 @@ Ormai saprai cercare da solo, avvalendoti di comandi quali
 > rtal list piastrelle -v
 ```
 i servizi offerti e relativi parametri. Questo vale anche per altri problemi entro TALight: ove un esplorazione diretta dei servizi, magari corroborata da un paio di interazioni di prova al terminale non sia sufficiente, forniamo allora un ulteriore servizio di help
-
 ```
 > rtal list help
 ```
