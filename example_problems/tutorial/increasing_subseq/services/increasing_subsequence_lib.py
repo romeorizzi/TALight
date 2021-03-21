@@ -144,4 +144,29 @@ def find_ls(l):
 def remove_duplicate_list(s):
     s = list(dict.fromkeys(s))
     return s
+
+def strictly_increasing(L):
+    return all(x<y for x, y in zip(L, L[1:]))
+
+def strictly_decreasing(L):
+    return all(x>y for x, y in zip(L, L[1:]))
+
+def non_increasing(L):
+    return all(x>=y for x, y in zip(L, L[1:]))
+
+def non_decreasing(L):
+    return all(x<=y for x, y in zip(L, L[1:]))
  
+
+def check_no_ordered_list_cert(S, a, b, ordering):
+    if ordering == 'not_increasing':
+        if S[a] >= S[b]:
+            return True
+        else:
+            return False
+    elif ordering == 'not_decreasing':
+        if S[a] <= S[b]:
+            return True
+        else:
+            return False
+
