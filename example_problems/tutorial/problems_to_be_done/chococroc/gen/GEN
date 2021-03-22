@@ -1,0 +1,70 @@
+#- **Subtask 1 [ 0 punti]**: il tuo programma deve risolvere correttamente i casi d'esempio qui sopra.
+#ST: 0
+ECHO 0 10 10
+ECHO 1 11 10
+ECHO 1 10 10
+
+#- **Subtask 2 [15 punti]**: determinare correttamente chi vince, va bene anche se in tempo esponenziale in $m$ ed $n$.
+#ST: 15
+ECHO 0 4 4
+ECHO 0 3 1
+ECHO 0 3 7
+ECHO 0 2 8
+ECHO 0 6 13
+ECHO 0 6 12
+
+#- **Subtask 3 [15 punti]**: come sopra, ma in tempo $O(nm)$, ossia in tempo pseudo-polinomiale, (esponenziale nella lunghezza del binary encoding di $m$ ed $n$, puoi quindi esplorare/etichettare l'intero grafo delle configurazioni).
+#ST: 15
+ECHO 0 4000 4000
+ECHO 0 3000 1
+ECHO 0 1500 1600
+ECHO 0 17000 20000
+ECHO 0 6000 12001
+ECHO 0 24003 6000
+ECHO 0 6000 12000
+
+#- **Subtask 4 [20 punti]**: come sopra, ma in tempo fortemente polinomiale.
+#ST: 20
+ECHO 0 400000000 400000000
+ECHO 0 321098765 1
+ECHO 0 321098765 421098765
+ECHO 0 170000000 270000000
+ECHO 0 600000000 1200000001
+ECHO 0 600000000 1200000000
+ECHO 0 17 1200000001
+ECHO 0 17 603979775
+ECHO 0 1207959551 17
+
+#- **Subtask 5 [15 punti]**: in configurazioni vincenti, dare la mossa corretta, va bene anche se in tempo esponenziale in $m$ ed $n$.
+#ST: 15
+ECHO 1 8 5
+ECHO 1 7 2
+ECHO 1 5 16
+ECHO 1 7 4
+ECHO 1 4 2
+ECHO 1 6 12
+
+
+#- **Subtask 6 [10 punti]**: come sopra, ma in tempo $O(nm)$, ossia in tempo pseudo-polinomiale, (esponenziale nella lunghezza del binary encoding di $m$ ed $n$, puoi quindi esplorare/etichettare l'intero grafo delle configurazioni).
+#ST: 15
+ECHO 1 4000 4000
+ECHO 1 3000 1
+ECHO 1 1500 1600
+ECHO 1 17000 20000
+ECHO 1 6000 12001
+ECHO 1 24003 6000
+ECHO 1 7307 98005
+ECHO 1 7307 116927
+ECHO 1 7307 116929
+
+#- **Subtask 7 [20 punti]**: come sopra, ma in tempo fortemente polinomiale.
+#ST: 20
+ECHO 1 400000000 400000000
+ECHO 1 321098765 1
+ECHO 1 321098765 421098765
+ECHO 1 17000321 270000000
+ECHO 1 700000007 1400000015
+ECHO 1 700000007 1400000016
+ECHO 1 17 1200000001
+ECHO 1 17 603979775
+ECHO 1 1207959551 17

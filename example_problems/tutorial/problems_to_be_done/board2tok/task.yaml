@@ -1,0 +1,8 @@
+nome_breve: "board2tok"
+nome: "Tiling di Elle in scacchiera quadrata con 2^k celle"
+timeout: 1
+memlimit: 256
+public_testcases: all
+token_mode: disabled
+feedback_level: full
+

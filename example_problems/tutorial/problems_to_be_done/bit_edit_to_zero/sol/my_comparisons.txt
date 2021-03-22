@@ -1,0 +1,71 @@
+def num_mosse1(n):
+    if n==0:
+        return 0
+    if num_of_ones_in_binary_rep(n) % 2 == 1:
+        return num_mosse_for_powers_of_two(lsp(n)) + num_mosse1(n-lsp(n))
+    if lsp(n-lsp(n)) == 2*lsp(n):
+        return 1 + num_mosse_for_powers_of_two(lsp(n)) + num_mosse1(n - 3*lsp(n))
+    else:
+        return 1 + num_mosse_for_powers_of_two(lsp(n)) + num_mosse1(n + lsp(n))
+
+
+def num_mosse2(n):
+    if n==0:
+        return 0
+    if num_of_ones_in_binary_rep(n) % 2 == 1:
+        return num_mosse_for_powers_of_two(lsp(n)) + num_mosse2(n-lsp(n))
+    if lsp(n-lsp(n)) == 2*lsp(n):
+        return 1 + num_mosse2(n - 2*lsp(n))
+    else:
+        return 1 + num_mosse2(n + 2*lsp(n))
+
+
+def num_mosse3(n):
+    if n==0:
+        return 0
+    if num_of_ones_in_binary_rep(n) % 2 == 1:
+        #since the correct first move is move 1 (flip the rightmost bit), then:
+        if n%2 == 1:
+            return 1 + num_mosse3(n -1)
+        else:
+            return 1 + num_mosse3(n +1)
+    if lsp(n-lsp(n)) == 2*lsp(n):
+        return 1 + num_mosse3(n - 2*lsp(n))
+    else:
+        return 1 + num_mosse3(n + 2*lsp(n))
+
+
+def num_mosse33(n):
+    risp = 0
+    while n!=0:
+        risp += 1
+        if num_of_ones_in_binary_rep(n) % 2 == 1:
+            #since the correct first move is move 1 (flip the rightmost bit), then:
+            if n%2 == 1:
+                n = n-1
+            else:
+                n = n+1
+        else:	
+            if lsp(n-lsp(n)) == 2*lsp(n):
+                n = n - 2*lsp(n)
+            else:
+                n = n + 2*lsp(n)
+    return risp
+
+for i in range(50):
+    print(num_mosse1(i), num_mosse2(i), num_mosse3(i), num_mosse33(i) )
+
+def chron(f,arg):
+    start=time.time()
+    f(arg)
+    print(f"{f.__name__} took {time.time()-start} seconds to output {f(arg)}")
+
+def compare(arg):
+    chron(num_mosse1, arg)
+    chron(num_mosse2, arg)
+    chron(num_mosse33, arg)
+
+>>> compare(100000)
+num_mosse1 took 6.389617919921875e-05 seconds to output 66752
+num_mosse2 took 7.152557373046875e-05 seconds to output 66752
+num_mosse33 took 0.16714000701904297 seconds to output 66752

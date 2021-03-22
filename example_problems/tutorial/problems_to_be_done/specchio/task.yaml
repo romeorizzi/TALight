@@ -1,0 +1,10 @@
+name: specchio
+title: Specchio
+time_limit: 1.0
+memory_limit: 256
+infile: ""
+outfile: ""
+public_testcases: all
+token_mode: disabled
+feedback_level: full
+

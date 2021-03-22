@@ -1,0 +1,10 @@
+memory_limit: 256
+name: bit_edit_to_zero
+time_limit: 0.4
+title: Da n a zero in meno mosse possibili
+infile: ""
+outfile: ""
+token_mode: disabled
+public_testcases: all
+feedback_level: full
+

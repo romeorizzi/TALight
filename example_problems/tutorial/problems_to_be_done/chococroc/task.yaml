@@ -1,0 +1,10 @@
+name: chococroc
+title: Due amici ed una barretta di cioccolato
+memory_limit: 64
+time_limit: 1.0
+infile: ""
+outfile: ""
+token_mode: disabled
+public_testcases: all
+feedback_level: full
+correttore: "check/checker"

@@ -1,0 +1,82 @@
+\renewcommand{\nomebreve}{bit\_edit\_to\_zero}
+\renewcommand{\titolo}{Da $n$ a zero ... \\in meno mosse possibili}
+
+
+\introduzione{}
+
+{\small Questo problema è un rimastering di un problema di HackerRank.}
+Ricevi in input un numero $n$ e devi trasformarlo nel numero $0$ impiegando il minor numero possibile di mosse.
+Hai a disposizione due possibili mosse, entrambe meglio descritte guardando alla rappresentazione in binario del numero $n$:
+\begin{description}
+  \item[Mossa~1:] inverte il valore del bit più a destra, ossia il bit di parità (quello meno significativo);
+  \item[Mossa~2:] inverte il valore del bit alla immediata sinistra del bit posto più a destra tra quelli settati ad uno. (Subito a destra del bit che si modifica deve esserci un bit settato ad $1$, e non vi è alcun bit settato ad uno a destra di questo).
+\end{description}
+
+Devi implementare le seguenti due funzioni:
+\begin{description}
+   \item[Funzione~1] {\tt num\_mosse(n)} deve ritornare il minimo numero di mosse per passare da n a zero;
+   \item[Funzione~2] {\tt mossa(n)} ritorna~$1$ oppure~$2$: la risposta $i$ (=$1,2$) è corretta se la mossa~$i$, applicata ad~$n$, ci porta un passo più vicini allo zero.
+\end{description}
+
+\section*{Dati di input}
+Il vostro programma, nell'ordine, riceve in input:
+\begin{itemize}
+    \item un numero naturale $p\in\{1,2\}$, che specifica la funzione da chiamare
+    \item il numero naturale $n$ da cui prende avvio il processo
+\end{itemize}
+
+
+\section*{Dati di output}
+\begin{itemize}
+\item se $p = 1$ il programma restituisce in output il numero minimo di mosse da effettuare per ridurre a $0$ il valore di partenza $n$ ricevuto in input,
+  ossia il valore restituito dalla funzione {\tt num\_mosse(n)}
+\item se $p = 2$ il programma restituisce in output il valore restituito dalla funzione {\tt mossa(n)}, ossia un valore $i\in \{1,2\}$ che risulta corretto se la mossa~$i$ ci porta un passo più vicini allo zero
+\end{itemize}
+
+% Esempi
+\sezionetesto{Esempio di input/output}
+
+In attachment alla pagina del problema trovate diverse copie input/output tra cui le seguenti.
+\vspace{0.5cm}
+
+\esempio{
+\input{esempio1.input.txt}
+}{\input{esempio1.output.txt}}
+
+\esempio{
+\input{esempio2.input.txt}
+}{\input{esempio2.output.txt}}
+
+\esempio{
+\input{esempio3.input.txt}
+}{\input{esempio3.output.txt}}
+
+\esempio{
+\input{esempio4.input.txt}
+}{\input{esempio4.output.txt}}
+
+\esempio{
+\input{esempio5.input.txt}
+}{\input{esempio5.output.txt}}
+
+
+% Assunzioni
+\sezionetesto{Assunzioni e note}
+  %\begin{itemize}[nolistsep, noitemsep]
+%  \item $1 \le n \le 1\,000\,000$.
+%\end{itemize}
+\textbf{NOTA}: abbiamo sopra fornito una descrizione del formato di input/output soltanto per facilitarvi il test sul vostro computer. Per sottomettere il problema è obbligatorio utilizzare il template che potete scaricare fra gli allegati del problema, avendo cura di modificare solamente l'implementazione delle funzioni richieste.
+Questo è necessario per garantire la compatibilità del vostro programma con il sistema di valutazione (se ad esempio utilizzate python potrebbe utilizzare una versione di python diversa, quale python2).
+
+
+\section*{Subtask}
+\begin{itemize}
+  \item \textbf{Subtask 1 [0 punti]:} gli esempi del testo.
+  \item \textbf{Subtask 2 [10 punti]:} $p = 1$, $n=2^k$, $k\leq 10$.
+  \item \textbf{Subtask 3 [20 punti]:} $p = 1$, $n\leq 1000$.
+  \item \textbf{Subtask 4 [20 punti]:} $p = 1$, $n\leq 100\,000$.
+  \item \textbf{Subtask 5 [10 punti]:} $p = 2$, $n=2^k$, $k\leq 10$.
+  \item \textbf{Subtask 6 [20 punti]:} $p = 2$, $n\leq 1000$.
+  \item \textbf{Subtask 7 [10 punti]:} $p = 2$, $n\leq 1\,000\,000$.
+  \item \textbf{Subtask 8 [10 punti]:} $p = 2$, $n\leq 100\,000\,000$.
+\end{itemize}

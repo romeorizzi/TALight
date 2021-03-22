@@ -1,0 +1,114 @@
+# File usato per descrivere gli input. Le parti della riga dopo un # vengono
+# ignorate. Le righe non banali (ovvero contenenti qualcosa oltre a whitespace
+# prima del primo #) vengono passate al generatore e generano un input ciascuna.
+# Se una riga inizia con "#ST:" (senza le virgolette) viene usata per delimitare
+# un subtask. "#ST:" va seguito con il punteggio assegnato a quel subtask. Se
+# sono presenti i subtask, è necessario che la somma dei punti di ogni subtask
+# sia 100.
+
+# subtask 1
+#ST: 0
+#COPY: testo/esempio1.input.txt
+#COPY: testo/esempio2.input.txt
+#COPY: testo/esempio3.input.txt
+#COPY: testo/esempio4.input.txt
+#COPY: testo/esempio5.input.txt
+
+# subtask 2
+#ST: 10
+ECHO 1 1
+ECHO 1 2
+ECHO 1 4
+ECHO 1 8
+ECHO 1 16
+ECHO 1 32
+ECHO 1 64
+ECHO 1 128
+ECHO 1 256
+ECHO 1 512
+ECHO 1 1024
+
+# subtask 3
+#ST: 20
+ECHO 1 13
+ECHO 1 22
+ECHO 1 43
+ECHO 1 80
+ECHO 1 160
+ECHO 1 320
+ECHO 1 421
+ECHO 1 653
+ECHO 1 777
+ECHO 1 999
+ECHO 1 1000
+
+# subtask 4
+#ST: 20
+ECHO 1 13455
+ECHO 1 22777
+ECHO 1 43213
+ECHO 1 80123
+ECHO 1 16012
+ECHO 1 32066
+ECHO 1 42177
+ECHO 1 65388
+ECHO 1 77799
+ECHO 1 99999
+ECHO 1 100000
+
+# subtask 5
+#ST: 10
+ECHO 2 1
+ECHO 2 2
+ECHO 2 4
+ECHO 2 8
+ECHO 2 16
+ECHO 2 32
+ECHO 2 64
+ECHO 2 128
+ECHO 2 256
+ECHO 2 512
+ECHO 2 1024
+
+# subtask 6
+#ST: 20
+ECHO 2 13
+ECHO 2 22
+ECHO 2 43
+ECHO 2 80
+ECHO 2 160
+ECHO 2 320
+ECHO 2 421
+ECHO 2 653
+ECHO 2 777
+ECHO 2 999
+ECHO 2 1000
+
+# subtask 7
+#ST: 10
+ECHO 2 134550
+ECHO 2 227770
+ECHO 2 432130
+ECHO 2 801230
+ECHO 2 160120
+ECHO 2 320660
+ECHO 2 421770
+ECHO 2 653880
+ECHO 2 777990
+ECHO 2 999990
+ECHO 2 1000000
+
+# subtask 8
+#ST: 10
+ECHO 2 13455099
+ECHO 2 22777099
+ECHO 2 43213099
+ECHO 2 80123099
+ECHO 2 16012099
+ECHO 2 32066099
+ECHO 2 42177099
+ECHO 2 65388099
+ECHO 2 77799099
+ECHO 2 99999999
+ECHO 2 100000000
+
