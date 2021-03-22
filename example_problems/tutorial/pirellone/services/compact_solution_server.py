@@ -16,7 +16,6 @@ from sys import stderr, exit, argv
 import random 
 import copy
 import pirellone_lib as pl
-from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
@@ -29,15 +28,16 @@ n=ENV['n']
 goal=ENV['goal']  
 doit=ENV['please_do_it_for_me'] 
 
-TAc.print("Instance: ", "yellow", ["bold"])
-istanza=pl.random_pirellone(m, n, solvable=True)
+
+istanza,seed=pl.random_pirellone(m, n, solvable=True)
+TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
 pirellone0=copy.deepcopy(istanza)
 pirellone1=copy.deepcopy(istanza)
 pirellone2=copy.deepcopy(istanza)
 pl.print_pirellone(istanza)
 
 
-TAc.print("Too long solution: ", "yellow", ["bold"])
+TAc.print(LANG.render_feedback("long-sol","Too long solution: "), "yellow", ["bold"])
 shortsol=pl.soluzione(pirellone0,m,n)
 longsol=pl.solution_toolong(shortsol,m,n)
 pl.stampa_lista(longsol)
@@ -58,22 +58,22 @@ elif goal=="min":
 risultato=pl.off_lista_noprint(pirellone1,solu)
 if risultato and len(solu)<g:
     TAc.OK()
-    TAc.print("Shorter than what you set in goal and all lights are off", "green", ["bold"])
+    TAc.print(LANG.render_feedback("shoter","Shorter than what you set in goal and all lights are off."), "green", ["bold"])
 elif risultato and len(solu)==g:
     TAc.OK()
-    TAc.print("Same lenght as you set in goal and all lights are off ", "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("same","Same lenght as you set in goal and all lights are off."), "yellow", ["bold"])
 elif risultato and len(solu)>g:
     TAc.NO()
-    TAc.print("Bigger than what you set in goal but all lights are off  ", "red", ["bold"])
+    TAc.print(LANG.render_feedback("bigger","Bigger than what you set in goal but all lights are off."), "red", ["bold"])
     if doit==1:
-        TAc.print("Solution: ", "blue", ["bold"])
+        TAc.print(LANG.render_feedback("sol","Solution: "), "blue", ["bold"])
         pl.stampa_lista(random.shuffle(sol_togive))
         
 else:
     TAc.NO()
-    TAc.print("Some lights are on ", "red", ["bold"])
+    TAc.print(LANG.render_feedback("same-on","Some lights are on "), "red", ["bold"])
     if doit==1:
-        TAc.print("Solution: ", "blue", ["bold"])
+        TAc.print(LANG.render_feedback("sol","Solution: "), "blue", ["bold"])
         pl.stampa_lista(sol_togive)
     
 exit(0)
