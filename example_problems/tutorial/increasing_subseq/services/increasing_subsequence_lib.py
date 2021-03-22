@@ -170,3 +170,35 @@ def check_no_ordered_list_cert(S, a, b, ordering):
         else:
             return False
 
+def lis(arr):
+    n = len(arr)
+    lis = [1]*n
+ 
+    for i in range (1 , n):
+        for j in range(0 , i):
+            if arr[i] > arr[j] and lis[i]< lis[j] + 1 :
+                lis[i] = lis[j]+1
+ 
+    return lis
+
+def get_min_coloring(lis):
+    maximum = max(lis)
+    index_max = lis.index(maximum)
+    color = [0]*len(lis)
+    i = index_max 
+    color_id = 1
+
+    while 0 in color:
+        if lis[index_max] > 0:
+            color[index_max] = color_id
+            lis[index_max] = 0
+            tmp = lis[:index_max]
+            if not tmp or all(v == 0 for v in tmp):
+                color_id+=1
+                maximum = max(lis) 
+                index_max = lis.index(maximum)
+            else:
+                maximum = max(tmp)
+                index_max = tmp.index(maximum)
+
+    return color
