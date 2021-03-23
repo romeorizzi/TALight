@@ -16,8 +16,11 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_subseq:
-    evaluator: [python, services/eval_subseq_server.py]
+    evaluator: [python3, services/eval_subseq_server.py]
     args:
+      len: 
+        regex: ^([1-9][0-9]{0,2})$
+        default: 5
   check_longest_subseq:
     evaluator: [python, services/check_longest_subseq_server.py]
     args:

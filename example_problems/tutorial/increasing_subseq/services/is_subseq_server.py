@@ -27,13 +27,14 @@ string_T = ""
 string_s = ""
 
 if (ENV['T'] == 'lazy_input'):
+    TAc.print("\nIn this problem you are asked to enter a sequence T of numbers with a blank space between each number (example: 12 34 56 ...) and a sequence s. You will be told if s is a sub-sequence of T.", "green")
     TAc.print("\nInsert T:", "green")
     string_T = input()
     ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_T))
     if ok:
         T = parse_input(string_T)
     else:
-        TAc.print("\n\nWRONG INPUT FORMAT\n", "red")
+        TAc.print("\n\nWRONG INPUT FORMAT: this is not a sequence of numbers (example: 12 34 56 ...).\n", "red")
         exit(0)
 else:
     string_T = ENV['T']
@@ -46,7 +47,7 @@ if (ENV['s'] == 'lazy_input'):
     if ok:
         s = parse_input(string_s)
     else:
-        TAc.print("\n\nWRONG INPUT FORMAT\n", "red")
+        TAc.print("\n\nWRONG INPUT FORMAT: this is not a sequence of numbers (example: 12 34 56 ...).\n", "red")
         exit(0)
 else:
     string_s = ENV['s']
