@@ -12,6 +12,7 @@ problem="increasing_subseq"
 service="is_subseq_server"
 args_list = [
     ('len',str),
+    ('lang',str),
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
