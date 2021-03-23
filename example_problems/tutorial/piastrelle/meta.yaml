@@ -4,7 +4,7 @@ services:
     evaluator: [python, services/check_one_sol_server.py]
     args:
       input_formula:
-        regex: ^(\[|\]|\w|-){0,1000}$
+        regex:  ^(\[|\]|-){0,1000}$
         example: "[][][--][]"
       silent:
         regex: ^(0|1)$
@@ -16,15 +16,15 @@ services:
     evaluator: [python, services/check_num_sol_server.py]
     args:
       n:
-        regex: ^(0|[1-9][0-9]{0,1}|100)$
+        regex: ^(0|[1-9][0-9]{0,50})$
         explain: it allows you to specify the length of the corridor  
       risp:
         regex: ^(0|[1-9][0-9]{0,50})$
         explain: it allows you to specify your conjectured answer  
       ok_if_congruent_modulus:
         regex: ^(0|[1-9][0-9]{0,10})$
-#        default: 0
-        default: 1000000007
+        default: 0
+#        default: 1000000007
       more_or_less_hint_if_wrong:
         regex: ^(0|1)$
         default: 0
@@ -72,9 +72,9 @@ services:
     evaluator: [python, services/check_next_sol_gen_server.py]
     args:
       current_sol:
-        regex:  ^(\(|\)){0,1000}$
+        regex:  ^(\[|\]|-){0,1000}$
       next_sol:
-        regex:  ^(\(|\)){0,1000}$
+        regex:  ^(\[|\]|-){0,1000}$
       sorting_criterion:
         regex: ^(loves_short_tiles|loves_long_tiles)$
         default: loves_short_tiles
@@ -97,23 +97,24 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_rank_of_sol:
-    evaluator: [python, services/check_rank_of_sol.py]
+    evaluator: [python, services/check_rank_of_sol_server.py]
     args:
-      one_formula:
-        regex:  ^(\(|\)){0,1000}$
+      n:
+        regex: ^(0|[1-9][0-9]{0,50})$
       sorting_criterion:
         regex: ^(loves_short_tiles|loves_long_tiles)$
         default: loves_short_tiles
+      more_or_less_hint_if_wrong:
+        regex: ^(0|1)$
+        default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_unrank:
-    evaluator: [python, services/check_unrank.py]
+    evaluator: [python, services/check_unrank_server.py]
     args:
-      num_pairs:
-        regex: ^([1-9][0-9]{0,1}|100)$
-      rank:
-        regex: ^([1-9]|1[0-9]{0,1}|20)$
+      n:
+        regex: ^(0|[1-9][0-9]{0,50})$
       sorting_criterion:
         regex: ^(loves_short_tiles|loves_long_tiles)$
         default: loves_short_tiles
