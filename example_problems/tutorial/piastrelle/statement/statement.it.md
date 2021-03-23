@@ -35,7 +35,7 @@ Potresti cominciare prima affinando e poi formalizzando in codice la tua capacit
 Per allenarti potresti sperimentare il seguente servizio:
 
 ```
-> rtal connect -a input_formula="[][--]" piastrelle check_one_sol
+> rtal connect -a input_formula="[][--]" piastrelle check_a_sol
 ```
 
 La primissima questione che vorremmo tu affrontassi è
@@ -48,7 +48,7 @@ La primissima questione che vorremmo tu affrontassi è
 Puoi chiedere verifica di quale possa essere il numero di piastrellature ben formate per un certo corridoio $1 \times N$ attraverso chiamate del tipo:
 
 ```
-> rtal connect -a num_pairs=4 -a risp=5  piastrelle check_num_sol
+> rtal connect -a n=4 -a risp=5  piastrelle check_num_sol
 ```
 
 Dopo aver verificato che la logica ti torna con delle sottomissioni spot a questo servizio, od al servizio che gestisce una dialogo di domande e risposte:
@@ -89,7 +89,7 @@ vorremmo tu ti avvalessi dello stesso schema ricorsivo impiegato per affrontare 
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect -a num_pairs=4 -a=spot_wrong_consec_if_sorted piastrelle check_sol_list
+> rtal connect piastrelle check_sol_list
 ```
 
 Potrai quindi controllare se dovresti considerare e venire a conoscere tecniche ed approcci algoritmici più efficaci (ossia asintoticamente più veloci) con:
@@ -111,7 +111,7 @@ Per il listing ti proponiamo di ricercare anche un approccio iterativo:
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect -a current_sol=[][][--] -a next_sol=[][--][] piastrelle check_nextcheck_next_sol_gen
+> rtal connect -a current_sol=[][][--] -a next_sol=[][--][] piastrelle check_next_sol_gen
 ```
 Di nuovo, se visualizzi i possibili argomenti del servizio scoprirai che puoi ancora scegliere tra le stesse due tipologie di ordinamento già proposte. 
 </details>
