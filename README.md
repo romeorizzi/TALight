@@ -119,7 +119,7 @@ ___
 
 You have two options on how to get it:
 
-1. **Option 1 [generally recommended]:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in the file `rtal/README.md` of this repo.
+1. **Option 1 [generally recommended]:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in [the file `rtal/README.md`](rtal) of this repo.
 
 
 2. **Option 2:** download the already compiled binary made available for your platform and set them in.
@@ -505,7 +505,7 @@ cd ~
 
 TAlight consists of two programs, the `rtal` client, and the `rtald` server. Both are needed both by the problem solver and by the problem maker. The problem maker will also use the `rtalc` checker.
 After downloading this TAlight project public repo, you can either choose to use the binaries made available for your platform (not yet made available at present) or compile them from the source code.
-How to make these two binaries and the basic on how to use them is explained in the file `rtal/README.md` of this repo.
+How to make these two binaries and the basic on how to use them is explained in [the file `rtal/README.md`](rtal) of this repo.
 
 In the following we assume that the files `~/TAlight/rtal/target/debug/rtal` and `~/TAlight/rtal/target/debug/rtald` exist (possibly with a different placement, as explained above) on your machine and have execution permission.
 You can check this by asking them to display out their main help page.
