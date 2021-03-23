@@ -25,7 +25,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 string_T = ""
 string_s = ""
 length = int(ENV["times"])
-TAc.print("\nIn this problem you are given a sequence of numbers T. You are asked to evaluate whether a sub-sequence s is part of T "+str(length)+" times. \nAnswer \"y\" if you think s is a subsequence you T, \"n\" otherwise.", "green")
+TAc.print("\nIn this problem you are given a sequence of numbers T. You are asked to evaluate whether a sub-sequence s is part of T "+str(length)+" times. \nAnswer \"y\" if you think s is a subsequence of T, \"n\" otherwise.", "green")
 string_T = generate_random_seq(10, 100)
 TAc.print(list_to_string(string_T), "green")
 
@@ -47,7 +47,7 @@ for i in range(0, length):
         exit(0)
     ret = is_subseq_with_position(string_s,string_T)
     if ret[0] == res:
-        TAc.print("OK, your answer is correct!.\n\n","green")
+        TAc.print("OK, your answer is correct!\n\n","green")
     else:
         TAc.print("NO, your answer isn't correct.\n\n","red")
 

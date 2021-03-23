@@ -114,11 +114,11 @@ def LS(A , ordering):
     for i in range(1, len(A)):
         for j in range(0, i):
             if ordering == 'increasing':
-                if (A[j] > A[i]) and (len(L[i]) < len(L[j])):
+                if (A[j] < A[i]) and (len(L[i]) < len(L[j])):
                     L[i] = []
                     L[i].extend(L[j])
             elif ordering == 'decreasing':
-                if (A[j] < A[i]) and (len(L[i]) < len(L[j])):
+                if (A[j] > A[i]) and (len(L[i]) < len(L[j])):
                     L[i] = []
                     L[i].extend(L[j])
         L[i].append(A[i])
