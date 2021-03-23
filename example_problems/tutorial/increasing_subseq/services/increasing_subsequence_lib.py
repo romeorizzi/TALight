@@ -202,3 +202,29 @@ def get_min_coloring(lis):
                 index_max = tmp.index(maximum)
 
     return color
+
+
+def get_max_increasing_subseq_by_color(T, color):
+    n_color = max(color)
+    max_n = 0
+    max_sub = 0
+    for i in range(1, n_color):
+        tmp = color.count(i)
+        if tmp > max_n:
+            max_n = tmp
+            max_sub = color[i]
+
+    pos = []
+    for i in range(0, len(T)):
+        if color[i] == max_sub:
+            pos.append(i)
+    return pos
+
+
+def list_to_string(T):
+    string = ""
+    for i in range(0, len(T)):
+        string += str(T[i])
+        if i != len(T) -1 :
+            string +=" "
+    return string
