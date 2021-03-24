@@ -176,12 +176,12 @@ def non_decreasing(L):
  
 
 def check_no_ordered_list_cert(S, a, b, ordering):
-    if ordering == 'not_increasing':
+    if ordering == 'not_increasing' or ordering == 'increasing':
         if S[a] >= S[b]:
             return True
         else:
             return False
-    elif ordering == 'not_decreasing':
+    elif ordering == 'not_decreasing' or ordering == 'decreasing':
         if S[a] <= S[b]:
             return True
         else:

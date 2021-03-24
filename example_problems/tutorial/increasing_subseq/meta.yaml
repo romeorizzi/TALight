@@ -168,6 +168,9 @@ services:
       times: 
         regex: ^([1-9][0-9]{0,2})$
         default: 5
+      NO_cert:
+        regex: ^(0|1)$
+        default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
