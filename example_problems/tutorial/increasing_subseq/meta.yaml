@@ -174,6 +174,15 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  min_k_col:
+    evaluator: [python3, services/min_k_col.py]
+    args:
+      coloring:
+        regex: ^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9})|lazy_input)$
+        default: lazy_input
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
   
 # END: competenza gestione sottosequenze diverse di una stessa sequenza
   synopsis:
