@@ -111,8 +111,9 @@ def get_rand_subseq(T):
         min = random.randint(min + 1,len(T)+1)
     return s
 
-def get_not_subseq(T, s, max):
-    tmp = s[:]
+def get_not_subseq(T, max):
+    tmp = []
+    tmp.append(random.randint(0, max))
     while is_subseq_with_position(tmp, T)[0]:
         tmp.append(random.randint(0, max))
     return tmp

@@ -34,7 +34,7 @@ for i in range(0, length):
     if i == 0 or x % 2 == 0:
         string_s = get_rand_subseq(string_T)
     else:
-        string_s = get_not_subseq(string_T, string_s, 100)
+        string_s = get_not_subseq(string_T, 100)
     TAc.print(list_to_string(string_s),"green")
     res = input()
 

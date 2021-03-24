@@ -42,7 +42,7 @@ for i in range(0, length):
     elif x % 3 == 0: 
         string_s = random.choice(longest)
     else:
-        string_s = get_not_subseq(string_T, string_s, 100)
+        string_s = get_not_subseq(string_T, 100)
     TAc.print(list_to_string(string_s),"green")
     res = input()
 
