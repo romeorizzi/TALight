@@ -6,7 +6,7 @@ services:
     args:
       n:
         regex: ^[1-9][0-9]?$|^100$
-        default: 10
+        default: 7
         explain: "Number of coins (1-100)"
       version: (false_is_leighter|false_is_heavier|false_has_different_wight)
         default: false_has_different_weight 

@@ -2,49 +2,72 @@
 
 ## Descrizione del problema
 
-Devi scrivere una procedura che individui l'unica moneta falsa in un set di *n* monete numerate da *0* ad *n-1*. Il file da sottomettere deve avere la seguente struttura:
+Vuoi individuare l'unica moneta falsa in un set di $7$ monete numerate da $0$ ad $6$. Puoi avvalerti in questo di una bilancia a braccia uguali.
+Questo puzzle classico assume che la moneta falsa ha un peso diverso delle altre (e in una sua variante più semplice assume che il penso della moneta falsa sia sempre inferiore a quello delle altre).
+Organizzare una pesata significa specificare i due sottoinsiemi disgiunti di $\{1,2,3,4,5,6\}$ delle monete da collocare sui due piatti della bilancia. Ad esempio, Se giochi a riga di comando, con:
 
-```cpp
-#include "ourLibToPlay.h"
+[1, 5, 6], [2, 4]
 
-void individua(long int n) {
-   ...
-} 
+richiederesti una pesata con le monete $1$, $5$, e $6$ sul piatto sinistro e $2, 4$ su quello destro. 
+
+La misura potrà avere uno dei seguenti 3 esiti:
+
+- **NONE:** se i due piatti della bilancia sono in perfetto equilibrio (nessuno dei due scende in basso);
+
+- **LEFT:** se il carico è maggiore sul piatto sinistro;
+
+- **RIGHT:** se il carico è maggiore sul piatto destro.
+
+## Estensibilità ever green del problema
+
+Attorno a questo puzzle potrai condurre delle tue esplorazioni, al momento possiamo proporre i seguenti percorsi:
+
+1. distinzione tra strategie statiche (dove l'insieme delle misure da compiere viene fissato a priori) e dinamiche (dove ogni atto di misura viene stabilit potendo prendere in considerazione gli esiti delle pesate precdenti)
+
+2. ricerca della natura ricorsiva del problema chiedendosi come possa essere stabilita una buna strategia di gioco per un numero di monete $n$ generico.
+
+Se ti sovvengono altre di queste curiosità puoi porti la sfida di realizzare tu dei servizi che stimolino e supportino il problem solver e scoprirti nel ruolo di problem maker ([brake on through to the other side](https://www.youtube.com/watch?v=-r679Hhs9Zs)). 
+
+## Supporti alla programmazione, interfacce grafiche, o avanguardia
+
+Oltre che giocare tu stesso prescrivendo le tue pesate da riga di comando con:
+
+```bash
+rtal connect light_coin check_dynamic_strategy
 ```
 
-Il parametro *n* che viene passato alla funzione `individua()` è il numero di monete sotto esame. Tutte le *n* monete hanno lo stesso peso, tranne quella falsa, che è più leggera delle altre. 
+puoi divertirti ad istruire un bot affinchè giochi in tua vece con:
 
-Potrai servirti di una bilancia a braccia eguali invocando, dalla tua implementazione della procedura `individua()`, la seguente funzione: 
-
-```cpp
-int piatto_con_peso_maggiore();
+```bash
+rtal connect light_coin check_dynamic_strategy -- python mybot.py
 ```
 
+Il bot può essere scritto in un qualsiasi altro linguaggio, e, se è un compilato, non ti sarà necesario richiamare l'interprete:
 
-
-La funzione prevede i seguenti 3 possibili valori di ritorno:
-
-- **NONE:** se i due piatti della bilancia sono in perfetto equilibrio;
-
-- **LEFT:** se il carico è maggiore sul piattto sinistro;
-
-- **RIGHT:** se il carico è maggiore sul piatto destro;
-
-dove `LEFT = -1`, `NONE = 0` e `RIGHT = 1`sono 3 costanti intere deﬁnite per voi in *ourLibToPlay.h*. 
-
-Per portare una certa moneta da dove si trova attualmente ad un certo piatto (`LEFT`, `RIGHT`, oppure anche `NONE` nel caso si voglia togliere la moneta dalla bilancia) si invoca la procedura:
-
-```cpp
-void collocaMoneta(long int, int moneta, int piatto);
+```bash
+rtal connect light_coin check_dynamic_strategy -- mybot
 ```
 
-Quando trova la moneta falsa, la tua procedura deve consegnarla alla zecca invocando:
+Ovviamente il file `mybot` sarà il file col codice binario prodotto con la compilazione, coi necessari diritti di esecuzione settati.  
 
-```cpp
-void denuncia(long int monetaFalsa);
+Se vuoi concentrarti sugli aspetti alti del probema e trascurare i dettagli della programmazione, puoi prendere un bot contenitore per il tuo linguaggio e limitarti a specificare l'implmentazine delle funzioni che gstisocono la logica del gioco. Ad esempio in python potrai limitarti ad implementare la funzione `individua()` nel modulo `logic.py` e da `individua()` potrai chiamare il comando/funzione: 
+
+```
+risp = piatto_con_peso_maggiore(left=[1, 5, 6], right=[2, 4])
 ```
 
-## Assunzioni
+Quando poi sei sicuro su quale sia la moneta falsa dovrai consegnarla alla zecca invocando:
+```
+denuncia(monetaFalsa)
+```
+per concludere con successo la partita.
+
+E'altresì possibile giocare entro un applet grafico (adatto per le medie) oppure in un ambiente ibrido dove ti sono consentiti varie possibilità per collocare ogni tua intrazione e, ad esempio, se compi una tua mossacol mouse puoi ottenerne visualizzazione/traduzione a vari livelli diversi del protocollo di gioco.
+
+## Servizi di tipo eval (per ottenere un feedback anche sul piano dei metodi e delle tcniche di problem solving)
+
+
+### Possibili goals per la strategia dinamica
 
 - Il programma termina dopo la prima chiamata alla funzione denuncia oppure allo scadere del tempo limite.
 
