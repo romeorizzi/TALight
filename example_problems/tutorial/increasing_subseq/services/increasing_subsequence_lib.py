@@ -245,3 +245,7 @@ def list_to_string(T):
         if i != len(T) -1 :
             string +=" "
     return string
+
+
+def n_coloring(color):
+    return len(set(color))
