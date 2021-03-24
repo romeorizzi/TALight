@@ -1,13 +1,42 @@
 public_folder: public
 services:
-  free_weigh:
-    explain: "you have n coins, one of which is false, you weigh them to find the position of it."
+  check_static_strategy:
+    explain: "choose an n and specify a sequence of measurements with the scale that allows to always identify among n coins the false one."
     evaluator: [python, services/free_weight_server.py]
     args:
       n:
         regex: ^[1-9][0-9]?$|^100$
         default: 10
-        explain: "Number of coins"
+        explain: "Number of coins (1-100)"
+      version: (false_is_leighter|false_is_heavier|false_has_different_wight)
+        default: false_has_different_weight 
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  check_dynamic_strategy:
+    explain: "Your goal is to identify the false coin in a set of n coins. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
+    evaluator: [python, services/free_weight_server.py]
+    args:
+      n:
+        regex: ^[1-9][0-9]?$|^100$
+        default: 10
+        explain: "Number of coins (1-100)"
+      version: (false_is_leighter|false_is_heavier|false_has_different_wight)
+        default: false_has_different_wight 
+      obj:
+        regex: ^(any|max_product)$
+        default: any
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  free_weigh:
+    explain: "you have n coins, one of which is false, use a scale to identify it."
+    evaluator: [python, services/free_weight_server.py]
+    args:
+      n:
+        regex: ^[1-9][0-9]?$|^100$
+        default: 10
+        explain: "Number of coins (1-100)"
       obj:
         regex: ^(any|max_product)$
         default: any
@@ -15,7 +44,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   compact_solution:
-    explain: "We provide you n coins and weighing sequence that leads to finding the counterfeit coin. It is necessary to shorten this sequence."
+    explain: "We provide you n coins and a sequence of weighting operations that allows to identify the false onefinding the counterfeit coin. It is necessary to shorten this sequence."
     evaluator: [python, services/compact_solution_server.py]
     args:
       n:
