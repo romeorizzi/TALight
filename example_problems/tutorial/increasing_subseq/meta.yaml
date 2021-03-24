@@ -52,7 +52,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_longest_subseq:
-    evaluator: [python3, services/eval_longest_increasing_subseq_server.py]
+    evaluator: [python, services/eval_longest_increasing_subseq_server.py]
     args:
       yield:
         regex: ^(max_len_min_k|a_max_subseq|a_min_col|both)$
@@ -163,11 +163,11 @@ services:
         default: it
   
   eval_rank_of_seq:
-    evaluator: [python, services/eval_rank_of_seq.py]
+    evaluator: [python3, services/eval_rank_of_seq.py]
     args:
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
+      times: 
+        regex: ^([1-9][0-9]{0,2})$
+        default: 5
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

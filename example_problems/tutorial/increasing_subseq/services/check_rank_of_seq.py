@@ -25,7 +25,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 string_T = ""
 
 if (ENV['T'] == 'lazy_input'):
-    TAc.print("\nIn this problem you are asked to enter a sequence T of numbers with a blank space between each number (example: 12 34 56 ...) and a sequence s. You will be told if s is a sub-sequence of T.", "green")
+    TAc.print("\nIn this problem you are asked to enter a sequence T of numbers with a blank space between each number (example: 12 34 56 ...). You are also asked to tell if T is a strictly increasing/decreasing or non increasing/decreasing sequence.\n", "green")
     TAc.print("\nInsert T:", "green")
     string_T = input()
     ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_T))

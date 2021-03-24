@@ -87,6 +87,22 @@ def generate_random_seq(lenght, max):
         T.append(random.randint(0,max))
     return T
 
+def generate_random_inc_seq(lenght, max):
+    T = []
+    current = 0
+    for i in range(0, lenght):
+        current = random.randint(current,current+10)
+        T.append(current)
+    return T
+
+def generate_random_dec_seq(lenght, max):
+    T = []
+    current = max
+    for i in range(0, lenght):
+        current = random.randint(current-10,current)
+        T.append(current)    
+    return T
+
 def get_rand_subseq(T):
     s=[]
     min = random.randint(0,len(T) - 1)
