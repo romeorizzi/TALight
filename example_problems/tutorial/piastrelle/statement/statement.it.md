@@ -89,7 +89,7 @@ vorremmo tu ti avvalessi dello stesso schema ricorsivo impiegato per affrontare 
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect piastrelle check_sol_list
+> rtal connect piastrelle check_sol_set
 ```
 
 Potrai quindi controllare se dovresti considerare e venire a conoscere tecniche ed approcci algoritmici più efficaci (ossia asintoticamente più veloci) con:
