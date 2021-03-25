@@ -35,7 +35,7 @@ Potresti cominciare prima affinando e poi formalizzando in codice la tua capacit
 Per allenarti potresti sperimentare il seguente servizio:
 
 ```
-> rtal connect -a input_formula="[][--]" piastrelle check_a_sol
+> rtal connect -a input_formula="[][--]" piastrelle check_one_sol
 ```
 
 La primissima questione che vorremmo tu affrontassi è
