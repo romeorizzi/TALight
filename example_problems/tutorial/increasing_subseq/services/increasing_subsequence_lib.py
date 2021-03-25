@@ -198,26 +198,61 @@ def lis(arr):
  
     return lis
 
+def remove_values_from_list(l, val):
+   return [value for value in l if value != val]
+
 def get_min_coloring(lis):
     maximum = max(lis)
     index_max = lis.index(maximum)
     color = [0]*len(lis)
-    i = index_max 
     color_id = 1
-
+    n_assign = 1
+    first = True
     while 0 in color:
         if lis[index_max] > 0:
+            #print(lis)
+            
             color[index_max] = color_id
+            last_index = lis[index_max]
+            #print(last_index)
             lis[index_max] = 0
+            
             tmp = lis[:index_max]
-            if not tmp or all(v == 0 for v in tmp):
+            print(last_index, index_max, color_id , lis ,tmp)
+            #print(tmp, lis)
+            tmp2 = remove_values_from_list(tmp, 0)
+            if not tmp2 or  all(v >= last_index for v in tmp2) or not tmp:
                 color_id+=1
                 maximum = max(lis) 
-                index_max = lis.index(maximum)
+                id_tmp = 0
+                for i in range(0, len(lis)):
+                    if lis[i] == maximum:
+                        id_tmp = i
+                index_max = id_tmp
+                n_assign = 1
+                
             else:
-                maximum = max(tmp)
-                index_max = tmp.index(maximum)
+                maximum_tmp = max(tmp)
+                #print(maximum, maximum_tmp)
+                index_max_tmp = tmp.index(maximum_tmp)
+                while maximum_tmp == maximum:
+                    tmp[index_max_tmp] = 0
+                    maximum_tmp = max(tmp)
+                    for i in range(0, len(tmp)):
+                        if tmp[i] == maximum_tmp:
+                            index_max_tmp = i
+                    index_max_tmp = tmp.index(maximum_tmp)
+                
+                maximum = maximum_tmp
 
+                for i in range(0, len(tmp)):
+                        if tmp[i] == maximum:
+                            id_tmp = i
+                
+                index_max = id_tmp
+                n_assign+=1
+                
+        
     return color
 
 
