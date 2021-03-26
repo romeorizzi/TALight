@@ -67,7 +67,7 @@ to play yourself and experiment with the problem and the service.
 
 to let your bot `common_multiple_bot`, i.e. an executable program of which you provide the full path, to play on your behalf.
 
-Either way, this service will check out that your machine correctly does the job on a few instances. We assume you could give your machine the form of an executable code running on your local device (L). The `TAlight` system will connect your input and output streams or those of your bot acting in your place with those of a checking machine (S) implementing this service and possibly running on an external server in the cloud.
+Either way, this service will check out that your machine correctly does the job on a few instances. We assume you could give your machine the form of an executable code running on your local device (L). The `TALight` system will connect your input and output streams or those of your bot acting in your place with those of a checking machine (S) implementing this service and possibly running on an external server in the cloud.
 
 #### Example of interaction between the two codes upon requiring the service
 
@@ -151,7 +151,7 @@ Lounch
 ```
 
 to find our more about the parameters specific to the various services.
-If you want to know more about the general possibilities offered by TAlight around the services of the problems then issue
+If you want to know more about the general possibilities offered by TALight around the services of the problems then issue
 
 Lounch
 

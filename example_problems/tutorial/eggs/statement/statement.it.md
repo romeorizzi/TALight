@@ -46,20 +46,20 @@ Ma quando $U$ ed $N$ dovessro essere grandi anche il copia incolla non sarà ada
 Supponiamo che la tabella sia contenuta nel file `bots/python/table_2_100.txt`. Possiamo allora inviarlo al servizio con l'aiuto della TALutil `TA_send_txt_file` come segue:
 
 ```bash
-rtal connect -e -a separator=, eggs check_table -- ~/TAlight/TAL_utils/TA_send_txt_file.py table_2_100.csv
+rtal connect -e -a separator=, eggs check_table -- ~/TALight/TAL_utils/TA_send_txt_file.py table_2_100.csv
 ```
 
 Un altro servizio che, in qusto problema, sfrutta questa stssa TALutil è:
 
 
 ```bash
-rtal connect -e eggs eval_strategy_table -- ~/TAlight/TAL_utils/TA_send_txt_file.py strategy_table.csv
+rtal connect -e eggs eval_strategy_table -- ~/TALight/TAL_utils/TA_send_txt_file.py strategy_table.csv
 ```
 
 oppure
 
 ```bash
-rtal connect -e -aseparator=, eggs eval_strategy_table -- ~/TAlight/TAL_utils/TA_send_txt_file.py strategy_table.csv
+rtal connect -e -aseparator=, eggs eval_strategy_table -- ~/TALight/TAL_utils/TA_send_txt_file.py strategy_table.csv
 ```
 
 

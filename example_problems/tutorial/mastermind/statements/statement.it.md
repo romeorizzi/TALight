@@ -7,7 +7,7 @@ Per vincere la sfida, devi scrivere una procedura che individui il suo codice se
 Ad ogni tentativo riceverai un feedback che ti consentirà di ricevere informazioni sul codice segreto impostato dall'avversario.
 Una prima funzione di valutazione ritorna tanti pioli neri quante sono le posizioni in cui ìl codice segreto e quello da tè sottomesso presentano lo stesso colore. Una seconda funzione (chiamare la quale non viene conteggiato come ulteriore tentativo se la chiami sullo stesso codice che hai appena passato alla funzione sopra) ti ritorna tanti pioli bianchi quanti sono gli ulteriori colori indovinati, ma collocati fuori posto.
 
-Le regole ti verranno forse più chiare dopo qualche partita giocata online meglio ancora tramite TAlight stesso (usa 6 colori su 4 posizioni, possibilmente ripetuti):
+Le regole ti verranno forse più chiare dopo qualche partita giocata online meglio ancora tramite TALight stesso (usa 6 colori su 4 posizioni, possibilmente ripetuti):
 
 [un player esterno, online](http://www.webgamesonline.com/mastermind/index.php)
 
@@ -23,7 +23,7 @@ I seguenti subtask e servizi, oggetto di feedback, potranno confermarti di aver 
 * [servizio:] ottieni_valutazione: puoi sottomettere una coppia di codici (quello segreto e un tentativo), per richiedere quale sia la valutazione corretta per quella coppia.
 
 ```t
-TAlight ask --problem=mastermind -check_evaluation m n codice_segreto codice_tentativo  
+TALight ask --problem=mastermind -check_evaluation m n codice_segreto codice_tentativo  
 ```
 
 dove $m$ ed $n$ sono due numeri naturali positivi e `codice_segreto` e `codice_tentativo` sono due sequenze di $n$ numeri naturali nell'intrvallo $[0,m]$ separati da spazio.
@@ -36,7 +36,7 @@ dove $m$ ed $n$ sono due numeri naturali positivi e `codice_segreto` e `codice_t
 Puoi ottenere del feedback sia dalla riga di comando con:
 
 ```t
-TAlight ask --problem=mastermind --goal=1 --subtask=SUBTASK_NUMBER  tuo_file_eseguibile 
+TALight ask --problem=mastermind --goal=1 --subtask=SUBTASK_NUMBER  tuo_file_eseguibile 
 ```
 
 Il tuo file eseguibile sarà un programma che gioca per tè oppure un applt attraverso cui potrai giocare. In entrambi i casi dovrà rispettare il sguente protocollo di comunicazione:
@@ -63,7 +63,7 @@ In questo caso il nostro feedback si baserà su un'interazione tra un tuo progra
 Una volta lanciato il comando:
 
 ```t
-TAlight ask --problem=mastermind --goal=2 --subtask=SUBTASK_NUMBER  tuo_file_eseguibile 
+TALight ask --problem=mastermind --goal=2 --subtask=SUBTASK_NUMBER  tuo_file_eseguibile 
 ```
 
 Il protocollo da rispettare è il seguente:

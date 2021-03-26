@@ -7,7 +7,7 @@ Per vincere la sfida, devi scrivere una procedura che individui il suo codice se
 Ad ogni tentativo riceverai un feedback che ti consentirà di ricevere informazioni sul codice segreto impostato dall'avversario.
 Una prima funzione di valutazione ritorna tanti pioli neri quante sono le posizioni in cui ìl codice segreto e quello da tè sottomesso presentano lo stesso colore. Una seconda funzione (chiamare la quale non viene conteggiato come ulteriore tentativo se la chiami sullo stesso codice che hai appena passato alla funzione sopra) ti ritorna tanti pioli bianchi quanti sono gli ulteriori colori indovinati, ma collocati fuori posto.
 
-Le regole ti verranno forse più chiare dopo qualche partita giocata online meglio ancora tramite TAlight stesso (usa 6 colori su 4 posizioni, possibilmente ripetuti):
+Le regole ti verranno forse più chiare dopo qualche partita giocata online meglio ancora tramite TALight stesso (usa 6 colori su 4 posizioni, possibilmente ripetuti):
 
 [un player esterno, online](http://www.webgamesonline.com/mastermind/index.php)
 
@@ -61,7 +61,7 @@ In questo caso il nostro servizio principale (e più atteso) si baserà su un'in
 Una volta lanciato il comando:
 
 ```t
-TAlight ask --problem=mastermind --goal=2 --subtask=SUBTASK_NUMBER  tuo_file_eseguibile 
+TALight ask --problem=mastermind --goal=2 --subtask=SUBTASK_NUMBER  tuo_file_eseguibile 
 ```
 
 Il protocollo da rispettare è il seguente:

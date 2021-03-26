@@ -23,7 +23,7 @@ Assumiamo infatti che la nostra nozione di "maggiore" (in simbolo, la relazione 
 2. Transitività: se $a > b$ e $b > c$ allora $a > c$.
 </details>
 
-Per partire, ti invitiamo ad esibire la detta competenza in una gara allo sparare numeri sempre più grossi. Mettiti alla prova giocando tu stesso contro [il servizio `bigger_and_bigger`](#service-bigger_and_bigger) di questo problema didattico del TAlight tutorial. E poi, quando avrai acquisito confidenza e preso le misure, potresti istruire un bot a giocare in tua vece. Nelle istruzioni sui servizi trovi i dettagli su come realizzare queste cose.  
+Per partire, ti invitiamo ad esibire la detta competenza in una gara allo sparare numeri sempre più grossi. Mettiti alla prova giocando tu stesso contro [il servizio `bigger_and_bigger`](#service-bigger_and_bigger) di questo problema didattico del TALight tutorial. E poi, quando avrai acquisito confidenza e preso le misure, potresti istruire un bot a giocare in tua vece. Nelle istruzioni sui servizi trovi i dettagli su come realizzare queste cose.  
 
 <details>
 <summary>Cosa dimostrerai col tuo costruire</summary>
@@ -196,4 +196,4 @@ L> 101
 ```
 </details>
 
-Tutte le possibilità di impiego menzionate sopra sono aperte anche per questo secondo servizio, come per ogni altro servizio TAlight.
+Tutte le possibilità di impiego menzionate sopra sono aperte anche per questo secondo servizio, come per ogni altro servizio TALight.

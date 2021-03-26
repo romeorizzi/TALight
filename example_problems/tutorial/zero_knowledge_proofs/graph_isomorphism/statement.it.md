@@ -25,14 +25,14 @@ S> sia $\sigma$ la permutazione ricvuta da L. Allora S verifica che $E(G_3)=\{\s
 ##Servizi offerti:
 
 ```t
-> TAlight verify_a_G1_G2_f_triple my_private_secret.txt
+> TALight verify_a_G1_G2_f_triple my_private_secret.txt
 ```
 
 Verifica che $f$ è un isomorfismo tra $G_1$ e $G_2$.
 Fornisce inoltre una valutazione su quanto possa essere difficile ricostruire $f$ dalla sola conoscenza di $G_1$ e $G_2$.
 
 ```t
-> TAlight claim_G1_G2_are_iso G1_G2.txt my_Ali --k=10
+> TALight claim_G1_G2_are_iso G1_G2.txt my_Ali --k=10
 ```
 
 Per verificare che il proprio eseguibile my_Ali correttamente implementa il protocollo visto sopra per convincere il server S di essere a conoscenza dell'isomorfismo dei due grafi $G_1$ e $G_2$ contenuti nel file G1_G2.txt. Per $k$ piccolo puoi sperare di convincere il server anche con una coppia di grafi $G_1$ e $G_2$ che in realtà isomorfi non sono.

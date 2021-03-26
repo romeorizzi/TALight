@@ -18,7 +18,7 @@ The following subtasks, covered by our authomatic feedback service, can guide yo
 ### Get feedback
 You can get feedback either from command line with:
 ```
-TAlight ask --problem=tiling_mxn_by_1x2 --goal=1 --subtask=SUBTASK_NUMBER file.txt 
+TALight ask --problem=tiling_mxn_by_1x2 --goal=1 --subtask=SUBTASK_NUMBER file.txt 
 ```
 or via web, by clicking on the subtask link here above and submitting the same file.
 
@@ -43,7 +43,7 @@ However, you should pose yourself the goal to identify a general construction pr
 ### Get feedback
 Again, you can get feedback either from command line with:
 ```
-TAlight ask --problem=tiling_mxn_by_1x2 --goal=2 --subtask=SUBTASK_NUMBER file.txt 
+TALight ask --problem=tiling_mxn_by_1x2 --goal=2 --subtask=SUBTASK_NUMBER file.txt 
 ```
 or via web, by clicking on the pertinent subtask link and submitting the same file.
 This time you can submit, one at the time, one or more `.txt` files structured as follows:
@@ -67,7 +67,7 @@ _Note:_ This service also allows you to further interact on those grids where wi
 In the same spirit, in case of need, you can profit of the [help service that, if you are skeptical on the existence of a tiling for the mxn-board, will dispell one for you](https://per-ora-costruiamo-qusti-URL-a-mano-ma-sarebbe-utile-costruzione-dinamica-e/o-da-problm.yaml).
 
 ```
-TAlight ask --problem=tiling_mxn_by_1x2 -tiling m n 
+TALight ask --problem=tiling_mxn_by_1x2 -tiling m n 
 ```
 
 ## Goal 3 - saying 'no'

@@ -75,7 +75,7 @@ L'efficienza computazionale della logica risolutiva che avrai inserito al suo in
 ```
 Quì `mybot_risp.py` potrà essere un qualsiasi eseguibile (un codice binario o anche un'interpretato) che gira sulla tua macchina.
 
-Entro TAlight puoi sempre sapere di più sui parametri e le possibilità dei servizi con
+Entro TALight puoi sempre sapere di più sui parametri e le possibilità dei servizi con
 
 ```
 > rtal list parentheses -v

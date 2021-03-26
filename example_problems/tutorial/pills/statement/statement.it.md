@@ -40,7 +40,7 @@ e poi chiama lo stesso servizio come segue per ridirigere il dialogo sul tuo bot
 ```
 Quì `mybot_risp.py` potrà essere un qualsiasi eseguibile (un codice binario o anche un'interpretato) che gira sulla tua macchina.
 
-Entro TAlight puoi sempre sapere di più sui parametri e le possibilità dei servizi con
+Entro TALight puoi sempre sapere di più sui parametri e le possibilità dei servizi con
 
 ```
 > rtal list pills -v

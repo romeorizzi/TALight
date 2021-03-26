@@ -54,7 +54,7 @@ Il tiling, se preferisci, può anche essere costruito a mano, ma poniti l'obiett
 ### Get feedback
 Di nuovo, puoi ottenere del feedback sia dalla riga di comando con:
 ```
-TAlight ask --problem=tiling_mxn_by_1x2 --goal=2 --subtask=SUBTASK_NUMBER file.txt 
+TALight ask --problem=tiling_mxn_by_1x2 --goal=2 --subtask=SUBTASK_NUMBER file.txt 
 ```
 o via web, cliccando sul link del subtask di pertinenza e sottomettendo lo stesso file.
 Questa volta potrai sottomettere, uno per volta, uno o più file `.txt` strutturati come segue:
@@ -78,7 +78,7 @@ _Nota:_ Grazie a questo servizio, potrai inoltre interagire oltre su quelle grig
 Allo stesso modo, in caso di bisogno, potrai avvalerti del [servizio di aiuto che, se sei scettico sul fatto che un tiling esista per la griglia mxn, te ne svelerà uno](https://per-ora-costruiamo-qusti-URL-a-mano-ma-sarebbe-utile-costruzione-dinamica-e/o-da-problm.yaml).
 
 ```
-TAlight ask --problem=tiling_mxn_by_1x2 -tiling m n 
+TALight ask --problem=tiling_mxn_by_1x2 -tiling m n 
 ```
 
 

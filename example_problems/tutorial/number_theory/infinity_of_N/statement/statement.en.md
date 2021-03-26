@@ -23,7 +23,7 @@ Indeed, we assume that our notion of "bigger" (in symbols, the $>$ relation) enj
 2. Transitivity: if $a > b$ and $b > c$ then $a > c$.
 </details>
 
-To start with, we invite you to exhibit the above competence in a race at calling out bigger and bigger numbers. Try playing yourself against [the service `bigger_and_bigger`](#service-bigger_and_bigger) of this didactic problem of the TAlight tutorial. And then, once you have gathered enough confidence, you might want to instruct a bot to play on your behalf. See the detailed instructions on the service to see how this can be done.  
+To start with, we invite you to exhibit the above competence in a race at calling out bigger and bigger numbers. Try playing yourself against [the service `bigger_and_bigger`](#service-bigger_and_bigger) of this didactic problem of the TALight tutorial. And then, once you have gathered enough confidence, you might want to instruct a bot to play on your behalf. See the detailed instructions on the service to see how this can be done.  
 
 <details>
 <summary>What will you prove as a result of your making</summary>
@@ -80,7 +80,7 @@ Launch
 ```
 
 to play yourself the game to whom shoots out the biggest natural against our service provider program S. A sequence of relentless overtakes will then take place between S and you, where S will have to throw in the sponge soon or later (if you do not make mistakes).
-Program S may be located and run on your local machine or in the cloud: which one of the two applies depends on how you instructed the TAlight daemon `rtald` when you launched it.
+Program S may be located and run on your local machine or in the cloud: which one of the two applies depends on how you instructed the TALight daemon `rtald` when you launched it.
 
 To organize yourself as an ever winner (i.e., to obtain a general proof of something), you can trow in a simple bot of yours to play in your behalf with
 
@@ -191,4 +191,4 @@ L> 101
 ```
 </details>
 
-All possibilities we have mentioned above for the previous task are also open here, like for any other TAlight problem service.
+All possibilities we have mentioned above for the previous task are also open here, like for any other TALight problem service.

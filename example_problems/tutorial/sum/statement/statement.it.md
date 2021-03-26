@@ -1,14 +1,14 @@
 # sum
 
-Questo è il primo problema del tutorial che intende illustare l'uso di `TAlight` sia ai problem solvers (apprendisti) che ai problem makers (addstratori a competenze).
+Questo è il primo problema del tutorial che intende illustare l'uso di `TALight` sia ai problem solvers (apprendisti) che ai problem makers (addstratori a competenze).
 La competenza richiesta dal problema `sum` è di saper trovare due numeri con una certa somma (ed eventualmente il cui prodotto sia massimo), oppure con somma e prodotto (oppure somma e differenza) assegnati.
 Come tale potrebbe essere orientativamente adatto per la fascia di età 8-15 oppure anche prima nei suoi subtask più elementari su cui offre comunque del dialogo.
 
-## sui problemi in `TAlight`
+## sui problemi in `TALight`
 
-Un problema curato in `TAlight` è un giocattolo ben congegnato che viene con dei servizi di corredo progettati e ralizzati dal problem maker per offrire all'apprendista delle occasioni di sperimentazione autonoma. Tali servizi offrono feedback, indirizzano la curiosità e gli approcci di soluzione, e supportano dei dialoghi che coinvolgano il problem solver in una sfida e lo volgano ad un approccio attivo all'apprendimento. L'attivazione, sviluppo e consolidamento delle potenzialità prime di apprendimento e crescita, il loro eterno recupero a partire dalle motivazioni, sono ancor più irrinuciabili nel contesto attuale, e ci riguardano tutti, dal neet al ricercatore affermato che comunque deve saper reinventarsi ed ampliarsi sempre più velocemente.
+Un problema curato in `TALight` è un giocattolo ben congegnato che viene con dei servizi di corredo progettati e ralizzati dal problem maker per offrire all'apprendista delle occasioni di sperimentazione autonoma. Tali servizi offrono feedback, indirizzano la curiosità e gli approcci di soluzione, e supportano dei dialoghi che coinvolgano il problem solver in una sfida e lo volgano ad un approccio attivo all'apprendimento. L'attivazione, sviluppo e consolidamento delle potenzialità prime di apprendimento e crescita, il loro eterno recupero a partire dalle motivazioni, sono ancor più irrinuciabili nel contesto attuale, e ci riguardano tutti, dal neet al ricercatore affermato che comunque deve saper reinventarsi ed ampliarsi sempre più velocemente.
 
-## struttura generale dei dialoghi offerti dai servizi `TAlight`
+## struttura generale dei dialoghi offerti dai servizi `TALight`
 
 Indipendentemente dal fatto che siano inviate dal server (S) al dispositivo in locale (L) oppure viceversa, le righe che iniziano col carattere cancelletto '#' sono commenti, e possono essere inviate in modo del tutto asincrono.
 Quando il server invia una riga che inizia col carattere '!' comunica la chiusura del canale per terminare un'interazione che si è svolta nel rispetto del protocollo sotteso, la riga può proseguire con un commento.
@@ -25,7 +25,7 @@ Il server invierà sul canale un certo numero di domande e le inframmezzerà con
 Siamo convinti che, e l'idea è anche che, il protocollo (sotteso) si chiarisca meglio e più efficacemente attraverso la sperimentazione diretta
 di dialoghi coi servizi offerti.
 
-Per questo primo esempio forniamo comunque degli esempi irrealistici (ma che in realtà un problem maker motivato avrebbe tutti gli strumnti per poter supportare entro `TAlight`) di come potrebbero svolgersi dei dialoghi.
+Per questo primo esempio forniamo comunque degli esempi irrealistici (ma che in realtà un problem maker motivato avrebbe tutti gli strumnti per poter supportare entro `TALight`) di come potrebbero svolgersi dei dialoghi.
 
 
 ## Esempio di interazione
@@ -70,7 +70,7 @@ Per ottenere informazioni più di dettaglio, quali i parametri di utilizzo dei s
 Leggendo ed interpretando l'output di questo comando scopriamo diverse cose.
 Scopriamo ad esempio che il servizio `sum` prevede il supporto per due lingue (italiano ed inglese, con l'italiano settato a default) e consente, attraverso il parametro `numbers`, la richiesta di lavorare con numeri di una sola cifra oppure più grossi (non meglio specificato il range), mentre `twodigits` è il valore di default per questo parametro.
 Tutti i valori di default sono settati dal docente nel file `meta.yaml` del problema. Anche un problem-solver (studente) potrà operare questa modifica e personalizzazione se ha scaricato l'intero problema in locale: lanciato il server `rtald` in locale e modificando il file `meta.yaml` nella sua copia del problema `sum` potrà riconfigurare ogni comportamento ed esplorare nuove possibilità.
-Lasciamo a tè di riscontrare come vadano interpretate le ulteriori informazioni reperite dal file `meta.yaml`. Un punto importante è: `TAlight` è stato progettato per promuovere possibilità di esplorazione autonoma e ciò che noi chiamiamo brake-on-through-to-the-other-side, ossia la transizione da problem-solver a problem-maker.
+Lasciamo a tè di riscontrare come vadano interpretate le ulteriori informazioni reperite dal file `meta.yaml`. Un punto importante è: `TALight` è stato progettato per promuovere possibilità di esplorazione autonoma e ciò che noi chiamiamo brake-on-through-to-the-other-side, ossia la transizione da problem-solver a problem-maker.
 
 Ma confrontati in un dialgo con uno dei servizi da noi predisposti per questo problema, ad esempio col servizio `sum` (omonimo del problema che lo ricomprende) così configurato:
 
@@ -92,8 +92,8 @@ L'interazione che intercorre tra tuo bot `sum_and_product_mysolution.py` ed il s
 rtal connect -e -a numbers=big sum sum_and_product  -- sum_and_product_mysolution.py
 ```
 
-Menzioniamo infine che nella cartelle `applets` del progetto `TAlight`, il file `sum-protoapplet.html` esemplifica le basi su come realizzare l'interazione entro un browser. Puoi vederlo in azione ad esempio con
+Menzioniamo infine che nella cartelle `applets` del progetto `TALight`, il file `sum-protoapplet.html` esemplifica le basi su come realizzare l'interazione entro un browser. Puoi vederlo in azione ad esempio con
 
 ```bash
-~/TAlight/applets$ google-chrome sum-protoapplet.html
+~/TALight/applets$ google-chrome sum-protoapplet.html
 ```

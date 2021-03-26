@@ -9,7 +9,7 @@ It offers two main programs plus other utilities mainly meant for the problem ma
 
 3. `rtalc` (the rust implementation of a checker of the consistency of the `meta.yaml` file listing the services of a problem)
 
-This document explains how to build up all these `TAlight` commands for your architecture.
+This document explains how to build up all these `TALight` commands for your architecture.
 Do not scare because:
 
 1. the process is simple and you will be followed step as step;
@@ -20,12 +20,12 @@ Do not scare because:
 ## Building the needed binaries
 
 In order to build this project, you will first need a working installation of the Rust compiler and Cargo.
-If you don't already have these, the official service [rustup.rs](https://rustup.rs/) from the rust community will guide you with updated instructions through the few simple steps needed to set these up. The service assumes you have a terminal at your disposal (which, in case you are on a Windows platform, can be the CMD). The terminal il also a main companion and your close friend in enjoying the TAlight services.
+If you don't already have these, the official service [rustup.rs](https://rustup.rs/) from the rust community will guide you with updated instructions through the few simple steps needed to set these up. The service assumes you have a terminal at your disposal (which, in case you are on a Windows platform, can be the CMD). The terminal il also a main companion and your close friend in enjoying the TALight services.
 
 Once Rust is set up, you have two options for the kinds of builds you intend to obtain.
 The `Relase build` is by far more efficient in term of performances.
 The `Debug build` provides you with more detailed information when you use it. For what it costs, we actually suggest you to make them both.
-However, using the debug version (binaries placed in the `~/TAlight/rtal/target/debug` folder) rather than the release version (binaries placed in the `~/TAlight/rtal/relase/debug` folder) is the best choice and practice, you can switch to the other in those few situations when in need for more performances. 
+However, using the debug version (binaries placed in the `~/TALight/rtal/target/debug` folder) rather than the release version (binaries placed in the `~/TALight/rtal/relase/debug` folder) is the best choice and practice, you can switch to the other in those few situations when in need for more performances. 
 
 ### Debug build
 
