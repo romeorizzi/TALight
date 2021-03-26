@@ -1,14 +1,14 @@
-# What is TAlight
+# What is TALight
 
 Are you a teacher/student/researcher/executive passionate about transmitting some problem solving competences, techniques, methods or skills? Do you want to acquire new competences in a lively, concrete and effective way? Do you want to promote them so that they come to new life in your children/students/employers/clients/customers/citizens? Would you like to promote your discoveries or products? Would you like to propose an interesting and instructive challenge, or organize a selection or recruiting campaign reaching to the alive ones?
 <details>
-<summary>TAlight offers you ...</summary>
-TAlight offers you the perfect tool and open framework for making up your favorite problem into a fully fledged didactic inclusive Montessori toy, allowing to organize and offer smooth interactive didactic paths around it and automatic feedback services to promote autonomous exploration and learning.
-Also the social and collaborative dimension is empowered in our approach and vision that has motivated the development of TAlight, an ongoing process that we hope will surprise you (also in the future :stuck_out_tongue_winking_eye:) and to which everyone is invited to participate.
+<summary>TALight offers you ...</summary>
+TALight offers you the perfect tool and open framework for making up your favorite problem into a fully fledged didactic inclusive Montessori toy, allowing to organize and offer smooth interactive didactic paths around it and automatic feedback services to promote autonomous exploration and learning.
+Also the social and collaborative dimension is empowered in our approach and vision that has motivated the development of TALight, an ongoing process that we hope will surprise you (also in the future :stuck_out_tongue_winking_eye:) and to which everyone is invited to participate.
 
 <details>
 <summary>Do you want to acquire new competences?</summary>
-Then we refer to you as a **problem solver**. If you can find out the content for you under TAlight, then both an active in-depth learning experience and pure fun are assured.
+Then we refer to you as a **problem solver**. If you can find out the content for you under TALight, then both an active in-depth learning experience and pure fun are assured.
 If no such content is already available, then think about making it while you progress in the subject. In this way you will be given a fun opportunity to learn by doing.  
 </details>
 
@@ -24,12 +24,12 @@ Yes, the knowledge or the willingness to learn even just the basics of one singl
 
 In good conclusion
 <details>
-<summary>TAlight is a minimal but powerful and flexible open system for the design, the sharing, the experimentation and the use of interactive didactic problems which offer rich ongoing instant feedback services to the problem solver (the student, or trainee, or employee, or fellow research colleague).
+<summary>TALight is a minimal but powerful and flexible open system for the design, the sharing, the experimentation and the use of interactive didactic problems which offer rich ongoing instant feedback services to the problem solver (the student, or trainee, or employee, or fellow research colleague).
 </summary>
-Right now, most problems already available in TAlight are of an algorithmic nature. This is mainly because of our own background and because algorithms often represent the ultimate form of archetypal knowledge. However, right now we do not set/state limits on what can be done, and welcome any kind of sensibility and new muses. 
-This repository offers the TAlight core plus some example problems working under it.
-These problems prompt and stimulate the problem solver but are mainly meant to illustrate how making new interesting problems under TAlight is in your and in their reach. Yes, we insist on this "also in their reach" both on the solving and on the making side of the coin, which is an important extra-point in our vision.
-TAlight is meant to be simple to work with and highly democratic.
+Right now, most problems already available in TALight are of an algorithmic nature. This is mainly because of our own background and because algorithms often represent the ultimate form of archetypal knowledge. However, right now we do not set/state limits on what can be done, and welcome any kind of sensibility and new muses. 
+This repository offers the TALight core plus some example problems working under it.
+These problems prompt and stimulate the problem solver but are mainly meant to illustrate how making new interesting problems under TALight is in your and in their reach. Yes, we insist on this "also in their reach" both on the solving and on the making side of the coin, which is an important extra-point in our vision.
+TALight is meant to be simple to work with and highly democratic.
 Among its commitments, in our vision come:
 
 1. no one left behind: the feedback provided to the students should be rich and stimulating.
@@ -130,9 +130,9 @@ Here the phases are: downloading, placing and uncompressing, testing and giving 
 
 <details><summary>How to download the binary</summary>
 
-Go to [the binaries download page](https://github.com/romeorizzi/TAlight/releases/) and choose the correct `rtal` binary for your platform and download the compressed file. For Mac you have one single option (64 bits) and the binary should work equally well on an Intel or an AMD processor. The same with Windows, but here you have two options (32 bits versus 64 bits) and you can [see here](https://support.microsoft.com/en-us/windows/32-bit-and-64-bit-windows-frequently-asked-questions-c6ca9541-8dce-4d48-0415-94a3faa2e13d) for instructions on how to find out which one of the two is the right one for your machine (nowadays 64 bits almost always). In the case of Linux we assume the 64 bits but you have to choose between the Intel-AMD architecture or the ARM architecture (usually meant for servers).
+Go to [the binaries download page](https://github.com/romeorizzi/TALight/releases/) and choose the correct `rtal` binary for your platform and download the compressed file. For Mac you have one single option (64 bits) and the binary should work equally well on an Intel or an AMD processor. The same with Windows, but here you have two options (32 bits versus 64 bits) and you can [see here](https://support.microsoft.com/en-us/windows/32-bit-and-64-bit-windows-frequently-asked-questions-c6ca9541-8dce-4d48-0415-94a3faa2e13d) for instructions on how to find out which one of the two is the right one for your machine (nowadays 64 bits almost always). In the case of Linux we assume the 64 bits but you have to choose between the Intel-AMD architecture or the ARM architecture (usually meant for servers).
 
-Place the downloaded file in the folder you prefer. If you have already cloned or downloaded this repo then we suggest you to place it in a folder named `TAlight/rtal/target/debug` within the copy of this repo on your local machine (to create subfolders you can use the `mkdir` command).
+Place the downloaded file in the folder you prefer. If you have already cloned or downloaded this repo then we suggest you to place it in a folder named `TALight/rtal/target/debug` within the copy of this repo on your local machine (to create subfolders you can use the `mkdir` command).
 After having placed the file which is correct for your platform on your local machine, proceed as follows.
 
 <strong>Linux/Mac:</strong>
@@ -186,12 +186,12 @@ To get the syntax that works you can then try it first from the CMD. Be told tha
 3. to refer to the current value of `PATH` (or any other environment variable) you write `%PATH%` rather than `$PATH`
    So, for example, you could end up writing something like:
 ```
-    SET "PATH=%PATH%;C:\Program Files\TAlight"
+    SET "PATH=%PATH%;C:\Program Files\TALight"
 ```
 
-However, we suggest you to create the `TAlight` folder (where to place the `rtal` binary) in your home folder (you can find it with `cd %HOME%` or just `cd ~`).
+However, we suggest you to create the `TALight` folder (where to place the `rtal` binary) in your home folder (you can find it with `cd %HOME%` or just `cd ~`).
 
-Like the browsers in parsing the URL field, any shell (and hence Linux and Mac) use '/' rather than '\' in order to separate the names of the directories when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
+Like the browsers in parsing the URL field, any shell (and hence Linux and Mac) use '/' rather than '\' in order to separate the names of the directories when walking along a path in your filesystem. Therefore, if you are on Windows, you should write `~\TALight` instead of `~/TALight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial.
 
 DESCRIPTION SHORT:
 You have to put your .exe file's path into enviroment variable path. To do this go to:
@@ -303,11 +303,11 @@ rtal -s wss://talight.tk/tutorial connect -n -aobj=max_product sum free_sum
 To connect a bot of yours to play on your behalf:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 <strong>If you are on Windows than you should write:</strong>
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- python ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- python ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 <strong>This is because only `.exe` files can be executed on Windows, scripts can not (even if their first line is the correct she-bang).
 
@@ -318,13 +318,13 @@ Of course, you can also use this second and longer form of the command also on L
 Ok, that bot did not behave that well because it was a simple one, but you can try the `sum_mymaxproductbot.py` in the same directory (of this report that you have cloned in local). Or you can assign to `sum_mysimplebot.py` a simpler task:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e sum free_sum -- ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect -e sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 
 When you succeed teaching a competence (like when you succeed instructing a bot to do something) then you get confirmed to have acquired that competence in the deep. Therefore, the submission of a bot offers a means to assess the competence. We might thus offer you an evaluation on your submissions. Apart for checking what is going on, you might then prefer to turn off the full report on the interaction between your bot and the program written by the problem maker who designed the service. In this case, just drop the `-e` flag:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect sum free_sum -- ~/TAlight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://talight.tk/tutorial connect sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 
 Since problem `sum` offers an `help` service, you can also get immediate directions about the problem by asking to this service, selecting the specific page through the use of arguments:
@@ -390,7 +390,7 @@ However, if `git` is installed on the machine, then cloning the repo is possible
 This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
 This mans that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
 ```bash
-git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+git clone -c core.symlinks=true https://github.com/romeorizzi/TALight.git
 ```
 
 Still, if you also intend to contribute to a git repo (act also pushes and not only pulls and clones), then be told that until recent versions of Windows 10, Windows could not manage symlinks in a fully satisfactory way.
@@ -410,7 +410,7 @@ Sharing the repo with collaborators (and consider having your students among the
 
 </details>
 
-## How to get TAlight running on your machine
+## How to get TALight running on your machine
 
 The following preamble might appear as of exclusive interest of the problem maker, but in fact helps putting things in proper perspective also for the problem solver. 
 
@@ -437,7 +437,7 @@ You are reading the `README.md` file of an open source project that aims at fost
 
 Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) of the [Git Community](https://git-scm.com/community) will give you the best updated instructions on how to install this game changer on your machine. If your are a Windows user, we limit ourselves to remark their suggestion to get the command line version of git as well as the GUI ("We’ll learn more about those things a little later, but suffice it to say they’re things you want.").
 
-Even if you do not make any other more advanced use of git, having it installed will simplify other steps in the installation process to follow and, more importantly, will allow you to better connect to this repo or other reports (possibly of TAlight problems). Even if you do not intend to contribute to their ongoing development, this means that it will be easy for you to maintain updated your local version of their contents and get the new exercises and/or features currently under development. To get the updates just launch the command
+Even if you do not make any other more advanced use of git, having it installed will simplify other steps in the installation process to follow and, more importantly, will allow you to better connect to this repo or other reports (possibly of TALight problems). Even if you do not intend to contribute to their ongoing development, this means that it will be easy for you to maintain updated your local version of their contents and get the new exercises and/or features currently under development. To get the updates just launch the command
 
 ```t
 git pull
@@ -447,7 +447,7 @@ from any directory of the repo. (In case you have overwritten some files of the 
 However, we also advise you to get at least a rough idea of what git has to offer you. Again, the [Documentation page of the Git community](https://git-scm.com/doc) is an ideal place where to get directions.
 
 The main reasons for you to get into `git` are: not only `git` offers you important facilities (free and robust) like backups and working directories that you can in simplicity share among your devices, and powerful and intrinsically safe time machines over them and on your work, but it offers you the means to share and collaborate on your projects and, in fact, it is the portal to the world of open source projects (git was designed by Linus Torvalds in order to scale up its projects concerning the development of the Linux operating system to a wide collaborative dimension).
-Not only TAlight is open source software, but we foresee and foster that problem makers from different countries/regions (but maybe of a same discipline) might collaborate on more or less open didactic projects.
+Not only TALight is open source software, but we foresee and foster that problem makers from different countries/regions (but maybe of a same discipline) might collaborate on more or less open didactic projects.
 </details> 
 
 ___
@@ -459,7 +459,7 @@ Assuming you have `git` installed on your machine:
 1. open a shell (that is, a terminal, or cmd, or power shell)
 2. go to your home directory, and enter:
 ```bash
-git clone https://github.com/romeorizzi/TAlight.git
+git clone https://github.com/romeorizzi/TALight.git
 ```
 to clone the content of this repo.
 Of course, you can achieve the same result by any other means if you prefer.
@@ -468,7 +468,7 @@ Of course, you can achieve the same result by any other means if you prefer.
 This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
 This means that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
 ```bash
-git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+git clone -c core.symlinks=true https://github.com/romeorizzi/TALight.git
 ```
 Still, if you also intend to contribute to a git repo (act also pushes and not only pulls and clones), then be told that until recent versions of Windows 10, Windows could not manage symlinks in a fully satisfactory way.
 However, since a relatively recent version of Windows it is now possible (and we recommend you to do so) to activate the management of the true symlinks by activating the "developer mode" ("modalità sviluppatore"):
@@ -478,7 +478,7 @@ However, since a relatively recent version of Windows it is now possible (and we
 Also, when you install Git Bash you are given you chance to activate the symlinks.
 </strong>
 
-You can also clone and/or place the TAlight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
+You can also clone and/or place the TALight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
 
 Note: cloning is better than downloading since in this way you get connected to the repo. Even if you do not intend to contribute to the project, still this is handy since, in order to update to the current version, you can simply go (from a terminal) to any folder of the repo and enter:
 
@@ -489,8 +489,8 @@ git pull
 </details> 
 
 ___
-In the following we assume that `~/TAlight` is the path to this TAlight repo as cloned on your system, i.e., we assumed that this repo has been cloned as a direct child of your home directory, which is the recommended choice. In case not then you should of course correspondingly adapt our explicit commands to your situation, both here and in the following.
-Of course, you are free to rename it at your will or place it elsewhere as long as you interpret all our instructions (also the following ones) accordingly (do not be afraid: moving/renaming the home folder of a repo on your local machine will not disconnect it from the original repo in the cloud, you can still update it with `git clone` even if you later change its name in local). For example, if you use programs like Github Desktop to manage your git repositories (we however suggest using the bash terminal), you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TAlight` in the following instructions. Just replace `~/TAlight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
+In the following we assume that `~/TALight` is the path to this TALight repo as cloned on your system, i.e., we assumed that this repo has been cloned as a direct child of your home directory, which is the recommended choice. In case not then you should of course correspondingly adapt our explicit commands to your situation, both here and in the following.
+Of course, you are free to rename it at your will or place it elsewhere as long as you interpret all our instructions (also the following ones) accordingly (do not be afraid: moving/renaming the home folder of a repo on your local machine will not disconnect it from the original repo in the cloud, you can still update it with `git clone` even if you later change its name in local). For example, if you use programs like Github Desktop to manage your git repositories (we however suggest using the bash terminal), you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TALight` in the following instructions. Just replace `~/TALight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
 
 
 <strong>Two notes of strict attention for Windows users</strong>
@@ -498,7 +498,7 @@ Of course, you are free to rename it at your will or place it elsewhere as long 
 1. be warned of what is the correct way to clone a git repo that contains symlinks:
     after having opened the git bash as Administrator, you must launch the clone command including the parameter specifying that symlinks should be treated as such. More precisely:
     ```bash
-    git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
+    git clone -c core.symlinks=true https://github.com/romeorizzi/TALight.git
     ```
 
 Still, if you also intend to contribute to a git repo (act also pushes and not only pulls and clones), then be told that until recent versions of Windows 10, Windows could not manage symlinks in a fully satisfactory way.
@@ -509,7 +509,7 @@ However, since a relatively recent version of Windows it is now possible (and we
 Also, when you install Git Bash you are given you chance to activate the symlinks.
 
 
-2. Windows uses '\\' instead of '/' (like Unix/Linux/Mac or also like in the URLs you access from your browser) in order to separate the names of the folders and subfolders encountered when walking along a path to a resource (file or folder) located in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial. In other words, you should adapt our instructions accordingly to this notice (and also further adapt these paths in case you have placed the `TAlight` cloned repo in a place other than the one we assume.
+2. Windows uses '\\' instead of '/' (like Unix/Linux/Mac or also like in the URLs you access from your browser) in order to separate the names of the folders and subfolders encountered when walking along a path to a resource (file or folder) located in your filesystem. Therefore, if you are on Windows, you should write `~\TALight` instead of `~/TALight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial. In other words, you should adapt our instructions accordingly to this notice (and also further adapt these paths in case you have placed the `TALight` cloned repo in a place other than the one we assume.
 Your home is where you get if you ask for it with
 
 ```bash
@@ -524,24 +524,24 @@ cd ~
 
 ## OBTAIN THE BINARIES
 
-TAlight consists of two programs, the `rtal` client, and the `rtald` server. Both are needed both by the problem solver and by the problem maker. The problem maker will also use the `rtalc` checker.
-After downloading this TAlight project public repo, you can either choose to use the binaries made available for your platform (not yet made available at present) or compile them from the source code.
+TALight consists of two programs, the `rtal` client, and the `rtald` server. Both are needed both by the problem solver and by the problem maker. The problem maker will also use the `rtalc` checker.
+After downloading this TALight project public repo, you can either choose to use the binaries made available for your platform (not yet made available at present) or compile them from the source code.
 How to make these two binaries and the basic on how to use them is explained in [the file `rtal/README.md`](rtal) of this repo.
 
-In the following we assume that the files `~/TAlight/rtal/target/debug/rtal` and `~/TAlight/rtal/target/debug/rtald` exist (possibly with a different placement, as explained above) on your machine and have execution permission.
+In the following we assume that the files `~/TALight/rtal/target/debug/rtal` and `~/TALight/rtal/target/debug/rtald` exist (possibly with a different placement, as explained above) on your machine and have execution permission.
 You can check this by asking them to display out their main help page.
 
 ```bash
-~/TAlight/rtal/target/debug/rtal --help
-~/TAlight/rtal/target/debug/rtald --help
-~/TAlight/rtal/target/debug/rtalc --help
+~/TALight/rtal/target/debug/rtal --help
+~/TALight/rtal/target/debug/rtald --help
+~/TALight/rtal/target/debug/rtalc --help
 ```
 
-These pages will list out the parameters and subcommands of these three `TAlight` commands.
+These pages will list out the parameters and subcommands of these three `TALight` commands.
 
 ## SETUP OF THE PATH ENVIRONMENT VARIABLE
 
-Having to remember and digit the whole path `~/TAlight/rtal/target/debug/` in order to use the `TAlight` commands will soon appear too lengthy.
+Having to remember and digit the whole path `~/TALight/rtal/target/debug/` in order to use the `TALight` commands will soon appear too lengthy.
 
 <details>
 <summary>To solve this ...</summary>
@@ -550,21 +550,21 @@ Having to remember and digit the whole path `~/TAlight/rtal/target/debug/` in or
 There are many ways to solve this nuisance, we list them out from the fastest fixes to the best ones:
 
 <details>
-<summary>add the path `$HOME/TAlight/rtal/target/debug/` to your `PATH` environment variable and define the `TAL_HOME` environment variable</summary>
+<summary>add the path `$HOME/TALight/rtal/target/debug/` to your `PATH` environment variable and define the `TAL_HOME` environment variable</summary>
 
 To do this, enter the following two command lines in the terminal (in case you are on Windows you should use the Git Bash):
 
 ```bash
-PATH=$PATH:$HOME/TAlight/rtal/target/debug/
-export TAL_HOME="$HOME/TAlight"
+PATH=$PATH:$HOME/TALight/rtal/target/debug/
+export TAL_HOME="$HOME/TALight"
 ```
-You will have to do this on every terminal from which you want to issue TAlight commands.
+You will have to do this on every terminal from which you want to issue TALight commands.
 
 If you want this change to apply to all terminals you will light up in the future, them add the following two lines to your `~/.bashrc` file (and to your `~/.zshrc` file if you are on Mac where by default you will be using the `zsh` shell): 
 
 ```bash
-export PATH="$PATH:$HOME/TAlight/rtal/target/debug"
-export TAL_HOME="$HOME/TAlight"
+export PATH="$PATH:$HOME/TALight/rtal/target/debug"
+export TAL_HOME="$HOME/TALight"
 ```
 
 Notice that this will not take effect on the terminals already open at the time you added the line and saved the new version of your `~/.bashrc` file.
@@ -587,17 +587,17 @@ From the terminal, lounch the following commands (if you are on Windows just lou
 ```bash
 mkdir ~/.bin
 cd ~/.bin
-ln -s ~/TAlight/rtal/target/debug/rtald ~/.bin/
-ln -s ~/TAlight/rtal/target/debug/rtalc ~/.bin/
-ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
-ln -s ~/TAlight/TAL_utils/problem_solver/TA_send_txt_file.py ~/.bin/ 
+ln -s ~/TALight/rtal/target/debug/rtald ~/.bin/
+ln -s ~/TALight/rtal/target/debug/rtalc ~/.bin/
+ln -s ~/TALight/rtal/target/debug/rtal ~/.bin/
+ln -s ~/TALight/TAL_utils/problem_solver/TA_send_txt_file.py ~/.bin/ 
 ```
 
 Then, (assuming you have the shell; for sure you have on Unix/Linux/Mac and also on Windows if you correctly installed `git` with the `Git Bash`) add the following lines at the end of your `~/.bashrc` file (and of your `~/.zshrc` file if you are on Mac where by default you will be using the `zsh` shell).
 
 ```bash
 export PATH="$PATH:$HOME/.bin"
-export TAL_HOME="$HOME/TAlight"
+export TAL_HOME="$HOME/TALight"
 ```
 
 Again, remember that this update will be effective only for terminals you open after having modifyied the `~/.bashrc` file.
@@ -611,7 +611,7 @@ For those with Windows and without the shell, add the path `~/.bin` to your `PAT
 </details>
 
 
-Either way and again, you can check that the `TAlight` commands are now directly accessible with
+Either way and again, you can check that the `TALight` commands are now directly accessible with
 
 ```bash
 rtal --help
@@ -625,7 +625,7 @@ rtald --help
 
 Either way, when defining the `TAL_HOME` environment variable we assumed that this repo has been cloned as a direct child of your home directory, which is the recommended choice. In case not then you should of course correspondingly adapt our explicit commands to your situation, both here and in the following. 
 
-## TUTORIAL (How to use TAlight)
+## TUTORIAL (How to use TALight)
 
 In all the examples we offer in this tutorial we assume the use of a POSIX-like shell.
 Even if you aim at the problem maker role we suggest you to first exploit the first of these two tutorials currently available.
@@ -634,8 +634,8 @@ Even if you aim at the problem maker role we suggest you to first exploit the fi
 
 #### PREAMBLE
 
-Once the two executable `rtal` and `rtald` are built and conveniently available then you can already use `TAlight` both in local and in connection to an external server exposing TAlight problems and other material for a course, a didactic path or project, a competition, a scouting selection, a challenge, or a game.
-Whether you are a problem solver (usually a student) or a problem maker (usually a teacher, or a senior student), a general truth and assumption in `TAlight` is that working first in local, whenever possibile, is the best way to experiment, learn and develop. You go out in the wide when ready. Active learning is better organized as a multistage process.
+Once the two executable `rtal` and `rtald` are built and conveniently available then you can already use `TALight` both in local and in connection to an external server exposing TALight problems and other material for a course, a didactic path or project, a competition, a scouting selection, a challenge, or a game.
+Whether you are a problem solver (usually a student) or a problem maker (usually a teacher, or a senior student), a general truth and assumption in `TALight` is that working first in local, whenever possibile, is the best way to experiment, learn and develop. You go out in the wide when ready. Active learning is better organized as a multistage process.
 
 After downloading this repo you already have on your machine 
 a set of working test problems to experiment with, and this section offers you a tutorial on them.
@@ -647,11 +647,11 @@ The first thing to understand is the way the server and the client interact. Thi
 
 In this tutorial we start with examples concerning modality 1 since all main features appear there.
 In particular, this is certainly true with the problems of this tutorial that are entirely public and already downloaded with this repo.
-Moreover, working in local prompts you to action, makes for a more concrete understanding, and fosters your experimental attitudes and skills which is one of the goals of `TAlight`.
+Moreover, working in local prompts you to action, makes for a more concrete understanding, and fosters your experimental attitudes and skills which is one of the goals of `TALight`.
 As a problem solver, the time to connect to the internet comes only when you want to work on problems that (in full or in part) are not openly published (competitions, exams, didactic reasons, privacy reasons, copyright reasons, ...) or to multiplayer problems or games.
 As a problem maker, you should consider offering the services for a problem from an internet server when your aim is to manage a competition, scouting selection, exam, or you want to offer a challenge through the internet with some control on the flow of information (for example when with your problems you want to instruct a client to the use of a product). Or possibly when you want to offer a very user friendly and attractive service.
 
-When creating a problem and designing, implementing and experimenting its services within `TAlight` you do not need to offer these services online through an internet server. You can experiment them in local and share them by other means with other problem solvers or makers and collaborators to that project. Each of these recipients will have the possibility to make them alive in local with the open source `TAlight` platform.
+When creating a problem and designing, implementing and experimenting its services within `TALight` you do not need to offer these services online through an internet server. You can experiment them in local and share them by other means with other problem solvers or makers and collaborators to that project. Each of these recipients will have the possibility to make them alive in local with the open source `TALight` platform.
 In good conclusion, you need modality 2 almost only to offer a service on the web for problems where some services to the problem solver require pieces that for some reason you do not want to make public. Though the example problems are fully public (you download them as a whole with this repo), still their directory structure is organized as they were not. In the public directory of a problem it is customary to place links to all the materials of the problem that can be made public without spoilering in any way the problem (as for its intended use). 
 
 In the case of the problems of this tutorial the whole of the materials comprising them is included in the directory with their names.
@@ -674,9 +674,9 @@ sudo apt install python-is-python3
 ```
 
 
-## STARTING THE TAlight DAEMON
+## STARTING THE TALight DAEMON
 
-To operate with problems you have on your local machine, you first activate the `TAlight` daemon `rtald` on your machine to serve requests coming from your machine itself (modality 1).
+To operate with problems you have on your local machine, you first activate the `TALight` daemon `rtald` on your machine to serve requests coming from your machine itself (modality 1).
 When starting the daemon, it is a good idea to first turn on logging, by setting the environment variable `RUST_LOG=info`.
 
 <details><summary>How to correctly set the environment variable `RUST_LOG=info`</summary>
@@ -697,21 +697,21 @@ The simplest and most effective way to unset all environment variables set up fo
 </details>
 
 
-Both in modality 1 and in modality 2, you must specify to the daemon the directory containing the `TAlight` problems it should take care of. It is assumed that this directory is located on your local file system and each problem is a direct subdirectory of it.
-In the case of the problems comprising this tutorial they are placed in the `~/TAlight/example_problems/tutorial` directory. Therefore, you activate (in modality 1) the `TAlight` daemon with the following command from a terminal where the `RUST_LOG` environment variable has been set:
+Both in modality 1 and in modality 2, you must specify to the daemon the directory containing the `TALight` problems it should take care of. It is assumed that this directory is located on your local file system and each problem is a direct subdirectory of it.
+In the case of the problems comprising this tutorial they are placed in the `~/TALight/example_problems/tutorial` directory. Therefore, you activate (in modality 1) the `TALight` daemon with the following command from a terminal where the `RUST_LOG` environment variable has been set:
 
 ```bash
-rtald -d ~/TAlight/example_problems/tutorial
+rtald -d ~/TALight/example_problems/tutorial
 ```
 
 If the variable `RUST_LOG` was unset you can still set it now, and specifically for this execution of `rtald` with:
 
 ```bash
-RUST_LOG=info rtald -d ~/TAlight/example_problems/tutorial
+RUST_LOG=info rtald -d ~/TALight/example_problems/tutorial
 ```
 This second possibility holds only for the `bash` shell and will not work for the `zsh` you are given by default if you are on Mac. (You can however launch another shell, like the `bash`, from other shells. On the `zsh` of Mac just enter th command `bash` and, after this, the `bash` is operating on that terminal. At this point the secon option is available also for you, on that terminal.)
 
-The `rtald` daemon is now active and ready to serve requests concerning the problems present in the directory `~/TAlight/example_problems/tutorial`.
+The `rtald` daemon is now active and ready to serve requests concerning the problems present in the directory `~/TALight/example_problems/tutorial`.
 The terminal where you issued its activation will now be the place where the server `rtald` updates you about the requests of service it receives and what is going on with them. If `RUST_LOG` was not set, then you will only get the error messages of the problem service server (the one called when you issued a request through the `rtal` client), if it crashes or malfunctions, but if the environment variable was set you will have access to further feedback that can help you out. 
 
 The help page of the `rtald` command lists its optional parameters that allow you to expose the service in the wide rather than just in local (modality 2).
@@ -743,7 +743,7 @@ Dopo aver pigiato il tasto "Download" offerto sulla [pagina ufficiale di ConEmu)
 ![image](./figs/ConEmu_download.png)
 e procedi con l'installazione.
 
-Al momento dell'utilizzo di ConEmu (in particolar modo a partire dal paragrafo della repo denominato "STARTING THE TAlight DAEMON") assicurarsi di aprire bash di Git (non la shell cmd che ha i suoi ben noti limiti) nel seguente modo:
+Al momento dell'utilizzo di ConEmu (in particolar modo a partire dal paragrafo della repo denominato "STARTING THE TALight DAEMON") assicurarsi di aprire bash di Git (non la shell cmd che ha i suoi ben noti limiti) nel seguente modo:
 
 + digita sulla tastiera "Win+Shift+W" (o scegliere l'opzione "Finestra nuova console")
 ![image](./figs/new_console1.png)
@@ -865,7 +865,7 @@ You can also change the default values of the parameters by editing the `meta.ya
 Not all parameters that `rtal` sends to the daemon to adapt the behavior of the services are specified in the `meta.yaml`.
 For example, for all problems you can ask that the feedback is sent to you in black and white even when `rtal` detects that your `tty` supports the use of the colors. You can enforce the suppressing of the colors in any case with the `-no-color` flag (`-n` is its short form). You get to know about these service-agnostic flags and parameters by issuing `rtal connect --help`.
 
-Combining the problem specific information you got above by issuing `rtal list sum -v` with the TAlight core instructions you get with `rtal connect --help` you could decide to try one of the following services:
+Combining the problem specific information you got above by issuing `rtal list sum -v` with the TALight core instructions you get with `rtal connect --help` you could decide to try one of the following services:
 
 ```bash
 rtal connect sum free_sum
@@ -957,21 +957,21 @@ Here are our mother repls from which to fork, organized by programming language 
 
 Problem `sum` also exemplifies how to interact with a service through a browser rather than through the terminal.
 In this way and by resorting on HTML/CCS/JavaScript technology, nice applets running on the problem solver site can be designed for more user friendly interactions.
-Just look in the `applets` directory of the project (`~/TAlight/applets`) and open the file `sum-protoapplet.html` in a browser.
+Just look in the `applets` directory of the project (`~/TALight/applets`) and open the file `sum-protoapplet.html` in a browser.
 
 <details><summary>How to open a file on your local machine in a browser</summary>
 
 On Linux:
 ```bash
-~/TAlight/applets$ google-chrome sum-protoapplet.html
+~/TALight/applets$ google-chrome sum-protoapplet.html
 ```
 On Mac:
 ```bash
-~/TAlight/applets$ open -a "Google Chrome" sum-protoapplet.html
+~/TALight/applets$ open -a "Google Chrome" sum-protoapplet.html
 ```
 On Windows, Linux, Mac: open a browser and in the URL field at the top insert:
 ```t
-file:///home/romeo/TAlight/applets/sum-protoapplet.html
+file:///home/romeo/TALight/applets/sum-protoapplet.html
 ```
 </details>
 
@@ -989,7 +989,7 @@ Notice that among the materials that the good problem solver has decided not to 
 Launch
 
 ```bash
-diff -r eggs ~/TAlight/example_problems/tutorial/eggs/public 
+diff -r eggs ~/TALight/example_problems/tutorial/eggs/public 
 ```
 to see other differences and ask yourself the reason why.
 
@@ -1004,11 +1004,11 @@ rtal get sum
 tar -xvf sum.tar
 google-chrome sum/statement/statement.it.md
 ```
-Of course, you could have visualized this file even before asking for the `public` folder of problem `sum`, since the whole of problem `sum`, including its `public` directory and its `statement` where already sitting on your machine as part of the `TAlight` repo (or you could have browsed this Markdown document from there, in the internet). We are however happy that you read this document for last, both as a problem solver and as a problem maker.
+Of course, you could have visualized this file even before asking for the `public` folder of problem `sum`, since the whole of problem `sum`, including its `public` directory and its `statement` where already sitting on your machine as part of the `TALight` repo (or you could have browsed this Markdown document from there, in the internet). We are however happy that you read this document for last, both as a problem solver and as a problem maker.
 Then,
 to grow as a problem maker, run
 ```bash
-diff -r sum ~/TAlight/example_problems/tutorial/sum/public 
+diff -r sum ~/TALight/example_problems/tutorial/sum/public 
 ```
 and ask yourself the reasons for these more refined differences.
 
@@ -1029,7 +1029,7 @@ Take a problem you have to:
 If you lounch:
 
 ```t
-tree ~/TAlight/example_problems/tutorial/sum 
+tree ~/TALight/example_problems/tutorial/sum 
 ```
 you will discover the main directories usually comprising the problem folder.
 These are:
@@ -1059,7 +1059,7 @@ with the lines
   sum_and_difference:
     evaluator: [services/sum_and_difference/python/simple/sum_and_difference_server.py]
 ```
-in the `~/TAlight/example_problems/tutorial/sum/meta.yaml` file 
+in the `~/TALight/example_problems/tutorial/sum/meta.yaml` file 
 
 This should allow you to test the simpler versions of codes that serve the intended service. See how simple serving a problem can be before entering in the (only superficial) obfuscations coming with colored outputting and multilingual support.
 As you can see, both for problem `sum` and for problem `morra` all services are implemented both in a simple and in an advanced manner. Starting from the simple and then looking at the advanced should help your way through to all the little proficiency needed on the technical level, and ready to express yourself on the creative side of problem making.
@@ -1067,7 +1067,7 @@ As you can see, both for problem `sum` and for problem `morra` all services are 
 There is also a service for checking whether a `meta.yaml` file is fit:
 
 ```t
-rtalc ~/TAlight/example_problems/tutorial/sum
+rtalc ~/TALight/example_problems/tutorial/sum
 ```
 it should out no line of error since/when this file is ok. The path it takes as argument is the path of the folder containing the `meta.yaml` file organizing the services of the problem. 
 
@@ -1086,7 +1086,7 @@ it should out no line of error since/when this file is ok. The path it takes as 
 ## Vision (pezzi in Italiano)
 
 Miriamo al promuovere lo sviluppo distribuito e condiviso di percorsi didattici funzionali alle proprie esigenze e finalità. Se diverrà facile per i docenti (e loro studenti) contribuire con problemi, ciò consentirà la realizzazione di un repository di percorsi didattici per problemi che possa venire costituito e popolato di problemi in modo distribuito e condiviso, in vari contesti e discipline.
-TAlight non richiede alcuna installazione.
-TAlight consente di affrontare in locale sia la soluzione che il design, la realizzazione, e testing in locale di un problema.
+TALight non richiede alcuna installazione.
+TALight consente di affrontare in locale sia la soluzione che il design, la realizzazione, e testing in locale di un problema.
 Al momento del deployment di servizi sul problema al docente basterà disporre di un web server modesto che potrà facilmente approntare senza spese. 
 In futuro potremmo mirare a fornire noi stessi dei servizi di hosting gratuiti che forniranno ambienti per percorsi didattici spendibili in esercitazioni, lezioni, gare, o allenamento aperto. I problemi potranno così essere condivisi e percorsi didattici basati su problemi potranno essere realizzati in una rete collaborativa, come specifici a particolari esigenze e percorsi svolti in scuole lontane ed altrimenti isolate.
