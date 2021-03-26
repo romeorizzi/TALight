@@ -19,10 +19,11 @@ services:
     explain: "You are asked to tranform the binary number to 0 using a minimum number of steps."
     evaluator: [python, services/total_steps_server.py]
     args:
-      b:
-        regex: ^([0-1][0-1]{0,1000})$
-        default: 101
-        explain: "Binary numeber."
+      number:
+        regex: ^(my|any)$
+        default: any
+        explain: "Decimal number."
+
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -67,3 +68,4 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
 
+##possibili altri servizi più avanzati: dare la combinazione di mosse
