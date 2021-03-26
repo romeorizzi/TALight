@@ -1,0 +1,118 @@
+# ~/.config/starship.toml
+
+format = """
+$username\
+$hostname\
+$shlvl\
+$kubernetes\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$hg_branch\
+$docker_context\
+$package\
+$cmake\
+$dart\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$golang\
+$helm\
+$java\
+$julia\
+$kotlin\
+$nim\
+$nodejs\
+$ocaml\
+$perl\
+$php\
+$purescript\
+$python\
+$ruby\
+$rust\
+$scala\
+$swift\
+$terraform\
+$vagrant\
+$zig\
+$nix_shell\
+$conda\
+$memory_usage\
+$aws\
+$gcloud\
+$openstack\
+$env_var\
+$crystal\
+$custom\
+$cmd_duration\
+$line_break\
+$lua\
+$jobs\
+$battery\
+$time\
+$status\
+$shell\
+$character"""
+
+[[battery.display]]  # "bold red" style when capacity is between 0% and 10%
+threshold = 10
+style = "bold red"
+
+[[battery.display]]  # "bold yellow" style when capacity is between 10% and 30%
+threshold = 30
+style = "bold yellow"
+
+[[battery.display]]
+threshold = 100
+style = "bold green"
+
+[character]
+success_symbol = "[➜](bold green) "
+error_symbol = "[✗](bold red) "
+
+[time]
+disabled = false
+format = '🕙[\[$time\]]($style) '
+time_format = "%T"
+utc_time_offset = "1"
+time_range = "10:00:00-14:00:00"
+
+[docker_context]
+format = "via [🐋 $context](blue bold)"
+
+[git_status]
+conflicted = "🏳"
+ahead = "🏎💨"
+behind = "😰"
+diverged = "😵"
+untracked = "🤷‍"
+stashed = "📦"
+modified = "📝"
+staged = '[++\($count\)](green)'
+renamed = "👅"
+deleted = "🗑"
+
+[hostname]
+ssh_only = true
+format =  "on [$hostname](bold red) "
+trim_at = ".companyname.com"
+disabled = false
+
+[jobs]
+symbol = "+ "
+threshold = 4
+
+[python]
+symbol = "👾 "
+pyenv_version_name = true
+
+[rust]
+format = "via [⚙️ $version](red bold)"
+
+[shell]
+fish_indicator = ""
+powershell_indicator = "_"
+disabled = false

@@ -779,7 +779,15 @@ The point is and should remain: we want to customize the prompt with the aim to 
 
 Currently, the best way to get a great prompt is to install the [starship prompt util](https://starship.rs/). It is highly robust and lightspeed (written in Rust) which is surprising considered the high amount of information it manages to convey to you.  
 
-The starship prompt is [highly costumizable](https://starship.rs/config/#prompt).
+The starship prompt is [highly costumizable](https://starship.rs/config/#prompt). When you do this, it is convenient to also install some Nerd fonts like the Fira Code Nerd Fonts. On Ubuntu this can be done with:
+
+```bash
+sudo apt-get install -y fonts-firacode
+```
+
+The configuration of `starship` is writtn in a `.toml` file usually named `starship.toml`) and placed in the ~/.config folder. 
+In the `starship` folder of this repo we offer two possible versions for this file that could be convenient to assume when collaborating on TALight problems (uniform environments facilitate cross assistance).
+Use the file `starship-no-nerd-fonts.toml` if you have installed some Nerd Fonts, or `starship-no-nerd-fonts.toml` otherwise.
 
 The old way to customize the prompt appearence was to work on the `PROMPT` environment variable (some instructions are given below but we suggest using `starship` instead). 
 
