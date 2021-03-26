@@ -1,0 +1,48 @@
+public_folder: public
+services:
+  minimum_laser:
+    explain: "We give you a matrix with asteroids and you have to return the minimum number of laser."
+    evaluator: [python,services/minimum_laser_server.py]
+    args:
+      level:
+        regex: ^(easy|medium|difficult)$
+        default: medium
+
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  indipendent_asteroids:
+    explain: "You have to give us the set of indipendent asteroids."
+    evaluator: [python, services/indipendent_asteroids_server.py]
+    args:
+      level:
+        regex: ^(easy|medium|difficult)$
+        default: medium
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  
+  eval_sol:
+    evaluator: [python, services/eval_sol_server.py]
+    args:
+      size:
+        regex: ^(small|medium|large)$
+        default: medium
+      with_NO_cert:
+        regex: ^(0|1)$
+        default: 1
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
+##possibili altri servizi ? , ora sono presenti le domande come nell'esame di ricerca operativa
