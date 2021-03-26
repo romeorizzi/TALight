@@ -779,12 +779,14 @@ The point is and should remain: we want to customize the prompt with the aim to 
 
 Currently, the best way to get a great prompt is to install the [starship prompt util](https://starship.rs/). It is highly robust and lightspeed (written in Rust) which is surprising considered the high amount of information it manages to convey to you.  
 
-The starship prompt is still highly costumizable.
+The starship prompt is [highly costumizable](https://starship.rs/config/#prompt).
 
-If you still want to customise the prompt your own way then the old approach is to directly work on the `PROMPT` environment variable. 
+The old way to customize the prompt appearence was to work on the `PROMPT` environment variable (some instructions are given below but we suggest using `starship` instead). 
 
-A minimal useful prompt should show the path and time (and do not forget the environment you are operating into when you activate environments). 
-  
+A minimal useful prompt should show the path and time (and do not forget the environment you are operating into when you activate environments). We suggest you to perform this customization now. Follow [these instructions](https://starship.rs/config/#prompt) on how to do it via starship. 
+
+<details><summary>The old way (before starship):</summary>
+
  We need to open and modify the file `./bashrc` hence we use the command:   
  ```
  vi ./baschrc
@@ -820,7 +822,8 @@ after your choice and the addition of the line press and digit:
 ![image](./figs/example1.png)
  *   ```export PS1="\t\u@\w $" ``` the prompt dispalys time, username and complete path in this way:  
    ![image](./figs/example2.png)
-</summary>
+</details>
+
 </details>
 
 ## Exploring the services available for a problem
