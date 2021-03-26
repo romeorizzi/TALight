@@ -176,7 +176,7 @@ or
 
 if you are on Windows and want to operate the downloaded binary.
 
-At this point we suggest you to make this binary accessible also from other directories by creating (if not already existing) a `.bin` subfolder of your home folder, place a symbolic link to the binary from `.bin`, and adding this folder into your PATH environment variable editing the `~/.bashrc` file. If you are on Windows and could not install git with the Git Bash or any other shell, then you can update your PATH environment variable from a GUI of Windows. You can easily find instructions on how this goes in internet, the GUI interface depends on the version of Windows but the syntax remains the same from version to version of Windows.
+At this point we suggest you to make this binary accessible also from other directories by creating (if not already existing) a `.bin` subfolder of your home folder, place a symbolic link to the binary from `.bin`, and adding this folder into your PATH environment variable editing the `~/.bashrc` file (and in the `~/.zshrc` file if you are on Mac where by default you will be using the `zsh` shell). If you are on Windows and could not install git with the Git Bash or any other shell, then you can update your PATH environment variable from a GUI of Windows. You can easily find instructions on how this goes in internet, the GUI interface depends on the version of Windows but the syntax remains the same from version to version of Windows.
 To get the syntax that works you can then try it first from the CMD. Be told that the syntax you are using it is different frmm that you will b using from a shell like bash. In particular:  
 
 1. the separator of the the various paths listed within the `PATH` variable is `;` rather than `:`
@@ -393,6 +393,13 @@ This mans that for cloning it propery on Windows, after having opened the git ba
 git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
 ```
 
+Still, if you also intend to contribute to a git repo (act also pushes and not only pulls and clones), then be told that until recent versions of Windows 10, Windows could not manage symlinks in a fully satisfactory way.
+However, since a relatively recent version of Windows it is now possible (and we recommend you to do so) to activate the management of the true symlinks by activating the "developer mode" ("modalità sviluppatore"):
+
+[https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development)
+
+Also, when you install Git Bash you are given you chance to activate the symlinks.
+
 
 <details><summary>To the problem maker</summary>
 
@@ -463,6 +470,12 @@ This means that for cloning it propery on Windows, after having opened the git b
 ```bash
 git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
 ```
+Still, if you also intend to contribute to a git repo (act also pushes and not only pulls and clones), then be told that until recent versions of Windows 10, Windows could not manage symlinks in a fully satisfactory way.
+However, since a relatively recent version of Windows it is now possible (and we recommend you to do so) to activate the management of the true symlinks by activating the "developer mode" ("modalità sviluppatore"):
+
+[https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development)
+
+Also, when you install Git Bash you are given you chance to activate the symlinks.
 </strong>
 
 You can also clone and/or place the TAlight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
@@ -487,6 +500,14 @@ Of course, you are free to rename it at your will or place it elsewhere as long 
     ```bash
     git clone -c core.symlinks=true https://github.com/romeorizzi/TAlight.git
     ```
+
+Still, if you also intend to contribute to a git repo (act also pushes and not only pulls and clones), then be told that until recent versions of Windows 10, Windows could not manage symlinks in a fully satisfactory way.
+However, since a relatively recent version of Windows it is now possible (and we recommend you to do so) to activate the management of the true symlinks by activating the "developer mode" ("modalità sviluppatore"):
+
+[https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development)
+
+Also, when you install Git Bash you are given you chance to activate the symlinks.
+
 
 2. Windows uses '\\' instead of '/' (like Unix/Linux/Mac or also like in the URLs you access from your browser) in order to separate the names of the folders and subfolders encountered when walking along a path to a resource (file or folder) located in your filesystem. Therefore, if you are on Windows, you should write `~\TAlight` instead of `~/TAlight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial. In other words, you should adapt our instructions accordingly to this notice (and also further adapt these paths in case you have placed the `TAlight` cloned repo in a place other than the one we assume.
 Your home is where you get if you ask for it with
@@ -539,7 +560,7 @@ export TAL_HOME="$HOME/TAlight"
 ```
 You will have to do this on every terminal from which you want to issue TAlight commands.
 
-If you want this change to apply to all terminals you will light up in the future, them add the following two lines to your `~/.bashrc` file: 
+If you want this change to apply to all terminals you will light up in the future, them add the following two lines to your `~/.bashrc` file (and to your `~/.zshrc` file if you are on Mac where by default you will be using the `zsh` shell): 
 
 ```bash
 export PATH="$PATH:$HOME/TAlight/rtal/target/debug"
@@ -572,7 +593,7 @@ ln -s ~/TAlight/rtal/target/debug/rtal ~/.bin/
 ln -s ~/TAlight/TAL_utils/problem_solver/TA_send_txt_file.py ~/.bin/ 
 ```
 
-Then, (assuming you have the shell; for sure you have on Unix/Linux/Mac and also on Windows if you correctly installed `git` with the `Git Bash`) add the following lines at the end of your `~/.bashrc` file.
+Then, (assuming you have the shell; for sure you have on Unix/Linux/Mac and also on Windows if you correctly installed `git` with the `Git Bash`) add the following lines at the end of your `~/.bashrc` file (and of your `~/.zshrc` file if you are on Mac where by default you will be using the `zsh` shell).
 
 ```bash
 export PATH="$PATH:$HOME/.bin"
@@ -582,7 +603,7 @@ export TAL_HOME="$HOME/TAlight"
 Again, remember that this update will be effective only for terminals you open after having modifyied the `~/.bashrc` file.
 If you want older terminals to get the update then you can issue from them the command
 ```bash
-source .bashrc
+source ~/.bashrc
 ```
 
 For those with Windows and without the shell, add the path `~/.bin` to your `PATH` environment variable. And also introduce a new environment variable `TAL_HOME` defined in analogy to what explicitly shown above for Unix/Linux/Mac. (Instructions on how these things should then be done are contained in the section with the instructions on how to just download the binaries).
@@ -753,12 +774,17 @@ rtal list --help
 </details>
 
 <details><summary>How to customize your prompt</summary>
-We want to customize the prompt with the aim to make it more useful.   
+
+The point is and should remain: we want to customize the prompt with the aim to make it more useful, not to make it fancier (and impress our girlfriends, right boys?).   
+
+Currently, the best way to get a great prompt is to install the [starship prompt util](https://starship.rs/). It is highly robust and lightspeed (written in Rust) which is surprising considered the high amount of information it manages to convey to you.  
+
+The starship prompt is still highly costumizable.
+
+If you still want to customise the prompt your own way then the old approach is to directly work on the `PROMPT` environment variable. 
+
+A minimal useful prompt should show the path and time (and do not forget the environment you are operating into when you activate environments). 
   
-![image](./figs/bash.png)     
-
-For example we want to show the path or the time.
-
  We need to open and modify the file `./bashrc` hence we use the command:   
  ```
  vi ./baschrc
