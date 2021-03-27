@@ -6,7 +6,7 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from increasing_subsequence_lib import parse_input, lis, get_min_coloring, n_coloring, is_subseq_with_position, get_yes_certificate, remove_duplicate_spaces, generate_random_seq, list_to_string
+from increasing_subsequence_lib import parse_input, min_decreasing_col, get_min_coloring, n_coloring, is_subseq_with_position, get_yes_certificate, remove_duplicate_spaces, generate_random_seq, list_to_string
 
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
@@ -26,12 +26,11 @@ T = generate_random_seq(10,100)
 string_T = list_to_string(T)
 TAc.print("T: "+string_T+"\n\n","green")
 
-inc_seq = lis(T)
-print(inc_seq)
-coloring = get_min_coloring(inc_seq)
 
-print(coloring)
-n_col = n_coloring(coloring)
+mdc = min_decreasing_col(T)
+
+n_col = n_coloring(mdc)
+
 
 TAc.print("Insert your coloring:\n","green")
 k = input()

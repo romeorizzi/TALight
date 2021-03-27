@@ -187,16 +187,16 @@ def check_no_ordered_list_cert(S, a, b, ordering):
         else:
             return False
 
-def lis(arr):
+def min_decreasing_col(arr):
     n = len(arr)
-    lis = [1]*n
+    mdc = [1]*n
  
     for i in range (1 , n):
         for j in range(0 , i):
-            if arr[i] > arr[j] and lis[i]< lis[j] + 1 :
-                lis[i] = lis[j]+1
+            if arr[i] > arr[j] and mdc[i]< mdc[j] + 1 :
+                mdc[i] = mdc[j]+1
  
-    return lis
+    return mdc
 
 def remove_values_from_list(l, val):
    return [value for value in l if value != val]
