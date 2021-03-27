@@ -34,15 +34,15 @@ public class TALcolors {
             }
         if (color != null) {
             if (color.equals("red")) {
-                System.out.println(co.color16(colorOption.Color16.FG_RED, msg_text));
+                System.out.print(co.color16(colorOption.Color16.FG_RED, msg_text));
                 return;
             }
             if (color.equals("green")) {
-                System.out.println(co.color16(colorOption.Color16.FG_GREEN, msg_text));
+                System.out.print(co.color16(colorOption.Color16.FG_GREEN, msg_text));
                 return;
             }
             if (color.equals("white")) {
-                System.out.println(co.color16(colorOption.Color16.FG_WHITE, msg_text));
+                System.out.print(co.color16(colorOption.Color16.FG_WHITE, msg_text));
                 return;
             }
             if (color.equals("yellow")) {
@@ -81,7 +81,7 @@ public class TALcolors {
     }
 
     public void Finished() {
-        this.print("!(We have finished)Correct answers:" + this.num_OK + "/" + (this.num_OK + this.num_NO), "violet", null, null);
+        this.print("!(We have finished)Correct answers:" + this.num_OK + "/" + (this.num_OK + this.num_NO), "white", null, null);
     }
 
 

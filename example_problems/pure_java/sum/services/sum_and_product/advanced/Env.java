@@ -5,6 +5,7 @@
  */
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,16 +26,24 @@ import java.util.Map;
 public class Env {
     private Map<String, Object> item = new HashMap<>();
     private Map<String, String> environment_variables = System.getenv();
-    private String meta_data = System.getenv("TAL_META_DIR");
-    private String problem = "";
-    private String service = "";
+    public String META_DIR = System.getenv("TAL_META_DIR");
+    public String exe_path = "";
+    public String problem = "";
+    public String service = "";
     private Object[] arg = {};
+    public Env() {
 
+    }
     public Env(String problem, String service, Map<String, String> args) {
         this.problem = problem;
         this.service = service;
         this.environment_variables = args;
         this.item = ENV_overide(environment_variables);
+        try {
+            this.exe_path= new java.io.File( "." ).getCanonicalPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
