@@ -103,13 +103,18 @@ In order to ask for the services of a TALight server you need the two things lis
 
 Be warned that neither cmd nor Powershell do for it. Also for the rest of this tutorial, be told that when we say "terminal" we do actually mean **terminal** (or **terminal emulator**) and not just a surrogate of it. It should offer you a shell like `bash` or `zsh`. However, if you have installed git on your machine, and have been wise enough to opt for the installation that also includes a bash terminal than you already have it. Otherwise, you can get it as follows.
 
-  Install git (and be wise enough to opt for the installation that also includes a bash terminal).
+  Install git (and be wise enough to opt for the installation that also includes the Git Bash and the support for the symlinks).
   
 This is an highly recommendable approach since `git` is good to have and, actually, it is quite likely you will need it anyhow, very soon.
 
 <details><summary>How to install git</summary>
 
-Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) of the [Git Community](https://git-scm.com/community) will give you the best updated instructions on how to install this game changer on your machine. If your are a Windows user, we limit ourselves to remark their suggestion to get the command line version of git as well as the GUI ("We’ll learn more about those things a little later, but suffice it to say they’re things you want.").
+Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) of the [Git Community](https://git-scm.com/community) will give you the best updated instructions on how to install this game changer on your machine. If your are a Windows user, here are two important pieces of advice to follow in the installation process:
+
+1. follow their suggestion (and default option) to get the Git Bash (as they say: "We’ll learn more about those things a little later, but suffice it to say they’re things you want.").
+
+2. ask to activate the support for the symlinks. Notice: though this is a very good thing to do it is not the default option since the versions of Windows before the Creators Update could not manage symlinks natively (make sure you already have that update before installing git. For this follow [these instructions](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/)).
+
 </details>
 
 </details>
@@ -177,7 +182,7 @@ or
 if you are on Windows and want to operate the downloaded binary.
 
 At this point we suggest you to make this binary accessible also from other directories by creating (if not already existing) a `.bin` subfolder of your home folder, place a symbolic link to the binary from `.bin`, and adding this folder into your PATH environment variable editing the `~/.bashrc` file (and in the `~/.zshrc` file if you are on Mac where by default you will be using the `zsh` shell). If you are on Windows and could not install git with the Git Bash or any other shell, then you can update your PATH environment variable from a GUI of Windows. You can easily find instructions on how this goes in internet, the GUI interface depends on the version of Windows but the syntax remains the same from version to version of Windows.
-To get the syntax that works you can then try it first from the CMD. Be told that the syntax you are using it is different frmm that you will b using from a shell like bash. In particular:  
+To get the syntax that works you can then try it first from the CMD. Be told that the syntax you are using it is different from that you will be using from a shell like bash. In particular:  
 
 1. the separator of the the various paths listed within the `PATH` variable is `;` rather than `:`
 
@@ -388,7 +393,7 @@ However, if `git` is installed on the machine, then cloning the repo is possible
 
 <strong>Attention (for Windows users):</strong> 
 This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
-This mans that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
+This means that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
 ```bash
 git clone -c core.symlinks=true https://github.com/romeorizzi/TALight.git
 ```
@@ -398,7 +403,13 @@ However, since a relatively recent version of Windows it is now possible (and we
 
 [https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development)
 
-Also, when you install Git Bash you are given you chance to activate the symlinks.
+In order to have this possibility your Windows 10 should have been updated to the 2017 release (Creators Update, a free of charge and important update). How to check if you already have upgraded to include the Creators Update and how to do it now in case not is [explained here in clear details](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/):
+
+[https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/)
+
+If you did not know about this update you can get hints on new functionalities even just as a consumer user [here](https://www.computerhope.com/jargon/c/creators-update.htm) and [here](https://www.howtogeek.com/278132/whats-new-in-windows-10s-creators-update/). Notice however that we are not pressing you to update your drivers, which might always be a different story (if you are happy with your drivers there might be no reason to do that).
+
+Also, when you install Git Bash you are given you chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
 
 
 <details><summary>To the problem maker</summary>
@@ -435,7 +446,11 @@ You are reading the `README.md` file of an open source project that aims at fost
 
 <details><summary><strong>How to get git and its power</strong></summary>
 
-Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) of the [Git Community](https://git-scm.com/community) will give you the best updated instructions on how to install this game changer on your machine. If your are a Windows user, we limit ourselves to remark their suggestion to get the command line version of git as well as the GUI ("We’ll learn more about those things a little later, but suffice it to say they’re things you want.").
+Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) of the [Git Community](https://git-scm.com/community) will give you the best updated instructions on how to install this game changer on your machine. If your are a Windows user, here are two important pieces of advice to follow in the installation process:
+
+1. follow their suggestion (and default option) to get the Git Bash (as they say: "We’ll learn more about those things a little later, but suffice it to say they’re things you want.").
+
+2. ask to activate the support for the symlinks. Notice: though this is a very good thing to do it is not the default option since the versions of Windows before the Creators Update could not manage symlinks natively (make sure you already have that update before installing git. For this follow [these instructions](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/)).
 
 Even if you do not make any other more advanced use of git, having it installed will simplify other steps in the installation process to follow and, more importantly, will allow you to better connect to this repo or other reports (possibly of TALight problems). Even if you do not intend to contribute to their ongoing development, this means that it will be easy for you to maintain updated your local version of their contents and get the new exercises and/or features currently under development. To get the updates just launch the command
 
@@ -475,7 +490,13 @@ However, since a relatively recent version of Windows it is now possible (and we
 
 [https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development)
 
-Also, when you install Git Bash you are given you chance to activate the symlinks.
+In order to have this possibility your Windows 10 should have been updated to the 2017 release (Creators Update, a free of charge and important update). How to check if you already have upgraded to include the Creators Update and how to do it now in case not is [explained here in clear details](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/):
+
+[https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/)
+
+If you did not know about this update you can get hints on new functionalities even just as a consumer user [here](https://www.computerhope.com/jargon/c/creators-update.htm) and [here](https://www.howtogeek.com/278132/whats-new-in-windows-10s-creators-update/). Notice however that we are not pressing you to update your drivers, which might always be a different story (if you are happy with your drivers there might be no reason to do that).
+
+Also, when you install Git Bash you are given you chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
 </strong>
 
 You can also clone and/or place the TALight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
@@ -506,7 +527,13 @@ However, since a relatively recent version of Windows it is now possible (and we
 
 [https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development)
 
-Also, when you install Git Bash you are given you chance to activate the symlinks.
+In order to have this possibility your Windows 10 should have been updated to the 2017 release (Creators Update, a free of charge and important update). How to check if you already have upgraded to include the Creators Update and how to do it now in case not is [explained here in clear details](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/):
+
+[https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/)
+
+If you did not know about this update you can get hints on new functionalities even just as a consumer user [here](https://www.computerhope.com/jargon/c/creators-update.htm) and [here](https://www.howtogeek.com/278132/whats-new-in-windows-10s-creators-update/). Notice however that we are not pressing you to update your drivers, which might always be a different story (if you are happy with your drivers there might be no reason to do that).
+
+Also, when you install Git Bash you are given you chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
 
 
 2. Windows uses '\\' instead of '/' (like Unix/Linux/Mac or also like in the URLs you access from your browser) in order to separate the names of the folders and subfolders encountered when walking along a path to a resource (file or folder) located in your filesystem. Therefore, if you are on Windows, you should write `~\TALight` instead of `~/TALight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial. In other words, you should adapt our instructions accordingly to this notice (and also further adapt these paths in case you have placed the `TALight` cloned repo in a place other than the one we assume.
