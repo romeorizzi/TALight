@@ -114,6 +114,13 @@ Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Instal
 1. follow their suggestion (and default option) to get the Git Bash (as they say: "We’ll learn more about those things a little later, but suffice it to say they’re things you want.").
 
 2. ask to activate the support for the symlinks. Notice: though this is a very good thing to do it is not the default option since the versions of Windows before the Creators Update could not manage symlinks natively (make sure you already have that update before installing git. For this follow [these instructions](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/)).
+<details><summary>non-default installation step: where to activate the symlinks for Git Bash</summary>
+
+Here is a screenshot of the installation dialogue window where to activate the symlinks for Git Bash:
+
+![image](./figs/Git_Bash_install_enable_symbolic_links_601x500.png)
+
+</details>
 
 </details>
 
@@ -409,7 +416,12 @@ In order to have this possibility your Windows 10 should have been updated to th
 
 If you did not know about this update you can get hints on new functionalities even just as a consumer user [here](https://www.computerhope.com/jargon/c/creators-update.htm) and [here](https://www.howtogeek.com/278132/whats-new-in-windows-10s-creators-update/). Notice however that we are not pressing you to update your drivers, which might always be a different story (if you are happy with your drivers there might be no reason to do that).
 
-Also, when you install Git Bash you are given you chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
+However, the only new feature that we ask you to set up now is telling Windows you need the management, development and collaborative functionalities like e.g. the native support for the symlinks. Follow the instructions here:
+
+[https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development)
+
+
+Also, when you install Git Bash you are given your chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
 
 
 <details><summary>To the problem maker</summary>
@@ -451,6 +463,13 @@ Whatever is your platform (Linux, Mac, Windows, ...) the [Getting-Started-Instal
 1. follow their suggestion (and default option) to get the Git Bash (as they say: "We’ll learn more about those things a little later, but suffice it to say they’re things you want.").
 
 2. ask to activate the support for the symlinks. Notice: though this is a very good thing to do it is not the default option since the versions of Windows before the Creators Update could not manage symlinks natively (make sure you already have that update before installing git. For this follow [these instructions](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/)).
+<details><summary>non-default installation step: where to activate the symlinks for Git Bash</summary>
+
+Here is a screenshot of the installation dialogue window where to activate the symlinks for Git Bash:
+
+![image](./figs/Git_Bash_install_enable_symbolic_links_601x500.png)
+
+</details>
 
 Even if you do not make any other more advanced use of git, having it installed will simplify other steps in the installation process to follow and, more importantly, will allow you to better connect to this repo or other reports (possibly of TALight problems). Even if you do not intend to contribute to their ongoing development, this means that it will be easy for you to maintain updated your local version of their contents and get the new exercises and/or features currently under development. To get the updates just launch the command
 
@@ -496,7 +515,11 @@ In order to have this possibility your Windows 10 should have been updated to th
 
 If you did not know about this update you can get hints on new functionalities even just as a consumer user [here](https://www.computerhope.com/jargon/c/creators-update.htm) and [here](https://www.howtogeek.com/278132/whats-new-in-windows-10s-creators-update/). Notice however that we are not pressing you to update your drivers, which might always be a different story (if you are happy with your drivers there might be no reason to do that).
 
-Also, when you install Git Bash you are given you chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
+However, the only new feature that we ask you to set up now is telling Windows you need the management, development and collaborative functionalities like e.g. the native support for the symlinks. Follow the instructions here:
+
+[https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development)
+
+Also, when you install Git Bash you are given your chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
 </strong>
 
 You can also clone and/or place the TALight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
