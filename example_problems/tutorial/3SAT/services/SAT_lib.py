@@ -172,6 +172,33 @@ def random_kcnf(n_literals, k=3):
 
     return result
 
+def dimacs_file_to_cnf(string):
+    cnf = []
+    f = open(string, "r")
+    for line in f:
+        if line[0] != 'c' and line[0] != 'p':
+            conj = set()
+            for disj in line.split(" ")[:-1]:
+                if (disj[0] == '-'):
+                    to_add = ('x' + disj[1:], False)
+                else:
+                    to_add = ('x' + disj, True)
+                conj.add(to_add)
+            cnf.append(conj)
+    f.close()
+    return cnf
+
+def saved_certificate_to_cnf(string):
+    cert = set()
+    f = open(string, "r")
+    for line in f:
+        if line[0] == 'v' and line[2] != '0':
+            for leterals in line.split(' ')[1:]:
+                numeric_leterals =int(leterals)
+                cert.add(('x{}'.format(abs(numeric_leterals)),True if numeric_leterals > 0 else False))
+    return cert
+
+
 def parse_certificate(string):
     ass = set()
     string = string.replace(' ','')

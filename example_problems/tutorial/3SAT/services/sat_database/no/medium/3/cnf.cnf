@@ -1,0 +1,15 @@
+c description: Random 3-CNF over 3 variables and 8 clauses
+c generator: CNFgen (0.9.0)
+c copyright: (C) 2012-2020 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c command line: cnfgen -o ./sat_database/no/medium/3/cnf.cnf randkcnf 3 3 8
+c
+p cnf 3 8
+-1 -2 3 0
+1 2 -3 0
+-1 -2 -3 0
+-1 2 -3 0
+1 -2 3 0
+-1 2 3 0
+1 2 3 0
+1 -2 -3 0

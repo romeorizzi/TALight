@@ -1,0 +1,8 @@
+c description: Random 4-CNF over 4 variables and 1 clauses
+c generator: CNFgen (0.9.0)
+c copyright: (C) 2012-2020 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c command line: cnfgen -o ./sat_database/yes/tiny/4/cnf.cnf randkcnf 4 4 1
+c
+p cnf 4 1
+1 2 3 -4 0

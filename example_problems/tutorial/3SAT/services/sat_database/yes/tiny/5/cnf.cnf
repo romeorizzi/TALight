@@ -1,0 +1,8 @@
+c description: Random 5-CNF over 5 variables and 1 clauses
+c generator: CNFgen (0.9.0)
+c copyright: (C) 2012-2020 Massimo Lauria <massimo.lauria@uniroma1.it>
+c url: https://massimolauria.net/cnfgen
+c command line: cnfgen -o ./sat_database/yes/tiny/5/cnf.cnf randkcnf 5 5 1
+c
+p cnf 5 1
+1 2 -3 4 -5 0
