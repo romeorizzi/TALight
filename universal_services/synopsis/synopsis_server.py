@@ -82,8 +82,6 @@ if "help" in meta_yaml_book['services'].keys():
     TAc.print(LANG.render_feedback("index-help-pages", 'Index of the Help Pages:'), "red", ["bold", "underline"], end="  ")
     print(meta_yaml_book['services']['help']['args']['page']['regex'][2:-2])
 TAc.print(LANG.render_feedback("list-services", 'List of all Services:'), "red", ["bold", "underline"], end="  ")
-for s in meta_yaml_book['services'].keys():
-    print(TAc.colored(s, "yellow", ["bold"]), end=",  ")
 print(",  ".join(TAc.colored(_, "yellow", ["bold"]) for _ in meta_yaml_book['services'].keys()))
     
 exit(0)
