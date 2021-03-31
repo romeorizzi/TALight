@@ -142,6 +142,19 @@ class TALcolors:
       else:
           print(msg_text, **kwargs)
 
+    def colored(self, msg_text, *msg_rendering):
+      if type(msg_rendering[-1]) == list:
+          msg_style = msg_rendering[-1]
+          msg_colors = msg_rendering[:-1]
+      else:
+          msg_style = []
+          msg_colors = msg_rendering
+      if self.colored_print:
+          return colored(msg_text, *msg_colors, attrs=msg_style)
+      else:
+          return msg_text
+          
+                
     def NO(self):
         self.numNO += 1
         self.print("No! ", "red", ["blink", "bold"], end="")
