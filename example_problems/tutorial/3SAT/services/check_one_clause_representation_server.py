@@ -23,8 +23,8 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
-# START CODING YOUR SERVICE: 
-    
+# START CODING YOUR SERVICE:
+
 def valid_cnf_string(string, regex):
     matches = re.match(regex,
                        string)
@@ -64,36 +64,30 @@ def check_equivalence(cnf1, cnf2):
                     break
             if a and not found:
                 readable_ass = '\n#'.join(sorted(set(map(lambda x: "\t" + x[0] + " = " + str(x[1]), out_ass))))
-                TAc.print("# Your 3CNF does not offer a representation of your clause as the prescribed property is not met.", "red")
+                TAc.print("# Your representing formula f  does not offer a representation of your clause as the prescribed property is not met.", "red")
                 TAc.print(
-                    "# Indeed, for the assignment: \n# {} \n# the clause evaluates to True but the 3CNF evaluates to False no matter how this assignment is extended on the variables in the set {}.\n".
-                    format(readable_ass, new_literals, SAT_lib.to_string(cnf1).replace("and ", "and\n#\t"),
-                           SAT_lib.to_string(cnf2).replace("and ", "and\n#\t"), new_literals), "yellow")
+                    "# Indeed, for the assignment: \n# {} \n# the clause evaluates to True but the representing formula f evaluates to False no matter how this assignment is extended on the variables in the set {}.\n".
+                    format(readable_ass,  new_literals), "yellow")
                 exit(1)
             if (found and not a):
                 readable_ass = '\n# '.join(sorted(set(map(lambda x: "\t" + x[0] + " = " + str(x[1]), ass))))
-                TAc.print("# Your 3CNF does not offer a representation of your clause as the prescribed property is not met.", "red")
+                TAc.print("# Your representing formula f does not offer a representation of your clause as the prescribed property is not met.", "red")
                 TAc.print(
-                    "# Indeed, for the assignment: \n# {} \n# the clause evaluates to False but the 3CNF evaluates to True when this assignment is extended as follows on the variables in the set {}.\n".
-                    format(readable_ass, SAT_lib.to_string(cnf1).replace("and ", "and\n#\t"),
-                        SAT_lib.to_string(cnf2).replace("and ", "and\n#\t")), "yellow")
-                print("Specificare anche la estensone delle y")
+                    "# Indeed, for the assignment: \n# {} \n# the clause C evaluates to False but the representing formula f  evaluates to True.\n".
+                    format(readable_ass), "yellow")
                 exit(1)
         else:
             a = SAT_lib.check_sol(cnf1, out_ass)
             b = SAT_lib.check_sol(cnf2, out_ass)
             if (a != b):
                 readable_ass = '\n# '.join(sorted(set(map(lambda x: "\t" + x[0] + " = " + str(x[1]), out_ass))))
-                TAc.print("# Your 3CNF does not offer a representation of your clause as the prescribed property is not met.", "red")
+                TAc.print("# Your representing formula f  does not offer a representation of your clause as the prescribed property is not met.", "red")
                 TAc.print("# Indeed, for the assignment: \n#{} \n"
-                          "# the clause:\n#\t{}\n# and the representing formula:\n#\t{} \n# gives as output a different result.\n"
-                          "# In fact the first one returns {} while the second one returns {}.".
-                          format(readable_ass, SAT_lib.to_string(cnf1).replace("and ", "and\n\t"),
-                                 SAT_lib.to_string(cnf2).replace("and ", "and\n#\t"), a, b), "yellow")
-                print("DA RIVEDERE COME DA CASI SOPRA!!!")
+                          "# the clause C returns {} while the representing formula f returns {}.".
+                          format(readable_ass, a, b), "yellow")
                 exit(1)
     TAc.print("\n# Congratulation!!!", "green")
-    print("Your 3CNF f offers a faithful representation of your clause C in the sense that the following property holds for every truth assignment x* for the x variables: C evaluates to true under x* iif there exists a truth assignment y* of the y variables such that f evaluates to true under (x*,y*).")
+    print("# Your representing formula f offers a faithful representation of your clause C in the sense that the following property holds for every truth assignment x* for the x variables: C evaluates to true under x* iif there exists a truth assignment y* of the y variables such that f evaluates to true under (x*,y*).")
 
 
 if (ENV['C'] == 'lazy_input'):

@@ -20,7 +20,7 @@ import itertools
 import random
 
 
-def valid_cnf_string(string, regex):
+def input_is_valid(string, regex):
     matches = re.match(regex,
                        string)
     if (matches != None):
@@ -47,7 +47,7 @@ if not ENV['silent']:
 def round1_2(cnf):
     TAc.print("# Here's a CNF. Can you give me an equivalent 3CNF ones?\n1\n{}".format(SAT_lib.to_string(cnf)), "green")
     T_f = input()
-    if (not valid_cnf_string(T_f,
+    if (not input_is_valid(T_f,
                              '^(\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*)')):
         exit(1)
     return SAT_lib.to_cnf(T_f)
@@ -56,12 +56,20 @@ def round3(cert):
     TAc.print("# Thanks for your CNF. Here's a certificate for the original one."
     "\n# Can you give me a certificate that is valid for yours CNF ?\n2\n{}".format(cert), "green")
     cert = input()
+    if (not input_is_valid(T_f,
+                             "^\s*{\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*(,\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*)*}\s*")):
+        exit(1)
+
     return SAT_lib.parse_certificate(cert)
 
-def round4(cert):
+def round4(cnf_yes, cert):
+	users_yes_cnf = round1_2(cnf_yes)
     TAc.print("# Thanks for your CNF. Here's an assignment that satisfy your CNF."
     "\n# Can you give me a certificate that is valid for my CNF ?\n3\n{}".format(cert), "green")
     cert = input()
+        if (not input_is_valid(T_f,
+                                 "^\s*{\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*(,\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*)*}\s*")):
+            exit(1)
     return SAT_lib.parse_certificate(cert)
 
 
@@ -92,8 +100,7 @@ if(not SAT_lib.check_sol(users_yes_cnf,users_yes_cert)):
     TAc.print("# The certificate that you gave me is not a valid one for your CNF", "red")
     quit(0)
 
-round1_2(users_yes_cnf)
-users_yes_cert = round4(users_yes_cert)
+users_yes_cert = round4(cnf_yes, users_yes_cert)
 
 if(not SAT_lib.check_sol(cnf_yes,users_yes_cert)):
     TAc.print("# The certificate that you gave me is not a valid one for my CNF", "red")

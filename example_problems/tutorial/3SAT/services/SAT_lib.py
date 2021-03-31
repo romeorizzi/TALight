@@ -32,6 +32,19 @@ def __dpll(cnf, assignments={}):
 
 
 def solve(cnf):
+    """ Given a cnf, try to find a possible solution.
+
+    Parameters
+    ----------
+    cnf :list[set[(string,bool)]]
+        The cnf formula
+
+    Returns
+    -------
+    (bool, set[(string,bool)])
+        A tuple where the first element is a boolean and tells if the cnf is solvable
+        and the second element is an assignment that satisfy the formula if the cnf is solvable, a empty set otherwise.
+    """
     (solvable, solution) = __dpll(cnf)
     if not solvable:
         return solvable, {}
@@ -54,7 +67,7 @@ def __to_conj(string):
 
 
 def to_cnf(cnf_string):
-    """ Given a string that represent a cnf formula it returns an object that represent the given cnf
+    """ Given a cnf in the form of a string, returns it as an object
 
     Parameters
     ----------
@@ -172,9 +185,21 @@ def random_kcnf(n_literals, k=3):
 
     return result
 
-def dimacs_file_to_cnf(string):
+def dimacs_file_to_cnf(file_path):
+    """ Load a cnf from a dimacs file
+
+        Parameters
+        ----------
+        file_path :string
+            Path of the file that contains the cnf wirtten in dimacs format
+
+        Returns
+        -------
+        list[set[(string,bool)]]
+            The object that represents the loaded cnf
+        """
     cnf = []
-    f = open(string, "r")
+    f = open(file_path, "r")
     for line in f:
         if line[0] != 'c' and line[0] != 'p':
             conj = set()
@@ -188,9 +213,21 @@ def dimacs_file_to_cnf(string):
     f.close()
     return cnf
 
-def saved_certificate_to_cnf(string):
+def saved_certificate_to_cnf(file_path):
+    """ Load a certificate from file
+
+        Parameters
+        ----------
+        file_path :string
+            Path of the file that contains the certificate fo a cnf
+
+        Returns
+        -------
+        set[(string,bool)]
+            The object that represents the loaded certificate
+        """
     cert = set()
-    f = open(string, "r")
+    f = open(file_path, "r")
     for line in f:
         if line[0] == 'v' and line[2] != '0':
             for leterals in line.split(' ')[1:]:
@@ -199,11 +236,23 @@ def saved_certificate_to_cnf(string):
     return cert
 
 
-def parse_certificate(string):
+def parse_certificate(cert_string):
+    """
+    Given a certificate in the form of a string, returns it as an object
+
+    Parameters
+    ----------
+    cert_string :str
+        The certificate formula
+
+    Returns
+    -------
+    set[(string,bool)]
+        The certificate object that represent the given cnf certificate
+    """
     ass = set()
-    string = string.replace(' ','')
-    #matches = re.findall("\(\s*\'(x|y)[0-9]*\'\s*,\s*(True|False)\s*\)", string)
-    for x in string.split('),('):
+    cert_string = cert_string.replace(' ','')
+    for x in cert_string.split('),('):
         x = x.replace(')','').replace('(','').replace('{','').replace('}','').replace('\'','')
         tmp = x.split(',')
         ass.add(((tmp[0],tmp[1] == 'True')))
