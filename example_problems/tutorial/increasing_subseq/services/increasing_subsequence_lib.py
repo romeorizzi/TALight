@@ -306,3 +306,18 @@ def remove_duplicate_list_of_list(li):
     li = set(map(tuple,li))
     li = list(map(list, li))
     return li
+
+def get_missing_subsequences(tot, input):
+    #tot and input are list of lists
+    missing = []
+    for i in tot:
+        if not i in input:
+            missing.append(i)
+
+    return missing
+
+
+import math
+
+def get_prefix(s):
+    return s[:math.floor(len(s)/2)]
