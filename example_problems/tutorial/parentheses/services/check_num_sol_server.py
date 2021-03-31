@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+from sys import stderr, exit, argv
+
+from TALinputs import TALinput
+from multilanguage import Env, Lang, TALcolors
+
+from parentheses_lib import Par
 
 # METADATA OF THIS TAL_SERVICE:
 problem="parentheses"
@@ -13,10 +19,6 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import stderr, exit, argv
-
-from TALinputs import TALinput
-from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
@@ -25,14 +27,8 @@ if not ENV['silent']:
 
 # START CODING YOUR SERVICE: 
 
-# risps_correct[num_open][num_closed] = number of different prefixes of well-formed formula with <num_open> open parentheses and <num_closed> closed parentheses.
-risps_correct = [ [1] * (ENV['num_pairs']+2) for _ in range(ENV['num_pairs']+1)]
-for num_open in range(1,ENV['num_pairs']+1):
-    risps_correct[num_open][0] = risps_correct[num_open-1][1]
-    for num_closed in range(1,ENV['num_pairs']+1):
-        risps_correct[num_open][num_closed] = risps_correct[num_open][num_closed-1] + risps_correct[num_open-1][num_closed+1]
-
-risp_correct = risps_correct[ENV['num_pairs']][0]
+parentheses = Par(ENV['num_pairs'])
+risp_correct = parentheses.num_sol(ENV['num_pairs'])
 
 overflow = False
 if ENV['ok_if_congruent_modulus'] != 0:

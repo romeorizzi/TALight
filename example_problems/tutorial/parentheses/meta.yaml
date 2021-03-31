@@ -36,15 +36,15 @@ services:
     evaluator: [python, services/eval_num_sol_server.py]
     args:
       answ_modulus:
-        regex: ^([1-9][0-9]{0,10})$
+        regex: ^([1-9][0-9]{0,10}|0)$
 #        default: 0
         default: 1000000007
       goal:
-        regex: ^(correct|fast|low_memory)$
+        regex: ^(correct|efficient)$
         default: correct
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
-        default: correct
+        default: python
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
