@@ -75,10 +75,6 @@ def sub_sequences(T):
             sub_seq.append(string)
     return sub_seq  #list of string
 
-def ordered_sub_sequences(T):
-    tmp = sub_sequences(T)
-    tmp.sort()
-    return tmp
 
 
 def generate_random_seq(lenght, max):
@@ -284,3 +280,29 @@ def list_to_string(T):
 
 def n_coloring(color):
     return len(set(color))
+
+
+def sub_sequences_list(T):
+    sub_seq = []
+    combs = []
+    for l in range(1, len(T)+1):
+        combs.append(list(itertools.combinations(T, l)))
+    for c in combs:
+        for t in c:
+            seq = []
+            for i in t:
+                seq.append(i)
+            sub_seq.append(seq)
+    return sub_seq  #list of string
+
+
+def ordered_sub_sequences(T):
+    tmp = sub_sequences_list(T)
+    tmp = remove_duplicate_list_of_list(tmp)
+    tmp.sort()
+    return tmp
+
+def remove_duplicate_list_of_list(li):
+    li = set(map(tuple,li))
+    li = list(map(list, li))
+    return li

@@ -10,7 +10,7 @@ from increasing_subsequence_lib import parse_input, min_decreasing_col, get_min_
 
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
-service="is_subseq_server"
+service="min_k_col"
 args_list = [
     ('coloring',str),
     ('lang',str),
