@@ -6,8 +6,7 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from increasing_subsequence_lib import parse_input, min_decreasing_col, get_min_coloring, n_coloring, is_subseq_with_position, get_yes_certificate, remove_duplicate_spaces, generate_random_seq, list_to_string
-
+from increasing_subsequence_lib import *
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
 service="min_k_col"

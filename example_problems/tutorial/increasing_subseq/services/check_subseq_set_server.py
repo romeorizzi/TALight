@@ -6,7 +6,7 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from increasing_subsequence_lib import parse_input, ordered_sub_sequences ,min_decreasing_col, get_min_coloring, n_coloring, is_subseq_with_position, get_yes_certificate, remove_duplicate_spaces, generate_random_seq, list_to_string
+from increasing_subsequence_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
@@ -19,6 +19,7 @@ ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
+level = ENV['feedback']
 #if not ENV['silent']:
 #    TAc.print(LANG.opening_msg, "green")
 TAc.print("\nYou will be given a sequence of numbers, and you have to enter all the different subsequences", "green")
@@ -37,14 +38,30 @@ else:
     exit(0)
 
 subseq = ordered_sub_sequences(T)
-print(sub)
 sub = [ int(x) for x in sub ]
-print(subseq)
 
-if sub in subseq:
-    TAc.print("\n\nYES, it's the minimum coloring of T\n", "red")
+if level == 'yes_no':
+    if sub in subseq:
+        TAc.print("\n\nYES, it's the minimum coloring of T\n", "red")
+    else:
+        TAc.print("\n\nNO, it isn't the minimum coloring of T\n", "red")
+elif level == 'give_one_missing':
+    if sub in subseq:
+        TAc.print("\n\nYES, it's the minimum coloring of T\n", "red")
+    else:
+        TAc.print("\n\nNO, it isn't the minimum coloring of T\n", "red")
+        missing = get_missing_subsequences(subseq, sub)
+        print(list_to_string(random.choice(missing)))
 else:
-    TAc.print("\n\nNO, it isn't the minimum coloring of T\n", "red")
+    if sub in subseq:
+        TAc.print("\n\nYES, it's the minimum coloring of T\n", "red")
+    else:
+        TAc.print("\n\nNO, it isn't the minimum coloring of T\n", "red")
+        missing = get_missing_subsequences(subseq, sub)
+        print(list_to_string(get_prefix(random.choice(missing))))
+
+
+    
 
 
 

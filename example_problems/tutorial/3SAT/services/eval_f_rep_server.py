@@ -43,6 +43,13 @@ LANG = Lang(ENV, TAc, lambda fstring:  eval(f"f'{fstring}'"))
 if not ENV['silent']:
     print(LANG.opening_msg, "green")
 
+def check_if_3cnf(cnf):
+    for disj in cnf:
+        if len(disj) > 3:
+            TAc.print("\n\n# The 3CNF f_3 inserted is not a valid 3-SAT.\n"
+                      "# In fact {} contains more than 3 literals".format(SAT_lib.to_string([disj])), "red")
+            exit(1)
+    return cnf
 
 def round1_2(cnf):
     TAc.print("# Here's a CNF. Can you give me an equivalent 3CNF ones?\n1\n{}".format(SAT_lib.to_string(cnf)), "green")
@@ -50,26 +57,24 @@ def round1_2(cnf):
     if (not input_is_valid(T_f,
                              '^(\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*(x|y)[1-9])(\s*or\s*!?\s*(x|y)[1-9])*\s*\))*\s*)')):
         exit(1)
-    return SAT_lib.to_cnf(T_f)
+    return check_if_3cnf(SAT_lib.to_cnf(T_f))
 
 def round3(cert):
     TAc.print("# Thanks for your CNF. Here's a certificate for the original one."
     "\n# Can you give me a certificate that is valid for yours CNF ?\n2\n{}".format(cert), "green")
     cert = input()
-    if (not input_is_valid(T_f,
+    if (not input_is_valid(cert,
                              "^\s*{\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*(,\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*)*}\s*")):
         exit(1)
 
     return SAT_lib.parse_certificate(cert)
 
 def round4(cnf_yes, cert):
-	users_yes_cnf = round1_2(cnf_yes)
-    TAc.print("# Thanks for your CNF. Here's an assignment that satisfy your CNF."
-    "\n# Can you give me a certificate that is valid for my CNF ?\n3\n{}".format(cert), "green")
+    users_yes_cnf = round1_2(cnf_yes)
+    TAc.print("# Thanks for your CNF. Here's an assignment that satisfy your CNF.\n# Can you give me a certificate that is valid for my CNF ?\n3\n{}".format(cert), "green")
     cert = input()
-        if (not input_is_valid(T_f,
-                                 "^\s*{\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*(,\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*)*}\s*")):
-            exit(1)
+    if (not input_is_valid(T_f,"^\s*{\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*(,\s*\(\s*'(x|y)[0-9]+'\s*,\s*(True|False)\s*\)\s*)*}\s*")):
+        exit(1)
     return SAT_lib.parse_certificate(cert)
 
 

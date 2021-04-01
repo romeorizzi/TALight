@@ -5,8 +5,7 @@ import re
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from increasing_subsequence_lib import parse_input, is_subseq_with_position, get_yes_certificate, remove_duplicate_spaces
-
+from increasing_subsequence_lib import *
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
 service="is_subseq_server"
