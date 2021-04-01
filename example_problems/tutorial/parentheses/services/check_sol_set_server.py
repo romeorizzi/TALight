@@ -4,7 +4,7 @@ from sys import stderr, exit, argv
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-from parentheses_lib import recognize, num_sol, unrank
+from parentheses_lib import recognize, Par
 
 # METADATA OF THIS TAL_SERVICE:
 problem="parentheses"
@@ -25,6 +25,8 @@ TAc.print(LANG.opening_msg, "green")
 stopping_command_set={'#end'}
 print("# waiting for your set of well-formed formulas of parentheses.\nPlease, each formula should go on a different line and each line should have the same length and comprise only '(' or ')' characters.\nWhen you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete. Any other line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file whose last line is '#end'. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.")
 
+p = Par(20)      
+      
 line = None
 while line == None:
     line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\(|\))*$", regex_explained="any string comprising of '(' and ')' characters.", TAc=TAc)
@@ -49,9 +51,10 @@ while True:
     if not recognize(line, TAc, LANG):
         exit(0)
     if line in input_solution_set:
-        TAc.print(LANG.render_feedback("repeated", f"No. La formula di parentesi ben formata che hai appena introdotto (tua riga {len(input_solution_list)+1}) è la stessa dell'inserimento numero {input_solution_list.index(line)+1}."), "red", ["bold"])
-    input_solution_set.add(line)
-    input_solution_list.append(line)
+        TAc.print(LANG.render_feedback("repeated", f"No. La formula di parentesi ben formata che hai appena introdotto (tua riga {len(input_solution_list)+1}) è la stessa dell'inserimento numero {input_solution_list.index(line)+1}. Nulla è perduto: questo doppio inserimento verrà ignorato. Puoi procedere."), "red", ["bold"])
+    else:
+        input_solution_set.add(line)
+        input_solution_list.append(line)
 
 print("# FILE GOT")
 TAc.print(LANG.render_feedback("your-formulas-all-ok", f"All the formulas you have introduced are ok (well formed)."), "green")
@@ -59,21 +62,20 @@ TAc.print(LANG.render_feedback("your-formulas-all-ok", f"All the formulas you ha
 input_solution_list.sort()
 #print(input_solution_list)
 
-if len(input_solution_list) < num_sol(n_pairs) and ENV['feedback'] == "yes_no":
+if len(input_solution_list) < p.num_sol(n_pairs) and ENV['feedback'] == "yes_no":
     TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed formula."), "red", ["bold"])
     exit(0)
 
 
-for pos in range(num_sol(n_pairs)):
-    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, unrank(n_pairs, pos)={unrank(n_pairs, pos)}")
-    if input_solution_list[pos] != unrank(n_pairs, pos):
-        missing = unrank(n_pairs, pos)
+for pos in range(p.num_sol(n_pairs)):
+    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, p.unrank(n_pairs, pos)={p.unrank(n_pairs, pos)}")
+    if input_solution_list[pos] != p.unrank(n_pairs, pos):
+        missing = p.unrank(n_pairs, pos)
         #print(f"missing={missing}")
         if ENV['feedback'] == "give_one_missing":
             TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed formula.\nConsider for example:"), "red", ["bold"])
             TAc.print(missing, "yellow", ["bold"])
-        else:
-            assert ENV['feedback'] == "tell_a_minimal_missing_prefix"
+        elif ENV['feedback'] == "tell_a_minimal_missing_prefix":
             min_len1 = 0
             if pos > 0:
                 while missing[min_len1] == input_solution_list[pos-1][min_len1]:

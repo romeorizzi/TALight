@@ -1,6 +1,26 @@
 #!/usr/bin/env python3
 import random
 
+def recognize(formula_of_parentheses, TAc, LANG):
+    #print(f"formula_of_parentheses={formula_of_parentheses}")
+    num_dangling_open = 0
+    for day, i in zip(formula_of_parentheses,range(1,len(formula_of_parentheses)+1)):
+        if day == '(':
+            num_dangling_open += 1
+        else:
+            if num_dangling_open == 0:
+                TAc.print(formula_of_parentheses, "yellow", ["underline"])
+                TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed."), "red", ["bold"])
+                return False
+            num_dangling_open -= 1
+
+    if num_dangling_open > 0:
+        TAc.print(formula_of_parentheses, "yellow", ["underline"])
+        TAc.print(LANG.render_feedback("unfinished", f"No. You have left {num_dangling_open} open parenthesis unclosed. This formula is not well formed. It contains more '(' than ')' characters."), "red", ["bold"])
+        return False
+    return True
+
+
 class Par:
     def __init__(self, MAX_N_PAIRS):
         self.MAX_N_PAIRS = MAX_N_PAIRS
@@ -75,25 +95,7 @@ class Par:
         random.seed(seed)
         r = random.randrange(self.num_sol(n_pairs))
         return self.unrank(n_pairs, r)
-
-    def recognize(self, formula_of_parentheses, TAc, LANG):
-        #print(f"formula_of_parentheses={formula_of_parentheses}")
-        num_dangling_open = 0
-        for day, i in zip(formula_of_parentheses,range(1,len(formula_of_parentheses)+1)):
-            if day == '(':
-                num_dangling_open += 1
-            else:
-                if num_dangling_open == 0:
-                    TAc.print(formula_of_parentheses, "yellow", ["underline"])
-                    TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed."), "red", ["bold"])
-                    return False
-                num_dangling_open -= 1
-
-        if num_dangling_open > 0:
-            TAc.print(formula_of_parentheses, "yellow", ["underline"])
-            TAc.print(LANG.render_feedback("unfinished", f"No. You have left {num_dangling_open} open parenthesis unclosed. This formula is not well formed. It contains more '(' than ')' characters."), "red", ["bold"])
-            return False
-        return True
+    
 
 if __name__ == "__main__":
     p = Par(1000)
@@ -118,5 +120,5 @@ if __name__ == "__main__":
         for r in range(p.num_sol(n)):
             assert p.rank(p.unrank(n, r)) == r
         for _ in range(5):
-            print(p.rand_gen(n))
+            #print(p.rand_gen(n))
             assert p.rand_gen(n, _ + 5*n) == p.rand_gen(n, _ + 5*n)

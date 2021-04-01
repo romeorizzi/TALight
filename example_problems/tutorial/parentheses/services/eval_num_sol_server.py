@@ -52,10 +52,10 @@ def one_test(n_pairs):
     t = end - start # è un float, in secondi
     if ENV['answ_modulus'] == 0:
         if risp != risp_correct:
-        TAc.print(LANG.render_feedback("not-correct", f"No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct} but according to your solution is {risp}."), "red", ["bold"])                        
+        TAc.print(LANG.render_feedback("not-correct", f"No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Not {risp}."), "red", ["bold"])                        
         exit(0)
     elif risp % ENV['answ_modulus'] != risp_correct % ENV['answ_modulus']:
-        TAc.print(LANG.render_feedback("not-correct", f"No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Taken modulus {ENV['answ_modulus']} this value boils down to {risp_correct % ENV['answ_modulus']}. But your bot answered {risp}."), "red", ["bold"])                
+        TAc.print(LANG.render_feedback("not-correct", f"No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Taken modulus {ENV['answ_modulus']} this value boils down to {risp_correct % ENV['answ_modulus']}. Not {risp}."), "red", ["bold"])                
         exit(0)
     if t > 1:
         if n_pairs > 14:
