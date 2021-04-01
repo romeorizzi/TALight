@@ -45,7 +45,7 @@ Altrimenti, accetteremo un semplice NO, almeno fino a quando non avrai scoperto 
 4 0
 
 ```bash
-rtal connect euler_dir -a goal=with_yes_certificates test_euler_dir
+rtal connect euler_dir -a goal=with_yes_certificates eval_euler_dir
 ```
 Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere ai nostri servizi affinché ne valutino correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
@@ -74,7 +74,7 @@ Te li presento:
 Con 
 
 ```bash
-rtal connect euler_dir -a fedback=yes_no is_sum_of_circuits
+rtal connect euler_dir -a fedback=yes_no check_is_a_family_of_circuits
 ```
 potrai proporre tu un grafo diretto e ti verrà risposto se decomponibile in cicli diretti, oppure no.
 Puoi ottenere conferma delle evntuali risposte affermative settando il parametro `fedback` al valore `yes_certificate`. Hai a disposizione anche il valore `no_certificate`, ma è già spoilerante della buona caratterizzazione, che potrebbe risultarti significativo scoprire da solo. Il certificato di NO viene infatti fornito secondo un formato che ben caratterizza questo problema di decisione.
