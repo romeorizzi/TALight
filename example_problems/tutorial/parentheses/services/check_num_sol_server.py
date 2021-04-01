@@ -24,24 +24,25 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE: 
-
 parentheses = Par(ENV['n_pairs'])
 risp_correct = parentheses.num_sol(ENV['n_pairs'])
-
 overflow = False
 if ENV['ok_if_congruent_modulus'] != 0:
     overflow = ( risp_correct >= ENV['ok_if_congruent_modulus'] )
     risp_correct %= ENV['ok_if_congruent_modulus'] 
 
-if ENV['risp'] != risp_correct or not ENV['silent']:
+if ENV['risp'] != risp_correct:
+    ENV['silent'] = False
+if not ENV['silent']:
     TAc.print(LANG.opening_msg, "green")
-    
+
 if ENV['risp'] == risp_correct:
+    TAc.OK()
     if not ENV['silent']:
         if overflow:
-            TAc.print(LANG.render_feedback("ok-equal", f"We agree. The number of well-formed formulas with {ENV['n_pairs']} pairs of open-closed parentheses is congruent to {ENV['risp']} modulo {ENV['ok_if_congruent_modulus']}."), "green", ["bold"])
+            TAc.print(LANG.render_feedback("ok-equal", f"♥  We agree. The number of well-formed formulas with {ENV['n_pairs']} pairs of open-closed parentheses is congruent to {ENV['risp']} modulo {ENV['ok_if_congruent_modulus']}."), "green", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("ok-equal", f"We agree. There are precisely {ENV['risp']} well-formed formulas with {ENV['n_pairs']} pairs of open-closed parentheses."), "green", ["bold"])
+            TAc.print(LANG.render_feedback("ok-equal", f"♥  We agree. There are precisely {ENV['risp']} well-formed formulas with {ENV['n_pairs']} pairs of open-closed parentheses."), "green", ["bold"])
     exit(0)
 
 # NOW DEALING WITH WRONG ANSWER:

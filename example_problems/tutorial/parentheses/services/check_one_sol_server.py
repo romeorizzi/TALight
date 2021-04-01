@@ -26,5 +26,5 @@ if not ENV['silent']:
 
 if recognize(ENV["input_formula"], TAc, LANG) and not ENV['silent']:
     TAc.OK()
-    TAc.print(LANG.render_feedback("ok", f"Your string is a well-formed formula of parentheses."), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("ok", f"♥  Your string is a well-formed formula of parentheses."), "yellow", ["bold"])
 exit(0)
