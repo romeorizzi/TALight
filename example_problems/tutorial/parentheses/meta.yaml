@@ -88,18 +88,21 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  eval_next_sol_gen:
-    evaluator: [python, services/eval_next_sol_gen_server.py]
+  eval_next:
+    evaluator: [python, services/eval_next_server.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
-        regex: ^(correct|fast)$
+        regex: ^(correct|efficient)$
         default: correct
+      seed:
+        regex: ^([1-9]|[0-9]{2,5})$
+        default: 777
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
-        default: correct
+        default: python
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -109,7 +112,7 @@ services:
       input_formula:
         regex:  ^(\(|\)){0,1000}$
       rank:
-        regex: ^(0|[1-9]|1[0-9]{0,300})$
+        regex: ^(0|[1-9]|[0-9]{0,300})$
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
@@ -123,7 +126,7 @@ services:
     evaluator: [python, services/check_unrank_server.py]
     args:
       input_rank:
-        regex: ^(0|[1-9]|1[0-9]{0,300})$
+        regex: ^(0|[1-9]|[0-9]{0,300})$
       formula:
         regex:  ^(\(|\)){0,1000}$
       sorting_criterion:
@@ -135,18 +138,21 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  eval_rank_of_sol:
-    evaluator: [python, services/eval_rank_of_sol_server.py]
+  eval_rank:
+    evaluator: [python, services/eval_rank_server.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
-        regex: ^(correct|fast)$
+        regex: ^(correct|efficient)$
         default: correct
+      seed:
+        regex: ^([1-9]|[0-9]{2,5})$
+        default: 777
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
-        default: correct
+        default: python
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -157,11 +163,14 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
-        regex: ^(correct|fast)$
+        regex: ^(correct|efficient)$
         default: correct
+      seed:
+        regex: ^([1-9]|[0-9]{2,5})$
+        default: 777
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
-        default: correct
+        default: python
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -182,7 +191,7 @@ services:
       n_pairs:
         regex: ^(0|[1-9][0-9]{0,1}|1000)$
       rank:
-        regex: ^(0|[1-9]|1[0-9]{0,1000})$
+        regex: ^(0|[1-9]|[0-9]{0,1000})$
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par

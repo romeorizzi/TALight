@@ -25,11 +25,15 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
 MAX_N_PAIRS = 14
+if ENV['code_lang']=="compiled":
+    MAX_N_PAIRS += 1
 instances = list(range(MAX_N_PAIRS + 1))
 if ENV['goal'] == "efficient":
     MAX_N_PAIRS = 1000
     if ENV['answ_modulus'] == 0:
         MAX_N_PAIRS = 100
+    if ENV['code_lang']=="compiled":
+        MAX_N_PAIRS *= 2
     scaling_factor = 1.2
     n = instances[-1]
     while True:
@@ -63,10 +67,10 @@ for n_pairs in instances:
    if time > 1:
        if n_pairs > 13:
            TAc.print(LANG.render_feedback("seems-correct", f"Ok. Your solution appears to correctly compute the number of well formed formulas (checked it up to {n_pairs} pairs of parentheses)."), "green")
-       TAc.print(LANG.render_feedback("not-efficient", f"No. You solution is not efficient. When run on your machine, it took more than one second to compute the number of well-formed formulas with {n_pairs} pairs of parentheses."), "red", ["bold"])        
+       TAc.print(LANG.render_feedback("not-efficient", f"No. Your solution is not efficient. When run on your machine, it took more than one second to compute the number of well-formed formulas with {n_pairs} pairs of parentheses."), "red", ["bold"])        
        exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct", f"Ok. Your solution appears to correctly compute the number of well formed formulas (checked it on several instances)."), "green")
-TAc.print(LANG.render_feedback("seems-correct", f"Ok. Your solution is efficient: its running time is logarithmic in the number of formulas it counts."), "green")
+TAc.print(LANG.render_feedback("efficient", f"Ok. Your solution is efficient: its running time is logarithmic in the number of formulas it counts."), "green")
 
 exit(0)

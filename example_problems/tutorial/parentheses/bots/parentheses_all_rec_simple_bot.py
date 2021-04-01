@@ -71,26 +71,26 @@ def next_wff(wff):
 def num_sol_bot():
     while True:
         tmp = input()
-        if tmp[0] != '#':
+        if len(tmp) == 0 or tmp[0] != '#':
             print(num_sol(int(tmp)))
 
 def unrank_bot():
     while True:
         tmp = input()
-        if tmp[0] != '#':
+        if len(tmp) == 0 or tmp[0] != '#':
             n, r = map(int, tmp.split())
             print(unrank(n, r))
 
 def rank_bot():
     while True:
         tmp = input()
-        if tmp[0] != '#':
+        if len(tmp) == 0 or tmp[0] != '#':
             print(rank(tmp))
 
-def next_sol_bot():
+def next_bot():
     while True:
         tmp = input()
-        if tmp[0] != '#':
+        if len(tmp) == 0 or tmp[0] != '#':
             print(next_wff(tmp))
 
 if argv[1] == 'num_sol':
@@ -99,5 +99,5 @@ if argv[1] == 'rank':
     rank_bot()
 if argv[1] == 'unrank':
     unrank_bot()
-if argv[1] == 'next_sol':
+if argv[1] == 'next':
     next_sol_bot()

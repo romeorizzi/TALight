@@ -104,6 +104,11 @@ class Par:
         r = random.randrange(self.num_sol(n_pairs))
         return self.unrank(n_pairs, r)
     
+    def next(self, wff, sorting_criterion="loves_opening_par"):
+        n_pairs = len(wff) // 2
+        r = self.rank(wff, sorting_criterion)
+        assert r < self.num_sol(n_pairs) -1
+        return self.unrank(n_pairs, r+1, sorting_criterion)
 
 if __name__ == "__main__":
     p = Par(1000)
