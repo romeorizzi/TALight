@@ -102,7 +102,6 @@ class Lang:
                 self.opening_msg += f", {arg_name}={'1' if arg_val else '0'} (i.e., {arg_val})"
             else:
                 self.opening_msg += f", {arg_name}={arg_val}"
-        self.opening_msg += ".\n"
         if self.messages_book == None:
             self.opening_msg += f".\n# The feedback_source is the one hardcoded in the service server ({ENV.service_server_fullname})"
         else:

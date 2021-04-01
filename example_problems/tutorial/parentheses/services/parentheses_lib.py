@@ -28,7 +28,7 @@ def recognize(formula_of_parentheses, TAc, LANG, yield_feedback=True):
 
 
 class Par:
-    def __init__(self, MAX_N_PAIRS):
+    def __init__(self, MAX_N_PAIRS, nums_modulus=0):
         self.MAX_N_PAIRS = MAX_N_PAIRS
 
         # num_wffs[num_pairs] = number of well-formed formula with <num_pairs> open parentheses and <num_pairs> closed parentheses correctly matching with them.
@@ -38,7 +38,9 @@ class Par:
         for num_pairs in range(2,MAX_N_PAIRS+1):
             self.num_wffs[num_pairs] = 0
             for n_pairs_included in range(num_pairs):
-                self.num_wffs[num_pairs] += self.num_wffs[n_pairs_included] * self.num_wffs[num_pairs - n_pairs_included -1] 
+                self.num_wffs[num_pairs] += self.num_wffs[n_pairs_included] * self.num_wffs[num_pairs - n_pairs_included -1]
+                if nums_modulus > 0:
+                    self.num_wffs[num_pairs] %= nums_modulus
 
     def num_sol(self, num_pairs):
         assert num_pairs <= self.MAX_N_PAIRS
