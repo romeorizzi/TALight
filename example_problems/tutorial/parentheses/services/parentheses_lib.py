@@ -1,22 +1,28 @@
 #!/usr/bin/env python3
 import random
 
-def recognize(formula_of_parentheses, TAc, LANG):
+def recognize(formula_of_parentheses, TAc, LANG, yield_feedback=True):
+    assert type(formula_of_parentheses)==str
     #print(f"formula_of_parentheses={formula_of_parentheses}")
     num_dangling_open = 0
-    for day, i in zip(formula_of_parentheses,range(1,len(formula_of_parentheses)+1)):
-        if day == '(':
+    for char, i in zip(formula_of_parentheses,range(1,len(formula_of_parentheses)+1)):
+        if char == '(':
             num_dangling_open += 1
         else:
             if num_dangling_open == 0:
-                TAc.print(formula_of_parentheses, "yellow", ["underline"])
-                TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed."), "red", ["bold"])
+                if yield_feedback:
+                    TAc.print(formula_of_parentheses, "yellow", ["underline"])
+                    TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed."), "red", ["bold"])
+                    TAc.print(formula_of_parentheses, "yellow", ["underline"])
+                    print(" "*(i-1),end="")
+                    TAc.print("^ unmatched ')'", "yellow", ["underline"])
                 return False
             num_dangling_open -= 1
 
     if num_dangling_open > 0:
-        TAc.print(formula_of_parentheses, "yellow", ["underline"])
-        TAc.print(LANG.render_feedback("unfinished", f"No. You have left {num_dangling_open} open parenthesis unclosed. This formula is not well formed. It contains more '(' than ')' characters."), "red", ["bold"])
+        if yield_feedback:
+            TAc.print(formula_of_parentheses, "yellow", ["underline"])
+            TAc.print(LANG.render_feedback("unfinished", f"No. You have left {num_dangling_open} open parenthesis unclosed. This formula is not well formed. It contains more '(' than ')' characters."), "red", ["bold"])
         return False
     return True
 
@@ -25,18 +31,18 @@ class Par:
     def __init__(self, MAX_N_PAIRS):
         self.MAX_N_PAIRS = MAX_N_PAIRS
 
-        # risps_correct[num_pairs] = number of well-formed formula with <num_pairs> open parentheses and <num_pairs> closed parentheses correctly matching with them.
+        # num_wffs[num_pairs] = number of well-formed formula with <num_pairs> open parentheses and <num_pairs> closed parentheses correctly matching with them.
 
-        self.risps_correct = [1] * (MAX_N_PAIRS+1) # while allocating w also set up the correct value for the two base cases
+        self.num_wffs = [1] * (MAX_N_PAIRS+1) # while allocating w also set up the correct value for the two base cases
         
         for num_pairs in range(2,MAX_N_PAIRS+1):
-            self.risps_correct[num_pairs] = 0
+            self.num_wffs[num_pairs] = 0
             for n_pairs_included in range(num_pairs):
-                self.risps_correct[num_pairs] += self.risps_correct[n_pairs_included] * self.risps_correct[num_pairs - n_pairs_included -1] 
+                self.num_wffs[num_pairs] += self.num_wffs[n_pairs_included] * self.num_wffs[num_pairs - n_pairs_included -1] 
 
     def num_sol(self, num_pairs):
         assert num_pairs <= self.MAX_N_PAIRS
-        return self.risps_correct[num_pairs]
+        return self.num_wffs[num_pairs]
 
     def unrank(self, n_pairs, pos, sorting_criterion="loves_opening_par"):
         if n_pairs == 0:
@@ -88,7 +94,7 @@ class Par:
         n_pairs_A = i//2
         n_pairs_B = n_pairs - n_pairs_A -1
         num_B = self.num_sol(n_pairs_B)
-        return count + self.rank(wff[1:i], sorting_criterion)*self.num_sol(num_B) + self.rank(wff[i+1:len(wff)+1], sorting_criterion)
+        return count + self.rank(wff[1:i], sorting_criterion)*num_B + self.rank(wff[i+1:len(wff)+1], sorting_criterion)
 
     def rand_gen(self, n_pairs, seed=None):
         """ritorna una wff pseudo-rando di n-pairs parentesi. Il seed la determina univocamente."""

@@ -14,11 +14,11 @@ services:
   check_num_sol:
     evaluator: [python, services/check_num_sol_server.py]
     args:
-      num_pairs:
+      n_pairs:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
       risp:
         regex: ^(0|[1-9][0-9]{0,50})$
-        explain: "what you conjecture to be the number of well-formed formulas on <num_pairs> parentheses"
+        explain: "what you conjecture to be the number of well-formed formulas on <n_pairs> pairs of parentheses"
       ok_if_congruent_modulus:
         regex: ^(0|[1-9][0-9]{0,10})$
 #        default: 0
@@ -100,10 +100,42 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_rank_of_sol:
-    evaluator: [python, services/check_rank_of_sol.py]
+  check_rank:
+    evaluator: [python, services/check_rank_server.py]
     args:
-      one_formula:
+      input_formula:
+        regex:  ^(\(|\)){0,1000}$
+      rank:
+        regex: ^(0|[1-9]|1[0-9]{0,300})$
+      sorting_criterion:
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  check_unrank:
+    evaluator: [python, services/check_unrank_server.py]
+    args:
+      input_rank:
+        regex: ^(0|[1-9]|1[0-9]{0,300})$
+      formula:
+        regex:  ^(\(|\)){0,1000}$
+      sorting_criterion:
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  gimme_rank:
+    evaluator: [python, services/gimme_rank_server.py]
+    args:
+      formula:
         regex:  ^(\(|\)){0,1000}$
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -111,21 +143,18 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_unrank:
-    evaluator: [python, services/check_unrank.py]
+  gimme_unrank:
+    evaluator: [python, services/gimme_unrank_server.py]
     args:
-      num_pairs:
-        regex: ^([1-9][0-9]{0,1}|100)$
+      n_pairs:
+        regex: ^(0|[1-9][0-9]{0,1}|1000)$
       rank:
-        regex: ^([1-9]|1[0-9]{0,1}|20)$
+        regex: ^(0|[1-9]|1[0-9]{0,1000})$
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
   eval_rank_of_sol:
-    evaluator: [python, services/eval_rank_of_sol.py]
+    evaluator: [python, services/eval_rank_of_sol_server.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -140,7 +169,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_unrank:
-    evaluator: [python, services/eval_unrank.py]
+    evaluator: [python, services/eval_unrank_server.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
