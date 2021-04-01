@@ -693,7 +693,7 @@ The first thing to understand is the way the server and the client interact. Thi
 
 1. `rtald` activated to serve requests concerning problems sitting on your local machine and coming from the local client.
 
-2. `rtald` activated to serve requests concerning problems sitting on your local machine and coming from clients on other machines but reaching it through the internet. In this case your `rtald` daemon will need the bind address and the port from where to listen from the outside world and on which to establish connection with other `rtald` daemons.
+2. `rtald` activated by a problem maker or provider/dispatcher to serve requests concerning problems sitting on your local machine and coming from clients on other machines but reaching it through the internet. In this case your `rtald` daemon will need the bind address and the port from where to listen from the outside world and on which to establish connection with other `rtald` daemons.
 
 In this tutorial we start with examples concerning modality 1 since all main features appear there.
 In particular, this is certainly true with the problems of this tutorial that are entirely public and already downloaded with this repo.

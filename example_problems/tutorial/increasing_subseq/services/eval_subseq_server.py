@@ -6,8 +6,7 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from increasing_subsequence_lib import list_to_string, parse_input, get_yes_certificate ,generate_random_seq, get_rand_subseq, get_not_subseq, is_subseq_with_position, remove_duplicate_spaces
-
+from increasing_subsequence_lib import *
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
 service="eval_subseq_server"
