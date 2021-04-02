@@ -1,0 +1,16 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+ok-congruent: '♥  We agree. The number of feasible treatments with {ENV["n_pills"]} pills is congruent to {ENV["risp"]} modulo {ENV["ok_if_congruent_modulus"]}.'
+ok-equal: '♥  We agree. There are precisely {ENV["risp"]} feasible treatments with {ENV["n_pills"]} pills.'
+not-equal: 'No. The feasible treatments with {ENV["n_pills"]} pills are not {ENV["risp"]}.'
+not-congruent: 'No. The number of feasible treatments with {ENV["n_pills"]} pills is NOT congruent to {ENV["risp"]} modulo {ENV["ok_if_congruent_modulus"]}.'
+however: 'However, I noticed that your risp={ENV["risp"]} is actually congruent modulo {ENV["ok_if_congruent_modulus"]} to the correct risp. Note that {ENV["ok_if_congruent_modulus"]} is the value of the parameter "ok_if_congruent_modulus" for the current call to the service (as you can see in the opening message). The role/use of the parameter "ok_if_congruent_modulus" is mentioned in the pages of the help or synopsis services (and possibly also in the statement of the problem).'
+more: 'Indeed, the feasible treatments with {ENV["n_pills"]} pills are strictly more than {ENV["risp"]}. If you do not believe this, you can check it out with the service check_sol_set.'
+why_pertinent: 'And be told that the feasible treatments with {ENV["n_pills"]} pills are anyhow strictly less than {ENV["ok_if_congruent_modulus"]}, which is the value of the parameter "ok_if_congruent_modulus" for the current call to this service, as you can always check in the opening message.'
+less: 'Indeed, the feasible treatments with {ENV["n_pills"]} pills are actually strictly less than {ENV["risp"]}. You can check this out through the service check_sol_set.'
+no_pertinent: 'First, be told that the number of feasible treatments with {ENV["n_pills"]} pills overflows the value {ENV["ok_if_congruent_modulus"]} for the parameter "ok_if_congruent_modulus" as set for the current call to this service.'
+bigger-risp: 'This said, the correct value for the parameter risp is bigger than {ENV["risp"]}, though it would be here not proper to make assertions regarding the true number of solutions.'
+smaller-risp: 'This said, the correct value for the parameter risp is smaller than {ENV["risp"]}, though it would be here not proper to make assertions regarding the true number of solutions.'

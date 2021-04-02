@@ -46,8 +46,8 @@ if ENV["sorting_criterion"]=="loves_opening_par":
 else:
     first='()' * n_pairs
 if input_solution_list[-1] != first:
-    TAc.print(LANG.render_feedback("wrong-first", f'No. La primissima formula di parentesi ben formata cha hai introdotto non è però la prima secondo l\'ordinamento impostato'), "red", ["bold"], end=" ")
-    print(LANG.render_feedback("called-with", '(servizio chiamato con'), end=" ")
+    TAc.print(LANG.render_feedback("wrong-first", f'No. Your very first formula of parentheses is well-formed but but it is not the first well-formed-formula on that number of parentheses according to the order that has been set.'), "red", ["bold"], end=" ")
+    print(LANG.render_feedback("called-with", '(service called with'), end=" ")
     TAc.print('sorting_criterion=', "red", end="")
     TAc.print(ENV["sorting_criterion"], "yellow", end="")
     print(').')
@@ -58,19 +58,19 @@ while True:
     if line in stopping_command_set:
         break
     if not len(line) == len_lines:
-        TAc.print(LANG.render_feedback("different_lengths", f'No. La formula di parentesi che hai appena introdotto (tua riga {len(input_solution_list)+1}) è di lunghezza diversa dalle precedenti.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("different_lengths", f'No. The well-formed formula of parentheses you have just introduced in your line {len(input_solution_list)+1} has different length than the previous ones.'), "red", ["bold"])
         exit(0)   
     if not recognize(line, TAc, LANG):
         exit(0)
-    if (line < input_solution_list[-1]) == (ENV["sorting_criterion"]=="loves_opening_par"):
-        TAc.print(LANG.render_feedback("order-violation", f'No. La formula di parentesi ben formata che hai introdotto in posizione {len(input_solution_list)+1} non viene dopo ma prima della precedente secondo l\'ordinamento impostato'), "red", ["bold"], end=" ")
-        print(LANG.render_feedback("called-with", '(servizio chiamato con'), end=" ")
+    if (ENV["sorting_criterion"]=="loves_opening_par" and line < input_solution_list[-1]) or (ENV["sorting_criterion"]=="loves_closing_par" and line > input_solution_list[-1]):
+        TAc.print(LANG.render_feedback("order-violation", f'No. The well-formed formula of parentheses you have just introduced in your line {len(input_solution_list)+1} does not come after but rather before than the previous one according to the order set.'), "red", ["bold"], end=" ")
+        print(LANG.render_feedback("called-with", '(service called with'), end=" ")
         TAc.print('sorting_criterion=', "red", end="")
         TAc.print(ENV["sorting_criterion"], "yellow", end="")
         print(').')
         exit(0)
     if line == input_solution_list[-1]:
-        TAc.print(LANG.render_feedback("repeated", f'No. La formula di parentesi ben formata che hai appena introdotto (tua riga {len(input_solution_list)+1}) è la stessa dell\'inserimento in riga immediatamente precedente. Nulla è perduto: questo doppio inserimento verrà ignorato. Puoi procedere.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("repeated", f'No. The well-formed formula of parentheses you have just introduced in your line {len(input_solution_list)+1} is the same as your {input_solution_list.index(line)+1}th one. But nothing is lost: this repetition will be ignored. You can go on.'), "red", ["bold"])
     else:
         input_solution_list.append(line)
 
@@ -79,8 +79,13 @@ TAc.print(LANG.render_feedback("your-formulas-all-ok", f'All the formulas you ha
 
 #print(input_solution_list)
 
-if len(input_solution_list) < p.num_sol(n_pairs) and ENV["feedback"] == "yes_no":
+if len(input_solution_list) == p.num_sol(n_pairs):
+    TAc.OK()
+    TAc.print(LANG.render_feedback("list-ok", f'You have listed all well-formed formulas with {n_pairs} pairs of parentheses. Also their order is the intended one.'), "green")
+    exit(0)
+else:
     TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f'No. Your list is missing at least one well-formed formula.'), "red", ["bold"])
+if ENV["feedback"] == "yes_no":
     exit(0)
 
 for pos in range(p.num_sol(n_pairs)):
@@ -89,12 +94,12 @@ for pos in range(p.num_sol(n_pairs)):
         missing = p.unrank(n_pairs, pos)
         #print(f"missing={missing}")
         if ENV["feedback"] == "give_first_missing":
-            TAc.print(LANG.render_feedback("give-missing-formula", f'No. Your list is missing at least one well-formed formula.\nConsider for example:'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
             TAc.print(missing, "yellow", ["bold"])
         if ENV["feedback"] == "spot_first_wrong_consec":
             assert pos > 0
-            TAc.print(LANG.render_feedback("not-consecutive", f'No. The two well-formed formulas:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nthat appear consecutive in your list are NOT consecutive in the intended order'), "red", ["bold"], end=" ")
-            print(LANG.render_feedback("called-with", f'(servizio chiamato con'), end=" ")
+            TAc.print(LANG.render_feedback("not-consecutive", f'In fact,the two well-formed formulas:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nthat appear consecutive in your list are NOT consecutive in the intended order'), "red", ["bold"], end=" ")
+            print(LANG.render_feedback("called-with", f'(service called with'), end=" ")
             TAc.print('sorting_criterion=', "red", end="")
             TAc.print(ENV["sorting_criterion"], "yellow", end="")
             print(").")
@@ -109,9 +114,6 @@ for pos in range(p.num_sol(n_pairs)):
                 while missing[min_len2] == input_solution_list[pos][min_len2]:
                     min_len2 += 1
             minimal_missing_prefix = missing[0:1+max(min_len1,min_len2)]
-            TAc.print(LANG.render_feedback("first-missing-prefix", f'No. Your list is missing at least one well-formed formula.\nHere is the prefix of a well-formed formula and no formula in your list has this prefix:'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("first-missing-prefix", f'As a strong hint, here is the prefix of a well-formed formula and no formula in your list has this prefix:'), "red", ["bold"])
             TAc.print(minimal_missing_prefix, "yellow", ["bold"])
         exit(0)
-TAc.OK()
-TAc.print(LANG.render_feedback("list-ok", f'Ok! You have listed all well-formed formulas with {n_pairs} pairs of parentheses. Also their order is the intended one.'), "green")
-exit(0)

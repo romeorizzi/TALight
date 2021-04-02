@@ -24,8 +24,8 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE: 
-parentheses = Par(ENV["n_pairs"])
-risp_correct = parentheses.num_sol(ENV["n_pairs"])
+p = Par(ENV["n_pairs"])
+risp_correct = p.num_sol(ENV["n_pairs"])
 overflow = False
 if ENV["ok_if_congruent_modulus"] != 0:
     overflow = ( risp_correct >= ENV["ok_if_congruent_modulus"] )

@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+at-least-one-line: 'No. You are required to enter at least one feasible treatment (possibly even just the empty one) before closing.'
+first-line-not-feasible: 'No. Your very first treatment is not feasible.'
+different_lengths: 'No. The treatment you have just introduced in your line {len(input_solution_list)+1} has different length than the previous ones.'
+repeated: 'No. The treatment you have just introduced in your line {len(input_solution_list)+1} is the same as your {input_solution_list.index(line)+1}th one. But nothing is lost: this repetition will be ignored. You can go on.'
+your-treatments-all-ok: 'All the treatments you have introduced are feasible.'
+one-treatment-is-missing-no-feedback: 'No. Your set is missing at least one feasible treatment.'
+give-missing-treatment: 'Consider for example:'
+one-missing-minimal-prefix: 'As a strong hint, here is the prefix of a feasible treatment and no treatment in your set has this prefix:'

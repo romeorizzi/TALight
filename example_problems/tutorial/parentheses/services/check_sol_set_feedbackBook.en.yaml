@@ -10,5 +10,5 @@ different_lengths: 'No. La formula di parentesi che hai appena introdotto (tua r
 repeated: 'No. La formula di parentesi ben formata che hai appena introdotto (tua riga {len(input_solution_list)+1}) è la stessa dell\'inserimento numero {input_solution_list.index(line)+1}. Nulla è perduto: questo doppio inserimento verrà ignorato. Puoi procedere.'
 your-formulas-all-ok: 'All the formulas you have introduced are ok (well formed).'
 one-formula-is-missing-no-feedback: 'No. Your set is missing at least one well-formed formula.'
-give-missing-formula: 'No. Your set is missing at least one well-formed formula.\nConsider for example:'
-one-missing-minimal-prefix: 'No. Your set is missing at least one well-formed formula.\nHere is the prefix of a well-formed formula and no formula in your set has this prefix:'
+give-missing-formula: 'Consider for example:'
+one-missing-minimal-prefix: 'As a strong hint, here is the prefix of a well-formed formula and no formula in your set has this prefix:'

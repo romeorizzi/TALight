@@ -62,8 +62,13 @@ TAc.print(LANG.render_feedback("your-formulas-all-ok", f'All the formulas you ha
 input_solution_list.sort()
 #print(input_solution_list)
 
-if len(input_solution_list) < p.num_sol(n_pairs) and ENV["feedback"] == "yes_no":
+if len(input_solution_list) == p.num_sol(n_pairs):
+    TAc.OK()
+    TAc.print(f'Congrats! You have input all the well-formed formulas on {n_pairs} pairs of parentheses.', "green")
+    exit(0)
+else:
     TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f'No. Your set is missing at least one well-formed formula.'), "red", ["bold"])
+if ENV["feedback"] == "yes_no":
     exit(0)
 
 
@@ -73,7 +78,7 @@ for pos in range(p.num_sol(n_pairs)):
         missing = p.unrank(n_pairs, pos)
         #print(f"missing={missing}")
         if ENV["feedback"] == "give_one_missing":
-            TAc.print(LANG.render_feedback("give-missing-formula", f'No. Your set is missing at least one well-formed formula.\nConsider for example:'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
             TAc.print(missing, "yellow", ["bold"])
         elif ENV["feedback"] == "tell_a_minimal_missing_prefix":
             min_len1 = 0
@@ -86,9 +91,6 @@ for pos in range(p.num_sol(n_pairs)):
                 while missing[min_len2] == input_solution_list[pos][min_len2]:
                     min_len2 += 1
             minimal_missing_prefix = missing[0:1+max(min_len1,min_len2)]
-            TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f'No. Your set is missing at least one well-formed formula.\nHere is the prefix of a well-formed formula and no formula in your set has this prefix:'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f'As a strong hint, here is the prefix of a well-formed formula and no formula in your set has this prefix:'), "red", ["bold"])
             TAc.print(minimal_missing_prefix, "yellow", ["bold"])
         exit(0)
-TAc.OK()
-TAc.print(f'Congrats! You have input all the well-formed formulas on {n_pairs} pairs of parentheses.', "green")
-exit(0)

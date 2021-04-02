@@ -1,0 +1,9 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+different-n: 'No. Le due formule che hai fornito hanno lunghezze diverse! Pertanto, non appartengono alla stessa lista.'
+next-ok: '♥  La wff fornita come next_sol è effettivamnte la wff che segue immediatamente la wff fornita come current_sol (nell\''ordine sorting_criterion={ENV["sorting_criterion"]}).'
+next-wrong: 'No. La wff fornita come next sol NON è la wff successiva alla wff fornita come current_sol nell\''ordine sorting_criterion={ENV["sorting_criterion"]}.'
+feedback: 'Il prefisso massimale di next_sol che sarebbe stato corretto è il seguente:'

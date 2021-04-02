@@ -1,0 +1,9 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+different-n: 'No. The two treatments you have provided have different lengths! As such, they do not belong to the same list.'
+next-ok: '♥  The next_sol wff is indeed the wff that comes just after the current_sol wff (according to sorting_criterion={ENV["sorting_criterion"]}).'
+next-wrong: 'No. The next_sol wff you have provided is NOT the wff coming just after the current_sol wff according to sorting_criterion={ENV["sorting_criterion"]}.'
+feedback: 'The maximal prefix of your next_sol wff that is actually correct is the following:'
