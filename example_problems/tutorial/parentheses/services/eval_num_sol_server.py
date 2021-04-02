@@ -54,10 +54,10 @@ def one_test(n_pairs):
     t = end - start # è un float, in secondi
     if ENV["answ_modulus"] == 0:
         if risp != risp_correct:
-            TAc.print(LANG.render_feedback("not-correct", f'No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Not {risp}.'), "red", ["bold"])                        
+            TAc.print(LANG.render_feedback("not-equal", f'# No. You solution is NOT correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is:\n {risp_correct}. Not {risp}.'), "red", ["bold"])                        
             exit(0)
     elif (risp % ENV["answ_modulus"]) != (risp_correct % ENV["answ_modulus"]):
-        TAc.print(LANG.render_feedback("not-correct", f'No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Taken modulus {ENV["answ_modulus"]} this value boils down to {risp_correct % ENV["answ_modulus"]}. Not {risp}.'), "red", ["bold"])                
+        TAc.print(LANG.render_feedback("not-equiv", f'No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Taken modulus {ENV["answ_modulus"]} this value boils down to {risp_correct % ENV["answ_modulus"]}. Not {risp}.'), "red", ["bold"])                
         exit(0)
     return t   
         
@@ -66,11 +66,11 @@ for n_pairs in instances:
    print(f"#Correct! [took {time} secs on your machine]")
    if time > 1:
        if n_pairs > 13:
-           TAc.print(LANG.render_feedback("seems-correct", f'# Ok. ♥  Your solution appears to correctly compute the number of well formed formulas (checked it up to {n_pairs} pairs of parentheses).'), "green")
-       TAc.print(LANG.render_feedback("not-efficient", f'No. Your solution is not efficient. When run on your machine, it took more than one second to compute the number of well-formed formulas with {n_pairs} pairs of parentheses.'), "red", ["bold"])        
+           TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥  Your solution correctly computes the number of well formed formulas up to {n_pairs} pairs of parentheses.'), "green")
+       TAc.print(LANG.render_feedback("not-efficient", f'# No. Your solution is not efficient. Run on your machine, it took more than one second to compute the number of well-formed formulas with {n_pairs} pairs of parentheses.'), "red", ["bold"])        
        exit(0)
 
-TAc.print(LANG.render_feedback("seems-correct", f'# Ok. ♥  Your solution appears to correctly compute the number of well formed formulas (checked it on several instances).'), "green")
+TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. ♥  Your solution appears to be correct (checked on several instances).'), "green")
 TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥  Your solution is efficient: its running time is logarithmic in the number of formulas it counts.'), "green")
 
 exit(0)

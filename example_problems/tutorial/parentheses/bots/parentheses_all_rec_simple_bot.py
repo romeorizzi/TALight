@@ -100,4 +100,4 @@ if argv[1] == 'rank':
 if argv[1] == 'unrank':
     unrank_bot()
 if argv[1] == 'next':
-    next_sol_bot()
+    next_bot()

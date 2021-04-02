@@ -73,7 +73,7 @@ for pos in range(p.num_sol(n_pairs)):
         missing = p.unrank(n_pairs, pos)
         #print(f"missing={missing}")
         if ENV["feedback"] == "give_one_missing":
-            TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f'No. Your set is missing at least one well-formed formula.\nConsider for example:'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("give-missing-formula", f'No. Your set is missing at least one well-formed formula.\nConsider for example:'), "red", ["bold"])
             TAc.print(missing, "yellow", ["bold"])
         elif ENV["feedback"] == "tell_a_minimal_missing_prefix":
             min_len1 = 0

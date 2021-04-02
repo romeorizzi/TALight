@@ -64,7 +64,7 @@ while True:
         exit(0)
     if (line < input_solution_list[-1]) == (ENV["sorting_criterion"]=="loves_opening_par"):
         TAc.print(LANG.render_feedback("order-violation", f'No. La formula di parentesi ben formata che hai introdotto in posizione {len(input_solution_list)+1} non viene dopo ma prima della precedente secondo l\'ordinamento impostato'), "red", ["bold"], end=" ")
-        print(LANG.render_feedback("called-with", f'(servizio chiamato con'), end=" ")
+        print(LANG.render_feedback("called-with", '(servizio chiamato con'), end=" ")
         TAc.print('sorting_criterion=', "red", end="")
         TAc.print(ENV["sorting_criterion"], "yellow", end="")
         print(').')
@@ -89,12 +89,12 @@ for pos in range(p.num_sol(n_pairs)):
         missing = p.unrank(n_pairs, pos)
         #print(f"missing={missing}")
         if ENV["feedback"] == "give_first_missing":
-            TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f'No. Your list is missing at least one well-formed formula.\nConsider for example:'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("give-missing-formula", f'No. Your list is missing at least one well-formed formula.\nConsider for example:'), "red", ["bold"])
             TAc.print(missing, "yellow", ["bold"])
         if ENV["feedback"] == "spot_first_wrong_consec":
             assert pos > 0
             TAc.print(LANG.render_feedback("not-consecutive", f'No. The two well-formed formulas:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nthat appear consecutive in your list are NOT consecutive in the intended order'), "red", ["bold"], end=" ")
-            print(LANG.render_feedback("called-with", f'(il servizio è stato chiamato con'), end=" ")
+            print(LANG.render_feedback("called-with", f'(servizio chiamato con'), end=" ")
             TAc.print('sorting_criterion=', "red", end="")
             TAc.print(ENV["sorting_criterion"], "yellow", end="")
             print(").")

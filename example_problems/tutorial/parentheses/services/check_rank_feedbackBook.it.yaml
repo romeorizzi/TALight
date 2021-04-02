@@ -1,0 +1,8 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+rank-ok: '♥  Corretto! E\''proprio questo il rank della tua formula tra le formule ben formate di {n_pairs} coppie di parentesi (quando ordinate secondo il sorting_criterion={ENV["sorting_criterion"]}).'
+ranked-too-low: 'No. Il rank della tua formula tra le formule ben formate di {n_pairs} coppie di parentesi è un numero maggiore di {ENV["rank"]} (quando ordinate secondo il sorting_criterion={ENV["sorting_criterion"]}).'
+ranked-too-high: 'No. Il rank della tua formula tra le formule ben formate di {n_pairs} coppie di parentesi è un numero minore di {ENV["rank"]} (quando ordinate secondo il sorting_criterion={ENV["sorting_criterion"]}).'

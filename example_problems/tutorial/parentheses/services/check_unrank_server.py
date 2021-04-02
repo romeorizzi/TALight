@@ -34,12 +34,12 @@ p = Par(n_pairs)
 if ENV["formula"] == p.unrank(n_pairs,ENV["input_rank"], sorting_criterion=ENV["sorting_criterion"]):
     if not ENV["silent"]:
         TAc.OK()
-        print(LANG.render_feedback("rank-ok", f'♥  You correctly ranked the formula among those on {len(ENV["formula"])//2} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'))
+        print(LANG.render_feedback("rank-ok", f'♥  Correct! It is indeed this one the formula that appears with rank={ENV["input_rank"]} among the well formed formulas on {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'))
     exit(0)
 
 # INDEPTH NEGATIVE FEEDBACK:
 if ENV["input_rank"] < p.rank(ENV["formula"], sorting_criterion=ENV["sorting_criterion"]):
-    TAc.print(LANG.render_feedback("ranks-higher", f'No. Your formula ranks higher than {ENV["input_rank"]} among those with {len(ENV["formula"])//2} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("ranks-higher", f'No. Your formula ranks higher than {ENV["input_rank"]} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'), "red", ["bold"])
 if ENV["input_rank"] > p.rank(ENV["formula"], sorting_criterion=ENV["sorting_criterion"]):
-    TAc.print(LANG.render_feedback("ranks-lower", f'No. Your formula ranks lower than {ENV["input_rank"]} among those with {len(ENV["formula"])//2} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("ranks-lower", f'No. Your formula ranks lower than {ENV["input_rank"]} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'), "red", ["bold"])
 exit(0)
