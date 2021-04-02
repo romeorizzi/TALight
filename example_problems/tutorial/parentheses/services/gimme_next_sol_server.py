@@ -20,15 +20,15 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
-if not recognize(ENV['current_sol'], TAc, LANG, yield_feedback=False):
+if not recognize(ENV["current_sol"], TAc, LANG, yield_feedback=False):
     TAc.print(LANG.opening_msg, "green")
-    recognize(ENV['current_sol'], TAc, LANG)
+    recognize(ENV["current_sol"], TAc, LANG)
     exit(0)
-n_pairs = len(ENV['current_sol'])//2 
+n_pairs = len(ENV["current_sol"])//2 
 p = Par(n_pairs)
-if p.rank(ENV['current_sol'], sorting_criterion=ENV['sorting_criterion']) == p.num_sol(n_pairs) -1:
+if p.rank(ENV["current_sol"], sorting_criterion=ENV["sorting_criterion"]) == p.num_sol(n_pairs) -1:
     TAc.print("Be told that your formula is the very last in the list", "yellow")
 else:
-    TAc.print(p.unrank(n_pairs, 1+p.rank(ENV['current_sol'], sorting_criterion=ENV['sorting_criterion']), sorting_criterion=ENV['sorting_criterion']), "yellow", ["bold"])
+    TAc.print(p.unrank(n_pairs, 1+p.rank(ENV["current_sol"], sorting_criterion=ENV["sorting_criterion"]), sorting_criterion=ENV["sorting_criterion"]), "yellow", ["bold"])
 
 exit(0)

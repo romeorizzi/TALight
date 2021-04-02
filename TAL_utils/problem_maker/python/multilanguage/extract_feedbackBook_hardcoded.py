@@ -107,7 +107,9 @@ while re.search("LANG.render_feedback", source_good_suffix, 1) != None:
         if phrase_text == found_phrases[phrase_code]:
             continue
         else:
-            print(f"\nERROR:\n duplicated code: {phrase_code}\n sentence in first occurrence: {found_phrases[phrase_code]}\n different sentence in later occurrences: {phrase_text}\n",file=stderr)            
+            print(f"\nERROR:\n duplicated code: {phrase_code}\n -message sentence in first occurrence:\n--->{found_phrases[phrase_code]}\n -different message sentence in later occurrences:\n--->{phrase_text}\n",file=stderr)
+    else:
+        found_phrases[phrase_code] = phrase_text
     if fstring_flag:
         num_fstring_phrases +=1
     else:

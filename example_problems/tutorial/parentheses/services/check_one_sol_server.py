@@ -21,10 +21,10 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
 # START CODING YOUR SERVICE: 
-if not ENV['silent']:
+if not ENV["silent"]:
     TAc.print(LANG.opening_msg, "green")
 
-if recognize(ENV["input_formula"], TAc, LANG) and not ENV['silent']:
+if recognize(ENV["input_formula"], TAc, LANG) and not ENV["silent"]:
     TAc.OK()
-    TAc.print(LANG.render_feedback("ok", f"♥  Your string is a well-formed formula of parentheses."), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("ok", f'♥  Your string is a well-formed formula of parentheses.'), "yellow", ["bold"])
 exit(0)
