@@ -11,7 +11,7 @@ from tabulate import tabulate
 import pandas as pd
 import copy
 import random
-
+import networkx as nx
 
 def random_quad(q):
     m=random.randrange(3,q)
@@ -61,24 +61,28 @@ def spara_c(quad,c):
 def verifica(raggi,quadro_istanza_originale,TAc,LANG):
     quadro_scratch=copy.deepcopy(quadro_istanza_originale)
     num_met_destroyed=0
+    num_co=max_match(quadro_istanza_originale)
     for tipo_sparo, pos_sparo in raggi:
         
         if tipo_sparo=='r':
             if pos_sparo < 0 or pos_sparo >= len(quadro_istanza_originale):
-                TAc.print(LANG.render_feedback("wrong", f"You shoot on the row {pos_sparo} but the right indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
+                TAc.print(LANG.render_feedback("wrong-row", f"You shoot on the row {pos_sparo} but the right indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
 
     
             num_met_destroyed+=spara_r(quadro_scratch,pos_sparo)
         if tipo_sparo=='c':
             if pos_sparo < 0 or pos_sparo >= len(quadro_istanza_originale[0]):
-                TAc.print(LANG.render_feedback("wrong", f"You shoot on the column {pos_sparo} but the right indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
+                TAc.print(LANG.render_feedback("wrong-col", f"You shoot on the column {pos_sparo} but the right indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
             num_met_destroyed+=spara_c(quadro_scratch,pos_sparo)
-    if conta_num_met_in(quadro_scratch)==0:
+    if conta_num_met_in(quadro_scratch)==0 and len(raggi)==num_co:
         TAc.OK()
-        TAc.print(LANG.render_feedback("wrong", "You destroyed all asteroids."), "green", ["bold"])
+        TAc.print(LANG.render_feedback("correct", "You destroyed all asteroids with minimum number of laser beams."), "green", ["bold"])
+    elif conta_num_met_in(quadro_scratch)==0 and len(raggi)>num_co:
+        TAc.NO()
+        TAc.print(LANG.render_feedback("semi-correct", "You destroyed all asteroids but you didn't use the minimum number of laser beams."), "red", ["bold"])
     else:
         TAc.NO()
-        TAc.print(LANG.render_feedback("wrong", "You didn't destroyed all asteroids, see what happens."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("wrong", "You didn't destroyed all asteroids, see what happens:."), "red", ["bold"])
         visualizza(quadro_scratch)
 
             
@@ -98,26 +102,48 @@ def presenza_in_col(asteroidi):
         else:
             return True        
         
+
+def max_match(quad):
+    G = nx.Graph()
+    for i in range(len(quad)):
+        G.add_node(f'r{i}',label=f'r{i}')
+    for j in range(len(quad[0])):
+        G.add_node(f'c{j}',label=f'c{j}')
+    
+    
+    for i in range(len(quad)):
+        for j in range(len(quad[0])):
+            if quad[i][j]=='*':
+                G.add_edge(f'r{i}',f'c{j}')
+    return len(nx.max_weight_matching(G))
+
+                
 def verifica_asteroidi_indipendenti(asteroidi,quadro_istanza_originale,TAc,LANG):
+    num_co=max_match(quadro_istanza_originale)
     for i,j in asteroidi:
         if i < 0 or i >= len(quadro_istanza_originale):
-            TAc.print(LANG.render_feedback("wrong", f"You shoot on the cell ({i},{j}) but the right row indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-row", f"You shoot on the cell ({i},{j}) but the right row indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
             return
             
             
         if j < 0 or j >= len(quadro_istanza_originale[0]):
-            TAc.print(LANG.render_feedback("wrong", f"You shoot on the cell ({i},{j}) but the right column indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-col", f"You shoot on the cell ({i},{j}) but the right column indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
             return 
         if quadro_istanza_originale[i][j]!='*':
-            TAc.print(LANG.render_feedback("wrong", f"You wrote the cell ({i},{j}) but it doesn't contain asteroids."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-cell", f"You wrote the cell ({i},{j}) but it doesn't contain asteroids."), "red", ["bold"])
             return 
     if presenza_in_rig(asteroidi):
-        TAc.print(LANG.render_feedback("wrong", f"You insert al least two cell of the same row {i}.You can not take more than one cell per row."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("wrong-row2", f"You insert al least two cell of the same row {i}.You can not take more than one cell per row."), "red", ["bold"])
         return 
         
     if presenza_in_col(asteroidi):
-        TAc.print(LANG.render_feedback("wrong", f"You insert al least two cell of the same column {j}.You can not take more than one cell per column."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("wrong-col2", f"You insert al least two cell of the same column {j}.You can not take more than one cell per column."), "red", ["bold"])
         return 
-    return TAc.print(LANG.render_feedback("right", "Your set is feaseble."), "green", ["bold"])        
+    if len(asteroidi)==num_co:
+        return TAc.OK(),TAc.print(LANG.render_feedback("right", "Your set is feaseble and maximum."), "green", ["bold"])    
+    if len(asteroidi)<num_co:
+        return TAc.NO(),TAc.print(LANG.render_feedback("wrong_set", "Your set is feaseble but not maximum."), "red", ["bold"])    
     
+
+
 
