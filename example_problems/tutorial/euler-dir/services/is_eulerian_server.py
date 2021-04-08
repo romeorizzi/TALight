@@ -11,6 +11,8 @@ from TALinputs import TALinput
 
 from euler_dir_lib import *
 
+# aggiorna meta.yaml
+
 # METADATA OF THIS TAL_SERVICE:
 problem="euler-dir"
 service="check_is_eulerian"
