@@ -82,9 +82,12 @@ services:
       size:
         regex: ^(small|medium|large)$
         default: medium
-      with_NO_cert:
-        regex: ^(0|1)$
-        default: 1
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+      code_lang:
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

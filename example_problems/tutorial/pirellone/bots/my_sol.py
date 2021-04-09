@@ -1,18 +1,14 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Mar 18 22:39:01 2021
-
-@author: aurora
-"""
+from sys import argv
 
 def switch_row(i,pirellone):
     for j in range(len(pirellone[0])):
         pirellone[i][j] = int(not pirellone[i][j])
+    return
 
 def switch_col(j,pirellone):
     for i in range(len(pirellone)):
         pirellone[i][j] = int(not pirellone[i][j])
+    return
 
 
 def is_solvable(pirellone, n, m):
@@ -45,3 +41,15 @@ def my_soluzione(pirellone,n,m):
         if C[j]:
             lista.append(f"c{j+1}")
     return lista
+
+
+    
+def num_sol_bot():
+    while True:
+        tmp = input()
+        tmp=tmp.split()
+        if tmp[0] != '#':
+            print(my_soluzione(tmp,len(tmp),len(tmp[0])))
+
+if argv[1] == 'prova':
+    num_sol_bot()

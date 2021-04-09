@@ -57,7 +57,7 @@ def one_test(n_pairs):
             TAc.print(LANG.render_feedback("not-equal", f'# No. You solution is NOT correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is:\n {risp_correct}. Not {risp}.'), "red", ["bold"])                        
             exit(0)
     elif (risp % ENV["answ_modulus"]) != (risp_correct % ENV["answ_modulus"]):
-        TAc.print(LANG.render_feedback("not-equiv", f'No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Taken modulus {ENV["answ_modulus"]} this value boils down to {risp_correct % ENV["answ_modulus"]}. Not {risp}.'), "red", ["bold"])                
+        TAc.print(LANG.render_feedback("not-equiv", f'#No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Taken modulus {ENV["answ_modulus"]} this value boils down to {risp_correct % ENV["answ_modulus"]}. Not {risp}.'), "red", ["bold"])                
         exit(0)
     return t   
         
