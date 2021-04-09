@@ -2,7 +2,7 @@
 
 ## Descrizione del problema
 
-Vuoi individuare l'unica moneta falsa in un set di $7$ monete numerate da $0$ ad $6$. Puoi avvalerti in questo di una bilancia a braccia uguali.
+Vuoi individuare l'unica moneta falsa in un set di $7$ monete numerate da $1$ ad $7$. Puoi avvalerti in questo di una bilancia a braccia uguali.
 Questo puzzle classico assume che la moneta falsa ha un peso diverso delle altre (e in una sua variante più semplice assume che il penso della moneta falsa sia sempre inferiore a quello delle altre).
 Organizzare una pesata significa specificare i due sottoinsiemi disgiunti di $\{1,2,3,4,5,6\}$ delle monete da collocare sui due piatti della bilancia. Ad esempio, Se giochi a riga di comando, con:
 

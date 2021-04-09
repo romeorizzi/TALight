@@ -2,84 +2,61 @@ public_folder: public
 services:
   check_static_strategy:
     explain: "choose an n and specify a sequence of measurements with the scale that allows to always identify among n coins the false one."
-    evaluator: [python, services/free_weight_server.py]
+    evaluator: [python3, services/check_static_strategy/check_static_strategy_server.py]
     args:
       n:
         regex: ^[1-9][0-9]?$|^100$
         default: 7
         explain: "Number of coins (1-100)"
-      version: (false_is_leighter|false_is_heavier|false_has_different_wight)
-        default: false_has_different_weight 
+      seed:
+        regex: ^([1-9]\d{2,7}|any)$
+        default: any
+        explain: "Called with seed = any, the service chooses its seed at random (and communicates it to the user)"
+      version: 
+        regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
+        default: false_is_leighter
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_dynamic_strategy:
     explain: "Your goal is to identify the false coin in a set of n coins. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
-    evaluator: [python, services/free_weight_server.py]
+    evaluator: [python3, services/check_dynamic_strategy/check_dynamic_strategy_server.py]
     args:
       n:
         regex: ^[1-9][0-9]?$|^100$
-        default: 10
+        default: 7
         explain: "Number of coins (1-100)"
-      version: (false_is_leighter|false_is_heavier|false_has_different_wight)
-        default: false_has_different_wight 
-      obj:
-        regex: ^(any|max_product)$
-        default: any
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  free_weigh:
-    explain: "you have n coins, one of which is false, use a scale to identify it."
-    evaluator: [python, services/free_weight_server.py]
-    args:
-      n:
-        regex: ^[1-9][0-9]?$|^100$
-        default: 10
-        explain: "Number of coins (1-100)"
-      obj:
-        regex: ^(any|max_product)$
-        default: any
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  compact_solution:
-    explain: "We provide you n coins and a sequence of weighting operations that allows to identify the false onefinding the counterfeit coin. It is necessary to shorten this sequence."
-    evaluator: [python, services/compact_solution_server.py]
-    args:
-      n:
-        regex: ^[1-9][0-9]?$|^100$
-        default: 10
-        explain: "Number of coins"
-      # TODO goal
-      please_do_it_for_me:
-        regex: ^(0|1)$
-        default: 0
-        explain: "If your solution is not correct we give you the right one."
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  check_sol:
-    explain: "You can check a solution of yours for an instance (yours or generated at random)."
-    evaluator: [python, services/check_sol_server.py]
-    args:
-      instance:
-        regex: ^(mine|random)$
-        default: random
-        explain: "Mine: i give my instace, random: random instance."
       seed:
         regex: ^([1-9]\d{2,7}|any)$
         default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
-      coding:
-        regex: ^(seq|subset)$
-        default: seq
-        explain: "seq: List of commands, where a command is the possibility to remove or put coins on the right or left plate "
-        # TODO example
+        explain: "Called with seed = any, the service chooses its seed at random (and communicates it to the user)"
+      version: 
+        regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
+        default: false_is_leighter
       lang:
         regex: ^(hardcoded|en|it)$
-      default: it
-  #  TODO ricorsione:
+        default: it
+  # check_sol:
+  #   explain: "You can check a solution of yours for an instance (yours or generated at random)."
+  #   evaluator: [python, services/check_sol_server.py]
+  #   args:
+  #     instance:
+  #       regex: ^(mine|random)$
+  #       default: random
+  #       explain: "Mine: i give my instace, random: random instance."
+  #     seed:
+  #       regex: ^([1-9]\d{2,7}|any)$
+  #       default: any
+  #       explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
+  #     coding:
+  #       regex: ^(seq|subset)$
+  #       default: seq
+  #       explain: "seq: List of commands, where a command is the possibility to remove or put coins on the right or left plate "
+  #     lang:
+  #       regex: ^(hardcoded|en|it)$
+  #       default: it
+  # TODO ricorsione:
+  # TODO help
   help:
     evaluator: [python, services/help/help_server.py]
     args:

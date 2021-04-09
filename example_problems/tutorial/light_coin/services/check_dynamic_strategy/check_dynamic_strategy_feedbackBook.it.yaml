@@ -1,0 +1,19 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#THE PROBLEM SERVICE SPECIFIC SECTION:
+insert-coins-left-place: 'Monete nel piatto sinistro:'
+error-input-int: 'La posizione della moneta deve essere un numero intero.'
+error-coins-out-range: 'Hai inserito una moneta fuori dal range! Il range della monete va da 0 a {coinsNum}.'
+insert-coins-right-place: 'Monete nel piatto destro:'
+error-same-coin: 'I piatti non possono contenere la stessa moneta.'
+left-scale-lighter: 'Il piatto di sinistra è più leggero'
+right-scale-lighter: 'Il piatto di destra è più leggero'
+same-scale-weight: 'I piatti hanno lo stesso peso'
+postion-question: 'Se hai trovato la moneta falsa inserisci la sua posizone (no altrimenti):'
+found-false-coin: 'Congratulazioni! Hai trovato la moneta falsa!'
+not-found-false-coin: 'Ops, non è qui! Prova ancora con altre pesate.'
+left-scale-heavier: 'Il piatto di sinistra è più pesante'
+right-scale-heavier: 'Il piatto di destra è più pesante'
+instance-seed: 'Seed = {seed}'

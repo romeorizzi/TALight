@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#THE PROBLEM SERVICE SPECIFIC SECTION:
+insert-coins-left-place: 'Monete nel piatto sinistro:'
+error-input-int: 'La posizione della moneta deve essere un numero intero.'
+error-coins-out-range: 'Hai inserito una moneta fuori dal range! Il range della monete va da 0 a {coinsNum}.'
+insert-coins-right-place: 'Monete nel piatto destro:'
+error-same-coin: 'I piatti non possono contenere la stessa moneta.'
+instance-seed: 'Seed = {seed}'
+input-choice: 'Premi "i" per inserire una nuova pesata o "q" per terminare:'
+found-false-coin: 'Congratulazioni! Hai trovato la moneta falsa in posizione {falseCoinPos}.'
+not-found-false-coin: 'Ops, la tua strategia non funziona, secondo essa la moneta falsa si trova nella posizione {possibleSolution[0]} ma è nella posizione {falseCoinPos}.'
+ambiguos-strategy: 'La tua strategia è ambigua perchè ritorna {len(possibleSolution)} possibili posizioni che sono {possibleSolution}, la moneta falsa si trova nella posizione {falseCoinPos}.'

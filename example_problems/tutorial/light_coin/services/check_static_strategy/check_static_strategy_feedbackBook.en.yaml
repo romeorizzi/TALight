@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION: 
+insert-coins-left-place: 'Coins in the left scale:'
+error-input-int: 'The position of the coin must be an integer.'
+error-coins-out-range: 'You have inserted a coin out of range! The range of coins goes from 0 to {coinsNum}.'
+insert-coins-right-place: 'Coins in the right scale:'
+error-same-coin: 'Scales cannot contain the same coin.'
+instance-seed: 'Seed = {seed}'
+input-choice: 'Type "i" to insert a new weight or "q" to end:'
+found-false-coin: 'Congratulations! You have spotted the false coin in {falseCoinPos} position.'
+not-found-false-coin: 'Ops, your strategy doesn\'t work, according to it the false coin is in {possibleSolution[0]} positions but is in {falseCoinPos} position.'
+ambiguos-strategy: 'Your strategy is ambiguous because it returns {len(possibleSolution)} possible positions which are {possibleSolution} and the false coin is in {falseCoinPos} position.'
