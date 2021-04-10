@@ -10,7 +10,6 @@ problem="games"
 service="game123"
 args_list = [
     ('num_questions',int),
-    ('instance',str),
     ('lang',str),
     ('ISATTY',bool),
 ]
@@ -25,7 +24,7 @@ TAc.print(LANG.opening_msg, "green")
 gen_new_s = True    
 for _ in range(ENV['num_questions']):
     if gen_new_s:
-            s = randrange(100)
+            s = randrange(5,100)
     TAc.print(f"? {s}", "yellow", ["bold"])
     a= int(input())
     gen_new_s = False
