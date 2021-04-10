@@ -1,0 +1,27 @@
+public_folder: public
+services:
+  game123:
+    explain: "You are given a sum value and are asked to return two natural numbers having that sum. You can also pose yourself the challenge to return such a pair of numbers for which the product is largest possible."
+    evaluator: [python, services/game123_server.py]
+    args:
+      instance:
+        regex: ^(my|random)$
+        default: random
+      num_questions:
+        regex: ^([1-9]|[1-2][0-9]|30)$
+        default: 10
+        explain: "a number from 1 to 30, the number of questions posed to the problem solver"
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: "any string without space characters but meant to specify one of the services of the problem {problem}"
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
