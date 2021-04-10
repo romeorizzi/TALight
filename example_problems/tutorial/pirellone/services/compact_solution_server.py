@@ -7,6 +7,7 @@ args_list = [
     ('m',int), 
     ('n',int),
     ('goal',str),
+    ('seed',str),
     ('please_do_it_for_me',bool),
     ('lang',str),
     ('ISATTY',bool),
@@ -27,20 +28,34 @@ m=ENV['m']
 n=ENV['n'] 
 goal=ENV['goal']  
 doit=ENV['please_do_it_for_me'] 
+s=ENV['seed']
 
-
-istanza,seed=pl.random_pirellone(m, n, solvable=True)
-TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
-pirellone0=copy.deepcopy(istanza)
-pirellone1=copy.deepcopy(istanza)
-pirellone2=copy.deepcopy(istanza)
-pl.print_pirellone(istanza)
-
-
-TAc.print(LANG.render_feedback("long-sol","Too long solution: "), "yellow", ["bold"])
-shortsol=pl.soluzione(pirellone0,m,n)
-longsol=pl.solution_toolong(shortsol,m,n)
-pl.stampa_lista(longsol)
+if ENV['seed']=='any': 
+    istanza,seed=pl.random_pirellone(m, n, solvable=True)
+    TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
+    pirellone0=copy.deepcopy(istanza)
+    pirellone1=copy.deepcopy(istanza)
+    pirellone2=copy.deepcopy(istanza)
+    pl.print_pirellone(istanza)
+    
+    
+    TAc.print(LANG.render_feedback("long-sol","Too long solution: "), "yellow", ["bold"])
+    shortsol=pl.soluzione(pirellone0,m,n)
+    longsol,_=pl.solution_toolong(shortsol,m,n)
+    pl.stampa_lista(longsol) 
+else:
+    istanza,seed=pl.random_pirellone(m, n,s, solvable=True)
+    TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
+    pirellone0=copy.deepcopy(istanza)
+    pirellone1=copy.deepcopy(istanza)
+    pirellone2=copy.deepcopy(istanza)
+    pl.print_pirellone(istanza)
+    
+    
+    TAc.print(LANG.render_feedback("long-sol","Too long solution: "), "yellow", ["bold"])
+    shortsol=pl.soluzione(pirellone0,m,n)
+    longsol,_=pl.solution_toolong(shortsol,m,n,s)
+    pl.stampa_lista(longsol)
 
 TAc.print("Short solution: ", "yellow", ["bold"])
 solu=input()
