@@ -4,6 +4,10 @@ services:
     explain: "We give you a matrix and a sequence of switch rows/columns operations that leads to the all 0 matrix. You are required to shorten this sequence."
     evaluator: [python,services/compact_solution_server.py]
     args:
+      seed:
+        regex: ^([1-9]\d{2,7}|any)$
+        default: any
+        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4

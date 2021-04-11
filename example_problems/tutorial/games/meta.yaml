@@ -1,0 +1,35 @@
+public_folder: public
+services:
+  game123:
+    explain: ""
+    evaluator: [python, services/game123_server.py]
+    args:
+      num_questions:
+        regex: ^([1-9]|[1-2][0-9]|30)$
+        default: 10
+        explain: "a number from 1 to 30, the number of questions posed to the problem solver"
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  game123_interactive:
+    explain: ""
+    evaluator: [python, services/game123_interactive_server.py]
+    args:
+      instance:
+        regex: ^(my|random)$
+        default: random
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: "any string without space characters but meant to specify one of the services of the problem {problem}"
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+

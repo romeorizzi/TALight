@@ -48,12 +48,12 @@ for i in range(15):
         b=monotonic() 
         time=b-a
         if not pl.off_lista_noprint(pirellone,sol_to_ver):
-            TAc.print(LANG.render_feedback("wrong",f"#No!The solution of the matrix of seed={_} is not correct."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong",f"# No!The solution of the matrix of seed={_} is not correct."), "red", ["bold"])
             exit(0)
         if len(sol_to_ver)>len(sol_togive):
-            TAc.print(LANG.render_feedback("semi-correct",f"#The solution of the matrix of seed={_} is not minimum."), "yellow", ["bold"])
+            TAc.print(LANG.render_feedback("semi-correct",f"# The solution of the matrix of seed={_} is not minimum."), "yellow", ["bold"])
         if time > 1:
-            TAc.print(LANG.render_feedback("not-efficient", '#No. Your solution is not efficient. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])        
+            TAc.print(LANG.render_feedback("not-efficient", '# No. Your solution is not efficient. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])        
             exit(0)
         else:
             TAc.print(LANG.render_feedback("efficient", '# ♥ Ok. Your solution is efficient.'), "green")
