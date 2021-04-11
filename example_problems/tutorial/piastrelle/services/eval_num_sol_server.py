@@ -71,4 +71,5 @@ for n in instances:
        exit(0)
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. :)  Your solution appears to be correct (checked on several instances).'), "green")
 TAc.print(LANG.render_feedback("efficient", f'# Ok. :)  Your solution is efficient: its running time is logarithmic in the number of tilings it counts.'), "green")
+
 exit(0)

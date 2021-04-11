@@ -2,8 +2,6 @@
 import random 
 
 def recognize(tiling, TAc, LANG):
-    #print(f"tiling={tiling}")
-
     pos = 0
     n_tiles = 0
     while pos < len(tiling):

@@ -12,7 +12,6 @@ args_list = [
 ]
  
 from sys import stderr, exit, argv
-
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 

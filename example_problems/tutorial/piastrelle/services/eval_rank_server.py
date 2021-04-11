@@ -71,5 +71,4 @@ for n_pairs in instances:
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. :)  Your solution appears to be correct (checked on several instances).'), "green")
 TAc.print(LANG.render_feedback("efficient", f'# Ok. :) Your solution is efficient: its running time is polynomial in the length of the formula it ranks.'), "green")
-
 exit(0)

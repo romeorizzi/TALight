@@ -56,4 +56,5 @@ else:
             TAc.print(LANG.render_feedback("not-congruent", f"No. The number of well-formed tilings of a corridor of dimension 1x{ENV['n']} is NOT congruent to {ENV['risp']} modulo {ENV['ok_if_congruent_modulus']}."), "red", ["bold"])
         else:
             TAc.print(LANG.render_feedback("not-equal", f"No. The well-formed tilings of a corridor of dimension 1x{ENV['n']} are not {ENV['risp']}."), "red", ["bold"])
+
 exit(0)

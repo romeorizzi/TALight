@@ -70,5 +70,6 @@ elif ENV['sorting_criterion']=='loves_long_tiles':
         exit(0)
     elif pos == p.num_sol(n_tiles)-1:
         last_elem()
+        
 TAc.print(LANG.render_feedback("list-ok", f"Ok! You have listed two consecutive tilings of a corridor of dimension 1x{n_tiles}."), "green", ["bold"])
 exit(0)
