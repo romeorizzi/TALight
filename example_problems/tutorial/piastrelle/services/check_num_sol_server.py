@@ -17,7 +17,7 @@ from sys import stderr, exit, argv
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
-from piastrelle_lib import num_sol
+from piastrelle_lib import Par
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
@@ -25,8 +25,8 @@ if not ENV['silent']:
     TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
-
-risp_correct=num_sol(ENV['n'])
+p = Par(ENV["n"])
+risp_correct=p.num_sol(ENV['n'])
 overflow = False
 if ENV['ok_if_congruent_modulus'] != 0:
     overflow = ( risp_correct >= ENV['ok_if_congruent_modulus'] )
