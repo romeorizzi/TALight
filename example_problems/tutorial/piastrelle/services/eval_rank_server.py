@@ -48,7 +48,7 @@ def one_test(wff):
     n_pairs = len(wff) //2
     assert n_pairs <= MAX_N_PAIRS
     risp_correct = p.rank(wff, ENV["sorting_criterion"])
-    TAc.print(wff, "yellow", ["bold"])
+    TAc.print(f"{wff} {ENV['sorting_criterion']}", "yellow", ["bold"])
     start = monotonic()
     risp = int(input())
     end = monotonic()

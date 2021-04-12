@@ -38,41 +38,56 @@ class Par:
         assert n_tiles  <= self.MAX_N_PAIRS
         return self.num_wffs[n_tiles ]
 
+    def unrank(self,n_tiles,pos,sorting_criterion):
+        if n_tiles==0:
+            return '-'
+        if n_tiles==1:
+            return '[]'
+        if sorting_criterion=='loves_long_tiles':
+            pos=self.num_sol(n_tiles)-pos+1
+        count=n_tiles
+        solu=''
+        while count>1:
+            if pos<=self.num_sol(count-1):
+                solu+='[]'
+                count-=1
+            else:
+                solu+='[--]'
+                pos-=self.num_sol(count-1)
+                count-=2
+        if count%2==1:
+            solu+='[]'
+        return solu
 
-    def unrank(self,n_tiles):
-        if self.num_sol(n_tiles )==1:
-            return ['[]']
-        if self.num_sol(n_tiles )==2:
-            return ['[][]', '[--]']
-        solu1=[]
-        solu2=[]
-        for i in range(self.num_sol(n_tiles -1)):
-            solu1.append('[]' + self.unrank(n_tiles -1)[i])
-        for j in range(self.num_sol(n_tiles -2)):
-            solu2.append('[--]' + self.unrank(n_tiles-2)[j])
-        return solu1 + solu2
-
-    def rank(self, wff):
-        if wff == "":
-            return 0
-        n_tiles = len(wff)//2
-        pos=self.unrank(n_tiles).index(wff)
-        return pos
+    def rank(self, wff,sorting_criterion):
+        count=len(wff)//2
+        if count==0 or count==1:
+            return 1
+        pos=1
+        a=0
+        while pos<len(wff):
+            if wff[pos]==']':
+                pos+=2
+                count-=1
+            else:
+                a+=self.num_sol(count-1)
+                pos+=4
+                count-=2
+        if sorting_criterion=='loves_short_tiles':
+            return a+1
+        elif sorting_criterion=='loves_long_tiles':
+            return self.num_sol(len(wff)//2)-a
 
     def rand_gen(self, n_tiles, seed=None):
-        """ritorna una wff pseudo-rando di n-pairs parentesi. Il seed la determina univocamente."""
+        """ritorna una wff pseudo-rando di un corridoio 1 x n_tiles. Il seed la determina univocamente."""
         random.seed(seed)
         r = random.randrange(self.num_sol(n_tiles))
-        return self.unrank(n_tiles)[r]
+        return self.unrank(n_tiles,r,'loves_short_tiles')
 
     def next(self, wff, sorting_criterion):
         n_tiles = len(wff)//2
-        r = self.rank(wff)
-        if sorting_criterion=='loves_short_tiles':
-            solu=self.unrank(n_tiles)[r+1]
-        elif sorting_criterion=='loves_long_tiles':
-            solu=self.unrank(n_tiles)[r-1]
-        return solu
+        r = self.rank(wff,sorting_criterion)
+        return self.unrank(n_tiles,r+1,sorting_criterion)
 
 if __name__ == "__main__":
     p = Par(1000)

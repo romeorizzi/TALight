@@ -79,4 +79,5 @@ for n in instances:
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. :)  Your solution appears to be correct (checked on several instances).'), "green")
 TAc.print(LANG.render_feedback("efficient", f'# Ok. :) Your solution is efficient: its running time is polynomial in the length of the formulas it manipulates.'), "green")
+
 exit(0)
