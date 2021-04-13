@@ -56,7 +56,7 @@ def one_test(rank, n_pairs):
         TAc.print(LANG.render_feedback("not-correct", f'# No. Your solution is NOT correct. The wff of rank {rank} is\n {risp_correct}. Not\n {risp}.'), "red", ["bold"])                        
         exit(0)
     return t   
-        
+
 for n_pairs in instances:
     for i in range(3):
         random.seed(n_pairs*i+ENV["seed"])

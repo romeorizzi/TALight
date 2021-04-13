@@ -36,6 +36,8 @@ def unrank(n_tiles,pos,sorting_criterion):
         return '0'
     if n_tiles==1:
         return '[]'
+    if sorting_criterion=='loves_long_tiles':
+        pos=num_sol(n_tiles)-pos+1
     count=n_tiles
     solu=''
     while count>1:
@@ -54,7 +56,6 @@ def next_wff(wff, sorting_criterion):
     n_tiles = len(wff)//2
     r = rank(wff,sorting_criterion)
     return unrank(n_tiles,r+1,sorting_criterion)
-
         
 def num_sol_bot():
     while True:
@@ -66,6 +67,7 @@ def unrank_bot():
     while True:
         tmp = input()
         if len(tmp) == 0 or tmp[0] != '#':
+            #print('tmp ',tmp.split())
             n, r, crit = map(str, tmp.split())
             print(unrank(int(n), int(r),crit))
 
