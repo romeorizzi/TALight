@@ -21,6 +21,16 @@ def unrank(n_tiles):
         solu2.append('[--]' + unrank(n_tiles-2)[j])
     return solu1 + solu2
 
+def rank(wff,sorting_criterion):
+    n_tiles=len(wff)//2
+    if n_tiles==0 or n_tiles==1:
+        return '1'
+    pos=unrank(n_tiles).index(wff)
+    if sorting_criterion=='loves_short_tiles':
+        return pos+1
+    elif sorting_criterion=='loves_long_tiles':
+        return num_sol(n_tiles)-pos
+
 def next_wff(wff, sorting_criterion):
     if wff == "":
         return 0
@@ -42,18 +52,22 @@ def num_sol_bot():
         if len(tmp) == 0 or tmp[0] != '#':
             print(num_sol(int(tmp)))
 
-# def unrank_bot():
-#     while True:
-#         tmp = input()
-#         if len(tmp) == 0 or tmp[0] != '#':
-#             n, r = map(int, tmp.split())
-#             print(unrank(n, r))
+def unrank_bot():
+    while True:
+        tmp = input()
+        if len(tmp) == 0 or tmp[0] != '#':
+            n, r ,crit= map(str, tmp.split())
+            if crit=='loves_long_tiles':
+                r=num_sol(int(n))-int(r)+1
+            print(unrank(int(n))[int(r)-1])
 
-# def rank_bot():
-#     while True:
-#         tmp = input()
-#         if len(tmp) == 0 or tmp[0] != '#':
-#             print(rank(tmp))
+def rank_bot():
+    while True:
+        tmp = input()
+        if len(tmp) == 0 or tmp[0] != '#':
+            wft, crit = map(str, tmp.split())
+            print(rank(wft,crit))
+
 
 def next_bot():
     while True:
@@ -64,9 +78,9 @@ def next_bot():
 
 if argv[1] == 'num_sol':
     num_sol_bot()
-# if argv[1] == 'rank':
-#     rank_bot()
-# if argv[1] == 'unrank':
-#     unrank_bot()
+if argv[1] == 'rank':
+    rank_bot()
+if argv[1] == 'unrank':
+    unrank_bot()
 if argv[1] == 'next':
     next_bot()
