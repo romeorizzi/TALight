@@ -10,24 +10,19 @@ def parse_input(string):
     l = list(string.split(" "))
     return l
 
-def is_subseq(s, T):
-    it = iter(T)
-    return all(any(c == ch for c in it) for ch in s)
-
 def remove_duplicate_spaces(T):
     return re.sub(' +', ' ', T)
 
 def is_subseq_with_position(s, T):
     pos = []
-    c_i = 0
-    i = 0
-    while (c_i < len(T) and i < len(s)):
-        
-        if T[c_i] == s[i]: 
-            i+=1
-            pos.append(c_i)
-        c_i +=1
-    if i == len(s):
+    i_T = 0
+    i_s = 0
+    while (i_T < len(T) and i_s < len(s)):
+        if T[i_T] == s[i_s]: 
+            i_s+=1
+            pos.append(i_T)
+        i_T +=1
+    if i_s == len(s):
         return [True, pos]
     else:
         return [False, pos]
@@ -37,8 +32,7 @@ def get_yes_certificate(T, pos):
     index = 0
     i = 0
     while (i < len(T) and index < len(pos)):
-        num_ciphers = len(str(T[i]))
-        
+        num_ciphers = len(str(T[i]))        
         if i == pos[index]:
             index+=1
             for _ in range(0, num_ciphers):
@@ -61,36 +55,48 @@ def sub_sequences_num(T):
             seq_num+=1
     return seq_num
 
+def alphabet_of(T):
+    "restituisce il set dei caratteri che appaiono in T, ciascuno con la prima posizione in cui appare in T"
+    alpha = {}
+    for char, pos in zip(T,range(len(T))):
+        if char not in alpha.keys():
+            alpha[char] = pos
+    return alpha
 
 def sub_sequences(T):
-    sub_seq = []
-    combs = []
-    for l in range(1, len(T)+1):
-        combs.append(list(itertools.combinations(T, l)))
-    for c in combs:
-        for t in c:
-            string = ""
-            for i in t:
-                string += str(i)
-            sub_seq.append(string)
-    return sub_seq  #list of string
+    """return the list of possible non-empty subsequnces of the string T
+    Example: sub_sequences("AA") returns ["", "A", "AA"]
+    """ 
+    risp = [""]
+    if len(T) == 0:
+        return risp 
+    alive_subseq = [("",0)]
+    while len(alive_subseq) > 0:
+        next_alive_subseq = []
+        for s,pos in alive_subseq:
+            for char, pos2 in alphabet_of(T[pos:]).items():
+                pos += pos2
+                new_subseq = s+char
+                risp.append(new_subseq)
+                if pos < len(T)-1:
+                    next_alive_subseq.append((new_subseq,pos+1))
+        alive_subseq = next_alive_subseq
+    return risp
 
 
-
-def generate_random_seq(lenght, max):
+def generate_random_seq(lenght, max, seed=None):
+    if seed ! = None:
+        random.seed(seed)
     T = []
     for i in range(0, lenght):
         T.append(random.randint(0,max))
     return T
 
-def generate_random_inc_seq(lenght, max):
-    T = []
-    current = 0
-    for i in range(0, lenght):
-        current = random.randint(current,current+10)
-        T.append(current)
-    return T
-
+def generate_random_inc_seq(length, max, seed=None):
+    if seed ! = None:
+        random.seed(seed)
+    return sorted(random.sample(range(max+1), length))
+    
 def generate_random_dec_seq(lenght, max):
     T = []
     current = max

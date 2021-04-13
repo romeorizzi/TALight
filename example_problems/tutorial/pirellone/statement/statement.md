@@ -1,32 +1,33 @@
 # Luci al Pirellone 
 
-QUesto problema è un revival del problema Pirellone da mè ideato per le Selezioni nazionali oii 2005 - Milano.
+Questo problema è un revival del problema Pirellone da mè ideato per la Selezione Nazionale 2005 delle OII tenutasi a Milano.
 Ho riportato la parte solo descrittiva del testo originale nel file `descrizione_originale_milano.md`.
 Il testo integrale può essere trovato nella sottocartella `testo_originale`.
 
 
 ### Percorso didattico che vorremmo proporre sotto TALight (come abbiamo stabilito insieme)
 
-diamo un'istanza, e diamo una soluzione intsa come una sequnza di mosse che spgne l'intero pirellone:
+diamo un'istanza, e diamo una soluzione intesa come una sequenza di mosse che spegne l'intero pirellone:
 
+```
 1 1 0
 0 0 1
 1 1 0
 
 r1 c1 
+```
 
 
 
-
-Lemma: se una matrice è risolvibi ogni sua sottomatrice è risolvibileà
+Lemma: se una matrice è risolvibile ogni sua sottomatrice è risolvibileà
 
 fornisco soluzione per marice grand,
 
-   dvono darmi soluzion per la sottomatrice fatta dalle prim 5 righe e prime 5 colonne
+   devono darmi soluzion per la sottomatrice fatta dalle prime 5 righe e prime 5 colonne
 
- (+)   dvono darmi soluzion per la sottomatrice fatta da uno specificato sottoinsim di righe/di colonne fatta dalle prim 5 righe e prime 5 colonne
+ (+)   devono darmi soluzion per la sottomatrice fatta da uno specificato sottoinsim di righe/di colonne fatta dalle prim 5 righe e prime 5 colonne
 
-Possiamo dfine il conctto d cattiva miniamale
+Possiamo definire il concetto di cattiva miniamale
 
 
 
