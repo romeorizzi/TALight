@@ -4,7 +4,7 @@ from sys import stderr, exit, argv
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-from piastrelle_lib import Par
+from piastrelle_lib import Par,recognize
 
 # METADATA OF THIS TAL_SERVICE:
 problem="piastrelle"
@@ -22,7 +22,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
-p=Par(ENV["n"])
 stopping_command_set={'#end'}
 print("# waiting for your ordered list of well-formed tilings.\nPlease, each formula should go on a different line and each line should have the same length and comprise only '[' , ']' or '-' characters.\nWhen you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete. Any other line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file whose last line is '#end'. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.")
 
@@ -33,12 +32,12 @@ while line == None:
         TAc.print(LANG.render_feedback("at-least-one-line", f"No. You are required to enter at least one valid tailing before closing."), "yellow")
     
 input_solution_list = [line]
-if not p.recognize(input_solution_list[-1], TAc, LANG):
+if not recognize(input_solution_list[-1], TAc, LANG):
     TAc.print(LANG.render_feedback("first-line-not-well-formed", f"No. Your very first tailing is not well formed."), "red", ["bold"])
     exit(0)
 len_lines = len(line)
 n_tiles = len_lines//2
-
+p=Par(n_tiles)
 while True:
     line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\[|\]|-)+$", regex_explained="any string of '[' , ']' and '-' characters.", TAc=TAc)
     if line in stopping_command_set:
@@ -46,7 +45,7 @@ while True:
     if not len(line) == len_lines:
         TAc.print(LANG.render_feedback("different_lengths", f"No. The tiling you just introduced (your line {len(input_solution_list)+1}) is different in length from the previous ones."), "red", ["bold"])
         exit(0)   
-    if not p.recognize(line, TAc, LANG):
+    if not recognize(line, TAc, LANG):
         exit(0)
     if line == input_solution_list[-1]:
         TAc.print(LANG.render_feedback("repeated", f"No. The well-formed tiling you just introduced (your line {len(input_solution_list)+1}) has already been inserted."), "red", ["bold"])
@@ -86,18 +85,13 @@ def answer():
         TAc.print(minimal_missing_prefix, "yellow", ["bold"])
     exit(0)
 
-for pos in range(len(input_solution_list)):
-    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, p.unrank(n_tiles)={p.unrank(n_tiles)[pos]}")
-    if input_solution_list[pos] != p.unrank(n_tiles)[pos] and ENV['sorting_criterion']=="loves_short_tiles":
-        missing = p.unrank(n_tiles)[pos]
-        answer()
-    elif input_solution_list[pos] != new[pos] and ENV['sorting_criterion']=="loves_long_tiles":
-        new=p.unrank(n_tiles)[::-1]
-        input_solution_list[pos] != new[pos]
-        missing = new[pos]
+for pos in range(1,len(input_solution_list)+1):
+    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos-1]}, p.unrank(n_tiles)={p.unrank(n_tiles,pos,ENV['sorting_criterion'])}")
+    if input_solution_list[pos-1] != p.unrank(n_tiles,pos,ENV['sorting_criterion']):
+        missing = p.unrank(n_tiles,pos,ENV['sorting_criterion'])
         answer()
 if missing=='empty' and len(input_solution_list) < p.num_sol(n_tiles):
-    missing=p.unrank(n_tiles)[pos+1]
+    missing=p.unrank(n_tiles,pos+1,ENV['sorting_criterion'])
     answer()
 TAc.print(LANG.render_feedback("list-ok", f"Ok! You have listed all well-formed tilings of a corridor of dimension 1x{n_tiles}. Also their order is the intended one."), "green")
 exit(0)

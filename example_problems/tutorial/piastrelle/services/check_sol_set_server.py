@@ -4,7 +4,7 @@ from sys import stderr, exit, argv
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-from piastrelle_lib import recognize, num_sol, unrank
+from piastrelle_lib import recognize, Par
 
 # METADATA OF THIS TAL_SERVICE:
 problem="piastrelle"
@@ -21,7 +21,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
-
 stopping_command_set={'#end'}
 print("# waiting for your set of well-formed tilings.\nPlease, each tiling should go on a different line and each line should have the same length and comprise only '[' or ']' or '-' characters.\nWhen you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete. Any other line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file whose last line is '#end'. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.")
 
@@ -38,6 +37,7 @@ if not recognize(input_solution_list[-1], TAc, LANG):
     exit(0)
 len_lines = len(line)
 n_tiles = len_lines//2
+p=Par(n_tiles)
 while True:
     line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\[|\]|-)+$", regex_explained="any string of '[' , ')' and '-' characters.", TAc=TAc)
     if line in stopping_command_set:
@@ -54,10 +54,9 @@ while True:
 
 print("# FILE GOT")
 TAc.print(LANG.render_feedback("your-formulas-all-ok", f"All the tilings you have introduced are ok (well formed)."), "green")
-
 input_solution_list.sort(reverse=True)
 #print(input_solution_list)
-if len(input_solution_list) < num_sol(n_tiles) and ENV['feedback'] == "yes_no":
+if len(input_solution_list) < p.num_sol(n_tiles) and ENV['feedback'] == "yes_no":
     TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed tiling."), "red", ["bold"])
     exit(0)
 missing='empty'
@@ -80,13 +79,14 @@ def answer():
         TAc.print(minimal_missing_prefix, "yellow", ["bold"])
     exit(0)
 
-for pos in range(len(input_solution_list)):
-    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, unrank(n_tiles)={unrank(n_tiles)[pos]}")
-    if input_solution_list[pos] != unrank(n_tiles)[pos]:
-        missing = unrank(n_tiles)[pos]
+for pos in range(1,len(input_solution_list)+1):
+    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, p.unrank(n_tiles)={p.unrank(n_tiles,pos,'loves_short_tiles')}")
+    correct=p.unrank(n_tiles,pos,'loves_short_tiles')
+    if input_solution_list[pos-1] != correct:
+        missing = correct
         answer()
-if missing=='empty' and len(input_solution_list) < num_sol(n_tiles):
-    missing=unrank(n_tiles)[pos+1]
+if missing=='empty' and len(input_solution_list) < p.num_sol(n_tiles):
+    missing=p.unrank(n_tiles,pos+1,'loves_short_tiles')
     answer()
 TAc.OK()
 TAc.print(f"Congrats! You have input all the well-formed tilings of a corridor of dimension 1x{n_tiles}.", "green")

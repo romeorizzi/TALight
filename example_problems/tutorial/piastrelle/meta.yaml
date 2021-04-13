@@ -66,7 +66,7 @@ services:
         regex: ^(loves_short_tiles|loves_long_tiles)$
         default: loves_short_tiles
       feedback:
-        regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
+        regex: ^(yes_no|tell_first_minimal_missing_prefix|give_first_missing)$
         default: yes_no
       lang:
         regex: ^(hardcoded|en|it)$
