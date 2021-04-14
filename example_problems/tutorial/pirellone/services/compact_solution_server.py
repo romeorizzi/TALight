@@ -41,8 +41,8 @@ if ENV['seed']=='any':
     
     TAc.print(LANG.render_feedback("long-sol","Too long solution: "), "yellow", ["bold"])
     shortsol=pl.soluzione(pirellone0,m,n)
-    longsol,_=pl.solution_toolong(shortsol,m,n)
-    pl.stampa_lista(longsol) 
+    longsol=pl.solution_pad(shortsol,m,n,m+n+1,seed)
+    "".join(longsol) 
 else:
     istanza,seed=pl.random_pirellone(m, n,s, solvable=True)
     TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
@@ -54,8 +54,8 @@ else:
     
     TAc.print(LANG.render_feedback("long-sol","Too long solution: "), "yellow", ["bold"])
     shortsol=pl.soluzione(pirellone0,m,n)
-    longsol,_=pl.solution_toolong(shortsol,m,n,s)
-    pl.stampa_lista(longsol)
+    longsol=pl.solution_pad(shortsol,m,n,m+n+1,seed)
+    "".join(longsol)
 
 TAc.print("Short solution: ", "yellow", ["bold"])
 solu=input()
@@ -82,13 +82,13 @@ elif risultato and len(solu)>g:
     TAc.print(LANG.render_feedback("bigger","Bigger than what you set in goal but all lights are off."), "red", ["bold"])
     if doit==1:
         TAc.print(LANG.render_feedback("sol","Solution: "), "blue", ["bold"])
-        pl.stampa_lista(random.shuffle(sol_togive))
+        "".join(random.shuffle(sol_togive))
         
 else:
     TAc.NO()
     TAc.print(LANG.render_feedback("same-on","Some lights are on "), "red", ["bold"])
     if doit==1:
         TAc.print(LANG.render_feedback("sol","Solution: "), "blue", ["bold"])
-        pl.stampa_lista(sol_togive)
+        "".join(sol_togive)
     
 exit(0)

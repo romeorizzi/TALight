@@ -32,14 +32,14 @@ if ENV['goal']=='minimum' or ENV['goal']=='any':
         TAc.NO() 
         TAc.print(LANG.render_feedback("no-min","Not minimum matrix."), "red", ["bold"])
     else:
-        if pl.is_solvable(p, m, n):
+        if pl.is_solvable(p):
             TAc.NO() 
             TAc.print(LANG.render_feedback("solvable","Solvable!"), "red", ["bold"])
         else:
             TAc.OK()
             TAc.print(LANG.render_feedback("correct","Correct: it is not solvable and minimum."), "green", ["bold"])
 else:
-    if pl.is_solvable(p, m, n):
+    if pl.is_solvable(p):
             TAc.NO() 
             TAc.print(LANG.render_feedback("solvable","Solvable!"), "red", ["bold"])
     else:

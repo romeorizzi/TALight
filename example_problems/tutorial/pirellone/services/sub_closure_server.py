@@ -33,7 +33,7 @@ pirellone0,_=pl.random_pirellone(m, n, solvable=True)
 pirellone1=copy.deepcopy(pirellone0)
 pl.print_pirellone(pirellone0)
 TAc.print(LANG.render_feedback("instance-sol","Solution of instance: "), "yellow", ["bold"])
-pl.stampa_lista(pl.soluzione_min(pirellone1,m,n))
+"".join(pl.soluzione_min(pirellone1,m,n))
 sub_n=random.randint(2, n-1)
 sub_m=random.randint(2, m-1)
 pirellone=[[0 for j in range(0,sub_n)] for i in range(0,sub_m)]

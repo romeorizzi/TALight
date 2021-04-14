@@ -25,6 +25,7 @@ if not ENV['silent']:
     TAc.print(LANG.opening_msg, "green")
 
 if recognize(ENV["input_formula"], TAc, LANG) and not ENV['silent']:
+    n = len(ENV["input_formula"])//2
     TAc.OK()
-    TAc.print(LANG.render_feedback("ok", f"Your string represents a valid tiling of a corridor."), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("ok", f"Your string represents a valid tiling of a corridor of length {n}."), "yellow", ["bold"])
 exit(0)
