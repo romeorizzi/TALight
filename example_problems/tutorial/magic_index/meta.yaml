@@ -1,0 +1,107 @@
+public_folder: public
+services:
+  spot_magic_indexes:
+    explain: "You give us a sorted vector of distinct integers and we return you the sorted list of magic indexes."
+    evaluator: [python, services/spot_magic_indexes_server.py]
+    args:
+      input_vector:
+        regex:  ^(lazy|-{0,1}[1-9][0-9]{0,3}(,-{0,1}[1-9][0-9]{0,3}){0,1000})$
+        default: lazy
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  check_magic_indexes:
+    explain: "You give us a sorted vector of distinct integers and the sorted list of magic indexes. We check it out."
+    evaluator: [python, services/spot_magic_indexes_server.py]
+    args:
+      input_vector:
+        regex:  ^(lazy|-{0,1}[1-9][0-9]{0,3}(,-{0,1}[1-9][0-9]{0,3}){0,1000})$
+        default: lazy
+      input_list:
+        regex:  ^(lazy|[1-9][0-9]{0,3}(,[1-9][0-9]{0,3}){0,1000})$
+        default: lazy
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  check_worst_case_n_questions:
+    evaluator: [python, services/check_worst_case_n_questions_server.py]
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]{0,1}|100)$
+      risp:
+        regex: ^(0|[1-9][0-9]{0,50})$
+        explain: "what you conjecture to be the smallest number r such that there exists a strategy for knowing the truth in at most r queries."
+      more_or_less_hint_if_wrong:
+        regex: ^(0|1)$
+        default: 0
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  play:
+    evaluator: [python, services/play_server.py]
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]{0,5}|1000000)$
+      goal:
+        regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
+        default: correct
+      feedback:
+        regex: ^(yes_no_goal|how_far|spot_first_gift|spot_every_gift)$
+        default: yes_no_goal
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  eval_play:
+    evaluator: [python, services/eval_play_server.py]
+    args:
+      goal:
+        regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
+        default: at_most_twice_the_opt
+      feedback:
+        regex: ^(yes_no_goal|how_far|spot_first_gift|spot_every_gift)$
+        default: yes_no_goal
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  optimal_move:
+    evaluator: [python, services/optimal_move_server.py]
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]{0,1}|100)$
+      situation:
+        regex: ^(know_nothing|first_is_magic|last_is_magic)$
+        explain: "three possible categories for what we might know at the beggining of the game."
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  trilly:
+    evaluator: [python, services/trilly_server.py]
+    explain: "The fairy Trilly helps you to understand how you can solve a random matrix."
+    args:
+      size:
+        regex: ^(small|medium|large|huge|unbearable)$
+        default: medium
+        explain: "You can choose the size of the random matrix."
+      num_calls:
+        regex: ^([1-9]{0,1})$
+        default: 2
+        explain: "Number of step to find the solution."
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
