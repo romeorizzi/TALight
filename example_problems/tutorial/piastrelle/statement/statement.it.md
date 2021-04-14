@@ -54,7 +54,7 @@ Puoi chiedere verifica di quale possa essere il numero di piastrellature ben for
 Dopo aver verificato che la logica ti torna con delle sottomissioni spot a questo servizio, od al servizio che gestisce una dialogo di domande e risposte:
 
 ```
-> rtal connect piastrelle evaluate_num_sol
+> rtal connect piastrelle eval_num_sol
 ```
 
 potrai poi realizzare un tuo bot che sostenga tale dialogo in tua vece.
@@ -62,7 +62,7 @@ potrai poi realizzare un tuo bot che sostenga tale dialogo in tua vece.
 
 L'efficienza computazionale della logica risolutiva che avrai inserito al suo interno potrà così essere valutata dal seguente servizio. 
 ```
-> rtal connect piastrelle evaluate_num_sol -- python mybot_risp.py
+> rtal connect -e piastrelle -agoal=efficient  eval_num_sol -- python TALight/example_problems/tutorial/piastrelle/bots/mybot_risp.py num_sol
 ```
 Quì `mybot_risp.py` potrà essere un qualsiasi eseguibile (un codice binario o anche un'interpretato) che gira sulla tua macchina.
 

@@ -4,15 +4,19 @@ services:
     explain: "This service will check your statement that a directed graph you provide us is Eulerian"
     evaluator: [python,services/is_eulerian_server.py]
     args:
+      graph:
+        regex: ^([1-2]{0,1}|lazy)$
+        default: lazy
+        explain: "Example graph"      
       n:
-        regex: ^([1-9][0-9]{0,1}|1000|lazy)$
+        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
         explain: "Number of nodes."
       m:
-        regex: ^([1-9][0-9]{0,1}|1000|lazy)$
+        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
         explain: "Number of arcs."
-      eulerian:	
+      eulerian:
         regex: ^(yes)$
         default: yes
       goal:
@@ -21,10 +25,6 @@ services:
       feedback:
         regex: ^(yes_no|with_certificate)$
         default: yes_no
-      seed:
-        regex: ^([1-9][0-9]{5,5}|lazy)$
-        default: lazy
-        explain: "Number of arcs."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -40,7 +40,7 @@ services:
         regex: ^([1-9][0-9]{0,1}|1000|lazy)$
         default: lazy
         explain: "Number of arcs."
-      eulerian:	
+      eulerian:
         regex: ^(no)$
         default: no
       goal:
@@ -49,10 +49,6 @@ services:
       feedback:
         regex: ^(yes_no|with_certificate)$
         default: yes_no
-      seed:
-        regex: ^([1-9][0-9]{5,5}|lazy)$
-        default: lazy
-        explain: "Number of arcs."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -72,36 +68,25 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_is_a_family_of_circuits:
-    explain: "Given a directed graph, can you decide whether it is decomposable? And can you do it efficiently?"
-    evaluator: [python,services/is_a_family_of_circuits_server.py]
+  eval_find_scc:
+    explain: "Given a directed graph, can you find its strongly connected components?"
+    evaluator: [python,services/eval_find_scc_server.py]
     args:
-     goal1:
-        regex: ^(yes_no|with_yes_certificates)$
+     graph:
+        regex: ^([1-2]{0,1}|lazy)$
+        default: lazy
+        explain: "Example graph"
+     components:
+        regex: ^(lazy)$
+        default: lazy
+        explain: "strigs of strongly connected components"
+     goal:
+        regex: ^(yes_no)$
         default: yes_no
-      goal2:
-        regex: ^(correct|efficient)$
-        default: correct
-      code_lang: 
+     code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  eval_circuit_decomposition:
-    explain: "Given a directed graph, can you decide whether its arc set can be decomposed into a collection of directed circuits? And can you do it efficiently?"
-    evaluator: [python,services/eval_euler_dir_server.py]
-    args:
-      goal1:
-        regex: ^(yes_no|with_yes_certificates)$
-        default: yes_no
-      goal2:
-        regex: ^(correct|efficient)$
-        default: correct
-      code_lang: 
-        regex: ^(python|java|nodejs|compiled)$
-        default: python
-      lang:
+     lang:
         regex: ^(hardcoded|en|it)$
         default: it
   synopsis:
