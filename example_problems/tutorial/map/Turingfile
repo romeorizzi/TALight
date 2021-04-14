@@ -1,0 +1,14 @@
+[problem]
+title = "Mappa come problema di programmazione matematica e modeling"
+
+[scoring]
+goals = [
+    "example_of_statement",
+    "no_traps",
+    "n_at_most_5",
+    "n10",
+    "n20",
+    "n30",
+    "n50",
+    "n100",
+]
