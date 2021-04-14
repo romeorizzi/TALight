@@ -11,6 +11,8 @@ Qui ci interessa il caso di grafi diretti (le strade/i ponti sono a senso unico)
 Sono dati $N$ vertici, numerati da $0$ a $N-1$, e $M$ archi diretti, che collegano i nodi in modo ordinato.
 
   <strong>Domanda Centrale:</strong> Ti è possibile ritornare una permutazione degli archi tale che per ogni arco $(a,b)$, cui nella permutazione segue un arco $(c,d)$, valga che $c = b$? 
+Ti ricordo che, nel nostro gioco, questa è anche la definizione di grafo diretto. Un grafo è diretto quando gli archi sono percorribili solo nel verso della freccia, pertanto se imponiamo che nella permutazione c'è un arco $(a,b)$ seguito da un arco $(c,d)$ con $c = b$, il verso delle frecce è da $a a $b = c$ a $d.
+
 
 ### Dati di input
   
@@ -53,9 +55,13 @@ Se invece non hai idea di come partire ti proponiamo dei percorsi che speriamo t
 
 ## Percorso
 
-Cominciamo con una questione più semplice:
+Cominciamo con una questione più semplice: usa check_is_eulerian e check_is_not_eulerian
+```bash
+rtal connect -a eulerian=yes euler-dir check_is_eulerian
+```
+questo servizio ti dice se il grafo diretto che hai inserito è euleriano o meno.
 
-  quando è possibile partizionare l'insieme degli archi di un grafo diretto in una collezione di cicli diretti?
+Prova a capire quando è possibile partizionare l'insieme degli archi di un grafo diretto in una collezione di cicli diretti?
 
 Quando avrai trovato un criterio semplice per fare questo potrai verificarlo col servizio:
 
@@ -68,7 +74,7 @@ e se il tuo semplice criterio è corretto puoi alzare l'asticella sfruttando i p
 ```bash
 rtal connect euler_dir -a goal=with_yes_certificates eval_circuit_decomposition
 ```
-Se riesci a superare questo livello, sei probabilmente pronto per congetturare quale possa essere il certificato di NO per il problema originale e potresti quindi (se non lo hai già fatto) porti anche l'obiettivo di ottenere un metodo efficiente (polinomiale). Altrimenti soffermati a giocare con noi e con gli ulteriori servizi di questa sezione.
+Se riesci a superare questo livello, sei probabilmente pronto per congetturare quale possa essere il certificato di NO per il problema originale e potresti porti anche l'obiettivo di ottenere un metodo efficiente (polinomiale). Altrimenti soffermati a giocare con noi e con gli ulteriori servizi di questa sezione.
 Te li presento:
 
 Con 
