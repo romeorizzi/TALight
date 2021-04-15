@@ -63,7 +63,7 @@ Genera un grafo diretto che ritieni essere euleriano, fornisci in input al servi
 ```bash
 rtal connect -a eulerian=no euler-dir check_is_not_eulerian
 ```
-Genera un grafo diretto che ritieni essere euleriano, fornisci in input al servizio il grafo e la tua risposta negativa, sarà il servizio a veificare se hai indovinato.
+Genera un grafo diretto che ritieni non euleriano, fornisci in input al servizio il grafo e la tua risposta negativa, sarà il servizio a veificare se hai indovinato.
 
 Prova a capire come è possibile stabilire se un grafo è euleriano, con 
 ```bash
@@ -74,7 +74,7 @@ Quando avrai trovato un criterio semplice per stabilire quali sono le comonenti 
 ```bash
 rtal connect -a goal=yes_no euler-dir eval_find_scc
 ```
-che ti mette a disposizione due grafi diretti di cui puoi calcolare le componeti fortemente connesse e fornircele in input insieme al tuo certificato di si o di no.
+che ti mette a disposizione due grafi diretti di cui puoi calcolare le componeti fortemente connesse e fornirle in input al servizio, insieme al tuo certificato di si o di no.
 
 ------------------------------------------------
 
