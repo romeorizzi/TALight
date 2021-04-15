@@ -67,7 +67,7 @@ Genera un grafo diretto che ritieni essere euleriano, fornisci in input al servi
 
 Prova a capire come è possibile stabilire se un grafo è euleriano, con 
 ```bash
-rtal connect -a fedback=yes_no euler-dir check_is_a_scc
+rtal connect euler-dir check_is_a_scc
 ```
 potrai proporre tu un grafo diretto e ti verrà risposto quali sono le componenti fortemente connesse.
 Quando avrai trovato un criterio semplice per stabilire quali sono le comonenti fortemente connesse, potrai verificarlo col servizio:
