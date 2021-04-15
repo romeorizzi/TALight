@@ -84,26 +84,23 @@ def sub_sequences(T):
     return risp
 
 
-def generate_random_seq(lenght, max, seed=None):
-    if seed ! = None:
+def generate_random_seq(length, max, seed=None):
+    if seed != None:
         random.seed(seed)
     T = []
-    for i in range(0, lenght):
+    for i in range(0, length):
         T.append(random.randint(0,max))
     return T
 
 def generate_random_inc_seq(length, max, seed=None):
-    if seed ! = None:
+    if seed != None:
         random.seed(seed)
     return sorted(random.sample(range(max+1), length))
     
-def generate_random_dec_seq(lenght, max):
-    T = []
-    current = max
-    for i in range(0, lenght):
-        current = random.randint(current-10,current)
-        T.append(current)    
-    return T
+def generate_random_dec_seq(length, max, seed=None):
+    if seed != None:
+       random.seed(seed)      
+    return sorted(random.sample(range(max+1), length), reversed=True)
 
 def get_rand_subseq(T):
     s=[]
