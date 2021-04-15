@@ -47,7 +47,7 @@ Altrimenti, accetteremo un semplice NO, almeno fino a quando non avrai scoperto 
 4 0
 
 ```bash
-rtal connect euler_dir -a goal=with_yes_certificates eval_euler_dir
+rtal connect -a goal=with_yes_certificates euler-dir eval_euler_dir
 ```
 Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere ai nostri servizi affinché ne valutino correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
@@ -59,38 +59,25 @@ Cominciamo con una questione più semplice: usa check_is_eulerian e check_is_not
 ```bash
 rtal connect -a eulerian=yes euler-dir check_is_eulerian
 ```
-questo servizio ti dice se il grafo diretto che hai inserito è euleriano o meno.
-
-Prova a capire quando è possibile partizionare l'insieme degli archi di un grafo diretto in una collezione di cicli diretti?
-
-Quando avrai trovato un criterio semplice per fare questo potrai verificarlo col servizio:
-
+Genera un grafo diretto che ritieni essere euleriano, fornisci in input al servizio il grafo e la tua risposta affermativa, sarà il servizio a veificare se hai indovinato.
 ```bash
-rtal connect euler_dir -a goal=yes_no eval_circuit_decomposition
+rtal connect -a eulerian=no euler-dir check_is_not_eulerian
 ```
+Genera un grafo diretto che ritieni essere euleriano, fornisci in input al servizio il grafo e la tua risposta negativa, sarà il servizio a veificare se hai indovinato.
 
-e se il tuo semplice criterio è corretto puoi alzare l'asticella sfruttando i parametri del servizio:
-
+Prova a capire come è possibile stabilire se un grafo è euleriano, con 
 ```bash
-rtal connect euler_dir -a goal=with_yes_certificates eval_circuit_decomposition
+rtal connect -a fedback=yes_no euler-dir check_is_a_scc
 ```
-Se riesci a superare questo livello, sei probabilmente pronto per congetturare quale possa essere il certificato di NO per il problema originale e potresti porti anche l'obiettivo di ottenere un metodo efficiente (polinomiale). Altrimenti soffermati a giocare con noi e con gli ulteriori servizi di questa sezione.
-Te li presento:
-
-Con 
-
+potrai proporre tu un grafo diretto e ti verrà risposto quali sono le componenti fortemente connesse.
+Quando avrai trovato un criterio semplice per stabilire quali sono le comonenti fortemente connesse, potrai verificarlo col servizio:
 ```bash
-rtal connect euler_dir -a fedback=yes_no check_is_a_family_of_circuits
+rtal connect -a goal=yes_no euler-dir eval_find_scc
 ```
-potrai proporre tu un grafo diretto e ti verrà risposto se decomponibile in cicli diretti, oppure no.
-Puoi ottenere conferma delle evntuali risposte affermative settando il parametro `fedback` al valore `yes_certificate`. Hai a disposizione anche il valore `no_certificate`, ma è già spoilerante della buona caratterizzazione, che potrebbe risultarti significativo scoprire da solo. Il certificato di NO viene infatti fornito secondo un formato che ben caratterizza questo problema di decisione.
-Se incontri difficoltà nel trovare l'interruttore della luce per questo problema, considera prima la possibilità di catalogare le istanze SI e quelle NO per piccoli valori di M e N.
-Il seguente servizio può aiutarti in questo:
+che ti mette a disposizione due grafi diretti di cui puoi calcolare le componeti fortemente connesse e fornircele in input insieme al tuo certificato di si o di no.
 
-```bash
-rtal connect euler_dir -a N=4-a M=5 - gimme_all_directed_graphs
-```
-esso restituirà tutti i grafi di N nodi e M archi non isomorfi, ovviamente, per valori di N ed M piccolissimi, ma che dovrebbero bastare ai tuoi scopi.
+------------------------------------------------
+
 Se invece non ti aiuta o non ti è piacevole, considera quest'altra sfida:
 
    sapresti scrivere un bot (il più semplice possibile) che, data in input una sequenza di archi diretti su un insieme di N nodi, riesca a stabilire se questi archi formano dei cicli diretti e senza nodi in comune tra di loro?
