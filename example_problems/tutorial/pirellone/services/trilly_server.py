@@ -20,28 +20,33 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
 if ENV['size']=='small':
-    m=3
-    n=3
+    m=2
+    n=2
 if ENV['size']=='medium':
-    m=5
-    n=5
+    m=4
+    n=4
 if ENV['size']=='large':
+    m=6
+    n=6
+if ENV['size']=='huge':
     m=8
     n=8
-if ENV['size']=='huge':
-    m=12
-    n=12
 if ENV['size']=='unbearable':
-    m=15
-    n=15
+    m=9
+    n=9
     
-pirellone,seed=pl.random_pirellone(m, n, solvable=True)
+pirellone,seed,sr,sc=pl.random_pirellone(m, n, solvable=True,s=True)
 empty=[[0 for j in range(0,len(pirellone[0]))] for i in range(0,len(pirellone))]
 TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
 pl.print_pirellone(pirellone)
+lista=pl.solution_irredundant(pirellone,sr,sc)
+i=0
 for _ in range(ENV['num_calls']):
     TAc.print(LANG.render_feedback("step","Step: "), "yellow", ["bold"])
-    pl.soluzione_min_step(pirellone,m,n)
+    print(lista[i])
+    pl.check_off_lights(pirellone,[lista[i]])
+    pl.print_pirellone(pirellone)
+    i+=1
     if empty==pirellone:      
         TAc.print(LANG.render_feedback("end","Finished "), "green", ["bold"])
         exit(0)

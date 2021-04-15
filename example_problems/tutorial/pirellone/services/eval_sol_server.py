@@ -32,9 +32,9 @@ for i in range(15):
     if ENV['size']=='large':
         m=8
         n=8
-    pirellone,_=pl.random_pirellone(m, n, solvable=True)
+    pirellone,_,sr,sc=pl.random_pirellone(m, n, solvable=True,s=True)
     print(pirellone)
-    sol_togive=pl.soluzione_min(copy.deepcopy(pirellone),m,n)
+    sol_togive=pl.solution_irredundant(pirellone,sr,sc)
     a=monotonic()
     sol=input()
     sol_to_ver=[]
@@ -47,7 +47,8 @@ for i in range(15):
     
         b=monotonic() 
         time=b-a
-        if not pl.off_lista_noprint(pirellone,sol_to_ver):
+        moff,_=pl.check_off_lights(pirellone,sol_to_ver)
+        if not moff:
             TAc.print(LANG.render_feedback("wrong",f"# No!The solution of the matrix of seed={_} is not correct."), "red", ["bold"])
             exit(0)
         if len(sol_to_ver)>len(sol_togive):

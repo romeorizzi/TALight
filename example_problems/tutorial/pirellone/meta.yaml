@@ -20,10 +20,10 @@ services:
         regex: ^(m_plus_n|m_plus_n_half|min)$
         default: m_plus_n
         explain: "Length of your solution."
-      please_do_it_for_me:
-        regex: ^(0|1)$
-        default: 0
-        explain: "If your solution is not correct we give you the right one."
+      level:
+        regex: ^(easy|medium|difficult)$
+        default: medium
+        explain: "Level of the exercise."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -46,6 +46,7 @@ services:
       goal:
         regex: ^(any|min)$
         default: min
+        explain: "If you choose min you have to insert the shortest solution, otherwise any that turn off all the lights ."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -61,7 +62,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_sol:
-    explain: "You can check a solution of yours for an instance (yours or generated at random)."
+    explain: "You can check a solution of yours for an instance (your or generated at random)."
     evaluator: [python, services/check_sol_server.py]
     args:
       instance:
@@ -86,12 +87,15 @@ services:
       size:
         regex: ^(small|medium|large)$
         default: medium
+        explain: "Choose the dimensions of the matrix to verify."
       goal:
         regex: ^(correct|efficient)$
         default: correct
+        explain: "Choose if your code turn off all the lights (correct) or does it also fast."
       code_lang:
         regex: ^(python|java|nodejs|compiled)$
         default: python
+        explain: "Choose the language that you used."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

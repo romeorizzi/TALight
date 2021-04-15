@@ -29,18 +29,17 @@ m=ENV['m']
 n=ENV['n'] 
 
 TAc.print(LANG.render_feedback("instance",f"Instance {m}x{n}: "), "yellow", ["bold"])
-pirellone0,_=pl.random_pirellone(m, n, solvable=True)
-pirellone1=copy.deepcopy(pirellone0)
-pl.print_pirellone(pirellone0)
+pirellone,_,sr,sc=pl.random_pirellone(m, n, solvable=True,s=True)
+pl.print_pirellone(pirellone)
 TAc.print(LANG.render_feedback("instance-sol","Solution of instance: "), "yellow", ["bold"])
-"".join(pl.soluzione_min(pirellone1,m,n))
+print(" ".join(pl.solution_irredundant(pirellone,sr,sc)))
 sub_n=random.randint(2, n-1)
 sub_m=random.randint(2, m-1)
-pirellone=[[0 for j in range(0,sub_n)] for i in range(0,sub_m)]
+sub_pirellone=[[0 for j in range(0,sub_n)] for i in range(0,sub_m)]
 if ENV['submatrix_type']=='consecutive':
     for i in range(0,sub_m):
         for j in range(0,sub_n):
-            pirellone[i][j]=pirellone0[i][j]
+            sub_pirellone[i][j]=pirellone[i][j]
 elif ENV['submatrix_type']=='any':
     r=[]
     c=[]
@@ -62,17 +61,31 @@ elif ENV['submatrix_type']=='any':
     k=0
     for i in u:
         for j in v:
-            pirellone[h][k]=pirellone0[i][j]
+            sub_pirellone[h][k]=pirellone[i][j]
             k+=1
         k=0
         h=+1
      
 TAc.print(LANG.render_feedback("sub-matrix",f"Submatrix {sub_m}x{sub_n}"), "yellow", ["bold"])   
-pl.print_pirellone(pirellone)     
+pl.print_pirellone(sub_pirellone)     
 TAc.print(LANG.render_feedback("bub-matrix-sol",f"Solution of the submatrix {sub_m}x{sub_n} : "), "yellow", ["bold"])
 solu=input()
 solu=solu.split()
-pl.off_lista(pirellone,solu,TAc,LANG)
+b,solvable=pl.check_off_lights(sub_pirellone,solu)
+if b and solvable=='s':
+    TAc.OK()
+    TAc.print(LANG.render_feedback('correct',"This sequence turns off all lights."), "green", ["bold"])
+if b==False and solvable=='s':
+    TAc.NO()
+    TAc.print(LANG.render_feedback('not-correct',"This sequence doesn't turn off all lights see what happens using your solution:"), "red", ["bold"])
+    pl.print_pirellone(sub_pirellone)    
 
+if b and solvable=='n':
+    TAc.OK()
+    TAc.print(LANG.render_feedback('no-more-lights',"You can not turn off more lights."), "green", ["bold"])
+if b==False and solvable=='n':
+    TAc.NO()
+    TAc.print(LANG.render_feedback('do-better',"You can turn off more lights, check it: "), "red", ["bold"])
+    pl.print_pirellone(sub_pirellone)  
     
 exit(0)
