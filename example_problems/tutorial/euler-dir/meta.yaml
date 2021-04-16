@@ -3,39 +3,31 @@ services:
   check_is_eulerian:
     explain: "This service will check your statement that a directed graph you provide us is Eulerian"
     evaluator: [python,services/is_eulerian_server.py]
-    args:
-    graph:
-      regex: ^([1-2]{0,1}|lazy)$
-      default: lazy
-      explain: "your input graph"
-    n:
-      regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-      default: lazy
-      explain: "Number of nodes."
-    m:
-      regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-      default: lazy
-      explain: "Number of arcs."
-    eulerian:
-      regex: ^(yes)$
-      default: yes
-    goal:
-      regex: ^(correct|with_certificate)$
-      default: correct
-    feedback:
-      regex: ^(yes_no|with_certificate)$
-      default: yes_no
-    lang:
-      regex: ^(hardcoded|en|it)$
-      default: it
+    args:     
+      n:
+        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
+        default: lazy
+        explain: "Number of nodes."
+      m:
+        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
+        default: lazy
+        explain: "Number of arcs."
+      eulerian:
+        regex: ^(yes)$
+        default: yes
+      goal:
+        regex: ^(correct|with_certificate)$
+        default: correct
+      feedback:
+        regex: ^(yes_no|with_certificate)$
+        default: yes_no
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
   check_is_not_eulerian:
     explain: "This service will check your statement that a directed graph you provide us is not Eulerian"
-    evaluator: [python,services/is_eulerian_server.py]
+    evaluator: [python,services/is_not_eulerian_server.py]
     args:
-      graph:
-        regex: ^([1-2]{0,1}|lazy)$
-        default: lazy
-        explain: "your input graph"
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
@@ -72,14 +64,10 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_is_a_scc:
+  gimme_scc:
     explain: "This service will check the strongly connected components of a graph that you provide us"
     evaluator: [python,services/check_is_a_scc_server.py]
-    args:
-      graph:
-        regex: ^([1-2]{0,1}|lazy)$
-        default: lazy
-        explain: "your input graph"      
+    args:   
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
@@ -98,22 +86,6 @@ services:
     explain: "Given a directed graph, can you find its strongly connected components?And you can decide if it is eulerian or not eulerian?"
     evaluator: [python,services/eval_find_scc_server.py]
     args:
-     graph:
-        regex: ^([1-2]{0,1}|lazy)$
-        default: lazy
-        explain: "your input graph"
-     n:
-        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-        default: lazy
-        explain: "Number of nodes."
-     m:
-        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-        default: lazy
-        explain: "Number of arcs."
-     components:
-        regex: ^(lazy)$
-        default: lazy
-        explain: "strigs of strongly connected components"
      goal:
         regex: ^(yes_no)$
         default: yes_no
