@@ -71,6 +71,26 @@ class Graph():
                 return False
   
         return True
+
+def printCircuit(adj):
+
+    curr_path = [0] 
+    circuit = []
+
+    while curr_path:
+        curr_v = curr_path[-1]
+
+        if adj[curr_v]:
+            next_v = adj[curr_v].pop()
+            curr_path.append(next_v)
+        else:
+            circuit.append(curr_path.pop())
+    
+    for i in range(len(circuit)-1, 0, -1):
+        print(circuit[i],circuit[i-1])
  
+
+
+
 
  
