@@ -1,12 +1,17 @@
 public_folder: public
 services:
   minimum_laser:
-    explain: "We give you a matrix with asteroids and you have to return the minimum number of laser."
+    explain: "We give you a matrix with asteroids and you have to return the minimum number of laser beams to destroy all them."
     evaluator: [python,services/minimum_laser_server.py]
     args:
       level:
         regex: ^(easy|medium|difficult)$
         default: medium
+        explain: "Level of difficulty of the problem."
+      seed:
+        regex: ^([1-9]\d{2,7}|any)$
+        default: any
+        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)."
 
       lang:
         regex: ^(hardcoded|en|it)$
@@ -18,6 +23,11 @@ services:
       level:
         regex: ^(easy|medium|difficult)$
         default: medium
+        explain: "Level of difficulty of the problem."
+      seed:
+        regex: ^([1-9]\d{2,7}|any)$
+        default: any
+        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

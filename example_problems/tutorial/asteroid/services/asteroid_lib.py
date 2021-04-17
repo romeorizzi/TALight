@@ -13,15 +13,22 @@ import copy
 import random
 import networkx as nx
 
-def random_quad(q):
+def random_quad(q,seed):
+    if seed=="any":
+        random.seed()
+        seed = random.randrange(0,1000000)
+    else:
+        seed = int(seed)
+    random.seed(seed)
     m=random.randrange(3,q)
     n=random.randrange(3,q)
     quad=[['' for j in range(n) ] for i in range(m)]
-    for _ in range(len(quad)):
+    a=n=random.randrange(1,m*n-n)
+    for _ in range(a):
         j=random.randrange(0,len(quad[0])-1)
         i=random.randrange(0,len(quad)-1)
         quad[i][j]='*'
-    return quad
+    return quad,seed
 
 
 
