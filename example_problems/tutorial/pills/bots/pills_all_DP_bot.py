@@ -101,6 +101,19 @@ def next_bot():
         if len(tmp) == 0 or tmp[0] != '#':
             print(next_sol(tmp))
 
+usage=f"""I am a general (non efficient) purpouse bot with the following functionalities:
+  1. num_sol
+  2. rank
+  3. unrank
+  4. next
+You should call me as follows:
+$ {argv[0]} <evalution service>
+"""
+if len(argv) != 2:
+    print(f"WARNING from bot {argv[0]}: called with the wrong number of parameters.")
+    print(usage)
+    exit(1)
+
 if argv[1] == 'num_sol':
     num_sol_bot()
 if argv[1] == 'rank':

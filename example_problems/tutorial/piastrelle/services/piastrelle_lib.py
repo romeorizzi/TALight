@@ -4,7 +4,7 @@ import random
 def recognize(tiling, TAc, LANG):
     pos = 0
     n_tiles = 0
-    while pos < len(tiling):
+    while pos < len(tiling)-1:
         if tiling[pos] != '[':
             TAc.print(tiling, "yellow", ["underline"])
             TAc.print(LANG.render_feedback("wrong-tile-opening", f'No. The tile in position {n_tiles+1} does not start with "[" (it starts with "{tiling[pos]}" instead). Your tiling is not correctly encoded.'), "red", ["bold"])
@@ -14,15 +14,23 @@ def recognize(tiling, TAc, LANG):
             pos += 2
         else:
             if pos+3 < len(tiling) and tiling[pos+3] != ']':
-                TAc.print(tiling, "yellow", ["underline"])
-                TAc.print(LANG.render_feedback("wrong-tile-closing", f'No. The tile in position {n_tiles}, starting with {tiling[pos:pos+3]}, does not end wih "]" (it ends with "{tiling[pos+3]}" instead). Your tiling is not correctly encoded.'), "red", ["bold"])
+                if tiling[pos+2] == ']':
+                    TAc.print(tiling, "yellow", ["underline"])
+                    TAc.print(LANG.render_feedback("wrong-tile-closing", f'No. The tile in position {n_tiles}, starting with "{tiling[pos:pos+2]}", can only be of the following type: "[]" or "[--]". Your tiling is not correctly encoded.'), "red", ["bold"])
+                else:
+                    TAc.print(tiling, "yellow", ["underline"])
+                    TAc.print(LANG.render_feedback("wrong-tile-closing", f'No. The tile in position {n_tiles}, starting with {tiling[pos:pos+3]}, can only be of the following type: "[]" or "[--]". Your tiling is not correctly encoded.'), "red", ["bold"])
                 return False
             for pos_fill in {pos+1,pos+2}:
                 if tiling[pos_fill] in {'[',']'}:
                     TAc.print(tiling, "yellow", ["underline"])
-                    TAc.print(LANG.render_feedback("wrong-tile-filling", f'No. The tile in position {n_tiles}, starting with {tiling[pos:pos+4]}, has a forbidden filling character (namely, "{tiling[pos_fill]}"). Your tiling is not correctly encoded.'), "red", ["bold"])
+                    TAc.print(LANG.render_feedback("wrong-tile-filling", f'No. The tile in position {n_tiles}, starting with "{tiling[pos:pos+2]}", can only be of the following type: "[]" or "[--]". Your tiling is not correctly encoded.'), "red", ["bold"])
                     return False
             pos += 4
+    if pos+1==len(tiling):
+        TAc.print(tiling, "yellow", ["underline"])
+        TAc.print(LANG.render_feedback("wrong-tile-closing", f'No. The tile in position {n_tiles+1}, namely "{tiling[pos]}" must be deleted or replaced with suitable tiling ("[]" or "[--]").'), "red", ["bold"])
+        return False
     return True
 
 class Par:

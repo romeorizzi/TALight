@@ -68,12 +68,10 @@ def answer():
         TAc.print(missing, "yellow", ["bold"])
     else:
         assert ENV['feedback'] == "tell_a_minimal_missing_prefix"
-
         pos1 = 0
         if rank > 0:
             while missing[pos1] == input_solution_list[rank-1][pos1]:
                 pos1 += 1
-
         pos2 = 0
         if rank < len(input_solution_list):
             while missing[pos2] == input_solution_list[rank][pos2]:
@@ -82,7 +80,7 @@ def answer():
         while missing[last_char]!=']':
             last_char += 1
         minimal_missing_prefix = missing[0:last_char+1]
-        TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of a well-formed formula and no formula in your set has this prefix:"), "red", ["bold"])
+        TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
         TAc.print(minimal_missing_prefix, "yellow", ["bold"])
     exit(0)
 

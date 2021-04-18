@@ -11,6 +11,7 @@ problem="parentheses"
 service="check_one_sol_server"
 args_list = [
     ('input_formula',str),
+    ('n',str),
     ('silent',bool),
     ('lang',str),
     ('ISATTY',bool),
@@ -21,10 +22,20 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
 # START CODING YOUR SERVICE: 
+n=ENV['n']
+len_input = len(ENV["input_formula"])//2
 if not ENV["silent"]:
     TAc.print(LANG.opening_msg, "green")
+def answer():
+    if recognize(ENV["input_formula"], TAc, LANG) and not ENV["silent"]:
+        TAc.OK()
+        TAc.print(LANG.render_feedback("ok", f' Your string is a well-formed formula with {len_input} pairs of parentheses.'), "yellow", ["bold"])
 
-if recognize(ENV["input_formula"], TAc, LANG) and not ENV["silent"]:
-    TAc.OK()
-    TAc.print(LANG.render_feedback("ok", f'♥  Your string is a well-formed formula of parentheses.'), "yellow", ["bold"])
+if n=='free':
+    answer()
+else:
+    if len_input==int(n):
+        answer()
+    elif recognize(ENV["input_formula"], TAc, LANG) and not ENV['silent']:
+        TAc.print(LANG.render_feedback("different_lengths", f"No! Your string represents a valid formula of parentheses but not of {n} pairs."), "red", ["bold"])
 exit(0)
