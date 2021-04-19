@@ -6,7 +6,7 @@ Vuoi individuare l'unica moneta falsa in un set di $7$ monete numerate da $1$ ad
 Questo puzzle classico assume che la moneta falsa abbia un peso diverso delle altre. (Ci sono 2 varianti: sappiamo anche se la moneta è più leggera o pesante, oppure, nella variante più interessante, si sà solo che ha peso diverso.)
 Organizzare una pesata significa specificare i due sottoinsiemi disgiunti di monete da collocare sui due piatti della bilancia. Ad esempio, immettendo:
 
-[1, 5, 6], [2, 4]
+[1 5 6], [2 4]
 
 richiedi una pesata con le monete $1$, $5$, e $6$ sul piatto sinistro e $2, 4$ su quello destro. 
 

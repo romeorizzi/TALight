@@ -8,10 +8,6 @@ services:
         regex: ^[1-9][0-9]?$|^100$
         default: 7
         explain: "Number of coins (1-100)"
-      seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed = any, the service chooses its seed at random (and communicates it to the user)"
       version: 
         regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
         default: false_is_leighter

@@ -27,6 +27,7 @@ def getInputScale(inputMsg, erroMsg, TAc):
         except ValueError:
             TAc.print(erroMsg, "red", ["bold"])
 
+# HOLD
 def getHeavierScale(leftScale, rightScale, falseCoinPos):
     if len(leftScale) > len(rightScale):
         return LEFT
@@ -40,11 +41,39 @@ def getHeavierScale(leftScale, rightScale, falseCoinPos):
         else:
             return NONE
 
+# HOLD
 def getLighterScale(leftScale, rightScale, falseCoinPos):
     if len(leftScale) > len(rightScale):
         return RIGHT
     elif len(leftScale) < len(rightScale):
         return LEFT
+    else:
+        if falseCoinPos in leftScale:
+            return LEFT
+        elif falseCoinPos in rightScale:
+            return RIGHT
+        else:
+            return NONE
+
+
+def makeWeighWithFalseLighter(leftScale, rightScale, falseCoinPos):
+    if len(leftScale) > len(rightScale):
+        return LEFT
+    elif len(leftScale) < len(rightScale):
+        return RIGHT
+    else:
+        if falseCoinPos in leftScale:
+            return RIGHT
+        elif falseCoinPos in rightScale:
+            return LEFT
+        else:
+            return NONE
+
+def makeWeighWithFalseHeavier(leftScale, rightScale, falseCoinPos):
+    if len(leftScale) > len(rightScale):
+        return LEFT
+    elif len(leftScale) < len(rightScale):
+        return RIGHT
     else:
         if falseCoinPos in leftScale:
             return LEFT

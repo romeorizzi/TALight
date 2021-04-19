@@ -5,7 +5,6 @@ problem="light_coin"
 service="check_static_strategy"
 args_list = [
     ('n', int),
-    ('seed',str),
     ('version', str),
     ('lang', str),
     ('ISATTY', bool),
@@ -14,127 +13,108 @@ args_list = [
 from sys import exit
 import LightCoinUtilities as Utilities
 from TALinputs import TALinput
+from TALinputs import MyTALinput
 from multilanguage import Env, Lang, TALcolors
-import random
-
 
 # START CODING YOUR SERVICE:
-def getScales(coinsNum):
-    leftScale = 0
-    haveSameCoin = True
-    while haveSameCoin:
-        isValidScaled = False
-        while not isValidScaled:
-            leftScale = Utilities.getInputScale( \
-                LANG.render_feedback("insert-coins-left-place", 'Coins in the left scale:'), \
-                LANG.render_feedback("error-input-int", 'The position of the coin must be an integer.'), \
-                TAc \
-            )
-            if any(i > coinsNum for i in leftScale):
-                TAc.print(LANG.render_feedback("error-coins-out-range", f"You have inserted a coin out of range! The range of coins goes from 0 to {coinsNum}."), "red", ["bold"])
-                isValidScaled = False
-            else:
-                isValidScaled = True
-        rightScale = 0
-        isValidScaled = False
-        while not isValidScaled:
-            rightScale = Utilities.getInputScale( \
-                LANG.render_feedback("insert-coins-right-place", 'Coins in the right scale:'), \
-                LANG.render_feedback("error-input-int", 'The position of the coin must be an integer.'), \
-                TAc \
-            )
-            if any(i > coinsNum for i in rightScale):
-                TAc.print(LANG.render_feedback("error-coins-out-range", f"You have inserted a coin out of range! The range of coins goes from 0 to {coinsNum}."), "red", ["bold"])
-                isValidScaled = False
-            else:
-                isValidScaled = True
-        # Check if scales contains the same coin
-        if any(item in leftScale for item in rightScale):
-            TAc.print(LANG.render_feedback("error-same-coin", "Scales cannot contain the same coin."), "red", ["bold"])
-            haveSameCoin = True
-        else:
-            haveSameCoin = False
-    return leftScale, rightScale
-
-def getWeighedList():
+def getStaticStrategy(coinsNum):
     weighedList = []
-    while True:
-        TAc.print(LANG.render_feedback("input-choice", "Type 'i' to insert a new weight or 'q' to end: "), "yellow", ["bold"])
-        i = input()
-        if i == 'i' or i == 'I':
-            leftScale, rightScale = getScales(coinsNum)
+    stoppingCommand = "end"
+    line = [0]
+    while line[0] != stoppingCommand:
+        line = MyTALinput(
+            str,
+            num_tokens=2,
+            sep=', ',
+            exceptions = stoppingCommand,
+            regex=r"^(\[([1-9](\s)?)+\])",
+            regex_explained="in square brackets, a series of numbers from one to n, separated by a space. An example is: '[1 2], [3 4]'",
+            TAc=TAc
+        )
+        if line[0] != stoppingCommand:
+            rightScale = [int(part) for part in line[0][1:-1].split()]
+            leftScale = [int(part) for part in line[1][1:-1].split()]
+            if any(item in leftScale for item in rightScale):
+                TAc.print(LANG.render_feedback("error-same-coin", "Scales cannot contain the same coin."), "red", ["bold"])
+                exit(0)
+            if any(item > coinsNum for item in leftScale):
+                TAc.print(LANG.render_feedback("error-coins-out-range", f"You have inserted a coin out of range! The range of coins goes from 0 to {coinsNum}."), "red", ["bold"])
+                exit(0)
             weighedList.append([leftScale, rightScale])
-        elif i == 'q' or i == 'Q':
-            return weighedList
+    return weighedList
 
-def getPossibleFalseCoin(weighedResults):
-    possibleSolution = []
-    maxValue = max(weighedResults)
-    for i in range(len(weighedResults)):
-        if weighedResults[i] == maxValue:
-            possibleSolution.append(i + 1)
-    return possibleSolution
 
-def checkSolution(possibleSolution):
-    if len(possibleSolution) == 1:
-        if falseCoinPos == possibleSolution[0]:
-            TAc.print(LANG.render_feedback("found-false-coin", f'Congratulations! You have spotted the false coin in {falseCoinPos} position.'), "green", ["bold"])
-        else:
-            TAc.print(LANG.render_feedback("not-found-false-coin", f'Ops, your strategy doesn\'t work, according to it the false coin is in {possibleSolution[0]} positions but is in {falseCoinPos} position.'), "red", ["bold"])
-    else:
-        TAc.print(LANG.render_feedback("ambiguos-strategy", f'Your strategy is ambiguous because it returns {len(possibleSolution)} possible positions which are {possibleSolution} and the false coin is in {falseCoinPos} position.'), "red", ["bold"])
-
-def doWeighed(weighedList, falseCoinLighter):
-    weighedResults = [0] * coinsNum
-    for leftScale, rightScale in weighedList:
-        if falseCoinLighter:
-            result = Utilities.getLighterScale(leftScale, rightScale, falseCoinPos)
-        else:
-            result = Utilities.getHeavierScale(leftScale, rightScale, falseCoinPos)
-        if result == Utilities.LEFT:
-            for i in leftScale:
-                weighedResults[i-1] += 1
-        elif result == Utilities.RIGHT:
-            for i in rightScale:
-                weighedResults[i-1] += 1
-        else:
-            for i in leftScale:
-                weighedResults[i-1] -= 1
-            for i in rightScale:
-                weighedResults[i-1] -= 1
-    possibleSolution = getPossibleFalseCoin(weighedResults)
-    checkSolution(possibleSolution)
+def findEqualWeighs(weighedResults):
+    weighedResults.sort(key=lambda e:e['weighed'])
+    results = set()
+    for i in range(len(weighedResults) - 1):
+        if weighedResults[i]['weighed'] == weighedResults[i + 1]['weighed']:
+            results.add(weighedResults[i]['coin'])
+            results.add(weighedResults[i + 1]['coin'])
+    return results
     
-def falseCoinIsLeighter():
-    weighedList = getWeighedList()
-    doWeighed(weighedList, True)
 
-def falseCoinIsHeavier():
-    weighedList = getWeighedList()
-    doWeighed(weighedList, True)
+def checkStaticStrategy(weighedList, falseCoinIsLeighter, output=True):
+    weighedResults = [{'coin': i + 1, 'weighed': []} for i in range(coinsNum)]
+    for i in range(len(weighedResults)):
+        for leftScale, rightScale in weighedList:
+            if falseCoinIsLeighter:
+                result = Utilities.makeWeighWithFalseLighter(leftScale, rightScale, weighedResults[i]['coin'])
+            else:
+                result = Utilities.makeWeighWithFalseHeavier(leftScale, rightScale, weighedResults[i]['coin'])
+            weighedResults[i]['weighed'].append(result)
+    coinsNotDistinct = findEqualWeighs(weighedResults)
+    if len(coinsNotDistinct) == 0 and output:
+        TAc.print(LANG.render_feedback("found-false-coin", 'Congratulations! Your strategy finds the false coin.'), "green", ["bold"])
+    elif len(coinsNotDistinct) != 0 and output:
+        TAc.print(LANG.render_feedback("ambiguos-strategy", f'Your strategy is ambiguous because it doesn\'t distinguish the coins {coinsNotDistinct}.'), "red", ["bold"])
+    return coinsNotDistinct
+
+
+def checkCoinWeightStrategy(weighedList):
+    weighedResults = [{'coin': i + 1, 'weighed': []} for i in range(coinsNum)]
+    for i in range(len(weighedResults)):
+        for leftScale, rightScale in weighedList:
+            if (weighedResults[i]['coin'] % 2) == 0:
+                result = Utilities.makeWeighWithFalseLighter(leftScale, rightScale, weighedResults[i]['coin'])
+            else:
+                result = Utilities.makeWeighWithFalseHeavier(leftScale, rightScale, weighedResults[i]['coin'])
+            weighedResults[i]['weighed'].append(result)
+    coinsNotDistinct = findEqualWeighs(weighedResults)
+    return len(coinsNotDistinct) == 0
+    
+
+def manageDifferentFalseCoinWeight(weighedList):
+    resultCheckWeight = checkCoinWeightStrategy(weighedList)
+    coinsNotDistinct = checkStaticStrategy(weighedList, falseCoinIsLeighter=True, output=False)
+    resultStrategy = len(coinsNotDistinct) == 0
+    if resultCheckWeight and resultStrategy:
+        TAc.print(LANG.render_feedback("found-coin-weight", 'Congratulations! Your strategy finds the false coin weight and position.'), "green", ["bold"])
+    elif not resultCheckWeight and resultStrategy:
+        TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your strategy doesn\'t find if the false coin is lighter or heavier but it would find the position of the false coin if he knew a priori whether it is heavier or lighter.'), "red", ["bold"])
+    elif resultCheckWeight and not resultStrategy:
+        TAc.print(LANG.render_feedback("not-found-coin-weight", f'Your strategy doesn\'t find the position of the false coin because it doesn\'t distinguish the coins {coinsNotDistinct} however, it manages to find if the false coin is heavier or lighter.'), "red", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter.'), "red", ["bold"])
+
 
 
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
-
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 coinsNum = ENV['n']
-falseCoinPos, seed = Utilities.getRandomFalseCoinPosition(coinsNum, ENV['seed'])
-TAc.print(LANG.render_feedback("instance-seed",f"Seed = {seed}"), "yellow", ["bold"])
 print("\n")
 # print("CoinsNum:", coinsNum)
-# print("falseCoinPos", falseCoinPos)
+
+weighedList = getStaticStrategy(coinsNum)
 
 if ENV['version'] == 'false_is_leighter':
-    falseCoinIsLeighter()
+    checkStaticStrategy(weighedList, falseCoinIsLeighter=True)
 elif ENV['version'] == 'false_is_heavier':
-    falseCoinIsHeavier()  
+    checkStaticStrategy(weighedList, falseCoinIsLeighter=False)  
 elif ENV['version'] == 'false_has_different_weight':
-    if random.randrange(2):
-        falseCoinIsLeighter()
-    else:
-        falseCoinIsHeavier()
-  
+    manageDifferentFalseCoinWeight(weighedList)
+   
 exit(0)
