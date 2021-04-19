@@ -57,7 +57,7 @@ This section gives general instructions on how the problems sitting in a public 
 
 TALight intends to promote autonomous exploration. We wish these explorations might lead you to find out, discover, experiment and develop resources within you, in your machine, in the cloud, in your fellows, and in the community. But, to be more concrete rather than sound too visionary or idealistic, we exhibit now the intended use of the few basic commands which allow you to access the services of a problem and all other problem contents made available by the problem maker and the cloud hosting service.  
 
-Knowing how to properly access a problem served from the cloud is at the basis to advance to deal with problems cloned in local on your machine. Playing with the problems in local will give you more freedom and control and enrich your opportunities for a wide and interconnected learning experience. Working on the problems cloned in local allows you to modify and adapt the problems themself to your needs and curiosities. Even if you do not modify the problms and leav them untouchd, still the habit to launch an `rtald` daemon dispatching the problem services for the problms sitting in local on your machine and addressing it rather than an opaque `rtald` daemon serving the cloud will give you full control and understanding on the dialogue that occurs between the solutions of the probelem solver and the service servers written by the problem maker.
+Knowing how to properly access a problem served from the cloud is at the basis to advance to deal with problems cloned in local on your machine. Playing with the problems in local will give you more freedom and control and enrich your opportunities for a wide and interconnected learning experience. Working on the problems cloned in local allows you to modify and adapt the problems themself to your needs and curiosities. Even if you do not modify the problems and leave them untouched, still the habit to launch an `rtald` daemon dispatching the problem services for the problms sitting in local on your machine and addressing it rather than an opaque `rtald` daemon serving the cloud will give you full control and understanding on the dialogue that occurs between the solutions of the probelem solver and the service servers written by the problem maker.
 All this, besides possibly springing you to become a proficient problem solver, will also make it natural for you to digievolve to the next level up and experiment yourself as a problem maker.
 
 </details>
@@ -399,8 +399,8 @@ Choose to download a compressed file, then uncompress it on your machine and loc
 However, if `git` is installed on the machine, then cloning the repo is possible. Cloning is always better than dowloading since not only it is more handy but also establishes a connection with the repo and you can more conveniently maintain your local copy updated.
 
 <strong>Attention (for Windows users):</strong> 
-This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
-This means that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
+This TAL repo makes use of symlinks since they help avoiding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
+This means that for cloning it properly on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
 ```bash
 git clone -c core.symlinks=true https://github.com/romeorizzi/TALight.git
 ```
@@ -426,7 +426,7 @@ Also, when you install Git Bash you are given your chance to activate the symlin
 
 <details><summary>To the problem maker</summary>
 
-Publishing a problem collection on a repo might empower the learning experience and enrich the learning opportunity. In particular, your possibility to test everything in local will be enanched. Not only you can now test your bots in local before sending them to the services in the cloud, but now you can also watch them more closely when both ends of this interaction sit on your local machine. Now you can also modify them and add prints to debug the communication protocol that the problem has defined for them to act within.
+Publishing a problem collection on a repo might empower the learning experience and enrich the learning opportunity. In particular, your possibility to test everything in local will be enanced. Not only you can now test your bots in local before sending them to the services in the cloud, but now you can also watch them more closely when both ends of this interaction sit on your local machine. Now you can also modify them and add prints to debug the communication protocol that the problem has defined for them to act within.
 All this added possibility to experiment is a precious opportunity to get under the hood by doing and has the further benefit to facilitate the transition from problem solver to problem maker. Making is the best and ultimate way of learning and can also offer opportunities for real projects that turn the evaluation from an artificial and frustrating to a stimulating and really inclusive experience. In the next section we will see how the problems you have here played with in this first level tutorial can be fully accessed in the backstage. The problem collection of the tutorial is a public git repo. To follow us there you will need to set up `git` on your machine. If you did not already have `git`, then we consider this as a first clear example on how TALight prompts towards self-empowerment since `git` is the portal towards open source projects and communities.
 
 Sharing the repo with collaborators (and consider having your students among them) might allow for better and new opportunities and energies to come to life. You can collaborate with teachers spread elsewhere in your country but commitment to the same topic. This opens the possibility to really join the forces for the joint design and realization of didactic curricular material.  
@@ -499,7 +499,7 @@ to clone the content of this repo.
 Of course, you can achieve the same result by any other means if you prefer.
 
 <strong>Attention (for Windows users): 
-This TAL repo makes use of symlinks since they help avoding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
+This TAL repo makes use of symlinks since they help avoiding unnecessary and undesirable duplications of files and help keeping things well organized and readily accessible.
 This means that for cloning it propery on Windows, after having opened the git bash as Administrator, you must launch the clone command with the correct parameter. More precisely:
 ```bash
 git clone -c core.symlinks=true https://github.com/romeorizzi/TALight.git
@@ -629,11 +629,11 @@ source ~/.bashrc
 <details>
 <summary>collect the symlinks to all your useful binaries into a folder made accessible through your `PATH` environment variable</summary>
 
-This is a more convenient solution and once the folder has been created you can use it also in the future and will help you mantaining your binaries organized.
+This is a more convenient solution and once the folder has been created you can use it also in the future and will help you maintaining your binaries organized.
 
 This approach can be applied on any platform that allows for simlinks (or hardlinks), like Unix/Linux/Mac/Windows: 
 
-From the terminal, lounch the following commands (if you are on Windows just lounch them on the `Git Bash`)
+From the terminal, launch the following commands (if you are on Windows just launch them on the `Git Bash`)
 ```bash
 mkdir ~/.bin
 cd ~/.bin
@@ -650,7 +650,7 @@ export PATH="$PATH:$HOME/.bin"
 export TAL_HOME="$HOME/TALight"
 ```
 
-Again, remember that this update will be effective only for terminals you open after having modifyied the `~/.bashrc` file.
+Again, remember that this update will be effective only for terminals you open after having modified the `~/.bashrc` file.
 If you want older terminals to get the update then you can issue from them the command
 ```bash
 source ~/.bashrc
@@ -689,7 +689,7 @@ Whether you are a problem solver (usually a student) or a problem maker (usually
 
 After downloading this repo you already have on your machine 
 a set of working test problems to experiment with, and this section offers you a tutorial on them.
-The first thing to understand is the way the server and the client interact. This can be confusing at first but every mistery will soon be dispelled. Though the `rtald` command might not be necessary (at least in principle) to the student in certain settings, for experimenting with the problems in our tutorial you need to launch both the server and the client and let them interact. The server `rtald` is the daemon and you need to activate it first, then you can issue many requests to it through the client `rtal`. The server offers two main modalities of activation:
+The first thing to understand is the way the server and the client interact. This can be confusing at first but every mystery will soon be dispelled. Though the `rtald` command might not be necessary (at least in principle) to the student in certain settings, for experimenting with the problems in our tutorial you need to launch both the server and the client and let them interact. The server `rtald` is the daemon and you need to activate it first, then you can issue many requests to it through the client `rtal`. The server offers two main modalities of activation:
 
 1. `rtald` activated to serve requests concerning problems sitting on your local machine and coming from the local client.
 
@@ -714,7 +714,7 @@ Use
 ```bash
 python --version
 ```
-to make sure that python3 is the defaut python on your machine. 
+to make sure that python3 is the default python on your machine. 
 If not, then it is time (and needed) that you make python3 the default. 
 
 if you are on Ubuntu, this can be achieved with:
@@ -759,7 +759,7 @@ If the variable `RUST_LOG` was unset you can still set it now, and specifically 
 ```bash
 RUST_LOG=info rtald -d ~/TALight/example_problems/tutorial
 ```
-This second possibility holds only for the `bash` shell and will not work for the `zsh` you are given by default if you are on Mac. (You can however launch another shell, like the `bash`, from other shells. On the `zsh` of Mac just enter th command `bash` and, after this, the `bash` is operating on that terminal. At this point the secon option is available also for you, on that terminal.)
+This second possibility holds only for the `bash` shell and will not work for the `zsh` you are given by default if you are on Mac. (You can however launch another shell, like the `bash`, from other shells. On the `zsh` of Mac just enter the command `bash` and, after this, the `bash` is operating on that terminal. At this point the second option is available also for you, on that terminal.)
 
 The `rtald` daemon is now active and ready to serve requests concerning the problems present in the directory `~/TALight/example_problems/tutorial`.
 The terminal where you issued its activation will now be the place where the server `rtald` updates you about the requests of service it receives and what is going on with them. If `RUST_LOG` was not set, then you will only get the error messages of the problem service server (the one called when you issued a request through the `rtal` client), if it crashes or malfunctions, but if the environment variable was set you will have access to further feedback that can help you out. 
@@ -770,11 +770,11 @@ One way to stop the daemon is to `Ctrl-C` when the focus is on this terminal.
 
 Anyhow, now that the `rtald` daemon is active and ready to serve our requests for a collection of problems, we are going to access the services available for these problems through the `rtal` client.  
  
-Since the previous terminal is now the downstream channel of the daemon you have activated, in order to enjoy and explore the services it gives you access to, you need to open another terminal. Better yet, rather than opening another terminal, I actually suggest you to vertically split the terminal into two, let the left panel to the visualization of this logging, and issue the `rtal` client commands in the right panel so that you will keep constantly aware of the interactions between the two (expecially useful for the problem maker).
+Since the previous terminal is now the downstream channel of the daemon you have activated, in order to enjoy and explore the services it gives you access to, you need to open another terminal. Better yet, rather than opening another terminal, I actually suggest you to vertically split the terminal into two, let the left panel to the visualization of this logging, and issue the `rtal` client commands in the right panel so that you will keep constantly aware of the interactions between the two (especially useful for the problem maker).
 
 <details><summary>How to split a terminal into two or more</summary>
 
-On Linux, the easiest way to do this is to use `Terminator` as your terminal. It also manages with high simplicity the possibility to multicast your typings on preselected subsets of the variuous panels you have open (though not needed here, this is a feature missing in all other tools here mentioned). In the web it is easy to find good tutorials and videos presenting the functionalities of Terminator and how to access them.
+On Linux, the easiest way to do this is to use `Terminator` as your terminal. It also manages with high simplicity the possibility to multicast your typings on preselected subsets of the various panels you have open (though not needed here, this is a feature missing in all other tools here mentioned). In the web it is easy to find good tutorials and videos presenting the functionalities of Terminator and how to access them.
 
 To [install Terminator on Linux](https://dev.to/xeroxism/how-to-install-terminator-a-linux-terminal-emulator-on-steroids-1m3h):
 ```bash
@@ -800,7 +800,7 @@ Al momento dell'utilizzo di ConEmu (in particolar modo a partire dal paragrafo d
 
 + assicurati di avere nella selezione per la nuova console la bash di GIT e spuntare l'opzione per dividere lo schermo
 ![image](./figs/new_console2.png)
-In questo modo si avrà una finestra divisa in due terminali. Mi è stato riferito che il combo bash di GIT + ConEmu migliora di molto l'esprienza d'uso del terminale per utenti Windows.
+In questo modo si avrà una finestra divisa in due terminali. Mi è stato riferito che il combo bash di GIT + ConEmu migliora di molto l'esperienza d'uso del terminale per utenti Windows.
 
 </summary>
 
@@ -829,17 +829,17 @@ The point is and should remain: we want to customize the prompt with the aim to 
 
 Currently, the best way to get a great prompt is to install the [starship prompt util](https://starship.rs/). It is highly robust and lightspeed (written in Rust) which is surprising considered the high amount of information it manages to convey to you.  
 
-The starship prompt is [highly costumizable](https://starship.rs/config/#prompt). When you do this, it is convenient to also install some Nerd fonts like the Fira Code Nerd Fonts. On Ubuntu this can be done with:
+The starship prompt is [highly customizable](https://starship.rs/config/#prompt). When you do this, it is convenient to also install some Nerd fonts like the Fira Code Nerd Fonts. On Ubuntu this can be done with:
 
 ```bash
 sudo apt-get install -y fonts-firacode
 ```
 
-The configuration of `starship` is writtn in a `.toml` file usually named `starship.toml`) and placed in the ~/.config folder. 
+The configuration of `starship` is written in a `.toml` file usually named `starship.toml`) and placed in the ~/.config folder. 
 In the `starship` folder of this repo we offer two possible versions for this file that could be convenient to assume when collaborating on TALight problems (uniform environments facilitate cross assistance).
 Use the file `starship-no-nerd-fonts.toml` if you have installed some Nerd Fonts, or `starship-no-nerd-fonts.toml` otherwise.
 
-The old way to customize the prompt appearence was to work on the `PROMPT` environment variable (some instructions are given below but we suggest using `starship` instead). 
+The old way to customize the prompt appearance was to work on the `PROMPT` environment variable (some instructions are given below but we suggest using `starship` instead). 
 
 A minimal useful prompt should show the path and time (and do not forget the environment you are operating into when you activate environments). We suggest you to perform this customization now. Follow [these instructions](https://starship.rs/config/#prompt) on how to do it via starship. 
 
@@ -911,7 +911,7 @@ Either way, you should get something like
 ```
 From this you understand that three services (`sum`, `sum_and_difference`, and `sum_and_product`) are up for this problem on your local machine. All three services will conduct a dialogue where you (or a bot you designed to act in your place) will be asked 10 questions (all instances of a problem defined by the service). Indeed, 10 is the default value for the parameter `num_questions`. You can specify a different value for this parameter (in the next example it is set to 13) but it can take only integers in the interval $[1,30]$ as specified by the regexp `^([1-9]|[1-2][0-9]|30)$` reported above.
 To know how to interpret (if a problem solver) or write (if a problem maker) these regexps, we refer you to [regexp syntax](https://docs.rs/regex/1.4.3/regex/#syntax).
-You can also change the default values of the parameters by editing the `meta.yaml` file in the directory of the problem. For example, try changing the default value for the `lang` parameter as specifyied in the `meta.yaml` file.
+You can also change the default values of the parameters by editing the `meta.yaml` file in the directory of the problem. For example, try changing the default value for the `lang` parameter as specified in the `meta.yaml` file.
 Not all parameters that `rtal` sends to the daemon to adapt the behavior of the services are specified in the `meta.yaml`.
 For example, for all problems you can ask that the feedback is sent to you in black and white even when `rtal` detects that your `tty` supports the use of the colors. You can enforce the suppressing of the colors in any case with the `-no-color` flag (`-n` is its short form). You get to know about these service-agnostic flags and parameters by issuing `rtal connect --help`.
 
@@ -926,7 +926,7 @@ rtal connect -a num_questions=13 -a numbers=big sum sum_and_product
 ```
 
 Connecting to the services in this direct way you will enjoy a direct interaction with the server through the terminal. This can help you to find out about the service and the protocol of the interaction.
-Actively experiment also with the arguments of the service, they are thought to help you and sometimes they are also meant to offer an excalation on a problem that starts simple to better approach your curiosity and open mindness. For example:
+Actively experiment also with the arguments of the service, they are thought to help you and sometimes they are also meant to offer an escalation on a problem that starts simple to better approach your curiosity and open mindness. For example:
 
 ```bash
 rtal connect -a numbers=big sum free_sum
@@ -956,7 +956,7 @@ For example, if you have written your bot in python (or pick up one already done
 rtal connect -e sum free_sum -- python free_sum_mysimplebot.py
 ```
 
-Actually, if you are on Linux/Max and the python script `free_sum_mysimplebot.py` is given excution permission, as it is the case in the repo you have cloned (again, better cloning than downloading, but you can also assign these permissions with the `chmod` command of the shell), then you could more simply write:
+Actually, if you are on Linux/Max and the python script `free_sum_mysimplebot.py` is given execution permission, as it is the case in the repo you have cloned (again, better cloning than downloading, but you can also assign these permissions with the `chmod` command of the shell), then you could more simply write:
 
 ```bash
 rtal connect -e sum free_sum -- free_sum_mysimplebot.py
@@ -984,11 +984,11 @@ In all these examples the bot had been written in python, but it could be just a
 rtal connect -e sum free_sum -- free_sum_mysimplebot
 ```
 
-Where the excutable binary `free_sum_mysimplebot` could have been obtained by compilation of a source code written in any programming language of your choice like for example C, c++, Rust, or Java. 
+Where the executable binary `free_sum_mysimplebot` could have been obtained by compilation of a source code written in any programming language of your choice like for example C, c++, Rust, or Java. 
 
 #### Fork the TALight repl for your preferred programming language and work from there
 
-This is also a very convenient option to work, within your preferred programming language, on the problems of a TALight collection of problems or didactical path or syllabus for a course made available to you. 
+This is also a very convenient option to work, within your preferred programming language, on the problems of a TALight collection of problems or didactic path or syllabus for a course made available to you. 
 
 1. Open an account (a free one will suffice) on the amazing service [https://repl.it](https://repl.it).
 
