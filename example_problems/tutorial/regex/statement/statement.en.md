@@ -81,7 +81,7 @@ I servizi disponibili per questo problema sono:
 
 * equivalenza di due automi deterministici/non deterministici (lo faccia TAL, lo faccia CIF in locale e lo verifichi TAL, scrivano un algoritmo i ragazzi  lo vrifichi TAL).
 
-* da non-deterministico a determinitico equivalente (lo faccia TAL, lo faccia CIF in locale e lo verifichi TAL, scrivano un algritmo i ragazzi  lo vrifichi TAL).
+* da non-deterministico a determinitico equivalente (lo faccia TAL, lo faccia CIF in locale e lo verifichi TAL, scrivano un algoritmo i ragazzi  lo vrifichi TAL).
 
 * da regular expression a non-deterministico (lo faccia TAL, lo faccia CIF in locale e lo verifichi TAL, scrivano un algoritmo i ragazzi lo verifichi TAL).
 
