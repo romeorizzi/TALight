@@ -14,10 +14,12 @@ args_list = [
     ('s',str),
     ('lang',str),
     ('YES_cert',bool),
+    ('seed', str)
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+seed = ENV['seed']
 
 #if not ENV['silent']:
 #    TAc.print(LANG.opening_msg, "green")
@@ -25,7 +27,13 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 string_T = ""
 string_s = ""
 
-if (ENV['T'] == 'lazy_input'):
+if re.match(r"^[1-9]|[0-9]{2,5}$", seed):
+    n_seed = int(seed)
+    T = generate_random_seq(10,100,n_seed)
+    
+
+
+if (ENV['T'] == 'lazy_input' and ENV['seed'] == 's_and_T_proposed_by_problem_solver'):
     TAc.print("\nIn this problem you are asked to enter a sequence T of numbers with a blank space between each number (example: 12 34 56 ...) and a sequence s. You will be told if s is a sub-sequence of T.", "green")
     TAc.print("\nInsert T:", "green")
     string_T = input()
@@ -39,7 +47,7 @@ else:
     string_T = ENV['T']
     T = parse_input(string_T)
 
-if (ENV['s'] == 'lazy_input'):
+if (ENV['s'] == 'lazy_input' and ENV['seed'] == 's_and_T_proposed_by_problem_solver'):
     TAc.print("\nInsert s:", "green")
     string_s = input()
     ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_s))

@@ -62,7 +62,7 @@ def alphabet_of(T):
         if char not in alpha.keys():
             alpha[char] = pos
     return alpha
-
+'''
 def sub_sequences(T):
     """return the list of possible non-empty subsequnces of the string T
     Example: sub_sequences("AA") returns ["", "A", "AA"]
@@ -82,15 +82,30 @@ def sub_sequences(T):
                     next_alive_subseq.append((new_subseq,pos+1))
         alive_subseq = next_alive_subseq
     return risp
+'''
+#with duplicate
+def sub_lists_with_pos (l):
+    empty = []  
+    lists = [empty]
+    for i in range(len(l)):
+        orig = lists[:]
+        new = (l[i],i)
+        for j in range(len(lists)):
+            lists[j] = lists[j] + [new]
 
-
+        lists = orig + lists
+    return lists
+  
 def generate_random_seq(length, max, seed=None):
     if seed != None:
+        random.seed(seed)
+    else:
+        seed = time.time()
         random.seed(seed)
     T = []
     for i in range(0, length):
         T.append(random.randint(0,max))
-    return T
+    return T, seed
 
 def generate_random_inc_seq(length, max, seed=None):
     if seed != None:
@@ -324,3 +339,14 @@ import math
 
 def get_prefix(s):
     return s[:math.floor(len(s)/2)]
+
+def get_position_from_subseq(subseq, all_subseq):
+    index_subseq = []
+
+    for i in all_subseq:
+        if i:
+            c,v = zip(*i)
+            if subseq == list(c):
+                index_subseq.append(list(v))
+
+    return index_subseq

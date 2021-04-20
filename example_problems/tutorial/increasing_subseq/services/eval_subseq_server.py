@@ -11,6 +11,7 @@ from increasing_subsequence_lib import *
 problem="increasing_subseq"
 service="eval_subseq_server"
 args_list = [
+    ('seed',str),
     ('times',str),
     ('cert', bool),
     ('lang',str),
@@ -30,10 +31,16 @@ string_T = generate_random_seq(10, 100)
 TAc.print(list_to_string(string_T), "green")
 cert = ENV['cert']
 
+seed = ENV['seed']
+n_seed = None
+
+if re.match(r"^[1-9]|[0-9]{2,5}$", seed):
+    n_seed = int(seed)
+
 for i in range(0, length):
     x = random.randint(1,10)
     if i == 0 or x % 2 == 0:
-        string_s = get_rand_subseq(string_T)
+        string_s = get_rand_subseq(string_T, n_seed)
     else:
         string_s = get_not_subseq(string_T, 100)
     TAc.print(list_to_string(string_s),"green")
