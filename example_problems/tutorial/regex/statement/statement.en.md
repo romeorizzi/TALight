@@ -1,4 +1,14 @@
-# Yield the automaton of a regular expression
+# Regular expressions and languages - automata theory
+
+This unit offers:
+
+1. an hands-on introduction to regular expressions and languages,
+
+2. an hands-on introduction to deterministic and non-deterministic automata,
+
+3. actual opportunities to explore their relations, their working, the most important operations on them, and some of their possible purposes. 
+
+## Regular expressions and languages
 
 An alphabet is a finite set of symbols, like, e.g., the binary alphabet {0,1} or the alphabet of the uppercase English characters. A _string_ over an alphabet $\Sigma$ is a finite sequence of symbols taken from $\Sigma$. The length of a string $s$ is denoted by $|s|$. The _empty string_ is denoted with ε and is the only string of length $0$. The set of all possible strings over $\Sigma$ is denoted by $\Sigma^*$. When $r$ and $s$ are strings then $rs$ denotes their concatenation ($s$ is appended after $r$). A language is any subset of $\Sigma^*$. Computer science concerns means to deal with languages at various levels. One first issue is how to conveniently describe a language (most languages are infinite objects and their complexity or even decidability might vary).
 _Regular expressions_ provide a fundamental basic tool to represent a class of languages with many nice properties, namely, the class of _regular languages_.  
@@ -50,7 +60,7 @@ And so, here are some intriguing challenges:
 The great thing about regular expressions and languages is that while these tasks are not trivial at first, still they can be performed efficiently and by robust means that exhibit good compositional properties. Automatons offer the tools and conceptual framework to deal with all these problems with ease. 
 
 
-# Services
+### Services
 
 I servizi disponibili per questo problema sono:  
 
@@ -70,14 +80,36 @@ I servizi disponibili per questo problema sono:
    put your rcognizer under stress to check its correctness and eval its performances.
 
 
-# Automatons
+## Automatons
 
-Automatons ...
+Automata ...
+
+## Deterministic Automata (DFA)
+
 blah ...  blah ...
 
-# Services
+## Deterministic Automata with $\varepsilon$ arcs (DFA$_\varepsilon$)
+
+blah ...  blah ...
+
+
+## Non-deterministic Automata (NFA)
+
+blah ...  blah ...
+
+Il problem solver dimostra attivamente di avere compreso l'equivalenza tra NFA e DFA$_\varepsilon$ tramite due servizi:
+
+DFA2DFAe: il problem solver riceve in input un DFA e restituisce un
+
+DFAe2DFA: il problem solver riceve in input un NFA e restituisce un DFA$_\varepsilon$ che riconosca lo stesso linguaggio.
+
+
+
+### Services
 
 I servizi disponibili per questo problema sono:  
+
+* 
 
 * equivalenza di due automi deterministici/non deterministici (lo faccia TAL, lo faccia CIF in locale e lo verifichi TAL, scrivano un algoritmo i ragazzi  lo vrifichi TAL).
 
