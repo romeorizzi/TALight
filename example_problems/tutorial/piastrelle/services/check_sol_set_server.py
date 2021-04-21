@@ -66,8 +66,7 @@ def answer():
     if ENV['feedback'] == "give_one_missing":
         TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed tiling.\nConsider for example:"), "red", ["bold"])
         TAc.print(missing, "yellow", ["bold"])
-    else:
-        assert ENV['feedback'] == "tell_a_minimal_missing_prefix"
+    elif ENV['feedback'] == "tell_a_minimal_missing_prefix":
         pos1 = 0
         if rank > 0:
             while missing[pos1] == input_solution_list[rank-1][pos1]:
@@ -82,6 +81,12 @@ def answer():
         minimal_missing_prefix = missing[0:last_char+1]
         TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
         TAc.print(minimal_missing_prefix, "yellow", ["bold"])
+    else:
+        assert ENV['feedback'][0:23] == "tell_prefix_of_missing_"
+        length = int(ENV['feedback'][23:])
+        missing_prefix = missing[0:length]
+        TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
+        TAc.print(missing_prefix, "yellow", ["bold"])
     exit(0)
 
 for rank in range(1,len(input_solution_list)+1):
