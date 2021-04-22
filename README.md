@@ -994,7 +994,7 @@ This is also a very convenient option to work, within your preferred programming
 
 2. Experiment what this amazing environment can offer you and customize it.
 
-3. go on our TALlight repl for those programming languages you like, and fork them to make them your own. In this way you will end up with a rather personalized environment offering you in one single place both your preferred programming language, the binaries comprising the TALight platform, the problems for that collection/syllabus.
+3. go on our TALight repl for those programming languages you like, and fork them to make them your own. In this way you will end up with a rather personalized environment offering you in one single place both your preferred programming language, the binaries comprising the TALight platform, the problems for that collection/syllabus.
 
 Of course, you will need to update the binaries and the problem collection when they move ahead (which happens rather fast in this first year of actual experimentation in our own courses). One simple way to do this is to return to the original repl and fork it again (you need to manage the recovery of the bots and solutions you have developed from the previous fork. The best way is to download them in local (one click) and then to update this version in local update after update). Then you will updload (or even just copy and paste) an old solution in the currently last and active fork of yours when you need it (mainly when you want to use it as a template to minimize your editing or when you want to come back to it to improve it or complete it to the most difficult tasks and goals, maybe incorporating into it a new technique you have just learned).
 
