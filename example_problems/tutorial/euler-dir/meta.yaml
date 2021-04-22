@@ -53,7 +53,7 @@ services:
     evaluator: [python,services/eval_euler_dir_server.py]
     args:
       goal1:
-        regex: ^(yes_no|with_yes_certificates)$
+        regex: ^(yes_no|with_yes_certificate)$
         default: yes_no
       goal2:
         regex: ^(correct|efficient)$
@@ -66,7 +66,7 @@ services:
         default: it
   gimme_scc:
     explain: "This service will check the strongly connected components of a graph that you provide us"
-    evaluator: [python,services/check_is_a_scc_server.py]
+    evaluator: [python,services/gimme_scc_server.py]
     args:   
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
@@ -83,6 +83,9 @@ services:
     explain: "Given a directed graph, can you find its strongly connected components?And you can decide if it is eulerian or not eulerian?"
     evaluator: [python,services/eval_find_scc_server.py]
     args:
+     graph:
+        regex: ^(1|2|3|4|5|6|7)$
+        explain: "chosen graph."
      goal:
         regex: ^(yes_no)$
         default: yes_no
@@ -101,3 +104,4 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+
