@@ -122,7 +122,8 @@ class Lang:
             self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book","red", file=stderr)
         if self.messages_book == None or msg_code not in self.messages_book:
             return rendition_of_the_hardcoded_msg
-        return self.service_server_eval(self.messages_book[msg_code])
+        msg_encoded = self.messages_book[msg_code]
+        return self.service_server_eval(msg_encoded)
 
     def render_Langinternal_feedback(self, msg_code, rendition_of_the_hardcoded_msg):
         if self.messages_book != None and msg_code not in self.messages_book:

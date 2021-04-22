@@ -77,7 +77,7 @@ services:
         default: 5
       YES_cert:
         regex: ^(0|1)$
-        default: 1	#explain: "the evaluated bot is required to also output a certificate on every YES-instance"
+        default: 1    #explain: "the evaluated bot is required to also output a certificate on every YES-instance"
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -195,8 +195,6 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  
-# END: competenza gestione sottosequenze diverse di una stessa sequenza
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
     args:
@@ -206,4 +204,3 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-
