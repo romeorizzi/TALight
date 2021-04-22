@@ -3,11 +3,13 @@
 import itertools
 import re
 import random
-
+import time
+import sys
 
 def parse_input(string):
     string = remove_duplicate_spaces(string)
     l = list(string.split(" "))
+    l = list(map(int, l))
     return l
 
 def remove_duplicate_spaces(T):
@@ -100,7 +102,7 @@ def generate_random_seq(length, max, seed=None):
     if seed != None:
         random.seed(seed)
     else:
-        seed = time.time()
+        seed = random.randrange(sys.maxsize)
         random.seed(seed)
     T = []
     for i in range(0, length):
@@ -117,20 +119,31 @@ def generate_random_dec_seq(length, max, seed=None):
        random.seed(seed)      
     return sorted(random.sample(range(max+1), length), reversed=True)
 
-def get_rand_subseq(T):
+def get_rand_subseq(T, seed=None):
     s=[]
+    if seed != None:
+        random.seed(seed)
+    else:
+        seed = random.randrange(sys.maxsize)
+        random.seed(seed)
     min = random.randint(0,len(T) - 1)
     while (min < len(T)):
         s.append(T[min])
         min = random.randint(min + 1,len(T)+1)
-    return s
-
-def get_not_subseq(T, max):
+    return s, seed
+    
+def get_not_subseq(T, max, seed=None):
     tmp = []
+    if seed != None:
+        random.seed(seed)
+    else:
+        seed = random.randrange(sys.maxsize)
+        random.seed(seed)
     tmp.append(random.randint(0, max))
     while is_subseq_with_position(tmp, T)[0]:
         tmp.append(random.randint(0, max))
-    return tmp
+    return tmp, seed
+    
 
 def get_n_subseq_all_diff(n):
     return (2**n) - 1
