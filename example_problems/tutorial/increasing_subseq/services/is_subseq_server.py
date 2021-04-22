@@ -37,7 +37,7 @@ if (ENV['T'] == 'lazy_input' and ENV['seed'] == 's_and_T_proposed_by_problem_sol
     TAc.print("\nIn this problem you are asked to enter a sequence T of numbers with a blank space between each number (example: 12 34 56 ...) and a sequence s. You will be told if s is a sub-sequence of T.", "green")
     TAc.print("\nInsert T:", "green")
     string_T = input()
-    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_T))
+    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*))$", string_T))
     if ok:
         T = parse_input(string_T)
     else:
@@ -50,7 +50,7 @@ else:
 if (ENV['s'] == 'lazy_input' and ENV['seed'] == 's_and_T_proposed_by_problem_solver'):
     TAc.print("\nInsert s:", "green")
     string_s = input()
-    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_s))
+    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*))$", string_s))
     if ok:
         s = parse_input(string_s)
     else:
@@ -65,7 +65,7 @@ ret = is_subseq_with_position(s,T)
 if ret[0]:
     TAc.print("\n\nYES, s is subsequence of T\n", "red")
 else:
-    TAc.print("\n\nNO, s isn't subsequence of T\n", "red")
+    TAc.print("\n\nNO, s is not a subsequence of T\n", "red")
 
 if(ENV['YES_cert'] == 1 and ret[0]):
     print("YES CERTIFICATE")

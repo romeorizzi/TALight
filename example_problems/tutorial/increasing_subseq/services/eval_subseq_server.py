@@ -12,7 +12,8 @@ problem="increasing_subseq"
 service="eval_subseq_server"
 args_list = [
     ('seed',str),
-    ('times',str),
+    ('goal',str),
+    ('code_lang',str),
     ('cert', bool),
     ('lang',str),
 ]

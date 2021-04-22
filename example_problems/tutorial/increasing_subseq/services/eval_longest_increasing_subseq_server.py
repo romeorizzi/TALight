@@ -13,7 +13,8 @@ service="is_subseq_server"
 args_list = [
     ('yield',str),
     ('feedback_level',int),
-    ('times',int),
+    ('goal',str),
+    ('code_lang',str),
     ('YES_cert',bool),
     ('lang',str),
 ]

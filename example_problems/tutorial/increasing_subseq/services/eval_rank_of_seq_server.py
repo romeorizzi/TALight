@@ -11,7 +11,8 @@ from increasing_subsequence_lib import *
 problem="increasing_subseq"
 service="is_subseq_server"
 args_list = [
-    ('times',int),
+    ('goal',str),
+    ('code_lang',str),
     ('NO_cert',bool),
     ('lang',str),
 ]
@@ -19,17 +20,22 @@ ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
+# START CODING YOUR SERVICE:
+inst_correct = [(5,2), ]
+inst_efficint = []
+
+
+times = 20
 #if not ENV['silent']:
 #    TAc.print(LANG.opening_msg, "green")
 
 string_T = ""
 type_seq = [1,2,3,4]
 
-length = (ENV["times"])
-TAc.print("\nIn this problem you are given a sequence of numbers T. You are asked to evaluate whether T is a strictly increasing/decreasing or non increasing/decreasing sequence "+str(length)+" times. \nAnswer \"y\" if you think the answer is correct, \"n\" otherwise.\n", "green")
+TAc.print("\nIn this problem you are given a sequence of numbers T. You are asked to evaluate whether T is a strictly increasing/decreasing or non increasing/decreasing sequence "+str(times)+" times. \nAnswer \"y\" if you think the answer is correct, \"n\" otherwise.\n", "green")
 
 
-for i in range(0, length):
+for i in range(0, times):
     x = random.randint(1,10)
     if x % 2 == 0:
         string_T = generate_random_inc_seq(10, 100)
@@ -72,7 +78,7 @@ for i in range(0, length):
             if ok:
                 cert = parse_input(cert)
             else: 
-                TAc.print("WRONG INPUT FORMAT: only a pair of number in the senquence length is allowed as answer.\n","red")
+                TAc.print("WRONG INPUT FORMAT: only a pair of number in the senquence times is allowed as answer.\n","red")
                 exit(0)
             ok = check_no_ordered_list_cert(string_T, int(cert[0])-1, int(cert[1])-1, ordering)
 

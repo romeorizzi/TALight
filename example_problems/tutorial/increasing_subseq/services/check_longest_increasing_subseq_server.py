@@ -37,7 +37,7 @@ if (ENV['T'] == 'lazy_input'):
     TAc.print("\nIn this problem you are asked to enter a increasing senquence of numbers T with a blank space between each number (example: 12 34 56 ...). Then you have to find the longest sub-sequence s of numbers. You will be told if s is the longest sub-sequence of T.", "green")
     TAc.print("\nInsert T:", "green")
     string_T = input()
-    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_T))
+    ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*))$", string_T))
     if ok:
         T = parse_input(string_T)
     else:
@@ -49,7 +49,7 @@ else:
 
 TAc.print("\nInsert s:", "green")
 string_s = input()
-ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*[1-9][0-9]{0,9}))$", string_s))
+ok = bool(re.match(r"^((([1-9][0-9]{0,9} *)*))$", string_s))
 if ok:
     s = parse_input(string_s)
 else:
