@@ -32,7 +32,7 @@ services:
         default: python
       cert: 
         regex: ^(0|1)$
-        default: 1
+        default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

@@ -24,7 +24,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 #if not ENV['silent']:
 #    TAc.print(LANG.opening_msg, "green")
-
+'''
 string_T = ""
 string_s = ""
 length = 10
@@ -47,10 +47,7 @@ for i in range(0, length):
         s = get_not_subseq(T[0], 100)
     TAc.print(list_to_string(s[0]),"green")
 
-    start = time.time()
-    res = input()
-    end = time.time()
-    print(end-start)
+    value, timing  = get_input_with_time()
 
     if res == "y" or res == "Y": 
         res = True
@@ -78,7 +75,77 @@ for i in range(0, length):
                     print(get_yes_certificate(T[0], ret[1]))
         print("\n")           
                     
+'''
+
+cert = ENV['cert']
+seed = ENV['seed']
+
+n_seed = None
+if re.match(r"^[1-9]|[0-9]{2,5}$", seed):
+    n_seed = int(seed)
+growth = []
+n_instances = 10
+T_length = 10
+timing = 0
+previous = 0
+correct = True
+seeds = list_of_seed(n_seed, 3 * n_instances)
+for i in range(0, n_instances * 3 ,3):
+    if not correct:
+        break
+    T = generate_random_seq(T_length, 100, seeds[i + 1])
+    print(T[0])
+    T_length *= 2
+
+    random.seed(seeds[i + 2])
+    x = random.randint(1,10)
+    if i == 0 or x % 2 == 0:
+        s = get_rand_subseq(T[0], i + 3)
+    else:
+        s = get_not_subseq(T[0], 100, n_seed)
+    TAc.print(list_to_string(s[0]),"green")
+    if i != 0:
+        previous = timing
+
+    res, timing  = get_input_with_time()
+
+    if res == "y" or res == "Y": 
+        res = True
+    elif res =="n" or res == "N":
+        res = False
+    else: 
+        TAc.print("WRONG INPUT FORMAT: only \"y\" or \"n\" are allowed as answer.","red")
+        exit(0)
+    ret = is_subseq_with_position(s[0],T[0])
+    if ret[0] == res:
+        TAc.print("OK, your answer is correct!\n","green")
+    else:
+        TAc.print("NO, your answer isn't correct.\n","red")
+        
+        correct = False
+        if cert:
+            if ret[0]:
+                print(remove_duplicate_spaces(list_to_string(T[0])))
+                print(get_yes_certificate(T[0], ret[1]))
+            else:
+                if not ret[1]:
+                    print("T doesn't contains s")
+                else:
+                    print("T contains only these elements of s")
+                    print(remove_duplicate_spaces(list_to_string(T[0])))
+                    print(get_yes_certificate(T[0], ret[1]))
+        print("\n")
+    if i != 0 and ENV['goal'] == 'efficient':        
+        growth.append(get_growth_rate(previous,timing))
 
 
-
-
+if ENV['goal'] == 'efficient' and correct:
+    linear = True
+    for i in growth:
+        if i > 2:
+            linear = False
+    
+    if linear == True:
+        print("Linear")
+    else:
+        print("Not linear")

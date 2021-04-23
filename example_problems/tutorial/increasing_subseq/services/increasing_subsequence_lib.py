@@ -363,3 +363,22 @@ def get_position_from_subseq(subseq, all_subseq):
                 index_subseq.append(list(v))
 
     return index_subseq
+
+def get_input_with_time():
+    start = time.time()
+    user_input = input()
+    end = time.time()
+    elapsed = end - start
+    return user_input, elapsed
+
+def get_growth_rate(previous, current):
+    return current/previous
+
+
+#return n seed
+def list_of_seed(seed,n):
+    random.seed(seed)
+    seeds = []
+    for i in range(n):
+        seeds.append(random.randrange(sys.maxsize))
+    return seeds
