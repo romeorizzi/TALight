@@ -43,12 +43,7 @@ else:
     TAc.NO()
     TAc.print(LANG.render_feedback("not-correct", 'This is not correct.'), "red", ["bold"])
 
-                          
-                                       
-    """if ENV['please_do_it_for_me']==1:
-        TAc.print(LANG.render_feedback("correct-num", f'The correct number is:{correct_bin}'), "green", ["bold"])
-"""        
-    
+
     
     
 exit(0)

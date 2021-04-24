@@ -29,7 +29,7 @@ services:
         default: it
   next_step:
     evaluator: [python, services/next_step_server.py]
-    explain: "We gave you a random number and you have to insert which is the right move."
+    explain: "We give you a random number and you have to insert which is the right move."
     args:
       lang:
         regex: ^(hardcoded|en|it)$
@@ -38,10 +38,6 @@ services:
     explain: "You ask to trilly which is the best next step to do, giving her a binary number."
     evaluator: [python, services/trilly_server.py]
     args:
-      b:
-        regex: ^([0-1][0-1]{0,1000})$
-        default: 101
-        explain: "Binary numeber."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

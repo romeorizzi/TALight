@@ -49,15 +49,11 @@ else:
     TAc.NO()
     TAc.print(LANG.render_feedback("not-correct", 'This is not correct.'), "red", ["bold"])
     if solu<correct_steps:
-        TAc.print(LANG.render_feedback("less", 'This doesn\'t transform the number to zero.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("less", 'This solution doesn\'t transform the number to zero.'), "red", ["bold"])
     elif solu>correct_steps:
         TAc.print(LANG.render_feedback("more", 'Too much steps.'), "red", ["bold"])
                           
-                                       
-    """if ENV['please_do_it_for_me']==1:
-        TAc.print(LANG.render_feedback("correct-num", f'The correct number is:{correct_bin}'), "green", ["bold"])
-"""        
-    
+
     
     
 exit(0)

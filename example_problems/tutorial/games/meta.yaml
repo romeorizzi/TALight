@@ -7,7 +7,7 @@ services:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
-        explain: "a number from 1 to 30, the number of questions posed to the problem solver"
+        explain: "Number from 1 to 30, the number of questions posed to the problem solver"
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
