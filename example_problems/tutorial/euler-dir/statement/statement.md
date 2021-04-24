@@ -22,37 +22,40 @@ Le successive $M$ righe contengono ciascuna un arco, rappresentato da una coppia
 
 ### Dati di output
 
-L'output (da immettere a terminale, o su `stdout` del caso giochi un tuo bot) riporta una permutazione degli archi, con ogni arco su una nuova riga.
-Se la permutazione esiste e costituisce un certificato verificabile di SI alla Domanda Centrale sopra formulata.
-Altrimenti, accetteremo un semplice NO, almeno fino a quando non avrai scoperto la forma del certificato/linguaggio di NO per questo problema.
+L'output (da immettere a terminale, o su `stdout` del caso giochi un tuo bot) riporta innanzitutto se il grafo è euleriano o meno, in caso affermativo viene stampata anche una permutazione degli archi rappresenti un ciclo euleriano, con ogni arco su una nuova riga.
 
 ### Esempio
 
 #### Input
 
+```bash
+5 6
 0 2
 0 3
 1 0
 2 1
 3 4
 4 0
+```
 
 #### Output
 
+```bash
 0 2
 2 1
 1 0
 0 3
 3 4
 4 0
+```
+
+Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere al nostro servizio affinché ne valuti correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
 ```bash
-rtal connect -a goal=with_yes_certificates euler-dir eval_euler_dir
+rtal connect euler_dir -a goal=with_yes_certificates eval_euler_dir
 ```
-Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere ai nostri servizi affinché ne valutino correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
-Se invece non hai idea di come partire ti proponiamo dei percorsi che speriamo tu possa trovare formativi e stimolanti.
-
+Se invece non hai idea di come partire ti proponiamo un percorso che speriamo tu possa trovare formativo e stimolante.
 ## Percorso
 
 Cominciamo con una questione più semplice: usa check_is_eulerian e check_is_not_eulerian
