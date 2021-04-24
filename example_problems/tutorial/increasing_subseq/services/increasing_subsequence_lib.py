@@ -117,7 +117,7 @@ def generate_random_inc_seq(length, max, seed=None):
 def generate_random_dec_seq(length, max, seed=None):
     if seed != None:
        random.seed(seed)      
-    return sorted(random.sample(range(max+1), length), reversed=True)
+    return sorted(random.sample(range(max+1), length), reverse=True)
 
 def get_rand_subseq(T, seed=None):
     s=[]
@@ -364,12 +364,15 @@ def get_position_from_subseq(subseq, all_subseq):
 
     return index_subseq
 
-def get_input_with_time():
+def get_input_with_time(regexp=None):
+    ok = True
     start = time.time()
     user_input = input()
     end = time.time()
     elapsed = end - start
-    return user_input, elapsed
+    if regexp!=None:
+        ok = bool(re.match(regexp, user_input))
+    return user_input, elapsed, ok
 
 def get_growth_rate(previous, current):
     return current/previous
@@ -377,8 +380,10 @@ def get_growth_rate(previous, current):
 
 #return n seed
 def list_of_seed(seed,n):
+    if seed == None:
+        seed = random.randrange(sys.maxsize)
     random.seed(seed)
     seeds = []
     for i in range(n):
         seeds.append(random.randrange(sys.maxsize))
-    return seeds
+    return seed, seeds

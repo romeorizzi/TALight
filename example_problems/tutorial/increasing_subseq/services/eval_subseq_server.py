@@ -89,7 +89,7 @@ T_length = 10
 timing = 0
 previous = 0
 correct = True
-seeds = list_of_seed(n_seed, 3 * n_instances)
+seed, seeds = list_of_seed(n_seed, 3 * n_instances)
 for i in range(0, n_instances * 3 ,3):
     if not correct:
         break
@@ -121,6 +121,7 @@ for i in range(0, n_instances * 3 ,3):
         TAc.print("OK, your answer is correct!\n","green")
     else:
         TAc.print("NO, your answer isn't correct.\n","red")
+        TAc.print("Seed of this test: " + str(seed))
         
         correct = False
         if cert:

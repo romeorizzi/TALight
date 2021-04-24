@@ -11,13 +11,23 @@ from increasing_subsequence_lib import *
 problem="increasing_subseq"
 service="min_k_col"
 args_list = [
-    ('coloring',str),
-    ('lang',str),
+    ('coloring', str),
+    ('lang', str),
+    ('seed', str),
+    ('goal', str),
+    ('input_type', str),
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
+seed = ENV['seed']
+input_type = ENV['input_type']
+n_seed = None
+if re.match(r"^[1-9]|[0-9]{2,5}$", seed):
+    n_seed = int(seed)
+
+'''
 #if not ENV['silent']:
 #    TAc.print(LANG.opening_msg, "green")
 TAc.print("\nYou will be given a sequence of numbers, and you have to enter a minimum coloring, where all elements of the same color represent a non-increasing sequence.", "green")
@@ -47,6 +57,56 @@ if n_col == n_col_user:
     TAc.print("\n\nYES, it's the minimum coloring of T\n", "red")
 else:
     TAc.print("\n\nNO, it isn't the minimum coloring of T\n", "red")
+'''
+
+growth = []
+n_instances = 10
+T_length = 10
+timing = 0
+previous = 0
+correct = True
+seed, seeds = list_of_seed(n_seed, n_instances)
+for i in range(0, n_instances ):
+    if not correct:
+        break
+    T = generate_random_seq(T_length, 100, seeds[i + 1])
+    print("\n#Sequence:")
+    print(list_to_string(T[0]))
+    T_length *= 2
+    mdc = min_decreasing_col(T[0])
+    n_col = n_coloring(mdc)
+
+    res, timing  = get_input_with_time()
+    if input_type == 'sequence':
+        if not is_subseq_with_position(parse_input(res), T[0])[0]:
+            TAc.print("\n#NO, it isn't the maximum increasing subsequence of T\n", "red")
+            print("#Seed of this test: " + str(seed))
+            break
+        else:
+            res = len(parse_input(res))
+
+    if n_col == int(res):
+        TAc.print("\n#YES, it's the length of the maximum increasing subsequence of T\n", "red")
+    else:
+        TAc.print("\n#NO, it isn't the  maximum increasing subsequence of T\n", "red")
+        print("#Seed of this test: " + str(seed))
+        correct = False
+
+    
+    if i != 0 and ENV['goal'] == 'efficient':        
+        growth.append(get_growth_rate(previous,timing))
 
 
+if ENV['goal'] == 'efficient' and correct:
+    linear = True
+    for i in growth:
+        if i > 2:
+            linear = False
+    
+    if linear == True:
+        print("Linear")
+    else:
+        print("Not linear")
 
+
+    
