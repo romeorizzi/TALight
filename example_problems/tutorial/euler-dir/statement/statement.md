@@ -84,7 +84,7 @@ rtal connect -a goal=yes_no euler-dir eval_find_scc
 In alternativa per cominciare con qualcosa di più semplice, potrai proporre tu un grafo e ti verrà risposto quali sono le componenti fortemente connesse usando il seguente servizio:
 
 ```bash
-rtal connect euler-dir check_is_a_scc
+rtal connect euler-dir gimme_scc
 ```
 
 ------------------------------------------------
