@@ -24,7 +24,7 @@ services:
         regex: ^(easy|medium|difficult)$
         default: medium
         explain: "Level of difficulty of the problem."
-      „seed:
+      seed:
         regex: ^([1-9]\d{2,7}|any)$
         default: any
         explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)."
