@@ -41,6 +41,7 @@ L'output (da immettere a terminale, o su `stdout` del caso giochi un tuo bot) ri
 #### Output
 
 ```bash
+Y
 0 2
 2 1
 1 0
@@ -56,68 +57,39 @@ rtal connect euler_dir -a goal=with_yes_certificates eval_euler_dir
 ```
 
 Se invece non hai idea di come partire ti proponiamo un percorso che speriamo tu possa trovare formativo e stimolante.
+
 ## Percorso
 
-Cominciamo con una questione più semplice: usa check_is_eulerian e check_is_not_eulerian
+Cominciamo con una questione più semplice e cerchiamo di capire insieme quando un grafo è euleriano.
+Puoi usare il seguente servizio per fornirci un grafo di tua fantasia credi sia euleriano. Il servizio cotrollerà per te la veridicità della tua assunzione.
+(Esiste anche un servizio duale se vuoi verificare il grafo da te proposto non è euleriano).
+
 ```bash
 rtal connect -a eulerian=yes euler-dir check_is_eulerian
 ```
-Genera un grafo diretto che ritieni essere euleriano, fornisci in input al servizio il grafo e la tua risposta affermativa, sarà il servizio a veificare se hai indovinato.
+
 ```bash
 rtal connect -a eulerian=no euler-dir check_is_not_eulerian
 ```
-Genera un grafo diretto che ritieni non euleriano, fornisci in input al servizio il grafo e la tua risposta negativa, sarà il servizio a veificare se hai indovinato.
 
-Prova a capire come è possibile stabilire se un grafo è euleriano, con 
-```bash
-rtal connect euler-dir check_is_a_scc
-```
-potrai proporre tu un grafo diretto e ti verrà risposto quali sono le componenti fortemente connesse.
-Quando avrai trovato un criterio semplice per stabilire quali sono le comonenti fortemente connesse, potrai verificarlo col servizio:
+Se invece sei in difficoltà nel capire come stabilire se un grafo è euleriano, ti proponiamo di studiare il problema partendo da un altro quesito.
+Saresti in grado di individuare quali sono le componenti fortemente connese di un grafo? 
+Individuate le componenti fortemente connesse, saresti in grado quindi di affermare se il grafo contiene un circuito euleriano?
+Gioca utilizzando il seguente servizio che ti proporrà dei grafi diretti elencandone gli archi, sarà tuo compito calcolarne le componenti fortemente connesse:
+
 ```bash
 rtal connect -a goal=yes_no euler-dir eval_find_scc
 ```
-che ti mette a disposizione due grafi diretti di cui puoi calcolare le componeti fortemente connesse e fornirle in input al servizio, insieme al tuo certificato di si o di no.
+
+In alternativa per cominciare con qualcosa di più semplice, potrai proporre tu un grafo e ti verrà risposto quali sono le componenti fortemente connesse usando il seguente servizio:
+
+```bash
+rtal connect euler-dir check_is_a_scc
+```
 
 ------------------------------------------------
 
-Se invece non ti aiuta o non ti è piacevole, considera quest'altra sfida:
-
-   sapresti scrivere un bot (il più semplice possibile) che, data in input una sequenza di archi diretti su un insieme di N nodi, riesca a stabilire se questi archi formano dei cicli diretti e senza nodi in comune tra di loro?
-
-   sapresti, dirmi SI o NO all'aggiunta di ogni singolo arco?
-
-Esempio:
-```bash
-rtal connect euler_dir -a N=10 play_incrementally_just_disjoint_directed_cycles
-> 1 4
-< n
-> 3 2
-< n
-> 5 6
-< n
-> 4 5
-< n
-> 5 1
-< n
-> 2 3
-< y
-```
-Gioca prima qualche partita a mano, e poi, una volta compreso il protocollo, realizza il tuo bot e fallo giocare in tua vece con 
-
-```bash
-rtal connect euler_dir -a N=10 play_incrementally_just_disjoint_directed_cycles -- python my_bot.py
-```
-
 Il fatto (che ci insegna la teoria della complessità) è questo:
-se sei riuscito a costruire un tale bot, allora conosci non solo le ragioni/il linguaggio del SI, ma anche quelle del NO (ossia quando il grafo non è una collezione di cicli diretti e disgiunti sui nodi puoi segnalare un'osservazione puntuale a supporto, una ragione semplice e chiara di NO).
-Se hai individuato questo semplice argomento di NO per un caso particolare, come questo, del problema originale, e questo ha la sua bellezza e semplicità, hai allora delle chances che tale argomento caratterizzante possa generalizzare all'intero problema di tuo interesse.
-  
-
-
-
-
-
-
+se sei riuscito a completare il percorso, allora dovresti avrere un'idea di quali solo le ragioni/il linguaggio del SI, ma anche quelle del NO per il problema euler-dir.
 
 
