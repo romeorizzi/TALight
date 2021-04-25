@@ -31,7 +31,7 @@ TAc.print(LANG.opening_msg, "green")
 TAc.print("\nIl seguente grafo è euleriano? Rispondi con Y o N.\n(NB: come per gli altri servizi la prima riga riporta numero nodi e numero archi, a seguire su ogni nuova riga è indicato un arco del grafo).\n","yellow")
 
 num = random.randrange(1,7)
-example_graph(num)
+example_graph_eval_euler(num)
 
 start = monotonic()
 PS_answer = input()

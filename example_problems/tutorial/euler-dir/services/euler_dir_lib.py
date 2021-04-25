@@ -123,6 +123,22 @@ def example_graph(num):
     if num == 7:
         print("0 1\n1 2\n2 0\n3 2\n3 1\n3 4\n4 3\n4 5\n5 2\n5 6\n6 5\n7 4\n7 6\n7 7\n")
 
+def example_graph_eval_euler(num):
+    if num == 1:
+        print("7 8\n5 6\n0 1\n3 0\n3 1\n1 2\n2 3\n1 4\n4 3\n")
+    if num == 2:
+        print("6 6\n5 5\n0 1\n1 2\n4 1\n0 3\n3 4\n")
+    if num == 3:
+        print("8 8\n6 7\n0 1\n0 3\n1 2\n5 1\n4 2\n4 3\n5 3\n")
+    if num == 4:
+        print("8 12\n7 6\n4 5\n5 0\n2 0\n0 6\n4 2\n6 4\n3 4\n0 1\n1 2\n2 3\n0 7\n")
+    if num == 5:
+        print("6 6\n5 2\n4 5\n1 0\n2 1\n3 4\n0 3\n")
+    if num == 6:
+        print("8 8\n6 7\n1 2\n7 0\n5 6\n4 5\n3 4\n0 1\n2 3\n")
+    if num == 7:
+        print("8 14\n0 1\n1 2\n2 0\n3 2\n3 1\n3 4\n4 3\n4 5\n5 2\n5 6\n6 5\n7 4\n7 6\n7 7\n")   
+
 def scc(num):
     if num == 1:
         return "01234 5 6"
