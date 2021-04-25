@@ -355,7 +355,7 @@ def get_prefix(s):
 
 def get_position_from_subseq(subseq, all_subseq):
     index_subseq = []
-
+    
     for i in all_subseq:
         if i:
             c,v = zip(*i)

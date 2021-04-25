@@ -8,7 +8,7 @@ from multilanguage import Env, Lang, TALcolors
 from increasing_subsequence_lib import *
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
-service="is_subseq_server"
+service="check_longest_increasing_subseq"
 args_list = [
     ('T',str),
     ('max_len_min_k',str),
@@ -18,11 +18,13 @@ args_list = [
     ('more_or_less_hint_if_wrong_max_len_min_k',bool),
     ('silent',bool),
     ('lang',str),
+    ('seed', str)
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-
+seed = ENV['seed']
+print(seed, type(seed))
 #if not ENV['silent']:
 #    TAc.print(LANG.opening_msg, "green")
 
@@ -31,9 +33,20 @@ string_s = ""
 
 feedback = ENV['feedback_level']
 
+T_length  = 100
+
+n_seed = None
+if re.match(r"^[0-9]{2,}$", seed):
+    n_seed = int(seed)
+
 print(feedback)
 
-if (ENV['T'] == 'lazy_input'):
+if ENV['T'] == 'lazy_input' and n_seed != None:
+
+    T = generate_random_seq(T_length, 100, seed) 
+    T = T[0]
+    print(list_to_string(T))
+elif ENV['T'] == 'lazy_input':
     TAc.print("\nIn this problem you are asked to enter a increasing senquence of numbers T with a blank space between each number (example: 12 34 56 ...). Then you have to find the longest sub-sequence s of numbers. You will be told if s is the longest sub-sequence of T.", "green")
     TAc.print("\nInsert T:", "green")
     string_T = input()
