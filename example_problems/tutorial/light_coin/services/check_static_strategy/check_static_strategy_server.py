@@ -23,25 +23,24 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
 
-stopping_command_set={"#end"}
+stopping_command_set="#end"
 print(f"# Notice: the n={ENV['n']} coins are numbered from 1 to {ENV['n']}.")
 print("# waiting for the list of measures comprising your static strategy.\nPlease, each measure should go on a different line and specify the coins on the left plate, then a comma, then the coins on the tight plate.\nExample:\n   1 3 5, 2 4 6.\nWhen you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete. Any other line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file whose last line is '#end'. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.")
 
 def getStaticStrategy():
     weighedList = []
-    stoppingCommand = "#end"
     line = [0]
-    while line[0] != stoppingCommand:
+    while line[0] != stopping_command_set:
         line = TALinput(
             str,
             num_tokens=2,
             sep=', ',
-            exceptions = stoppingCommand,
+            exceptions = stopping_command_set,
             regex=r"^(([1-9][0-9]{0,9}\s+)*[1-9][0-9]{0,9}\s*)$",
             regex_explained="a sequence of numbers from 1 to n, separated by a space. An example of what should go on a plate of the scale (one of the two expected token of the line) is: '2 5 7'.",
             TAc=TAc
         )
-        if line[0] != stoppingCommand:
+        if line[0] != stopping_command_set:
             leftScale = [int(part) for part in line[0].split()]
             rightScale = [int(part) for part in line[1].split()]
             if any(item in leftScale for item in rightScale):
@@ -106,11 +105,10 @@ def manageDifferentFalseCoinWeight(weighedList):
         TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your measures do not suffice. Actually, with this set of measures you can not even tell whether the false coin is lighter or heavier than the others. However, if we knew this a priori (whether the false coin is heavier or lighter) then your strategy would always identify the false coin.'), "red", ["bold"])
     elif resultCheckWeight and not resultStrategy:
         TAc.NO()
-        TAc.print(LANG.render_feedback("not-found-coin-weight", f'Your measures do not suffice. Indeed, these measures would produce the very same outcomes in these two cases: 1. ... 2. ... .'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("not-found-coin-weight", f'Your measures do not suffice. Indeed, these measures understand if the false coin is heavier or lighter but not which it because it does not distinguish the coins {coinsNotDistinct}.'), "red", ["bold"])
     else:
         TAc.NO()
         TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter.'), "red", ["bold"])
-
 
 
 
