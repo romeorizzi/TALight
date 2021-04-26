@@ -22,7 +22,7 @@ Le successive $M$ righe contengono ciascuna un arco, rappresentato da una coppia
 
 ### Dati di output
 
-L'output (da immettere a terminale, o su `stdout` del caso giochi un tuo bot) riporta innanzitutto se il grafo è euleriano o meno, in caso affermativo viene stampata anche una permutazione degli archi rappresenti un ciclo euleriano, con ogni arco su una nuova riga.
+L'output (da immettere a terminale, o su `stdout` del caso giochi un tuo bot) riporta innanzitutto se il grafo è euleriano o meno, in caso affermativo viene stampata anche una permutazione degli archi rappresenti un circuito euleriano, con ogni arco su una nuova riga.
 
 ### Esempio
 
