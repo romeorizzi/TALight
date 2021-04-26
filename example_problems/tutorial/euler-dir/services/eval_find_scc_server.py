@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 from sys import stderr, exit, argv
 
 import collections
@@ -28,7 +27,7 @@ TAc.print(LANG.opening_msg, "green")
 if ENV['graph'] == '1':  
     TAc.print("\n# Graph 1:","yellow")
     example_graph(1)
-    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh : \n","yellow")
+    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh (ovvero con uno spazio tra ogni componente fortemente connessa): \n","yellow")
     sin = input()
     scheck = scc(1)
     if check_scc(scheck,sin):
@@ -45,7 +44,7 @@ if ENV['graph'] == '1':
 if ENV['graph'] == '2':  
     TAc.print("\n# Graph 2:","yellow")
     example_graph(2)
-    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh : \n","yellow")
+    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh (ovvero con uno spazio tra ogni componente fortemente connessa): \n","yellow")
     sin = input()
     scheck = scc(2)
     if check_scc(scheck,sin):
@@ -62,7 +61,7 @@ if ENV['graph'] == '2':
 if ENV['graph'] == '3':  
     TAc.print("\n# Graph 3:","yellow")
     example_graph(3)
-    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh : \n","yellow")
+    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh (ovvero con uno spazio tra ogni componente fortemente connessa): \n","yellow")
     sin = input()
     scheck = scc(3)
     if check_scc(scheck,sin):
@@ -79,7 +78,7 @@ if ENV['graph'] == '3':
 if ENV['graph'] == '4':  
     TAc.print("\n# Graph 4:","yellow")
     example_graph(4)
-    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in In un formato come abc ef gh : \n","yellow")
+    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in In un formato come abc ef gh (ovvero con uno spazio tra ogni componente fortemente connessa): \n","yellow")
     sin = input()
     scheck = scc(4)
     if check_scc(scheck,sin):
@@ -96,7 +95,7 @@ if ENV['graph'] == '4':
 if ENV['graph'] == '5':  
     TAc.print("\n# Graph 5:","yellow")
     example_graph(5)
-    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh : \n","yellow")
+    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh (ovvero con uno spazio tra ogni componente fortemente connessa): \n","yellow")
     sin = input()
     scheck = scc(5)
     if check_scc(scheck,sin):
@@ -113,7 +112,7 @@ if ENV['graph'] == '5':
 if ENV['graph'] == '6':  
     TAc.print("\n# Graph 6:","yellow")
     example_graph(6)
-    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh : \n","yellow")
+    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh (ovvero con uno spazio tra ogni componente fortemente connessa): \n","yellow")
     sin = input()
     scheck = scc(6)
     if check_scc(scheck,sin):
@@ -130,7 +129,7 @@ if ENV['graph'] == '6':
 if ENV['graph'] == '7':  
     TAc.print("\n# Graph 7:","yellow")
     example_graph(7)
-    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh : \n","yellow")
+    TAc.print("\n# Inserisci le componenti fortemente connesse che hai calcolato, in ordine crescente e in un formato come abc ef gh (ovvero con uno spazio tra ogni componente fortemente connessa): \n","yellow")
     sin = input()
     scheck = scc(7)
     if check_scc(scheck,sin):
