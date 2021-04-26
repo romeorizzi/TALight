@@ -98,14 +98,15 @@ def sub_lists_with_pos (l):
         lists = orig + lists
     return lists
   
-def generate_random_seq(length, max, seed=None):
-    if seed != None:
-        random.seed(seed)
-    else:
+def generate_random_seq(length, max_val, seed=None):
+    """yields a random list of <length> naturals in [0, max_val].
+       If seed == None then it generates a seed at random.
+       In any case, it returns the seed used.""" 
+    if seed == None:
         seed = random.randrange(sys.maxsize)
-        random.seed(seed)
+    random.seed(seed)
     T = []
-    for i in range(0, length):
+    for i in range(length):
         T.append(random.randint(0,max))
     return T, seed
 
@@ -120,17 +121,54 @@ def generate_random_dec_seq(length, max, seed=None):
     return sorted(random.sample(range(max+1), length), reverse=True)
 
 def get_rand_subseq(T, seed=None):
-    s=[]
-    if seed != None:
-        random.seed(seed)
-    else:
+    if seed == None:
         seed = random.randrange(sys.maxsize)
-        random.seed(seed)
+    random.seed(seed)
+    s=[]
     min = random.randint(0,len(T) - 1)
     while (min < len(T)):
         s.append(T[min])
         min = random.randint(min + 1,len(T)+1)
     return s, seed
+
+def get_random_subseq(T, n, seed=None):
+    if seed == None:
+        seed = random.randrange(sys.maxsize)
+    random.seed(seed)
+    return [T[i] for i in sorted(random.sample(range(len(T)), n)) ], seed
+
+def gen_seq_avoiding_(s, m, max_val, seed=None):
+    if seed == None:
+        seed = random.randrange(sys.maxsize)
+    random.seed(seed)
+    T = []
+    seen = 0
+    while len(T) < m:
+        if seen < len(s) -1:
+            T.append(random.randint(0,max_val))
+            if T[-1] == s[seen]:
+                seen += 1
+        else:
+            T.append(random.randint(0,max_val-1))
+            if T[-1] >= s[-1]:
+                T[-1] += 1
+    return T, seed
+    
+def gen_subseq_instance(m, n, max_val, yes_instance, seed=None):
+    """yields an instance for the subseq decision problem.
+       Both the text T (of lenght m) and the candidate subsequence s (of length n) are made of naturals in [0, max_val].
+       If seed == None then it generates a seed at random.
+       In any case, it returns the seed used."""
+    if seed == None:
+        seed = random.randrange(sys.maxsize)
+    random.seed(seed)
+    if yes_instance:
+        T,_ = generate_random_seq(m, max_val, seed)
+        s,_ = get_random_subseq(T, n, seed)
+    else:
+        s,_ = generate_random_seq(n, max_val, seed)
+        T,_ = gen_seq_avoiding_(s, m, max_val, seed)
+    return T, s, seed
     
 def get_not_subseq(T, max, seed=None):
     tmp = []
