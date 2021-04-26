@@ -53,7 +53,7 @@ Y
 Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere al nostro servizio affinché ne valuti correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
 ```bash
-rtal connect euler_dir -a goal=with_yes_certificates eval_euler_dir
+rtal connect -a goal1=with_yes_certificates euler-dir eval_euler_dir
 ```
 
 Se invece non hai idea di come partire ti proponiamo un percorso che speriamo tu possa trovare formativo e stimolante.
