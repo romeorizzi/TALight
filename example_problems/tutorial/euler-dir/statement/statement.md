@@ -22,7 +22,7 @@ Le successive $M$ righe contengono ciascuna un arco, rappresentato da una coppia
 
 ### Dati di output
 
-L'output (da immettere a terminale, o su `stdout` del caso giochi un tuo bot) riporta innanzitutto se il grafo è euleriano o meno, in caso affermativo viene stampata anche una permutazione degli archi rappresenti un ciclo euleriano, con ogni arco su una nuova riga.
+L'output (da immettere a terminale, o su `stdout` del caso giochi un tuo bot) riporta innanzitutto se il grafo è euleriano o meno, in caso affermativo viene stampata anche una permutazione degli archi rappresenti un circuito euleriano, con ogni arco su una nuova riga.
 
 ### Esempio
 
@@ -53,7 +53,12 @@ Y
 Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere al nostro servizio affinché ne valuti correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
 ```bash
-rtal connect euler_dir -a goal=with_yes_certificates eval_euler_dir
+rtal connect -a goal1=with_yes_certificates euler-dir eval_euler_dir
+```
+Puoi prefissarti come obiettivo aggiuntivo di comporre un algoritmo efficiente, che puoi controllare con il servizio:
+
+```bash
+rtal connect -a goal1=with_yes_certificates -a goal2=efficient euler-dir eval_euler_dir
 ```
 
 Se invece non hai idea di come partire ti proponiamo un percorso che speriamo tu possa trovare formativo e stimolante.
@@ -61,6 +66,7 @@ Se invece non hai idea di come partire ti proponiamo un percorso che speriamo tu
 ## Percorso
 
 Cominciamo con una questione più semplice e cerchiamo di capire insieme quando un grafo è euleriano.
+
 Puoi usare il seguente servizio per fornirci un grafo di tua fantasia credi sia euleriano. Il servizio cotrollerà per te la veridicità della tua assunzione.
 (Esiste anche un servizio duale se vuoi verificare il grafo da te proposto non è euleriano).
 
@@ -75,10 +81,10 @@ rtal connect -a eulerian=no euler-dir check_is_not_eulerian
 Se invece sei in difficoltà nel capire come stabilire se un grafo è euleriano, ti proponiamo di studiare il problema partendo da un altro quesito.
 Saresti in grado di individuare quali sono le componenti fortemente connese di un grafo? 
 Individuate le componenti fortemente connesse, saresti in grado quindi di affermare se il grafo contiene un circuito euleriano?
-Gioca utilizzando il seguente servizio che ti proporrà dei grafi diretti elencandone gli archi, sarà tuo compito calcolarne le componenti fortemente connesse:
+Gioca utilizzando il seguente servizio che ti proporrà dei grafi diretti elencandone gli archi (per selezionare il grafo con cui vuoi giocare scrivi nel comando al posto di X un numero tra 1 e 7), sarà tuo compito calcolarne le componenti fortemente connesse:
 
 ```bash
-rtal connect -a goal=yes_no euler-dir eval_find_scc
+rtal connect -a graph=X euler-dir eval_find_scc
 ```
 
 In alternativa per cominciare con qualcosa di più semplice, potrai proporre tu un grafo e ti verrà risposto quali sono le componenti fortemente connesse usando il seguente servizio:

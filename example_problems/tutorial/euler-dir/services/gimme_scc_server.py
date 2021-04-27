@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+# "This service will check your statement that a directed graph you provide us is Eulerian"
 
 from sys import stderr, exit, argv
 
