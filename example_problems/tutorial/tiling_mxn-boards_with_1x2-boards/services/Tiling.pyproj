@@ -1,0 +1,53 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>7fda8a5e-39e6-49e5-9a3b-4d3ce796e6e9</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>
+    </StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>Tiling</Name>
+    <RootNamespace>Tiling</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="eval_submission.py" />
+    <Compile Include="gimme_hints_on_a_tiling_server.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="multilanguage.py" />
+    <Compile Include="show_tile.py" />
+    <Compile Include="TALinputs.py" />
+    <Compile Include="tell_if_tilable_server.py" />
+    <Compile Include="tiling_generico.py" />
+    <Compile Include="yield_random_tiling.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="eval_submission.en.yaml" />
+    <Content Include="eval_submission.it.yaml" />
+    <Content Include="is_not_tilable_feedbackBook.en.yaml" />
+    <Content Include="is_not_tilable_feedbackBook.it.yaml" />
+    <Content Include="is_tilable_feedbackBook.en.yaml" />
+    <Content Include="is_tilable_feedbackBook.it.yaml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
