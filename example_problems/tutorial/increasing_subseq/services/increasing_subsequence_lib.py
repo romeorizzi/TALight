@@ -107,7 +107,7 @@ def generate_random_seq(length, max_val, seed=None):
     random.seed(seed)
     T = []
     for i in range(length):
-        T.append(random.randint(0,max))
+        T.append(random.randint(0,max_val))
     return T, seed
 
 def generate_random_inc_seq(length, max, seed=None):
