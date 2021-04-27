@@ -30,4 +30,6 @@ TEMA_OGGI*
 *.tar
 *.7z
 
-/.vs/*
+# Visual Studio
+.vs/
+.suo/
