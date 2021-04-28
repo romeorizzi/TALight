@@ -100,7 +100,7 @@ for instance in instances:
     time = one_test(instance[0], instance[1], max_val, instance[2], instance[3])
     count +=1
     print(f"#Correct! [took {time} seconds on your machine]\n")
-    if time > 10000:
+    if time > 1:
         if count > NUM_instances_correct:
             TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution correctly computes the well formed formula immidiately following a given one (checked with formulas up to {count} pairs of parentheses).'), "green")
         TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to compute the next well-formed formula of this last wff with {count} pairs of parentheses.'), "red", ["bold"])        
