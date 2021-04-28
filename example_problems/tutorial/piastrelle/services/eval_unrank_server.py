@@ -14,7 +14,7 @@ service="eval_unrank"
 args_list = [
     ('sorting_criterion',str),
     ('goal',str),
-    ('seed',int),
+    ('seed',str),
     ('code_lang',str),
     ('lang',str),
     ('ISATTY',bool),
@@ -59,7 +59,11 @@ def one_test(rank, n_pairs):
 
 for n_pairs in instances:
     for i in range(3):
-        random.seed(n_pairs*i+ENV["seed"])
+        if ENV["seed"]=='random_seed':
+            rand=random.randint(1, 1000)
+        else:
+            rand=int(ENV["seed"])
+        random.seed(n_pairs*i+rand)
         rank = random.randrange(1,p.num_sol(n_pairs)+1)
         time = one_test(rank, n_pairs)
         print(f"#Correct! [took {time} secs on your machine]")

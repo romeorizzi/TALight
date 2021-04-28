@@ -26,7 +26,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 n_tiles=ENV['n']
 p = Par(n_tiles)
 pos=random.randint(1,p.num_sol(n_tiles))
-print(pos)
+#print(pos)
 wff=p.unrank(n_tiles,pos,ENV['sorting_criterion'])
 print('In what position of the tiling does '+ wff +' fit? \nWrite it here: ')
 risp=int(input())   

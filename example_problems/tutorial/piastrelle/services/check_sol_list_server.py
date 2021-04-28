@@ -70,28 +70,56 @@ def answer():
     if ENV['feedback'] == "give_first_missing":
         TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed tiling.\nConsider for example:"), "red", ["bold"])
         TAc.print(missing, "yellow", ["bold"])
-    else:
-        assert ENV['feedback'] == "tell_first_minimal_missing_prefix"
-        min_len1 = 0
-        if pos > 0:
-            while missing[min_len1] == input_solution_list[pos-1][min_len1]:
-                min_len1 += 1
-        min_len2 = 0
-        if pos < len(input_solution_list):
-            while missing[min_len2] == input_solution_list[pos][min_len2]:
-                min_len2 += 1
-        minimal_missing_prefix = missing[0:1+max(min_len1,min_len2)]
+    elif ENV['feedback'] == "tell_first_minimal_missing_prefix":
+        pos1 = 0
+        if rank > 0:
+            while missing[pos1] == input_solution_list[rank-2][pos1]:
+                pos1 += 1
+        pos2 = 0
+        if rank < len(input_solution_list):
+            while missing[pos2] == input_solution_list[rank-1][pos2]:
+                pos2 += 1
+        #minimal_missing_prefix = missing[0:1+max(pos1,pos2)]
+        last_char = max(pos1,pos2)
+        while missing[last_char]!=']':
+            last_char += 1
+        minimal_missing_prefix = missing[0:last_char+1]
         TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of a well-formed formula and no formula in your set has this prefix:"), "red", ["bold"])
         TAc.print(minimal_missing_prefix, "yellow", ["bold"])
+    elif ENV['feedback'] == "dispell_first_missing_till_already_present":
+        pos1=0
+        while missing[pos1]==input_solution_list[rank-2][pos1]:
+            pos1+=1
+        pos2=0
+        while missing[pos2]==input_solution_list[rank-1][pos2]:
+            pos2+=1
+        if pos1==1 and pos2==1:
+            TAc.print(LANG.render_feedback("first-missing-till-already-present", f"No. Your set is missing at least one well-formed tiling, but this has no prefix in common with a solution you have given."), "red", ["bold"])
+            exit(0)
+        TAc.print(LANG.render_feedback("first-missing-till-already-present", f"No. Your set is missing at least one well-formed tiling.\nIn green you find the longest prefix that a solution you are missing has in common with a solution you have given: "), "red", ["bold"])
+        if pos1>=pos2:
+            missing_prefix=input_solution_list[rank-2][:pos1-1]
+            suffix=input_solution_list[rank-2][pos1-1:]
+        else:
+            missing_prefix=input_solution_list[rank-1][:pos2-1]
+            suffix=input_solution_list[rank-1][pos2-1:]
+        TAc.print(missing_prefix, "green", ["bold"], end='')
+        TAc.print(suffix, "red", ["bold"])
+    else:
+        assert ENV['feedback'][0:23] == "tell_prefix_of_missing_"
+        length = int(ENV['feedback'][23:])
+        missing_prefix = missing[0:length]
+        TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
+        TAc.print(missing_prefix, "yellow", ["bold"])
     exit(0)
 
-for pos in range(1,len(input_solution_list)+1):
-    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos-1]}, p.unrank(n_tiles)={p.unrank(n_tiles,pos,ENV['sorting_criterion'])}")
-    if input_solution_list[pos-1] != p.unrank(n_tiles,pos,ENV['sorting_criterion']):
-        missing = p.unrank(n_tiles,pos,ENV['sorting_criterion'])
+for rank in range(1,len(input_solution_list)+1):
+    #print(f"rank={rank}, input_solution_list[rank]={input_solution_list[rank-1]}, p.unrank(n_tiles)={p.unrank(n_tiles,rank,ENV['sorting_criterion'])}")
+    if input_solution_list[rank-1] != p.unrank(n_tiles,rank,ENV['sorting_criterion']):
+        missing = p.unrank(n_tiles,rank,ENV['sorting_criterion'])
         answer()
 if missing=='empty' and len(input_solution_list) < p.num_sol(n_tiles):
-    missing=p.unrank(n_tiles,pos+1,ENV['sorting_criterion'])
+    missing=p.unrank(n_tiles,rank+1,ENV['sorting_criterion'])
     answer()
 TAc.print(LANG.render_feedback("list-ok", f"Ok! You have listed all well-formed tilings of a corridor of dimension 1x{n_tiles}. Also their order is the intended one."), "green")
 exit(0)

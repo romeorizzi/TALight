@@ -47,6 +47,7 @@ class Par:
         return self.num_wffs[n_tiles ]
 
     def unrank(self,n_tiles,pos,sorting_criterion):
+        assert pos>0 and pos<=self.num_sol(n_tiles), 'the position must be between 1 and '+str(self.num_sol(n_tiles))
         if n_tiles==0:
             return '-'
         if n_tiles==1:
@@ -89,7 +90,7 @@ class Par:
     def rand_gen(self, n_tiles, seed=None):
         """ritorna una wff pseudo-rando di un corridoio 1 x n_tiles. Il seed la determina univocamente."""
         random.seed(seed)
-        r = random.randrange(self.num_sol(n_tiles))
+        r = random.randrange(1,self.num_sol(n_tiles)+1)
         return self.unrank(n_tiles,r,'loves_short_tiles')
 
     def next(self, wff, sorting_criterion):

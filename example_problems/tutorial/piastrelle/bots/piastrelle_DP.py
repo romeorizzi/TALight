@@ -32,6 +32,7 @@ def rank(wff,sorting_criterion):
         return num_sol(len(wff)//2)-a
 
 def unrank(n_tiles,pos,sorting_criterion):
+    assert pos>0 and pos<=num_sol(n_tiles), 'the position must be between 1 and '+str(num_sol(n_tiles))
     if n_tiles==0:
         return '0'
     if n_tiles==1:

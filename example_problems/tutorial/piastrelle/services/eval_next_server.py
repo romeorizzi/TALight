@@ -14,7 +14,7 @@ service="eval_next"
 args_list = [
     ('sorting_criterion',str),
     ('goal',str),
-    ('seed',int),
+    ('seed',str),
     ('code_lang',str),
     ('lang',str),
     ('ISATTY',bool),
@@ -66,7 +66,11 @@ for n in instances:
         first = '[--]'*(n//2)+'[]'*(n%2)
         last = '[]'*n
     for i in range(3):
-        wff = p.rand_gen(n, seed=n*i+ENV["seed"])
+        if ENV["seed"]=='random_seed':
+            rand=random.randint(1, 1000)
+        else:
+            rand=int(ENV["seed"])
+        wff = p.rand_gen(n, seed=n*i+rand)
         if wff == last:
             wff = first
         time = one_test(wff)

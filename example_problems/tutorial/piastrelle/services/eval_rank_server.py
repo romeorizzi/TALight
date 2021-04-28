@@ -14,7 +14,7 @@ service="eval_rank"
 args_list = [
     ('sorting_criterion',str),
     ('goal',str),
-    ('seed',int),
+    ('seed',str),
     ('code_lang',str),
     ('lang',str),
     ('ISATTY',bool),
@@ -60,7 +60,11 @@ def one_test(wff):
         
 for n_pairs in instances:
     for i in range(3):
-        wff = p.rand_gen(n_pairs, seed=n_pairs*i+ENV["seed"])
+        if ENV["seed"]=='random_seed':
+            rand=random.randint(1, 1000)
+        else:
+            rand=int(ENV["seed"])
+        wff = p.rand_gen(n_pairs, seed=n_pairs*i+rand)
         time = one_test(wff)
         print(f"#Correct! [took {time} secs on your machine]")
         if time > 1:
