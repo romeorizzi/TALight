@@ -14,7 +14,7 @@ service="eval_next"
 args_list = [
     ('sorting_criterion',str),
     ('goal',str),
-    ('seed',int),
+    ('seed',str),
     ('code_lang',str),
     ('lang',str),
     ('ISATTY',bool),
@@ -66,18 +66,22 @@ for n_pairs in instances:
         first = '()'*n_pairs
         last = '('*n_pairs + ')'*n_pairs
     for i in range(3):
-        wff = p.rand_gen(n_pairs, seed=n_pairs*i+ENV["seed"])
+        if ENV["seed"]=='random_seed':
+            rand=random.randint(1, 1000)
+        else:
+            rand=int(ENV["seed"])
+        wff = p.rand_gen(n_pairs, seed=n_pairs*i+rand)
         if wff == last:
             wff = first
         time = one_test(wff)
         print(f"#Correct! [took {time} secs on your machine]")
         if time > 1:
             if n_pairs > 13:
-                TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution correctly computes the well formed formula immidiately following a given one (checked with formulas up to {n_pairs} pairs of parentheses).'), "green")
+                TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. :) Your solution correctly computes the well formed formula immidiately following a given one (checked with formulas up to {n_pairs} pairs of parentheses).'), "green")
             TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to compute the next well-formed formula of this last wff with {n_pairs} pairs of parentheses.'), "red", ["bold"])        
             exit(0)
 
-TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. ♥  Your solution appears to be correct (checked on several instances).'), "green")
-TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is efficient: its running time is polynomial in the length of the formulas it manipulates.'), "green")
+TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. :)  Your solution appears to be correct (checked on several instances).'), "green")
+TAc.print(LANG.render_feedback("efficient", f'# Ok. :) Your solution is efficient: its running time is polynomial in the length of the formulas it manipulates.'), "green")
 
 exit(0)

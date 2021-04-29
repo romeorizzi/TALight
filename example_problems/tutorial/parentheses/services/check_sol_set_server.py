@@ -61,36 +61,47 @@ TAc.print(LANG.render_feedback("your-formulas-all-ok", f'All the formulas you ha
 
 input_solution_list.sort()
 #print(input_solution_list)
-
 if len(input_solution_list) == p.num_sol(n_pairs):
     TAc.OK()
-    TAc.print(f'Congrats! You have input all the well-formed formulas on {n_pairs} pairs of parentheses.', "green")
+    TAc.print(f'Congrats! You have input all the well-formed formulas of {n_pairs} pairs of parentheses.', "green")
     exit(0)
 else:
     TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f'No. Your set is missing at least one well-formed formula.'), "red", ["bold"])
 if ENV["feedback"] == "yes_no":
     exit(0)
 
+missing='empty'
+def answer():
+    if ENV["feedback"] == "give_one_missing":
+        TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
+        TAc.print(missing, "yellow", ["bold"])
+    elif ENV["feedback"] == "tell_first_minimal_missing_prefix":
+        min_len1 = 0
+        if pos > 0:
+            while missing[min_len1] == input_solution_list[pos-1][min_len1]:
+                min_len1 += 1
 
-for pos in range(p.num_sol(n_pairs)):
+        min_len2 = 0
+        if pos < len(input_solution_list):
+            while missing[min_len2] == input_solution_list[pos][min_len2]:
+                min_len2 += 1
+        minimal_missing_prefix = missing[0:1+max(min_len1,min_len2)]
+        TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f'As a strong hint, here is the prefix of a well-formed formula and no formula in your set has this prefix:'), "red", ["bold"])
+        TAc.print(minimal_missing_prefix, "yellow", ["bold"])
+    else:
+        assert ENV['feedback'][0:23] == "tell_prefix_of_missing_"
+        length = int(ENV['feedback'][23:])
+        missing_prefix = missing[0:length]
+        TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed formula.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
+        TAc.print(missing_prefix, "yellow", ["bold"])
+    exit(0)
+
+for pos in range(len(input_solution_list)):
     #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, p.unrank(n_pairs, pos)={p.unrank(n_pairs, pos)}")
     if input_solution_list[pos] != p.unrank(n_pairs, pos):
         missing = p.unrank(n_pairs, pos)
-        #print(f"missing={missing}")
-        if ENV["feedback"] == "give_one_missing":
-            TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
-            TAc.print(missing, "yellow", ["bold"])
-        elif ENV["feedback"] == "tell_a_minimal_missing_prefix":
-            min_len1 = 0
-            if pos > 0:
-                while missing[min_len1] == input_solution_list[pos-1][min_len1]:
-                    min_len1 += 1
-
-            min_len2 = 0
-            if pos < len(input_solution_list):
-                while missing[min_len2] == input_solution_list[pos][min_len2]:
-                    min_len2 += 1
-            minimal_missing_prefix = missing[0:1+max(min_len1,min_len2)]
-            TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f'As a strong hint, here is the prefix of a well-formed formula and no formula in your set has this prefix:'), "red", ["bold"])
-            TAc.print(minimal_missing_prefix, "yellow", ["bold"])
-        exit(0)
+        answer()
+if missing=='empty' and len(input_solution_list) < p.num_sol(n_pairs):
+    missing = p.unrank(n_pairs, p.num_sol(n_pairs)+1)
+    answer()
+exit(0)

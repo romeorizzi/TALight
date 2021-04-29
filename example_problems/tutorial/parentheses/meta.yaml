@@ -24,8 +24,8 @@ services:
         explain: "what you conjecture to be the number of well-formed formulas on <n_pairs> pairs of parentheses"
       ok_if_congruent_modulus:
         regex: ^(0|[1-9][0-9]{0,10})$
-#        default: 0
-        default: 1000000007
+        default: 0
+#        default: 1000000007
       more_or_less_hint_if_wrong:
         regex: ^(0|1)$
         default: 0
@@ -55,8 +55,13 @@ services:
     evaluator: [python, services/check_sol_set_server.py]
     args:
       feedback:
-        regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
+        regex: ^(yes_no|tell_first_minimal_missing_prefix|give_one_missing|tell_prefix_of_missing_[1-9][0-9]{0,10})$
         default: yes_no
+        explain: the options are as follows
+        explain1: -yes_no= just tell me if I am missing one solution.
+        explain2: -tell_first_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution I get a new one.
+        explain3: -give_one_missing= just spoil me out a solution I have missed.
+        explain4: -tell_prefix_of_missing_<len>= please, of one solution I am missing, give me the prefix of length <len>.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -67,8 +72,15 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_closing_par
       feedback:
-        regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
+        regex: ^(yes_no|spot_first_wrong_consec|dispell_first_missing_till_already_present|tell_first_minimal_missing_prefix|give_first_missing|tell_prefix_of_missing_[1-9][0-9]{0,10})$
         default: yes_no
+        explain: the options are as follows
+        explain1: -yes_no= just tell me if I am missing one solution.
+        explain2: -spot_first_wrong_consec= tell me between which two solutions I have given one is missing.
+        explain3: -dispell_first_missing_till_already_present= please, of one solution I am missing, give me the longest prefix it has in common with a solution I have given.
+        explain4: -tell_first_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution I get a new one.
+        explain5: -give_first_missing= just spoil me out a solution I have missed.
+        explain6: -tell_prefix_of_missing_<len>= please, of one solution I am missing, give me the prefix of length <len>.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -101,8 +113,9 @@ services:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]|[0-9]{2,5})$
-        default: 777
+        regex: ^(random_seed|[1-9]|[0-9]{2,5})$
+        default: random_seed
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
@@ -151,8 +164,9 @@ services:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]|[0-9]{2,5})$
-        default: 777
+        regex: ^(random_seed|[1-9]|[0-9]{2,5})$
+        default: random_seed
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
@@ -169,8 +183,9 @@ services:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]|[0-9]{2,5})$
-        default: 777
+        regex: ^(random_seed|[1-9]|[0-9]{2,5})$
+        default: random_seed
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
