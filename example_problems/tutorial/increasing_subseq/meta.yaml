@@ -88,6 +88,10 @@ services:
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
+      seed:
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       YES_cert:
         regex: ^(0|1)$
         default: 1    #explain: "the evaluated bot is required to also output a certificate on every YES-instance"

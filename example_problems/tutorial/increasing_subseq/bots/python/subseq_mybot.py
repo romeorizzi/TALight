@@ -13,14 +13,18 @@ while True:
     pos_S = 0
     indexes = []
     for wanted, i in zip(T,range(len(T))):
+
         if S[pos_S] == wanted:
             pos_S += 1
             indexes.append(i)
             if pos_S == len(S):
-                print(1)
+                print('y')
+                break
                 if len(argv) == 1:
                     print("#", end=" ")
                 print(" ".join(map(str,indexes)))
-                exit(0)
-    print(0)
+                
+
+    if pos_S < len(S):
+        print('n')
 exit(0)

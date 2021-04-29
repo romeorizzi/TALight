@@ -76,7 +76,7 @@ for i in range(0, n_instances ):
     mdc = min_decreasing_col(T[0])
     n_col = n_coloring(mdc)
 
-    res, timing  = get_input_with_time()
+    res = input()
     if input_type == 'sequence':
         if not is_subseq_with_position(parse_input(res), T[0])[0]:
             TAc.print("\n#NO, it isn't the maximum increasing subsequence of T\n", "red")

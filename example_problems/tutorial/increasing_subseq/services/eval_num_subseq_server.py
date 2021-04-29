@@ -16,10 +16,6 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-seed = ENV['seed']
-
-
-
 cert = ENV['cert']
 seed = ENV['seed']
 
