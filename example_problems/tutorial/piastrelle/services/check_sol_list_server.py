@@ -70,6 +70,8 @@ def answer():
     if ENV['feedback'] == "give_first_missing":
         TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed tiling.\nConsider for example:"), "red", ["bold"])
         TAc.print(missing, "yellow", ["bold"])
+    elif ENV["feedback"] == "spot_first_wrong_consec":
+        TAc.print(LANG.render_feedback("not-consecutive", f'In fact, the two tilings:\n {input_solution_list[pos]}\n {input_solution_list[pos+1]}\nthat appear consecutive in your list are NOT consecutive in the intended order. You have missed something inbetween.'), "red", ["bold"], end=" ")
     elif ENV['feedback'] == "tell_first_minimal_missing_prefix":
         pos1 = 0
         if rank > 0:
@@ -106,8 +108,8 @@ def answer():
         TAc.print(missing_prefix, "green", ["bold"], end='')
         TAc.print(suffix, "red", ["bold"])
     else:
-        assert ENV['feedback'][0:23] == "tell_prefix_of_missing_"
-        length = int(ENV['feedback'][23:])
+        assert ENV['feedback'][0:27] == "tell_prefix_of_missing_len_"
+        length = int(ENV['feedback'][27:])
         missing_prefix = missing[0:length]
         TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
         TAc.print(missing_prefix, "yellow", ["bold"])

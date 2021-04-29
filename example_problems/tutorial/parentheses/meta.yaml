@@ -1,28 +1,33 @@
 public_folder: public
 services:
   check_one_sol:
+    explains: "this service checks whether an input string of '(' and ')' characters is a well formed formula of parentheses."
     evaluator: [python, services/check_one_sol_server.py]
     args:
       input_formula:
         regex:  ^(\(|\)){0,1000}$
       silent:
+        explains: "if your formula is well formed then the service runs silently; otherwise it explains what is the problem in clear."
         regex: ^(0|1)$
         default: 0
       n:
+        explains: "set this to prescribe the precise number of pairs of parentheses involved."
         regex: ^(free|0|[1-9][0-9]{0,1000})$
         default: free
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_num_sol:
+    explains: "call this service to check that the number of well formed formulas with <n_pairs> pairs of parenthes is what you think (<risp>)."
     evaluator: [python, services/check_num_sol_server.py]
     args:
       n_pairs:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
       risp:
         regex: ^(0|[1-9][0-9]{0,50})$
-        explain: "what you conjecture to be the number of well-formed formulas on <n_pairs> pairs of parentheses"
+        explain: "what you conjecture to be the number of well-formed formulas on <n_pairs> pairs of parentheses."
       ok_if_congruent_modulus:
+        explain: "when n grows the number of well formed formulas gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas."  
         regex: ^(0|[1-9][0-9]{0,10})$
 #        default: 0
         default: 1000000007
@@ -30,6 +35,7 @@ services:
         regex: ^(0|1)$
         default: 0
       silent:
+        explains: "the service runs silently unless your conjectured answer is wrong (or for wrong calls)."
         regex: ^(0|1)$
         default: 0
       lang:
@@ -39,13 +45,16 @@ services:
     evaluator: [python, services/eval_num_sol_server.py]
     args:
       answ_modulus:
+        explain: "when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <answ_modulus> will suffice in assessing you got the right ideas."  
         regex: ^([1-9][0-9]{0,10}|0)$
 #        default: 0
         default: 1000000007
       goal:
+        explains: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       code_lang: 
+        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
@@ -57,6 +66,10 @@ services:
       feedback:
         regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
         default: yes_no
+        explain: the options are as follows
+        explain1: -yes_no= just tell me if I am missing one solution.
+        explain2: -tell_a_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution then I get a new one.
+        explain3: -give_one_missing= just spoil me out a solution I have missed.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -69,6 +82,11 @@ services:
       feedback:
         regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
         default: yes_no
+        explain: the options are as follows
+        explain1: -yes_no= just tell me if I am missing one solution.
+        explain2: -spot_first_wrong_consec= please, point me out two solutions I have placed consecutive whereas at least one missing solutions sits betwen them.
+        explain3: -tell_first_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution I get a new one.
+        explain4: -give_first_missing= just spoil me out a solution I have missed.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -86,6 +104,7 @@ services:
         regex: ^(0|1)$
         default: 0
       silent:
+        explains: "if nothing is wrong then the service runs silently."
         regex: ^(0|1)$
         default: 0
       lang:
@@ -98,14 +117,17 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
+        explains: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]|[0-9]{2,5})$
-        default: 777
+        regex: ^(random_seed|[1-9]|[0-9]{5,5})$
+        default: random_seed
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
+        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -148,14 +170,17 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
+        explains: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]|[0-9]{2,5})$
-        default: 777
+        regex: ^(random_seed|[1-9]|[0-9]{5,5})$
+        default: random_seed
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
+        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -166,14 +191,17 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
+        explains: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]|[0-9]{2,5})$
-        default: 777
+        regex: ^(random_seed|[1-9]|[0-9]{5,5})$
+        default: random_seed
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
+        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

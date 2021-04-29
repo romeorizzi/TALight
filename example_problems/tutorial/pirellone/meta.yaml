@@ -5,9 +5,9 @@ services:
     evaluator: [python,services/compact_solution_server.py]
     args:
       seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -19,7 +19,7 @@ services:
       goal:
         regex: ^(m_plus_n|m_plus_n_half|min)$
         default: m_plus_n
-        explain: "Length of your solution."
+        explain: "set an upper-bound on the length of your solution."
       level:
         regex: ^(easy|medium|difficult)$
         default: medium
@@ -46,7 +46,7 @@ services:
       goal:
         regex: ^(any|min)$
         default: min
-        explain: "If you choose min you have to insert the shortest solution, otherwise any that turn off all the lights ."
+        explains: "set your goal. Here min includes also any: if you choose min then your solution should be shortest possibile, otherwise any solution that turn off all the lights is good."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -57,7 +57,7 @@ services:
       goal:
         regex: ^(any|minimal|minimum)$
         default: any
-        explain: "You can choose the type of unsolvability related to the size of the matrix."
+        explains: "set your goal. You can choose the type of unsolvability related to the size of the matrix."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -70,9 +70,9 @@ services:
         default: random
         explain: "Mine: i give my instace, random: random instance."
       seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       coding:
         regex: ^(seq|subset)$
         default: seq
@@ -91,17 +91,17 @@ services:
       goal:
         regex: ^(correct|efficient)$
         default: correct
-        explain: "Choose if your code turn off all the lights (correct) or does it also fast."
+        explains: "set your goal (efficient includes also correct)."
       code_lang:
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explain: "Choose the language that you used."
+        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   trilly:
     evaluator: [python, services/trilly_server.py]
-    explain: "The fairy Trilly helps you to understand how you can solve a random matrix."
+    explain: "Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix."
     args:
       size:
         regex: ^(small|medium|large|huge|unbearable)$

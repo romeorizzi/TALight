@@ -13,6 +13,6 @@ repeated: 'No. Il trattamento ammissibile che hai appena introdotto in posizione
 your-treatments-all-ok: 'Tutti i trattamenti che hai introdotto sono ammissibili e correttamente ordinati.'
 one-treatment-is-missing-no-feedback: 'No. Alla tua lista manca almeno un trattamento ammissibile.'
 give-missing-treatment: 'Considera ad esempio:'
-not-consecutive: 'No. I due trattamenti ammissibili:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nche appaiono consecutivamente nella tua lista NON sono consecutivi secondo l\''ordinamento impostato.'
+not-consecutive: 'No. I due trattamenti ammissibili:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nche appaiono consecutivamente nella tua lista NON sono consecutivi secondo l\''ordinamento impostato. Ne manca uno che si colloca in mezzo ai due.'
 first-missing-prefix: 'Ti forniamo un prefisso di trattamento ammissibile tale che nessuno dei trattamenti nella tua lista ha questo prefisso:'
 list-ok: 'Hai prodotto e listato nell\''ordine corretto tutti i trattamenti ammissibili con {n_pills} pillole.'

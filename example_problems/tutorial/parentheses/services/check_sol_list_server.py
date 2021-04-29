@@ -96,14 +96,9 @@ for pos in range(p.num_sol(n_pairs)):
         if ENV["feedback"] == "give_first_missing":
             TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
             TAc.print(missing, "yellow", ["bold"])
-        if ENV["feedback"] == "spot_first_wrong_consec":
-            assert pos > 0
-            TAc.print(LANG.render_feedback("not-consecutive", f'In fact,the two well-formed formulas:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nthat appear consecutive in your list are NOT consecutive in the intended order'), "red", ["bold"], end=" ")
-            print(LANG.render_feedback("called-with", f'(service called with'), end=" ")
-            TAc.print('sorting_criterion=', "red", end="")
-            TAc.print(ENV["sorting_criterion"], "yellow", end="")
-            print(").")
-        if ENV["feedback"] == "tell_first_minimal_missing_prefix":
+        elif ENV["feedback"] == "spot_first_wrong_consec":
+            TAc.print(LANG.render_feedback("not-consecutive", f'In fact, the two well-formed formulas:\n {input_solution_list[pos]}\n {input_solution_list[pos+1]}\nthat appear consecutive in your list are NOT consecutive in the intended order. You have missed something inbetween.'), "red", ["bold"], end=" ")
+        elif ENV["feedback"] == "tell_first_minimal_missing_prefix":
             min_len1 = 0
             if pos > 0:
                 while missing[min_len1] == input_solution_list[pos-1][min_len1]:
