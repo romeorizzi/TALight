@@ -18,9 +18,9 @@ services:
     evaluator: [python,services/TAL_you_recognize_server.py]
     args:
       seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same instance as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 12
@@ -43,13 +43,13 @@ services:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       code_lang:
         regex: ^(CIF|python|java|nodejs|compiled)$
         default: CIF
-        explain: "You can specify the language/framework that you used."
+        explain: "You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
       feedback:
         regex: ^(yes_no|with_construction_of_s)$
         default: yes_no
@@ -64,13 +64,13 @@ services:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       code_lang:
         regex: ^(CIF|python|java|nodejs|compiled)$
         default: CIF
-        explain: "You can specify the language/framework that you used."
+        explain: "You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
       feedback:
         regex: ^(yes_no|correct_NDF_when_wrong)$
         default: yes_no
@@ -85,13 +85,13 @@ services:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       code_lang:
         regex: ^(CIF|python|java|nodejs|compiled)$
         default: CIF
-        explain: "You can specify the language/framework that you used."
+        explain: "You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
       feedback:
         regex: ^(yes_no|correct_DFA_when_wrong)$
         default: yes_no

@@ -18,6 +18,7 @@ args_list = [
     ('code_lang',str),
     ('cert', bool),
     ('lang',str),
+    ('ISATTY',bool),
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
@@ -27,14 +28,14 @@ TAc.print(LANG.opening_msg, "green")
 # START CODING YOUR SERVICE:
 max_val = 100
 if ENV['seed']=='random_seed': 
-    seed_service = random.randrange(sys.maxsize)
+    seed_service = random.randint(100000,999999)
 else:
     seed_service = int(ENV['seed'])
 random.seed(seed_service)
 TAc.print(LANG.render_feedback("seed-service",f"# The service is running with seed={seed_service}"), "green")
-TAc.print(LANG.render_feedback("explain-protocol","# Each instance gives you a sequence of numbers T and then, on the next row, a sequence of numbers s. You should say whether s is a sub-sequence of T or not (y/n)."), "green")
+TAc.print(LANG.render_feedback("explain-protocol","# Each instance gives you a sequence of numbers T and then, on the next row, a sequence of numbers S. You should say whether S is a sub-sequence of T or not (1/0)."), "green")
 MAX_M_correct = 20 # len_T
-MAX_N_correct = 20 # len_s
+MAX_N_correct = 20 # len_S
 NUM_instances_correct = 20
 if ENV["code_lang"]=="compiled":
     MAX_M_correct += 2
@@ -49,7 +50,7 @@ for i in range(NUM_instances_correct):
 
 # creo ulteriori istanze per le valutazioni di efficienza:
 MAX_M_efficient = 10000 # len_T
-MAX_N_efficient =   100 # len_s
+MAX_N_efficient =   100 # len_S
 NUM_instances_efficient = 20
 if ENV["goal"] == "efficient":
     if ENV["code_lang"]=="compiled":
@@ -78,20 +79,23 @@ while True:
 
 def one_test(m,n,max_val,seed,yes_instance):
     TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed {seed}): "), "yellow", ["bold"])
-    T,s,seed = gen_subseq_instance(m, n, max_val, yes_instance, seed)
-    TAc.print(T, "yellow", ["bold"])
-    TAc.print(s, "yellow", ["bold"])
+    T,S,seed = gen_subseq_instance(m, n, max_val, yes_instance, seed)
+    TAc.print(" ".join(map(str,T)), "yellow", ["bold"])
+    TAc.print(" ".join(map(str,S)), "yellow", ["bold"])
     start = monotonic()
-    #risp = input(str,num_tokens=1,regex="^(y|n|Y|N|0|1|yes|no|YES|NO|Yes|No)$")
+    #risp = input(str,num_tokens=1,regex="^(0|1|y|n|Y|N|yes|no|YES|NO|Yes|No)$")
     risp = input()
     end = monotonic()
     t = end - start # è un float, in secondi
-    if risp[0] in {'y','Y','1'}:
+    if risp[0] in {'1','y','Y'}:
         risp = 1
+    elif risp[0] in {'0','n','N'}:
+        risp = 0 
     else:
-        risp = 0
+        TAc.print(LANG.render_feedback("not-recognized-answer", f'# Sorry, you answered with "{risp[0]}" which is not an allowed answer (allowed: 0,1,y,n,Y,N,yes,no,YES,NO,Yes,No).'), "red", ["bold"])                        
+        exit(0)
     if risp != yes_instance:
-        TAc.print(LANG.render_feedback("not-correct", f'# No. Your solution is NOT correct. The correct solution is\n {yes_instance}. Not\n {risp}.'), "red", ["bold"])                        
+        TAc.print(LANG.render_feedback("not-correct", f'# No. Your solution is NOT correct.\nThe correct solution is {yes_instance}.\nNot {risp}.'), "red", ["bold"])                        
         exit(0)
     return t   
     
@@ -99,14 +103,14 @@ count = 0
 for instance in instances:
     time = one_test(instance[0], instance[1], max_val, instance[2], instance[3])
     count +=1
-    print(f"#Correct! [took {time} seconds on your machine]\n")
+    print(f"#Correct! [took {time} seconds on your machine]")
     if time > 1:
         if count > NUM_instances_correct:
-            TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution correctly computes the well formed formula immidiately following a given one (checked with formulas up to {count} pairs of parentheses).'), "green")
-        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to compute the next well-formed formula of this last wff with {count} pairs of parentheses.'), "red", ["bold"])        
+            TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution answers correctly on a first set of instances (with |T|, the length of T, up to {instance[0]}.'), "green")
+        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to answer on an instance where |T|={instance[0]} and |S|={instance[1]}.'), "red", ["bold"])        
         exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. ♥  Your solution appears to be correct (checked on several instances).'), "green")
-TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is efficient: its running time is polynomial in the length of the formulas it manipulates.'), "green")
+TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is efficient: its running time is linear in the length of T and S.'), "green")
 
 exit(0)

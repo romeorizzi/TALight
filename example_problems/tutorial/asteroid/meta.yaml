@@ -1,7 +1,7 @@
 public_folder: public
 services:
   minimum_laser:
-    explain: "We give you a matrix with asteroids and you have to return the minimum number of laser beams to destroy all them."
+    explain: "We give you a matrix with asteroids and you have to return the minimum number of laser beams to destroy all of them."
     evaluator: [python,services/minimum_laser_server.py]
     args:
       level:
@@ -9,10 +9,9 @@ services:
         default: medium
         explain: "Level of difficulty of the problem."
       seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)."
-
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -25,26 +24,33 @@ services:
         default: medium
         explain: "Level of difficulty of the problem."
       seed:
-        regex: ^([1-9]\d{2,7}|any)$
-        default: any
-        explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)."
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  
   eval_sol:
     evaluator: [python, services/eval_sol_server.py]
     args:
-      size:
-        regex: ^(small|medium|large)$
-        default: medium
-      with_NO_cert:
+      seed:
+        regex: ^(random_seed|[1-9]|[0-9]{5,5})$
+        default: random_seed
+        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
+      goal:
+        explains: "set your goal (efficient includes also correct)."
+        regex: ^(correct|efficient)$
+        default: correct
+      with_opt_cert:
         regex: ^(0|1)$
         default: 1
+      code_lang: 
+        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
       lang:
         regex: ^(hardcoded|en|it)$
-        default: it
-  
+        default: it  
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
     args:
