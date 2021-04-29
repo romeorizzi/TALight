@@ -6,25 +6,25 @@ services:
       T:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
-      s:
+      S:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
       YES_cert:
         regex: ^(0|1)$
         default: 1      #explain: "underline the subsequence as evidence of positive answers"
       seed:
-        regex: ^(s_and_T_proposed_by_problem_solver|[1-9]|[0-9]{2,5})$
-        default: s_and_T_proposed_by_problem_solver
+        regex: ^(S_and_T_proposed_by_problem_solver|random_seed|[1-9][0-9]{5,5})$
+        default: S_and_T_proposed_by_problem_solver
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_subseq:
-    explain: "Evaluates correctness and efficiency of a program from the problem solver that, given in input two integer sequences T (on a first line) and S (on a second line), decides whether S is a subsquence of T or not (y/n). The evaluation is done on a set of pseudo-random instances (everything is fully reproducible from the seed)."
+    explain: "Evaluates correctness and efficiency of a program from the problem solver that, given in input two integer sequences T (on a first line) and S (on a second line), decides whether S is a subsequence of T or not (y/n). The evaluation is done on a set of pseudo-random instances (everything is fully reproducible from the seed)."
     evaluator: [python, services/eval_subseq_server.py]
     args:
       seed:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
-        regex: ^(random_seed|[1-9][0-9]*)$
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       goal:
         regex: ^(correct|efficient)$
@@ -64,7 +64,8 @@ services:
         regex: ^(0|1)$
         default: 1
       seed:
-        regex: ^(random_seed|[1-9][0-9]*)$
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       silent:
         regex: ^(0|1)$
@@ -93,17 +94,18 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_num_occurrences_of_s_in_T:    #explain: checks the number of different ways s occurs in T
+  check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
     evaluator: [python, services/check_num_subseq_server.py]
     args:
       T:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
-      s:
+      S:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
       seed:
-        regex: ^(random_seed|[1-9][0-9]*)$
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       len_T:
         regex: ^(0|1)$
@@ -123,11 +125,12 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  eval_num_occurrences_of_s_in_T:
+  eval_num_occurrences_of_S_in_T:
     evaluator: [python, services/eval_num_subseq_server.py]
     args:
       seed:
-        regex: ^(random_seed|[1-9][0-9]*)$
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       answ_modulus:
         regex: ^([1-9][0-9]{0,10})$
@@ -197,8 +200,7 @@ services:
         default: lazy_input
       lang:
         regex: ^(hardcoded|en|it)$
-        default: it
-  
+        default: it  
   eval_rank_of_seq:
     evaluator: [python, services/eval_rank_of_seq_server.py]
     args:
@@ -211,24 +213,6 @@ services:
       NO_cert:
         regex: ^(0|1)$
         default: 0
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  min_k_col:
-    evaluator: [python, services/min_k_col_server.py]
-    args:
-      coloring:
-        regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
-        default: lazy_input
-      seed:
-        regex: ^(random_seed|[1-9][0-9]*)$
-        default: random_seed
-      goal:
-        regex: ^(correct|efficient)$
-        default: correct
-      input_type:
-        regex: ^(number|sequence)$
-        default: number
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
