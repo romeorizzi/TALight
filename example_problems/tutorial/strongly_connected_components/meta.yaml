@@ -12,7 +12,7 @@ services:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
         explain: "Number of arcs."
-      eulerian:
+      sc:
         regex: ^(yes)$
         default: yes
       goal:
@@ -33,7 +33,7 @@ services:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
         explain: "Number of arcs."
-      eulerian:
+      sc:
         regex: ^(no)$
         default: no
       goal:
@@ -95,4 +95,3 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-
