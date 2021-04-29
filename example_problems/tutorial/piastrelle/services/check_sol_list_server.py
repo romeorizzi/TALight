@@ -71,7 +71,7 @@ def answer():
         TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed tiling.\nConsider for example:"), "red", ["bold"])
         TAc.print(missing, "yellow", ["bold"])
     elif ENV["feedback"] == "spot_first_wrong_consec":
-        TAc.print(LANG.render_feedback("not-consecutive", f'In fact, the two tilings:\n {input_solution_list[pos]}\n {input_solution_list[pos+1]}\nthat appear consecutive in your list are NOT consecutive in the intended order. You have missed something inbetween.'), "red", ["bold"], end=" ")
+        TAc.print(LANG.render_feedback("not-consecutive", f'In fact, the two tilings:\n {input_solution_list[rank]}\n {input_solution_list[rank+1]}\nthat appear consecutive in your list are NOT consecutive in the intended order. You have missed something inbetween.'), "red", ["bold"], end=" ")
     elif ENV['feedback'] == "tell_first_minimal_missing_prefix":
         pos1 = 0
         if rank > 0:

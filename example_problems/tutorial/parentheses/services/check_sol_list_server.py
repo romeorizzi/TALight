@@ -89,7 +89,6 @@ else:
 if ENV["feedback"] == "yes_no":
     exit(0)
 
-<<<<<<< HEAD
 missing='empty'
 def answer():
     if ENV["feedback"] == "give_first_missing":
@@ -114,28 +113,6 @@ def answer():
             while missing[min_len2] == input_solution_list[rank][min_len2]:
                 min_len2 += 1
         if ENV["feedback"] == "tell_first_minimal_missing_prefix":
-=======
-for pos in range(p.num_sol(n_pairs)):
-    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, p.unrank(n_pairs, pos)={p.unrank(n_pairs, pos)}")
-    if input_solution_list[pos] != p.unrank(n_pairs, pos):
-        missing = p.unrank(n_pairs, pos)
-        #print(f"missing={missing}")
-        if ENV["feedback"] == "give_first_missing":
-            TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
-            TAc.print(missing, "yellow", ["bold"])
-        elif ENV["feedback"] == "spot_first_wrong_consec":
-            TAc.print(LANG.render_feedback("not-consecutive", f'In fact, the two well-formed formulas:\n {input_solution_list[pos]}\n {input_solution_list[pos+1]}\nthat appear consecutive in your list are NOT consecutive in the intended order. You have missed something inbetween.'), "red", ["bold"], end=" ")
-        elif ENV["feedback"] == "tell_first_minimal_missing_prefix":
-            min_len1 = 0
-            if pos > 0:
-                while missing[min_len1] == input_solution_list[pos-1][min_len1]:
-                    min_len1 += 1
-
-            min_len2 = 0
-            if pos < len(input_solution_list):
-                while missing[min_len2] == input_solution_list[pos][min_len2]:
-                    min_len2 += 1
->>>>>>> af99182e7c1ee7ff63860392c2b1111eb472d56e
             minimal_missing_prefix = missing[0:1+max(min_len1,min_len2)]
             TAc.print(LANG.render_feedback("first-missing-prefix", f'As a strong hint, here is the prefix of a well-formed formula and no formula in your list has this prefix:'), "red", ["bold"])
             TAc.print(minimal_missing_prefix, "yellow", ["bold"])
