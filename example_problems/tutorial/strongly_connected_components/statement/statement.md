@@ -39,16 +39,14 @@ Le successive $M$ righe contengono ciascuna un diverso arco, rappresentato da un
 4 0
 ```
 
-### Codifica di un
-
-
-
+### Codifica di un output
+La codifica dell'output avviene su tante righe quante sono le componenti fortemente connesse individuate nel grafo.
+Le componenti fortemente connesse e i nodi che le compongono vengono stampate nell'ordine in cui il servizio le calcola, non sempre sono in ordine crescente.
 
 #### Esempio
 
-
 ```bash
-
+01234
 ```
 
 Se ti servono degli spunti su come partire ad affrontare il problema, ti proponiamo quì un percorso che speriamo tu possa trovare formativo e stimolante. 
@@ -57,12 +55,12 @@ Se ti servono degli spunti su come partire ad affrontare il problema, ti proponi
 
 In questo percorso ti proponiamo dei servizi che possano agevolare o strutturare le tue investigazioni.
 
-Il seguente servizio è pensato per agevolarle: puoi sottoporgli un grafo di tua fantasia e che credi sia fortemente connesso. Il servizio controllerà per te che in effetti lo sia e su richiesta potrà fornire il cerificato di yes.
+Il seguente servizio è pensato per agevolarle: puoi sottoporgli un grafo di tua fantasia e che credi sia fortemente connesso. Il servizio controllerà per te che in effetti lo sia e su richiesta potrà fornire il cerificato.
 
 ```bash
 rtal connect strongly_connected_components check_is_gsc
 ```
-Il cui servizio duale è pensato per sottoporgli un grafo che credi non sia fortemente connesso. Il servizio controllerà per te che in effetti non lo sia e su richiesta potrà fornire il certificato di no.
+Il cui servizio duale è pensato per sottoporgli un grafo che credi non sia fortemente connesso. Il servizio controllerà per te che in effetti non lo sia e su richiesta potrà fornire il certificato.
 
 ```bash
 rtal connect strongly_connected_components check_is_not_gsc
@@ -74,16 +72,22 @@ In nocciolo della questione risiede nel capire quante componenti fortemente conn
 
    <strong>Competenza ausiliaria:</strong> Saresti in grado di individuare quali sono le componenti fortemente connesse di un grafo? 
 
-Gioca con il seguente servizio a cui potrai proporre tu un grafo e ti verrà risposto quali sono le componenti fortemente connesse:
+Gioca con il seguente servizio a cui potrai proporre tu un grafo, nel formato di input definito sopra, e ti verrà risposto quali sono le componenti fortemente connesse.
+La codifica dell'output avviene su tante righe quante sono le componenti fortemente connesse individuate nel grafo.
+Le componenti fortemente connesse e i nodi che le compongono vengono stampate nell'ordine in cui il servizio le calcola, non sempre sono in ordine crescente.
 
 ```bash
-rtal connect euler-dir gimme_scc
+rtal connect strongly_connected_components gimme_scc
 ```
 
- Qui invece sarà il servizio a proporti dei grafi diretti elencandone gli archi (per selezionare il grafo con cui vuoi giocare scrivi nel comando al posto di X un numero tra 1 e 7), sarà tuo compito calcolarne le componenti fortemente connesse e stabilire se il grafo scelto è fortemente connesso o meno:
-
+ Qui invece sarà il servizio a proporti dei grafi diretti elencandone gli archi (per selezionare il grafo con cui vuoi giocare scrivi nel comando al posto di X un numero tra 1 e 7), sarà tuo compito calcolarne le componenti fortemente connesse. 
+ Fornisci in input le componenti che hai calcolato tutte su una riga e separate da uno spazio, come segue:
 ```bash
-rtal connect -a graph=X euler-dir eval_find_scc
+0123 45 6
+```
+Il servizio:
+```bash
+rtal connect -a graph=X strongly_connected_components eval_find_scc
 ```
 
 
