@@ -16,15 +16,8 @@ Pertanto è un Grafo Diretto Fortemente connesso.
 
 Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere ai nostri servizi affinché ne valutino correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
-Il seguente servizio è pensato per sottoporgli un grafo di tua fantasia e che credi sia fortemente connesso. Il servizio controllerà per te che in effetti lo sia e su richiesta potrà fornire il cerificato di yes.
-
 ```bash
-rtal connect strongly_connected_components check_is_gsc
-```
-Il seguente servizio è pensato per sottoporgli un grafo di tua fantasia e che credi non sia fortemente connesso. Il servizio controllerà per te che in effetti non lo sia e su richiesta potrà fornire il certificato di no.
-
-```bash
-rtal connect strongly_connected_components check_is_not_gsc
+rtal connect strongly_connected_components eval_gsc
 ```
 
 ### Codifica di un grafo diretto G
@@ -63,6 +56,17 @@ Se ti servono degli spunti su come partire ad affrontare il problema, ti proponi
 ## Percorso
 
 In questo percorso ti proponiamo dei servizi che possano agevolare o strutturare le tue investigazioni.
+
+Il seguente servizio è pensato per agevolarle: puoi sottoporgli un grafo di tua fantasia e che credi sia fortemente connesso. Il servizio controllerà per te che in effetti lo sia e su richiesta potrà fornire il cerificato di yes.
+
+```bash
+rtal connect strongly_connected_components check_is_gsc
+```
+Il cui servizio duale è pensato per sottoporgli un grafo che credi non sia fortemente connesso. Il servizio controllerà per te che in effetti non lo sia e su richiesta potrà fornire il certificato di no.
+
+```bash
+rtal connect strongly_connected_components check_is_not_gsc
+```
 
 Vediamo la definizione di Componente Fortemente Connessa, in un grafo diretto G è un sottografo massimale di G in cui esiste un cammino orientato tra ogni coppia di nodi ad esso appartenenti.
 
