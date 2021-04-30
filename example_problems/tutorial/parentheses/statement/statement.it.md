@@ -44,7 +44,7 @@ Potresti cominciare prima affinando e poi formalizzando in codice la tua capacit
 Per allenarti potresti sperimentare il seguente servizio:
 
 ```
-> rtal connect -a input_formula="()(()())" parentheses check_a_sol
+> rtal connect -a input_formula="()(()())" parentheses check_one_sol
 ```
 
 La primissima questione che vorremmo tu affrontassi è
@@ -57,13 +57,15 @@ La primissima questione che vorremmo tu affrontassi è
 Puoi chiedere verifica di quale possa essere il numero di formule benformate per un certo numero di coppie $n$ attraverso chiamate del tipo:
 
 ```
-> rtal connect -a num_pairs=3 -a risp=4  parentheses check_num_sol
+> rtal connect -a n_pairs=3 -a risp=4 parentheses check_num_sol
 ```
+
+Modificando alcuni parametri, ad esempio aggiungendo `-a more_or_less_hint_if_wrong`, puoi capire se la risposta che hai dato è maggiore o minore di quella esatta.
 
 Dopo aver verificato che la logica ti torna con delle sottomissioni spot a questo servizio, od al servizio che gestisce una dialogo di domande e risposte:
 
 ```
-> rtal connect parentheses evaluate_num_sol
+> rtal connect parentheses eval_num_sol
 ```
 
 potrai poi realizzare un tuo bot che sostenga tale dialogo in tua vece.
@@ -71,7 +73,7 @@ potrai poi realizzare un tuo bot che sostenga tale dialogo in tua vece.
 
 L'efficienza computazionale della logica risolutiva che avrai inserito al suo interno potrà così essere valutata dal seguente servizio. 
 ```
-> rtal connect parentheses evaluate_num_sol -- python mybot_risp.py
+> rtal connect -e parentheses eval_num_sol -- python TALight/example_problems/tutorial/parentheses/bots/mybot_risp.py num_sol  
 ```
 Quì `mybot_risp.py` potrà essere un qualsiasi eseguibile (un codice binario o anche un'interpretato) che gira sulla tua macchina.
 
@@ -98,16 +100,16 @@ vorremmo tu ti avvalessi dello stesso schema ricorsivo impiegato per affrontare 
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect -a num_pairs=3 -a=spot_wrong_consec_if_sorted parentheses check_sol_list
+> rtal connect parentheses check_sol_list
 ```
 
 Potrai quindi controllare se dovresti considerare e venire a conoscere tecniche ed approcci algoritmici più efficaci (ossia asintoticamente più veloci) con:
 
 ```
-> rtal connect parentheses evaluate_sol_list
+> rtal connect parentheses eval_sol_list
 ```
 
-Se visualizzi i possibili argomenti del servizio come insegnato sopra scoprirai che puoi scegliere tra due tipologie di ordinamento naturale sostanzialmente diversi (nota che non sono uno l'inverso dell'altro). 
+Se visualizzi i possibili argomenti del servizio come insegnato sopra scoprirai che puoi scegliere tra due tipologie di ordinamento: `loves_opening_par` (fissato di default) e `loves_closing_par`. 
 
 </details>
 
@@ -120,9 +122,9 @@ Per il listing ti proponiamo di ricercare anche un approccio iterativo:
 <H4>Servizi offerti</H4>
 
 ```
-> rtal connect -a current_sol=IIHIHH -a next_sol=IIHHIH parentheses check_nextcheck_next_sol_gen
+> rtal connect parentheses check_next_sol -a current_sol="()()()" -a next_sol="()(())" -asorting_criterion=loves_closing_par
 ```
-Di nuovo, se visualizzi i possibili argomenti del servizio scoprirai che puoi ancora scegliere tra le stesse due tipologie di ordinamento già proposte. 
+Di nuovo, se visualizzi i possibili argomenti del servizio scoprirai che puoi ancora scegliere tra le stesse due tipologie di ordinamento già proposte (in questo caso è stata scelta `loves_closing_par`; se non viene specificato l'ordinamento, come visto sopra è previsto `loves_opening_par` di default). 
 </details>
 
 ___
@@ -132,14 +134,13 @@ Ma per affrontare efficientemente e pur sempre in semplicità il ranking e l'unr
 <details>
 <summary><strong>Servizi offerti</strong></summary>
 <H4>Servizi offerti</H4>
-Ormai saprai cercare da solo, avvalendoti di comandi quali
-```
-> rtal list parentheses -v
-```
-i servizi offerti e relativi parametri. Questo vale anche per altri problemi entro TALight: ove un esplorazione diretta dei servizi, magari corroborata da un paio di interazioni di prova al terminale non sia sufficiente, forniamo allora un ulteriore servizio di help
+  
+Ormai saprai cercare da solo, avvalendoti di comandi quali ` > rtal list parentheses -v ` i servizi offerti e relativi parametri. Questo vale anche per altri problemi entro TALight: ove un esplorazione diretta dei servizi, magari corroborata da un paio di interazioni di prova al terminale non sia sufficiente, forniamo allora un ulteriore servizio di help
+
 ```
 > rtal list help
 ```
+
 che ha come parametri la specifica di eventuali pagine di aiuto, tipicamente dedicate ai servizi del problema che possano beneficiarne. 
 
 </details>
@@ -149,7 +150,9 @@ ___
 <details>
 <summary><strong>Servizi offerti</strong></summary>
 <H4>Servizi offerti</H4>
+  
 Ormai sarai autonomo nel raccogliere le possibilità offerte.
+
 </details>
 
 </details>
