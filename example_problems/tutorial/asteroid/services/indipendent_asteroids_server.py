@@ -14,7 +14,7 @@ from sys import exit
 import asteroid_lib as al
 
 
-from TALinputs import TALinput
+
 from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)

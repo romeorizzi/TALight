@@ -14,7 +14,7 @@ import random
 import networkx as nx
 
 def random_quad(q,seed):
-    if seed=="any":
+    if seed=="random_seed":
         random.seed()
         seed = random.randrange(0,1000000)
     else:
