@@ -4,7 +4,6 @@
 problem="pirellone"
 service="check_sol"
 args_list = [
-    ('instance',str),
     ('coding',str),
     ('seed',str),
     ('lang',str),
@@ -26,16 +25,13 @@ m=int(input())
 TAc.print(LANG.render_feedback("insert-num-col", 'Insert the number of columns:'), "yellow", ["bold"])
 n=int(input())
 
-if ENV['instance']=='random':
+if ENV['seed']=='random_seed':
+    pirellone, seed=pl.random_pirellone(m, n, seed="any", solvable=True)
+else:
     pirellone, seed=pl.random_pirellone(m, n, ENV['seed'], solvable=True)
-    TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
-    pl.print_pirellone(pirellone)
-elif ENV['instance']=='mine':
-    TAc.print(LANG.render_feedback("instance-","Instance to check:"), "yellow", ["bold"])
-    pirellone=[]
-    for i in range(m):
-        row = TALinput(int, num_tokens=n)
-        pirellone.append(row)   
+    
+TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
+pl.print_pirellone(pirellone)
 
 if ENV['coding']=='seq':
     TAc.print(LANG.render_feedback("sequence-r-c","Sequence of rows and columms: "), "yellow", ["bold"])

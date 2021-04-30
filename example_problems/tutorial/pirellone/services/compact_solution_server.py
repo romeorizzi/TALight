@@ -34,7 +34,7 @@ if level=="medium":
 if level=="difficult":
     d=6
     
-if ENV['seed']=='any': 
+if ENV['seed']=='random_seed': 
     pirellone,seed,sr,sc=pl.random_pirellone(m, n, solvable=True,s=True)
 else:
     pirellone,seed,sr,sc=pl.random_pirellone(m, n,ENV['seed'], solvable=True,s=True)
