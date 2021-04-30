@@ -110,6 +110,8 @@ def answer():
                 min_len1 += 1
         min_len2 = 0
         if rank < len(input_solution_list):
+            # print(missing,min_len2,missing[min_len2], rank)
+            # print(input_solution_list[rank][min_len2])
             while missing[min_len2] == input_solution_list[rank][min_len2]:
                 min_len2 += 1
         if ENV["feedback"] == "tell_first_minimal_missing_prefix":
@@ -121,9 +123,9 @@ def answer():
             #print(min_len1, min_len2)
             #print(input_solution_list[rank-1], input_solution_list[rank])
             if rank==len(input_solution_list)-1 and not case:
-                TAc.print(LANG.render_feedback("not-consecutive(last)", f'In green you find the longest prefix that a solution you are missing has in common with a solution you have given: '), "red", ["bold"], end=" ")
+                TAc.print(LANG.render_feedback("not-consecutive(last)", f'In green you find the longest prefix that a solution you are missing has in common with a solution you have given:'), "red", ["bold"], end=" ")
             else:
-                TAc.print(LANG.render_feedback("first-missing-till-already-present", f"In green you find the longest prefix that a solution you are missing has in common with a solution you have given: "), "red", ["bold"])
+                TAc.print(LANG.render_feedback("first-missing-till-already-present", f"In green you find the longest prefix that a solution you are missing has in common with a solution you have given:"), "red", ["bold"], end=" ")
             if min_len1>=min_len2:
                 missing_prefix=input_solution_list[rank-1][:min_len1]
                 suffix=input_solution_list[rank-1][min_len1:]
@@ -133,8 +135,8 @@ def answer():
             TAc.print(missing_prefix, "green", ["bold"], end='')
             TAc.print(suffix, "red", ["bold"])
     else:
-        assert ENV['feedback'][0:23] == "tell_prefix_of_missing_"
-        length = int(ENV['feedback'][23:])
+        assert ENV['feedback'][0:27] == "tell_prefix_of_missing_len_"
+        length = int(ENV['feedback'][27:])
         missing_prefix = missing[0:length]
         TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
         TAc.print(missing_prefix, "yellow", ["bold"])
@@ -157,7 +159,7 @@ if missing=='empty' and len(input_solution_list) < p.num_sol(n_pairs):
     if ENV['sorting_criterion']=='loves_closing_par':
         rank_g=p.num_sol(n_pairs)-rank-2
     else:
-        rank_g=rank
+        rank_g=rank+1
     #print(rank, rank_g, len(input_solution_list))
     missing = p.unrank(n_pairs, rank_g)
     #print(f"\nmissing={missing}\n")

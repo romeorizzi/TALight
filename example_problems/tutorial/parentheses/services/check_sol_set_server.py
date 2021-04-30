@@ -46,12 +46,12 @@ while True:
     if line in stopping_command_set:
         break
     if not len(line) == len_lines:
-        TAc.print(LANG.render_feedback("different_lengths", f'No. La formula di parentesi che hai appena introdotto (tua riga {len(input_solution_list)+1}) è di lunghezza diversa dalle precedenti.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("different_lengths", f'No. The parentheses formula you just introduced (your line {len(input_solution_list)+1}) is different in length from the previous ones.'), "red", ["bold"])
         exit(0)   
     if not recognize(line, TAc, LANG):
         exit(0)
     if line in input_solution_set:
-        TAc.print(LANG.render_feedback("repeated", f'No. La formula di parentesi ben formata che hai appena introdotto (tua riga {len(input_solution_list)+1}) è la stessa dell\'inserimento numero {input_solution_list.index(line)+1}. Nulla è perduto: questo doppio inserimento verrà ignorato. Puoi procedere.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("repeated", f'No.The parentheses formula you just introduced (your line {len(input_solution_list)+1}) is the same as the one in line {input_solution_list.index(line)+1}. Nothing is lost: this double entry will be ignored. You can go on.'), "red", ["bold"])
     else:
         input_solution_set.add(line)
         input_solution_list.append(line)
@@ -59,7 +59,7 @@ while True:
 print("# FILE GOT")
 TAc.print(LANG.render_feedback("your-formulas-all-ok", f'All the formulas you have introduced are ok (well formed).'), "green")
 
-input_solution_list.sort()
+input_solution_list.sort(reverse=True)
 #print(input_solution_list)
 if len(input_solution_list) == p.num_sol(n_pairs):
     TAc.OK()
@@ -72,18 +72,9 @@ if ENV["feedback"] == "yes_no":
 
 missing='empty'
 def answer():
-    if ENV["feedback"] == "give_one_missing":
+    if ENV["feedback"] == "give_first_missing":
         TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
         TAc.print(missing, "yellow", ["bold"])
-    elif ENV["feedback"] == "spot_first_wrong_consec":
-        if rank==len(input_solution_list)-1 and not case:
-            TAc.print(LANG.render_feedback("not-consecutive(last)", f'In fact, after {input_solution_list[rank]} there is another formula.'), "red", ["bold"])
-            exit(0)
-        TAc.print(LANG.render_feedback("not-consecutive", f'In fact, the two well-formed formulas:\n {input_solution_list[rank-1]}\n {input_solution_list[rank]}\nthat appear consecutive in your list are NOT consecutive in the intended order'), "red", ["bold"], end=" ")
-        print(LANG.render_feedback("called-with", f'(service called with'), end=" ")
-        TAc.print('sorting_criterion=', "red", end="")
-        TAc.print(ENV["sorting_criterion"], "yellow", end="")
-        print(").")
     elif ENV["feedback"] == "tell_first_minimal_missing_prefix" or ENV['feedback'] == "dispell_first_missing_till_already_present":
         min_len1 = 0
         if rank > 0:
@@ -102,9 +93,9 @@ def answer():
             #print(min_len1, min_len2)
             #print(input_solution_list[rank-1], input_solution_list[rank])
             if rank==len(input_solution_list)-1 and not case:
-                TAc.print(LANG.render_feedback("not-consecutive(last)", f'In green you find the longest prefix that a solution you are missing has in common with a solution you have given: '), "red", ["bold"], end=" ")
+                TAc.print(LANG.render_feedback("not-consecutive(last)", f'In green you find the longest prefix that a solution you are missing has in common with a solution you have given:'), "red", ["bold"], end=" ")
             else:
-                TAc.print(LANG.render_feedback("first-missing-till-already-present", f"In green you find the longest prefix that a solution you are missing has in common with a solution you have given: "), "red", ["bold"])
+                TAc.print(LANG.render_feedback("first-missing-till-already-present", f"In green you find the longest prefix that a solution you are missing has in common with a solution you have given:"), "red", ["bold"], end=" ")
             if min_len1>=min_len2:
                 missing_prefix=input_solution_list[rank-1][:min_len1]
                 suffix=input_solution_list[rank-1][min_len1:]
@@ -114,18 +105,15 @@ def answer():
             TAc.print(missing_prefix, "green", ["bold"], end='')
             TAc.print(suffix, "red", ["bold"])
     else:
-        assert ENV['feedback'][0:23] == "tell_prefix_of_missing_"
-        length = int(ENV['feedback'][23:])
+        assert ENV['feedback'][0:27] == "tell_prefix_of_missing_len_"
+        length = int(ENV['feedback'][27:])
         missing_prefix = missing[0:length]
-        TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
+        TAc.print(LANG.render_feedback("one-missing-prefix-length", f"\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
         TAc.print(missing_prefix, "yellow", ["bold"])
+
 case=True
 for rank in range(len(input_solution_list)):
-    if ENV['sorting_criterion']=='loves_closing_par':
-        rank_g=p.num_sol(n_pairs)-rank-1
-    else:
-        rank_g=rank
-    #print(rank_g)
+    rank_g=p.num_sol(n_pairs)-rank-1
     #print(f"rank={rank}, input={input_solution_list[rank]}, giusta={p.unrank(n_pairs, rank_g)}")
     if input_solution_list[rank] != p.unrank(n_pairs, rank_g):
         missing = p.unrank(n_pairs, rank_g)
@@ -135,11 +123,7 @@ for rank in range(len(input_solution_list)):
 
 if missing=='empty' and len(input_solution_list) < p.num_sol(n_pairs):
     case=False
-    if ENV['sorting_criterion']=='loves_closing_par':
-        rank_g=p.num_sol(n_pairs)-rank-2
-    else:
-        rank_g=rank
-    #print(rank, rank_g, len(input_solution_list))
+    rank_g=p.num_sol(n_pairs)-rank-2
     missing = p.unrank(n_pairs, rank_g)
     #print(f"\nmissing={missing}\n")
     answer()

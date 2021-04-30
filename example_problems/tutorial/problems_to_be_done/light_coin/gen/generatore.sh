@@ -1,1 +1,1 @@
-/bin/echo
+C:/bin/echo

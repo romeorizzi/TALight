@@ -1,1 +1,18 @@
-../../../../../universal_services/synopsis/synopsis_feedbackBook.en.yaml
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+ruamel-missing: 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package "ruamel" on your machine).'
+ruamel-required: ' the service "synopsis" needs to access .yaml files in order to provide you with the information required. As long as "ruamel" is not installed in the environment where the "rtald" daemon runs, the service "synopsis" can not perform.'
+operation-necessary: ' This operation is necessary. The synopsis service aborts and drops the channel.'
+metafile-missing: 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file of the problem {problem} could not be accessed for the required information.'
+metafile-unparsable: 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have alterered the file yourself): The meta.yaml file of the problem could not be loaded as a .yaml file. The file might be corrupted.'
+wrong-service-name: '\nSorry, you asked information about {ENV["service"]} which however does not appear among the services currently supported for the problem {problem}.'
+service-of: '   (service of the {problem} problem)'
+the-num-arguments: '\nThe {len(meta_yaml_book["services"][ENV["service"]]["args"])} arguments of service {ENV["service"]}:'
+help-pages: 'Index of the Help Pages:'
+services-list: 'List of all Services:'
+regex-cloud-resource: '\nThe arguments of all TALight services must always be strings (streamed from the "rtal" client to the "rtald" daemon). The family of all the admissible strings for a certain argument is described by a regular expression (regex). If the correct interpretation of the regex confuses you, then take profit of the online support at "https://extendsclass.com/regex-tester.html".\n'
+"index-help-pages": 'Index of the Help Pages:'
+"list-services": 'List of all Services:'

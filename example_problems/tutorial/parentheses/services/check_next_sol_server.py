@@ -28,16 +28,15 @@ if ( len(ENV['current_sol']) != len(ENV['next_sol'])
      or not recognize(ENV['current_sol'], TAc, LANG, yield_feedback=False)
      or not recognize(ENV['next_sol'], TAc, LANG, yield_feedback=False)
    ):
-    ENV['silent'] = False
-if not ENV['silent']:
-    TAc.print(LANG.opening_msg, "green")
-    if ( not recognize(ENV['current_sol'], TAc, LANG)
-         or not recognize(ENV['next_sol'], TAc, LANG)
-       ):
-        exit(0)
-    if len(ENV['current_sol']) != len(ENV['next_sol']):
-        TAc.print(LANG.render_feedback("different-n", f'No. The two formulas you have provided have different lengths! As such, they do not belong to the same list.'), "red", ["bold"])
-        exit(0)
+    if not ENV['silent']:
+        TAc.print(LANG.opening_msg, "green")
+        if ( not recognize(ENV['current_sol'], TAc, LANG)
+            or not recognize(ENV['next_sol'], TAc, LANG)
+        ):
+            exit(0)
+        if len(ENV['current_sol']) != len(ENV['next_sol']):
+            TAc.print(LANG.render_feedback("different-n", f'No. The two formulas you have provided have different lengths! As such, they do not belong to the same list.'), "red", ["bold"])
+            exit(0)
         
 n_pairs = len(ENV['current_sol'])//2 
 p = Par(n_pairs)
@@ -50,13 +49,13 @@ true_next = p.unrank(n_pairs, 1+p.rank(ENV['current_sol'], sorting_criterion=ENV
 if ENV['next_sol'] == true_next:
     if not ENV['silent']:
         TAc.OK()
-        print(LANG.render_feedback("next-ok", f'♥  The next_sol wff is indeed the wff that comes just after the current_sol wff (according to sorting_criterion={ENV["sorting_criterion"]}).'))
+        TAc.print(LANG.render_feedback("next-ok", f':)  The next_sol wff is indeed the wff that comes just after the current_sol wff (according to sorting_criterion={ENV["sorting_criterion"]}).'),"green",["bold"])
     exit(0)
 
 # INDEPTH NEGATIVE FEEDBACK:
 TAc.print(LANG.render_feedback("next-wrong", f'No. The next_sol wff you have provided is NOT the wff coming just after the current_sol wff according to sorting_criterion={ENV["sorting_criterion"]}.'), "red", ["bold"])
 if ENV['tell_maximal_correct_feedback']:
-    print(LANG.render_feedback("feedback", f'The maximal prefix of your next_sol wff that is actually correct is the following:'))
+    TAc.print(LANG.render_feedback("feedback", f'The maximal prefix of your next_sol wff that is actually correct is the following:'),"red",["bold"])
     maximal_correct = ''
     for c1, c2 in zip(true_next, ENV['next_sol']):
         if c1 == c2:

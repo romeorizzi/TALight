@@ -20,6 +20,6 @@ TAc =TALcolors(ENV)
 
 # START CODING YOUR SERVICE:
 p = Par(ENV['n_pairs'])
-TAc.print(p.unrank(ENV['n_pairs'],ENV['rank'],sorting_criterion=ENV['sorting_criterion']), "yellow", ["bold"])
+TAc.print(p.unrank(ENV['n_pairs'],ENV['rank']-1,sorting_criterion=ENV['sorting_criterion']), "yellow", ["bold"])
 
 exit(0)

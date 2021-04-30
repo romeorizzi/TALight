@@ -26,6 +26,6 @@ if not recognize(ENV['formula'], TAc, LANG, yield_feedback=False):
     exit(0)
 n_pairs = len(ENV['formula'])//2 
 p = Par(n_pairs)
-TAc.print(p.rank(ENV['formula'],sorting_criterion=ENV['sorting_criterion']), "yellow", ["bold"])
+TAc.print(p.rank(ENV['formula'],sorting_criterion=ENV['sorting_criterion'])+1, "yellow", ["bold"])
 
 exit(0)
