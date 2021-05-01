@@ -132,10 +132,16 @@ services:
   eval_num_occurrences_of_S_in_T:
     evaluator: [python, services/eval_num_subseq_server.py]
     args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
       seed:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      code_lang: 
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
       answ_modulus:
         regex: ^([1-9][0-9]{0,10})$
 #        default: 0
