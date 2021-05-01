@@ -9,7 +9,7 @@ Come in figura:
 
 Possiamo dare la definizione di Grafo Diretto Fortemente Connesso, ossia un grafo con una e una sola Componente Fortemente Connessa.
 Prendendo come esempio la figura, nel grafo c'è una sola componente fortemente connessa, così formata:
-$(0,3), (3,4), (4,0), (0,2), (2,1), (1,0)$
+$01243$
 Pertanto è un Grafo Diretto Fortemente connesso.
 
   <strong>Domanda Centrale:</strong> Dato un grafo diretto G, possiamo stabilire se è fortemente connesso?
