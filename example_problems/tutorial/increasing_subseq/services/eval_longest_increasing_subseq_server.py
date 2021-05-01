@@ -71,15 +71,15 @@ def one_test(m,max_val,seed):
     TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m},max_val={max_val},seed {seed}): "), "yellow", ["bold"])
     T,seed = generate_random_seq(m, max_val, seed)
     TAc.print(" ".join(map(str,T)), "yellow", ["bold"])
-    mdc = min_decreasing_col(T)
-    n_col = n_coloring(mdc)
+    mdc = min_decreasing_col(T) #trova la colorazione minima decrescente
+    n_col = n_coloring(mdc) #trova il numero di colori usati nella colorazione
     start = monotonic()
     
     risp = input()
     end = monotonic()
     t = end - start # è un float, in secondi
     if n_col != int(risp):
-        TAc.print("#NO, it isn't the  maximum increasing subsequence of T", "red")
+        TAc.print(f"#NO, it isn't the  maximum increasing subsequence of T. To retry this test use seed: {seed_service}", "red")
         exit(0)
     return t  
 
