@@ -71,7 +71,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_find_scc:
-    explain: "Given a directed graph, can you find its strongly connected components?And you can decide if it is eulerian or not eulerian?"
+    explain: "Given a directed graph, can you find its strongly connected components?"
     evaluator: [python,services/eval_find_scc_server.py]
     args:
      graph:
