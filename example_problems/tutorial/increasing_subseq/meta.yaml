@@ -33,7 +33,7 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       cert: 
-        explain: if set to 1 the service server program should also return (on a second line, when its first is 'y') a sequence of indexes where S can be read out from T (idexes start from 0).
+        explain: if set to 1 the service bot program should also return (on a second line, when its first is 'y') a sequence of indexes where S can be read out from T (idexes start from 0).
         regex: ^(0|1)$
         default: 0
       lang:

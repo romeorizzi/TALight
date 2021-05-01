@@ -19,10 +19,11 @@ while True:
             indexes.append(i)
             if pos_S == len(S):
                 print('y')
-                break
-                if len(argv) == 1:
-                    print("#", end=" ")
+                
+                #if len(argv) == 1:
+                #    print("#", end=" ")
                 print(" ".join(map(str,indexes)))
+                break
                 
 
     if pos_S < len(S):

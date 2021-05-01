@@ -25,6 +25,8 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
+cert = int(ENV['cert'])
+
 # START CODING YOUR SERVICE:
 max_val = 100
 if ENV['seed']=='random_seed': 
@@ -88,7 +90,25 @@ def one_test(m,n,max_val,seed,yes_instance):
     start = monotonic()
     #risp = input(str,num_tokens=1,regex="^(0|1|y|n|Y|N|yes|no|YES|NO|Yes|No)$")
     risp = input()
+    if cert == 1 and risp == 'y':
+        YES_cert = input()
     end = monotonic()
+    if cert==1 and risp == 'y':
+        YES_cert = YES_cert.strip().split()
+        YES_cert = list(map(int, YES_cert))
+
+        init = 0
+        for i in YES_cert:
+            if T[i] == S[init]:
+                init+=1
+
+        if init == len(S):
+            TAc.print(LANG.render_feedback("seems-correct-cert", f'# Ok. ♥ Your YES certificate is valid.'), "green")
+        else:
+            TAc.print(LANG.render_feedback("not-correct-cert", f'# No. Your YES certificate is NOT correct. To retry this test use the seed: {seed_service}'), "red", ["bold"])                        
+            exit(0)
+            
+
     t = end - start # è un float, in secondi
     if risp[0] in {'1','y','Y'}:
         risp = 1
@@ -98,7 +118,7 @@ def one_test(m,n,max_val,seed,yes_instance):
         TAc.print(LANG.render_feedback("not-recognized-answer", f'# Sorry, you answered with "{risp[0]}" which is not an allowed answer (allowed: 0,1,y,n,Y,N,yes,no,YES,NO,Yes,No).'), "red", ["bold"])                        
         exit(0)
     if risp != yes_instance:
-        TAc.print(LANG.render_feedback("not-correct", f'# No. Your solution is NOT correct.\nThe correct solution is {yes_instance}.\nNot {risp}.'), "red", ["bold"])                        
+        TAc.print(LANG.render_feedback("not-correct", f'# No. Your solution is NOT correct.\nThe correct solution is {yes_instance}.\nNot {risp}. To retry this test use the seed: {seed_service}'), "red", ["bold"])                        
         exit(0)
     return t   
     
