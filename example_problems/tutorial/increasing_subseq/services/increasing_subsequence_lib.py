@@ -425,3 +425,19 @@ def list_of_seed(seed,n):
     for i in range(n):
         seeds.append(random.randrange(sys.maxsize))
     return seed, seeds
+
+
+def count_increasing_sub(arr, n, max_val):
+    count = [0 for i in range(max_val + 1)]
+
+    for i in range(n):
+        for j in range(arr[i] - 1, -1, -1):
+            count[arr[i]] += count[j]
+
+        count[arr[i]] += 1
+
+    result = 0
+    for i in range(max_val + 1):
+        result += count[i]
+
+    return result
