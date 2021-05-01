@@ -441,3 +441,25 @@ def count_increasing_sub(arr, n, max_val):
         result += count[i]
 
     return result
+
+
+def count_occurences(T, S):
+    m = len(T) #T
+    n = len(S)  #S
+
+    lookup = [[0] * (n + 1) for i in range(m + 1)]
+
+    for i in range(n + 1):
+        lookup[0][i] = 0
+
+    for i in range(m + 1):
+        lookup[i][0] = 1
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if T[i - 1] == S[j - 1]:
+                lookup[i][j] = lookup[i - 1][j - 1] + lookup[i - 1][j]
+            else:
+                lookup[i][j] = lookup[i - 1][j]
+
+    return lookup[m][n]

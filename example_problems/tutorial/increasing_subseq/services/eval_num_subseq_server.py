@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from sys import stderr, exit, argv
 import re
+from time import monotonic
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
@@ -44,9 +45,8 @@ for i in range(NUM_instances_correct):
     m_instance = MAX_M_correct - i%5      
     n_instance = MAX_N_correct - i%MAX_N_correct      
     seed_instance = seed_service + i
-    yes = i%2
 
-    instances.append((m_instance, n_instance, seed_instance, yes))
+    instances.append((m_instance, n_instance, seed_instance, 1))
 
 # creo ulteriori istanze per le valutazioni di efficienza:
 MAX_M_efficient = 10000 # len_T
@@ -61,8 +61,7 @@ if ENV["goal"] == "efficient":
         m_instance = i      
         n_instance = i // 2      
         seed_instance = seed_service + i + NUM_instances_correct
-        yes = i%2
-        instances.append((m_instance, n_instance, seed_instance, yes))
+        instances.append((m_instance, n_instance, seed_instance, 1))
     # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
     scaling_factor = 1.5
     tmp = instances[-1]
@@ -75,7 +74,7 @@ if ENV["goal"] == "efficient":
         seed_instance = seed_service + m + n
         if (m > MAX_M_efficient) or (n > MAX_N_efficient):
             break
-        instances.append((m, n, seed_instance, random.randint(0,1)))
+        instances.append((m, n, seed_instance, 1))
 
 
 def one_test(m,n,max_val,seed,yes_instance):
@@ -83,15 +82,18 @@ def one_test(m,n,max_val,seed,yes_instance):
     T,S,seed = gen_subseq_instance(m, n, max_val, yes_instance, seed)
     TAc.print(" ".join(map(str,T)), "yellow", ["bold"])
     TAc.print(" ".join(map(str,S)), "yellow", ["bold"])
+
+    n_occurences = count_occurences(T,S)
     start = monotonic()
     #risp = input(str,num_tokens=1,regex="^(0|1|y|n|Y|N|yes|no|YES|NO|Yes|No)$")
     risp = input()
-    if cert == 1 and risp == 'y':
-        YES_cert = input()
+
     end = monotonic()
 
-    if num_increasing_subseq != int(risp):
-        TAc.print(f"#NO, it isn't the number of increasing subsequences of T. The correct number is {num_increasing_subseq}. To retry this test use seed: {seed_service}", "red")
+    t = end - start
+
+    if n_occurences != int(risp):
+        TAc.print(f"#NO, it isn't the number of occurences of S in T. The correct number is {n_occurences}. To retry this test use seed: {seed_service}", "red")
         exit(0)
     return t   
     
