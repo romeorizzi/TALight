@@ -26,7 +26,7 @@ while True:
     T = list(map(int, T))
 
     n = len(T)
-    count = count_increasing_sub(arr, n)
+    count = count_increasing_sub(T, n)
    
     print(count)
 

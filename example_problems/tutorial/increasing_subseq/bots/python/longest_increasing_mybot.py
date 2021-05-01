@@ -1,7 +1,6 @@
 #!/usr/bin/python
 from sys import stderr, exit, argv
 
-
 def min_decreasing_col(arr):
     n = len(arr)
     mdc = [1]*n

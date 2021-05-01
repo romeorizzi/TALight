@@ -220,6 +220,22 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  eval_count_increasing_subseq:
+    evaluator: [python, services/eval_count_increasing_subseq.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+      seed:
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      code_lang: 
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
     args:
