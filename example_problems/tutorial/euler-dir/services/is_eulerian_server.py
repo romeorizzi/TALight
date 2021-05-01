@@ -29,24 +29,19 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 
-if ENV['n'] == 'lazy':
-        TAc.print('\n# Inserisci il numero di nodi presenti nel grafo:\n',"yellow")
-        n = int(input())
-
-g = Graph(n)
+if ENV['n'] == 'lazy' and ENV['m'] == 'lazy':
+    n,m = input().split()
+    n = int(n)
+    m = int(m)
     
+g = Graph(int(n))
+    
+adj = [ [] for _ in range(int(m))]
 
-if ENV['m'] == 'lazy':
-         TAc.print('\n# Inserisci il numero di archi presenti nel grafo:\n',"yellow")
-         m = int(input())
-
-adj = [ [] for _ in range(m)]
-
-TAc.print("\n# Inserisci gli archi, ogni arco su una nuova riga, indicando nodo di partenza e fine separati da uno spazio (es:0 1).\nRicorda l'enumerazione dei nodi parte da zero!\n","yellow")
-for i in range(m):
+for i in range(int(m)):
          head, tail = input().split()
          if int(tail)>(n-1) or int(head)>(n-1) :
-            TAc.print("\n# ERRORE: hai inserito un arco non può essere presente nel grafo!", "red")
+            TAc.print("\n# ERRORE: hai inserito un arco non può essere presente nel grafo!\n", "red")
             exit(0)
 
          g.addEdge(int(head),int(tail))
@@ -56,15 +51,15 @@ answer = g.isEulerianCycle()
 
 if ENV['goal'] == 'correct':
     if answer == True:
-      TAc.print("\n\nESATTO, il grafo contiene un circuito euleriano.\nSe sei curioso di sapere esattamente qual è il circuito euleriano, puoi interpellare il servizio 'rtal connect -a eulerian=yes -a goal=with_certificate euler-dir check_is_eulerian' e seguire le istruzioni.","green") 
+      TAc.print("\nESATTO, il grafo contiene un circuito euleriano!\n","green") 
       exit(0)       
     else:
-      TAc.print("\n\nSBAGLIATO, il grafo NON contiene un circuito euleriano!\n","red")
+      TAc.print("\nSBAGLIATO, il grafo NON contiene un circuito euleriano!\n","red")
       exit(0)   
 
 if ENV['goal'] == 'with_certificate':
     if answer == False:
-        TAc.print("\n\nIl grafo hai sottomesso non è euleriano, perciò non contiene un circuito euleriano!\n","red")
+        TAc.print("\nIl grafo hai sottomesso non è euleriano, perciò non contiene un circuito euleriano!\n","red")
         exit(0)
     if answer == True:
         TAc.print("\nIl circuito è:\n","geen")
