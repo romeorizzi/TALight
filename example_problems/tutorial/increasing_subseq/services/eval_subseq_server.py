@@ -25,8 +25,6 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
-cert = int(ENV['cert'])
-
 # START CODING YOUR SERVICE:
 max_val = 100
 if ENV['seed']=='random_seed': 
@@ -45,13 +43,12 @@ if ENV["code_lang"]=="compiled":
 instances = []
 # creo i descrittori di istanza per le istanze che è necessario superare per ottenere conferma di correttezza:
 for i in range(NUM_instances_correct):
-    m_instance = MAX_M_correct - i%5      
-    n_instance = MAX_N_correct - i%MAX_N_correct      
-    seed_instance = seed_service + i
-    yes = i%2
-
-    instances.append((m_instance, n_instance, seed_instance, yes))
-
+    instances.append({
+        "m": MAX_M_correct - i%5,      
+        "n": MAX_N_correct - i%MAX_N_correct,
+        "max_val": max_val,
+        "yes": i%2,
+        "seed": seed_service + i })    
 # creo ulteriori istanze per le valutazioni di efficienza:
 MAX_M_efficient = 10000 # len_T
 MAX_N_efficient =   100 # len_S
@@ -62,69 +59,71 @@ if ENV["goal"] == "efficient":
         MAX_N_efficient *= 20
     # crescita graduale (rischio soluzione esponenziale):
     for i in range(MAX_M_correct+1, 2*MAX_M_correct):
-        m_instance = i      
-        n_instance = i // 2      
-        seed_instance = seed_service + i + NUM_instances_correct
-        yes = i%2
-        instances.append((m_instance, n_instance, seed_instance, yes))
+        instances.append({
+        "m": i,      
+        "n": i//2,
+        "max_val": max_val,
+        "yes": i%2,
+        "seed": seed_service + i + NUM_instances_correct })
     # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
     scaling_factor = 1.5
     tmp = instances[-1]
-    m = tmp[0]
-    n = tmp[1]
-    s = tmp[2]
+    m = tmp["m"]
+    n = tmp["n"]
+    s = tmp["seed"]
     while True:
         m = 1 + int(m * scaling_factor)
         n = 1 + int(n * scaling_factor)
-        seed_instance = seed_service + m + n
         if (m > MAX_M_efficient) or (n > MAX_N_efficient):
             break
-        instances.append((m, n, seed_instance, random.randint(0,1)))
+        instances.append({
+        "m": m,      
+        "n": n,
+        "max_val": max_val,
+        "yes": random.randint(0,1),
+        "seed": seed_service + m + n })
 
 
-def one_test(m,n,max_val,seed,yes_instance):
+def one_test(m,n,max_val,yes_instance,seed):
     TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed {seed}): "), "yellow", ["bold"])
     T,S,seed = gen_subseq_instance(m, n, max_val, yes_instance, seed)
     TAc.print(" ".join(map(str,T)), "yellow", ["bold"])
     TAc.print(" ".join(map(str,S)), "yellow", ["bold"])
     start = monotonic()
-    #risp = input(str,num_tokens=1,regex="^(0|1|y|n|Y|N|yes|no|YES|NO|Yes|No)$")
-    risp = input()
-    if cert == 1 and risp == 'y':
-        YES_cert = input()
+    risp = TALinput(str,num_tokens=1,regex="^(0|1|y|n|Y|N|yes|no|YES|NO|Yes|No)$", regex_explained="the allowed answers here were: '0','1','y','n','Y','N','yes','no','YES','NO','Yes','No'", TAc=TAc, LANG=LANG)
     end = monotonic()
-    if cert==1 and risp == 'y':
-        YES_cert = YES_cert.strip().split()
-        YES_cert = list(map(int, YES_cert))
-
-        init = 0
-        for i in YES_cert:
-            if T[i] == S[init]:
-                init+=1
-
-        if init == len(S):
-            TAc.print(LANG.render_feedback("seems-correct-cert", f'# Ok. ♥ Your YES certificate is valid.'), "green")
-        else:
-            TAc.print(LANG.render_feedback("not-correct-cert", f'# No. Your YES certificate is NOT correct. To retry this test use the seed: {seed_service}'), "red", ["bold"])                        
-            exit(0)
-            
-
     t = end - start # è un float, in secondi
-    if risp[0] in {'1','y','Y'}:
+    if risp[0][0] in {'1','y','Y'}:
         risp = 1
-    elif risp[0] in {'0','n','N'}:
-        risp = 0 
     else:
-        TAc.print(LANG.render_feedback("not-recognized-answer", f'# Sorry, you answered with "{risp[0]}" which is not an allowed answer (allowed: 0,1,y,n,Y,N,yes,no,YES,NO,Yes,No).'), "red", ["bold"])                        
-        exit(0)
+        risp = 0 
     if risp != yes_instance:
-        TAc.print(LANG.render_feedback("not-correct", f'# No. Your solution is NOT correct.\nThe correct solution is {yes_instance}.\nNot {risp}. To retry this test use the seed: {seed_service}'), "red", ["bold"])                        
+        TAc.print(LANG.render_feedback("not-correct", f'# No. Your answer is NOT correct.\nThe correct answer is {yes_instance}.\nNot {risp}.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("to-retry", f'# To retry this very same eval run the service with seed={seed_service}. The description of this very last instance is <m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed={seed}>'), "orange")                        
         exit(0)
+
+    if ENV['cert'] and risp == 1:
+        start = monotonic()
+        YES_cert = TALinput(int, num_tokens=len(S), regex="^(0|[1-9][0-9]{0,9} *$", TAc=TAc, LANG=LANG)
+        end = monotonic()
+        t += end - start
+
+        pos = 0
+        for i in YES_cert:
+            if T[i] == S[pos]:
+                pos += 1
+
+        if pos == len(S):
+            TAc.print(LANG.render_feedback("correct-cert", f'# Ok. ♥ Your YES certificate is valid.'), "green")
+        else:
+            TAc.print(LANG.render_feedback("not-correct-cert", f'# No. Your YES certificate is NOT correct.'), "red", ["bold"])                        
+            TAc.print(LANG.render_feedback("to-retry", f'# To retry this very same eval run the service with seed={seed_service}. The description of this very last instance is <m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed={seed}>'), "orange")                        
+            exit(0)
     return t   
-    
+
 count = 0
 for instance in instances:
-    time = one_test(instance[0], instance[1], max_val, instance[2], instance[3])
+    time = one_test(instance["m"], instance["n"], instance["max_val"], instance["yes"], instance["seed"])
     count +=1
     print(f"#Correct! [took {time} seconds on your machine]")
     if time > 1:

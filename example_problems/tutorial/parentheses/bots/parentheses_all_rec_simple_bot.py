@@ -102,7 +102,7 @@ You should call me as follows:
 $ {argv[0]} <evalution service>
 """
 if len(argv) != 2:
-    print(f"WARNING from bot {argv[0]}: called with the wrong number of parameters.")
+    print(f"ERROR from bot {argv[0]}: called with the wrong number of parameters.")
     print(usage)
     exit(1)
 if argv[1] == 'num_sol':
