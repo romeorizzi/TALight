@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-open-channel: '# Servirò: problem={problem}, service={service}'
+open-channel: '# Servirò: problema={problem}, servizio={service}'
 feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 different-n: 'No. Le due formule che hai fornito hanno lunghezze diverse! Pertanto, non appartengono alla stessa lista.'

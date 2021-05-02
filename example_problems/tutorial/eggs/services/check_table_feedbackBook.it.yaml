@@ -1,5 +1,5 @@
 %YAML 1.2
 ---
-open-channel: "# Servirò: problem={problem}, service={service}"
+open-channel: "# Servirò: problema={problem}, servizio={service}"
 too-few-rows: "Il tuo file ha solo {i-1} righe invece di {N}."
 too-few-columns: "Il tuo file ha solo {i-1} righe invece di {N}."

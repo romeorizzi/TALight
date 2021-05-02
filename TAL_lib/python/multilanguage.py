@@ -104,15 +104,16 @@ class Lang:
         #END:  try_to_load_the_message_book():
 
                     
-        self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={ENV.problem}, service={ENV.service}")
+        self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={ENV.problem}, service={ENV.service}\n#  with arguments: ")
         for arg_name, arg_type in ENV.args_list:
             arg_val = ENV[arg_name]
             if arg_type == bool:
-                self.opening_msg += f", {arg_name}={'1' if arg_val else '0'} (i.e., {arg_val})"
+                self.opening_msg += f"{arg_name}={'1' if arg_val else '0'} (i.e., {arg_val}), "
             else:
-                self.opening_msg += f", {arg_name}={arg_val}"
+                self.opening_msg += f"{arg_name}={arg_val}, "
+        self.opening_msg = self.opening_msg[:-2] + ".\n"
         if self.messages_book == None:
-            self.opening_msg += f".\n# The feedback_source is the one hardcoded in the service server ({ENV.service_server_fullname})"
+            self.opening_msg += f"# The feedback_source is the one hardcoded in the service server ({ENV.service_server_fullname})"
         else:
             self.opening_msg += self.render_Langinternal_feedback("feedback_source",f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder.")
         TAc.print(self.opening_msg, "yellow", ["underline"], file=stderr)

@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-open-channel: '# Servirò: problem={problem}, service={service}'
+open-channel: '# Servirò: problema={problem}, servizio={service}'
 FALSE-is-not-tilable: 'Contrariamente a quanto asserisci, la griglia {ENV["m"]}x{ENV["n"]} NON è tilable. Se non ti torna puoi provare a sottomettere un tiling della griglia {ENV["m"]}x{ENV["n"]} al servizio "check_my_tiling".'
 TRUE-is-not-tilable: 'Hai perfettamente ragione: la griglia {ENV["m"]}x{ENV["n"]} NOT è tilable.'
 TRUE-is-tilable: 'Io e tè la pensiamo uguale: la griglia {ENV["m"]}x{ENV["n"]} è tilable, si o no? E se vuoi esibirci un suo tiling puoi sottometterlo al servizio "check_my_tiling".'
