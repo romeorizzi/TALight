@@ -80,14 +80,14 @@ Le componenti fortemente connesse e i nodi che le compongono vengono stampate ne
 rtal connect strongly_connected_components gimme_scc
 ```
 
- Qui invece sarà il servizio a proporti dei grafi diretti elencandone gli archi (per selezionare il grafo con cui vuoi giocare scrivi nel comando al posto di X un numero tra 1 e 7), sarà tuo compito calcolarne le componenti fortemente connesse. 
+ Qui invece sarà il servizio a proporti dei grafi diretti elencandone gli archi, sarà tuo compito calcolarne le componenti fortemente connesse. 
  Fornisci in input le componenti che hai calcolato tutte su una riga e separate da uno spazio, come segue:
 ```bash
 0123 45 6
 ```
 Il servizio:
 ```bash
-rtal connect -a graph=X strongly_connected_components eval_find_scc
+rtal connect strongly_connected_components eval_find_scc
 ```
 
 
