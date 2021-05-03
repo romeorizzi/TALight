@@ -46,9 +46,6 @@ services:
     explain: "Given a directed graph, can you decide whether it is strongly connected?"
     evaluator: [python,services/eval_gsc_server.py]
     args:
-      graph:
-        regex: ^(1|2|3|4|5|6|7)$
-        explain: "chosen graph."
       goal:
         regex: ^(yes_no)$
         default: yes_no
@@ -77,9 +74,6 @@ services:
     explain: "Given a directed graph, can you find its strongly connected components?"
     evaluator: [python,services/eval_find_scc_server.py]
     args:
-     graph:
-        regex: ^(1|2|3|4|5|6|7)$
-        explain: "chosen graph."
      goal:
         regex: ^(yes_no)$
         default: yes_no
