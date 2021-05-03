@@ -40,12 +40,13 @@ Le successive $M$ righe contengono ciascuna un diverso arco, rappresentato da un
 ```
 
 ### Codifica di un output
-La codifica dell'output avviene su tante righe quante sono le componenti fortemente connesse individuate nel grafo.
-Le componenti fortemente connesse e i nodi che le compongono vengono stampate nell'ordine in cui il servizio le calcola, non sempre sono in ordine crescente.
+La codifica dell'output in caso affermativo avviene su due righe: la prima presenta Y per indicare il grafo è fortemente connesso mentre a seguire nella riga successiva è stampato il certificato, ovvero la componente fortemente connessa caratterizza il grafo.
+La codifica dell'output in caso negativo avviene su una riga riporta una semplice N.
 
 #### Esempio
 
 ```bash
+Y
 01234
 ```
 
