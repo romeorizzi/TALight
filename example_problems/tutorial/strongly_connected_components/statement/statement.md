@@ -40,14 +40,15 @@ Le successive $M$ righe contengono ciascuna un diverso arco, rappresentato da un
 ```
 
 ### Codifica di un output
-La codifica dell'output in caso affermativo avviene su due righe: la prima presenta Y per indicare il grafo è fortemente connesso mentre a seguire nella riga successiva è stampato il certificato, ovvero la componente fortemente connessa caratterizza il grafo.
-La codifica dell'output in caso negativo avviene su una riga riporta una semplice N.
+La codifica dell'output avviene su una riga, che contiene i caratteri Y o N a seconda se il grafo è fortemente connesso o meno.
 
 #### Esempio
 
 ```bash
 Y
-01234
+```
+```bash
+N
 ```
 
 Se ti servono degli spunti su come partire ad affrontare il problema, ti proponiamo quì un percorso che speriamo tu possa trovare formativo e stimolante. 
