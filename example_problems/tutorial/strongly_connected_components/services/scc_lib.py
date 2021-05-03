@@ -25,8 +25,7 @@ class Graph():
     #pec printSCCs
     def DFSUtility(self, v, visited,cfc): 
         visited[v] = True
-        cfc = cfc+f"{v}"
-        #print (v, end="") 
+        cfc = cfc+f"{v}" 
         for node in self.graph[v]: 
             if visited[node] == False: 
                 cfc = self.DFSUtility(node, visited,cfc)
