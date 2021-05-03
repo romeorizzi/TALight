@@ -14,7 +14,7 @@ Pertanto è un Grafo Diretto Fortemente connesso.
 
   <strong>Domanda Centrale:</strong> Dato un grafo diretto G, possiamo stabilire se è fortemente connesso?
 
-Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere ai nostri servizi affinché ne valutino correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
+Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere ai nostri servizi affinché ne valutino correttezza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
 ```bash
 rtal connect strongly_connected_components eval_gsc
