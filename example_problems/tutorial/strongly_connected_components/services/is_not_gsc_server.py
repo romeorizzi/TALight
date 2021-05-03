@@ -33,7 +33,7 @@ if ENV['n'] == 'lazy' and ENV['m'] == 'lazy':
     m = int(m)
 
 g = Graph(n)
-adj = [ [] for _ in range(m)]
+
 
 for i in range(m):
          head, tail = input().split()
@@ -42,7 +42,6 @@ for i in range(m):
             exit(0)
 
          g.addEdge(int(head), int(tail))
-         adj[int(head)].append(int(tail))
 
 if ENV['goal'] == 'correct':
     if g.isSC():
@@ -53,7 +52,7 @@ if ENV['goal'] == 'correct':
 
 if ENV['goal'] == 'with_certificate':
     if g.isSC() == False:
-        TAc.print("\nIl grafo che hai sottomesso non e' fortemente connesso, percio' non contiene un'unica componente fortemente connessa!","red")
+        TAc.print("\nIl grafo che hai sottomesso non e' fortemente connesso perchè non contiene un'unica componente fortemente connessa!","red")
         g.printSCCs()
         exit(0)
     if g.isSC():

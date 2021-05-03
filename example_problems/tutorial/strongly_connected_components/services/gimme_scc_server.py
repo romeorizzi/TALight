@@ -34,7 +34,6 @@ if ENV['n'] == 'lazy' and ENV['m'] == 'lazy':
     m = int(m)
 
 g = Graph(n)
-adj = [ [] for _ in range(m)]
 
 for i in range(m):
          head, tail = input().split()
@@ -43,7 +42,6 @@ for i in range(m):
             exit(0)
 
          g.addEdge(int(head),int(tail))
-         adj[int(head)].append(int(tail))
 
-print ("Following are strongly connected components in given graph")
-g.printSCCs()
+cfc = g.printSCCs()
+print (f"Following are strongly connected components in given graph: {cfc}")
