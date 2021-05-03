@@ -42,12 +42,12 @@ if ENV["code_lang"]=="compiled":
 instances = []
 # creo i descrittori di istanza per le istanze che è necessario superare per ottenere conferma di correttezza:
 for i in range(NUM_instances_correct):
-    m_instance = MAX_M_correct - i%5      
-    n_instance = MAX_N_correct - i%MAX_N_correct      
-    seed_instance = seed_service + i
-
-    instances.append((m_instance, n_instance, seed_instance, 1))
-
+    instances.append({
+        "m": MAX_M_correct - i%5,      
+        "n": MAX_N_correct - i%MAX_N_correct,
+        "max_val": max_val,
+        "yes": 1,
+        "seed": seed_service + i })   
 # creo ulteriori istanze per le valutazioni di efficienza:
 MAX_M_efficient = 10000 # len_T
 MAX_N_efficient =   100 # len_S
@@ -58,26 +58,34 @@ if ENV["goal"] == "efficient":
         MAX_N_efficient *= 20
     # crescita graduale (rischio soluzione esponenziale):
     for i in range(MAX_M_correct+1, 2*MAX_M_correct):
-        m_instance = i      
-        n_instance = i // 2      
-        seed_instance = seed_service + i + NUM_instances_correct
-        instances.append((m_instance, n_instance, seed_instance, 1))
+        instances.append({
+            "m": i,      
+            "n": i//2,
+            "max_val": max_val,
+            "yes": 1,
+            "seed": seed_service + i + NUM_instances_correct })
+    
     # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
     scaling_factor = 1.5
     tmp = instances[-1]
-    m = tmp[0]
-    n = tmp[1]
-    s = tmp[2]
+    m = tmp["m"]
+    n = tmp["n"]
+    s = tmp["seed"]
     while True:
         m = 1 + int(m * scaling_factor)
         n = 1 + int(n * scaling_factor)
         seed_instance = seed_service + m + n
         if (m > MAX_M_efficient) or (n > MAX_N_efficient):
             break
-        instances.append((m, n, seed_instance, 1))
+        instances.append({
+        "m": m,      
+        "n": n,
+        "max_val": max_val,
+        "yes": 1,
+        "seed": seed_service + m + n })
 
 
-def one_test(m,n,max_val,seed,yes_instance):
+def one_test(m,n,max_val,yes_instance,seed):
     TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed {seed}): "), "yellow", ["bold"])
     T,S,seed = gen_subseq_instance(m, n, max_val, yes_instance, seed)
     TAc.print(" ".join(map(str,T)), "yellow", ["bold"])
@@ -99,7 +107,7 @@ def one_test(m,n,max_val,seed,yes_instance):
     
 count = 0
 for instance in instances:
-    time = one_test(instance[0], instance[1], max_val, instance[2], instance[3])
+    time = one_test(instance["m"], instance["n"], instance["max_val"], instance["yes"], instance["seed"])
     count +=1
     print(f"#Correct! [took {time} seconds on your machine]")
     if time > 1:

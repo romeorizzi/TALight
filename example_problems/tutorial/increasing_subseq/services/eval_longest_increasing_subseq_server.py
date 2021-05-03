@@ -38,9 +38,10 @@ if ENV["code_lang"]=="compiled":
 instances = []
 # creo i descrittori di istanza per le istanze che è necessario superare per ottenere conferma di correttezza:
 for i in range(NUM_instances_correct):
-    m_instance = MAX_M_correct - i%5         
-    seed_instance = seed_service + i
-    instances.append((m_instance, seed_instance))
+    instances.append({
+        "m": MAX_M_correct - i%5,      
+        "max_val": max_val,
+        "seed": seed_service + i })  
 
 # creo ulteriori istanze per le valutazioni di efficienza:
 MAX_M_efficient = 10000 # len_T
@@ -50,20 +51,25 @@ if ENV["goal"] == "efficient":
         MAX_M_efficient *= 20
     # crescita graduale (rischio soluzione esponenziale):
     for i in range(MAX_M_correct+1, 2*MAX_M_correct):
-        m_instance = i          
-        seed_instance = seed_service + i + NUM_instances_correct
-        instances.append((m_instance, seed_instance))
+        instances.append({
+           "m": i,      
+           "max_val": max_val,
+           "seed": seed_service + i + NUM_instances_correct })
+    
     # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
     scaling_factor = 1.5
     tmp = instances[-1]
-    m = tmp[0]
-    s = tmp[1]
+    m = tmp["m"]
+    s = tmp["seed"]
     while True:
         m = 1 + int(m * scaling_factor)
         seed_instance = seed_service + m
         if (m > MAX_M_efficient):
             break
-        instances.append((m, seed_instance))
+        instances.append({
+        "m": m,      
+        "max_val": max_val,
+        "seed": seed_service + m})
 
 
 
@@ -85,7 +91,7 @@ def one_test(m,max_val,seed):
 
 count = 0
 for instance in instances:
-    time = one_test(instance[0], max_val, instance[1])
+    time = one_test(instance["m"], instance["max_val"], instance["seed"])
     count +=1
     print(f"#Correct! [took {time} seconds on your machine]")
     if time > 2.5:

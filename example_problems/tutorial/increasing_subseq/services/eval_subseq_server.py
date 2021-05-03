@@ -91,6 +91,7 @@ def one_test(m,n,max_val,yes_instance,seed):
     TAc.print(" ".join(map(str,S)), "yellow", ["bold"])
     start = monotonic()
     risp = TALinput(str,num_tokens=1,regex="^(0|1|y|n|Y|N|yes|no|YES|NO|Yes|No)$", regex_explained="the allowed answers here were: '0','1','y','n','Y','N','yes','no','YES','NO','Yes','No'", TAc=TAc, LANG=LANG)
+
     end = monotonic()
     t = end - start # è un float, in secondi
     if risp[0][0] in {'1','y','Y'}:
@@ -104,10 +105,31 @@ def one_test(m,n,max_val,yes_instance,seed):
 
     if ENV['cert'] and risp == 1:
         start = monotonic()
-        YES_cert = TALinput(int, num_tokens=len(S), regex="^(0|[1-9][0-9]{0,9} *$", TAc=TAc, LANG=LANG)
+        #YES_cert = TALinput(int, num_tokens=len(S), regex="^(0|[1-9][0-9]{0,9} *$", TAc=TAc, LANG=LANG)
+        YES_cert = input()
+        while YES_cert[0] == '#':
+            YES_cert = input()
+            #YES_cert = TALinput(int, num_tokens=len(S), regex="^(0|[1-9][0-9]{0,9} *$", TAc=TAc, LANG=LANG)
         end = monotonic()
+        YES_cert = parse_input(YES_cert)
         t += end - start
 
+
+        for i in YES_cert:
+            if i < 0 or i > len(T) - 1:
+                TAc.print(LANG.render_feedback("not-correct-cert", f'# No. Your YES certificate is NOT correct. There are indexes that fall outside the interval [0,|T|-1]'), "red", ["bold"])
+                TAc.print(LANG.render_feedback("to-retry", f'# To retry this very same eval run the service with seed={seed_service}. The description of this very last instance is <m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed={seed}>'), "orange")
+                exit(0) 
+
+        if len(YES_cert) != len(S):
+            TAc.print(LANG.render_feedback("not-correct-cert", f'# No. Your YES certificate is NOT correct. The sequence of indexes has not length |S|'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("to-retry", f'# To retry this very same eval run the service with seed={seed_service}. The description of this very last instance is <m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed={seed}>'), "orange")
+            exit(0)
+        elif not strictly_increasing(YES_cert):
+            TAc.print(LANG.render_feedback("not-correct-cert", f'# No. Your YES certificate is NOT correct. The sequence of indexes is not increasing'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("to-retry", f'# To retry this very same eval run the service with seed={seed_service}. The description of this very last instance is <m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed={seed}>'), "orange")
+            exit(0)
+        
         pos = 0
         for i in YES_cert:
             if T[i] == S[pos]:
@@ -116,7 +138,7 @@ def one_test(m,n,max_val,yes_instance,seed):
         if pos == len(S):
             TAc.print(LANG.render_feedback("correct-cert", f'# Ok. ♥ Your YES certificate is valid.'), "green")
         else:
-            TAc.print(LANG.render_feedback("not-correct-cert", f'# No. Your YES certificate is NOT correct.'), "red", ["bold"])                        
+            TAc.print(LANG.render_feedback("not-correct-cert", f'# No. Your YES certificate is NOT correct. For some i, S[i] <> T[index_i]'), "red", ["bold"])                        
             TAc.print(LANG.render_feedback("to-retry", f'# To retry this very same eval run the service with seed={seed_service}. The description of this very last instance is <m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed={seed}>'), "orange")                        
             exit(0)
     return t   
