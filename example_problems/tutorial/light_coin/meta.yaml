@@ -28,26 +28,6 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  # check_sol:
-  #   explain: "You can check a solution of yours for an instance (yours or generated at random)."
-  #   evaluator: [python, services/check_sol_server.py]
-  #   args:
-  #     instance:
-  #       regex: ^(mine|random)$
-  #       default: random
-  #       explain: "Mine: i give my instace, random: random instance."
-  #     seed:
-  #       regex: ^([1-9]\d{2,7}|any)$
-  #       default: any
-  #       explain: "Called with seed=any, the service chooses its seed at random (and communicates it to the user)"
-  #     coding:
-  #       regex: ^(seq|subset)$
-  #       default: seq
-  #       explain: "seq: List of commands, where a command is the possibility to remove or put coins on the right or left plate "
-  #     lang:
-  #       regex: ^(hardcoded|en|it)$
-  #       default: it
-  # TODO ricorsione:
   # TODO help
   help:
     evaluator: [python, services/help/help_server.py]
