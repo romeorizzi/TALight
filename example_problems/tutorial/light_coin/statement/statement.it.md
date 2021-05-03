@@ -3,10 +3,15 @@
 ## Descrizione del problema
 
 Vuoi individuare l'unica moneta falsa in un set di $7$ monete numerate da $1$ ad $7$. Puoi avvalerti in questo di una bilancia a braccia uguali.
-Questo puzzle classico assume che la moneta falsa abbia un peso diverso delle altre. (Ci sono 2 varianti: sappiamo anche se la moneta è più leggera o pesante, oppure, nella variante più interessante, si sà solo che ha peso diverso.)
+Questo puzzle classico assume che la moneta falsa abbia un peso diverso delle altre, e presenta 2 varianti:
+
+1. è noto a priori se la moneta falsa è più leggera (o più pesante) delle altre,
+
+2. si sà solo che tutte le monete hanno lo stesso peso tranne quella falsa.
+
 Organizzare una pesata significa specificare i due sottoinsiemi disgiunti di monete da collocare sui due piatti della bilancia. Ad esempio, immettendo:
 
-[1 5 6], [2 4]
+1 5 6, 2 4
 
 richiedi una pesata con le monete $1$, $5$, e $6$ sul piatto sinistro e $2, 4$ su quello destro. 
 
@@ -20,39 +25,58 @@ La misura potrà avere uno dei seguenti 3 esiti:
 
 ## Estensibilità ever green del problema
 
-Attorno a questo puzzle potrai condurre delle tue esplorazioni, al momento possiamo proporre i seguenti percorsi:
+Attorno a questo puzzle potrai condurre delle tue esplorazioni, al momento possiamo proporre i seguenti percorsi già in qualche modo supportati da srvizi:
 
 1. distinzione tra strategie _statiche_ (dove l'insieme delle misure da compiere viene fissato a priori) e _dinamiche_ (dove ogni atto di misura viene stabilito prendendo in considerazione gli esiti delle pesate già fatte);
 
-2. ricerca della natura ricorsiva del problema chiedendosi come possa essere stabilita una buna strategia di gioco per un numero di monete $n$ generico.
+2. ricerca della natura ricorsiva del problema chiedendosi come possa essere stabilita una buona strategia di gioco per un numero di monete $n$ generico.
 
-Se il problema ti incuriosisce anche in altri modi e ti poni altre questioni intriganti, puoi porti la sfida di realizzare tu stesso dei servizi che stimolino e supportino il problem solver guidandolo sui terreni da tè esplorati. Sarà molto stimolante e formativo, nonché divertente, riscoprirti nel ruolo di problem maker ([brake on through to the other side](https://www.youtube.com/watch?v=-r679Hhs9Zs)).
+Se il problema ti incuriosisce anche in altri modi e ti poni altre questioni intriganti, puoi porti la sfida di realizzare tu stesso dei servizi che stimolino e supportino il problem solver accompagnandolo o guidandolo sui terreni da tè esplorati. Sarà molto stimolante e formativo, nonché divertente, riscoprirti nel ruolo di problem maker ([brake on through to the other side](https://www.youtube.com/watch?v=-r679Hhs9Zs)).
 
 
 
 ## Supporti alla programmazione, interfacce grafiche, o avanguardia
 
-Oltre che giocare tu stesso prescrivendo le tue pesate da riga di comando con:
+Se lanci il comando:
 
 ```bash
-rtal connect light_coin check_dynamic_strategy
+rtal connect light_coin check_static_strategy -a n=7 -a version=false_is_leighter
+```
+vieni invitato ad inserire una strategia statica la cui correttezza sarà verificata e confermata dal servizio.
+Potrai trovare più conveniente esserti annotato la strategia su un qualche file, e trasmetterla al servizio di valutazione con:
+
+```bash
+rtal connect -e light_coin check_static_strategy -a n=9 -- ~/TALight/TAL_utils/problem_solver/TA_send_txt_file.py my_static_strategy_for_9_coins.txt  
+```
+oppure potrai fare copia ed incolla del contenuto del file al momento del dialogo col servizio.
+Ovviamente, se invii un file contenete una strategia, dovrai specificare il nome del file comprensivo del percorso se esso non è situato nella cartella corrente.  
+
+Per ogni servizio, ti invitiamo ad esplorare lo spazio dei possibili argomenti, ad esempio con:
+
+```bash
+rtal connect light_coin synopsis -a service=check_static_strategy
 ```
 
+Per verificare strategie dinamiche, oltre che giocare tu stesso prescrivendo le tue pesate da riga di comando, ora nel dinamico lungo un dialogo avviato con:
+
+```bash
+rtal connect light_coin check_dynamic_strategy -aversion=false_has_different_weight
+```
 puoi divertirti ad istruire un bot affinché giochi in tua vece con:
 
 ```bash
-rtal connect light_coin check_dynamic_strategy -- python mybot.py
+rtal connect -e light_coin check_dynamic_strategy -a version=false_is_heavier -- python mybot.py
 ```
 
-Il bot può essere scritto in un qualsiasi altro linguaggio, e, se è un compilato, non ti sarà necessario richiamare l'interprete:
+Il bot può essere scritto in un qualsiasi altro linguaggio, e, se è un compilato, non ti sarà necessario richiamare l'interprete (python):
 
 ```bash
 rtal connect light_coin check_dynamic_strategy -- mybot
 ```
 
-Ovviamente il file `mybot` sarà il file col codice binario prodotto con la compilazione, coi necessari diritti di esecuzione settati.  
+Ovviamente il file `mybot` sarà il file col codice binario prodotto con la compilazione, coi necessari diritti di esecuzione settati (e, di nuovo, dovrai specificare il nome comprensivo del percorso se il bot non è situato nella cartella corrente).  
 
-Se vuoi concentrarti sugli aspetti alti del problema e trascurare i dettagli della programmazione, puoi prendere il bot contenitore già predisposto da noi per il tuo linguaggio. Esso prenderà cura della gestione dell'input e output secondo il protocollo di gioco e potrai così limitarti a specificare l'implementazione delle funzioni che esprimono al nocciolo la logica del gioco. Ad esempio in python potrai limitarti ad implementare la funzione `individua()` nel modulo `logic.py` e da `individua()` potrai chiamare il comando/funzione: 
+Se vuoi concentrarti sugli aspetti alti del problema e trascurare i dettagli della programmazione, puoi prendere il bot contenitore (bot_template.py) già predisposto da noi per il tuo linguaggio. Esso prenderà cura della gestione dell'input e output secondo il protocollo di gioco e potrai così limitarti a specificare l'implementazione delle funzioni che esprimono al nocciolo la logica del gioco. Ad esempio in python potrai limitarti ad implementare la funzione `individua()` nel modulo `logic.py` e da `individua()` potrai chiamare il comando/funzione: 
 
 ```
 risp = piatto_con_peso_maggiore(left=[1, 5, 6], right=[2, 4])
@@ -111,7 +135,7 @@ Per quei valori di $n$ dove la tua strategia statica richieda più di $2$ pesate
     prova costruendo un algoritmo che, dato un qualunque set con meno pesate, offra due risposte e due verità compatibili con esse (una verità con moneta falsa leggere e l'altra verità con moneta falsa pesante). Questo potrebbe aiutarti a contestualizzare il problema. Ed è supportato dal nostro servizio
 
 ```bash
-rtal connect light_coin empass_static_strategy_lighter_or_heavier -- mybot
+rtal connect -e light_coin empass_static_strategy_lighter_or_heavier -- mybot
 ```
 
 
