@@ -23,10 +23,11 @@ services:
     evaluator: [python, services/eval_subseq_server.py]
     args:
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       goal:
+        explains: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       code_lang: 
@@ -64,7 +65,7 @@ services:
         regex: ^(0|1)$
         default: 1
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       silent:
@@ -83,13 +84,14 @@ services:
         regex: ^(0|1|2)$
         default: 1
       goal:
+        explains: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       YES_cert:
@@ -108,7 +110,7 @@ services:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       len_T:
@@ -135,8 +137,9 @@ services:
       goal:
         regex: ^(correct|efficient)$
         default: correct
+        explains: "set your goal (efficient includes also correct)."
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       code_lang: 
@@ -217,6 +220,7 @@ services:
       goal:
         regex: ^(correct|efficient)$
         default: correct
+        explains: "set your goal (efficient includes also correct)."
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
@@ -232,8 +236,9 @@ services:
       goal:
         regex: ^(correct|efficient)$
         default: correct
+        explains: "set your goal (efficient includes also correct)."
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run."
+       explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       code_lang: 

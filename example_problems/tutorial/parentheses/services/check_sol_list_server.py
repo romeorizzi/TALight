@@ -103,7 +103,7 @@ def answer():
         TAc.print('sorting_criterion=', "red", end="")
         TAc.print(ENV["sorting_criterion"], "yellow", end="")
         print(").")
-    elif ENV["feedback"] == "tell_first_minimal_missing_prefix" or ENV['feedback'] == "dispell_first_missing_till_already_present":
+    elif ENV["feedback"] == "tell_minimal_missing_prefix" or ENV['feedback'] == "dispell_longest_seen_prefix_of_first_missing":
         min_len1 = 0
         if rank > 0:
             while missing[min_len1] == input_solution_list[rank-1][min_len1]:
@@ -114,12 +114,12 @@ def answer():
             # print(input_solution_list[rank][min_len2])
             while missing[min_len2] == input_solution_list[rank][min_len2]:
                 min_len2 += 1
-        if ENV["feedback"] == "tell_first_minimal_missing_prefix":
+        if ENV["feedback"] == "tell_minimal_missing_prefix":
             minimal_missing_prefix = missing[0:1+max(min_len1,min_len2)]
             TAc.print(LANG.render_feedback("first-missing-prefix", f'As a strong hint, here is the prefix of a well-formed formula and no formula in your list has this prefix:'), "red", ["bold"])
             TAc.print(minimal_missing_prefix, "yellow", ["bold"])
             exit(0)
-        elif ENV['feedback'] == "dispell_first_missing_till_already_present":
+        elif ENV['feedback'] == "dispell_longest_seen_prefix_of_first_missing":
             #print(min_len1, min_len2)
             #print(input_solution_list[rank-1], input_solution_list[rank])
             if rank==len(input_solution_list)-1 and not case:
@@ -135,8 +135,8 @@ def answer():
             TAc.print(missing_prefix, "green", ["bold"], end='')
             TAc.print(suffix, "red", ["bold"])
     else:
-        assert ENV['feedback'][0:27] == "tell_prefix_of_missing_len_"
-        length = int(ENV['feedback'][27:])
+        assert ENV['feedback'][0:33] == "tell_first_missing_prefix_of_len_"
+        length = int(ENV['feedback'][33:])
         missing_prefix = missing[0:length]
         TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
         TAc.print(missing_prefix, "yellow", ["bold"])
