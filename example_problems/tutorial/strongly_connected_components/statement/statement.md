@@ -73,7 +73,7 @@ In nocciolo della questione risiede nel capire quante componenti fortemente conn
    <strong>Competenza ausiliaria:</strong> Saresti in grado di individuare quali sono le componenti fortemente connesse di un grafo? 
 
 Gioca con il seguente servizio a cui potrai proporre tu un grafo, nel formato di input definito sopra, e ti verrà risposto quali sono le componenti fortemente connesse.
-La codifica dell'output avviene su tante righe quante sono le componenti fortemente connesse individuate nel grafo.
+La codifica dell'output avviene su una riga e ogni componente fortemente connessa è separata da uno spazio.
 Le componenti fortemente connesse e i nodi che le compongono vengono stampate nell'ordine in cui il servizio le calcola, non sempre sono in ordine crescente.
 
 ```bash
