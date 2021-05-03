@@ -7,10 +7,8 @@ Come in figura:
 
 ![image](figs/euler-dir.png)
 
-Possiamo dare la definizione di Grafo Diretto Fortemente Connesso, ossia un grafo con una e una sola Componente Fortemente Connessa.
-Prendendo come esempio la figura, nel grafo c'è una sola componente fortemente connessa, così formata:
-$01243$
-Pertanto è un Grafo Diretto Fortemente connesso.
+Possiamo dare la definizione di Grafo Diretto Fortemente Connesso, ossia un grafo dove esiste un cammino da v a w per ogni coppia di nodi v,w appartenenti all'insieme dei nodi del grafo.
+Prendendo come esempio la figura, il grafo rappresentato è un Grafo Diretto Fortemente Connesso.
 
   <strong>Domanda Centrale:</strong> Dato un grafo diretto G, possiamo stabilire se è fortemente connesso?
 
@@ -40,7 +38,7 @@ Le successive $M$ righe contengono ciascuna un diverso arco, rappresentato da un
 ```
 
 ### Codifica di un output
-La codifica dell'output avviene su una riga, che contiene i caratteri Y o N a seconda se il grafo è fortemente connesso o meno.
+La codifica dell'output avviene su una riga, che contiene i caratteri Y o N a seconda se il grafo è fortemente connesso o non è fortemente connesso.
 
 #### Esempio
 
@@ -68,9 +66,9 @@ Il cui servizio duale è pensato per sottoporgli un grafo che credi non sia fort
 rtal connect strongly_connected_components check_is_not_gsc
 ```
 
-Vediamo la definizione di Componente Fortemente Connessa, in un grafo diretto G è un sottografo massimale di G in cui esiste un cammino orientato tra ogni coppia di nodi ad esso appartenenti.
+Vediamo la definizione di Componente Fortemente Connessa: in un grafo diretto G è un sottografo massimale di G in cui esiste un cammino orientato tra ogni coppia di nodi ad esso appartenenti.
 
-In nocciolo della questione risiede nel capire quante componenti fortemente connesse ci sono un grafo diretto G. Per preparare il terreno protresti raccogliere prima ulteriori comprensioni, ad esempio partendo da un altro quesito, più semplice, che ti proponiamo:
+In nocciolo della questione risiede nel capire quante componenti fortemente connesse ci sono in un grafo diretto G. Per preparare il terreno protresti raccogliere prima ulteriori comprensioni, ad esempio partendo da un altro quesito, più semplice, che ti proponiamo:
 
    <strong>Competenza ausiliaria:</strong> Saresti in grado di individuare quali sono le componenti fortemente connesse di un grafo? 
 
@@ -82,7 +80,7 @@ Le componenti fortemente connesse e i nodi che le compongono vengono stampate ne
 rtal connect strongly_connected_components gimme_scc
 ```
 
- Qui invece sarà il servizio a proporti dei grafi diretti elencandone gli archi, sarà tuo compito calcolarne le componenti fortemente connesse. 
+ Qui invece sarà il servizio a proporti dei grafi diretti, sarà tuo compito calcolarne le componenti fortemente connesse. 
  Fornisci in input le componenti che hai calcolato tutte su una riga e separate da uno spazio, come segue:
 ```bash
 0123 45 6
