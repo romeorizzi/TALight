@@ -22,7 +22,7 @@ Quando hai raccolto un metodo che ti consente di rispondere efficacemente a ques
 ```bash
 rtal connect -a goal1=with_yes_certificates euler-dir eval_euler_dir
 ```
-Puoi prefissarti come obiettivo aggiuntivo di comporre un algoritmo efficiente, che puoi controllare con il servizio:
+Puoi prefissarti come obiettivo aggiuntivo di comporre un algoritmo efficiente, che puoi controllare chiamando:
 
 ```bash
 rtal connect -a goal1=with_yes_certificates -a goal2=efficient euler-dir eval_euler_dir
@@ -31,7 +31,7 @@ rtal connect -a goal1=with_yes_certificates -a goal2=efficient euler-dir eval_eu
 Se invece non hai idea di come partire ti proponiamo un percorso che speriamo tu possa trovare formativo e stimolante.
 
 
-### Codifica di un circuito Euleriano
+### Codifica di un grafo
 
 Assumiamo il grafo abbia $N$ vertici e $M$ archi diretti. Assumiamo che gli $N$ vertici siano numerati da $0$ a $N-1$.
 La codifica avviene su $M+1$ righe (di un file o stream da terminale o da `stdin`). 
@@ -51,16 +51,16 @@ Le successive $M$ righe contengono ciascuna un diverso arco, rappresentato da un
 ```
 
 ### Codifica di un circuito Euleriano
+
 Nella prima riga scriviamo il numero di nodi $N$ ed il numero di archi $M$.
 Nelle successive $M$ righe vengono disposti gli $M$ archi secondo l'ordine prescritto dal circuito Euleriano.
 Ognuna di queste $M$ righe contiene due interi separati da spazio: il primo è la coda ed il secondo la testa dell'arco in questione.
 
 #### Esempio
 
-Ad esempio, un programma pensato per stabilire se un grafo passatogli in input ammetta un ciclo Euleriano, una volta ricevuto in input il grafo di vui sopra restituirebbe:
+Ad esempio, un programma pensato per stabilire se un grafo passatogli in input ammetta un ciclo Euleriano, una volta ricevuto in input il grafo di cui sopra, restituisce il carattere 'Y' (invece che il carattere 'N') per indicare che il grafo è Euleriano. A questa prima riga, se il programma si prefigge di restituire anche i certificati per le risposte affermative, seguirebbe la codifica di un circuito Euleriano, che in questo caso potrebbe essere:
 
 ```bash
-Y
 5 6
 0 2
 2 1
@@ -70,11 +70,10 @@ Y
 4 0
 ```
 
-Dove il carattere 'Y' che compone la prima riga stà ad indicare che un circuito Euleriano esiste. Dove esso non esista la risposta sarà di una sola riga costituita dal carattere 'N'. In caso di risposta affermativa alla prima riga potranno invece seguire le $M$ righe col circuito Euleriano,
 
 ## Percorso
 
-Se ti servono degli spunti su come partire ad affrontare il problema, ti proponiamo quì un percorso che speriamo tu possa trovare formativo e stimolante. Ti esibiremo inoltre dei servizi che possono agevolare o strutturare le tue investigazioni.
+Se ti servono degli spunti su come partire ad affrontare il problema, ti proponiamo qui un percorso che speriamo tu possa trovare formativo e stimolante. Ti esibiremo inoltre dei servizi che possono agevolare o strutturare le tue investigazioni.
 
 Il seguente servizio è pensato per solo stimolarle:
 
@@ -93,8 +92,8 @@ Esiste anche un servizio duale se vuoi conferma sul fatto che un grafo da te pro
 rtal connect euler-dir check_is_not_eulerian
 ```
 
-In nocciolo della questione risiede quindi nel capire quando un grafo sia Euleriano. In questo, senza infingimenti: lavore su esempi ha un valore insostituibile.
-In aggiunta, per preparare il terreno protresti raccogliere prima ulteriori comprensioni, ad esempio partendo da un altro quesito, più semplice, che ti proponiamo:
+In nocciolo della questione risiede quindi nel capire quando un grafo sia Euleriano. In questo, senza infingimenti: lavorare su esempi ha un valore insostituibile.
+In aggiunta, per preparare il terreno potresti raccogliere prima ulteriori comprensioni, ad esempio partendo da un altro quesito, più semplice, che ti proponiamo:
 
    <strong>Competenza ausiliaria:</strong> Saresti in grado di individuare quali sono le componenti fortemente connesse di un grafo? 
 
@@ -108,7 +107,7 @@ Se non sai da dove partire, ti suggeriamo di stabilire, per ciascuno dei grafi n
 
 Se vuoi controllare la tua etichettatura o ti serve aiuto, puoi avvalerti dei servizi di questo problema o del problema `strongly_connected_components`.
 
-E' probabile che a valle di questo percorso tu possa avere acquisito chiarezza su quale possa essere il legame tra le proprità di connessione forte e di Eulerianità (ti sarà più facile se ti soffermerai ad analizzare gli esempi non fortemente connessi). In tal caso, avrai forse ottenuto delle prime _condizioni necessarie_ che devono essere rispettate affinchè un grafo possa essere Euleriano.
+E' probabile che a valle di questo percorso tu possa avere acquisito chiarezza su quale possa essere il legame tra le proprità di connessione forte e di Eulerianità (ti sarà più facile se ti soffermerai ad analizzare gli esempi non fortemente connessi). In tal caso, avrai forse ottenuto delle prime _condizioni necessarie_ che devono essere rispettate affinché un grafo possa essere Euleriano.
 
 Ossia ad un'affermazione del tipo:
 
@@ -120,18 +119,18 @@ Se sei in questa condizione, ecco un barbatrucco generale per ottenere una _buon
 
 Buona Congettura: tutti i grafi sono Euleriani tranne quelli "così o cosà".
 
-Una congettura è uno strumento di lavoro che appunto serve per aprire un problema. Pertanto, il valore di una congettura non stà tanto nel fatto che essa sia vera oppure falsa, ma piuttosto nella qualità delle sue implicazioni ove fosse vera. Una congettura si dice buona quando il coltello è affilato, ma, se conosci le classi P, NP, co-NP, possiamo allora darti un criterio formale per riconoscere importanti classi di buone congetture, particolarmente affilate e con proprietà notevoli (quale essere win-win o autoavverranti).
+Una congettura è uno strumento di lavoro che appunto serve per aprire un problema. Pertanto, il valore di una congettura non sta tanto nel fatto che essa sia vera oppure falsa, ma piuttosto nella qualità delle sue implicazioni ove fosse vera. Una congettura si dice buona quando il coltello è affilato, ma, se conosci le classi P, NP, co-NP, possiamo allora darti un criterio formale per riconoscere importanti classi di buone congetture, particolarmente affilate e con proprietà notevoli (quale essere win-win o autoavverranti).
 
-Diciamo che il problema di riconoscre se un grafo è Euleriano è in NP in quanto, tutte le volta che la risposta è affermativa, allora è possibile esibire un certificato (il circuito Euleriano) che chiaramente può essere verificato in tempo polinomiale.
+Diciamo che il problema di riconoscere se un grafo è Euleriano è in NP in quanto, tutte le volta che la risposta è affermativa, allora è possibile esibire un certificato (il circuito Euleriano) che chiaramente può essere verificato in tempo polinomiale.
 Il problema è pertanto nato in NP di suo, ma, condizione necessaria per poterlo portare in P (ossia per scoprire un algoritmo polinomiale per la sua soluzione, che è quanto richiesto dal presente problema `euler-dir`) è che esso sia anche in co-NP:
 il problema è in co_NP quando, in modo complementare, tutte le volta che la risposta è negativa, allora esiste un analogo certificato (sempre una qualche stringa che potrebbe anche essere difficile andare a scoprire autonomamente) che possa chiaramente comprovare in NO e che possa essere verificato in tempo polinomiale.
 
-Diciamo che una congettura è buona quando, ove fosse vera, ne conseguirebbe che il problema appartenga ad una classe di complssità (quale NP o co-NP) in cui ancora ci era ignoto rientrasse.
-Riesci a vedere perchè la congttura di cui sopra sia allora buona, alla luc di questa definizione, ed assumndo che la condizione "così o colà" del Lemma possa essere vrificata in tempo polinomiale?
+Diciamo che una congettura è buona quando, ove fosse vera, ne conseguirebbe che il problema appartenga ad una classe di complessità (quale NP o co-NP) in cui ancora ci era ignoto rientrasse.
+Riesci a vedere perché la congettura di cui sopra sia allora buona, alla luce di questa definizione, ed assumendo che la condizione "così o colà" del Lemma possa essere verificata in tempo polinomiale?
 
 ## Servizi per acclimatarsi col concetto di buona congettura
 
-Vogliamo dimostrare che il problema nasce in NP. Il certificato di SI è un circuito Hamiltoniano che potremmo esibire ogniqualvolta esso esista.
+Vogliamo dimostrare che il problema nasce in NP. Il certificato di SI è un circuito Euleriano che potremmo esibire ogniqualvolta esso esista.
 Scrivi un algoritmo A che riceva in input un grafo ed una proposta di certificato di SI, e verifichi il certificato.
 Se vuoi esplorare le possibili ragioni di bocciatura di un certificato utilizza il nostro servizio
 
@@ -148,29 +147,29 @@ rtal connect -a euler-dir eval_YES_certificate -- myA.py
 
 ## Ma la buona congettura potrebbe anche essere falsa
 
-Una volta formulata una buona congettura lo sport è qullo di andare a capire se possa essere vera oppure falsa.
+Una volta formulata una buona congettura lo sport è quello di andare a capire se possa essere vera oppure falsa.
 La caccia può concludersi in due modi, cui corrispondono modi diversi per andare a reclamare la taglia:
 
 A. un controesempio è il modo per dire che la congettura è falsa.
 
 B. una dimostrazione è il modo per dire che la congettura è vera.
 
-Se esce B non vi è alcun dubbio vi sia ragione di festeggiare: dato che si trattava di una buona congettura essa aveva valore potenziale per definizione. Ora sappiamo qualcosa di più su dove il problema si collochi dal punto di vista della sua complssità computazionale.
+Se esce B non vi è alcun dubbio vi sia ragione di festeggiare: dato che si trattava di una buona congettura essa aveva valore potenziale per definizione. Ora sappiamo qualcosa di più su dove il problema si collochi dal punto di vista della sua complessità computazionale.
 
-Se esce A possiamo comunque reputarci soddisfatti: ora del problema conosciamo qualcosa di più, e questo qualcosa si colloca comunque sul piano della struttura del problema in quanto se il contoesempio non fosse esistito allora la struttura del problema si sarebbe manifestata benigna. IL controesempio è quindi un messaggero fecondo.
+Se esce A possiamo comunque reputarci soddisfatti: ora del problema conosciamo qualcosa di più, e questo qualcosa si colloca comunque sul piano della struttura del problema in quanto se il controesempio non fosse esistito allora la struttura del problema si sarebbe manifestata benigna. Il controesempio è quindi un messaggero fecondo.
 
 Per questo una buona congettura ci colloca in una situazione win-win. Ottimo affare, non è vero?
-Anche ove falsa, una buona congettura è di per sè stessa un passo avanti nel dialogo col problema.
+Anche ove falsa, una buona congettura è di per sé stessa un passo avanti nel dialogo col problema.
 
 Possibili domande:
 
-Ma come trovare un controesempio? Per ora questo lo lasciamo a voi. Quì merita solo aggiungere che amiamo i controesempi minimali e che, una volta trovato un controesempio, è importante spremerli come limoni. 
+Ma come trovare un controesempio? Per ora questo lo lasciamo a voi. Qui merita solo aggiungere che amiamo i controesempi minimali e che, una volta trovato un controesempio, è importante spremerli come limoni. 
 
-Ma come dimostrare una congettura vera? Quì siamo ancor più in mare aperto, ma di nuovo vanno aggiunte alcuni trucchi. Un paio di questi vengono esplorato con un percorso nella prossima sezione.
+Ma come dimostrare una congettura vera? Qui siamo ancor più in mare aperto, ma di nuovo vanno aggiunte alcuni trucchi. Un paio di questi vengono esplorato con un percorso nella prossima sezione.
 
 ## Dimostrare buone congetture
 
-se sei riuscito a completare il percorso delle precedenti sezioni, allora dovresti avrere un'idea di quali solo le ragioni/il linguaggio del SI, ma anche quelle del NO per il problema euler-dir.
+se sei riuscito a completare il percorso delle precedenti sezioni, allora dovresti avere un'idea di quali solo le ragioni/il linguaggio del SI, ma anche quelle del NO per il problema euler-dir.
 
 
 Il fatto (che ci insegna la teoria della complessità) è questo:
