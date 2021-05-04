@@ -96,7 +96,7 @@ services:
         default: random_seed
       YES_cert:
         regex: ^(0|1)$
-        default: 1    #explain: "the evaluated bot is required to also output a certificate on every YES-instance"
+        default: 0    #explain: "the evaluated bot is required to also output a certificate on every YES-instance"
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

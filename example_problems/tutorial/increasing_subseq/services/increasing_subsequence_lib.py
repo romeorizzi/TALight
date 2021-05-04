@@ -463,3 +463,15 @@ def count_occurences(T, S):
                 lookup[i][j] = lookup[i - 1][j]
 
     return lookup[m][n]
+
+def get_max_inc_seq(T,col):
+    max_col = max(col)
+    T_tmp = T[:]
+    ret = []
+    for i in range(len(T)-1, -1, -1):
+        if col[i] == max_col:
+            ret.append(T[i])
+            max_col = max_col-1
+
+    ret.reverse()
+    return ret
