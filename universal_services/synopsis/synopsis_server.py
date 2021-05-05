@@ -68,7 +68,7 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
             print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['explain'])}'"))
             i = 1
             while ("explain"+str(i)) in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
-              print(" "*16, end="")
+              print(" "*6, end="")
               print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)])}'"))
               i += 1
         if "example" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
