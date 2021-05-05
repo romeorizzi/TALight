@@ -5,7 +5,7 @@ services:
     evaluator: [python, services/spot_magic_indexes_server.py]
     args:
       input_vector:
-        regex:  ^(lazy|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
+        regex:  ^(lazy_input|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
         default: lazy_input
         explain: "an increasing sequence of integers separated by commas (no spaces)."
         example: "-12,0,34,56"
@@ -25,6 +25,19 @@ services:
       silent:
         regex: ^(0|1)$
         default: 0
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  gimme_input_vector:
+    explain: "To ask for an instance, that is, an increasing sequence of inetgers comprising an input vector."
+    evaluator: [python, services/gimme_input_vector_server.py]
+    args:
+      n:
+        regex:  ^([1-9][0-9]{0,1}|1000})$
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
