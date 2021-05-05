@@ -1,15 +1,11 @@
 # Magic Indexes
 
-Per ora quanto stiamo componendo su:
-
-https://etherpad.wikimedia.org/p/Luca&Deborah
-
-### Nostre prime riflssioni sul problema:
+### Nostre prime riflessioni sul problema:
 
 PROBLEMA PROPOSTO:
     Input: un vettore ordinato A di n numeri interi/pari distinti
-    Def:  è un magix-index ogni i tale che A[i]=i.
-    Task: trovare i magic index/il magic index se ce ne è.
+    Def:  ogni posizione i=0, ..., n-1, tale che A[i]=i è un magix-index.
+    Task: trovare i magic index/il magic index se ce ne sono.
     
     Voglia di log n checks
     

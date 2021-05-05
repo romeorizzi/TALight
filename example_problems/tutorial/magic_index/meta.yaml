@@ -5,8 +5,10 @@ services:
     evaluator: [python, services/spot_magic_indexes_server.py]
     args:
       input_vector:
-        regex:  ^(lazy|-{0,1}[1-9][0-9]{0,3}(,-{0,1}[1-9][0-9]{0,3}){0,1000})$
-        default: lazy
+        regex:  ^(lazy|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
+        default: lazy_input
+        explain: "an increasing sequence of integers separated by commas (no spaces)."
+        example: "-12,0,34,56"
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
