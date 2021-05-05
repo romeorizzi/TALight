@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+at-least-one-line: 'No. You are required to enter at least one well-formed formula of parentheses (possibly even just the empty one) before closing.'
+first-line-not-well-formed: 'No. Your very first formula of parentheses is not well formed.'
+wrong-first: 'No. Your very first formula of parentheses is well-formed but but it is not the first well-formed-formula on that number of parentheses according to the order that has been set.'
+called-with: '(service called with'
+different_lengths: 'No. The well-formed formula of parentheses you have just introduced in your line {len(input_solution_list)+1} has different length than the previous ones.'
+order-violation: 'No. The well-formed formula of parentheses you have just introduced in your line {len(input_solution_list)+1} does not come after but rather before than the previous one according to the order set.'
+repeated: 'No. The well-formed formula of parentheses you have just introduced in your line {len(input_solution_list)+1} is the same as your {input_solution_list.index(line)+1}th one. But nothing is lost: this repetition will be ignored. You can go on.'
+your-formulas-all-ok: 'All the formulas you have introduced are ok (well formed) and correctly ordered.'
+one-formula-is-missing-no-feedback: 'No. Your list is missing at least one well-formed formula.'
+give-missing-formula: 'Consider for example:'
+not-consecutive: 'In fact, the two well-formed formulas:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nthat appear consecutive in your list are NOT consecutive in the intended order'
+first-missing-prefix: 'As a strong hint, here is the prefix of a well-formed formula and no formula in your list has this prefix:'
+list-ok: 'Ok! You have listed all well-formed formulas with {n_pairs} pairs of parentheses. Also their order is the intended one.'
