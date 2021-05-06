@@ -59,22 +59,20 @@ while True:
     cert = get_max_inc_seq(T,mdc)
    
     print(n_col)
-    if certificate == 1:
-        print("# correct certificate:")
+    print("# correct certificate:")
+    if certificate == 0:
+        print("# " + " ".join(map(str,cert)))
+    elif certificate == 1:
         print(" ".join(map(str,cert)))
     elif certificate == 2:
         cert.pop()
-        print("# correct certificate:")
         print(" ".join(map(str,cert)))
     elif certificate == 3:
         cert.reverse()
-        print("# correct certificate:")
         print(" ".join(map(str,cert)))
     elif certificate == 4:
         cert = [x+1 for x in cert]
-        print("# correct certificate:")
         print(" ".join(map(str,cert)))
         
-
 
 exit(0)

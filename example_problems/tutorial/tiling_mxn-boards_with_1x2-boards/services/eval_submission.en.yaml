@@ -1,5 +1,8 @@
 %YAML 1.2
 ---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 too-few-lines: "Your file has only {i-1} lines instead of {N}."
 wrong-line-length-single-newline-char: "Disregarding its single newline character, the {i}-th line of your file has {len(risp_line)} characters instead of {N}."
 wrong-line-length-more-newline-chars: "Disregarding its {len(risp_line_full)-len(risp_line)} newline characters, the {i}-th line of your file has {len(risp_line)} characters instead of {N}."
