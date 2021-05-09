@@ -5,7 +5,7 @@ import re
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-#from magic_indexes_lib import *
+from magic_indexes_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
 problem="magic_indexes"
@@ -21,16 +21,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
-
-def check_input_vector(vec):
-    for i in range(1,len(vec)):
-        if vec[i] == vec[i-1]:
-            TAc.print(LANG.render_feedback("equal-values", f'No. Your vector contains entries with the same value vec[{i-1}] = {vec[i-1]} =vec[{i}].'), "red", ["bold"])
-            exit(0)
-        if vec[i] < vec[i-1]:
-            TAc.print(LANG.render_feedback("decrease", f'No. Your vector is not incrisingly sorted: vec[{i-1}] = {vec[i-1]} > {vec[i]} = vec[{i}].'), "red", ["bold"])
-            exit(0)
-
 if ENV['input_vector'] == 'lazy_input':
     TAc.print("\n#Enter an increasing sequence of integer values separated by commas (no spaces). This will be your <input_vector> (example: -12,0,34,56). You will be returned the sorted list of magic indexes for this vector.", "green")
     TAc.print("\n#Insert your input vector:", "green")
@@ -39,7 +29,7 @@ if ENV['input_vector'] == 'lazy_input':
 else:
     vec = ENV['input_vector'].split(',')
 vec = list(map(int, vec))
-check_input_vector(vec)
+check_input_vector(vec, TAc, LANG)
 
 TAc.print("[ ", "yellow", end="")
 for i in range(len(vec)):
