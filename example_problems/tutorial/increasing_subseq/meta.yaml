@@ -115,7 +115,7 @@ services:
         default: 1
       goal:
         explains: "set your goal (efficient includes also correct)."
-        regex: ^(correct|quadratic|quasi_linear)$
+        regex: ^(correct|quadratic|quasi_linear|efficient)$
         default: correct
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
