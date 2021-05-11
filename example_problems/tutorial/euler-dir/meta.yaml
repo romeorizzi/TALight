@@ -64,6 +64,40 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  check_YES_certificate:
+    explain: "This service will check if the certificate of the directed graph you provide us is a yes certificate"
+    evaluator: [python,services/check_YES_certificate_server.py]
+    args:
+      n:
+        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
+        default: lazy
+        explain: "Number of nodes."
+      m:
+        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
+        default: lazy
+        explain: "Number of arcs."
+      goal:
+        regex: ^(correct)$
+        default: correct
+      feedback:
+        regex: ^(none|full)$
+        default: none
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  eval_YES_certificate:
+    explain: "Given a certificate and the directed graph, can you decide if the certificate is correct?"
+    evaluator: [python,services/eval_YES_certificate_server.py]
+    args:
+      goal:
+        regex: ^(correct)$
+        default: correct
+      code_lang: 
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
     args:
