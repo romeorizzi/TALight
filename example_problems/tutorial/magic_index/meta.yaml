@@ -14,13 +14,13 @@ services:
         default: it
   check_magic_indexes:
     explain: "You give us a sorted vector of distinct integers and the sorted list of magic indexes. We check it out."
-    evaluator: [python, services/spot_magic_indexes_server.py]
+    evaluator: [python, services/check_magic_indexes_server.py]
     args:
       input_vector:
-        regex:  ^(lazy|-{0,1}[1-9][0-9]{0,3}(,-{0,1}[1-9][0-9]{0,3}){0,1000})$
+        regex:  ^(lazy_input|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
         default: lazy
       input_list:
-        regex:  ^(lazy|[1-9][0-9]{0,3}(,[1-9][0-9]{0,3}){0,1000})$
+        regex:  ^(lazy_input|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
         default: lazy
       silent:
         regex: ^(0|1)$

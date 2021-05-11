@@ -23,3 +23,10 @@ def random_vector(n, seed="any"):
     vec.sort()  # and we sort the list of elements
     
     return vec,seed
+
+def spot_magic_index(vec):
+    magic_indexes = []
+    for i in range(len(vec)):
+        if vec[i]==i:
+            magic_indexes.append(i)
+    return magic_indexes
