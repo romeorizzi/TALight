@@ -61,8 +61,8 @@ class Graph():
                 return False
         return True
 
-def printCircuit(adj):
 
+def printCircuit(adj):
     curr_path = [0] 
     circuit = []
 
@@ -77,7 +77,7 @@ def printCircuit(adj):
     
     for i in range(len(circuit)-1, 0, -1):
         print(circuit[i],circuit[i-1])
- 
+
 
 def GenerateGraph():
     n = random.randrange(10,20)
