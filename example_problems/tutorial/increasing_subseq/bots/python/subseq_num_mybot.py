@@ -3,7 +3,7 @@ from sys import stderr, exit, argv
 
 def count_occurences(T, S):
     m = len(T) #T
-    n = len(S)  #S
+    n = len(S) #S
 
     lookup = [[0] * (n + 1) for i in range(m + 1)]
 

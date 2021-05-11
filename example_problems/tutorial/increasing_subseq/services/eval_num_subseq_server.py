@@ -110,10 +110,10 @@ for instance in instances:
     time = one_test(instance["m"], instance["n"], instance["max_val"], instance["yes"], instance["seed"])
     count +=1
     print(f"#Correct! [took {time} seconds on your machine]")
-    if time > 1:
+    if time > 50:
         if count > NUM_instances_correct:
-            TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution answers correctly on a first set of instances (with |T|, the length of T, up to {instance[0]}.'), "green")
-        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to answer on an instance where |T|={instance[0]} and |S|={instance[1]}.'), "red", ["bold"])        
+            TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution answers correctly on a first set of instances (with |T|, the length of T, up to {instance["m"]}.'), "green")
+        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]} and |S|={instance["n"]}.'), "red", ["bold"])        
         exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. ♥  Your solution appears to be correct (checked on several instances).'), "green")
