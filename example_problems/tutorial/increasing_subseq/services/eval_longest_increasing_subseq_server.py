@@ -10,18 +10,20 @@ from multilanguage import Env, Lang, TALcolors
 from increasing_subsequence_lib import *
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
-service="eval_longest_subseq"
+service="eval_longest_increasing_subseq"
 args_list = [
-    ('seed', str),
     ('lang', str),
     ('goal', str),
     ('code_lang',str),
+    ('seed', str),
     ('YES_cert', bool),
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
+
+# START CODING YOUR SERVICE:
 
 max_val = 100
 if ENV['seed']=='random_seed': 
@@ -32,6 +34,26 @@ random.seed(seed_service)
 
 TAc.print(LANG.render_feedback("seed-service",f"# The service is running with seed={seed_service}"), "green")
 TAc.print(LANG.render_feedback("explain-protocol","# Each instance gives you a sequence of numbers T. You should answer with the length of the longest increasing sub-sequence."), "green")
+
+
+#                       N                           opt
+# correct     | 20 compilato;  15 python, java     | *  |
+# quadratic   | 500 compilato; 100 python, java    | *  |
+# n_times_opt | 50000 compilato; 2000 python, java | 20 |
+# quasi_linar | 100000 compilato; 10000 python, java | *, anche lunghe |
+#
+# 1 secondo
+
+# come generare n = 100000, opt = 20 (si mette in sequenza o si fà un multi-merge arbitrario di 20 sequenze non-crescenti)
+
+
+|n_times_opt|quasi_linear
+
+
+MAX_M_correct = 20 # len_T
+
+
+
 MAX_M_correct = 20 # len_T
 NUM_instances_correct = 20
 if ENV["code_lang"]=="compiled":
