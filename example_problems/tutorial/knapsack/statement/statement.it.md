@@ -11,7 +11,7 @@ e noi vogliamo scegliere un sottoinsieme $S$ di $\mathbf{N}_n := \{0,1,2,\ldots,
 
 Denotiamo con $opt(C,n,w,v)$ il valore della soluzione ottima, ossia il massimo valore totale acquisibile senza sforare il vincolo di capacità dello zaino.
 
-**Knapack [come problema di costruzione]**
+**Knapsack [come problema di costruzione]**
 
 INPUT: $C$, $n$, e i $2\,n$ numeri naturali
 $v_i$ e $w_i$, $i\in \mathbf{N}_n$.
@@ -22,16 +22,16 @@ OUTPUT: restituire una scelta di oggetti $S\subseteq \mathbf{N}_n$ tale che $\su
 
 Prima di essere un modello fondamentale della Ricerca Operativa e della Computer Science, il Knapsack è un problema per il quale è stato opportuno sviluppare efficaci algoritmi che lo risolvano. Per focalizzare meglio questi sforzi, risultano preferibili delle formulazioni più essenziali del problema.
 
-**Knapack [forma di ottimizzazione]**
+**Knaspack [forma di ottimizzazione]**
 
 INPUT: $C$, $n$, e i $2\,n$ numeri naturali
-$v_i$ e $w_i$, $i\in \mathbf{N}_n$, ma anche un valore target $T\in \mathbf{N}$.
+$v_i$ e $w_i$, $i\in \mathbf{N}_n$.
 
 OUTPUT: $opt(C,n,w,v)$.
 
 Per analizzare meglio la complessità di questo problema di ottimizzazione combinatoria potremmo associare ad esso il seguente problema di decisione:
 
-**Knapack [forma di decisione]**
+**Knapsack [forma di decisione]**
 
 INPUT: $C$, $n$, e i $2\,n$ numeri naturali
 $v_i$ e $w_i$, $i\in \mathbf{N}_n$, ma anche un valore target $T\in \mathbf{N}$.
