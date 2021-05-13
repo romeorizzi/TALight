@@ -1,282 +1,131 @@
 public_folder: public
 services:
-  check_one_sol:
-    explains: "this service checks whether an input string of '(' and ')' characters is a well formed formula of parentheses."
-    evaluator: [python, services/check_one_sol_server.py]
+  dec2opt:
+    explains: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
+    evaluator: [python, services/dec2opt_server.py]
     args:
-      input_formula:
-        regex:  ^(\(|\)){0,1000}$
-      silent:
-        explains: "if your formula is well formed then the service runs silently; otherwise it explains what is the problem in clear."
-        regex: ^(0|1)$
-        default: 0
       n:
-        explains: "set this to prescribe the precise number of pairs of parentheses involved."
-        regex: ^(free|0|[1-9][0-9]{0,1000})$
-        default: free
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  check_num_sol:
-    explains: "call this service to check that the number of well formed formulas with <n_pairs> pairs of parenthes is what you think (<risp>)."
-    evaluator: [python, services/check_num_sol_server.py]
-    args:
-      n_pairs:
-        regex: ^(0|[1-9][0-9]{0,1}|100)$
-      risp:
-        regex: ^(0|[1-9][0-9]{0,50})$
-        explain: "what you conjecture to be the number of well-formed formulas on <n_pairs> pairs of parentheses."
-      ok_if_congruent_modulus:
-        explain: "when n grows the number of well formed formulas gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas."  
-        regex: ^(0|[1-9][0-9]{0,10})$
-        default: 0
-#        default: 1000000007
-      more_or_less_hint_if_wrong:
-        regex: ^(0|1)$
-        default: 0
-      silent:
-        explains: "the service runs silently unless your conjectured answer is wrong (or for wrong calls)."
-        regex: ^(0|1)$
-        default: 0
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  eval_num_sol:
-    evaluator: [python, services/eval_num_sol_server.py]
-    args:
-      answ_modulus:
-        explain: "when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <answ_modulus> will suffice in assessing you got the right ideas."  
-        regex: ^([1-9][0-9]{0,10}|0)$
-        default: 0
-#        default: 1000000007
-      goal:
-        explains: "set your goal (efficient includes also correct)."
-        regex: ^(correct|efficient)$
-        default: correct
-      code_lang: 
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
-        regex: ^(python|java|nodejs|compiled)$
-        default: python
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  check_sol_set:
-    evaluator: [python, services/check_sol_set_server.py]
-    args:
-      feedback:
-        regex: ^(yes_no|dispell_longest_seen_prefix_of_a_missing_sol|tell_minimal_missing_prefix|give_a_missing_sol|tell_a_missing_prefix_of_len_[1-9][0-9]{0,10})$
-        default: yes_no
-        explain: the options are as follows
-        explain1: -yes_no= just tell me if I am missing one solution.
-        explain2: -dispell_longest_seen_prefix_of_a_missing_sol= please, of one solution I am missing, give me the longest prefix it has in common with a solution I have given.
-        explain3: -tell_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution I get a new one.
-        explain4: -give_a_missing_sol= just spoil me out a solution I have missed.
-        explain5: -tell_a_missing_prefix_of_len_?= please, of one solution I am missing, give me the prefix of the specified length (the number put in place of ?).
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  check_sol_list:
-    evaluator: [python, services/check_sol_list_server.py]
-    args:
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
-      feedback:
-        regex: ^(yes_no|spot_first_wrong_consec|dispell_longest_seen_prefix_of_first_missing|tell_minimal_missing_prefix|give_first_missing|tell_first_missing_prefix_of_len_[1-9][0-9]{0,10})$
-        default: yes_no
-        explain: the options are as follows
-        explain1: -yes_no= just tell me if I am missing one solution.
-        explain2: -spot_first_wrong_consec= point me out where I have placed as consecutive two solutions which are not consecutive in the intended order (hence, one solution between them is missing in my listing).
-        explain3: -dispell_longest_seen_prefix_of_first_missing= please, of the first solution I am missing, give me the longest prefix it has in common with a solution I have given.
-        explain4: -tell_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution I get a new one.
-        explain5: -give_first_missing= just spoil me out a solution I have missed.
-        explain6: -tell_first_missing_prefix_of_len_?= please, of the first solution I am missing, give me the prefix of the specified length (the number put in place of ?).
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  gen_random_sol:
-    evaluator: [python, services/gen_random_sol_server.py]
-    args:
-      n_pairs:
-        regex: ^(0|[1-9][0-9]{0,5}|1000000)$
-      verbose:
-        explain: sets the verbosity level of the service. The options are as follows
-        explain1: "0. print only the generated formula."
-        explain2: "1. print the generated formula but also the seed (only in case seed=random_seed)."
-        explain3: "2. print the random seed (first line) and the generated formula (second line) and the seed (only in case seed=random_seed)."
-        explain4: "3. print everything (also the opening message)."
-        regex: ^(0|1|2|3)$
-        default: 0
+        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        default: small
       seed:
+        explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  check_next_sol:
-    evaluator: [python, services/check_next_sol_server.py]
-    args:
-      current_sol:
-        regex:  ^(\(|\)){0,1000}$
-      next_sol:
-        regex:  ^(\(|\)){0,1000}$
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
-      tell_maximal_correct_feedback:
-        regex: ^(0|1)$
-        default: 0
-      silent:
-        explains: "if nothing is wrong then the service runs silently."
-        regex: ^(0|1)$
-        default: 0
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  eval_next:
-    evaluator: [python, services/eval_next_server.py]
-    args:
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
       goal:
-        explains: "set your goal (efficient includes also correct)."
-        regex: ^(correct|efficient)$
+        regex: ^(correct|at_most_one_call)$
         default: correct
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  opt2con:
+    explains: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
+    evaluator: [python, services/opt2con_server.py]
+    args:
+      n:
+        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        default: small
       seed:
+        explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-      code_lang: 
-        regex: ^(python|java|nodejs|compiled)$
-        default: python
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  check_rank:
-    evaluator: [python, services/check_rank_server.py]
-    args:
-      input_formula:
-        regex:  ^(\(|\)){0,1000}$
-      rank:
-        regex: ^(0|[1-9]|[0-9]{0,300})$
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
-      more_or_less_hint_if_wrong:
-        regex: ^(0|1)$
-        default: 0
-      silent:
-        regex: ^(0|1)$
-        default: 0
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  check_unrank:
-    evaluator: [python, services/check_unrank_server.py]
-    args:
-      input_rank:
-        regex: ^(0|[1-9]|[0-9]{0,300})$
-      formula:
-        regex:  ^(\(|\)){0,1000}$
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
-      more_or_less_hint_if_wrong:
-        regex: ^(0|1)$
-        default: 0
-      silent:
-        regex: ^(0|1)$
-        default: 0
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  eval_rank:
-    evaluator: [python, services/eval_rank_server.py]
-    args:
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
       goal:
-        explains: "set your goal (efficient includes also correct)."
-        regex: ^(correct|efficient)$
+        regex: ^(correct|at_most_one_call)$
         default: correct
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  dec2con:
+    explains: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
+    evaluator: [python, services/dec2con_server.py]
+    args:
+      n:
+        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        default: small
       seed:
+        explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-      code_lang: 
-        regex: ^(python|java|nodejs|compiled)$
-        default: python
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
-  eval_unrank:
-    evaluator: [python, services/eval_unrank_server.py]
-    args:
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
       goal:
-        explains: "set your goal (efficient includes also correct)."
-        regex: ^(correct|efficient)$
+        regex: ^(correct|at_most_one_call)$
         default: correct
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  opt2dec:
+    explains: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
+    evaluator: [python, services/dec2opt_server.py]
+    args:
+      n:
+        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        default: small
       seed:
-        regex: ^(random_seed|[1-9]|[0-9]{5,5})$
+        explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-      code_lang: 
-        regex: ^(python|java|nodejs|compiled)$
-        default: python
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
+      goal:
+        explain: the options are as follows:
+	explain1: [correct] we only check that your answer to the optimization problem is correct.
+	explain2: [at_most_opt_calls] we check that your answer to the optimization problem is correct and that you do not make more than opt_calls to the oracle.
+	explain3: [polynomial] when numbers are encoded by means of a positional notation, as we do, then the share value of natural numbers grows exponentially in the length of the strings encoding them. Therefore, the opt value might be exponentially big in the length of the string encoding the input. As such, in this context polynomial means polynomial in log opt. We are asking you to exhibit a polynomial reduction, not just a pseudo-polynomial one.
+        regex: ^(correct|at_most_opt_calls|polynomial)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  gimme_rank:
-    evaluator: [python, services/gimme_rank_server.py]
+  con2opt:
+    explains: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange."
+    evaluator: [python, services/opt2con_server.py]
     args:
-      formula:
-        regex:  ^(\(|\)){0,1000}$
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
+      n:
+        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        default: small
+      seed:
+        explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      goal:
+        regex: ^(correct|number_of_calls_linear_in_n)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  gimme_unrank:
-    evaluator: [python, services/gimme_unrank_server.py]
+  con2dec:
+    explains: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle for the decision form as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange. Posing yourself a different set of goals, you might also ask for one single call to an oracle for the Knapsack problem in its optimization form (see the arguments of the service to know more)."
+    evaluator: [python, services/dec2con_server.py]
     args:
-      n_pairs:
-        regex: ^(0|[1-9][0-9]{0,1}|1000)$
-      rank:
-        regex: ^(0|[1-9]|[0-9]{0,1000})$
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
+      n:
+        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        default: small
+      seed:
+        explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      goal:
+        regex: ^(correct|polynomial_dec_calls|at_most_n_dec_calls)$
+        default: correct
+      ask_for_one_opt_oracle_call:
+        explain: "setting this flag to 1, your very first call to an oracle is interpreted as a call to an oracle for the Knapsack problem in its optimization form. By resorting on a suitable such call, you can reduce to at most n the calls to the decision oracle."
+        regex: ^(0|1)$
+        default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  gimme_next_sol:
-    evaluator: [python, services/gimme_next_sol_server.py]
+  trilly:
+    explains: "this service poses you an n elements instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange."
+    evaluator: [python, services/trilly_server.py]
     args:
-      current_sol:
-        regex:  ^(\(|\)){0,1000}$
-      sorting_criterion:
-        regex: ^(loves_opening_par|loves_closing_par)$
-        default: loves_opening_par
+      n:
+        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        default: small
+      seed:
+        explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      goal:
+        regex: ^(correct|polynomial_calls|at_most_n_dec_calls|at_most_2_dec_calls)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
-    args:
-      service:
-        regex: ^((\S)+)$
-        default: synopsis
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
+
 
