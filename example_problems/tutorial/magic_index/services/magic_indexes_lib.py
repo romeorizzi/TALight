@@ -30,3 +30,56 @@ def spot_magic_index(vec):
         if vec[i]==i:
             magic_indexes.append(i)
     return magic_indexes
+
+
+questions = 0
+recursions = 0
+
+def magic_index(array, l, u):
+  global questions
+  global recursions
+
+  if l == u and l > 0:
+    # ci chiediamo sempre se ho un elemento è un Magic index
+    questions += 1
+    if array[l] == l:        
+        return [l]
+    return []
+
+  if l > u:
+    return []
+
+  #ci chiediamo sempre se il valore del lower è maggiore dell'indice del lower
+  questions += 1
+  if array[l] > l:
+    return []
+
+  #ci chiediamo sempre se il valore dell'upper è minore dell'indice dell'upper
+  questions += 1
+  if array[u] < u:
+    return []
+
+  #ci chiediamo sempre se i valori degli estremi sono uguali ai loro indici
+  questions += 2
+  if array[l] == l and array[u] == u:
+    return array[l:u + 1]
+
+  else:
+    mid = (l + u) // 2
+
+    #ci chiediamo sempre se l'elemento corrente 'smezzato' è mag del suo indice
+    questions += 1
+    if array[mid] > mid:      
+      recursions += 1
+      return magic_index(array, l, mid - 1)
+
+    #ci chiediamo sempre se l'elemento corrente 'smezzato' è minore del suo indice 
+    #(non serve sommare una question sotto nell'uguale perchè si va ad esclusione coi primi due)
+    questions += 1
+    if array[mid] < mid:
+      recursions += 1
+      return magic_index(array, mid + 1, u)
+
+    if array[mid] == mid:  # se è un magic index, aggiungilo
+      recursions += 2
+      return magic_index(array, l, mid - 1) + [mid] + magic_index(array, mid + 1, u)

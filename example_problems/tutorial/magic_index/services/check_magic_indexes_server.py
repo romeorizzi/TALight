@@ -31,8 +31,8 @@ ans = list(map(int, ans))
 check_input_vector(vec, TAc, LANG)
 check_input_vector(ans, TAc, LANG)
 
-risp_correct = spot_magic_index(vec)
-
+#risp_correct = spot_magic_index(vec)
+risp_correct = magic_index(vec,0, len(vec)-1)
 
 TAc.print(LANG.render_feedback("input_vector", f'Your vector: {ENV["input_vector"]} '), "yellow", ["bold"])
 TAc.print(LANG.render_feedback("input_list", f'Your answer: {ENV["input_list"]} '), "yellow", ["bold"])
