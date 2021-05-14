@@ -475,3 +475,19 @@ def get_max_inc_seq(T,col):
 
     ret.reverse()
     return ret
+
+def get_n_log_increasing_instance(m, max_val, seed):
+    if seed == None:
+        seed = random.randrange(sys.maxsize)
+    random.seed(seed)
+    n_seq = math.ceil(m/20)
+    instance = []
+    for i in range(20):
+        instance += generate_random_dec_seq(n_seq, max_val, seed+i)
+
+    return instance, seed
+
+
+
+
+

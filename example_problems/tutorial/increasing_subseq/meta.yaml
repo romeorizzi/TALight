@@ -117,11 +117,11 @@ services:
         explain: "use this argument to specify what the bot is required to yield."
         explain1: "[only_opt_val]  the problem solver''s bot is required to yield only the maximum length of a longest strictly increasing subsequence."
         explain2: "[a_max_subseq]  the bot is required to yield not only the length but also a longest strictly increasing subsequence."
-        explain3: "[a_min_col]  the bot is required to yield not only the minimum number k of non-decreasing subsequences needed to cover all elemnts of the input sequence (which is equal to the maximum length of a longest strictly increasing subsequence) but also to specify, for each element of the input sequence, the non-decreasing subsequence including it (a number from 1 to k)."
+        explain3: "[a_min_col]  the bot is required to yield not only the minimum number k of non-decreasing subsequences needed to cover all elements of the input sequence (which is equal to the maximum length of a longest strictly increasing subsequence) but also to specify, for each element of the input sequence, the non-decreasing subsequence including it (a number from 1 to k)."
         explain4: "[both_certificates]  the yield should include all of the above."
       feedback_level:
         regex: ^(0|1|2|3)$
-        default: 2
+        default: 3
         explain: "(IGNORE THIS ARGUMENT IN THE CURRENT IMPLEMENTATION. Use full feedback) Set the feedback level (the levels form a total order where each level implies the previous one)."
         explain1: "[0] silent - it warns you only in case you have not reached your goals."
         explain2: "[1] only report - it reports on the achievement of the goals you have set."

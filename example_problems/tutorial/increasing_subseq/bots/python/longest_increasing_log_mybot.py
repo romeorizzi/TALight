@@ -33,7 +33,6 @@ def CeilIndex(A, l, r, key):
   
 def LongestIncreasingSubsequenceLength(A, size):
  
-  
     tailTable = [0 for i in range(size + 1)]
     length = 0
   
