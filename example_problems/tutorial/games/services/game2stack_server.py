@@ -4,7 +4,6 @@ from random import randrange
 
 from multilanguage import Env, Lang, TALcolors
 
-
 # METADATA OF THIS TAL_SERVICE:
 problem="games"
 service="game2stack"
@@ -50,3 +49,4 @@ for _ in range(ENV['num_questions']):
             
 TAc.Finished()
 exit(0)
+      

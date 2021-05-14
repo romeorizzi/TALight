@@ -42,7 +42,7 @@ else:
 TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
 pl.print_pirellone(pirellone)
 TAc.print(LANG.render_feedback("long-sol","Too long solution: "), "yellow", ["bold"])
-shortsol=pl.solution_irredundant(pirellone,sr,sc)
+shortsol=pl.solution_min(sr,sc)
 longsol=pl.solution_pad(shortsol,m,n,m+n+d,seed)
 print(" ".join(longsol))
 

@@ -31,7 +31,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   order_of_rows_columns:
-    explain: "You are asked to prove that the solvability of a 0/1-matrix is invariant under permutation of its rows (or columns). We give you a good 0/1-matrix and a sequence of swich row/column operations turnig it off (a certificate of goodness). We also give you a prmutation of the rows and a permutation of the columns of the matrix. You are required to give us a certificate of goodness for the permuted matrix."
+    explain: "You are asked to prove that the solvability of a 0/1-matrix is invariant under permutation of its rows (or columns). We give you a good 0/1-matrix and a sequence of switch row/column operations turnig it off (a certificate of goodness). We also give you a permutation of the rows and a permutation of the columns of the matrix. You are required to give us a certificate of goodness for the permuted matrix."
 #    example: "rtal connect pirellone -am=2 -an=3\\n1 0 1\\n0 1 0\\nr1 c2\\n2 1\\n3 2 1\\n>r2 c2"
     example: "rtal connect pirellone -am=2 -an=3"
     example1: "> 1 0 1"
@@ -52,7 +52,7 @@ services:
         explain: "Number of columns of the big matrix."
       seed:
         explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       lang:
         regex: ^(hardcoded|en|it)$
@@ -93,7 +93,7 @@ services:
       with_certificate:
         regex: ^(0|1)$
         default: 0
-        explain: if this flag is set to 1 and your assertion is false, then the service offers evidence of the fault.
+        explain: "if this flag is set to 1 and your assertion is false, then the service offers evidence of the fault."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

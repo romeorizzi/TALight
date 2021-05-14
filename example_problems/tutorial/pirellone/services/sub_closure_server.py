@@ -5,7 +5,7 @@ service="sub_closure"
 args_list = [
     ('m',int), 
     ('n',int),
-    ('goal',str),
+    ('seed',str),
     ('submatrix_type',str),
     ('lang',str),
     ('ISATTY',bool),
@@ -27,12 +27,16 @@ TAc.print(LANG.opening_msg, "green")
 
 m=ENV['m'] 
 n=ENV['n'] 
+if ENV['seed']=='random_seed': 
+    pirellone,seed,sr,sc=pl.random_pirellone(m, n, solvable=True,s=True)
+else:
+    pirellone,seed,sr,sc=pl.random_pirellone(m, n,ENV['seed'], solvable=True,s=True)
+random.seed(seed)
 
-TAc.print(LANG.render_feedback("instance",f"Instance {m}x{n}: "), "yellow", ["bold"])
-pirellone,_,sr,sc=pl.random_pirellone(m, n, solvable=True,s=True)
+TAc.print(LANG.render_feedback("instance",f"Instance {m}x{n} (of seed {seed}): "), "yellow", ["bold"])
 pl.print_pirellone(pirellone)
 TAc.print(LANG.render_feedback("instance-sol","Solution of instance: "), "yellow", ["bold"])
-print(" ".join(pl.solution_irredundant(pirellone,sr,sc)))
+print(" ".join(pl.solution_min(sr,sc)))
 sub_n=random.randint(2, n-1)
 sub_m=random.randint(2, m-1)
 sub_pirellone=[[0 for j in range(0,sub_n)] for i in range(0,sub_m)]
@@ -40,6 +44,7 @@ if ENV['submatrix_type']=='consecutive':
     for i in range(0,sub_m):
         for j in range(0,sub_n):
             sub_pirellone[i][j]=pirellone[i][j]
+    TAc.print(LANG.render_feedback("sub-matrix-sol",f"Solution of the consecutive submatrix {sub_m}x{sub_n} : "), "yellow", ["bold"])
 elif ENV['submatrix_type']=='any':
     r=[]
     c=[]
@@ -64,11 +69,20 @@ elif ENV['submatrix_type']=='any':
             sub_pirellone[h][k]=pirellone[i][j]
             k+=1
         k=0
-        h=+1
-     
-TAc.print(LANG.render_feedback("sub-matrix",f"Submatrix {sub_m}x{sub_n}"), "yellow", ["bold"])   
-pl.print_pirellone(sub_pirellone)     
-TAc.print(LANG.render_feedback("bub-matrix-sol",f"Solution of the submatrix {sub_m}x{sub_n} : "), "yellow", ["bold"])
+        h+=1
+    ul=[]    
+    for i in u:
+        ul.append(f"{i+1}")
+    vl=[]    
+    for j in v:
+        vl.append(f"{j+1}")
+    TAc.print(LANG.render_feedback("sub-matrix",f"Submatrix {sub_m}x{sub_n} defined by:"), "yellow", ["bold"])   
+    TAc.print(LANG.render_feedback("rows","Rows of the big matrix:"), "yellow", ["bold"]) 
+    print(" ".join(ul))
+    TAc.print(LANG.render_feedback("col","Columns of the big matrix:"), "yellow", ["bold"]) 
+    print(" ".join(vl))
+    pl.print_pirellone(sub_pirellone)     
+    TAc.print(LANG.render_feedback("sub-matrix-sol",f"Solution of the submatrix {sub_m}x{sub_n} : "), "yellow", ["bold"])
 solu=input()
 solu=solu.split()
 b,solvable=pl.check_off_lights(sub_pirellone,solu)

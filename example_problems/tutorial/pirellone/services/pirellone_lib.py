@@ -76,7 +76,56 @@ def check_off_lights(pirellone,solu):
             return True,'n'
         else:
             return False,'n'
-            
+
+def solution_min(switches_row,switches_col):
+    m=len(switches_row)
+    n=len(switches_col)
+    num_one=sum(switches_col)+sum(switches_row)
+    if num_one>m+n-num_one:
+        switches_row = [ 1-val for val in switches_row]
+        switches_col = [ 1-val for val in switches_col]
+    lista=[]
+    for i in range(m):
+        if switches_row[i]:
+            lista.append(f"r{i+1}")
+    for j in range(n):
+        if switches_col[j]:
+            lista.append(f"c{j+1}")
+    return lista
+        
+def solution(pirellone):
+    m=len(pirellone)
+    n=len(pirellone[0]) 
+    sr=[]
+    sc=[]
+    for j in range(n):
+        if pirellone[0][j]:
+            sc.append(j)
+            switch_col(j,pirellone)
+    for i in range(1,m):
+        if pirellone[i][0]:
+            sr.append(i)
+            switch_row(i,pirellone)
+    if len(sr)+len(sc)>= (m+n)//2:
+        switches_row=[]
+        switches_col=[]
+        for j in range(n):
+            if j not in sc:
+                switches_col.append(j)
+        for i in range(m):
+            if i not in sr:
+                switches_row.append(i)
+    else:
+        switches_row=sr
+        switches_col=sc
+    lista=[]
+    for i in switches_row:
+        lista.append(f"r{i+1}")
+    for j in switches_col:
+        lista.append(f"c{j+1}")
+    return lista
+        
+#forse non corretta la seguente funzione            
 def solution_irredundant(pirellone,switches_row,switches_col,smallest=True):
     m=len(switches_row)
     n=len(switches_col)
@@ -119,6 +168,8 @@ def solution_pad(sol,m,n,lb,seed="any"):
         longsol.append(num)      
     random.shuffle(longsol)
     return longsol
+
+
 
 def min_lights_on(pirellone):
     s=0

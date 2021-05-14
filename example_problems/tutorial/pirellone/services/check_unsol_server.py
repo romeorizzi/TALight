@@ -2,9 +2,10 @@
 
 # METADATA OF THIS TAL_SERVICE:
 problem="pirellone"
-service="check_unsolvability"
+service="check_unsol"
 args_list = [
-    ('goal',str),
+    ('assertion',str),
+    ('with_certificate',int),
     ('lang',str),
     ('ISATTY',bool),
 ]
@@ -27,23 +28,20 @@ p=[]
 for i in range(m):
     row = TALinput(int, num_tokens=n) 
     p.append(row)
-if ENV['goal']=='minimum' or ENV['goal']=='any':
-    if n>2 or m>2:
-        TAc.NO() 
-        TAc.print(LANG.render_feedback("no-min","Not minimum matrix."), "red", ["bold"])
-    else:
-        if pl.is_solvable(p):
-            TAc.NO() 
-            TAc.print(LANG.render_feedback("solvable","Solvable!"), "red", ["bold"])
-        else:
-            TAc.OK()
-            TAc.print(LANG.render_feedback("correct","Correct: it is not solvable and minimum."), "green", ["bold"])
+
+if n>2 or m>2:
+    TAc.NO() 
+    TAc.print(LANG.render_feedback("no-min","Not minimum matrix."), "red", ["bold"])
 else:
     if pl.is_solvable(p):
-            TAc.NO() 
-            TAc.print(LANG.render_feedback("solvable","Solvable!"), "red", ["bold"])
+        TAc.NO() 
+        TAc.print(LANG.render_feedback("solvable","Solvable!"), "red", ["bold"])
+        if ENV['with_certificate']:
+            TAc.print(LANG.render_feedback("sol","This is the solution: "), "yellow", ["bold"])
+            sol=pl.solution(p)
+            print(" ".join(sol))
     else:
         TAc.OK()
-        TAc.print(LANG.render_feedback("correct-no-min","Correct but not minimum."), "green", ["bold"])
-    
+        TAc.print(LANG.render_feedback("correct","Correct: it is not solvable and minimum."), "green", ["bold"])
+
 exit(0)
