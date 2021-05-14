@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from sys import exit
+import math
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
@@ -12,6 +13,7 @@ service="check_static_strategy"
 args_list = [
     ('n', int),
     ('version', str),
+    ('feedback', str),
     ('lang', str),
     ('ISATTY', bool),
 ]
@@ -73,11 +75,23 @@ def checkStaticStrategy(weighedList, falseCoinIsLeighter, output=True):
                 result = Utilities.makeWeighWithFalseHeavier(leftScale, rightScale, weighedResults[i]['coin'])
             weighedResults[i]['weighed'].append(result)
     coinsNotDistinct = findEqualWeighs(weighedResults)
+    numberOfScale = len(weighedList)
+    feedback = ENV['feedback']
     if len(coinsNotDistinct) == 0 and output:
-        TAc.print(LANG.render_feedback("found-false-coin", 'Congratulations! Your strategy finds the false coin.'), "green", ["bold"])
+        if feedback == "optimal":
+            optimalNumOfScales = math.ceil(math.log(ENV['n'], 3))
+            if numberOfScale > optimalNumOfScales:
+                TAc.print(LANG.render_feedback("found-false-coin-not-optimal", 'Your strategy finds the false coin but it\'s not optimal.'), "red", ["bold"])
+            else:
+                TAc.print(LANG.render_feedback("found-false-coin-optimal", 'Congratulations! Your strategy finds the false coin and it\'s optimal.'), "green", ["bold"])        
+        else:
+            TAc.print(LANG.render_feedback("found-false-coin", 'Congratulations! Your strategy finds the false coin.'), "green", ["bold"])
     elif len(coinsNotDistinct) != 0 and output:
         TAc.NO()
-        TAc.print(LANG.render_feedback("ambiguos-strategy", f'Your strategy is ambiguous because it doesn\'t distinguish the coins {coinsNotDistinct}.'), "red", ["bold"])
+        if feedback == "provide_counterexample":
+            TAc.print(LANG.render_feedback("ambiguos-strategy", f'Your strategy is ambiguous because it doesn\'t distinguish the coins {coinsNotDistinct}.'), "red", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback("fail-strategy", 'Your strategy doesn\'t find the false coin.'), "red", ["bold"])
     return coinsNotDistinct
 
 
@@ -98,17 +112,29 @@ def manageDifferentFalseCoinWeight(weighedList):
     resultCheckWeight = checkCoinWeightStrategy(weighedList)
     coinsNotDistinct = checkStaticStrategy(weighedList, falseCoinIsLeighter=True, output=False)
     resultStrategy = len(coinsNotDistinct) == 0
+    numberOfScale = len(weighedList)
+    feedback = ENV['feedback']
     if resultCheckWeight and resultStrategy:
-        TAc.print(LANG.render_feedback("found-coin-weight", 'Congratulations! Your strategy finds the false coin weight and position.'), "green", ["bold"])
-    elif not resultCheckWeight and resultStrategy:
+        if feedback == "optimal":
+            optimalNumOfScales = math.ceil(math.log((ENV['n'] * 2) + 1, 3))
+            if numberOfScale > optimalNumOfScales:
+                TAc.print(LANG.render_feedback("found-coin-weight-optimal", 'Congratulations! Your strategy finds the false coin weight and position but it\'s not optimal.'), "red", ["bold"])
+            else:
+                TAc.print(LANG.render_feedback("found-coin-weight-optimal", 'Congratulations! Your strategy finds the false coin weight and position and it\'s optimal.'), "green", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback("found-coin-weight", 'Congratulations! Your strategy finds the false coin weight and position.'), "green", ["bold"])
+    elif feedback == "provide_counterexample":
         TAc.NO()
-        TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your measures do not suffice. Actually, with this set of measures you can not even tell whether the false coin is lighter or heavier than the others. However, if we knew this a priori (whether the false coin is heavier or lighter) then your strategy would always identify the false coin.'), "red", ["bold"])
-    elif resultCheckWeight and not resultStrategy:
-        TAc.NO()
-        TAc.print(LANG.render_feedback("not-found-coin-weight", f'Your measures do not suffice. Indeed, these measures understand if the false coin is heavier or lighter but not which it because it does not distinguish the coins {coinsNotDistinct}.'), "red", ["bold"])
+        if not resultCheckWeight and resultStrategy:
+            TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your measures do not suffice. Actually, with this set of measures you can not even tell whether the false coin is lighter or heavier than the others. However, if we knew this a priori (whether the false coin is heavier or lighter) then your strategy would always identify the false coin.'), "red", ["bold"])
+        elif resultCheckWeight and not resultStrategy:
+            TAc.print(LANG.render_feedback("not-found-coin-weight", f'Your measures do not suffice. Indeed, these measures understand if the false coin is heavier or lighter but not which it because it does not distinguish the coins {coinsNotDistinct}.'), "red", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter.'), "red", ["bold"])
     else:
         TAc.NO()
         TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter.'), "red", ["bold"])
+
 
 
 

@@ -11,7 +11,8 @@ services:
       version: 
         regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
         default: false_is_leighter
-      feedback: ^(yes_no|provide_counterexample|optimal)$
+      feedback:
+        regex: ^(yes_no|provide_counterexample|optimal)$
         default: yes_no
         explain: choose the feedback level. Options are as follows
         explain1: -yes_no= just tell me if my strategy is correct (correct does not imply optimal)
@@ -31,7 +32,8 @@ services:
       version: 
         regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
         default: false_is_leighter
-      feedback: ^(yes_no|provide_counterexample|optimal)$
+      feedback: 
+        regex: ^(yes_no|provide_counterexample|optimal)$
         default: yes_no
         explain: choose the feedback level. Options are as follows
         explain1: -yes_no= just tell me if my strategy is correct (correct does not imply optimal)
@@ -42,7 +44,7 @@ services:
         default: it
   empass_static_strategy_lighter_or_heavier:
     explain: "this service proves that, for an infinite number of n, two experiments are not enough to understand whether the false coin is heavier or lighter than the others. To do so, you provide us with a lower bound lb and we return you the smalles n >= lb such that no static strategy with only two expriments exists. You then provide us a static strategy for that n, with at most two experiments, and we explain why your static strategy fails."
-    evaluator: [python3, services/check_static_strategy/empass_static_strategy_lighter_or_heavier_server.py]
+    evaluator: [python3, services/empass_static_strategy_lighter_or_heavier/empass_static_strategy_lighter_or_heavier_server.py]
     args:
       lb:
         regex: ^[1-9][0-9]?$|^100$
