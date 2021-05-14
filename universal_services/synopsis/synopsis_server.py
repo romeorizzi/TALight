@@ -56,6 +56,14 @@ TAc.print(LANG.render_feedback("service-of", f'   (service of the {problem} prob
 if "explain" in meta_yaml_book['services'][ENV['service']].keys():
     TAc.print('\nDescription:', "green", ["bold"])
     print("   "+eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['explain'])}'"))
+if "example" in meta_yaml_book['services'][ENV['service']].keys():
+    TAc.print('   Example: ', ["bold"], end="")
+    print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['example'])}'"))
+    i = 1
+    while ("example"+str(i)) in meta_yaml_book['services'][ENV['service']].keys():
+      print(" "*6, end="")
+      print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['example'+str(i)])}'"))
+      i += 1
 if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
     TAc.print(LANG.render_feedback("the-num-arguments", f'\nThe {len(meta_yaml_book["services"][ENV["service"]]["args"])} arguments of service {ENV["service"]}:'), "green", ["bold"])
     for a,i in zip(meta_yaml_book['services'][ENV['service']]['args'],range(1,1+len(meta_yaml_book['services'][ENV['service']]['args']))):
@@ -74,6 +82,11 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
         if "example" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             TAc.print('   Example: ', ["bold"], end="")
             print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['example'])}'"))
+            i = 1
+            while ("example"+str(i)) in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
+              print(" "*6, end="")
+              print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['example'+str(i)])}'"))
+              i += 1
         if "default" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             TAc.print('   Default Value: ', ["bold"], end="")
             print(str(meta_yaml_book['services'][ENV['service']]['args'][a]['default']))
