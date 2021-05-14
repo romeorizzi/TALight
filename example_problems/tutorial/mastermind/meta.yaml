@@ -1,7 +1,7 @@
 public_folder: public
 services:
   tell_score:
-    explain: "You provide both the secret code and a probing code that will be scored against the secret code according too the rules of the game."
+    explain: "You provide both the secret code and a probing code that will be scored against the secret code according to the rules of the game."
     evaluator: [python, services/tell_score_server.py]
     args:
       secret_code:
@@ -17,10 +17,6 @@ services:
     explain: "Your scoring competence is assessed. You are given both the secret code and a guessed code that you should score according to the rules."
     evaluator: [python, services/check_scoring_competence_server.py]
     args:
-      num_questions:
-        regex: ^([1-9]|[1-2][0-9]|30)$
-        default: 10
-        explain: "a number from 1 to 30, the number of questions posed to the problem solver to test the competence"
       num_pegs:
         regex: ^([1-9])$
         default: 4
@@ -34,9 +30,9 @@ services:
     evaluator: [python, services/play_server.py]
     args:
       max_num_attempts:
-        regex: ^([1-9]|[1-2][0-9]|30)$
+        regex: ^([1-9]|[1-4][0-9]|50)$
         default: 10
-        explain: "a number from 1 to 30, the number of questions posed to the problem solver to test the competence"
+        explain: "a number from 1 to 50, the number of questions posed to the problem solver to test the competence"
       num_pegs:
         regex: ^([1-9])$
         default: 4
