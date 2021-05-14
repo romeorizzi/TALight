@@ -1,44 +1,61 @@
 public_folder: public
 services:
   check_static_strategy:
-    explain: "choose an n and specify a sequence of measurements with the scale that allows to always identify among n coins the false one."
+#    explain: "What is the smallest number of two-pan scale weighings required to distinguish a single heavier coin from a set of n otherwise identical coins?"
+    explain: "choose an n and specify a set of two-pan scale weighings that always allow to identify the false coin among n otherwise identical coins."
+    example: "with n=3, a correct (and optimal) static strategy would be:"
+    example1: "1, 2"
+    example2: "with n=4, a correct (and not optimal) static strategy would be:"
+    example3: "1 2, 3 4"
+    example4: "1, 2"
+    example5: "3, 4"
     evaluator: [python3, services/check_static_strategy/check_static_strategy_server.py]
     args:
       n:
         regex: ^[1-9][0-9]?$|^100$
         default: 7
-        explain: "Number of coins (1-100)"
+        explain: "number of coins (1-100)"
       version: 
         regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
         default: false_is_leighter
+        explain: "choose the version of the puzzle among the following:"
+        explain1: "[false_is_leighter]  you are given to know that the false coin is leighter."
+        explain2: "[false_is_heavier]  you are given to know that the false coin is heavier."
+        explain3: "[false_has_different_weight]  you are only given to know that the weight of the false coin differs, but do not know whether it is leighter or heavier."
+      goal:
+        regex: ^(correct|optimal)$	
+        default: correct
       feedback:
-        regex: ^(yes_no|provide_counterexample|optimal)$
+        regex: ^(yes_no|provide_counterexample)$
         default: yes_no
-        explain: choose the feedback level. Options are as follows
-        explain1: -yes_no= just tell me if my strategy is correct (correct does not imply optimal)
-        explain2: -provide_counterexample= please, explain me why my strategy is not correct
-        explain3: -optimal= please, confirm me whether I am using the scale the minimum possibile number of times
+        explain: "choose the feedback level. Options are as follows:"
+        explain1: "[yes_no]  just confirm me that my strategy meets the goal."
+        explain2: "[provide_counterexample]  please, when my strategy is not correct, provide me evidence of that. Also, when my strategy does not meet the goal, give me evidence of its failure in the form of a correct strategy with a smaller number of weighings."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_dynamic_strategy:
-    explain: "Your goal is to identify the false coin in a set of n coins. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
+    explain: "Your goal is to identify the false coin in a set of n coins of otherwise equal weight. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
     evaluator: [python3, services/check_dynamic_strategy/check_dynamic_strategy_server.py]
     args:
       n:
         regex: ^[1-9][0-9]?$|^100$
         default: 7
-        explain: "Number of coins (1-100)"
+        explain: "number of coins (1-100)"
       version: 
         regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
         default: false_is_leighter
+        explain: "choose the version of the puzzle among the following:"
+        explain1: "[false_is_leighter]  you are given to know that the false coin is leighter."
+        explain2: "[false_is_heavier]  you are given to know that the false coin is heavier."
+        explain3: "[false_has_different_weight]  you are only given to know that the weight of the false coin differs, but do not know whether it is leighter or heavier."
       feedback: 
         regex: ^(yes_no|provide_counterexample|optimal)$
         default: yes_no
-        explain: choose the feedback level. Options are as follows
-        explain1: -yes_no= just tell me if my strategy is correct (correct does not imply optimal)
-        explain2: -provide_counterexample= please, explain me why my strategy is not correct
-        explain3: -optimal= please, confirm me that my strategy never uses the scale more then opt times. Here opt is the largest number such that every dynamic strategy is due to take at least opt moves in some cases.
+        explain: "choose the feedback level. Options are as follows:"
+        explain1: "[yes_no]  just confirm me that my strategy is correct (correct does not mean optimal)."
+        explain2: "[provide_counterexample]  please, provide me evidence that my strategy is not correct."
+        explain3: "[optimal]  please, confirm me that my strategy never uses the scale more then opt times. Here opt is the largest number such that every dynamic strategy is due to take at least opt weighings in some cases."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

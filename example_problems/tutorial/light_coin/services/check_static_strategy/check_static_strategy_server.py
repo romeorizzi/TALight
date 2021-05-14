@@ -36,9 +36,9 @@ def getStaticStrategy():
         line = TALinput(
             str,
             num_tokens=2,
-            sep=', ',
-            exceptions = stopping_command_set,
-            regex=r"^(([1-9][0-9]{0,9}\s+)*[1-9][0-9]{0,9}\s*)$",
+            sep=',',
+            exceptions = {stopping_command_set},
+            regex=r"^\s*(([1-9][0-9]{0,9}\s+)*[1-9][0-9]{0,9}\s*)$",
             regex_explained="a sequence of numbers from 1 to n, separated by a space. An example of what should go on a plate of the scale (one of the two expected token of the line) is: '2 5 7'.",
             TAc=TAc
         )
@@ -46,10 +46,10 @@ def getStaticStrategy():
             leftScale = [int(part) for part in line[0].split()]
             rightScale = [int(part) for part in line[1].split()]
             if any(item in leftScale for item in rightScale):
-                TAc.print(LANG.render_feedback("error-same-coin", "A same coin can not be place on both plates of the scale (within a same maesure)."), "red", ["bold"])
+                TAc.print(LANG.render_feedback("error-same-coin", "A same coin can not be placed on both plates of the scale (within a same weighing)."), "red", ["bold"])
                 exit(0)
             if any(item > ENV['n'] for item in leftScale):
-                TAc.print(LANG.render_feedback("error-coins-out-range", f"You have inserted a coin out of range! The range of coin labels goes from 1 to {ENV['n']}."), "red", ["bold"])
+                TAc.print(LANG.render_feedback("error-coins-out-range", f"The coin {item} does not exist! The range of coin labels goes from 1 to {ENV['n']}."), "red", ["bold"])
                 exit(0)
             weighedList.append([leftScale, rightScale])
     return weighedList
