@@ -5,6 +5,7 @@ problem="pirellone"
 service="eval_sol"
 args_list = [
     ('goal',str),
+    ('with_check_of_sol',bool),
     ('lang',str),
     ('ISATTY',bool),
 ]
@@ -28,27 +29,13 @@ else:
     seed_service = int(ENV['seed'])
 random.seed(seed_service)
 TAc.print(LANG.render_feedback("seed-service",f'# The service is running with seed={seed_service}'), "green")
-TAc.print(LANG.render_feedback("explain-protocol",'# The test instances are all 0,1-matrices that can be turned off with the allowed moves. Instances are dealt with subsequently, one at the time, up to termination of the evaluation or first detected fault. For each instance, the service prints only m and n (its number of rows and columns) separated by spaces and then answers your queries about the entries of the matrix. A query is a line beginning with \'?\' followed by a row index (in the interval [1,m]) and a column index (in the interval [1,n]) again separated by spaces. After the needed queries, you should answer with a solution, i.e., a sequence of moves leading to the all zero matrix (example: r1 c3 r5)'), "green")
+TAc.print(LANG.render_feedback("explain-protocol","# Each instance describes a 0,1-matrix. Print \'y\' if this matrix can be turned off with the allowed moves, otherwise print \'n\'. After printing 'y', if the service has been called with the flag \'with_check_of_sol\' set to 1, you should also print, in the following line, a solution, i.e., a sequence of moves leading to the all zero matrix (example: r1 c3 r5)") , "green")
 
-#                   |   M                                | N  |
-# correct           | 10 compilato; 7 python, java       | =M |
-# polynomial_in_m   | 50                                 | 10 |
-# efficient         | 50 compilato; 50 python, java      | =M |
-# sub_linear        | 1000 compilato; 10000 python, java | 1000 compilato; 10000 python, java |
+#             |   M                               | N  |
+# correct     | 10 compilato; 7 python, java      | =M |
+# efficient   | 100 compilato; 100 python, java   | =M |
 #
 # 1 secondo
-
-
-# definizione delle classi di istanze per il goal selezionato
-
-if ENV['goal'] == 
-
-
-
-
-def one_test(m,max_val,seed):
-
-# managing della valutazione sulle istanze di cui i descrittori di istanza sono stati definiti.
 
 
 for i in range(15):

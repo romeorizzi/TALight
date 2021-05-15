@@ -114,7 +114,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_decision:
-    evaluator: [python, services/eval_sol_server.py]
+    evaluator: [python, services/eval_decision_server.py]
     args:
       goal:
         regex: ^(correct|efficient)$
@@ -132,7 +132,7 @@ services:
     evaluator: [python, services/eval_sol_server.py]
     args:
       goal:
-        regex: ^(correct|efficient|sub_linear)$
+        regex: ^(correct|polynomial_in_m|efficient|sub_linear)$
         default: correct
         explain: "Set your goal from the following total order"
         explain1: "[correct]  bla bla"
