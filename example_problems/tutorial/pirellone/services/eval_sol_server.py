@@ -47,14 +47,14 @@ TAc.print(LANG.render_feedback("explain-protocol",'# The test instances are all 
 def one_test(m,n,seed,max_queries=None):
     TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m}, n={n}, solvable=True, seed={seed}): "), "yellow", ["bold"])
     M, seed, switches_row, switches_col = pl.random_pirellone(m, n, seed="random_seed", solvable=False, s=True)
-    TAc.print(m, n, "yellow", ["bold"])
+    TAc.print(f"{m} {n}", "yellow", ["bold"])
     num_queries = 0
     start = monotonic()
     while True:
         line = input()
         if line[0] != "?":
             break
-        matched = re.match("^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$", line)
+        matched = re.match("^('?'\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$", line)
         if not bool(matched):
             TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! Your query line ({line}) is not accordant (it does not match the regular expression "^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$"'), "red", ["bold"])
             exit(0)

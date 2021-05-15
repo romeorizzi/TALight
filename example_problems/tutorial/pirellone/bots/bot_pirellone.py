@@ -24,12 +24,12 @@ def num_sol_bot():
             m=int(tmp[0])
             n=int(tmp[1])
             for j in range(n):
-                print(f'?1 {j+1} ')
+                print(f'? 1 {j+1} ')
                 tmp = input()
                 tmp=int(tmp)
                 sc.append(tmp)
             for i in range(m):
-                print(f'?{i+1} 1')
+                print(f'? {i+1} 1')
                 tmp = input()
                 tmp=int(tmp)
                 sr.append(tmp)

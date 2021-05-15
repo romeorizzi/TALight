@@ -22,7 +22,6 @@ def random_pirellone(m, n, seed="random_seed", solvable=False, s=False):
         ar=[]
         ac=[]
         k=random.randrange(1, m+n)
-        print(k)
         for _ in range(k):
             row = random.randrange(0, m)
             col = random.randrange(0, n)
