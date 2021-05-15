@@ -26,7 +26,7 @@ TAc.print(LANG.render_feedback("insert-num-col", 'Insert the number of columns:'
 n=int(input())
 
 if ENV['seed']=='random_seed':
-    pirellone, seed=pl.random_pirellone(m, n, seed="any", solvable=True)
+    pirellone, seed=pl.random_pirellone(m, n, seed="random_seed", solvable=True)
 else:
     pirellone, seed=pl.random_pirellone(m, n, ENV['seed'], solvable=True)
     

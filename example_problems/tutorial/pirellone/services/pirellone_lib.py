@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import random
+import re
 import copy
 
-def random_pirellone(m, n, seed="any", solvable=False, s=False):
-    if seed=="any":
+def random_pirellone(m, n, seed="random_seed", solvable=False, s=False):
+    if seed=="random_seed":
         random.seed()
         seed = random.randrange(0,1000000)
     else:
@@ -27,6 +28,30 @@ def random_pirellone(m, n, seed="any", solvable=False, s=False):
     else:
         return pirellone, seed
 
+def extract_sol(line, m, n, LANG, TAc):
+    matched = re.match("^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$", line)
+    if !bool(matched):
+        TAc.print(LANG.render_feedback("wrong-sol-line",f'# Error! The line with your solution ({line}) is not accordant (it does not match the regular expression "^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$"'), "red", ["bold"])
+        exit(0)
+    switch_rows = [0]*m
+    switch_cols = [0]*n
+    moves = line.split()
+    for move,i in zip(moves,len(moves)):
+        index = int(move[1:])
+        if move[0] == "r":
+            if index > m:
+                TAc.print(LANG.render_feedback("row-index-exceeds-m",f'# Error! In your solution line ({line}) the {i}-th move ({move}) is not applicable. Indeed, {index}>{m}=m.'), "red", ["bold"])
+            exit(0)
+            switch_rows[index] = 1-switch_rows[index]
+        if move[0] == "c":
+            if index > n:
+                TAc.print(LANG.render_feedback("column-index-exceeds-n",f'# Error! In your solution line ({line}) the {i}-th move ({move}) is not applicable. Indeed, {index}>{n}=n.'), "red", ["bold"])
+            exit(0)
+            switch_cols[index] = 1-switch_cols[index]
+    return switch_rows, switch_cols
+
+    
+    
 def switch_row(i,pirellone):
     for j in range(len(pirellone[0])):
         pirellone[i][j] = int(not pirellone[i][j])
@@ -146,9 +171,9 @@ def solution_irredundant(pirellone,switches_row,switches_col,smallest=True):
             lista.append(f"c{j+1}")
     return lista
 
-def solution_pad(sol,m,n,lb,seed="any"):
+def solution_pad(sol,m,n,lb,seed="random_seed"):
     if type(seed)==str:
-        assert seed=="any"
+        assert seed=="random_seed"
         random.seed()
         seed = random.randrange(0,1000000)
     random.seed(seed)  

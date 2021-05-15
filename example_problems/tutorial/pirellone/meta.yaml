@@ -5,7 +5,7 @@ services:
     evaluator: [python,services/compact_solution_server.py]
     args:
       seed:
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
+        explain: "specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       m:
@@ -51,8 +51,8 @@ services:
         default: 10
         explain: "Number of columns of the big matrix."
       seed:
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
-        regex: ^(random_seed|[1-9][0-9]{0,5})$
+        explain: "specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
         regex: ^(hardcoded|en|it)$
@@ -76,7 +76,7 @@ services:
         explain1: "[consecutive]  the submatrix comprises the first m_small rows and the first n_small columns of the big matrix. See also the service order_of_rows_columns to see why this is actually a general consecutive submatrix."
         explain2: "[any]  the service server provides two random 0/1-vectors of length m and n, respectively. These characteristic vectors specify the rows and columns of the submatrix."
       seed:
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
+        explain: "specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
@@ -102,7 +102,7 @@ services:
     evaluator: [python, services/check_sol_server.py]
     args:
       seed:
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run."
+        explain: "specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       coding:
@@ -124,6 +124,10 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: if this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -136,6 +140,10 @@ services:
         default: correct
         explain: "Set your goal from the following total order"
         explain1: "[correct]  bla bla"
+      seed:
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

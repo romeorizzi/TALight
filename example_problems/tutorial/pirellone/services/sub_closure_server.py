@@ -45,7 +45,7 @@ if ENV['submatrix_type']=='consecutive':
         for j in range(0,sub_n):
             sub_pirellone[i][j]=pirellone[i][j]
     TAc.print(LANG.render_feedback("sub-matrix-sol",f"Solution of the consecutive submatrix {sub_m}x{sub_n} : "), "yellow", ["bold"])
-elif ENV['submatrix_type']=='any':
+elif ENV['submatrix_type']=='random_seed':
     r=[]
     c=[]
     for i in range(m):
