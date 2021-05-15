@@ -51,7 +51,7 @@ elif ENV['coding']=='subset':
             solu.append(f'c{j+1}')
 
 
-b,solvable=pl.check_off_lights(pirellone,solu)
+b,solvable=pl.check_off_lights(pirellone,solu,LANG, TAc)
 if b and solvable=='s':
     TAc.OK()
     TAc.print(LANG.render_feedback('correct',"This sequence turns off all lights."), "green", ["bold"])

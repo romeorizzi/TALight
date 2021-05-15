@@ -123,7 +123,7 @@ services:
       with_check_of_sol:
         regex: ^(0|1)$
         default: 0
-        explain: if this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+        explain: "If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service."
       seed:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -132,7 +132,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_sol:
-    explain: si basa su un dialogo dove il bot chiede il valore di alcune entris prima di tornar la soluzione.
+    explain: "si basa su un dialogo dove il bot chiede il valore di alcune entris prima di tornar la soluzione."
     evaluator: [python, services/eval_sol_server.py]
     args:
       goal:

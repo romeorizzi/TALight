@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-from sys import stderr, exit, argv
+from sys import exit
 import re
 from time import monotonic
-import copy
+import random
 
-from TALinputs import TALinput
+
 from multilanguage import Env, Lang, TALcolors
 
 import pirellone_lib as pl
@@ -14,6 +14,7 @@ problem="pirellone"
 service="eval_sol"
 args_list = [
     ('goal',str),
+    ('seed',str),
     ('lang',str),
     ('ISATTY',bool),
 ]
@@ -26,7 +27,7 @@ TAc.print(LANG.opening_msg, "green")
 # START CODING YOUR SERVICE: 
 
 if ENV['seed']=='random_seed': 
-    seed_service = random.randint(100000,999999)
+    seed_service = random.randint(10000,99999)
 else:
     seed_service = int(ENV['seed'])
 random.seed(seed_service)
@@ -43,6 +44,78 @@ TAc.print(LANG.render_feedback("explain-protocol",'# The test instances are all 
 
 
 # definizione delle classi di istanze per il goal selezionato
+def one_test(m,n,seed,max_queries=None):
+    TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m}, n={n}, solvable=True, seed={seed}): "), "yellow", ["bold"])
+    M, seed, switches_row, switches_col = pl.random_pirellone(m, n, seed="random_seed", solvable=False, s=True)
+    TAc.print(m, n, "yellow", ["bold"])
+    num_queries = 0
+    start = monotonic()
+    while True:
+        line = input()
+        if line[0] != "?":
+            break
+        matched = re.match("^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$", line)
+        if not bool(matched):
+            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! Your query line ({line}) is not accordant (it does not match the regular expression "^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$"'), "red", ["bold"])
+            exit(0)
+        i,j = map(int, line[1:].split())
+        if i > m:
+            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! In your query line ({line}) the row index ({i}) exceeds the number of rows ({m})'), "red", ["bold"])
+            exit(0)
+        if j > n:
+            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! In your query line ({line}) the column index ({j}) exceeds the number of columns ({n})'), "red", ["bold"])
+            exit(0)
+        TAc.print(switches_row[i-1] + switches_col[j-1] % 2, "yellow", ["bold"])
+        num_queries += 1 
+    line=input()
+    end = monotonic()
+    t = end - start # è un float, in secondi
+    #provo a fare un altro metodo
+    line=line.split()
+    correction,_=pl.check_off_lights(M,line,LANG, TAc)
+    if not correction:
+        TAc.print(LANG.render_feedback("wrong",f"# No! The solution of the matrix {m}x{n} of seed={seed} does not turn off all lights."), "red", ["bold"])
+        exit(0)
+    if t > 1:
+        return False
+    return True
+
+
+
+
+
+
+
+
+def eval_correct():
+    for _ in range(5):
+        one_test(7,7,seed_service,max_queries=None)
+        
+    return
+
+def eval_polynomial_in_m():
+    for _ in range(5):
+        if not one_test(50,10,seed_service,max_queries=None):
+            TAc.print(LANG.render_feedback("not-polynomial-in-m", '# No. Your solution is not polynomial in m. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])   
+            exit(0)
+    TAc.print(LANG.render_feedback("correct-polynomial-in-m", '# Your solution stays in the goal you set: polynomial_in_m .'), "green",["bold"])
+    return
+
+def eval_efficient():
+    for _ in range(5):
+        if not one_test(50,50,seed_service,max_queries=None):
+            TAc.print(LANG.render_feedback("not-efficient", '# No. Your solution is efficient. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])   
+            exit(0)
+    TAc.print(LANG.render_feedback("correct-efficient", '# Your solution stays in the goal you set: efficient .'), "green",["bold"])
+    return
+
+def eval_sub_linear():
+    for _ in range(5):
+        if not one_test(10000,10000,seed_service,max_queries=None):
+            TAc.print(LANG.render_feedback("not-sub_linear", '# No. Your solution is sub linear. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])   
+            exit(0)
+    TAc.print(LANG.render_feedback("correct-sub_linear", '# Your solution stays in the goal you set: sub_linear .'), "green",["bold"])
+    return
 
 eval_correct()
 if ENV['goal'] == "correct":
@@ -55,36 +128,25 @@ if ENV['goal'] == "efficient":
     exit(0)
 eval_sub_linear()
 
+exit(0)
 
-def one_test(m,n,seed,max_queries=None):
-    TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m}, n={n}, solvable=True, seed={seed}): "), "yellow", ["bold"])
 
-    M, seed, switches_row, switches_col = random_pirellone(m, n, seed="random_seed", solvable=False, s=True)
-    TAc.print(m, n, "yellow", ["bold"])
-    num_queries = 0
-    start = monotonic()
-    while True:
-        line = input()
-        if line[0] != "?":
-            break
-        matched = re.match("^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$", line)
-        if !bool(matched):
-            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! Your query line ({line}) is not accordant (it does not match the regular expression "^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$"'), "red", ["bold"])
-            exit(0)
-        i,j = map(int, line[1:].split())
-        if i > m:
-            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! In your query line ({line}) the row index ({i}) exceeds the number of rows ({m})'), "red", ["bold"])
-            exit(0)
-        if j > n:
-            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! In your query line ({line}) the column index ({j}) exceeds the number of columns ({n})'), "red", ["bold"])
-            exit(0)
-        TAc.print(switches_row[i-1] + switches_col[j-1] % 2, "yellow", ["bold"])
-        num_queries += 1 
-    end = monotonic()
-    t = end - start # è un float, in secondi
-    s_rows, s_cols = extract_sol(line, m, n)
+
+
+
+
+
+
+
+
+
+    
+"""
+    #PARTE CON PROF
+    s_rows, s_cols = pl.extract_sol(line, m, n)
     s_rows_comp = [1-x for x in s_rows]
     s_cols_comp = [1-x for x in s_cols]
+    
     ok = False
     if s_rows == switches_row:
         if s_cols != switches_col:
@@ -103,36 +165,9 @@ def one_test(m,n,seed,max_queries=None):
     else:
         TAc.print(LANG.render_feedback("wrong-first-row",f"# No! The submitted solution of the matrix of seed={seed} is not correct: at least one element of the first row will end up set to 1"), "red", ["bold"])
         exit(0)
-
-#  OK, SONO ARRIVATO FINO A QUI:
-#  GRAZIE SE PROVI AD ANDARE AVANTI DA SOLA, MA CHIAMAMI A PRIMO DUBBIO E COMUNQUE, PRIMA DI PROCEDERE SUL PROSSIMO SERVIZO EVAL, PORTIAMO A CONVERGENZA QUESTO
-
-               
-    if s_rows_comp == switches_row and s_rows_comp == switches_col:
-        ok = True
-    if not ok:
-        TAc.print(LANG.render_feedback("wrong",f"# No! The submitted solution of the matrix of seed={seed} is not correct."), "red", ["bold"])
-        exit(0)
-    if len(sol_to_ver)>len(sol_togive):
-        TAc.print(LANG.render_feedback("semi-correct",f"# The solution of the matrix of seed={_} is not minimum."), "yellow", ["bold"])
-    if time > 1:
-        TAc.print(LANG.render_feedback("not-efficient", '# No. Your solution is not efficient. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])        
-        exit(0)
-    else:
-        TAc.print(LANG.render_feedback("efficient", '# ♥ Ok. Your solution is efficient.'), "green")
-        if len(sol_to_ver)==len(sol_togive):
-            TAc.print(LANG.render_feedback("correct", '# ♥ Your solution is the best one.'), "green",["bold"])
-    sol_to_ver.clear()
-    sol=''
-    pirellone.clear()
-
-####################################################################
-
-    
-
-# managing della valutazione sulle istanze di cui i descrittori di istanza sono stati definiti.
-
-
+    """
+"""
+#VECCHIO EVAL_SOL
 for i in range(15):
     if ENV['size']=='small':
         m=3
@@ -176,3 +211,4 @@ for i in range(15):
         pirellone.clear()
     
 exit(0)
+"""

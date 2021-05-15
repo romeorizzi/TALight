@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 import random
 import re
-import copy
+from sys import exit
+
+
+
+####DA SISTEMARE TUTTI I CHECK OFF LIGHTS 
+
 
 def random_pirellone(m, n, seed="random_seed", solvable=False, s=False):
     if seed=="random_seed":
@@ -30,7 +35,7 @@ def random_pirellone(m, n, seed="random_seed", solvable=False, s=False):
 
 def extract_sol(line, m, n, LANG, TAc):
     matched = re.match("^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$", line)
-    if !bool(matched):
+    if not bool(matched):
         TAc.print(LANG.render_feedback("wrong-sol-line",f'# Error! The line with your solution ({line}) is not accordant (it does not match the regular expression "^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$"'), "red", ["bold"])
         exit(0)
     switch_rows = [0]*m
@@ -41,12 +46,12 @@ def extract_sol(line, m, n, LANG, TAc):
         if move[0] == "r":
             if index > m:
                 TAc.print(LANG.render_feedback("row-index-exceeds-m",f'# Error! In your solution line ({line}) the {i}-th move ({move}) is not applicable. Indeed, {index}>{m}=m.'), "red", ["bold"])
-            exit(0)
+                exit(0)
             switch_rows[index] = 1-switch_rows[index]
         if move[0] == "c":
             if index > n:
                 TAc.print(LANG.render_feedback("column-index-exceeds-n",f'# Error! In your solution line ({line}) the {i}-th move ({move}) is not applicable. Indeed, {index}>{n}=n.'), "red", ["bold"])
-            exit(0)
+                exit(0)
             switch_cols[index] = 1-switch_cols[index]
     return switch_rows, switch_cols
 
@@ -73,15 +78,23 @@ def print_pirellone(pirellone):
     for l in pirellone:
         print(*l) 
         
-def check_off_lights(pirellone,solu):
-    pirellone1=copy.deepcopy(pirellone)
+def check_off_lights(pirellone,solu,LANG, TAc):
+    pirellone1=[line[:] for line in pirellone]
+    m=len(pirellone)
+    n=len(pirellone[0])
+    #pirellone1=copy.deepcopy(pirellone)
     empty=[[0 for j in range(0,len(pirellone[0]))] for i in range(0,len(pirellone))]
     for i in range(0,len(solu)):
-        
         if solu[i][0]=='r':
-                switch_row(int(solu[i][1:])-1,pirellone)
+            if int(solu[i][1:]) > m:
+                TAc.print(LANG.render_feedback("row-index-exceeds-m",f'# Error! In your solution the move ({solu[i]}) is not applicable. Indeed, {int(solu[i][1:])}>{m}.'), "red", ["bold"])
+                exit(0)
+            switch_row(int(solu[i][1:])-1,pirellone)
         elif solu[i][0]=='c':
-                switch_col(int(solu[i][1:])-1,pirellone)
+            if int(solu[i][1:]) > n:
+                TAc.print(LANG.render_feedback("col-index-exceeds-n",f'# Error! In your solution the move ({solu[i]}) is not applicable. Indeed, {int(solu[i][1:])}>{n}.'), "red", ["bold"])
+                exit(0)
+            switch_col(int(solu[i][1:])-1,pirellone)
     if is_solvable(pirellone):             
         if empty==pirellone:
                 return True,'s'

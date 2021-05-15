@@ -43,6 +43,10 @@ def my_soluzione(pirellone,n,m):
     return lista
 
 
+
+
+
+
     
 def num_sol_bot():
     while True:
