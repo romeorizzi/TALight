@@ -54,15 +54,9 @@ def check_off_lights(pirellone,solu):
     for i in range(0,len(solu)):
         
         if solu[i][0]=='r':
-            if len(solu[i])>2:
-                switch_row(int(solu[i][1])*10+int(solu[i][2])-1,pirellone)
-            else:
-                switch_row(int(solu[i][1])-1,pirellone)
+                switch_row(int(solu[i][1:])-1,pirellone)
         elif solu[i][0]=='c':
-            if len(solu[i])>2:
-                switch_col(int(solu[i][1])*10+int(solu[i][2])-1,pirellone)
-            else:
-                switch_col(int(solu[i][1])-1,pirellone)
+                switch_col(int(solu[i][1:])-1,pirellone)
     if is_solvable(pirellone):             
         if empty==pirellone:
                 return True,'s'
