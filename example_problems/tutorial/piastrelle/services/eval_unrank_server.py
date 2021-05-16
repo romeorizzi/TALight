@@ -60,10 +60,10 @@ def one_test(rank, n_pairs):
 for n_pairs in instances:
     for i in range(3):
         if ENV["seed"]=='random_seed':
-            rand=random.randint(1, 1000)
+            seed=random.randint(100000,999999)
         else:
-            rand=int(ENV["seed"])
-        random.seed(n_pairs*i+rand)
+            seed=int(ENV["seed"])
+        random.seed(n_pairs*i+seed)
         rank = random.randrange(1,p.num_sol(n_pairs)+1)
         time = one_test(rank, n_pairs)
         print(f"#Correct! [took {time} secs on your machine]")

@@ -61,10 +61,10 @@ def one_test(wff):
 for n_pairs in instances:
     for i in range(3):
         if ENV["seed"]=='random_seed':
-            rand=random.randint(1, 1000)
+            seed=random.randint(100000,999999)
         else:
-            rand=int(ENV["seed"])
-        wff = p.rand_gen(n_pairs, seed=n_pairs*i+rand)
+            seed=int(ENV["seed"])
+        wff = p.rand_gen(n_pairs, seed=n_pairs*i+seed)
         time = one_test(wff)
         print(f"#Correct! [took {time} secs on your machine]")
         if time > 1:

@@ -34,7 +34,7 @@ def rank(wff,sorting_criterion):
 def unrank(n_tiles,pos,sorting_criterion):
     assert pos>0 and pos<=num_sol(n_tiles), 'the position must be between 1 and '+str(num_sol(n_tiles))
     if n_tiles==0:
-        return '0'
+        return '-'
     if n_tiles==1:
         return '[]'
     if sorting_criterion=='loves_long_tiles':
@@ -53,6 +53,12 @@ def unrank(n_tiles,pos,sorting_criterion):
         solu+='[]'
     return solu
     
+def lista(n_tiles, sort_crit):
+    solu=[]
+    for i in range (1,num_sol(int(n_tiles))+1):
+        solu.append(unrank(int(n_tiles),i,sort_crit))
+    return solu
+
 def next_wff(wff, sorting_criterion):
     n_tiles = len(wff)//2
     r = rank(wff,sorting_criterion)
@@ -86,11 +92,19 @@ def next_bot():
             wft, r = map(str, tmp.split())
             print(next_wff(wft,r))
 
+def list_bot():
+    while True:
+        tmp = input()
+        if len(tmp) == 0 or tmp[0] != '#':
+            n_tiles, sort_crit = map(str, tmp.split())
+            print(' , '.join(lista(n_tiles, sort_crit)))
+
 usage=f"""I am a general (non efficient) purpouse bot with the following functionalities:
   1. num_sol
   2. rank
   3. unrank
   4. next
+  5. list
 You should call me as follows:
 $ {argv[0]} <evalution service>
 """
@@ -107,3 +121,5 @@ if argv[1] == 'unrank':
     unrank_bot()
 if argv[1] == 'next':
     next_bot()
+if argv[1] == 'list':
+    list_bot()

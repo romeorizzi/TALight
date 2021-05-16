@@ -29,7 +29,7 @@ while line == None:
     line, = TALinput(str, num_tokens=1, exceptions = stopping_command_set, regex="^(\[|\]|-)+$", regex_explained="any string of '[' , ']' and '-' characters (actually, more precisely, any string on the alphabet {'[]', '[--]'}).", line_recognizer=recognize, TAc=TAc, LANG=LANG)
     if line == "#end":
         TAc.print(LANG.render_feedback("at-least-one-line", f"No. You are required to enter at least one valid formula before closing."), "yellow")
-        
+
 input_solution_list = [line]
 input_solution_set = {line}
 if not recognize(input_solution_list[-1], TAc, LANG):
@@ -63,10 +63,10 @@ if len(input_solution_list) < p.num_sol(n_tiles) and ENV['feedback'] == "yes_no"
     exit(0)
 missing='empty'
 def answer():
-    if ENV['feedback'] == "give_one_missing":
+    if ENV['feedback'] == "give_a_missing_sol":
         TAc.print(LANG.render_feedback("one-formula-is-missing-no-feedback", f"No. Your set is missing at least one well-formed tiling.\nConsider for example:"), "red", ["bold"])
         TAc.print(missing, "yellow", ["bold"])
-    elif ENV['feedback'] == "tell_a_minimal_missing_prefix":
+    elif ENV['feedback'] == "tell_minimal_missing_prefix" or ENV['feedback'] == "dispell_longest_seen_prefix_of_a_missing_sol":
         pos1 = 0
         if rank > 0:
             while missing[pos1] == input_solution_list[rank-2][pos1]:
@@ -78,17 +78,32 @@ def answer():
         last_char = max(pos1,pos2)
         while missing[last_char]!=']':
             last_char += 1
-        minimal_missing_prefix = missing[0:last_char+1]
-        TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
-        TAc.print(minimal_missing_prefix, "yellow", ["bold"])
+        if ENV["feedback"] == "tell_minimal_missing_prefix":
+            minimal_missing_prefix = missing[0:last_char+1]
+            TAc.print(LANG.render_feedback("one-missing-minimal-prefix", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
+            TAc.print(minimal_missing_prefix, "yellow", ["bold"])
+        elif ENV['feedback'] == "dispell_longest_seen_prefix_of_a_missing_sol":
+            if rank==len(input_solution_list)-1 and not case:
+                TAc.print(LANG.render_feedback("not-consecutive(last)", f'In green you find the longest prefix that a solution you are missing has in common with a solution you have given:'), "red", ["bold"], end=" ")
+            else:
+                TAc.print(LANG.render_feedback("first-missing-till-already-present", f"In green you find the longest prefix that a solution you are missing has in common with a solution you have given:"), "red", ["bold"], end=" ")
+            if pos1>=pos2:
+                missing_prefix=input_solution_list[rank-2][:pos1]
+                suffix=input_solution_list[rank-2][pos1:]
+            else:
+                missing_prefix=input_solution_list[rank-1][:pos2]
+                suffix=input_solution_list[rank-1][pos2:]
+            TAc.print(missing_prefix, "green", ["bold"], end='')
+            TAc.print(suffix, "red", ["bold"])
     else:
-        assert ENV['feedback'][0:27] == "tell_prefix_of_missing_len_"
-        length = int(ENV['feedback'][27:])
+        assert ENV['feedback'][0:29] == "tell_a_missing_prefix_of_len_"
+        length = int(ENV['feedback'][29:])
         missing_prefix = missing[0:length]
         TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
         TAc.print(missing_prefix, "yellow", ["bold"])
     exit(0)
 
+case=True
 for rank in range(1,len(input_solution_list)+1):
     #print(f"rank={rank}, input_solution_list[rank]={input_solution_list[rank]}, p.unrank(n_tiles)={p.unrank(n_tiles,rank,'loves_short_tiles')}")
     correct=p.unrank(n_tiles,rank,'loves_short_tiles')
@@ -96,6 +111,7 @@ for rank in range(1,len(input_solution_list)+1):
         missing = correct
         answer()
 if missing=='empty' and len(input_solution_list) < p.num_sol(n_tiles):
+    case=False
     missing=p.unrank(n_tiles,rank+1,'loves_short_tiles')
     answer()
 TAc.OK()

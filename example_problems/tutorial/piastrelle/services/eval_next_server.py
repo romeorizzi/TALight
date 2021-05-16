@@ -67,10 +67,10 @@ for n in instances:
         last = '[]'*n
     for i in range(3):
         if ENV["seed"]=='random_seed':
-            rand=random.randint(1, 1000)
+            seed=random.randint(100000,999999)
         else:
-            rand=int(ENV["seed"])
-        wff = p.rand_gen(n, seed=n*i+rand)
+            seed=int(ENV["seed"])
+        wff = p.rand_gen(n, seed=n*i+seed)
         if wff == last:
             wff = first
         time = one_test(wff)
