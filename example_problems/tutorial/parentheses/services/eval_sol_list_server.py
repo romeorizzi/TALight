@@ -6,10 +6,10 @@ from time import monotonic
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from piastrelle_lib import Par
+from parentheses_lib import Par
 
 # METADATA OF THIS TAL_SERVICE:
-problem="piastrelle"
+problem="parentheses"
 service="eval_sol_list"
 args_list = [
     ('sorting_criterion',str),
@@ -43,14 +43,14 @@ if ENV["goal"] == "efficient":
 
 p = Par(MAX_N_PAIRS)
 sorting_criterion=ENV['sorting_criterion']
-def one_test(n_tiles):
+def one_test(n_pairs):
     correct_list=[]
-    num_sol=p.num_sol(n_tiles)
-    for i in range (1,num_sol+1):
-        risp_correct = p.unrank(n_tiles,i,sorting_criterion)
+    num_sol=p.num_sol(n_pairs)
+    for i in range (num_sol):
+        risp_correct = p.unrank(n_pairs,i,sorting_criterion)
         #TAc.print(f"{risp_correct}", "yellow", ["bold"])
         correct_list.append(risp_correct)
-    #print(correct_list)
+    #print('#', correct_list)
     risp=[]
     start = monotonic()
     answ=input().split(' , ')
@@ -58,20 +58,20 @@ def one_test(n_tiles):
     t = end - start # è un float, in secondi
     for elem in range(len(answ)):
         if answ[elem] != correct_list[elem]:
-            #print('#',answ[elem:elem+n_tiles*2+1], correct_list[elem])
+            #print('#',answ[elem:elem+n_pairs*2+1], correct_list[elem])
             TAc.print(LANG.render_feedback("not-correct", f'# No. Your solution is NOT correct.'), "red", ["bold"])                        
             exit(0)
     return t
-for n_tiles in instances:
-    print(n_tiles, sorting_criterion)
-    time = one_test(n_tiles)
+for n_pairs in instances:
+    print(n_pairs, sorting_criterion)
+    time = one_test(n_pairs)
     print(f"#Correct! [took {time} secs on your machine]")
     if time > 1:
-        if n_tiles > 13:
-            TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. :) Your solution correctly computes the list of well formed tilings of a corridor of dimension 1x{n_tiles} using as criterion {sorting_criterion}.'), "green")
-        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to compute the list of well-formed tilings of a corridor of dimension 1x{n_tiles}.'), "red", ["bold"])        
+        if n_pairs > 13:
+            TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. :) Your solution correctly computes the list of well formed formulas (checked with formulas up to {n_pairs} pairs of parentheses).'), "green")
+        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to compute the list of well-formed formulas with {n_pairs} pairs of parentheses.'), "red", ["bold"])        
         exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. :)  Your solution appears to be correct (checked on several instances).'), "green")
-TAc.print(LANG.render_feedback("efficient", f'# Ok. :) Your solution is efficient: its running time is polynomial in the length of the tilings.'), "green")
+TAc.print(LANG.render_feedback("efficient", f'# Ok. :) Your solution is efficient: its running time is polynomial in the length of the formula it lists.'), "green")
 exit(0)

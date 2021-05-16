@@ -94,6 +94,23 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  eval_sol_list:
+    evaluator: [python, services/eval_sol_list_server.py]
+    args:
+      sorting_criterion:
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
+      goal:
+        explains: "set your goal (efficient includes also correct)."
+        regex: ^(correct|efficient)$
+        default: correct
+      code_lang: 
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
   gen_random_sol:
     evaluator: [python, services/gen_random_sol_server.py]
     args:

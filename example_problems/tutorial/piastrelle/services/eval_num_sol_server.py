@@ -66,7 +66,7 @@ for n in instances:
    print(f"#Correct! [took {time} secs on your machine]")
    if time > 1:
        if n > 13:
-           TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. :)  Your solution correctly computes the number of well formed tilings of a corridor of dimension 1x {n}.'), "green")
+           TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. :)  Your solution correctly computes the number of well formed tilings of a corridor of dimension 1x{n}.'), "green")
        TAc.print(LANG.render_feedback("not-efficient", f'# No. Your solution is not efficient. Run on your machine, it took more than one second to compute the number of well-formed tilings of a corridor of dimension 1x{n} .'), "red", ["bold"])        
        exit(0)
        

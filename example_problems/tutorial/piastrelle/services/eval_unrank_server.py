@@ -44,10 +44,10 @@ if ENV["goal"] == "efficient":
 
 p = Par(MAX_N_PAIRS)
 
-def one_test(rank, n_pairs):
-    assert n_pairs <= MAX_N_PAIRS
-    risp_correct = p.unrank(n_pairs, rank, ENV['sorting_criterion'])
-    TAc.print(f"{n_pairs} {rank} {ENV['sorting_criterion']}", "yellow", ["bold"])
+def one_test(rank, n_tiles):
+    assert n_tiles <= MAX_N_PAIRS
+    risp_correct = p.unrank(n_tiles, rank, ENV['sorting_criterion'])
+    TAc.print(f"{n_tiles} {rank} {ENV['sorting_criterion']}", "yellow", ["bold"])
     start = monotonic()
     risp = input()
     end = monotonic()
@@ -57,23 +57,23 @@ def one_test(rank, n_pairs):
         exit(0)
     return t   
 
-for n_pairs in instances:
+for n_tiles in instances:
     for i in range(3):
         if ENV["seed"]=='random_seed':
             seed=random.randint(100000,999999)
         else:
             seed=int(ENV["seed"])
-        random.seed(n_pairs*i+seed)
-        rank = random.randrange(1,p.num_sol(n_pairs)+1)
-        time = one_test(rank, n_pairs)
+        random.seed(n_tiles*i+seed)
+        rank = random.randrange(1,p.num_sol(n_tiles)+1)
+        time = one_test(rank, n_tiles)
         print(f"#Correct! [took {time} secs on your machine]")
         if time > 1:
-            if n_pairs > 13:
-                TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. sol:) Your solution correctly unranks well formed formulas (checked with formulas up to {n_pairs} pairs of parentheses).'), "green")
-            TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to unrank a well-formed formula with {n_pairs} pairs of parentheses.'), "red", ["bold"])        
+            if n_tiles > 13:
+                TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. sol:) Your solution correctly unranks well formed tilings (checked with tilings up to a corridor of dimension 1x{n_tiles}.'), "green")
+            TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to unrank a well-formed tiling of a corridor of dimension 1x{n_tiles}.'), "red", ["bold"])        
             exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. sol:)  Your solution appears to be correct (checked on several instances).'), "green")
-TAc.print(LANG.render_feedback("efficient", f'# Ok. sol:) Your solution is efficient: its running time is polynomial in the length of the formula it unranks.'), "green")
+TAc.print(LANG.render_feedback("efficient", f'# Ok. sol:) Your solution is efficient: its running time is polynomial in the length of the tiling it unranks.'), "green")
 
 exit(0)

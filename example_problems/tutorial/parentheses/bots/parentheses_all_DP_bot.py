@@ -68,6 +68,12 @@ def rank(wff, sorting_criterion="loves_opening_par"):
     num_B = num_sol(n_pairs_B)
     return count + rank(wff[1:i], sorting_criterion)*num_B + rank(wff[i+1:len(wff)+1], sorting_criterion)
 
+def lista(n_tiles, sort_crit):
+    solu=[]
+    for i in range (num_sol(int(n_tiles))):
+        solu.append(unrank(int(n_tiles),i,sort_crit))
+    return solu
+
 def next_wff(wff):
     n_pairs = len(wff) // 2
     r = rank(wff)
@@ -100,11 +106,19 @@ def next_bot():
         if len(tmp) == 0 or tmp[0] != '#':
             print(next_wff(tmp))
 
+def list_bot():
+    while True:
+        tmp = input()
+        if len(tmp) == 0 or tmp[0] != '#':
+            n_tiles, sort_crit = map(str, tmp.split())
+            print(' , '.join(lista(n_tiles, sort_crit)))
+
 usage=f"""I am a general (non efficient) purpouse bot with the following functionalities:
   1. num_sol
   2. rank
   3. unrank
   4. next
+  5. list
 You should call me as follows:
 $ {argv[0]} <evalution service>
 """
@@ -120,3 +134,5 @@ if argv[1] == 'unrank':
     unrank_bot()
 if argv[1] == 'next':
     next_bot()
+if argv[1] == 'list':
+    list_bot()
