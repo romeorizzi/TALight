@@ -46,7 +46,7 @@ TAc.print(LANG.render_feedback("explain-protocol",'# The test instances are all 
 # definizione delle classi di istanze per il goal selezionato
 def one_test(m,n,seed,max_queries=None):
     TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m}, n={n}, solvable=True, seed={seed}): "), "yellow", ["bold"])
-    M, seed, switches_row, switches_col = pl.random_pirellone(m, n, seed="random_seed", solvable=False, s=True)
+    M, seed, switches_row, switches_col = pl.random_pirellone(m, n, seed="random_seed", solvable=True, s=True)
     TAc.print(f"{m} {n}", "yellow", ["bold"])
     num_queries = 0
     start = monotonic()
@@ -54,7 +54,7 @@ def one_test(m,n,seed,max_queries=None):
         line = input()
         if line[0] != "?":
             break
-        matched = re.match("^('?'\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$", line)
+        matched = re.match("^(\?\s[1-9][0-9]{0,3}\s[1-9][0-9]{0,3})$", line)
         if not bool(matched):
             TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! Your query line ({line}) is not accordant (it does not match the regular expression "^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$"'), "red", ["bold"])
             exit(0)
@@ -65,7 +65,8 @@ def one_test(m,n,seed,max_queries=None):
         if j > n:
             TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! In your query line ({line}) the column index ({j}) exceeds the number of columns ({n})'), "red", ["bold"])
             exit(0)
-        TAc.print(switches_row[i-1] + switches_col[j-1] % 2, "yellow", ["bold"])
+        TAc.print(M[i-1][j-1], "yellow", ["bold"])    
+        #TAc.print((switches_row[i-1] + switches_col[j-1]) % 2, "yellow", ["bold"])
         num_queries += 1 
     line=input()
     end = monotonic()
@@ -75,6 +76,7 @@ def one_test(m,n,seed,max_queries=None):
     correction,_=pl.check_off_lights(M,line,LANG, TAc)
     if not correction:
         TAc.print(LANG.render_feedback("wrong",f"# No! The solution of the matrix {m}x{n} of seed={seed} does not turn off all lights."), "red", ["bold"])
+        #print(f"# pirellone spento?{M}")
         exit(0)
     if t > 1:
         return False
@@ -90,7 +92,7 @@ def one_test(m,n,seed,max_queries=None):
 def eval_correct():
     for _ in range(5):
         one_test(7,7,seed_service,max_queries=None)
-        
+    TAc.print(LANG.render_feedback("correct-efficient", '# Your solution stays in the goal you set: correct .'), "green",["bold"])    
     return
 
 def eval_polynomial_in_m():
