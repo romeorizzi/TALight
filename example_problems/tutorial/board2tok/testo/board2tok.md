@@ -1,6 +1,6 @@
 # Tiling di Elle in scacchiera $2^k \times 2^k$ (board2tok)
 
-1. ossvare che 2^k*2^k = 4^k = 1 (mod 3), quindi non puoi coprire tutte le celle, ma puoi porti l'obiettivo di coprirle tutte meno una.
+1. ossevare che 2^k*2^k = 4^k = 1 (mod 3), quindi non puoi coprire tutte le celle, ma puoi porti l'obiettivo di coprirle tutte meno una.
 
 Quale?
 
@@ -11,7 +11,7 @@ Quale?
 
 # Percorso TALight per giungere a vedere una soluzione
 
-il servizio di manda k e la scelta di una cella d'angolo.
+il servizio ti manda k e la scelta di una cella d'angolo.
 Quello che devi fare:
 anche a mano, oppure il tuo bot, deve costruire un tiling di tutta la scacchiera 2^k x 2^k che eviti la cella d'angolo prefissata.
 
