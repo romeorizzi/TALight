@@ -250,11 +250,11 @@ for instance in instances:
     if time > 1:
         if count > NUM_instances_correct:
             TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution answers correctly on a first set of instances (with |T|, the length of T, up to {instance["m"]}.'), "green")
-        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]}.'), "red", ["bold"])        
+        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT {ENV["goal"]}. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]}.'), "red", ["bold"])        
         exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. ♥  Your solution appears to be correct (checked on several instances).'), "green")
-TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is efficient: its running time is linear in the length of T.'), "green")
+TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is {ENV["goal"]}: its running time is linear in the length of T.'), "green")
 
 exit(0)
 
