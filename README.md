@@ -1138,12 +1138,15 @@ it should out no line of error since/when this file is ok. The path it takes as 
 
 ## PROBLEMS WORKING AT PRESENT
 
-1. `sum`
-2. `eggs`
-3. `infinity_of_N`
-4. `morra`
-5. `pills`
-6. `parentheses`
+* `sum`
+* `eggs`
+* `infinity_of_N`
+* `morra`
+* `pills`
+* `parentheses`
+* `pirellone`
+* `piastrelle`
+* `increasing_subseq`
 
 ## Vision (pezzi in Italiano)
 
