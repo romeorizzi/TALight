@@ -1,47 +1,23 @@
 # What is TALight
 
-Are you a teacher/student/researcher/executive passionate about transmitting some problem solving competences, techniques, methods or skills? Do you want to acquire new competences in a lively, concrete and effective way? Do you want to promote them so that they come to new life in your children/students/employers/clients/customers/citizens? Would you like to promote your discoveries or products? Would you like to propose an interesting and instructive challenge, or organize a selection or recruiting campaign reaching to the alive ones?
-<details>
-<summary>TALight offers you ...</summary>
-TALight offers you the perfect tool and open framework for making up your favorite problem into a fully fledged didactic inclusive Montessori toy, allowing to organize and offer smooth interactive didactic paths around it and automatic feedback services to promote autonomous exploration and learning.
-Also the social and collaborative dimension is empowered in our approach and vision that has motivated the development of TALight, an ongoing process that we hope will surprise you (also in the future :stuck_out_tongue_winking_eye:) and to which everyone is invited to participate.
+Are you a teacher/student/researcher/parent/employer/employee/executive passionate about acquiring and/or transmitting some problem solving competences, techniques, methods or skills? Do you want to acquire new competences in a lively, concrete and effective way? Do you want to promote them so that they come to new life in your children/students/employees/clients/customers/citizens? Would you like to promote your discoveries or products? Would you like to propose an interesting and instructive challenge, or organize a selection or recruiting campaign reaching to the alive ones?
 
-<details>
-<summary>Do you want to acquire new competences?</summary>
-Then we refer to you as a **problem solver**. If you can find out the content for you under TALight, then both an active in-depth learning experience and pure fun are assured.
-If no such content is already available, then think about making it while you progress in the subject. In this way you will be given a fun opportunity to learn by doing.  
-</details>
 
-<details>
-<summary>Do you want to transmit competences or assess them? Do you want to share or spread active knowledge on a subject or a complex tool or product?</summary>
-Then you should consider becoming a **problem maker** and forge your content in the form of compelling problems and services. The teachings you will put in there will be sought for and deeply absorbed, and the materials you prepare will be highly reusable.  
-</details>
+**In all these cases TALight represents a rather peculiar and currently unique option to consider. Besides some already developed didactic problems and tools and options for their deployment, TALight offers an open framework and approach for making up your favorite problem into a fully fledged didactic inclusive Montessori toy.**\
+From this framework you can organize and offer smooth and inclusive interactive didactic paths relying on automatic feedback services supporting autonomous exploration and learning. Also the social and collaborative dimensions of the process of learning and making are empowered. The development of problems in git repositories can be shared among problem makers scattered around the world or proposed to your students or pals in the form of collaborative projects. These repositories can be public or private. Even in the second case, their services can be made accessible to the precise degree set by the problem maker, and in various modalities. The TALight platform itself is public and freely available as open source.
 
-<details>
-<summary>Do you want to become a problem maker but know only one programming language?</summary>
-Yes, the knowledge or the willingness to learn even just the basics of one single programming language of your choice, combined with the knowledge of your subject and the willingness to communicate and transmit an alive competence are just enough. If you have them you can already set up to make up an effective interactive problem truly hitting on the key issues that you want to dispel and share.
-</details>
+* **Do you want to acquire new competences?**\
+  Then we refer to you as a **_Problem Solver_.**
 
-In good conclusion
-<details>
-<summary>TALight is a minimal but powerful and flexible open system for the design, the sharing, the experimentation and the use of interactive didactic problems which offer rich ongoing instant feedback services to the problem solver (the student, or trainee, or employee, or fellow research colleague).
-</summary>
-Right now, most problems already available in TALight are of an algorithmic nature. This is mainly because of our own background and because algorithms often represent the ultimate form of archetypal knowledge. However, right now we do not set/state limits on what can be done, and welcome any kind of sensibility and new muses. 
+* **Do you want to transmit competences or assess them? Do you want to share or spread active knowledge on a subject or a complex tool or product?**\
+  Then you should consider becoming a **_Problem Maker_.** and 
+  forge your content in the form of compelling problems and services. The teachings you will put in there will be sought for and deeply absorbed, and the materials you prepare will be highly reusable both in space (MOOC) and in time.
+
+**TALight is a minimal but powerful and flexible open system for the design, the sharing, the experimentation and the use of interactive didactic problems which offer rich ongoing instant feedback services to the problem solver (the student, or trainee, or employee, or fellow research colleague).**
+
+This repository offers the TALight core plus some example problems working under it. Have a look at our `tutorial collection` to get a feeling about the kind of didactic problems and paths you can either find or cook up yourself with TALight, or what are their main features and advantages. In the future of our dreams we will also link from here the TALight problem collections either publically available in full or hosted in the cloud to be publicly accessible as services.
+
 This repository offers the TALight core plus some example problems working under it.
-These problems prompt and stimulate the problem solver but are mainly meant to illustrate how making new interesting problems under TALight is in your and in their reach. Yes, we insist on this "also in their reach" both on the solving and on the making side of the coin, which is an important extra-point in our vision.
-TALight is meant to be simple to work with and highly democratic.
-Among its commitments, in our vision come:
-
-1. no one left behind: the feedback provided to the students should be rich and stimulating.
-2. brake on through to the other side: when solving problems and interacting with the system, problem solvers should grow autonomous and get the desire and competence to become problem makers on their own. In fact, this will be the true mark on how much they have learned and grown.
-3. to be a problem maker the knowledge of one single programming language of your choice (and just the basics of it) should be enough. Our ambitions are high, we know that competences, experience, and knowledge can go much beyond the mere tools.
-4. possible to design didactic projects articulated on problems meant as Montessori games.
-5. possible for teachers to share and collaborate on these didactic projects.
-6. no installation strictly required for the problem solvers.
-</details>
-</details>
-
-___
 Have a look at our `tutorial collection` (see [next section](#explore-the-example-problems-in-our-tutorial-collection)) to get a feeling about the kind of didactic problems you can cook up yourself with TALight, or what are the features and advantages of the didactic paths and problems you might (in the future) find in TALight collections hosted in the cloud to be publicly available as services.
 
 
