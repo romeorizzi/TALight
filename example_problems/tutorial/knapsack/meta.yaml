@@ -5,7 +5,7 @@ services:
     evaluator: [python, services/dec2opt_server.py]
     args:
       n:
-        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        regex: ^([1-9][0-9]{0,2}|100|small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
@@ -22,7 +22,7 @@ services:
     evaluator: [python, services/opt2con_server.py]
     args:
       n:
-        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        regex: ^([1-9][0-9]{0,2}|100|small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
@@ -39,7 +39,7 @@ services:
     evaluator: [python, services/dec2con_server.py]
     args:
       n:
-        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        regex: ^([1-9][0-9]{0,2}|100|small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
@@ -56,17 +56,18 @@ services:
     evaluator: [python, services/dec2opt_server.py]
     args:
       n:
-        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        regex: ^([1-9][0-9]{0,2}|100|small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       goal:
-        explain: the options are as follows:
-	explain1: [correct] we only check that your answer to the optimization problem is correct.
-	explain2: [at_most_opt_calls] we check that your answer to the optimization problem is correct and that you do not make more than opt_calls to the oracle.
-	explain3: [polynomial] when numbers are encoded by means of a positional notation, as we do, then the share value of natural numbers grows exponentially in the length of the strings encoding them. Therefore, the opt value might be exponentially big in the length of the string encoding the input. As such, in this context polynomial means polynomial in log opt. We are asking you to exhibit a polynomial reduction, not just a pseudo-polynomial one.
+        explain: "the options are as follows: 
+        explain1: [correct] we only check that your answer to the optimization problem is correct.
+        explain2: [at_most_opt_calls] we check that your answer to the optimization problem is correct and that you do not make more than opt_calls to the oracle.
+        explain3: [polynomial] when numbers are encoded by means of a positional notation, as we do, then the share value of natural numbers grows exponentially in the length of the strings encoding them. Therefore, the opt value might be exponentially big in the length of the string encoding the input. As such, in this context polynomial means polynomial in log opt. We are asking you to exhibit a polynomial reduction, not just a pseudo-polynomial one.
+        "
         regex: ^(correct|at_most_opt_calls|polynomial)$
         default: correct
       lang:
@@ -77,7 +78,7 @@ services:
     evaluator: [python, services/opt2con_server.py]
     args:
       n:
-        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        regex: ^([1-9][0-9]{0,2}|100|small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
@@ -94,7 +95,7 @@ services:
     evaluator: [python, services/dec2con_server.py]
     args:
       n:
-        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        regex: ^([1-9][0-9]{0,2}|100|small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
@@ -111,11 +112,11 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   trilly:
-    explains: "this service poses you an n elements instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange."
+    explain: "this service poses you an n elements instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange."
     evaluator: [python, services/trilly_server.py]
     args:
       n:
-        regex: ^([1-9][0-9]{0,1}|100|small|large)$
+        regex: ^([1-9][0-9]{0,2}|100|small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
@@ -127,5 +128,3 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-
-
