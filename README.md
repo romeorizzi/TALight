@@ -25,21 +25,30 @@ Have a look at our `tutorial collection` (see [next section](#explore-the-exampl
 
 This section gives general instructions on how the problems sitting in a public collection, and their services, can be actually accessed.
 
-<details><summary>As such, this first stage of our tutorial should be read by</summary>
+This first stage of our tutorial should be read by:
 
 1. problem solvers still new to TALight but now enrolled in a course based on TALight problems, or interested into a didactic path developed under TALight they can get from the cloud.
 
 2. all those new to TALight, included those who want to act as problem makers or take part in the project as problem makers or as TALight platform developers or ecosystem designers.
 
-TALight intends to promote autonomous exploration. We wish these explorations might lead you to find out, discover, experiment and develop resources within you, in your machine, in the cloud, in your fellows, and in the community. But, to be more concrete rather than sound too visionary or idealistic, we exhibit now the intended use of the few basic commands which allow you to access the services of a problem and all other problem contents made available by the problem maker and the cloud hosting service.  
+TALight intends to promote autonomous exploration. We wish these explorations might lead you to find out, discover, experiment and develop resources within you, in your machine, in the cloud, in your fellows, and in the community.
 
-Knowing how to properly access a problem served from the cloud is at the basis to advance to deal with problems cloned in local on your machine. Playing with the problems in local will give you more freedom and control and enrich your opportunities for a wide and interconnected learning experience. Working on the problems cloned in local allows you to modify and adapt the problems themself to your needs and curiosities. Even if you do not modify the problems and leave them untouched, still the habit to launch an `rtald` daemon dispatching the problem services for the problms sitting in local on your machine and addressing it rather than an opaque `rtald` daemon serving the cloud will give you full control and understanding on the dialogue that occurs between the solutions of the probelem solver and the service servers written by the problem maker.
+There are more options on how you can access these problems and services:
+
+1. clone this repo and operate a full installation of TALight on your machine. This is the suggested route.
+
+2. clone this repo and install only the client side of TALight (TALight has a client/server architecture).
+
+3. download a client binary suitable for your machine, and use it to access the services of TALight problems openly deployed in the cloud.
+
+4. connect to a cloud service to operate a TALight client accessing the services of TALight problems openly deployed in the cloud. 
+
+It is actually an assumption of TALight that playing with the problems in local will give you more freedom and control and enrich your opportunities for a wide and interconnected learning experience. Even more so if you launch the TALight server on your machine, which allows you to modify the problems cloned in local to adapt them to your needs, or make/explore your own problems and variants. Even if you do not modify the problems and leave them untouched, still the habit to launch an `rtald` daemon dispatching the problem services for the problems sitting in local on your machine and addressing it rather than an opaque `rtald` daemon serving the cloud will give you full control and understanding on the dialogue that occurs between the solutions of the probelem solver and the service servers written by the problem maker.
 All this, besides possibly springing you to become a proficient problem solver, will also make it natural for you to digievolve to the next level up and experiment yourself as a problem maker.
-
-</details>
-
 ___
-The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, we suggest you to first explore the problems of this collection as deployed by this server. In this stage of the tutorial we illustrate the basic tools through which you can conduct this sort of exploration.
+The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, we suggest you to first explore the problems of this collection as deployed by this server.
+
+We exhibit now the few basic commands which support this exploration.  
 
 <details><summary>The two things you need before starting this first exploration as a problem solver and how to get them</summary>
 
