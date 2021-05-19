@@ -24,13 +24,13 @@ Have a look at our `tutorial collection` (see [next section](#explore-the-exampl
 
 TALight has a client/server architecture. There are more options on how you can access TALight problems and services:
 
-1. clone this repo and operate a full installation of TALight on your machine. This is the suggested route. Also, this is the only alternative for problem makers. However, if your intention right now is only to explore what TALight problems look like, then you can do so without operating any installation, provided you have a device connected to internet. Be aware that your experience will degradate the more you will rely on the involvement of external servers.   
+1. clone this repo and operate a full installation of TALight on your machine. In particuar, install both `rtal` (the TALight client) and `rtald` (the TALight server daemon). This is the suggested route. Also, this is the only alternative for problem makers in action. However, if your intention right now is only to explore what TALight problems look like, then you can proceed without any installation, provided you have a device connected to internet. Be aware that your experience will degradate the more you will rely on the involvement of external servers.   
 
-2. clone this repo and install only the client side of TALight.
+2. clone this repo and install only `rtal`. Then use your `rtal` command to access services of TALight problems openly deployed in the cloud (e.g., the problems in our tutorial). Your requests will be served by an `rtald` daemon server running on a remote server rather than on your machine.
 
-3. download a client binary suitable for your machine, and use it to access the services of TALight problems openly deployed in the cloud (like the problems in our tutorial). With this option, your possibilities and user experience will be equivalent to those with Option 2.  
+3. download a client `rtal` binary suitable for your machine, and use it to access services of TALight problems openly deployed in the cloud (like the problems in our tutorial). With this lighter option, your possibilities and user experience will be equivalent to those with Option 2.  
 
-4. connect to a cloud service to operate a TALight client accessing the services of TALight problems openly deployed in the cloud. In principle, this can be done even from a cell phone, but at that point the user experience will be largely compromised. 
+4. connect to a cloud service to operate a remote TALight client `rtal` which will access the services of TALight problems openly deployed in the cloud as above. In principle, this can be done even from a cell phone, but at that point the user experience will be largely compromised. 
 
 It is actually an assumption of TALight that playing with the problems in local will give you more freedom and control and enrich your opportunities for a wide and interconnected learning experience. Even more so if you launch the TALight server on your machine, which allows you to modify the problems cloned in local to adapt them to your needs, or make/explore your own problems and variants. Even if you do not modify the problems and leave them untouched, still the habit to launch an `rtald` daemon dispatching the problem services for the problems sitting in local on your machine and addressing it rather than an opaque `rtald` daemon serving the cloud will give you full control and understanding on the dialogue that occurs between the solutions of the problem solver and the service servers written by the problem maker.
 All this, besides possibly springing you to become a proficient problem solver, will also make it natural for you to digievolve to the next level up and experiment yourself as a problem maker.
@@ -39,11 +39,11 @@ All this, besides possibly springing you to become a proficient problem solver, 
 
 The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, you can first explore the problems of this collection as deployed by this server.
 
-You can do this by running a TALight client (`rtal`) set up on your machine, or by using your browser to operate a TALight client exported by a cloud hosted service. 
-This last setting is far from ideal but allows you to give TALight a try even if you only have a smartphone, or no permission to install anything on the available PC, or even if you only want to give a look.
-In these cases operating from a browser a client in the cloud that will connect to our web service server `wss://talight.tk/tutorial` migh actually be the best option for you to start with.
+You can do this by running a TALight client (`rtal`) set up on your machine (Options 2 and 3), or by using your browser to operate a TALight client exported by a cloud hosted service (Option 4). 
+Option 4 is not ideal but allows you to give TALight a try even if you only have a smartphone (where the impediments will be serious), or no permission to install anything on the available PC, or even if you only want to give a look.
+In these cases operating from a browser a client in the cloud that will connect to our web service server `wss://talight.tk/tutorial` might actually be the best option for you to start with.
 
-A very good option for a service allowing you to operate an `rtal` client is `repl`. This service also allows you to play with the problem operating from your preferred programming language.
+A very good option for a cloud service allowing you to operate an `rtal` client is `repl`, a very notable free facility for learning programming languages. From the `repl` site you can play with the problem also operating from your preferred programming language and environment.
 
 <details><summary>How to access a repl TALight client in the cloud supporting your preferred programming language</summary>
 
@@ -53,10 +53,13 @@ Choose your preferred programming language from the following list. If it is mis
 2. [cpp](https://repl.it/@RomeoRizziUniVR/rtalcpp#README.txt)
 3. [c](https://repl.it/@RomeoRizziUniVR/rtalc#README.txt)
 
+Rather than using these repls, we suggest you to make your own (free) repl account and then clone one of the above repls to make it your own and customize it at your will. This will disclose for you more powerful permissions and modalities of use. 
+
 <strong>What to do once you are on the rtal repl for your preferred programming language?</strong>
 
-In your repl page in the browser, open the shell and ask for the TALight services from command line. To do so, issue the rtal command with the right arguments that modulate its rich behaviours. The following examples give you a first start:
+In your repl page in the browser, open the shell and ask for the TALight services from command line. To do so, issue the rtal executable we placed there. The rtal command takes in a set of arguments that can be extended by the problem maker. You have to find out yourself the arbitrarily rich possibilities made available for each single problem. To give you a first start with this, here are a few examples of commands one could issue to explore what services are offered:
 
+```bash
 ./rtal -s wss://talight.tk/tutorial help
 ./rtal -s wss://talight.tk/tutorial list
 ./rtal -s wss://talight.tk/tutorial list sum -v
@@ -66,22 +69,10 @@ In your repl page in the browser, open the shell and ask for the TALight service
 ./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=help
 ./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
 ./rtal -s wss://talight.tk/tutorial connect sum free_sum
+```
 </details>
 
-# Exploring a TALight problem
-
-We exhibit now the few basic `rtal` commands which support the exploration of a TALight problem.  
-In this section we only assume to have access to a functional `rtal` command, either because it has been installed on the local machine or because we operate an instatiation of it in a cloud service. 
-In either case, we assume to operate the `rtal` command from a CLI environment, some powerful enough shell emulator. 
-
-<details><summary>The two things you need before starting this first exploration as a problem solver and how to get them</summary>
-
-Well, to a certain extent a functioning browser is all what you need.
-Seriosly: 
-
-
-
-# Explore the example problems in our tutorial collection
+# Exploring a TALight problem or a problem collection
 
 This section gives general instructions on how the problems sitting in a public collection, and their services, can be actually accessed from a working TALight setup.
 
@@ -93,13 +84,30 @@ This first stage of our tutorial should be read by:
 
 TALight intends to promote autonomous exploration. We wish these explorations might lead you to find out, discover, experiment and develop resources within you, in your machine, in the cloud, in your fellows, and in the community.
 
-XXX
+We exhibit now the few basic `rtal` commands which support the exploration of a TALight problem.  
+In this section we only assume to have access to a functioning `rtal` command, either because it has been installed on the local machine or because we operate an instatiation of it in a cloud service. 
+In either case, we assume to operate the `rtal` command from a CLI environment, some powerful enough shell emulator.
+At this point, the only difference is: in the various examples of use listed here below, you should write `./rtal -s wss:INTENDED_ADDRESS` (like for example `./rtal -s wss://talight.tk/tutorial`) rather than `./rtal` when the `rtald` we are appealing to is deployed from some `INTENDED_ADDRESS` in the cloud rather than our local machine.
 
+
+The rtal command takes in a set of arguments that can be extended by the problem maker. You have to find out yourself the arbitrarily rich possibilities made available for each single problem. To give you a first start with this, here are a few examples of commands one could issue to explore what services are offered:
+
+```bash
+./rtal -s wss://talight.tk/tutorial help
+./rtal -s wss://talight.tk/tutorial list
+./rtal -s wss://talight.tk/tutorial list sum -v
+./rtal -s wss://talight.tk/tutorial connect --help
+./rtal -s wss://talight.tk/tutorial connect sum synopsis
+./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=free_sum
+./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=help
+./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
+./rtal -s wss://talight.tk/tutorial connect sum free_sum
+```
+
+
+<details><summary>The two things you need before starting this first exploration as a problem solver and how to get them</summary>
 
 In order to ask for the services of a TALight server you need the two things listed here below. If you do not have them you can get them has explained and this is most advisable because you will get a better experience.
-
-
-
 
 <strong>Thing 1:</strong> You need to have a terminal or a terminal emulator (with a shell like bash or zsh). If you are on Linux or Mac you already have it.
 
