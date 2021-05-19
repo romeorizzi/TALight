@@ -3,8 +3,10 @@
 Are you a teacher/student/researcher/parent/employer/employee/executive passionate about acquiring and/or transmitting some problem solving competences, techniques, methods or skills? Do you want to acquire new competences in a lively, concrete and effective way? Do you want to promote them so that they come to new life in your children/students/employees/clients/customers/citizens? Would you like to promote your discoveries or products? Would you like to propose an interesting and instructive challenge, or organize a selection or recruiting campaign reaching to the alive ones?
 
 
-**First of all, TALight is a rather peculiar and in many ways unique approach to address the above issues. Also, TALight offers for free some already developed didactic problems and tools, with options and tools for their deployment and actual use. In fact, with this public repo, TALight offers a free and open framework (and approach) for making up your favorite problem into a fully fledged didactic inclusive Montessori toy.**\
+**First of all, TALight is a rather peculiar and in many ways unique approach to address the above issues. With this public repo, TALight offers a free and open framework (and approach) for making up your favorite problem into a fully fledged didactic inclusive Montessori toy. The repo also includes already developed didactic problems, with options and tools for their deployment and actual use.**\
 From this framework you can organize and offer smooth and inclusive interactive didactic paths relying on automatic feedback services supporting autonomous exploration and learning. Also the social and collaborative dimensions of the process of learning and making are empowered. The development of problems in git repositories can be shared among problem makers scattered around the world or proposed to your students or pals in the form of collaborative projects. These repositories can be public or private. Even in the second case, their services can be made accessible to the precise degree set by the problem maker, and in various modalities. The TALight platform itself is public and freely available as open source.
+
+TALight has two categories of users: 
 
 * **Do you want to acquire new competences?**\
   Then we refer to you as a **_Problem Solver_.**
@@ -15,10 +17,8 @@ From this framework you can organize and offer smooth and inclusive interactive 
 
 **TALight is a minimal but powerful and flexible open system for the design, the sharing, the experimentation and the use of interactive didactic problems which offer rich ongoing instant feedback services to the problem solver (the student, or trainee, or employee, or fellow research colleague).**
 
-This repository offers the TALight core plus some example problems working under it. Have a look at our `tutorial collection` to get a feeling about the kind of didactic problems and paths you can either find or cook up yourself with TALight, or what are their main features and advantages. In the future of our dreams we will also link from here the TALight problem collections either publically available in full or hosted in the cloud to be publicly accessible as services.
-
 This repository offers the TALight core plus some example problems working under it.
-Have a look at our `tutorial collection` (see [next section](#explore-the-example-problems-in-our-tutorial-collection)) to get a feeling about the kind of didactic problems you can cook up yourself with TALight, or what are the features and advantages of the didactic paths and problems you might (in the future) find in TALight collections hosted in the cloud to be publicly available as services.
+Have a look at our `tutorial collection` (see [next section](#explore-the-example-problems-in-our-tutorial-collection)) to get a feeling about the kind of didactic problems you can cook up yourself with TALight, or what are their main features and advantages.
 
 
 ## Explore the example problems in our tutorial collection
