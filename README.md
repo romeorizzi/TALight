@@ -93,15 +93,15 @@ At this point, the only difference is: in the various examples of use listed her
 The rtal command takes in a set of arguments that can be extended by the problem maker. You have to find out yourself the arbitrarily rich possibilities made available for each single problem. To give you a first start with this, here are a few examples of commands one could issue to explore what services are offered:
 
 ```bash
-./rtal -s wss://talight.tk/tutorial help
-./rtal -s wss://talight.tk/tutorial list
-./rtal -s wss://talight.tk/tutorial list sum -v
-./rtal -s wss://talight.tk/tutorial connect --help
-./rtal -s wss://talight.tk/tutorial connect sum synopsis
-./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=free_sum
-./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=help
-./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
-./rtal -s wss://talight.tk/tutorial connect sum free_sum
+./rtal help
+./rtal list
+./rtal list sum -v
+./rtal connect --help
+./rtal connect sum synopsis
+./rtal connect sum synopsis -a service=free_sum
+./rtal connect sum synopsis -a service=help
+./rtal connect sum -a page=sum_and_difference help
+./rtal connect sum free_sum
 ```
 
 
