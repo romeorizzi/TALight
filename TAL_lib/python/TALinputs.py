@@ -58,7 +58,9 @@ def TALinput(token_type, num_tokens=None, sep=None, exceptions = set({}), commen
             print(f"the server was expecting a line with {num_tokens} tokens but the line you entered:\n{input_line}\ncontains {len(tokens)} != {num_tokens} tokens.\n", file=out)
             TAc.print("I am dropping the communication because of violation of the intended protocol between problem solver and problem maker.", "yellow", file=out)
             if sep != None:
-               TAc.print(f"The token separation character for this problem service is '{sep}'.", file=out)
+               TAc.print(f"The input line is split into tokens at each separation character. The separation character for this problem service is '{sep}'.", "yellow", file=out)
+            else:
+               TAc.print(f"Spaces are what split up the input line into tokens.", "yellow", file=out)                
         exit(0)
     vals = []
     for token, i in zip(tokens,range(1,1+len(tokens))):

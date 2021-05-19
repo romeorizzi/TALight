@@ -1,7 +1,7 @@
 public_folder: public
 services:
   spot_magic_indexes:
-    explain: "You give us a sorted vector of distinct integers and we return you the sorted list of magic indexes."
+    explain: "You give us a sorted array of distinct integers and we return you the sorted list of magic indexes."
     evaluator: [python, services/spot_magic_indexes_server.py]
     args:
       input_vector:
@@ -13,23 +13,29 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_magic_indexes:
-    explain: "You give us a sorted vector of distinct integers and the sorted list of magic indexes. We check it out."
+    explain: "You give us a sorted vector of distinct integers and the sorted list of its magic indexes. We check it out."
     evaluator: [python, services/check_magic_indexes_server.py]
     args:
       input_vector:
-        regex:  ^(lazy_input|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
-        default: lazy
+        regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
+        explain: "an increasing sequence of integers separated by commas (no spaces)."
+        example: "-12,0,2,3,34,56"
       input_list:
-        regex:  ^(lazy_input|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
-        default: lazy
-      silent:
-        regex: ^(0|1)$
-        default: 0
+        regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
+        explain: "the sorted sequence of magic indexes of input_vector (again an increasing sequence of integers separated by commas and no spaces)."
+        example: "2,3"
+      feedback:
+        regex: ^(silent|yes_no|gimme_one_wrong)$
+        default: silent
+        explain: "the levels of feedback are as follows:"
+        explain1: "[silent]  if the input_list is correct then the service runs silently. Otherwise it signals that there is some problem."
+        explain2: "[yes_no]  only tells whether input_list is correct or not."
+        explain3: "[gimme_one_wrong]  tells whether input_list is correct or not, and in the second case points out precisely one of the errors."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   gimme_input_vector:
-    explain: "To ask for an instance, that is, an increasing sequence of inetgers comprising an input vector."
+    explain: "Call this service to ask for an instance, that is, an increasing sequence of integers comprising an input vector."
     evaluator: [python, services/gimme_input_vector_server.py]
     args:
       n:
@@ -41,14 +47,15 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_worst_case_n_questions:
+  check_worst_case_num_questions:
+    explain: "You give us a natural n and what you conjecture to be the smallest number r such that there exists a strategy for knowing the truth in at most r queries. We check out your conjecture."
     evaluator: [python, services/check_worst_case_n_questions_server.py]
     args:
       n:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
       risp:
         regex: ^(0|[1-9][0-9]{0,50})$
-        explain: "what you conjecture to be the smallest number r such that there exists a strategy for knowing the truth in at most r queries."
+        explain: "the smallest number r such that there exists a strategy for finding out precisely which indexes are magic in at most r queries."
       more_or_less_hint_if_wrong:
         regex: ^(0|1)$
         default: 0
@@ -58,22 +65,32 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  play:
-    evaluator: [python, services/play_server.py]
+  play1:
+    evaluator: [python, services/play1_server.py]
+    explain: "You give us a natural n to start a play where the server holds the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense."
+    evaluator: [python, services/play1_server.py]
     args:
       n:
         regex: ^(0|[1-9][0-9]{0,5}|1000000)$
+      opponent:
+        regex: ^(optimal|random)$
+        default: optimal
       goal:
         regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
         default: correct
       feedback:
         regex: ^(yes_no_goal|how_far|spot_first_gift|spot_every_gift)$
         default: yes_no_goal
+        explain: "the levels of feedback are as follows:"
+        explain1: "[yes_no_goal]  tells wethether your play reaches the goal set when launching the service."
+        explain2: "[how_far]  tells how far you are from the goal you have set."
+        explain3: "[spot_first_gift]  during the game signals out (in a commented line, not to disturb the bot that could possibly play in your place) your first move where your goal is compromised."
+        explain4: "[spot_every_gift]  during the game signals out (in a commented line) every move where you waste one dollar."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  eval_play:
-    evaluator: [python, services/eval_play_server.py]
+  eval_play1:
+    evaluator: [python, services/eval_play1_server.py]
     args:
       goal:
         regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
@@ -84,7 +101,31 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  optimal_move:
+  play2:
+    evaluator: [python, services/play1_server.py]
+    explain: "You give us a natural n to start a play where you hold the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense."
+    evaluator: [python, services/play1_server.py]
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]{0,5}|1000000)$
+      opponent:
+        regex: ^(optimal|random)$
+        default: optimal
+      goal:
+        regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
+        default: correct
+      feedback:
+        regex: ^(yes_no_goal|how_far|spot_first_gift|spot_every_gift)$
+        default: yes_no_goal
+        explain: "the levels of feedback are as follows:"
+        explain1: "[yes_no_goal]  tells wethether your play reaches the goal set when launching the service."
+        explain2: "[how_far]  tells how far you are from the goal you have set."
+        explain3: "[spot_first_gift]  during the game signals out (in a commented line, not to disturb the bot that could possibly play in your place) your first move where your goal is compromised."
+        explain4: "[spot_every_gift]  during the game signals out (in a commented line) every move where you waste one dollar."
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  optimal_move1:
     evaluator: [python, services/optimal_move_server.py]
     args:
       n:

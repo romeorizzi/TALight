@@ -9,19 +9,22 @@ def check_input_vector(vec, TAc, LANG):
             TAc.print(LANG.render_feedback("decrease", f'No. Your vector is not incrisingly sorted: vec[{i-1}] = {vec[i-1]} > {vec[i]} = vec[{i}].'), "red", ["bold"])
             exit(0)
 
-def random_vector(n, seed="any"):
-    if seed=="any":
+def random_vector(n, seed="random_seed"):
+    if seed=="random_seed":
         random.seed()
         seed = random.randrange(0,1000000)
     else:
         seed = int(seed)
-
     random.seed(seed)
-    vec = [random.randint(-10, 1000) for _ in range(n)]
-    vec = set(vec) # we remove any duplicates
-    vec = list(vec) 
-    vec.sort()  # and we sort the list of elements
-    
+    first_magic = random.randint(0,n-1)
+    last_magic = random.randint(0,n-1)
+    vec = list(range(n))
+    for i in range(last_magic+1,n):
+        vec[i] = vec[i-1] + random.randint(2, 5)
+    if first_magic > last_magic:
+        first_magic = last_magic +1
+    for i in range(first_magic-1,-1,-1):
+        vec[i] = vec[i+1] - random.randint(2, 5)    
     return vec,seed
 
 def spot_magic_index(vec):

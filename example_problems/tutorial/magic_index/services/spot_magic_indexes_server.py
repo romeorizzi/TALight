@@ -31,10 +31,15 @@ else:
 vec = list(map(int, vec))
 check_input_vector(vec, TAc, LANG)
 
-TAc.print("[ ", "yellow", end="")
+TAc.print("[", "yellow", end="")
+got_one = False
 for i in range(len(vec)):
   if vec[i] == i:
-    TAc.print(f"{i}", "yellow", end=" ")
+      if not got_one:
+          got_one = True
+          TAc.print(f"{i}", "yellow", end="")
+      else:
+          TAc.print(f", {i}", "yellow", end="")          
 TAc.print("]", "yellow")
 exit(0)
 
