@@ -58,7 +58,7 @@ Il servizio presenterà un'istanza $I$ del problema di decisione e rimarrà in a
 Puoi alzare l'asticella con:
 
 ```bash
-rtal connect -e knapsack dec2opt -a goal=one_single_oracle_call  -- python my_algo.py
+rtal connect -e knapsack dec2opt -a goal=at_most_one_call -- python my_algo.py
 ```
 
 Diventa più interessante elaborare l'algoritmo che dimostra la riduzione inversa (dove vanno invertiti i ruoli dei due problemi nei punti 1 e 2 dello schema dato sopra), per dimostrare che l'esistenza di un algoritmo polinomiale per il problema di decisione implica l'esistenza di un algoritmo polinomiale per il problema di ottimizzazione.
