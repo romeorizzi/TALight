@@ -20,40 +20,30 @@ TALight has two categories of users:
 This repository offers the TALight core plus some example problems working under it.
 Have a look at our `tutorial collection` (see [next section](#explore-the-example-problems-in-our-tutorial-collection)) to get a feeling about the kind of didactic problems you can cook up yourself with TALight, or what are their main features and advantages.
 
+# Set-up your access to TALight services.
 
-## Explore the example problems in our tutorial collection
+TALight has a client/server architecture. There are more options on how you can access TALight problems and services:
 
-This section gives general instructions on how the problems sitting in a public collection, and their services, can be actually accessed.
+1. clone this repo and operate a full installation of TALight on your machine. This is the suggested route. Also, this is the only alternative for problem makers. However, if your intention right now is only to explore what TALight problems look like, then you can do so without operating any installation, provided you have a device connected to internet. Be aware that your experience will degradate the more you will rely on the involvement of external servers.   
 
-This first stage of our tutorial should be read by:
+2. clone this repo and install only the client side of TALight.
 
-1. problem solvers still new to TALight but now enrolled in a course based on TALight problems, or interested into a didactic path developed under TALight they can get from the cloud.
+3. download a client binary suitable for your machine, and use it to access the services of TALight problems openly deployed in the cloud (like the problems in our tutorial). With this option, your possibilities and user experience will be equivalent to those with Option 2.  
 
-2. all those new to TALight, included those who want to act as problem makers or take part in the project as problem makers or as TALight platform developers or ecosystem designers.
-
-TALight intends to promote autonomous exploration. We wish these explorations might lead you to find out, discover, experiment and develop resources within you, in your machine, in the cloud, in your fellows, and in the community.
-
-There are more options on how you can access these problems and services:
-
-1. clone this repo and operate a full installation of TALight on your machine. This is the suggested route.
-
-2. clone this repo and install only the client side of TALight (TALight has a client/server architecture).
-
-3. download a client binary suitable for your machine, and use it to access the services of TALight problems openly deployed in the cloud.
-
-4. connect to a cloud service to operate a TALight client accessing the services of TALight problems openly deployed in the cloud. 
+4. connect to a cloud service to operate a TALight client accessing the services of TALight problems openly deployed in the cloud. In principle, this can be done even from a cell phone, but at that point the user experience will be largely compromised. 
 
 It is actually an assumption of TALight that playing with the problems in local will give you more freedom and control and enrich your opportunities for a wide and interconnected learning experience. Even more so if you launch the TALight server on your machine, which allows you to modify the problems cloned in local to adapt them to your needs, or make/explore your own problems and variants. Even if you do not modify the problems and leave them untouched, still the habit to launch an `rtald` daemon dispatching the problem services for the problems sitting in local on your machine and addressing it rather than an opaque `rtald` daemon serving the cloud will give you full control and understanding on the dialogue that occurs between the solutions of the probelem solver and the service servers written by the problem maker.
 All this, besides possibly springing you to become a proficient problem solver, will also make it natural for you to digievolve to the next level up and experiment yourself as a problem maker.
-___
-The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, we suggest you to first explore the problems of this collection as deployed by this server.
 
-We exhibit now the few basic commands which support this exploration.  
+## How to avoid installing the TALight server daemon (`tald`)
 
-<details><summary>The two things you need before starting this first exploration as a problem solver and how to get them</summary>
+The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, you can first explore the problems of this collection as deployed by this server.
 
-Well, to a certain extent a functioning browser is all what you need.
-Seriosly: if you only have a smartphone, or no permission to install anything on the available PC, or even if you only want to give a look but are also certain you are not going to write any code, then reaching some TALight services from the browser migh actually be the best option for you to start with. In practice, throught the browser you will access a client in the cloud that will connect to our web service server `wss://talight.tk/tutorial`.
+You can do this by running a TALight client (`rtal`) set up on your machine, or by using your browser to operate a TALight client exported by a cloud hosted service. 
+This second setting is far from ideal but allows you to give TALight a try even if you only have a smartphone, or no permission to install anything on the available PC, or even if you only want to give a look.
+In these cases operating from a browser a client in the cloud that will connect to our web service server `wss://talight.tk/tutorial` migh actually be the best option for you to start with.
+
+A very good option for a service allowing you to operate an `rtal` client is `repl`. This service also allows you to play with the problem operating from your preferred programming language.
 
 <details><summary>How to access a repl TALight client in the cloud supporting your preferred programming language</summary>
 
@@ -65,17 +55,46 @@ Choose your preferred programming language from the following list. If it is mis
 
 <strong>What to do once you are on the rtal repl for your preferred programming language?</strong>
 
-Aprire la shell e da linea di comando si richiedano i servizi TALight tramite il comando rtal come da primi esempi sequenti:
+In your repl page in the browser, open the shell and ask for the TALight services from command line. To do so, issue the rtal command with the right arguments that modulate its rich behaviours. The following examples give you a first start:
 
 ./rtal -s wss://talight.tk/tutorial help
 ./rtal -s wss://talight.tk/tutorial list
 ./rtal -s wss://talight.tk/tutorial list sum -v
 ./rtal -s wss://talight.tk/tutorial connect --help
+./rtal -s wss://talight.tk/tutorial connect sum synopsis
+./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=free_sum
+./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=help
 ./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
 ./rtal -s wss://talight.tk/tutorial connect sum free_sum
-
-
 </details>
+
+# Exploring a TALight problem
+
+We exhibit now the few basic `rtal` commands which support the exploration of a TALight problem.  
+In this section we only assume to have access to a functional `rtal` command, either because it has been installed on the local machine or because we operate an instatiation of it in a cloud service. 
+In either case, we assume to operate the `rtal` command from a CLI environment, some powerful enough shell emulator. 
+
+<details><summary>The two things you need before starting this first exploration as a problem solver and how to get them</summary>
+
+Well, to a certain extent a functioning browser is all what you need.
+Seriosly: 
+
+
+
+# Explore the example problems in our tutorial collection
+
+This section gives general instructions on how the problems sitting in a public collection, and their services, can be actually accessed from a working TALight setup.
+
+This first stage of our tutorial should be read by:
+
+1. problem solvers still new to TALight but now enrolled in a course based on TALight problems, or interested into a didactic path developed under TALight they can get from the cloud.
+
+2. all those new to TALight, included those who want to act as problem makers or take part in the project as problem makers or as TALight platform developers or ecosystem designers.
+
+TALight intends to promote autonomous exploration. We wish these explorations might lead you to find out, discover, experiment and develop resources within you, in your machine, in the cloud, in your fellows, and in the community.
+
+XXX
+
 
 In order to ask for the services of a TALight server you need the two things listed here below. If you do not have them you can get them has explained and this is most advisable because you will get a better experience.
 
