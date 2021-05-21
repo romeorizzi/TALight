@@ -3,7 +3,7 @@
 Are you a teacher/student/researcher/parent/employer/employee/executive passionate about acquiring and/or transmitting some problem solving competences, techniques, methods or skills? Do you want to acquire new competences in a lively, concrete and effective way? Do you want to promote them so that they come to new life in your children/students/employees/clients/customers/citizens? Would you like to promote your discoveries or products? Would you like to propose an interesting and instructive challenge, or organize a selection or recruiting campaign reaching to the alive ones?
 
 
-**First of all, TALight is a rather peculiar and in many ways unique approach to address the above issues. With this public repo, TALight offers a free and open framework (and approach) for making up your favorite problem into a fully fledged didactic inclusive Montessori toy. The repo also includes already developed didactic problems, with options and tools for their deployment and actual use.**\
+**First of all, TALight is a peculiar and in many ways unique approach to address the above issues. With this public repo, TALight offers a free and open framework (and approach) for making up your favorite problem into a fully fledged didactic inclusive Montessori toy. The repo also includes already developed didactic problems, with options and tools for their deployment and actual use.**\
 From this framework you can organize and offer smooth and inclusive interactive didactic paths relying on automatic feedback services supporting autonomous exploration and learning. Also the social and collaborative dimensions of the process of learning and making are empowered. The development of problems in git repositories can be shared among problem makers scattered around the world or proposed to your students or pals in the form of collaborative projects. These repositories can be public or private. Even in the second case, their services can be made accessible to the precise degree set by the problem maker, and in various modalities. The TALight platform itself is public and freely available as open source.
 
 TALight has two categories of users: 
@@ -39,10 +39,10 @@ All this, besides possibly springing you to become a proficient problem solver, 
 
 The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, you can first explore the problems of this collection as deployed by this server.
 
-You can do this by running a TALight client (`rtal`) set up on your machine (Options 2 and 3), or by using your browser to operate a TALight client exported by a cloud hosted service (Option 4). 
-Option 4 is not ideal but allows you to give TALight a try even if you only have a smartphone (where the impediments will be serious), or no permission to install anything on the available PC, or even if you only want to give a look.
-In these cases operating from a browser a client in the cloud that will connect to our web service server `wss://talight.tk/tutorial` might actually be the best option for you to start with.
+You can do this by running a TALight client (`rtal`) set up on your machine (Options 2 and 3), or by using a browser to operate a TALight client exported by a cloud hosted service (Option 4). 
+Option 4 is not ideal but allows you to explore what TALight might offer if you have no permission to install anything on your PC, or even from a tablet or a smartphone (in which case the impediments will however get more serious).
 
+___
 A very good option for a cloud service allowing you to operate an `rtal` client is `repl`, a very notable free facility for learning programming languages. From the `repl` site you can play with the problem also operating from your preferred programming language and environment.
 
 <details><summary>How to access a repl TALight client in the cloud supporting your preferred programming language</summary>
@@ -57,7 +57,7 @@ Rather than using these repls, we suggest you to make your own (free) repl accou
 
 <strong>What to do once you are on the rtal repl for your preferred programming language?</strong>
 
-In your repl page in the browser, open the shell and ask for the TALight services from command line. To do so, issue the rtal executable we placed there. The rtal command takes in a set of arguments that can be extended by the problem maker. You have to find out yourself the arbitrarily rich possibilities made available for each single problem. To give you a first start with this, here are a few examples of commands one could issue to explore what services are offered:
+In your repl page in the browser, open the shell and ask for the TALight services from its command line. To do so, issue the rtal executable we placed there. The rtal command takes in a set of arguments that can be extended by the problem maker. You have to find out yourself the arbitrarily rich possibilities made available for each single problem. To give you a first start with this, here are a few examples of commands one could issue to explore what services are offered:
 
 ```bash
 ./rtal -s wss://talight.tk/tutorial help
@@ -438,8 +438,8 @@ Also, when you install Git Bash you are given your chance to activate the symlin
 
 <details><summary>To the problem maker</summary>
 
-Publishing a problem collection on a repo might empower the learning experience and enrich the learning opportunity. In particular, your possibility to test everything in local will be enanced. Not only you can now test your bots in local before sending them to the services in the cloud, but now you can also watch them more closely when both ends of this interaction sit on your local machine. Now you can also modify them and add prints to debug the communication protocol that the problem has defined for them to act within.
-All this added possibility to experiment is a precious opportunity to get under the hood by doing and has the further benefit to facilitate the transition from problem solver to problem maker. Making is the best and ultimate way of learning and can also offer opportunities for real projects that turn the evaluation from an artificial and frustrating to a stimulating and really inclusive experience. In the next section we will see how the problems you have here played with in this first level tutorial can be fully accessed in the backstage. The problem collection of the tutorial is a public git repo. To follow us there you will need to set up `git` on your machine. If you did not already have `git`, then we consider this as a first clear example on how TALight prompts towards self-empowerment since `git` is the portal towards open source projects and communities.
+Publishing a problem collection on a repo might empower the learning experience and enrich the learning opportunity. In particular, your possibility to test everything in local will be enanced. Not only you can now test your bots in local before confronting them with the services in the cloud, but now you can also watch them more closely when both ends of this interaction sit on your local machine. Now you can modify also the service server programs by the problem maker and add prints to debug the communication protocol, or even adapt it as you prefer.
+This extra freedom in experimenting is also a precious opportunity to get under the hood by doing and has the further benefit to facilitate the transition from problem solver to problem maker. Making is the best and ultimate way of learning and can also offer opportunities for real projects that turn the evaluation from an artificial and frustrating to a stimulating and really inclusive experience. In the next section we will see how the problems you have here played with in this first level tutorial can be fully accessed in the backstage. The problem collection of the tutorial is a public git repo. To follow us there you will need to set up `git` on your machine. If you did not already have `git`, then we consider this as a first clear example on how TALight prompts towards self-empowerment since `git` is the portal towards open source projects and communities.
 
 Sharing the repo with collaborators (and consider having your students among them) might allow for better and new opportunities and energies to come to life. You can collaborate with teachers spread elsewhere in your country but commitment to the same topic. This opens the possibility to really join the forces for the joint design and realization of didactic curricular material.  
 
@@ -1006,7 +1006,7 @@ This is also a very convenient option to work, within your preferred programming
 
 2. Experiment what this amazing environment can offer you and customize it.
 
-3. go on our TALight repl for those programming languages you like, and fork them to make them your own. In this way you will end up with a rather personalized environment offering you in one single place both your preferred programming language, the binaries comprising the TALight platform, the problems for that collection/syllabus.
+3. go on our TALight repl for those programming languages you like, and fork them to make them your own. In this way you will end up with a personalized environment offering you in one single place both your preferred programming language, the binaries comprising the TALight platform, the problems for that collection/syllabus.
 
 Of course, you will need to update the binaries and the problem collection when they move ahead (which happens rather fast in this first year of actual experimentation in our own courses). One simple way to do this is to return to the original repl and fork it again (you need to manage the recovery of the bots and solutions you have developed from the previous fork. The best way is to download them in local (one click) and then to update this version in local update after update). Then you will updload (or even just copy and paste) an old solution in the currently last and active fork of yours when you need it (mainly when you want to use it as a template to minimize your editing or when you want to come back to it to improve it or complete it to the most difficult tasks and goals, maybe incorporating into it a new technique you have just learned).
 
