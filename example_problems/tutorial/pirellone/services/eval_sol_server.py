@@ -76,7 +76,8 @@ def one_test(m,n,seed,max_queries=None):
     correction,_=pl.check_off_lights(M,line,LANG, TAc)
     if not correction:
         TAc.print(LANG.render_feedback("wrong",f"# No! The solution of the matrix {m}x{n} of seed={seed} does not turn off all lights."), "red", ["bold"])
-        #print(f"# pirellone spento?{M}")
+        print(f"# pirellone spento?{M}")
+        print(f"# {line}")
         exit(0)
     if t > 1:
         return False
@@ -97,7 +98,7 @@ def eval_correct():
 
 def eval_polynomial_in_m():
     for _ in range(5):
-        if not one_test(50,10,seed_service,max_queries=None):
+        if not one_test(29,10,seed_service,max_queries=None):
             TAc.print(LANG.render_feedback("not-polynomial-in-m", '# No. Your solution is not polynomial in m. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])   
             exit(0)
     TAc.print(LANG.render_feedback("correct-polynomial-in-m", '# Your solution stays in the goal you set: polynomial_in_m .'), "green",["bold"])
