@@ -22,6 +22,8 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
+# START CODING YOUR SERVICE:
+
 max_val = 100
 if ENV['seed']=='random_seed': 
     seed_service = random.randint(100000,999999)
@@ -44,11 +46,11 @@ for i in range(NUM_instances_correct):
         "seed": seed_service + i }) 
 
 # creo ulteriori istanze per le valutazioni di efficienza:
-MAX_M_efficient = 10000 # len_T
-NUM_instances_efficient = 20
-if ENV["goal"] == "efficient":
+MAX_M_quadratic = 1000 # len_T
+NUM_instances_quadratic = 20
+if ENV["goal"] == "quadratic":
     if ENV["code_lang"]=="compiled":
-        MAX_M_efficient *= 20
+        MAX_M_quadratic *= 20
     # crescita graduale (rischio soluzione esponenziale):
     for i in range(MAX_M_correct+1, 2*MAX_M_correct):
         instances.append({
@@ -62,7 +64,33 @@ if ENV["goal"] == "efficient":
     s = tmp["seed"]
     while True:
         m = 1 + int(m * scaling_factor)
-        if (m > MAX_M_efficient):
+        if (m > MAX_M_quadratic):
+            break
+        instances.append({
+        "m": m,      
+        "max_val": max_val,
+        "seed": seed_service + m})
+
+# creo ulteriori istanze per le valutazioni di efficienza:
+MAX_M_quasi_linear = 10000 # len_T
+NUM_instances_quasi_linear = 20
+if ENV["goal"] == "quasi_linear":
+    if ENV["code_lang"]=="compiled":
+        MAX_M_quasi_linear *= 20
+    # crescita graduale (rischio soluzione esponenziale):
+    for i in range(MAX_M_correct+1, 2*MAX_M_correct):
+        instances.append({
+           "m": i,      
+           "max_val": max_val,
+           "seed": seed_service + i + NUM_instances_correct })
+    # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
+    scaling_factor = 1.5
+    tmp = instances[-1]
+    m = tmp["m"]
+    s = tmp["seed"]
+    while True:
+        m = 1 + int(m * scaling_factor)
+        if (m > MAX_M_quasi_linear):
             break
         instances.append({
         "m": m,      
@@ -90,13 +118,13 @@ for instance in instances:
     time = one_test(instance["m"], instance["max_val"], instance["seed"])
     count +=1
     print(f"#Correct! [took {time} seconds on your machine]")
-    if time > 10:
+    if time > 1:
         if count > NUM_instances_correct:
             TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution answers correctly on a first set of instances (with |T|, the length of T, up to {instance["m"]}.'), "green")
-        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]}.'), "red", ["bold"])        
+        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT {ENV["goal"]}. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]}.'), "red", ["bold"])        
         exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. ♥  Your solution appears to be correct (checked on several instances).'), "green")
-TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is efficient: its running time is linear in the length of T.'), "green")
+TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is {ENV["goal"]}: its running time is linear in the length of T.'), "green")
 
 exit(0)

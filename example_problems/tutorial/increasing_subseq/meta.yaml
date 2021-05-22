@@ -275,9 +275,12 @@ services:
     evaluator: [python, services/eval_count_increasing_subseq.py]
     args:
       goal:
-        regex: ^(correct|efficient)$
+        explain: "set your goal (the goals form a total order where each goal implies the previous one)."
+        regex: ^(correct|quadratic|quasi_linear)$
         default: correct
-        explain: "set your goal (efficient includes also correct)."
+        explain1: "[correct] this is the minimal requirement."
+        explain2: "[quadratic] this goal can be achieved by a correct algorithm taking time O(n^2), where n is the length of the input sequence."
+        explain3: "[quasi_linear] this goal can be achieved by a correct algorithm taking time O(n * log n)."
       seed:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$

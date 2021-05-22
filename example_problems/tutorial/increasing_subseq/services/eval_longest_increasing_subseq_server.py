@@ -173,8 +173,7 @@ def one_test(m,max_val,seed):
         T,seed = generate_random_seq(m, max_val, seed)
 
     TAc.print(" ".join(map(str,T)), "yellow", ["bold"])
-    mdc = min_decreasing_col(T) #trova la colorazione minima decrescente
-    n_col = n_coloring(mdc) #trova il numero di colori usati nella colorazione
+    seq, n_col  = LongestIncreasingSubsequenceLength(T, len(T))
     start = monotonic() 
     risp = input()
     end = monotonic()

@@ -487,7 +487,30 @@ def get_n_log_increasing_instance(m, max_val, seed):
 
     return instance, seed
 
-
-
-
-
+def CeilIndex(A, l, r, key):
+    while (r - l > 1):
+        m = l + (r - l)//2
+        if (A[m] >= key):
+            r = m
+        else:
+            l = m
+    return r
+  
+def LongestIncreasingSubsequenceLength(A, size):
+    tailTable = [0 for i in range(size + 1)]
+    length = 0
+    tailTable[0] = A[0]
+    length = 1
+    for i in range(1, size):
+     
+        if (A[i] < tailTable[0]):
+            tailTable[0] = A[i]
+  
+        elif (A[i] > tailTable[length-1]):
+            tailTable[length] = A[i]
+            length+= 1
+        else:
+            tailTable[CeilIndex(tailTable, -1, length-1, A[i])] = A[i]
+         
+    tailTable = tailTable[:length]
+    return tailTable, length
