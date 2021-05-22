@@ -49,10 +49,43 @@ for i in range(NUM_instances_correct):
         "yes": 1,
         "seed": seed_service + i })   
 # creo ulteriori istanze per le valutazioni di efficienza:
-MAX_M_efficient = 10000 # len_T
-MAX_N_efficient =   100 # len_S
-NUM_instances_efficient = 20
-if ENV["goal"] == "efficient":
+MAX_M_quadratic = 10000 # len_T
+MAX_N_quadratic =   100 # len_S
+if ENV["goal"] == "quadratic":
+    if ENV["code_lang"]=="compiled":
+        MAX_M_quadratic *= 20
+        MAX_N_quadratic *= 20
+    # crescita graduale (rischio soluzione esponenziale):
+    for i in range(MAX_M_correct+1, 2*MAX_M_correct):
+        instances.append({
+            "m": i,      
+            "n": i//2,
+            "max_val": max_val,
+            "yes": 1,
+            "seed": seed_service + i + NUM_instances_correct })
+    
+    # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
+    scaling_factor = 1.5
+    tmp = instances[-1]
+    m = tmp["m"]
+    n = tmp["n"]
+    s = tmp["seed"]
+    while True:
+        m = 1 + int(m * scaling_factor)
+        n = 1 + int(n * scaling_factor)
+        seed_instance = seed_service + m + n
+        if (m > MAX_M_quadratic) or (n > MAX_N_quadratic):
+            break
+        instances.append({
+        "m": m,      
+        "n": n,
+        "max_val": max_val,
+        "yes": 1,
+        "seed": seed_service + m + n })
+
+MAX_M_quasi_linear = 10000 # len_T
+MAX_N_quasi_linear =   100 # len_S
+if ENV["goal"] == "quasi_linear":
     if ENV["code_lang"]=="compiled":
         MAX_M_efficient *= 20
         MAX_N_efficient *= 20
@@ -75,7 +108,7 @@ if ENV["goal"] == "efficient":
         m = 1 + int(m * scaling_factor)
         n = 1 + int(n * scaling_factor)
         seed_instance = seed_service + m + n
-        if (m > MAX_M_efficient) or (n > MAX_N_efficient):
+        if (m > MAX_M_quasi_linear) or (n > MAX_N_quasi_linear):
             break
         instances.append({
         "m": m,      
@@ -113,10 +146,10 @@ for instance in instances:
     if time > 50:
         if count > NUM_instances_correct:
             TAc.print(LANG.render_feedback("seems-correct-weak", f'# Ok. ♥ Your solution answers correctly on a first set of instances (with |T|, the length of T, up to {instance["m"]}.'), "green")
-        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT efficient. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]} and |S|={instance["n"]}.'), "red", ["bold"])        
+        TAc.print(LANG.render_feedback("not-efficient", f'# No. You solution is NOT {ENV["goal"]}. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]} and |S|={instance["n"]}.'), "red", ["bold"])        
         exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. ♥  Your solution appears to be correct (checked on several instances).'), "green")
-TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is efficient: its running time is linear in the length of T and S.'), "green")
+TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is {ENV["goal"]}: its running time is linear in the length of T and S.'), "green")
 
 exit(0)
