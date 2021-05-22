@@ -40,20 +40,25 @@ TAc.print(LANG.render_feedback("input_list", f'Your answer: [{ENV["input_list"]}
 
 
 if ans != risp_correct and ENV['feedback'] == 'silent':
-    TAc.print(LANG.render_feedback("wrong answer", f'Some problems with your magic_indexes list [{ENV["input_list"]}] \U0001F644!'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong answer", f'Some problems with your magic_indexes list [{ENV["input_list"]}] .-.'), "red", ["bold"])
+    #TAc.print(LANG.render_feedback("wrong answer", f'Some problems with your magic_indexes list [{ENV["input_list"]}] \U0001F644!'), "red", ["bold"])
     exit(0)
 elif ans != risp_correct and ENV['feedback'] == 'yes_no':
-    TAc.print(LANG.render_feedback("wrong answer", f'No \U0001F62C! Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. Remember the indexes start from 0...'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong answer", f'No ._." Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. Remember the indexes start from 0...'), "red", ["bold"])
+    #TAc.print(LANG.render_feedback("wrong answer", f'No \U0001F62C! Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. Remember the indexes start from 0...'), "red", ["bold"])
     exit(0)
 elif ans != risp_correct and ENV['feedback'] == 'gimme_one_wrong':
     if len(risp_correct) > len(ans):
-        TAc.print(LANG.render_feedback("wrong answer", f'Good try \U0001F62C! Unfortunately you entered too few magic indexes for the vector [{ENV["input_vector"]}].'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("wrong answer", f'Good try :\'c Unfortunately you entered too few magic indexes for the vector [{ENV["input_vector"]}].'), "red", ["bold"])
+        #TAc.print(LANG.render_feedback("wrong answer", f'Good try \U0001F62C! Unfortunately you entered too few magic indexes for the vector [{ENV["input_vector"]}].'), "red", ["bold"])
         exit(0)
     else:
         wrong = [item for item in ans if item not in risp_correct]
-        TAc.print(LANG.render_feedback("wrong answer", f'Good try \U0001F62C! Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. {wrong[0]} is not a magic index!'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("wrong answer", f'Good try :C Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. {wrong[0]} is not a magic index!'), "red", ["bold"])
+        #TAc.print(LANG.render_feedback("wrong answer", f'Good try \U0001F62C! Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. {wrong[0]} is not a magic index!'), "red", ["bold"])
         exit(0)
 else:
-    TAc.print(LANG.render_feedback("correct answer", f'Correct \U0001F929! The magic index/indexes list for the vector [{ENV["input_vector"]}] is [{ENV["input_list"]}]. '), "green", ["bold"])
+    TAc.print(LANG.render_feedback("correct answer", f'Correct :D The magic index/indexes list for the vector [{ENV["input_vector"]}] is [{ENV["input_list"]}]. '), "green", ["bold"])
+    #TAc.print(LANG.render_feedback("correct answer", f'Correct \U0001F929! The magic index/indexes list for the vector [{ENV["input_vector"]}] is [{ENV["input_list"]}]. '), "green", ["bold"])
     exit(0)
 
