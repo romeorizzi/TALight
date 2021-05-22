@@ -68,7 +68,6 @@ services:
   play1:
     evaluator: [python, services/play1_server.py]
     explain: "You give us a natural n to start a play where the server holds the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense."
-    evaluator: [python, services/play1_server.py]
     args:
       n:
         regex: ^(0|[1-9][0-9]{0,5}|1000000)$
@@ -90,7 +89,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_play1:
-    evaluator: [python, services/eval_play1_server.py]
+    evaluator: [python, services/eval_play2_server.py]
     args:
       goal:
         regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
@@ -102,9 +101,8 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   play2:
-    evaluator: [python, services/play1_server.py]
+    evaluator: [python, services/play2_server.py]
     explain: "You give us a natural n to start a play where you hold the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense."
-    evaluator: [python, services/play1_server.py]
     args:
       n:
         regex: ^(0|[1-9][0-9]{0,5}|1000000)$
