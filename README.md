@@ -24,7 +24,7 @@ Have a look at our `tutorial collection` (see [next section](#explore-the-exampl
 
 TALight has a client/server architecture. There are more options on how you can access TALight problems and services:
 
-1. clone this repo and operate a full installation of TALight on your machine. In particular, install both `rtal` (the TALight client) and `rtald` (the TALight server daemon). This is the main option and suggested route to follow. Also, this is the only viable alternative for problem makers in action. However, if your intention right now is only to explore what TALight problems look like, then you can proceed without any installation, provided you have a device connected to the internet (see Option 3). Be aware that your experience will degrade the more you will rely on the involvement of external servers.   
+1. clone this repo and operate a full installation of TALight on your machine. In particular, install both `rtal` (the TALight client) and `rtald` (the TALight server daemon). This is the main option and the suggested route to follow. Also, this is the only viable alternative for problem makers in action. However, if your intention right now is only to explore what TALight problems look like, then you can proceed without any installation, provided you have a device connected to the internet (see Option&nbsp;3). Be aware that your experience will degrade the more you will rely on the involvement of external servers.   
 
 2. download a client `rtal` binary suitable for your machine and install it by properly defining a few environment variables. Then use your `rtal` command to access services of TALight problems openly deployed in the cloud (like, e.g., the problems in our tutorials). Your requests will be served by an `rtald` daemon server running on a remote server rather than on your own local machine. Indeed, if you are not a problem maker AND do not want to deploy yourself some TALight problems then `rtald` is not strictly needed, virtually. However, there is no real cost in installing it together with `rtal` whereas having it installed is useful also to the problem solver that might be interested in more control in debugging his solutions in local, or in working on a problem even when disconnected from the internet. Similarly, also git is not strictly required but git is anyhow nice to have since it is a great free utility that opens an universe of possibilities and fosters collaborations even beyond TALight projects. However, if you really prefer not to have git at your side, then you can consider downoading this repo rather than cloning it (or you can even limit yurself at consulting its files at the GitHub site when/if needed).
 
@@ -37,8 +37,8 @@ All this, besides possibly springing you to become a proficient problem solver, 
 
 The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, you can first explore the problems of this collection as deployed by this server.
 
-You can do this by running a TALight client (`rtal`) set up on your machine (Option 2), or by using a browser to operate a TALight client exported by a cloud hosted service (Option 3). 
-Option 3 is not ideal but allows you to explore what TALight might offer if you have no permission to install anything on your PC, or even from a tablet or a smartphone (in which case the impediments will however get more serious).
+You can do this by running a TALight client (`rtal`) set up on your machine (Option&nbsp;2), or by using a browser to operate a TALight client exported by a cloud hosted service (Option&nbsp;3). 
+Option&nbsp;3 is not ideal but allows you to explore what TALight might offer if you have no permission to install anything on your PC, or even from a tablet or a smartphone (in which case the impediments will however get more serious).
 
 ___
 A very good option for a cloud service allowing you to operate an `rtal` client is `repl`, a very notable free facility for learning programming languages. From the `repl` site you can play with the problem also operating from your preferred programming language and environment.
@@ -141,10 +141,10 @@ ___
 
 You have two options on how to get it:
 
-1. **Option 1 [generally recommended]:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in [the file `rtal/README.md`](rtal) of this repo.
+1. **Option&nbsp;1 [generally recommended]:** if you already know you will next advance to later stages of this tutorial, then, after installing git on your local machine and cloning this repo (explained in later stages of this tutorial), build your own binaries to get all of the TALight utilities in one shot. How to [get Rust and build the binaries](#obtain-the-binaries) is explained in [the file `rtal/README.md`](rtal) of this repo.
 
 
-2. **Option 2:** download the already compiled binary made available for your platform and set them in.
+2. **Option&nbsp;2:** download the already compiled binary made available for your platform and set them in.
 
 <details><summary>How to download the binary and place and test it properly</summary>
 
