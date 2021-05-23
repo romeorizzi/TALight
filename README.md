@@ -20,6 +20,12 @@ TALight has two categories of users:
 This repository offers the TALight core plus some example problems working under it.
 Have a look at our `tutorial collection` (see [next section](#explore-the-example-problems-in-our-tutorial-collection)) to get a feeling about the kind of didactic problems you can cook up yourself with TALight, or what are their main features and advantages.
 
+# The Wiki for this repo
+
+This repo has a Wiki.
+Right now this README.md file is out of order, you better go to the [Wiki](https://github.com/romeorizzi/TALight/wiki/EN_Home) that is more structured.
+
+
 # Set-up your access to TALight services.
 
 TALight has a client/server architecture. There are more options on how you can access TALight problems and services:
@@ -560,9 +566,9 @@ In order to have this possibility your Windows 10 should have been updated to th
 
 [https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/](https://www.cnet.com/how-to/how-to-tell-if-your-pc-is-running-windows-10-creators-update/)
 
-If you did not know about this update you can get hints on new functionalities even just as a consumer user [here](https://www.computerhope.com/jargon/c/creators-update.htm) and [here](https://www.howtogeek.com/278132/whats-new-in-windows-10s-creators-update/). Notice however that we are not pressing you to update your drivers, which might always be a different story (if you are happy with your drivers there might be no reason to do that).
+If you did not know about this update you can get hints on the general empowerment and the new functionalities it brings about and that should be of interest even just for a consumer user [here](https://www.computerhope.com/jargon/c/creators-update.htm) and [here](https://www.howtogeek.com/278132/whats-new-in-windows-10s-creators-update/). Notice however that we are not pressing you to update your drivers, which might always be a different story (if you are happy with your drivers there might be no reason to update them).
 
-Also, when you install Git Bash you are given you chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
+Also, when you install Git Bash you are now given your chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
 
 
 2. Windows uses '\\' instead of '/' (like Unix/Linux/Mac or also like in the URLs you access from your browser) in order to separate the names of the folders and subfolders encountered when walking along a path to a resource (file or folder) located in your filesystem. Therefore, if you are on Windows, you should write `~\TALight` instead of `~/TALight` and interpret writings like `~/yourpath/text` as if we had written `~\yourpath\text` in this tutorial. In other words, you should adapt our instructions accordingly to this notice (and also further adapt these paths in case you have placed the `TALight` cloned repo in a place other than the one we assume.
