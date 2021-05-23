@@ -809,8 +809,11 @@ Al momento dell'utilizzo di ConEmu (in particolar modo a partire dal paragrafo d
 ![image](./figs/new_console2.png)
 In questo modo si avrà una finestra divisa in due terminali. Mi è stato riferito che il combo bash di GIT + ConEmu migliora di molto l'esperienza d'uso del terminale per utenti Windows.
 
+</details>
+
 Whatever is your operating system, a more powerful and multi-platform solution is [Tmux](https://dev.to/srbruning/making-your-terminal-more-productive-with-tmux-2497). Not only this has the extra benefit to be platform independent (bringing Linux, Mac, and Windows on a common ground) but it also allows you to manage sessions.
 Indeed, Tmux is a [terminal multiplexer](https://linuxhint.com/tmux_vs_screen/) like `screen`, that may sit on any other basic terminal of your preference. While `Tmux` does not allow session sharing with other users it is however more user-friendly than `screen` and, for this reason, among the two we recommend `Tmux`. TMux is highly configurable, also allowing for projects whose editing is simplified by a [tmux sessions manager](https://github.com/tmuxinator/tmuxinator).
+</details>
 </details>
 
 First, to list the problems available, and thus check that both the client and the server are working, try the following command:
