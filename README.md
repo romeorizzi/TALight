@@ -447,13 +447,12 @@ Sharing the repo with collaborators (and consider having your students among the
 
 The following preamble might appear as of exclusive interest of the problem maker, but in fact helps putting things in proper perspective also for the problem solver. 
 
-<details><summary><strong>A TALight problem collection can be put in action by</strong></summary>
+<details><summary><strong>A TALight problem collection can be put in action in two non-exclusive modalities</strong></summary>
 
 1. hosting it on a cloud server that exposes the services designed for the problems comprising the collection. The server in the cloud will here serve the requests of the problem solvers by launching the service serving programs written by the problem maker;
 
 2. giving access to its repo so that the problem solvers can clone it on their local machine. The problem solver has now full and direct access to all what the problem maker has decided to ultimately include in the public (or only shared) repo and can also launch its local server to answer its own requests without further need for a working internet connection and without loading on the server at every request. In this way, even a teacher/instructor/field expert/promoter with no server available can put in action its problem collection and active learning material. With no expenses, no limitations, and, under a certain regard, in the best possible way: the problem solver having direct access to the material is both a value and a resource. Not only he might become more autonomous but he might also more easily spot out corrections and also find it natural to brake on through to the other side to enjoy collaboration with the problem maker. TALight might help in vanishing the walls that make school sort of a prison and helps in crating an environment where both the students and the teachers enjoy the experience to be on the same side, working and possibly collaborating towards shared goals. One limitation with this possibility is that most often among the services there are evaluators containing solutions to the problem, which, unless with mature born students, will spoil the problem. Another obvious problem with this modality would then be with 
-
-3. one question every instructor should pose itself is: why not to activate both modalities (like for the problems in this tutorial)? Of course, the answer depends on a lot of factors but do not be scared: as long as you keep sensitive on this from the aspects that matter most, you can even experiment and adjust.  
+  
 
 </details>
 
@@ -495,8 +494,6 @@ Not only TALight is open source software, but we foresee and foster that problem
 </details> 
 
 ___
-Now, the best and simplest option you have is to download this repo through git, so that you will remain connected with this open source projects and have the opportunity to easily update.
-
 <details><summary><strong>Clone this repo (assuming you have `git`)</strong></summary>
 Assuming you have `git` installed on your machine:
 
@@ -532,7 +529,6 @@ However, the only new feature that we ask you to set up now is telling Windows y
 Also, when you install Git Bash you are given your chance to activate the symlinks. If you missed that chance, unistall and reinstall git with the Git Bash as explained in that section.
 </strong>
 
-You can also clone and/or place the TALight folder in any other directory of your preference as long as you interpret the following instructions accordingly.
 
 Note: cloning is better than downloading since in this way you get connected to the repo. Even if you do not intend to contribute to the project, still this is handy since, in order to update to the current version, you can simply go (from a terminal) to any folder of the repo and enter:
 
@@ -543,8 +539,8 @@ git pull
 </details> 
 
 ___
-In the following we assume that `~/TALight` is the path to this TALight repo as cloned on your system, i.e., we assumed that this repo has been cloned as a direct child of your home directory, which is the recommended choice. In case not then you should of course correspondingly adapt our explicit commands to your situation, both here and in the following.
-Of course, you are free to rename it at your will or place it elsewhere as long as you interpret all our instructions (also the following ones) accordingly (do not be afraid: moving/renaming the home folder of a repo on your local machine will not disconnect it from the original repo in the cloud, you can still update it with `git clone` even if you later change its name in local). For example, if you use programs like Github Desktop to manage your git repositories (we however suggest using the bash terminal), you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TALight` in the following instructions. Just replace `~/TALight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
+In the following we assume that `~/TALight` is the path to this TALight repo as cloned on your system, i.e., we assume that this repo has been cloned as a direct child of your home directory, which is the recommended choice. In case not then you should of course correspondingly adapt our explicit commands to your situation, both here and in the following.
+Even in the future, you are free to rename it or move it elsewhere as long as you adapt all our instructions accordingly (do not be afraid: moving/renaming the home folder of a repo on your local machine will not disconnect it from the original repo in the cloud, you can still update it with `git pull` even if you later change its name in local). For example, if you use programs like Github Desktop to manage your git repositories (we however suggest using the bash terminal), you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TALight` in the following instructions. Just replace `~/TALight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
 
 
 <strong>Two notes of strict attention for Windows users</strong>
