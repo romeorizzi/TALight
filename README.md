@@ -540,7 +540,7 @@ git pull
 
 ___
 In the following we assume that `~/TALight` is the path to this TALight repo as cloned on your system, i.e., we assume that this repo has been cloned as a direct child of your home directory, which is the recommended choice. In case not then you should of course correspondingly adapt our explicit commands to your situation, both here and in the following.
-Even in the future, you are free to rename it or move it elsewhere as long as you adapt all our instructions accordingly (do not be afraid: moving/renaming the home folder of a repo on your local machine will not disconnect it from the original repo in the cloud, you can still update it with `git pull` even if you later change its name in local). For example, if you use programs like Github Desktop to manage your git repositories (we however suggest using the bash terminal), you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TALight` in the following instructions. Just replace `~/TALight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
+Even in the future, you are free to rename or move your folder elsewhere as long as you adapt all our instructions accordingly (do not be afraid: moving/renaming the home folder of a repo on your local machine will not disconnect it from the original repo in the cloud, you can still update it with `git pull` even if you later change its name in local). For example, if you use programs like Github Desktop to manage your git repositories (we however suggest using the bash terminal), you are given to choose the location of the repo on your local machine. Please, feel free to place the repo folder according to your preferences or conventions. We will anyhow call it `~/TALight` in the following instructions. Just replace `~/TALight` with your path. E.g., `~/text` becomes `~/yourpath/text`.
 
 
 <strong>Two notes of strict attention for Windows users</strong>
@@ -582,7 +582,7 @@ cd ~
 
 TALight consists of two programs, the `rtal` client, and the `rtald` server. Both are needed both by the problem solver and by the problem maker. The problem maker will also use the `rtalc` checker.
 After downloading this TALight project public repo, you can either choose to use the binaries made available for your platform (not yet made available at present) or compile them from the source code.
-How to make these two binaries and the basic on how to use them is explained in [the file `rtal/README.md`](rtal) of this repo.
+How to make these binaries and the basic on how to use them is explained in the following.
 
 In the following we assume that the files `~/TALight/rtal/target/debug/rtal` and `~/TALight/rtal/target/debug/rtald` exist (possibly with a different placement, as explained above) on your machine and have execution permission.
 You can check this by asking them to display out their main help page.
@@ -780,18 +780,19 @@ Since the previous terminal is now the downstream channel of the daemon you have
 
 <details><summary>How to split a terminal into two or more</summary>
 
-On Linux, the easiest way to do this is to use `Terminator` as your terminal. It also manages with high simplicity the possibility to multicast your typings on preselected subsets of the various panels you have open (though not needed here, this is a feature missing in all other tools here mentioned). In the web it is easy to find good tutorials and videos presenting the functionalities of Terminator and how to access them.
+Given also the client/server architecture of TALight, it will soon come handy (expecially for problem makers) to have a terminal whose panel can be split in two or more.
+On Mac, the default terminal currently is [iTerm2](https://iterm2.com/) which already has this feature and represents a very good option, but you can keep reading for more alternatives.
 
-To [install Terminator on Linux](https://dev.to/xeroxism/how-to-install-terminator-a-linux-terminal-emulator-on-steroids-1m3h):
+On Linux, the most user friendy terminal that does this is `Terminator`. To [install Terminator on Linux](https://dev.to/xeroxism/how-to-install-terminator-a-linux-terminal-emulator-on-steroids-1m3h):
 ```bash
 sudo add-apt-repository ppa:gnome-terminator
 sudo apt-get update
 sudo apt-get install terminator
 ```
 
-On Mac, the best solution is [iTerm2](https://iterm2.com/), but if you have other suggestions ...
+It is easy to find good tutorials and videos on the use of Terminator in the web.
 
-On Windows, the best solution is [ConEmu](https://conemu.github.io/), but if you have other suggestions ...
+On Windows, an excellent solution is [ConEmu](https://conemu.github.io/).
 
 <details><summary>Avvio all'uso di ConEmu</summary>
 
@@ -808,11 +809,8 @@ Al momento dell'utilizzo di ConEmu (in particolar modo a partire dal paragrafo d
 ![image](./figs/new_console2.png)
 In questo modo si avrà una finestra divisa in due terminali. Mi è stato riferito che il combo bash di GIT + ConEmu migliora di molto l'esperienza d'uso del terminale per utenti Windows.
 
-</summary>
-
-Actually, if you want to invest more on this, a more powerful solution is [Tmux](https://dev.to/srbruning/making-your-terminal-more-productive-with-tmux-2497) on all three platforms. Not only this has the extra benefit to be platform independent (bringing Linux, Mac, and Windows on a common ground) but it also allows you to manage sessions.
+Whatever is your operating system, a more powerful and multi-platform solution is [Tmux](https://dev.to/srbruning/making-your-terminal-more-productive-with-tmux-2497). Not only this has the extra benefit to be platform independent (bringing Linux, Mac, and Windows on a common ground) but it also allows you to manage sessions.
 Indeed, Tmux is a [terminal multiplexer](https://linuxhint.com/tmux_vs_screen/) like `screen`, that may sit on any other basic terminal of your preference. While `Tmux` does not allow session sharing with other users it is however more user-friendly than `screen` and, for this reason, among the two we recommend `Tmux`. TMux is highly configurable, also allowing for projects whose editing is simplified by a [tmux sessions manager](https://github.com/tmuxinator/tmuxinator).
-</summary>
 </details>
 
 First, to list the problems available, and thus check that both the client and the server are working, try the following command:
