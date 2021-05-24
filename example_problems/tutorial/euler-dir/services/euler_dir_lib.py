@@ -97,3 +97,124 @@ def GenerateGraph():
 
     return g,graph_print,edges, m
 
+def certificateEYC (x):
+    if x == 1:
+    # start_node != end_node
+        n = random.randrange(10,20)
+        m = random.randrange(10,25)
+        circuit = ""
+
+        for i in range(m):
+            if i == 0:
+                start = 0
+                end = random.randrange(0,n-1)
+                circuit = f"{start} {end}\n"
+            if i == m-1:
+                start = end
+                end = random.randrange(1,n-1)
+                circuit = circuit+f"{start} {end}"
+            if i!= 0 and i!=m-1:
+                start = end
+                end = random.randrange(0,n-1)
+                circuit = circuit+f"{start} {end}\n"
+
+        graph = circuit.split("\n")
+        random.shuffle(graph)
+        str_graph = '\n'.join(graph)
+        str_graph = f"{n} {m}\n"+str_graph
+        error = "Il circuito non termina nel nodo iniziale." 
+        return str_graph,circuit,error
+
+    if x == 2:
+        n = random.randrange(10,20)
+        m = random.randrange(10,25)
+        circuit = ""
+        graph = ""
+
+        for i in range(m):
+            if i == 0:
+                start = 0
+                end = random.randrange(0,n-1)
+                circuit = f"{start} {end}\n"
+                graph = f"{start} {end}\n"
+            if i == m-1:
+                start = end
+                end = 0
+                circuit = circuit+f"{start} {end}"
+                graph = graph+f"{start} {n+1}"
+            if i!= 0 and i!=m-1:
+                start = end
+                end = random.randrange(1,n-1)
+                circuit = circuit+f"{start} {end}\n"
+                graph = graph+f"{start} {end}\n"
+
+        graph = graph.split("\n")
+        random.shuffle(graph)
+        str_graph = '\n'.join(graph)
+        str_graph = f"{n} {m}\n"+str_graph
+        error = "L'arco non esiste nel grafo."  
+        return str_graph,circuit,error 
+
+
+    if x == 3:
+        n = random.randrange(10,20)
+        m = random.randrange(10,25)
+        circuit = ""
+        graph = ""
+
+        for i in range(m-1):
+            if i == 0:
+                start = 0
+                end = random.randrange(0,n-1)
+                circuit = f"{start} {end}\n"
+                graph = f"{start} {end}\n"
+            if i == m-2:
+                start = end
+                end = 0
+                circuit = circuit+f"{start} {end}"
+                graph = graph+f"{start} {end}\n{start} {end}"
+            if i!= 0 and i!=m-2:
+                start = end
+                end = random.randrange(1,n-1)
+                circuit = circuit+f"{start} {end}\n"
+                graph = graph+f"{start} {end}\n"
+
+        graph = graph.split("\n")
+        random.shuffle(graph)
+        str_graph = '\n'.join(graph)
+        str_graph = f"{n} {m}\n"+str_graph
+        error = "Il circuito non riporta il numero corretto di archi."  
+        return str_graph,circuit,error        
+
+
+    if x == 4:
+        n = random.randrange(10,20)
+        m = random.randrange(10,25)
+        circuit = ""
+        graph = ""
+
+        for i in range(m):
+            if i == 0:
+                start = 0
+                end = random.randrange(0,n-1)
+                circuit = f"{start} {end}\n"
+                graph = f"{start} {end}\n"
+            if i == m-1:
+                start = end-1
+                end = 0
+                circuit = circuit+f"{start} {end}"
+                graph = graph+f"{start} {end}"
+            if i!= 0 and i!=m-1:
+                start = end
+                end = random.randrange(1,n-1)
+                circuit = circuit+f"{start} {end}\n"
+                graph = graph+f"{start} {end}\n"
+
+        graph = graph.split("\n")
+        random.shuffle(graph)
+        str_graph = '\n'.join(graph)
+        str_graph = f"{n} {m}\n"+str_graph
+        error = "L'arco non è collegato al precedente."  
+        return str_graph,circuit,error 
+
+ 
