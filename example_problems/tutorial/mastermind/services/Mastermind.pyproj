@@ -27,20 +27,34 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="engine.py" />
-    <Compile Include="help_server.py" />
+    <Compile Include="get_lines.py" />
+    <Compile Include="get_tables.py" />
+    <Compile Include="hash_and_cipher.py" />
+    <Compile Include="help\help_server.py" />
+    <Compile Include="help\multilanguage.py" />
     <Compile Include="multilanguage.py" />
-    <Compile Include="playconsole.py" />
+    <Compile Include="test_play.py" />
     <Compile Include="play_server.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="synopsis\multilanguage.py" />
+    <Compile Include="synopsis\synopsis_server.py" />
+    <Compile Include="TALinputs.py" />
     <Compile Include="tell_score_server.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="test_1.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="help_feedbackBook.en.yaml" />
-    <Content Include="help_feedbackBook.it.yaml" />
+    <Content Include="help\help_feedbackBook.en.yaml" />
+    <Content Include="help\help_feedbackBook.it.yaml" />
+    <Content Include="synopsis\synopsis_feedbackBook.en.yaml" />
+    <Content Include="synopsis\synopsis_feedbackBook.it.yaml" />
+    <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="help\" />
+    <Folder Include="synopsis\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -23,11 +23,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="eval_submission.py" />
+    <Compile Include="get_lines.py" />
+    <Compile Include="get_tables.py" />
     <Compile Include="gimme_hints_on_a_tiling_server.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="help\help_server.py" />
+    <Compile Include="help\multilanguage.py" />
     <Compile Include="multilanguage.py" />
     <Compile Include="show_tile.py" />
+    <Compile Include="synopsis\multilanguage.py" />
+    <Compile Include="synopsis\synopsis_server.py" />
     <Compile Include="TALinputs.py" />
     <Compile Include="tell_if_tilable_server.py" />
     <Compile Include="tiling_generico.py" />
@@ -36,10 +42,19 @@
   <ItemGroup>
     <Content Include="eval_submission.en.yaml" />
     <Content Include="eval_submission.it.yaml" />
+    <Content Include="help\help_feedbackBook.en.yaml" />
+    <Content Include="help\help_feedbackBook.it.yaml" />
     <Content Include="is_not_tilable_feedbackBook.en.yaml" />
     <Content Include="is_not_tilable_feedbackBook.it.yaml" />
     <Content Include="is_tilable_feedbackBook.en.yaml" />
     <Content Include="is_tilable_feedbackBook.it.yaml" />
+    <Content Include="synopsis\synopsis_feedbackBook.en.yaml" />
+    <Content Include="synopsis\synopsis_feedbackBook.it.yaml" />
+    <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="help\" />
+    <Folder Include="synopsis\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
