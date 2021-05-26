@@ -172,6 +172,3 @@ Ma come dimostrare una congettura vera? Qui siamo ancor più in mare aperto, ma 
 se sei riuscito a completare il percorso delle precedenti sezioni, allora dovresti avere un'idea di quali solo le ragioni/il linguaggio del SI, ma anche quelle del NO per il problema euler-dir.
 
 
-Il fatto (che ci insegna la teoria della complessità) è questo:
-...
-
