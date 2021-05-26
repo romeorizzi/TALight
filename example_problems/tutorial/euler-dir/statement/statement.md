@@ -20,12 +20,12 @@ Un grafo si dice Euleriano quando ammette un circuito Euleriano, ossia quando po
 Quando hai raccolto un metodo che ti consente di rispondere efficacemente a questa domanda considera di darne descrizione in un codice che potrai sottomettere al nostro servizio affinché ne valuti correttezza ed efficienza su un benchmark più esteso di istanze e ti forniscano dei feedback.
 
 ```bash
-rtal connect -a goal1=with_yes_certificates euler-dir eval_euler_dir
+rtal connect -a goal1=with_yes_certificate euler-dir eval_euler_dir
 ```
 Puoi prefissarti come obiettivo aggiuntivo di comporre un algoritmo efficiente, che puoi controllare chiamando:
 
 ```bash
-rtal connect -a goal1=with_yes_certificates -a goal2=efficient euler-dir eval_euler_dir
+rtal connect -a goal1=with_yes_certificate -a goal2=efficient euler-dir eval_euler_dir
 ```
 
 Se invece non hai idea di come partire ti proponiamo un percorso che speriamo tu possa trovare formativo e stimolante.
