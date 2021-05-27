@@ -54,14 +54,14 @@ if true_answer == False:
         TAc.print(f"\nRISPOSTA CORRETTA!\n", "green")
     if ENV['goal1'] == 'yes_no' and ENV['goal2'] == 'efficient':
         TAc.print(f"\nCORRETTO!\nCi sono voluti {time1} secs sulla tua macchina!\n","yellow")
-        if time_yes_no > 1:
+        if time1 > 1:
             TAc.print("Il tuo algoritmo non è molto efficiente, ci mette più di un secondo\n","red")
         else:
             TAc.print("Il tuo algoritmo sembra essere efficiente!\n","green")
         exit(0)  
     if ENV['goal1'] == 'with_yes_certificate' and ENV['goal2'] == 'efficient':
         TAc.print(f"CORRETTO!\nCi sono voluti {time1} secs sulla tua macchina!\n","yellow")
-        if time_yes_no > 1:
+        if time1 > 1:
             TAc.print("Il tuo algoritmo complessivamente non è molto efficiente, ci mette più di un secondo\n","red")
         else:
             TAc.print("Il tuo algoritmo complessivamente sembra essere efficiente!\n","green")
@@ -83,20 +83,31 @@ if true_answer == True:
         TAc.print("\nSBAGLIATO, il grafo è euleriano\n","red")
         exit(0)    
 
+    
     for i in range(m):
         prompt = input()
         head, tail = prompt.split()
+        if i == 0 :
+            circuit_start = head
+        if i == m-1:
+            circuit_end = tail
         if edges.find(prompt) == -1:
             TAc.print("\nL'arco non esiste nel grafo.\n","red")
             exit(0)
-        if i == 1:
+        if i == 0:
             prec_tail = tail
-        if i > 1:
+        if i > 0:
             if head == prec_tail:
                 prec_tail = tail
             else:
                 TAc.print("\nL'arco che hai inserito non è collegato al precedente, non puoi di certo creare un circuito con questa permutazione\n", "red")
                 exit(0)
+        edges.replace(prompt, "")
+
+    if circuit_end != circuit_start:
+        TAc.print("\nSBAGLIATO, non hai inserito un circuito.\n","red")
+        exit(0)
+
     end2 = monotonic()
     time2 = end2 - start
     time1 = end1 - start
@@ -105,14 +116,14 @@ if true_answer == True:
         TAc.print(f"\nRISPOSTA CORRETTA!\n","green")
     if ENV['goal1'] == 'yes_no' and ENV['goal2'] == 'efficient':
         TAc.print(f"\nCORRETTO!\nCi sono voluti {time1} secs sulla tua macchina!\n","yellow")
-        if time_yes_no > 1:
+        if time1 > 1:
             TAc.print("Il tuo algoritmo non è molto efficiente, ci mette più di un secondo\n","red")
         else:
             TAc.print("Il tuo algoritmo sembra essere efficiente!\n","green")
         exit(0)
     if ENV['goal1'] == 'with_yes_certificate' and ENV['goal2'] == 'efficient':
             TAc.print(f"\nCORRETTO!\nCi sono voluti {time2} secs sulla tua macchina!\n","yellow")
-            if time_yes_no > 1:
+            if time2 > 1:
                 TAc.print("Il tuo algoritmo complessivamente non è molto efficiente, ci mette più di un secondo\n","red")
             else:
                 TAc.print("Il tuo algoritmo complessivamente sembra essere efficiente!\n","green")

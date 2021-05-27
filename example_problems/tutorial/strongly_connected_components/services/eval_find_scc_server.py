@@ -30,15 +30,11 @@ cfc = g.printSCCs().strip()
 ps = input()
 
 l1 = len(cfc)
-print(l1)
 l2 = len(ps)
-print(l2)
 sp1=contaspazi(cfc)
-print(sp1)
 sp2=contaspazi(ps)
-print(sp2)
 if (l1 != l2 or sp1 != sp2):
-    TAc.print(f"1Certificato SBAGLIATO:{cfc}", "green")
+    TAc.print(f"Certificato SBAGLIATO:{cfc}", "green")
     exit(0)
 for i in cfc.split(' '):
     a=permuta(i)
@@ -48,7 +44,8 @@ for i in cfc.split(' '):
         if a == b:
             ris=True
     if ris == False:
-        TAc.print(f"2Certificato SBAGLIATO:{cfc}", "green")
+        TAc.print(f"Certificato SBAGLIATO:{cfc}", "green")
         exit(0)
     if ris==True:
-        TAc.print("/nCertificato ESATTO.", "green")
+        TAc.print("\nCertificato ESATTO.", "green")
+        exit(0)
