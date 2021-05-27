@@ -1,3 +1,9 @@
+# The Wiki for this repo
+
+This repo has a Wiki.
+Right now this README.md file is out of order, you better go to the [Wiki](https://github.com/romeorizzi/TALight/wiki/EN_Home) that is more structured. In case you get to a point where the Wiki is not up to help you out, please, let us know. This will actually help us as well. It is also possibile that this README.md file can give you that extra information, but everything is really very messy in this file right now.
+We are slowly moving everything it contains within the Wiki. This process is almost complete by now.
+
 # What is TALight
 
 Are you a teacher/student/researcher/parent/employer/employee/executive passionate about acquiring and/or transmitting some problem solving competences, techniques, methods or skills? Do you want to acquire new competences in a lively, concrete and effective way? Do you want to promote them so that they come to new life in your children/students/employees/clients/customers/citizens? Would you like to promote your discoveries or products? Would you like to propose an interesting and instructive challenge, or organize a selection or recruiting campaign reaching to the alive ones?
@@ -23,7 +29,8 @@ Have a look at our `tutorial collection` (see [next section](#explore-the-exampl
 # The Wiki for this repo
 
 This repo has a Wiki.
-Right now this README.md file is out of order, you better go to the [Wiki](https://github.com/romeorizzi/TALight/wiki/EN_Home) that is more structured.
+Right now this README.md file is out of order, you better go to the [Wiki](https://github.com/romeorizzi/TALight/wiki/EN_Home) that is more structured. In case you get to a point where the Wiki is not up to help you out, please, let us know. This will actually help us as well. It is also possibile that this README.md file can give you that extra information, but everything is really very messy in this file right now.
+We are slowly moving everything it contains within the Wiki. This process is almost complete by now.
 
 
 # Set-up your access to TALight services.
@@ -188,9 +195,9 @@ ls -l rtal*
 ```
 
 then you should see the binary and a summary of data about the file, including its permissions (if on Linux or Mac, in Windows the permissions are not included in the file but rather attached to them). In the following, we assume the binary has execution permission.
-The name of the binary will be `rtal` on Unix/Linux/Mac and `rtal.exe` on Windows (note: in the case of Windows the name of the binary when you make it is simply `rtal` like for the Unix based systems, but if you download it like explained here, then it is `rtal.exe` since you have been told that downloading it is not the first option and therefore, if you have taken this path, then you are likely to be either an unexprienced user or an user with no rights on his machine and end up in a "protected user" category).
+The name of the binary will be `rtal` on Unix/Linux/Mac and `rtal.exe` on Windows (note: in the case of Windows the name of the binary when you make it is simply `rtal` like for the Unix based systems, but if you download it like explained here, then it is `rtal.exe` since you have been told that downloading it is not the first option and therefore, if you have taken this path, then you are likely to be either an unexperienced user or an user with no rights on his machine and end up in a "protected user" category).
 
-You can check the binary works by issuing:
+You can check that the binary works by issuing:
 
 ```bash
 ./rtal --help
@@ -784,9 +791,10 @@ Anyhow, now that the `rtald` daemon is active and ready to serve our requests fo
  
 Since the previous terminal is now the downstream channel of the daemon you have activated, in order to enjoy and explore the services it gives you access to, you need to open another terminal. Better yet, rather than opening another terminal, I actually suggest you to vertically split the terminal into two, let the left panel to the visualization of this logging, and issue the `rtal` client commands in the right panel so that you will keep constantly aware of the interactions between the two (especially useful for the problem maker).
 
-<details><summary>How to split a terminal into two or more</summary>
+<details><summary>How to split a terminal into resizable panels</summary>
 
-Given also the client/server architecture of TALight, it will soon come handy (expecially for problem makers) to have a terminal whose panel can be split in two or more.
+Both problem makers and solvers need to use the terminal. If you launch both `rtald` and `rtal` on your local machine to see how they interact (a necessity for problem makers but also suggested for problem solvers), then having a terminal that you can split in resizable panals will significantly improve your user experience and avoid you to loose a lot of time when debugging. Be told that tabs are not a substitute for panels.
+
 On Mac, the default terminal currently is [iTerm2](https://iterm2.com/) which already has this feature and represents a very good option, but you can keep reading for more alternatives.
 
 On Linux, the most user friendy terminal that does this is `Terminator`. To [install Terminator on Linux](https://dev.to/xeroxism/how-to-install-terminator-a-linux-terminal-emulator-on-steroids-1m3h):
