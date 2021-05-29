@@ -34,18 +34,18 @@ Nei seguenti esempi, le righe che iniziano con "S> " sono quelle inviate dal ser
 
 ```t
 S> # buongiorno!
-S> ? 42
+S> 42
 L> 11 31
-S> ok! vero! 42=11+31
+S> # ok! vero! 42=11+31
 S> # io avrei risposto 42=42+0
-S> ? 22
+S> 22
 L> 11 31
-S> no! falso: 11+31=42, mica 22
+S> # no! falso: 11+31=42, mica 22
 S> # ma va là, mica vero! 11+31= 42, forse sei rimasto impiantato su domanda precedente?
-S> ? 12
+S> 12
 L> # questa volta vedrai che non mi sbaglio, prima avevo fatto apposta
 L> 1 11
-S> ok!
+S> # ok!
 S> # ho troppo carico ora per tenere in piedi questa piacevolissima conversazione! ciao ciao ciao ...
 S> ! :)
 ```
