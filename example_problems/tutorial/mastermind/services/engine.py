@@ -1,6 +1,28 @@
 #!/usr/bin/env python3
 from random import seed, randint
 
+def evaluate(secret, probe):
+    assert len(secret) == len(probe)
+    black = 0
+    counter = {}
+    for a,b in zip(secret, probe):
+        if a == b:
+            black += 1
+        if a in counter:
+            counter[a][0] += 1
+        else:
+            counter[a] = [1,0]
+        if b in counter:
+            counter[b][1] += 1
+        else:
+            counter[b] = [0,1]
+    print(counter)
+    sum_of_mins = 0
+    for num1,num2 in counter.values():
+        sum_of_mins += min(num1,num2) 
+    return black, sum_of_mins - black
+
+
 def check(sol: str, mine: str):
     solarray = sol.split(" ")
     minearray = mine.split(" ")
