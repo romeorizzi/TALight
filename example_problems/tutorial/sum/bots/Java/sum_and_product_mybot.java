@@ -15,15 +15,14 @@ public class sum_and_product_mybot {
 
         while (true) {
             spoon = scan.nextLine();
-            while (!spoon.split(" ")[0].equals("?")) {
-                spoon = scan.nextLine();
+	    if(!spoon[0].equals("#")) {
+		s = spoon.split(" ")[0];
+		p = spoon.split(" ")[1];
+		int rad = (int) sqrt(Integer.parseInt(s) * Integer.parseInt(s) - 4 * Integer.parseInt(p));
+		x1 = (Integer.parseInt(s) - rad) / 2;
+		x2 = Integer.parseInt(s) - x1;
+		System.out.println(x1 + " " + x2);
             }
-            s = spoon.split(" ")[1];
-            p = spoon.split(" ")[2];
-            int rad = (int) sqrt(Integer.parseInt(s) * Integer.parseInt(s) - 4 * Integer.parseInt(p));
-            x1 = (Integer.parseInt(s) - rad) / 2;
-            x2 = Integer.parseInt(s) - x1;
-            System.out.println(x1 + " " + x2);
         }
     }
 }

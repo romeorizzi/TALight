@@ -23,7 +23,7 @@ TAc.print(LANG.opening_msg, "green")
 # START CODING YOUR SERVICE:
 
 stopping_command_set={"#end"}
-print("# waiting for your set of feasible treatments.\nPlease, each treatment should go on a different line and each line should have the same length and comprise only 'I' or 'H' characters.\nWhen you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete. Any other line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file whose last line is '#end'. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.")
+print("#? waiting for your set of feasible treatments.\nPlease, each treatment should go on a different line and each line should have the same length and comprise only 'I' or 'H' characters.\nWhen you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete. Any other line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file whose last line is '#end'. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.")
 
 p = Flask(20)      
       

@@ -36,7 +36,7 @@ for _ in range(ENV['num_questions']):
             y = randrange(2**64)
     if x < y:
         x,y = y,x
-    TAc.print(f"? {x+y} {x-y}", "yellow", ["bold"])
+    TAc.print(f"{x+y} {x-y}", "yellow", ["bold"])
     a, b = TALinput(int, 2, TAc=TAc)
     gen_new_pair = False
     if a+b > x+y:

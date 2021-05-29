@@ -25,9 +25,9 @@ TAc.print(LANG.opening_msg, "green")
 
 sep=None if ENV['separator']=="None" else ENV['separator']
 if ENV['eggs_from_zero']:
-    print('# waiting for a rectangular table of natural numbers. The first row (i.e., the 0 eggs row) may contain "inf" entries to represent that the truth can not be learned with 0 eggs. Insert a closing line "#end" after the last row of the table.')
+    print('#? waiting for a rectangular table of natural numbers. The first row (i.e., the 0 eggs row) may contain "inf" entries to represent that the truth can not be learned with 0 eggs. Insert a closing line "#end" after the last row of the table.')
 else:
-    print('# waiting for a rectangular table of natural numbers. Insert a closing line "#end" after the last row of the table.')
+    print('#? waiting for a rectangular table of natural numbers. Insert a closing line "#end" after the last row of the table.')
 def get_line():
     raw_line = input().strip()
     if raw_line[0] != "#":

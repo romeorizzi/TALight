@@ -22,7 +22,7 @@ def get_one_numeric_table(sep=None, should_be_int=False, should_be_nat=False, ro
        > [tk.strip() for tk in "wfwqf,   wqfwqfq, wfwfq".split(",")]
        returns ['wfwqf', 'wqfwqfq', 'wfwfq']
     """
-    print("# waiting for a rectangular table of numbers (a matrix). Insert a closing line '#end' after the last row of the table. Any other line beggining with the '#' character is ignored. You can use the 'TA_send_txt_file.py' util here to send us the lines of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file.")
+    print("#? waiting for a rectangular table of numbers (a matrix). Insert a closing line '#end' after the last row of the table. Any other line beggining with the '#' character is ignored. You can use the 'TA_send_txt_file.py' util here to send us the lines of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file.")
     def get_line():
         raw_line = input().strip()
         if raw_line[0] != "#":            

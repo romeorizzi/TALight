@@ -13,7 +13,7 @@ def get_line():
 
 def get_lines_from_stream(same_length = True, order_matters = False, unique = True, checks=[]):
     """ Puts the sequence of lines fed in into a list or a set (which one of the two depends on the value of the parameter 'order_matters'). In the case of a set the parameter `unique` set to True has the effect to assess unicity in the input stream. The input stream is ended with a line like '# END'."""
-    print('# waiting for a stream of lines. Insert a closing line "# END" after the last row of the table.')
+    print('#? waiting for a stream of lines. Insert a closing line "# END" after the last row of the table.')
     def get_line():
         raw_line = input().strip()
         if raw_line[0] != "#":            

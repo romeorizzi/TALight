@@ -54,7 +54,7 @@ def startAlgo():
 
 
 spoon = input().strip()
-while spoon[:len("# waiting for ")] != "# waiting for ":
+while spoon[:len("#? waiting for ")] != "#? waiting for ":
     spoon = input().strip()
     assert spoon[0] == "#"
 startAlgo()

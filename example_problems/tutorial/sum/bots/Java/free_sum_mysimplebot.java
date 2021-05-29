@@ -7,11 +7,10 @@ public class free_sum_mysimplebot {
 
         while (true) {
             spoon = scan.nextLine();
-            while (!(spoon.charAt(0) == '?')) {
-                spoon = scan.nextLine();
-            }
-            n = Integer.parseInt(spoon.split(" ")[1]);
-            System.out.println(n + " 0");
+	    if(!spoon[0].equals("#")) {
+		n = Integer.parseInt(spoon.split(" ")[0]);
+		System.out.println(n + " 0");
+	    }
         }
     }
 }

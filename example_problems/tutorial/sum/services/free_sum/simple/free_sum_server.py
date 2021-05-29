@@ -20,7 +20,7 @@ for _ in range(ENV['num_questions']):
             s = randrange(100)
         else:
             s = randrange(2**64)
-    print(f"? {s}")
+    print(f"{s}")
     spoon = input().strip()
     while spoon[0] == '#':
         spoon = input().strip()

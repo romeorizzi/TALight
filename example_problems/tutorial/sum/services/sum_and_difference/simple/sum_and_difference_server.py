@@ -24,7 +24,7 @@ for _ in range(ENV['num_questions']):
             y = randrange(2**64)
     if x < y:
         x,y = y,x
-    print(f"? {x+y} {x-y}")
+    print(f"{x+y} {x-y}")
     spoon = input().strip()
     while spoon[0] == '#':
         spoon = input().strip()

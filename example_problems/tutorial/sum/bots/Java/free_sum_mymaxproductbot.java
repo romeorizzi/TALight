@@ -8,12 +8,10 @@ public class free_sum_mymaxproductbot {
 
         while (true) {
             spoon = scan.nextLine();
-            while (!(spoon.charAt(0) == '?')) {
-                spoon = scan.nextLine();
+	    if(!spoon[0].equals("#")) {
+		n = Integer.parseInt(spoon.split(" ")[0]);
+		System.out.println(n / 2 + " " + (n + 1) / 2);
             }
-            n = Integer.parseInt(spoon.split(" ")[1]);
-
-            System.out.println(n / 2 + " " + (n + 1) / 2);
         }
     }
 }

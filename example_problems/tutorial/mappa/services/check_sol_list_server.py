@@ -77,7 +77,6 @@ while True:
 print("# FILE GOT")
 TAc.print(LANG.render_feedback("your-formulas-all-ok", f'All the formulas you have introduced are ok (well formed) and correctly ordered.'), "green")
 
-#input_solution_list.sort()
 #print(input_solution_list)
 
 if len(input_solution_list) == p.num_sol(n_pairs):
@@ -89,79 +88,32 @@ else:
 if ENV["feedback"] == "yes_no":
     exit(0)
 
-missing='empty'
-def answer():
-    if ENV["feedback"] == "give_first_missing":
-        TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
-        TAc.print(missing, "yellow", ["bold"])
-    elif ENV["feedback"] == "spot_first_wrong_consec":
-        if rank==len(input_solution_list)-1 and not case:
-            TAc.print(LANG.render_feedback("not-consecutive(last)", f'In fact, after {input_solution_list[rank]} there is another formula.'), "red", ["bold"])
-            exit(0)
-        TAc.print(LANG.render_feedback("not-consecutive", f'In fact, the two well-formed formulas:\n {input_solution_list[rank-1]}\n {input_solution_list[rank]}\nthat appear consecutive in your list are NOT consecutive in the intended order'), "red", ["bold"], end=" ")
-        print(LANG.render_feedback("called-with", f'(service called with'), end=" ")
-        TAc.print('sorting_criterion=', "red", end="")
-        TAc.print(ENV["sorting_criterion"], "yellow", end="")
-        print(").")
-    elif ENV["feedback"] == "tell_minimal_missing_prefix" or ENV['feedback'] == "dispell_longest_seen_prefix_of_first_missing":
-        min_len1 = 0
-        if rank > 0:
-            while missing[min_len1] == input_solution_list[rank-1][min_len1]:
-                min_len1 += 1
-        min_len2 = 0
-        if rank < len(input_solution_list):
-            # print(missing,min_len2,missing[min_len2], rank)
-            # print(input_solution_list[rank][min_len2])
-            while missing[min_len2] == input_solution_list[rank][min_len2]:
-                min_len2 += 1
-        if ENV["feedback"] == "tell_minimal_missing_prefix":
+for pos in range(p.num_sol(n_pairs)):
+    #print(f"pos={pos}, input_solution_list[pos]={input_solution_list[pos]}, p.unrank(n_pairs, pos)={p.unrank(n_pairs, pos)}")
+    if input_solution_list[pos] != p.unrank(n_pairs, pos):
+        missing = p.unrank(n_pairs, pos)
+        #print(f"missing={missing}")
+        if ENV["feedback"] == "give_first_missing":
+            TAc.print(LANG.render_feedback("give-missing-formula", f'Consider for example:'), "red", ["bold"])
+            TAc.print(missing, "yellow", ["bold"])
+        if ENV["feedback"] == "spot_first_wrong_consec":
+            assert pos > 0
+            TAc.print(LANG.render_feedback("not-consecutive", f'In fact,the two well-formed formulas:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nthat appear consecutive in your list are NOT consecutive in the intended order'), "red", ["bold"], end=" ")
+            print(LANG.render_feedback("called-with", f'(service called with'), end=" ")
+            TAc.print('sorting_criterion=', "red", end="")
+            TAc.print(ENV["sorting_criterion"], "yellow", end="")
+            print(").")
+        if ENV["feedback"] == "tell_first_minimal_missing_prefix":
+            min_len1 = 0
+            if pos > 0:
+                while missing[min_len1] == input_solution_list[pos-1][min_len1]:
+                    min_len1 += 1
+
+            min_len2 = 0
+            if pos < len(input_solution_list):
+                while missing[min_len2] == input_solution_list[pos][min_len2]:
+                    min_len2 += 1
             minimal_missing_prefix = missing[0:1+max(min_len1,min_len2)]
             TAc.print(LANG.render_feedback("first-missing-prefix", f'As a strong hint, here is the prefix of a well-formed formula and no formula in your list has this prefix:'), "red", ["bold"])
             TAc.print(minimal_missing_prefix, "yellow", ["bold"])
-            exit(0)
-        elif ENV['feedback'] == "dispell_longest_seen_prefix_of_first_missing":
-            #print(min_len1, min_len2)
-            #print(input_solution_list[rank-1], input_solution_list[rank])
-            if rank==len(input_solution_list)-1 and not case:
-                TAc.print(LANG.render_feedback("not-consecutive(last)", f'In green you find the longest prefix that a solution you are missing has in common with a solution you have given:'), "red", ["bold"], end=" ")
-            else:
-                TAc.print(LANG.render_feedback("first-missing-till-already-present", f"In green you find the longest prefix that a solution you are missing has in common with a solution you have given:"), "red", ["bold"], end=" ")
-            if min_len1>=min_len2:
-                missing_prefix=input_solution_list[rank-1][:min_len1]
-                suffix=input_solution_list[rank-1][min_len1:]
-            else:
-                missing_prefix=input_solution_list[rank][:min_len2]
-                suffix=input_solution_list[rank][min_len2:]
-            TAc.print(missing_prefix, "green", ["bold"], end='')
-            TAc.print(suffix, "red", ["bold"])
-    else:
-        assert ENV['feedback'][0:33] == "tell_first_missing_prefix_of_len_"
-        length = int(ENV['feedback'][33:])
-        missing_prefix = missing[0:length]
-        TAc.print(LANG.render_feedback("one-missing-prefix-length", f"No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:"), "red", ["bold"])
-        TAc.print(missing_prefix, "yellow", ["bold"])
-case=True
-for rank in range(len(input_solution_list)):
-    if ENV['sorting_criterion']=='loves_closing_par':
-        rank_g=p.num_sol(n_pairs)-rank-1
-    else:
-        rank_g=rank
-    #print(rank_g)
-    #print(f"rank={rank}, input={input_solution_list[rank]}, giusta={p.unrank(n_pairs, rank_g)}")
-    if input_solution_list[rank] != p.unrank(n_pairs, rank_g):
-        missing = p.unrank(n_pairs, rank_g)
-        answer()
-        #print(f"\nmissing={missing}\n")
         exit(0)
-
-if missing=='empty' and len(input_solution_list) < p.num_sol(n_pairs):
-    case=False
-    if ENV['sorting_criterion']=='loves_closing_par':
-        rank_g=p.num_sol(n_pairs)-rank-2
-    else:
-        rank_g=rank+1
-    #print(rank, rank_g, len(input_solution_list))
-    missing = p.unrank(n_pairs, rank_g)
-    #print(f"\nmissing={missing}\n")
-    answer()
-    exit(0)

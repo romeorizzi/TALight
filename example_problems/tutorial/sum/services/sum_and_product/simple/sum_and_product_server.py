@@ -22,7 +22,7 @@ for _ in range(ENV['num_questions']):
         else:
             x = randrange(2**32)
             y = randrange(2**32)
-    print(f"? {x+y} {x*y}")
+    print(f"{x+y} {x*y}")
     spoon = input().strip()
     while spoon[0] == '#':
         spoon = input().strip()

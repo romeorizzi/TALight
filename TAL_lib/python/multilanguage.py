@@ -167,10 +167,12 @@ class TALcolors:
                 
     def NO(self):
         self.numNO += 1
+        self.print("# ", "yellow", end="")
         self.print("No! ", "red", ["blink", "bold"], end="")
 
     def OK(self):
         self.numOK += 1
+        self.print("# ", "yellow", end="")
         self.print("OK! ", "green", ["bold"], end="")
 
     def GotBored(self):

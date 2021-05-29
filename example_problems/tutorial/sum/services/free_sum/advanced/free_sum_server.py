@@ -32,7 +32,7 @@ for _ in range(ENV['num_questions']):
             s = randrange(100)
         else:
             s = randrange(2**64)
-    TAc.print(f"? {s}", "yellow", ["bold"])
+    TAc.print(f"{s}", "yellow", ["bold"])
     a, b = TALinput(int, 2, TAc=TAc)
     gen_new_s = False
     if a+b > s:

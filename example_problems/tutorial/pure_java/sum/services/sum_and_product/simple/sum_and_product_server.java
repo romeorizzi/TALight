@@ -40,7 +40,7 @@ public class sum_and_product_server {
             }
             int sum = x+y;
             int prod=x*y;
-            System.out.println("? "+sum + " "+prod);
+            System.out.println(sum + " " + prod);
             spoon = scan.nextLine();
             while(spoon.charAt(0)=='#') {
                 spoon=scan.nextLine();
@@ -49,15 +49,15 @@ public class sum_and_product_server {
             int b = Integer.parseInt(spoon.split(" ")[1]);
             gen_new_pair = false;
             if (a+b > x+y)
-                System.out.println("No! indeed,"+a+ "+"+b+"="+(a+b)+">"+(x+y)+".");
+                System.out.println("# No! indeed,"+a+ "+"+b+"="+(a+b)+">"+(x+y)+".");
             else if (a+b < x+y)
-                System.out.println("No! indeed,"+a+ "+"+b+"="+(a+b)+"<"+(x+y)+".");
+                System.out.println("# No! indeed,"+a+ "+"+b+"="+(a+b)+"<"+(x+y)+".");
             else if (a*b > x*y)
-                System.out.println("No! indeed,"+a+ "*"+b+"="+(a*b)+">"+(x*y)+".");
+                System.out.println("# No! indeed,"+a+ "*"+b+"="+(a*b)+">"+(x*y)+".");
             else if (a*b < x*y)
-                System.out.println("No! indeed,"+a+ "*"+b+"="+(a*b)+">"+(x*y)+".");
+                System.out.println("# No! indeed,"+a+ "*"+b+"="+(a*b)+">"+(x*y)+".");
             else {
-                System.out.println("Ok! indeed,"+a+ "+"+b+"="+(a+b)+" and"+a+"*"+b+"="+(a*b)+".");
+                System.out.println("# Ok! indeed,"+a+ "+"+b+"="+(a+b)+" and"+a+"*"+b+"="+(a*b)+".");
                 gen_new_pair = false;
             }
 

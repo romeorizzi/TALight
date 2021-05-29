@@ -41,7 +41,7 @@ public class sum_and_product_server {
             int prod = x * y;
             List<String> carFormat = new ArrayList<>();
             carFormat.add("bold");
-            TAc.print("? " + sum + " " + prod, "yellow", carFormat, null);
+            TAc.print(sum + " " + prod, "yellow", carFormat, null);
 
             List<Object> vars = new ArrayList<>();
             vars = TALinput.TALinput("int", 2, TAc);

@@ -23,7 +23,7 @@ for i in range(1,len(argv)):
         exit(1)
 
 spoon = input().strip()
-while spoon[:len("# waiting for ")] != "# waiting for ":
+while spoon[:2] != "#?":
     spoon = input().strip()
     assert spoon[0] == "#"
 
