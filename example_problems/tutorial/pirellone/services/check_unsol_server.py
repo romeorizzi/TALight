@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+from sys import exit
+
+from multilanguage import Env, Lang, TALcolors
+from TALinputs import TALinput
+
+import pirellone_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
 problem="pirellone"
@@ -9,10 +15,6 @@ args_list = [
     ('lang',str),
     ('ISATTY',bool),
 ]
-import pirellone_lib as pl
-from sys import exit
-from TALinputs import TALinput
-from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))

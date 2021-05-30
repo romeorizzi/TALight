@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 from sys import exit
 import re
-from time import monotonic
 import random
-
+from time import monotonic
 
 from multilanguage import Env, Lang, TALcolors
 
