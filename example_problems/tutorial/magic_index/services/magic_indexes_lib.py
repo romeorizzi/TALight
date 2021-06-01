@@ -1,4 +1,4 @@
-import random
+import random, math
 
 def check_input_vector(vec, TAc, LANG):
     for i in range(1,len(vec)):
@@ -33,3 +33,31 @@ def spot_magic_index(vec):
         if vec[i]==i:
             magic_indexes.append(i)
     return magic_indexes
+
+# The worst case is the one where there are n/2 (rounded up) magic indexes on the left of the array. 
+# After the first recursion we spot a magic index, so we don't have enough information to determine 
+# in which part of the vector we have to search for the rest of the indexes.
+# In O(log n base 2) we can spot the first left index, and then in n/2 rounded down (worst case) 
+# questions we can spot the last one on the right (assuming more than one magic index).
+# The final complexity is O(log n base 2 + n/2 rounded down)
+
+def check_n_questions_worst_case(n):
+	return check_n_questions_worst_case_support(n, n)
+
+def check_n_questions_worst_case_support(n, nOriginal):
+	"""
+	Args:
+		n: the vector lenght 
+		nOriginal: the original vector lenght. it is used at the end to sum n/2 rounded down
+
+	Returns:
+		questions: the minumum number of questions to spot all the magic indexes in the worst case
+	"""
+
+	#base case
+	if n == 0:
+		return 0 + nOriginal//2 #default rounded down
+	if n == 1:
+		return 1 + nOriginal//2 #default rounded down
+	
+	return 1 + check_n_questions_worst_case_support((int(math.ceil(n / 2))) - 1, nOriginal)
