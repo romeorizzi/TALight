@@ -98,7 +98,25 @@ def sub_lists_with_pos (l):
         lists = orig + lists
     return lists
   
-def generate_random_seq(length, max_val, seed=None):
+def generate_random_inc_seq(length, max_val, stricty=True, seed=None):
+    assert not stricty or length <= max_val +1
+    if seed != None:
+        random.seed(seed)
+    if strictly:
+        return sorted(random.sample(range(max_val+1), length))
+    else:
+        return sorted(random.choice(range(max_val+1), length))
+    
+def generate_random_dec_seq(length, max_val, stricty=True, seed=None):
+    return generate_random_inc_seq(length, max_val, stricty, seed).reversed()
+
+def get_random_subseq(T, n, seed=None):
+    if seed == None:
+        seed = random.randrange(sys.maxsize)
+    random.seed(seed)
+    return [T[i] for i in sorted(random.sample(range(len(T)), n)) ], seed
+
+def generate_random_seq(length, max_val, max_incr_subseq_len=None, stricty=True, seed=None):
     """yields a random list of <length> naturals in [0, max_val].
        If seed == None then it generates a seed at random.
        In any case, it returns the seed used.""" 
@@ -106,36 +124,44 @@ def generate_random_seq(length, max_val, seed=None):
         seed = random.randrange(sys.maxsize)
     random.seed(seed)
     T = []
-    for i in range(length):
-        T.append(random.randint(0,max_val))
+    if max_incr_subseq_len==None:
+        for i in range(length):
+            T.append(random.randint(0,max_val))
+        return T, seed
+    else:
+        if stricty:
+            assert max_incr_subseq_len <= max_val +1
+            # how we generate a random sequence whose longest increasing subsequence has length precisely max_incr_subseq_len
+            # 1. we generate a random strictly increasing sequence s = s1 ... smax_incr_subseq_len
+            # 2. for each i we generate a random non-increasing sequence Si containing element si
+            # 3. we merge all the Si sequences taking care that the value si from Si goes before than the value s(i+1) form sequence S(i+1)
+            #    But we found it more convenient to just concatenate them 
+
+            s = generate_random_inc_seq(max_incr_subseq_len, max_val, stricty=True, seed=seed+i)
+            for i in range(max_incr_subseq_len,0,-1):
+                Si = generate_random_dec_seq(length//i, max_val, stricty=False, seed=seed)
+                length -= len(Si)
+                pos = 0
+                while Si[pos] < s[i]:
+                    pos += 1
+                Si[pos] = s[i]
+                T.append(Si)
+        else:
+            assert length <= max_incr_subseq_len * max_val
+            # how we generate a random sequence whose longest non-decreasing subsequence has length precisely max_incr_subseq_len
+            # 1. we generate a random non-decreasing sequence s = s1 ... smax_incr_subseq_len
+            # 2. for each i we generate a random stricty decreasing sequence Si containing element si
+            # 3. we just concatenate them 
+            s = generate_random_inc_seq(max_incr_subseq_len, max_val, stricty=False, seed=seed+i)
+            for i in range(max_incr_subseq_len,0,-1):
+                Si = generate_random_dec_seq(length//i, max_val, stricty=True, seed=seed)
+                length -= len(Si)
+                pos = 0
+                while Si[pos] < s[i]:
+                    pos += 1
+                Si[pos] = s[i]
+                T.append(Si)            
     return T, seed
-
-def generate_random_inc_seq(length, max, seed=None):
-    if seed != None:
-        random.seed(seed)
-    return sorted(random.sample(range(max+1), length))
-    
-def generate_random_dec_seq(length, max, seed=None):
-    if seed != None:
-       random.seed(seed)      
-    return sorted(random.sample(range(max+1), length), reverse=True)
-
-def get_rand_subseq(T, seed=None):
-    if seed == None:
-        seed = random.randrange(sys.maxsize)
-    random.seed(seed)
-    s=[]
-    min = random.randint(0,len(T) - 1)
-    while (min < len(T)):
-        s.append(T[min])
-        min = random.randint(min + 1,len(T)+1)
-    return s, seed
-
-def get_random_subseq(T, n, seed=None):
-    if seed == None:
-        seed = random.randrange(sys.maxsize)
-    random.seed(seed)
-    return [T[i] for i in sorted(random.sample(range(len(T)), n)) ], seed
 
 def gen_seq_avoiding_(s, m, max_val, seed=None):
     if seed == None:
@@ -169,7 +195,8 @@ def gen_subseq_instance(m, n, max_val, yes_instance, seed=None):
         s,_ = generate_random_seq(n, max_val, seed)
         T,_ = gen_seq_avoiding_(s, m, max_val, seed)
     return T, s, seed
-    
+
+
 def get_not_subseq(T, max, seed=None):
     tmp = []
     if seed != None:
@@ -475,17 +502,6 @@ def get_max_inc_seq(T,col):
 
     ret.reverse()
     return ret
-
-def get_n_log_increasing_instance(m, max_val, seed):
-    if seed == None:
-        seed = random.randrange(sys.maxsize)
-    random.seed(seed)
-    n_seq = math.ceil(m/20)
-    instance = []
-    for i in range(20):
-        instance += generate_random_dec_seq(n_seq, max_val, seed+i)
-
-    return instance, seed
 
 def CeilIndex(A, l, r, key):
     while (r - l > 1):

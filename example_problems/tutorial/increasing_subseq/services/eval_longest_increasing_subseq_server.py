@@ -8,6 +8,7 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 from increasing_subsequence_lib import *
+
 # METADATA OF THIS TAL_SERVICE:
 problem="increasing_subseq"
 service="eval_longest_increasing_subseq"
@@ -18,6 +19,7 @@ args_list = [
     ('goal', str),
     ('code_lang',str),
     ('lang', str),
+    ('max_val', int),
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
@@ -26,7 +28,6 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
 
-max_val = 100
 if ENV['seed']=='random_seed': 
     seed_service = random.randint(100000,999999)
 else:
@@ -51,10 +52,6 @@ TAc.print(LANG.render_feedback("explain-protocol","# Each instance gives you a s
 #correct
 
 MAX_M_correct = 20 # len_T
-
-
-
-MAX_M_correct = 20 # len_T
 NUM_instances_correct = 20
 if ENV["code_lang"]=="compiled":
     MAX_M_correct += 2 
@@ -63,12 +60,11 @@ instances = []
 for i in range(NUM_instances_correct):
     instances.append({
         "m": MAX_M_correct - i%5,      
-        "max_val": max_val,
+        "max_val": ENV["max_val"],
+        "opt": None,  
         "seed": seed_service + i })  
 
-
-
-
+    
 #quadratic
 
 # creo ulteriori istanze per le valutazioni di efficienza:
@@ -81,7 +77,8 @@ if ENV["goal"] == "quadratic":
     for i in range(MAX_M_correct+1, 2*MAX_M_correct):
         instances.append({
            "m": i,      
-           "max_val": max_val,
+           "max_val": ENV["max_val"],
+           "opt": None,  
            "seed": seed_service + i + NUM_instances_correct })
     
     # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
@@ -96,7 +93,8 @@ if ENV["goal"] == "quadratic":
             break
         instances.append({
         "m": m,      
-        "max_val": max_val,
+        "max_val": ENV["max_val"],
+        "opt": None,  
         "seed": seed_service + m})
 
 
@@ -111,7 +109,8 @@ if ENV["goal"] == "n_times_opt":
     for i in range(MAX_M_correct+1, 2*MAX_M_correct):
         instances.append({
            "m": i,      
-           "max_val": max_val,
+           "max_val": ENV["max_val"],
+           "opt": None,  
            "seed": seed_service + i + NUM_instances_correct })
     
     # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
@@ -126,13 +125,11 @@ if ENV["goal"] == "n_times_opt":
             break
         instances.append({
         "m": m,      
-        "max_val": max_val,
+        "max_val": ENV["max_val"],
+        "opt": 20,  
         "seed": seed_service + m})
 
-
-
-
-
+        
 # quasi linear
 
 MAX_M_log = 10000 # len_T
@@ -144,7 +141,8 @@ if ENV["goal"] == "quasi_linear":
     for i in range(MAX_M_correct+1, 2*MAX_M_correct):
         instances.append({
            "m": i,      
-           "max_val": max_val,
+           "max_val": ENV["max_val"],
+           "opt": None,  
            "seed": seed_service + i + NUM_instances_correct })
     
     # crescita geometrica (ora sappiamo che la soluzione è polinomiale):    
@@ -159,18 +157,16 @@ if ENV["goal"] == "quasi_linear":
             break
         instances.append({
         "m": m,      
-        "max_val": max_val,
+        "max_val": ENV["max_val"],
+        "opt": None,  
         "seed": seed_service + m})
 
 
 
-def one_test(m,max_val,seed):
-    TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m},max_val={max_val},seed {seed}): "), "yellow", ["bold"])
+def one_test(m,max_val,opt,strictly,seed):
+    TAc.print(LANG.render_feedback("seed-all-run",f"#Check on Instance (m={m},max_val={max_val},opt={opt},strictly={strictly},seed={seed}): "), "yellow", ["bold"])
     
-    if ENV["goal"] == "n_times_opt":
-        T, seed = get_n_log_increasing_instance(m, max_val, seed)
-    else:
-        T,seed = generate_random_seq(m, max_val, seed)
+    T, seed = generate_random_seq(m, max_val, opt, strictly, seed)
 
     TAc.print(" ".join(map(str,T)), "yellow", ["bold"])
     seq, n_col  = LongestIncreasingSubsequenceLength(T, len(T))
@@ -243,7 +239,7 @@ def one_test(m,max_val,seed):
 
 count = 0
 for instance in instances:
-    time = one_test(instance["m"], instance["max_val"], instance["seed"])
+    time = one_test(instance["m"], instance["max_val"], instance["opt"], False, instance["seed"])
     count +=1
     print(f"#Correct! [took {time} seconds on your machine]")
     if time > 1:
@@ -253,7 +249,11 @@ for instance in instances:
         exit(0)
 
 TAc.print(LANG.render_feedback("seems-correct-strong", f'# Ok. ♥  Your solution appears to be correct (checked on several instances).'), "green")
-TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is {ENV["goal"]}: its running time is linear in the length of T.'), "green")
+if ENV["goal"] != "correct":
+    if ENV["goal"] == "quasi_linear":
+        TAc.print(LANG.render_feedback("quasi_linear", '# Ok. ♥ The running time of your solution is quasi_linear. You achieved our highest efficiency goal!'), "green")
+    else:
+        TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ The running time of your solution is at most {ENV["goal"]}. You achieved your efficiency goal!'), "green")
 
 exit(0)
 

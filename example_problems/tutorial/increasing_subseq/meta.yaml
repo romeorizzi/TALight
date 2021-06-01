@@ -105,6 +105,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_longest_increasing_subseq:
+    explain: this service helps you evaluating your program for computing the maximum length of a strictly increasing subsequence of a given sequence.
     evaluator: [python, services/eval_longest_increasing_subseq_server.py]
     args:
       seed:
@@ -114,11 +115,11 @@ services:
       yield:
         regex: ^(only_opt_val|a_max_subseq|a_min_col|both_certificates)$
         default: only_opt_val
-        explain: "use this argument to specify what the bot is required to yield."
-        explain1: "[only_opt_val]  the problem solver''s bot is required to yield only the maximum length of a longest strictly increasing subsequence."
+        explain: "use this argument to specify what your bot is required to yield."
+        explain1: "[only_opt_val]  your bot is required to yield only the maximum length of a longest strictly increasing subsequence."
         explain2: "[a_max_subseq]  the bot is required to yield not only the length but also a longest strictly increasing subsequence."
-        explain3: "[a_min_col]  the bot is required to yield not only the minimum number k of non-decreasing subsequences needed to cover all elements of the input sequence (which is equal to the maximum length of a longest strictly increasing subsequence) but also to specify, for each element of the input sequence, the non-decreasing subsequence including it (a number from 1 to k)."
-        explain4: "[both_certificates]  the yield should include all of the above."
+        explain3: "[a_min_col]  the bot is required to yield not only the minimum number k of non-decreasing subsequences needed to cover all elements of the input sequence (this k is always equal to the maximum length of a longest strictly increasing subsequence) but also to specify, for each element of the input sequence, the non-decreasing subsequence including it (a number from 1 to k)."
+        explain4: "[both_certificates]  your bot is required to yield all of the above."
       feedback_level:
         regex: ^(0|1|2|3)$
         default: 3
@@ -141,6 +142,9 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+      max_val:
+        regex: ^100$
+        default: 100
   check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
     evaluator: [python, services/check_num_subseq_server.py]
     args:

@@ -52,7 +52,7 @@ else:
     T = parse_input(string_T)
 
 if ENV['s'] == 'lazy_input' and n_seed != None:
-    s = get_rand_subseq(T, seeds[1][1]) 
+    s = get_random_subseq(T, seeds[1][1], math.log(len(T))) 
     s = s[0]
     print(list_to_string(s))
 
