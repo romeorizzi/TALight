@@ -27,31 +27,23 @@ TAc.print(LANG.opening_msg, "green")
 n = int(ENV['n'])
 risp = int(ENV['risp'])
 
-correct_worst_answer = check_n_questions_worst_case(n) #verifica
+correct_worst_answer = check_n_questions_worst_case(n)
 
 TAc.print(LANG.render_feedback("n", f'Your vector lenght: [{ENV["n"]}] '), "yellow", ["bold"])
 TAc.print(LANG.render_feedback("risp", f'Your minimum question number in the worst case: [{ENV["risp"]}] '), "yellow", ["bold"])
 
-if risp != correct_worst_answer and ENV['silent'] == True:
+if risp != correct_worst_answer and ENV['silent'] == False and ENV['more_or_less_hint_if_wrong'] == True:
+    if risp > correct_worst_answer:
+        TAc.print(LANG.render_feedback("wrong answer", f'Some problems with your question number {ENV["risp"]}.\
+        \nIt is possible to find all the magic indexes in less than {ENV["risp"]} questions'), "red", ["bold"])
+        exit(0)
+    elif risp < correct_worst_answer:
+        TAc.print(LANG.render_feedback("wrong answer", f'Some problems with your question number {ENV["risp"]}.\
+        \nIt is not possible to find all the magic indexes in exactly {ENV["risp"]} questions. You should make more queries.'), "red", ["bold"])
+        exit(0)
+elif risp != correct_worst_answer:
     TAc.print(LANG.render_feedback("wrong answer", f'Some problems with your question number {ENV["risp"]} .-.'), "red", ["bold"])
     exit(0)
-'''
-elif ans != risp_correct and ENV['feedback'] == 'yes_no':
-    TAc.print(LANG.render_feedback("wrong answer", f'No ._." Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. Remember the indexes start from 0...'), "red", ["bold"])
-    #TAc.print(LANG.render_feedback("wrong answer", f'No \U0001F62C! Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. Remember the indexes start from 0...'), "red", ["bold"])
+elif risp == correct_worst_answer and ENV['silent'] == False:
+    TAc.print(LANG.render_feedback("right answer", f'Your number of queries {ENV["risp"]} is correct! :D'), "green", ["bold"])
     exit(0)
-elif ans != risp_correct and ENV['feedback'] == 'gimme_one_wrong':
-    if len(risp_correct) > len(ans):
-        TAc.print(LANG.render_feedback("wrong answer", f'Good try :\'c Unfortunately you entered too few magic indexes for the vector [{ENV["input_vector"]}].'), "red", ["bold"])
-        #TAc.print(LANG.render_feedback("wrong answer", f'Good try \U0001F62C! Unfortunately you entered too few magic indexes for the vector [{ENV["input_vector"]}].'), "red", ["bold"])
-        exit(0)
-    else:
-        wrong = [item for item in ans if item not in risp_correct]
-        TAc.print(LANG.render_feedback("wrong answer", f'Good try :C Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. {wrong[0]} is not a magic index!'), "red", ["bold"])
-        #TAc.print(LANG.render_feedback("wrong answer", f'Good try \U0001F62C! Unfortunately you entered the wrong magic indexes for the vector [{ENV["input_vector"]}]. {wrong[0]} is not a magic index!'), "red", ["bold"])
-        exit(0)
-else:
-    TAc.print(LANG.render_feedback("correct answer", f'Correct :D The magic index/indexes list for the vector [{ENV["input_vector"]}] is [{ENV["input_list"]}]. '), "green", ["bold"])
-    #TAc.print(LANG.render_feedback("correct answer", f'Correct \U0001F929! The magic index/indexes list for the vector [{ENV["input_vector"]}] is [{ENV["input_list"]}]. '), "green", ["bold"])
-    exit(0)
-'''
