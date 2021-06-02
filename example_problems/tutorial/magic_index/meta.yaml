@@ -116,7 +116,7 @@ services:
         regex: ^(yes_no_goal|how_far|spot_first_gift|spot_every_gift)$
         default: yes_no_goal
         explain: "the levels of feedback are as follows:"
-        explain1: "[yes_no_goal]  tells wethether your play reaches the goal set when launching the service."
+        explain1: "[yes_no_goal]  tells whether your play reaches the goal set when launching the service."
         explain2: "[how_far]  tells how far you are from the goal you have set."
         explain3: "[spot_first_gift]  during the game signals out (in a commented line, not to disturb the bot that could possibly play in your place) your first move where your goal is compromised."
         explain4: "[spot_every_gift]  during the game signals out (in a commented line) every move where you waste one dollar."
@@ -130,7 +130,7 @@ services:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
       situation:
         regex: ^(know_nothing|first_is_magic|last_is_magic)$
-        explain: "three possible categories for what we might know at the beggining of the game."
+        explain: "three possible categories for what we might know at the beginning of the game."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
