@@ -85,8 +85,8 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       goal:
-        regex: ^(correct|number_of_calls_linear_in_n)$
-        default: correct
+        regex: ^(number_of_calls_linear_in_n)$
+        default: number_of_calls_linear_in_n
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
