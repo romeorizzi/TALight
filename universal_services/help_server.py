@@ -2,6 +2,8 @@
 from sys import stderr, exit, argv
 from os import environ
 
+from multilanguage import Env, Lang, TALcolors
+
 problem=environ["TAL_META_DIR"].split("/")[-1]
 service="help"
 args_list = [
@@ -10,11 +12,9 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-#from TALinputs import TALinput
-from multilanguage import Env, Lang, TALcolors
 ENV =Env(args_list, problem, service, argv[0])
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), book_required=True)
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), book_strictly_required=True)
 TAc.print(LANG.opening_msg, "green")
 
 page = LANG.messages_book[ENV["page"]]
