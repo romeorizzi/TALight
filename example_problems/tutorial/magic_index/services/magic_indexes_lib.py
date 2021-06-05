@@ -70,7 +70,7 @@ def check_n_questions_worst_case_support(n, nOriginal):
 
 def random_vector_worst_case():
     size = random.randrange(5,21)
-    # create a vector and fill the first n//2 elements with MI
+    # create a vector and fill the first n//2 elements with MI, range upper bound is not included, so we added +1
     vec = [i for i in range(0,(size//2)+1)]
     # create a list of random values without duplicates for the remaining elements  
     remaining_elements = random.sample(range(size,100), size-len(vec))
@@ -80,3 +80,4 @@ def random_vector_worst_case():
     vec.extend(remaining_elements)
 
     return size, vec
+
