@@ -61,3 +61,22 @@ def check_n_questions_worst_case_support(n, nOriginal):
 		return 1 + nOriginal//2 #default rounded down
 	
 	return 1 + check_n_questions_worst_case_support((int(math.ceil(n / 2))) - 1, nOriginal)
+
+
+#We define this method to create a random "worst-case" vector for the play service. 
+# Basically, we take a random size between 5 and 20 for the vector and we fill the first 
+# n//2 elements of magic indexes and the remaining elements of random values according to 
+# the explanation of our worst-case described above.
+
+def random_vector_worst_case():
+    size = random.randrange(5,21)
+    # create a vector and fill the first n//2 elements with MI
+    vec = [i for i in range(0,(size//2)+1)]
+    # create a list of random values without duplicates for the remaining elements  
+    remaining_elements = random.sample(range(size,100), size-len(vec))
+    # sort the random numbers created
+    remaining_elements.sort()
+    # merge the two lists
+    vec.extend(remaining_elements)
+
+    return size, vec
