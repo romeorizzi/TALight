@@ -1,5 +1,6 @@
 public_folder: public
 services:
+  #fatto
   dec2opt:
     explains: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
     evaluator: [python, services/dec2opt_server.py]
@@ -9,7 +10,7 @@ services:
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       goal:
         regex: ^(correct|at_most_one_call)$
@@ -17,6 +18,7 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  #fatto (sistemato)
   opt2con:
     explains: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
     evaluator: [python, services/opt2con_server.py]
@@ -26,7 +28,7 @@ services:
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       goal:
         regex: ^(correct|at_most_one_call)$
@@ -34,6 +36,7 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  #fatto
   dec2con:
     explains: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
     evaluator: [python, services/dec2con_server.py]
@@ -43,7 +46,7 @@ services:
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       goal:
         regex: ^(correct|at_most_one_call)$
@@ -51,16 +54,17 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  #da completare goal
   opt2dec:
     explains: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
-    evaluator: [python, services/dec2opt_server.py]
+    evaluator: [python, services/opt2dec_server.py]
     args:
       size:
         regex: ^(small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       goal:
         explain: "the options are as follows: 
@@ -73,33 +77,35 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  # fatto
   con2opt:
     explains: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange."
-    evaluator: [python, services/opt2con_server.py]
+    evaluator: [python, services/con2opt_server.py]
     args:
       size:
         regex: ^(small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       goal:
-        regex: ^(number_of_calls_linear_in_n)$
-        default: number_of_calls_linear_in_n
+        regex: ^(correct|number_of_calls_linear_in_n)$
+        default: correct
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  #fatto - manca polynomial
   con2dec:
     explains: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle for the decision form as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange. Posing yourself a different set of goals, you might also ask for one single call to an oracle for the Knapsack problem in its optimization form (see the arguments of the service to know more)."
-    evaluator: [python, services/dec2con_server.py]
+    evaluator: [python, services/con2dec_server.py]
     args:
       size:
         regex: ^(small|large)$
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       goal:
         regex: ^(correct|polynomial_dec_calls|at_most_n_dec_calls)$
@@ -111,6 +117,7 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+ # fatto - manca polynomial 
   trilly:
     explain: "this service poses you an n elements instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange."
     evaluator: [python, services/trilly_server.py]
@@ -120,10 +127,10 @@ services:
         default: small
       seed:
         explain: "specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       goal:
-        regex: ^(correct|polynomial_calls|at_most_n_dec_calls|at_most_2_dec_calls)$
+        regex: ^(correct|polynomial_calls|at_most_n_opt_calls|at_most_2_opt_calls)$
         default: correct
       lang:
         regex: ^(hardcoded|en|it)$
