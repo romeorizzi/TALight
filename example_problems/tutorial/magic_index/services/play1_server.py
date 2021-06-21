@@ -29,7 +29,7 @@ TAc.print(LANG.render_feedback("random_vector", f'I generated a vector of size: 
 wasted_dollars = 0
 min_questions_worst_case = check_n_questions_worst_case(len(vec))
 magic_indexes = spot_magic_index(vec)
-print(magic_indexes)
+#print(magic_indexes)
 
 while True:
     TAc.print(LANG.render_feedback("random_vector", f'Choose an index to play:'), "yellow", ["bold"])
@@ -45,7 +45,7 @@ while True:
     TAc.print(LANG.render_feedback("solution proposed", f'Do you want to give the solution? (y / n)'), "yellow", ["bold"])
     ans = TALinput(str, num_tokens=1, regex="^([y]*|[n]*)$", regex_explained="enter Y if you want submit your solution, otherwise N", TAc=TAc, LANG=None)
     if ans[0] == 'y':
-        TAc.print(LANG.render_feedback("solution proposed", f'Enter your vector of magic indexes here:'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("solution proposed", f'Enter your vector of magic indexes here: (example: 1,2,3)'), "yellow", ["bold"])
         user_solution = TALinput(str, num_tokens=1, regex="^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$", regex_explained="regex for magic indexes provided by the user", TAc=TAc, LANG=None)
         user_solution = user_solution[0].split(',')
         user_solution = list(map(int, user_solution))
@@ -65,6 +65,3 @@ while True:
         TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])  
 
 
-
-#TODO: cosi c'è un problema, l'utente potrebbe capire che il vettore generato è sempre 
-# quello del worst case, quindi con n//2 magic indexes tutti a sx, bisogna generarlo randomicamente

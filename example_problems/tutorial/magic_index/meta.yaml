@@ -134,21 +134,7 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  trilly:
-    evaluator: [python, services/trilly_server.py]
-    explain: "The fairy Trilly helps you to understand how you can solve a random matrix."
-    args:
-      size:
-        regex: ^(small|medium|large|huge|unbearable)$
-        default: medium
-        explain: "You can choose the size of the random matrix."
-      num_calls:
-        regex: ^([1-9]{0,1})$
-        default: 2
-        explain: "Number of step to find the solution."
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
+  
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
     args:
