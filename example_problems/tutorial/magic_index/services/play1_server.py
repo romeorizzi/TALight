@@ -29,6 +29,7 @@ TAc.print(LANG.render_feedback("random_vector", f'I generated a vector of size: 
 wasted_dollars = 0
 min_questions_worst_case = check_n_questions_worst_case(len(vec))
 magic_indexes = spot_magic_index(vec)
+discovered_vec = ['?' for _ in range(1, size+1)]
 #print(magic_indexes)
 
 while True:
@@ -38,7 +39,9 @@ while True:
     if n >= size:
         TAc.print(LANG.render_feedback("error", f'The input value for the index is not between 0 and {size-1}. Insert another index to play:'), "red", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("value", f'The corresponding value for the index requested is: {vec[n]}.'), "green", ["bold"])
+        discovered_vec[n] = vec[n]
+        print_vector(discovered_vec, TAc, LANG)
+        #TAc.print(LANG.render_feedback("value", f'The corresponding value for the index requested is: {vec[n]}.'), "green", ["bold"])
         wasted_dollars += 1
     
     # we ask if the user wants to try to give the solution
@@ -62,6 +65,7 @@ while True:
             exit(0)
 
     else:
-        TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])  
+        TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])
+
 
 

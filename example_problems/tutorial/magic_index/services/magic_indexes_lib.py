@@ -100,3 +100,21 @@ def generate_optimal_questions_order(vec):
     upper_bound = questions + (len(vec))//2
     questions_vec[(len(vec)+1)//2:] = [x for x in range(upper_bound,questions,-1)]
     return questions_vec 
+
+
+def print_vector(vec, TAc, LANG):
+    w = len(vec)*2
+    h = 3
+
+    for i in range(h):
+        if not i or i == h-1:
+            #print(' -'*w, end ='')
+            TAc.print(LANG.render_feedback("draw box", f' -'*w), "yellow", ["bold"], end="")
+            print()
+        else:
+            #print('|', end="")
+            TAc.print(LANG.render_feedback("draw box", '|'), "yellow", ["bold"], end="")
+            for i in vec:
+                #print(f' {i} |', end="")
+                TAc.print(LANG.render_feedback("draw box", f' {i} |'), "yellow", ["bold"], end="")
+            print()
