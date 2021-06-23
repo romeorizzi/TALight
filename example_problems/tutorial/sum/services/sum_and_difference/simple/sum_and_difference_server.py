@@ -31,16 +31,16 @@ for _ in range(ENV['num_questions']):
     a, b = map(int, spoon.split(" "))
     gen_new_pair = False
     if a+b > x+y:
-        print(f"No! indeed, {a}+{b}={a+b} > {x+y}.")
+        print(f"# No! indeed, {a}+{b}={a+b} > {x+y}.")
     elif a+b < x+y:    
-        print(f"No! indeed, {a}+{b}={a+b} < {x+y}.")
+        print(f"# No! indeed, {a}+{b}={a+b} < {x+y}.")
     elif abs(a-b) > x-y:    
-        print(f"No! indeed, |{a}-{b}|={abs(a-b)} > {x-y}.")
+        print(f"# No! indeed, |{a}-{b}|={abs(a-b)} > {x-y}.")
     elif abs(a-b) < x-y:    
-        print(f"No! indeed, |{a}-{b}|={abs(a-b)} < {x-y}.")
+        print(f"# No! indeed, |{a}-{b}|={abs(a-b)} < {x-y}.")
     else:
         assert (a + b == x+y) and (abs(a-b) == x-y)
-        print(f"Ok! indeed, {a}+{b} = {x+y} and |{a}-{b}| = {x-y}.")
+        print(f"# Ok! indeed, {a}+{b} = {x+y} and |{a}-{b}| = {x-y}.")
         gen_new_pair = True
 
 exit(0)

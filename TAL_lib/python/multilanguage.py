@@ -176,7 +176,7 @@ class TALcolors:
         self.print("OK! ", "green", ["bold"], end="")
 
     def GotBored(self):
-        self.print("! (I got bored)", "white")
+        self.print("# I got bored (too much load on the server)", "white")
 
     def Finished(self):
-        self.print(f"! (We have finished) Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
+        self.print(f"# WE HAVE FINISHED\n#    Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")

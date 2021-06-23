@@ -20,27 +20,27 @@ for _ in range(ENV['num_questions']):
             s = randrange(100)
         else:
             s = randrange(2**64)
-    print(f"{s}")
+    print(s)
     spoon = input().strip()
     while spoon[0] == '#':
         spoon = input().strip()
     a, b = map(int, spoon.split(" "))
     gen_new_s = False
     if a+b > s:
-        print(f"No! indeed, {a}+{b}={a+b} > {s}.")
+        print(f"# No! indeed, {a}+{b}={a+b} > {s}.")
     elif a+b < s:
-        print(f"No! indeed, {a}+{b}={a+b} < {s}.")
+        print(f"# No! indeed, {a}+{b}={a+b} < {s}.")
     else: # a + b == n
         if ENV['obj'] == "max_product":
             if a < b:
                 a,b = b,a
             if a-b > 1:
-                print(f"No! indeed, {a-1}+{b+1}={s} and {a-1}*{b+1}={(a-1)*(b+1)} > {a*b}={a}*{b}.")
+                print(f"# No! indeed, {a-1}+{b+1}={s} and {a-1}*{b+1}={(a-1)*(b+1)} > {a*b}={a}*{b}.")
             else:
                 gen_new_s = True
-                print(f"Ok! indeed, x={a} and y={b} have maximum product among the integer numbers with x+y={s}. Do you know why? Do you have a proof for your intuition?")
+                print(f"# Ok! indeed, x={a} and y={b} have maximum product among the integer numbers with x+y={s}. Do you know why? Do you have a proof for your intuition?")
         else:
-            print(f"Ok! indeed, {a}+{b}={s}")
+            print(f"# Ok! indeed, {a}+{b}={s}")
             gen_new_s = True
             
 exit(0)
