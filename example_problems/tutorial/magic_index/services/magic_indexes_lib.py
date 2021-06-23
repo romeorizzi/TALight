@@ -105,16 +105,17 @@ def generate_optimal_questions_order(vec):
 def print_vector(vec, TAc, LANG):
     w = len(vec)*2
     h = 3
-
+    print()
     for i in range(h):
         if not i or i == h-1:
             #print(' -'*w, end ='')
-            TAc.print(LANG.render_feedback("draw box", f' -'*w), "yellow", ["bold"], end="")
+            TAc.print(LANG.render_feedback("draw box", f' -'*w), "white", ["bold"], end="")
             print()
         else:
             #print('|', end="")
-            TAc.print(LANG.render_feedback("draw box", '|'), "yellow", ["bold"], end="")
+            TAc.print(LANG.render_feedback("draw box", '|'), "white", ["bold"], end="")
             for i in vec:
                 #print(f' {i} |', end="")
-                TAc.print(LANG.render_feedback("draw box", f' {i} |'), "yellow", ["bold"], end="")
+                TAc.print(LANG.render_feedback("draw box", f' {i} |'), "white", ["bold"], end="")
             print()
+    print()
