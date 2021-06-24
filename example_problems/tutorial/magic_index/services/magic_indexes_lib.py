@@ -9,7 +9,13 @@ def check_input_vector(vec, TAc, LANG):
             TAc.print(LANG.render_feedback("decrease", f'No. Your vector is not incrisingly sorted: vec[{i-1}] = {vec[i-1]} > {vec[i]} = vec[{i}].'), "red", ["bold"])
             exit(0)
 
-def random_vector(n, seed="random_seed"):
+def random_vector():
+    n = random.randint(5, 20)
+    vec, seed = random_vector_fixed(n)
+    return vec, seed, n
+
+
+def random_vector_fixed(n, seed="random_seed"):
     if seed=="random_seed":
         random.seed()
         seed = random.randrange(0,1000000)
@@ -119,3 +125,32 @@ def print_vector(vec, TAc, LANG):
                 TAc.print(LANG.render_feedback("draw box", f' {i} |'), "white", ["bold"], end="")
             print()
     print()
+
+def check_goal(goal, feedback, magic_indexes, user_solution, vector_optmal_questions, vector_questions, wasted_dollars, min_questions_worst_case, TAc, LANG):
+    # we give feedback based on the chosen optimality level
+    isCorrect = magic_indexes == user_solution
+
+    if isCorrect:
+        #correct
+        if goal == 'correct':
+            TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You reached your goal'), "green", ["bold"])
+            exit(0)
+
+        #at_most_twice_the_opt - al massimo 2 volte la sol ottima
+        elif goal == 'at_most_twice_the_opt':
+            isAtMostTwice = wasted_dollars <= 2*min_questions_worst_case #compreso il doppio, true if is it at most twice the opt
+
+            if isAtMostTwice:
+                TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You reached your goal'), "green", ["bold"])
+                exit(0)
+            else:
+                if feedback == 'yes_no_goal':
+                    TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You inserted the right magic indexes, but you wasted too many dollars: you didn\'t reach your goal'), "yellow", ["bold"])
+                    exit(0)
+                elif feedback == 'how_far':    
+                    TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You inserted the right magic indexes, but you wasted {wasted_dollars-2*min_questions_worst_case} more dollars than the optimal solution: you didn\'t reach your goal'), "yellow", ["bold"])             
+                    exit(0)
+                    
+    else:
+        TAc.print(LANG.render_feedback("wrong solution!", f'Wrong answer! You didn\'t reach your goal'), "red", ["bold"])
+        exit(0)

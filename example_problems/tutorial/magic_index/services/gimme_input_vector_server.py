@@ -24,9 +24,9 @@ n=ENV['n']
 
 # START CODING YOUR SERVICE:
 if ENV['seed']=='random_seed': 
-    vec,seed = random_vector(int(n))
+    vec,seed = random_vector_fixed(int(n))
 else:
-    vec,seed = random_vector(int(n),ENV['seed'])
+    vec,seed = random_vector_fixed(int(n),ENV['seed'])
 
 vec = [str(e) for e in vec]
 vec = ",".join(vec)

@@ -24,16 +24,19 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
-size, vec = random_vector_worst_case()
+
+if ENV['opponent'] == 'optimal':
+    size, vec = random_vector_worst_case()
+elif ENV['opponent'] == 'random':
+    vec, _ , size = random_vector()
+
 wasted_dollars = 0
 min_questions_worst_case = check_n_questions_worst_case(len(vec))
 magic_indexes = spot_magic_index(vec)
-vector_optmal_questions = generate_optimal_questions_order(vec)
+vector_optmal_questions = generate_optimal_questions_order(vec) #stores the optimal question order
 
-discovered_vec = ['?' for _ in range(1, size+1)]
-vector_questions = [None for i in range(1,len(vec)+1)]
-
-
+discovered_vec = ['?' for _ in range(1, size+1)] # print vector
+vector_questions = [None for i in range(1,len(vec)+1)] # support vector: it stores the queried values in the asked order
 
 TAc.print(LANG.render_feedback("random_vector", f'I generated a vector of size: {size}.'), "yellow", ["bold"])
 
@@ -51,30 +54,18 @@ while True:
         wasted_dollars += 1
 
         # check if the user is playing (optimally) according to the chosen level
+
+        # we ask if the user wants to try to give the solution
+        TAc.print(LANG.render_feedback("solution proposed", f'Do you want to give the solution? (y for yes, otherwise any other character)'), "yellow", ["bold"])
+        ans = TALinput(str, num_tokens=1, regex_explained="enter y if you want submit your solution, otherwise any other character", TAc=TAc, LANG=None)
         
-    
-    # we ask if the user wants to try to give the solution
-    TAc.print(LANG.render_feedback("solution proposed", f'Do you want to give the solution? (y / n)'), "yellow", ["bold"])
-    ans = TALinput(str, num_tokens=1, regex="^([y]*|[n]*)$", regex_explained="enter Y if you want submit your solution, otherwise N", TAc=TAc, LANG=None)
-    if ans[0] == 'y':
-        TAc.print(LANG.render_feedback("solution proposed", f'Enter your vector of magic indexes here: (example: 1,2,3)'), "yellow", ["bold"])
-        user_solution = TALinput(str, num_tokens=1, regex="^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$", regex_explained="regex for magic indexes provided by the user", TAc=TAc, LANG=None)
-        user_solution = user_solution[0].split(',')
-        user_solution = list(map(int, user_solution))
-        check_input_vector(user_solution, TAc, LANG)
+        if ans[0].lower() == 'y':
+            TAc.print(LANG.render_feedback("solution proposed", f'Enter your vector of magic indexes here: (example: 1,2,3)'), "yellow", ["bold"])
+            user_solution = TALinput(str, num_tokens=1, regex="^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$", regex_explained="regex for magic indexes provided by the user", TAc=TAc, LANG=None)
+            user_solution = user_solution[0].split(',')
+            user_solution = list(map(int, user_solution))
+            check_input_vector(user_solution, TAc, LANG)
 
-
-        # we give feedback based on the chosen optimality level
-        isCorrect = magic_indexes == user_solution
-        if ENV['goal'] == 'correct' and isCorrect:
-            TAc.print(LANG.render_feedback(" correct solution!", f'Correct!'), "green", ["bold"])
-            exit(0)
+            check_goal(ENV['goal'], ENV['feedback'], magic_indexes, user_solution, vector_optmal_questions, vector_questions, wasted_dollars, min_questions_worst_case, TAc, LANG)
         else:
-            TAc.print(LANG.render_feedback("wrong solution!", f'Wrong answer!'), "red", ["bold"])
-            exit(0)
-
-    else:
-        TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])
-
-
-
+            TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])
