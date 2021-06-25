@@ -89,7 +89,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_play1:
-    evaluator: [python, services/eval_play2_server.py]
+    evaluator: [python, services/eval_play1_server.py]
     args:
       goal:
         regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
