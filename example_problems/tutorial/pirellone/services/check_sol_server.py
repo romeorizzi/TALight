@@ -23,9 +23,9 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
 TAc.print(LANG.render_feedback("insert-num-rows", 'Insert the number of rows:'), "yellow", ["bold"])
-m=int(input())
+m=TALinput(int, 1, TAc=TAc)
 TAc.print(LANG.render_feedback("insert-num-col", 'Insert the number of columns:'), "yellow", ["bold"])
-n=int(input())
+n=TALinput(int, 1, TAc=TAc)
 
 if ENV['seed']=='random_seed':
     pirellone, seed=pl.random_pirellone(m, n, seed="random_seed", solvable=True)

@@ -29,7 +29,7 @@ pos=random.randint(1,p.num_sol(n_tiles))
 #print(pos)
 wff=p.unrank(n_tiles,pos,ENV['sorting_criterion'])
 print('In what position of the tiling does '+ wff +' fit? \nWrite it here: ')
-risp=int(input())   
+risp=TALinput(int, 1, TAc=TAc)   
 if risp==pos:
     TAc.print(LANG.render_feedback("risp-ok", f"Ok! {risp} is the position of {wff} in the list of tilings of a corridor of dimension 1x{n_tiles}."), "green", ["bold"])
     exit(0)

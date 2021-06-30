@@ -40,7 +40,7 @@ correct_steps=el.num_mosse(n)
 
       
 TAc.print(LANG.render_feedback("insert-solu", 'Insert your solution:'), "yellow", ["bold"])
-solu=int(input())
+solu=TALinput(int, 1, TAc=TAc)
 
 if solu==correct_steps:
     TAc.OK()

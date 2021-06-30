@@ -22,9 +22,9 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
 TAc.print(LANG.render_feedback("rows","Rows:"), "yellow", ["bold"])
-m=int(input())
+m=TALinput(int, 1, TAc=TAc)
 TAc.print(LANG.render_feedback("col","Columns:"), "yellow", ["bold"])
-n=int(input())
+n=TALinput(int, 1, TAc=TAc)
 TAc.print(LANG.render_feedback("insert-counter","Insert your counterexample:"), "yellow", ["bold"])
 p=[]
 for i in range(m):

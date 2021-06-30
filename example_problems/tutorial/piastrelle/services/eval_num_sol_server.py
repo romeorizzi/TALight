@@ -49,7 +49,7 @@ def one_test(n):
     risp_correct = p.num_sol(n)
     TAc.print(n, "yellow", ["bold"])
     start = monotonic()
-    risp = int(input())
+    risp = TALinput(int, 1, TAc=TAc)
     end = monotonic()
     t = end - start # è un float, in secondi
     if ENV["answ_modulus"] == 0:

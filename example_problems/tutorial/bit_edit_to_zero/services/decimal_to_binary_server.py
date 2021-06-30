@@ -27,11 +27,11 @@ if ENV['number']=='any':
     TAc.print(LANG.render_feedback("random-num", f'Random number: {n}'), "yellow", ["bold"])
 elif ENV['number']=='my':
     TAc.print(LANG.render_feedback("insert-num", 'Insert the number in decimal form:'), "yellow", ["bold"])
-    n=int(input())
+    n=TALinput(int, 1, TAc=TAc)
 correct_bin=el.dec_to_bin(n) 
       
 TAc.print(LANG.render_feedback("insert-solu", 'Insert your solution:'), "yellow", ["bold"])
-solu=int(input())
+solu=TALinput(int, 1, TAc=TAc)
 
 if solu==correct_bin:
     TAc.OK()

@@ -26,7 +26,7 @@ for _ in range(ENV['num_questions']):
     if gen_new_s:
             s = randrange(5,100)
     TAc.print(f"? {s}", "yellow", ["bold"])
-    a= int(input())
+    a= TALinput(int, 1, TAc=TAc)
     gen_new_s = False
     
     if a>3:
