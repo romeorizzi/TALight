@@ -126,6 +126,36 @@ def print_vector(vec, TAc, LANG):
             print()
     print()
 
+
+def get_first_questions_for_magic_index_random(res,array, l, u):
+  
+    if l > u:
+        return []
+
+    mid = (l + u) // 2
+    res.append(mid)
+    if array[mid] > mid:      
+        return get_first_questions_for_magic_index_random(res,array, l, mid - 1)
+
+    if array[mid] < mid:
+        return get_first_questions_for_magic_index_random(res,array, mid + 1, u)
+
+    if array[mid] == mid: 
+        return get_first_questions_for_magic_index_random(res,array, l, mid - 1) + [mid]
+
+
+
+def fill_last_questions_for_random_vector(questions_vector, vec):
+    index = len(vec)-1
+    while index > questions_vector.index(0):
+        questions_vector[index] = max([i for i in questions_vector if i is not None]) + 1
+        if vec[index] == index:
+            break
+        index -= 1
+
+
+
+
 def check_goal(opponent, goal, feedback, magic_indexes, user_solution, vector_optmal_questions, vector_questions, wasted_dollars, min_questions_worst_case, TAc, LANG):
     # we give feedback based on the chosen optimality level
     if user_solution == ['e'] and magic_indexes==[]:
