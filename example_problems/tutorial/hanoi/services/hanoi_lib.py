@@ -3,17 +3,15 @@ import sys, random
 sys.setrecursionlimit(1000000)
 
 
-def get_input_from(text, n):
-    if n == -1 and (text == "all_A" or text == "all_B" or text == "all_c"):
-        return "err"
-    if text == "all_A":
+def get_input_from(n, config):
+    """Assume N!=-1 if start=all_X and final=all_X"""
+    if config == "all_A":
         return 'A' * n
-    if text == "all_B":
+    if config == "all_B":
         return 'B' * n
-    if text == "all_C":
+    if config == "all_C":
         return 'C' * n
-    return text
-
+    return config
 
 
 class HanoiTowerProblem():
@@ -53,6 +51,21 @@ class HanoiTowerProblem():
                 return False #disk is blocked
         return True
     
+
+    def check_admissibility_of(self, sol, initial, final):
+        state = list(initial)
+        for e in sol:
+            disk, tmp = e.split(": ")
+            disk = int(disk)
+            c, t = tmp.split("->")
+            if not self.is_valid(state, disk, c, t):
+                return 'move_not_valid', e
+            state[disk-1] = t
+        final_config_sol = ''.join(state)
+        if final_config_sol != final:
+            return 'final_wrong', final_config_sol
+        return 'admissible', None
+
 
     def get_not_opt_sol(self, initial, final, size):
         tmp = self.version

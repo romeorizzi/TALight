@@ -26,10 +26,6 @@ services:
         explain1: -any= just check that the solution is an admissible one.
         explain2: -optimal= the solution is required to use a minimum possible number of moves.
         explain3: -simple_walk= the solution is required to be admissible and not to visit a same configuration more than once.
-      silent:
-        explains: "if your solution is ok then the service runs silently; otherwise it explains what is the problem in your solution."
-        regex: ^(0|1)$
-        default: 0
       feedback:
         regex: ^(minimal|spot_first_non_optimal_move|gimme_shorter_solution|gimme_optimal_solution)$
         default: minimal
@@ -69,6 +65,10 @@ services:
       v:      
         regex:  ^(classic|toddler|clockwise)$
         default: classic
+      silent:
+        explains: "if your solution is ok then the service runs silently; otherwise it explains what is the problem in your solution."
+        regex: ^(0|1)$
+        default: 0
       feedback:
         regex: ^(minimal|smaller_or_bigger|true_val)$
         default: minimal
