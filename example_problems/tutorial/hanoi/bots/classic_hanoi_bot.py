@@ -28,15 +28,21 @@ def move_tower(n, current, target, support):
     move_tower(n - 1, support, target, current)
 
 
-# Run with:
-# rtal connect -e hanoi check_one_sol -an=2 -- ./classic_hanoi_bot.py
 
 wait_start()
-move_tower(2, 'A', 'C', 'B')
+##############################
+# CASE: AA -> CC
+# move_tower(2, 'A', 'C', 'B')
 
-# print('1: A->B')
-# print('2: A->C')
-# print('1: B->A')
-
+# CASE: ABC -> CBA
+print('1: A->B')
+print('3: C->A')
+print('1: B->C')
+print('1: C->C')
+print('1: C->C')
+print('1: C->C')
+print('1: C->C')
+##############################
 print("end")
 wait_end() 
+

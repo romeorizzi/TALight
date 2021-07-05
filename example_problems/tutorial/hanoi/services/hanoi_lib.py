@@ -3,7 +3,7 @@ import sys, random
 sys.setrecursionlimit(1000000)
 
 
-def get_input_from(n, config):
+def get_input_from(config, n):
     """Assume N!=-1 if start=all_X and final=all_X"""
     if config == "all_A":
         return 'A' * n
@@ -52,18 +52,23 @@ class HanoiTowerProblem():
         return True
     
 
-    def check_admissibility_of(self, sol, initial, final):
-        state = list(initial)
+    def check_sol(self, sol, initial, final):
+        state = initial
+        states = {state : 1}
         for e in sol:
             disk, tmp = e.split(": ")
             disk = int(disk)
             c, t = tmp.split("->")
             if not self.is_valid(state, disk, c, t):
                 return 'move_not_valid', e
-            state[disk-1] = t
-        final_config_sol = ''.join(state)
-        if final_config_sol != final:
-            return 'final_wrong', final_config_sol
+            state = state[:disk-1] + t + state[disk:]
+            states[state] = states.get(state, 0) + 1
+        if state != final:
+            return 'final_wrong', state
+        # check loops
+        for k, v in states.items():
+            if v > 1:
+                return 'admissible', k
         return 'admissible', None
 
 
@@ -171,40 +176,39 @@ class HanoiTowerProblem():
 
 
 if __name__ == "__main__":
-    h = HanoiTowerProblem(version='classic')
-    assert h.get_min_moves('A', 'A') == 0
-    assert h.get_min_moves('A', 'C') == 1
-    assert h.get_min_moves('AA', 'CC') == 3
-    assert h.get_min_moves('AAA', 'CCC') == 7
-    assert h.get_min_moves('AAAA', 'CCCC') == 15
+    h_classic = HanoiTowerProblem(version='classic')
+    assert h_classic.get_min_moves('A', 'A') == 0
+    assert h_classic.get_min_moves('A', 'C') == 1
+    assert h_classic.get_min_moves('AA', 'CC') == 3
+    assert h_classic.get_min_moves('AAA', 'CCC') == 7
+    assert h_classic.get_min_moves('AAAA', 'CCCC') == 15
 
-    assert h.is_valid(['A', 'A'], 2, 'A', 'B') == False
-    assert h.is_valid(['A', 'A'], 1, 'A', 'B') == True
-    assert h.is_valid(['A', 'A'], 1, 'A', 'D') == False
-    assert h.is_valid(['A', 'A'], 1, 'C', 'B') == False
-
-    print(h.get_moves_list("AA", "CC"))
-    print("----")
-    print(h.get_not_opt_sol("AA", "CC", 10))
-    print()
+    assert h_classic.is_valid('AA', 2, 'A', 'B') == False
+    assert h_classic.is_valid('AA', 1, 'A', 'B') == True
+    assert h_classic.is_valid('AA', 1, 'A', 'D') == False
+    assert h_classic.is_valid('AA', 1, 'C', 'B') == False
 
 
-    h = HanoiTowerProblem(version='toddler')
-    assert h.get_min_moves('A', 'A') == 0
-    assert h.get_min_moves('A', 'C') == 1
-    assert h.get_min_moves('AA', 'CC') == 3
-    assert h.get_min_moves('AAA', 'CCC') == 7
-    assert h.get_min_moves('AAAA', 'CCCC') == 15
+    h_toddler = HanoiTowerProblem(version='toddler')
+    assert h_toddler.get_min_moves('A', 'A') == 0
+    assert h_toddler.get_min_moves('A', 'C') == 1
+    assert h_toddler.get_min_moves('AA', 'CC') == 3
+    assert h_toddler.get_min_moves('AAA', 'CCC') == 7
+    assert h_toddler.get_min_moves('AAAA', 'CCCC') == 15
 
-    assert h.get_min_moves('AA', 'BB') == 3
-    assert h.get_min_moves('AAA', 'BBB') == 7
-    assert h.get_min_moves('AA', 'CC') == 3
-    assert h.get_min_moves('AA', 'AC') == 3
-    assert h.get_min_moves('AAA', 'ABC') == 5
-    assert h.get_min_moves('AAAA', 'CBCC') == 14
-
-    print(h.get_moves_list("AA", "CC"))
-    print("----")
-    print(h.get_not_opt_sol("AA", "CC", 10))
+    assert h_toddler.get_min_moves('AA', 'BB') == 3
+    assert h_toddler.get_min_moves('AAA', 'BBB') == 7
+    assert h_toddler.get_min_moves('AA', 'CC') == 3
+    assert h_toddler.get_min_moves('AA', 'AC') == 3
+    assert h_toddler.get_min_moves('AAA', 'ABC') == 5
+    assert h_toddler.get_min_moves('AAAA', 'CBCC') == 14
 
 
+
+    initial = 'AA'
+    final = 'CC'
+    opt_sol = h_classic.get_moves_list(initial, final)
+    assert h_classic.check_sol(opt_sol, initial, final) == ('admissible', None)
+
+    not_opt_sol = h_classic.get_not_opt_sol(initial, final, 5)
+    assert h_classic.check_sol(not_opt_sol, initial, final) == ('admissible', 'AA')

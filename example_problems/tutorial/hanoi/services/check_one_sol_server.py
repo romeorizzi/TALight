@@ -12,10 +12,13 @@ def provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=False):
     if ENV['feedback'] == 'spot_first_non_optimal_move':
         # Check diff
         diff = None
-        for i in range(len(opt_sol)):
-            if user_sol[i] != opt_sol[i]:
-                diff = [i+1, user_sol[i], opt_sol[i]]
-                break
+        if len(opt_sol) == 0:
+            diff = [0, user_sol[0], None]
+        else:
+            for i in range(len(opt_sol)):
+                if user_sol[i] != opt_sol[i]:
+                    diff = [i+1, user_sol[i], opt_sol[i]]
+                    break
         assert diff != None
         TAc.print(LANG.render_feedback("spot-first-diff", f'diff: {diff}'), "yellow", ["bold"])
 
@@ -41,24 +44,23 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-ENV =Env(problem, service, args_list)
-TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+ENV = Env(problem, service, args_list)
+TAc = TALcolors(ENV)
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 
 # INITIALIZATION
-N = ENV['N']
+N = ENV['n']
 
 # Check arguments errors
-if N == -1:
-    if (ENV['start'] != "all_A" and ENV['start'] != "all_B" and ENV['start'] != "all_c"):
-        N = len(ENV['start'])
-    elif (ENV['final'] != "all_A" and ENV['final'] != "all_B" and ENV['final'] != "all_c"):
-        N = len(ENV['final'])
-    else:
-        TAc.print(LANG.render_feedback("arg-err", f"N!=-1 if start=all_X and final=all_X"), "red", ["bold"])
-        exit(0)
+if (ENV['start'] != "all_A" and ENV['start'] != "all_B" and ENV['start'] != "all_C"):
+    N = len(ENV['start'])
+elif (ENV['final'] != "all_A" and ENV['final'] != "all_B" and ENV['final'] != "all_C"):
+    N = len(ENV['final'])
+elif (N == -1):
+    TAc.print(LANG.render_feedback("arg-err", f"N!=-1 if start=all_X and final=all_X"), "red", ["bold"])
+    exit(0)
 
 # Get configurations
 start = get_input_from(ENV['start'], N)
@@ -91,9 +93,8 @@ if (len(user_sol) < len(opt_sol)):
     TAc.print(LANG.render_feedback("sol-wrong-less", f'user_sol is wrong. len(user_sol) < len(corr_moves)'), "red", ["bold"])
     provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=True)
 
-
 # Check admissibility
-info, error = hanoi.check_admissibility_of(user_sol, start, final)
+info, error = hanoi.check_sol(user_sol, start, final)
 if (info == 'move_not_valid'):
     TAc.print(LANG.render_feedback("move-not-valid", f'In user_sol move_not_valid: {error}'), "red", ["bold"])
     provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=True)
@@ -101,11 +102,15 @@ elif (info == 'final_wrong'):
     TAc.print(LANG.render_feedback("final-wrong", f'In user_sol final_wrong: {error}'), "red", ["bold"])
     provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=True)
 else:
-    TAc.print(LANG.render_feedback("sol-admissible", f'user_sol is admissible'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("sol-admissible", f'user_sol is admissible'), "green", ["bold"])
 
+    # check if is a simple walk
+    if (error != None):
+        TAc.print(LANG.render_feedback("sol-not-simplewalk", f'user_sol is not a simple walk'), "red", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("sol-simplewalk", f'user_sol is a simple walk'), "green", ["bold"])
 
-if ENV['goal'] == 'optimal':
-    # user_sol is optimal if is admissible and len(user_sol) == len(opt_sol)
+    # check optimality: sol admissible and len(user_sol) == len(opt_sol)
     if len(user_sol) != len(opt_sol):
         TAc.print(LANG.render_feedback("sol-not-opt", f'user_sol is not optimal'), "red", ["bold"])
         provide_feedback_and_exit(user_sol, opt_sol)
