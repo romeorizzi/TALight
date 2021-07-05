@@ -27,13 +27,17 @@ TAc.print(LANG.opening_msg, "green")
 
 if ENV['opponent'] == 'optimal':
     size, vec = random_vector_worst_case()
+    vector_optmal_questions = generate_optimal_questions_order(vec) #stores the optimal question order
+    min_questions = check_n_questions_worst_case(len(vec))
 elif ENV['opponent'] == 'random':
     vec, _ , size = random_vector()
+    vector_optmal_questions = vector_optimal_questions_random_vec(vec)
+    min_questions = check_n_questions_random_case(vector_optmal_questions)
+
 
 wasted_dollars = 0
-min_questions_worst_case = check_n_questions_worst_case(len(vec))
 magic_indexes = spot_magic_index(vec)
-vector_optmal_questions = generate_optimal_questions_order(vec) #stores the optimal question order
+
 print(vec, vector_optmal_questions)
 
 discovered_vec = ['?' for _ in range(1, size+1)] # print vector
@@ -77,7 +81,7 @@ while True:
                 user_solution = list(map(int, user_solution))
                 check_input_vector(user_solution, TAc, LANG)
 
-            check_goal(ENV['opponent'], ENV['goal'], ENV['feedback'], magic_indexes, user_solution, vector_optmal_questions, vector_questions, wasted_dollars, min_questions_worst_case, TAc, LANG)
+            check_goal(ENV['opponent'], ENV['goal'], ENV['feedback'], magic_indexes, user_solution, vector_optmal_questions, vector_questions, wasted_dollars, min_questions, TAc, LANG)
         else:
             TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])
 
