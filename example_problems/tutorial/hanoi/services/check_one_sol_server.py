@@ -26,7 +26,7 @@ def provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=False):
         TAc.print(LANG.render_feedback("gimme-optimal", f'opt-sol: {opt_sol}'), "yellow", ["bold"])
 
     elif ENV['feedback'] == 'gimme_shorter_solution' and not user_sol_is_wrong:
-            TAc.print(LANG.render_feedback("gimme-admissible", f'adm-sol: {hanoi.get_not_opt_sol(start, final, size=len(user_sol)-1)}'), "yellow", ["bold"])
+            TAc.print(LANG.render_feedback("gimme-admissible", f'adm-sol: {hanoi.getNotOptimalSol(start, final, size=len(user_sol)-1)}'), "yellow", ["bold"])
     exit(0)
 
 
@@ -66,6 +66,11 @@ elif (N == -1):
 start = get_input_from(ENV['start'], N)
 final = get_input_from(ENV['final'], N)
 
+# Check configs error
+if len(start) != len(final):
+    TAc.print(LANG.render_feedback("arg-config-err", f"len(start) != len(final)"), "red", ["bold"])
+    exit(0)
+
 # Init Hanoi Tower
 hanoi = HanoiTowerProblem(ENV['v'])
 
@@ -84,7 +89,7 @@ while True:
     user_sol.append(move)
 
 # Get optimal moves
-opt_sol = hanoi.get_moves_list(start, final)
+opt_sol = hanoi.getMovesList(start, final)
 
 
 # PROCESS DATA
@@ -94,7 +99,7 @@ if (len(user_sol) < len(opt_sol)):
     provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=True)
 
 # Check admissibility
-info, error = hanoi.check_sol(user_sol, start, final)
+info, error = hanoi.checkSol(user_sol, start, final)
 if (info == 'move_not_valid'):
     TAc.print(LANG.render_feedback("move-not-valid", f'In user_sol move_not_valid: {error}'), "red", ["bold"])
     provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=True)
