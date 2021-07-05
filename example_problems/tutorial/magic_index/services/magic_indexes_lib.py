@@ -127,34 +127,53 @@ def print_vector(vec, TAc, LANG):
     print()
 
 
-def get_first_questions_for_magic_index_random(res,array, l, u):
+def get_first_questions_for_magic_index(last_index_no_magic,res,array, l, u):
   
     if l > u:
         return []
 
     mid = (l + u) // 2
     res.append(mid)
-    if array[mid] > mid:      
-        return get_first_questions_for_magic_index_random(res,array, l, mid - 1)
+    if array[mid] > mid:  
+        last_index_no_magic.append(mid)
+        return get_first_questions_for_magic_index(last_index_no_magic,res,array, l, mid - 1)
 
     if array[mid] < mid:
-        return get_first_questions_for_magic_index_random(res,array, mid + 1, u)
+        return get_first_questions_for_magic_index(last_index_no_magic,res,array, mid + 1, u)
 
     if array[mid] == mid: 
-        return get_first_questions_for_magic_index_random(res,array, l, mid - 1) + [mid]
+        return get_first_questions_for_magic_index(last_index_no_magic,res,array, l, mid - 1) + [mid]
 
 
 
-def fill_last_questions_for_random_vector(questions_vector, vec):
-    index = len(vec)-1
-    while index > questions_vector.index(0):
+def fill_last_questions(questions_vector, vec, upper_bound):
+    index = upper_bound-1
+
+    while index >= 0 and vec[index] != index and questions_vector[index] == None:
+            questions_vector[index] = max([i for i in questions_vector if i is not None]) + 1
+            index -= 1
+        
+        
+    if index >= 0 and questions_vector[index] == None:
         questions_vector[index] = max([i for i in questions_vector if i is not None]) + 1
-        if vec[index] == index:
-            break
-        index -= 1
+
+def vector_optimal_questions_random_vec(vec):
+    last_index_no_magic = [len(vec)]
+    res = []
+    questions_vector = [None for _ in range(0, len(vec))]
+    _ = get_first_questions_for_magic_index(last_index_no_magic,res,vec,0,len(vec)-1)
+    
+    i = 0
+    for r in res:
+        questions_vector[r] = i
+        i+=1
+    fill_last_questions(questions_vector,vec,last_index_no_magic[-1])
+    
+    return questions_vector
 
 
-
+def check_n_questions_random_case(questions_vector):
+    return len([i for i in questions_vector if i is not None])
 
 def check_goal(opponent, goal, feedback, magic_indexes, user_solution, vector_optmal_questions, vector_questions, wasted_dollars, min_questions_worst_case, TAc, LANG):
     # we give feedback based on the chosen optimality level
