@@ -98,28 +98,28 @@ services:
         default: all_C
       n:
         explains: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
-        regex: ^(implicit|0|[1-9][0-9]{0,2}|1000)$
-        default: implicit
+        regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
+        default: -1 #implicit
       disk:
         explains: "an integer in the interval [1,n]: the disk for which you want to give the tightest possible lower-bound on the number of times it must be moved in any solution. Note: disks 1 is the smallest."
         regex: ^([1-9][0-9]{0,2}|1000)$
-      lower_bound:
+      sol:
         explains: "what you conjecture to be the minimum number of times that disk <disk> needs to be moved in order to solve the puzzle."
         regex: ^(0|[1-9][0-9]{0,1000})$
       v:      
         regex:  ^(classic|toddler|clockwise)$
-        default: classic
+        default: classic    
+      silent:
+        explains: "if your solution is ok then the service runs silently; otherwise it explains what is the problem in your solution."
+        regex: ^(0|1)$
+        default: 0
       feedback:
-        regex: ^(minimal| smaller_or_bigger | true_val )$
+        regex: ^(minimal|smaller_or_bigger|true_val)$
         default: minimal
         explain: the options are as follows
         explain1: -minimal= provide the minimum possible amount of feedback.
         explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
         explain3: -true_val= offers the lenght of an optimal solution.
-      with_certificate:
-        explains: "if your <lower_bound> is bigger than the true value, the service provides you with a solution moving <disk> less than <lower_bound> times."
-        regex: ^(0|1)$
-        default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

@@ -25,30 +25,18 @@ class HanoiTowerProblem():
         assert version == 'classic' or version == 'toddler' or version == 'clockwise'
         self.version = version  # classic|toddler|clockwise
         self.moves = list()
+        self.n_moves_of = list()
 
         # toddler version
         self.names = ["[Daddy  ] ", "[Toddler] "]
         self.player = 0
-        self.n_moves = 0
     
 
     # PUBLIC INTERFACE
-    def getMinMoves(self, initial, final):
-        assert len(initial) == len(final)
-        if self.version == 'classic':
-            return self.__getMinMoves_classic(initial, final)
-        
-        if self.version == 'toddler':
-            return self.__getMinMoves_classic(initial, final)
-        
-        if self.version == 'clockwise':
-            return self.__getMinMoves_clockwise(initial, final)
-
-
     def getMovesList(self, initial, final):
         assert len(initial) == len(final)
         self.moves.clear()
-        self.n_moves = 0
+        self.n_moves_of = [0] * (len(initial) + 1)
 
         if self.version == 'classic':
             self.__move_classic(initial, final)
@@ -61,6 +49,29 @@ class HanoiTowerProblem():
             self.__move_clockwise(initial, final)
         
         return self.moves
+
+
+    def getMinMoves(self, initial, final, optimized=True):
+        assert len(initial) == len(final)
+        if optimized:
+            if self.version == 'classic':
+                return self.__getMinMoves_classic(initial, final)
+            
+            if self.version == 'toddler':
+                return self.__getMinMoves_classic(initial, final)
+            
+            if self.version == 'clockwise':
+                return self.__getMinMoves_clockwise(initial, final)
+        else:
+            self.getMovesList(initial, final)
+            return sum(self.n_moves_of)
+
+
+    def getMinMovesOf(self, initial, final, disk):
+        assert len(initial) == len(final)
+        assert disk > 0 and disk <= len(initial)
+        self.getMovesList(initial, final)
+        return self.n_moves_of[disk]
     
     
     def isValid(self, state, disk, c, t):
@@ -191,7 +202,7 @@ class HanoiTowerProblem():
         elif self.version == 'clockwise':
             self.moves.append(f"{disk}: {current}->{target}")
         
-        self.n_moves += 1
+        self.n_moves_of[disk] += 1
     
 
     # PRIVATE CLASSIC
@@ -260,7 +271,7 @@ class HanoiTowerProblem():
 
     def __getMinMoves_clockwise(self, initial, final):
         self.getMovesList(initial, final)
-        return self.n_moves
+        return sum(self.n_moves_of)
 
 
 
