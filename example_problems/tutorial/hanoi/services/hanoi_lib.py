@@ -339,3 +339,18 @@ if __name__ == "__main__":
     not_opt_sol = h_clockwise.getNotOptimalSol(initial, final, 5)
     adm, info = h_classic.checkSol(not_opt_sol, initial, final) 
     assert adm == 'admissible'
+
+
+    # CHECK CORRECTNESS MIN_MOVES OPTIMIZED
+    seed = 13000
+    num_test = 1000
+    n_max = 10
+    for h in [h_classic, h_toddler, h_clockwise]:
+        for t in range(num_test):
+            for n in range(1, n_max + 1):
+                initial = get_input_from('general', n, seed, 1)
+                final = get_input_from('general', n,  seed, 2)
+                fast = h.getMinMoves(initial, final, True)
+                slow = h.getMinMoves(initial, final, False)
+                assert fast == slow
+            print(f"finish test {t} on {h.version}")
