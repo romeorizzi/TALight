@@ -11,12 +11,12 @@ from hanoi_lib import get_input_from, HanoiTowerProblem
 problem="hanoi"
 service="check_opt_num_moves"
 args_list = [
+    ('v',str),
     ('start', str),
     ('final', str),
     ('n',int),
     ('sol',int),
     ('ok_if_congruent_modulus',int),
-    ('v',str),
     ('silent',bool),
     ('feedback',str),
     ('with_certificate',bool),

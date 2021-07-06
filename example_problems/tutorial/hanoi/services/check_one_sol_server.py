@@ -32,12 +32,12 @@ def provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=False):
 
 # METADATA OF THIS TAL_SERVICE:
 problem="hanoi"
-service="check_opt_num_moves"
+service="check_one_sol"
 args_list = [
+    ('v',str),
     ('start', str),
     ('final', str),
     ('n',int),
-    ('v',str),
     ('goal',str),
     ('feedback',str),
     ('lang',str),

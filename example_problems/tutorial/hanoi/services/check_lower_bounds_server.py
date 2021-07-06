@@ -9,14 +9,14 @@ from hanoi_lib import get_input_from, HanoiTowerProblem
 
 # METADATA OF THIS TAL_SERVICE:
 problem="hanoi"
-service="check_opt_num_moves"
+service="check_lower_bound"
 args_list = [
+    ('v',str),
     ('start', str),
     ('final', str),
     ('n',int),
     ('disk',int),
     ('sol',int),
-    ('v',str),
     ('silent',bool),
     ('feedback',str),
     ('lang',str),

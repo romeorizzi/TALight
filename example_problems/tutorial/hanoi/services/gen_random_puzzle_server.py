@@ -11,7 +11,7 @@ from hanoi_lib import get_input_from
 
 # METADATA OF THIS TAL_SERVICE:
 problem="hanoi"
-service="check_opt_num_moves"
+service="gen_random_puzzle"
 args_list = [
     ('n',int),
     ('seed',int),
