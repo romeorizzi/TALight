@@ -3,7 +3,7 @@ import sys, random
 sys.setrecursionlimit(1000000)
 
 
-def get_input_from(config, n, seed = 0):
+def get_input_from(config, n, seed = 0, n_query=1):
     """Assume N!=-1 if start=all_X and final=all_X"""
     if config == 'all_A':
         return 'A' * n
@@ -12,10 +12,11 @@ def get_input_from(config, n, seed = 0):
     if config == 'all_C':
         return 'C' * n
     if config == 'general':
-        config = ''
         random.seed(seed)
-        for _ in range(n):
-            config += random.choice(('A', 'B', 'C'))
+        for _ in range(n_query):
+            config = ''
+            for _ in range(n):
+                config += random.choice(('A', 'B', 'C'))
     return config
 
 
@@ -329,8 +330,6 @@ if __name__ == "__main__":
     assert h_clockwise.getMinMoves('AA', 'AC') == 5
     assert h_clockwise.getMinMoves('AAA', 'ABC') == 18
     assert h_clockwise.getMinMoves('AAAA', 'CBCC') == 55
-
-
 
     initial = 'AA'
     final = 'BB'

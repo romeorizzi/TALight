@@ -40,8 +40,8 @@ if ENV['verbose'] == 2:
     TAc.print(LANG.render_feedback("print-seed", f"seed = {seed}"), "yellow", ["bold"])
 
 # get type of configurations
-start = get_input_from(ENV['start'], ENV['n'], seed)
-final = get_input_from(ENV['final'], ENV['n'], seed)
+start = get_input_from(ENV['start'], ENV['n'], seed, 1)
+final = get_input_from(ENV['final'], ENV['n'], seed, 2)
 TAc.print(LANG.render_feedback("print-configs", f"input:  {start}\noutput: {final}"), "green", ["bold"])
 
 TAc.print(LANG.render_feedback("print-configs-arg", f"-astart={start} -afinal={final}"), "yellow", ["bold"])
