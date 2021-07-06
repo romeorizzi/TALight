@@ -2,6 +2,8 @@
 
 from sys import stderr, exit, argv
 
+from time import monotonic
+
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
@@ -37,6 +39,7 @@ a_wt = [int(i) for i in a_wt]
 a_val = [int(i) for i in a_val]
 answer = zopt(W, a_wt, a_val, n)
 print("\n")
+start = monotonic()
 prompt = input()
 count = 0
 search = prompt.find(' ')
@@ -64,6 +67,9 @@ while search != -1:
     prompt = input()
     search = prompt.find(' ')
 
+end = monotonic()
+time = end - start
+
 if ENV['goal'] == "correct":
     if str(answer) == prompt:
             TAc.print("\nCORRETTO!", "green")
@@ -76,4 +82,10 @@ if ENV['goal'] == "at_most_opt_calls":
 
 
 if ENV['goal'] == "polynomial":
-    print("DA FARE")
+    if str(answer) == prompt:
+        if time > 1:
+            TAc.print("\nCORRETTO! Il tuo algoritmo non è molto efficiente.\n", "yellow")
+        else:
+            TAc.print("\CORRETTO! Il tuo algoritmo è anche efficiente, hai raggiunto l'obiettivo!\n", "green")
+    else:
+        TAc.print("\nSBAGLIATO!", "red")

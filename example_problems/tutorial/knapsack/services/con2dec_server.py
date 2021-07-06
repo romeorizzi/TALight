@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from sys import stderr, exit, argv
+from time import monotonic
 
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
@@ -14,7 +15,7 @@ args_list = [
     ('size',str),
     ('seed',str),
     ('goal',str),
-    ('ask_for_one_opt_oracle_call', str)
+    ('ask_for_one_opt_oracle_call', int),
     ('lang',str),
 ]
 
@@ -37,6 +38,7 @@ a_wt = [int(i) for i in a_wt]
 a_val = [int(i) for i in a_val]
 answer = zcon(W, a_wt, a_val, n)
 print("\n")
+start = monotonic()
 prompt = input()
 count = 0
 num_space = prompt.count(" ")
@@ -87,6 +89,8 @@ while num_space!=n-1:
     prompt = input()
     num_space = prompt.count(" ")
 
+end = monotonic()
+time = end - start
 
 if ENV['goal'] == "correct":
     if str(answer) == prompt:
@@ -95,13 +99,19 @@ if ENV['goal'] == "correct":
             TAc.print("\nSBAGLIATO!", "red")
 
 if ENV['goal'] == "polynomial_dec_calls":
-    print("DA FARE")
+    if str(answer) == prompt:
+        if time > 1:
+            TAc.print("\nCORRETTO! Il tuo algoritmo non è molto efficiente.\n", "yellow")
+        else:
+            TAc.print("\CORRETTO! Il tuo algoritmo è anche efficiente, hai raggiunto l'obiettivo!\n", "green")
+    else:
+        TAc.print("\nSBAGLIATO!", "red")
 
 if ENV['goal'] == "at_most_n_dec_calls":
     if str(answer) == prompt:
             if count <= n:
                 TAc.print("\nCORRETTO! La tua soluzione è anche ottima, hai usato massimo n numero di chiamate a oracolo.", "green")
-            if count > n+1:
+            if count > n:
                 TAc.print("\nCORRETTO! Esiste una soluzione più efficiente però che usa massimo n numero di chiamate a oracolo.", "yellow")
     else:
             TAc.print("\nSBAGLIATO!", "red")
