@@ -163,20 +163,13 @@ services:
   gen_random_puzzle:
     evaluator: [python, services/gen_random_puzzle_server.py]
     args:
-      n:
-        regex: ^(0|[1-9][0-9]{0,2}|1000)$
-      verbose:
-        explain: sets the verbosity level of the service. The options are as follows
-        explain1: "0. print only the generated formula."
-        explain2: "1. print the generated formula but also the seed (only in case seed=random_seed)."
-        explain3: "2. print the random seed (first line) and the generated formula (second line) and the seed (only in case seed=random_seed)."
-        explain4: "3. print everything (also the opening message)."
-        regex: ^(0|1|2|3)$
-        default: 0
       seed:
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=-1, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(-1|[1-9][0-9]{5,5})$
+        default: -1 #random_seed
+      n:
+        explains: "the number of disks."
+        regex: ^(0|[1-9][0-9]{0,2}|1000)$
       start:
         explains: "initial configuration of the puzzle"
         regex:  ^(all_A|all_B|all_C|general)$
@@ -185,6 +178,13 @@ services:
         explains: "target configuration for the puzzle"
         regex:  ^(all_A|all_B|all_C|general)$
         default: all_C
+      verbose:
+        explain: sets the verbosity level of the service. The options are as follows
+        explain1: "0. print only the n configurations."
+        explain2: "1. print the seed if seed=-1 and then the configurations"
+        explain3: "2. print the seed and then the configurations"
+        regex: ^(0|1|2)$
+        default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

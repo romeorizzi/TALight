@@ -3,14 +3,19 @@ import sys, random
 sys.setrecursionlimit(1000000)
 
 
-def get_input_from(config, n):
+def get_input_from(config, n, seed = 0):
     """Assume N!=-1 if start=all_X and final=all_X"""
-    if config == "all_A":
+    if config == 'all_A':
         return 'A' * n
-    if config == "all_B":
+    if config == 'all_B':
         return 'B' * n
-    if config == "all_C":
+    if config == 'all_C':
         return 'C' * n
+    if config == 'general':
+        config = ''
+        random.seed(seed)
+        for _ in range(n):
+            config += random.choice(('A', 'B', 'C'))
     return config
 
 
