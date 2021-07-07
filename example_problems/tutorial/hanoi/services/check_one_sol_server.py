@@ -26,7 +26,7 @@ def provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=False):
         TAc.print(LANG.render_feedback("gimme-optimal", f'opt-sol: {opt_sol}'), "yellow", ["bold"])
 
     elif ENV['feedback'] == 'gimme_shorter_solution' and not user_sol_is_wrong:
-            TAc.print(LANG.render_feedback("gimme-admissible", f'adm-sol: {hanoi.getNotOptimalSol(start, final, size=len(user_sol)-1)}'), "yellow", ["bold"])
+            TAc.print(LANG.render_feedback("gimme-admissible", f'adm-sol: {hanoi.getNotOptimalSol(start, final, desired_size=len(user_sol)-1)}'), "yellow", ["bold"])
     exit(0)
 
 

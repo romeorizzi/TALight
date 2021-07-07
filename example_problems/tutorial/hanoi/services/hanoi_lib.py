@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from os import name
 import sys, random
 sys.setrecursionlimit(1000000)
 
@@ -30,7 +31,9 @@ class HanoiTowerProblem():
 
         # toddler version
         self.names = ["[Daddy  ] ", "[Toddler] "]
+        assert len(self.names[0]) == len(self.names[1])
         self.player = 0
+        self.print_player = True
 
         # clockwise version
         self.mem = dict()
@@ -47,7 +50,7 @@ class HanoiTowerProblem():
         
         elif self.version == 'toddler':
             self.player = 0
-            self.__move_classic(initial, final)
+            self.__move_classic(initial, final) #equal to toddler version
         
         elif self.version == 'clockwise':
             self.__move_clockwise(initial, final)
@@ -79,40 +82,60 @@ class HanoiTowerProblem():
         return self.n_moves_of[disk]
     
     
-    def isValid(self, state, disk, c, t):
+    def parseMove(self, move):
+        if self.version == 'toddler':
+            disk, tmp = move[len(self.names[0]):].split(": ")
+            disk = int(disk)
+            c, t = tmp.split("->")
+            if move[:len(self.names[0])] == self.names[0]:
+                p = 0
+            elif move[:len(self.names[0])] == self.names[1]:
+                p = 1
+        else:
+            disk, tmp = move.split(": ")
+            disk = int(disk)
+            c, t = tmp.split("->")
+            p = None
+        return disk, c, t, p
+
+
+    def isValid(self, state, disk, c, t, player= None, last_disk = None):
         """Assume valid state"""
         if disk > len(state):
             return False # invalid disk
         if (c != 'A' and c!= 'B' and c != 'C') or \
            (t != 'A' and t!= 'B' and t != 'C'):
            return False # invalid peg
+        if c == t:
+            return False # invalid move (x->x)
         if state[disk-1] != c:
             return False # wrong current
-        for i in range(disk-1, 0, -1):
-            if state[i-1] == state[disk-1]:
-                return False # disk is blocked
+        if self.version == 'toddler':
+            assert player != None
+            assert last_disk != None
+            if player == 1 and disk == last_disk:
+                return False # toddler can't move last_disk
         if self.version == 'clockwise':
             if t == self.__getPegFrom(self.__getNextPeg(c), c):
                 return False # peg counterclockwise
+        for i in range(disk-1, 0, -1):
+            if state[i-1] == state[disk-1]:
+                return False # disk is blocked
         return True
     
-
-    def parseMove(self, move):
-            disk, tmp = move.split(": ")
-            disk = int(disk)
-            c, t = tmp.split("->")
-            return disk, c, t
 
 
     def checkSol(self, sol, initial, final):
         state = initial
         states = {state : 1}
+        last_disk = -1
         for e in sol:
-            disk, c, t = self.parseMove(e)
-            if not self.isValid(state, disk, c, t):
+            disk, c, t, p = self.parseMove(e)
+            if not self.isValid(state, disk, c, t, p, last_disk):
                 return 'move_not_valid', e
             state = state[:disk-1] + t + state[disk:]
             states[state] = states.get(state, 0) + 1
+            last_disk = disk
         if state != final:
             return 'final_wrong', state
         # check loops
@@ -122,25 +145,20 @@ class HanoiTowerProblem():
         return 'admissible', None
 
 
-    def getNotOptimalSol(self, initial, final, size):
-        if self.version == 'classic' or self.version == 'toddler':
-            tmp = self.version
-            self.version = 'classic'
-            self.getMovesList(initial, final)
-            self.version = tmp
-        elif self.version == 'clockwise':
-            self.getMovesList(initial, final)
-        
-        sol = self.moves.copy()
-        diff = size - len(sol)
+    def getNotOptimalSol(self, initial, final, desired_size):
+        self.getMovesList(initial, final)
+        sol = self.moves
+        diff = desired_size - len(sol)
         if diff <= 0:
             return sol
 
         i = 0
-        while i < len(sol):
-            disk, c, t = self.parseMove(sol[i])
+        state = initial #Note: without [None] + the i = disk-1
+        while diff > 0:
+            disk, c, t, p = self.parseMove(sol[i])
+            state = state[:disk-1] + t + state[disk:]
             if disk == 1 and random.randint(1,10) > 2:
-                if self.version == 'classic' or self.version == 'toddler':
+                if self.version == 'classic':
                     s = self.__getPegFrom(c, t)
                     sol[i] = f"{disk}: {c}->{s}"
                     sol.insert(i+1, f"{disk}: {s}->{t}")
@@ -148,6 +166,18 @@ class HanoiTowerProblem():
                     if diff <= 0:
                         break
                     # deliberately not incrementing by 1+1 to add randomness
+                if self.version == 'toddler':
+                    s = self.__getPegFrom(c, t)
+                    x = state[disk] #this is the state of disk+1
+                    y = self.__getPegFrom(x, s)
+                    sol[i] = f"{self.names[0]}{disk}: {c}->{s}"
+                    sol.insert(i+1, f"{self.names[0]}{disk+1}: {x}->{y}")
+                    sol.insert(i+2, f"{self.names[0]}{disk+1}: {y}->{x}")
+                    sol.insert(i+3, f"{self.names[0]}{disk}: {s}->{t}")
+                    diff = diff - 3
+                    if diff < 3:
+                        break
+                    # deliberately not incrementing by 1+3 to add randomness
                 elif self.version == 'clockwise':
                     s = self.__getNextPeg(t)
                     sol.insert(i+1, f"{disk}: {t}->{s}")
@@ -155,20 +185,18 @@ class HanoiTowerProblem():
                     sol.insert(i+3, f"{disk}: {c}->{t}")
                     diff = diff - 3
                     # deliberately not incrementing by 1+3 to add randomness
-                    if diff <= 3:
+                    if diff < 3:
                         break
             i = i + 1
+            if i >= len(sol):
+                i = 0
+                state = initial #Note: without [None] + the i = disk-1
 
-        
-        for _ in range(diff):
-            move_index = random.randint(0, len(sol)-1)
-            disk, c, t = self.parseMove(sol[move_index])
-            sol.insert(move_index, f"{disk}: {c}->{c}")
         
         if self.version == "toddler":
             p = 0
             for i in range(len(sol)):
-                sol[i] = self.names[p] + sol[i]
+                sol[i] = self.names[p] + sol[i][len(self.names[0]):]
                 p = (p + 1) % 2
         return sol
 
@@ -207,7 +235,10 @@ class HanoiTowerProblem():
             self.moves.append(f"{disk}: {current}->{target}")
 
         elif self.version == 'toddler':
-            self.moves.append(f"[{self.names[self.player]}]{disk}: {current}->{target}")
+            s = ""
+            if self.print_player:
+                s = f'{self.names[self.player]}'
+            self.moves.append(f"{s}{disk}: {current}->{target}")
             self.player = (self.player + 1) % 2
 
         elif self.version == 'clockwise':
@@ -319,6 +350,8 @@ class HanoiTowerProblem():
 if __name__ == "__main__":
     # CLASSIC
     h_classic = HanoiTowerProblem(version='classic')
+    assert h_classic.parseMove('130: A->B') == (130, 'A', 'B', None)
+
     assert h_classic.isValid('AA', 2, 'A', 'B') == False
     assert h_classic.isValid('AA', 1, 'A', 'B') == True
     assert h_classic.isValid('AA', 1, 'A', 'D') == False
@@ -348,12 +381,38 @@ if __name__ == "__main__":
     
     # TODDLER
     h_toddler = HanoiTowerProblem(version='toddler')
+    assert h_toddler.parseMove('[Daddy  ] 130: A->B') == (130, 'A', 'B', 0)
+    assert h_toddler.parseMove('[Daddy  ] 130: A->B') != (130, 'A', 'B', 1)
+    assert h_toddler.parseMove('[Toddler] 130: A->B') != (130, 'A', 'B', 0)
+    assert h_toddler.parseMove('[Toddler] 130: A->B') == (130, 'A', 'B', 1)
+
+    assert h_toddler.isValid('AA', 2, 'A', 'B', 1, 1) == False
+    assert h_toddler.isValid('AA', 1, 'A', 'B', 1, 2) == True
+    assert h_toddler.isValid('AA', 1, 'A', 'B', 1, 1) == False
+    assert h_toddler.isValid('AA', 1, 'A', 'B', 0, 1) == True
+    assert h_toddler.isValid('AA', 1, 'A', 'D', 1, 2) == False
+    assert h_toddler.isValid('AA', 1, 'C', 'B', 1, 2) == False
+
     assert h_toddler.getMovesList('AA', 'AC') == \
-        ['[[Daddy  ] ]1: A->B', '[[Toddler] ]2: A->C', '[[Daddy  ] ]1: B->A']
+        ['[Daddy  ] 1: A->B', '[Toddler] 2: A->C', '[Daddy  ] 1: B->A']
 
     assert h_toddler.getMovesList('AAA', 'ABC') == \
-        ['[[Daddy  ] ]1: A->C', '[[Toddler] ]2: A->B', '[[Daddy  ] ]1: C->B', '[[Toddler] ]3: A->C', '[[Daddy  ] ]1: B->A']
+        ['[Daddy  ] 1: A->C', '[Toddler] 2: A->B', '[Daddy  ] 1: C->B', '[Toddler] 3: A->C', '[Daddy  ] 1: B->A']
 
+    initial = 'AA'
+    final = 'CC'
+    opt_sol = h_toddler.getMovesList(initial, final)
+    assert h_toddler.checkSol(opt_sol, initial, final) == ('admissible', None)
+
+    for _ in range(1000):
+        try:
+            not_opt_sol = h_toddler.getNotOptimalSol(initial, final, 10)
+            adm, info = h_toddler.checkSol(not_opt_sol, initial, final) 
+            assert adm == 'admissible'
+        except:
+            print("ERR")
+            print(not_opt_sol)
+            exit(0)
 
     # CLOCKWISE
     h_clockwise = HanoiTowerProblem(version='clockwise')
@@ -382,15 +441,17 @@ if __name__ == "__main__":
 
 
     # CHECK CORRECTNESS MIN_MOVES OPTIMIZED
-    seed = 13000
-    num_tests = 10
-    n_max = 10
-    for h in [h_classic, h_toddler, h_clockwise]:
-        for t in range(1, num_tests + 1):
-            for n in range(1, n_max + 1):
-                initial = get_input_from('general', n, seed, 1)
-                final = get_input_from('general', n,  seed, 2)
-                fast = h.getMinMoves(initial, final, True)
-                slow = h.getMinMoves(initial, final, False)
-                assert fast == slow
-            print(f"finish test {t} on {h.version}")
+    test_enable = False
+    if test_enable:
+        seed = 13000
+        num_tests = 10
+        n_max = 10
+        for h in [h_classic, h_toddler, h_clockwise]:
+            for t in range(1, num_tests + 1):
+                for n in range(1, n_max + 1):
+                    initial = get_input_from('general', n, seed, 1)
+                    final = get_input_from('general', n,  seed, 2)
+                    fast = h.getMinMoves(initial, final, True)
+                    slow = h.getMinMoves(initial, final, False)
+                    assert fast == slow
+                print(f"finish test {t} on {h.version}")
