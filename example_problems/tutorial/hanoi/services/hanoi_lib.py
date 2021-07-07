@@ -31,6 +31,9 @@ class HanoiTowerProblem():
         # toddler version
         self.names = ["[Daddy  ] ", "[Toddler] "]
         self.player = 0
+
+        # clockwise version
+        self.mem = dict()
     
 
     # PUBLIC INTERFACE
@@ -62,6 +65,7 @@ class HanoiTowerProblem():
                 return self.__getMinMoves_classic(initial, final)
             
             if self.version == 'clockwise':
+                # self.mem.clear()
                 return self.__getMinMoves_clockwise(initial, final)
         else:
             self.getMovesList(initial, final)
@@ -269,17 +273,41 @@ class HanoiTowerProblem():
             else:
                 intermediate1 = final[-1] * (disk - 1)
                 intermediate2 = initial[-1] * (disk - 1)
-                self.move(initial[:-1], intermediate1)
+                self.__move_clockwise(initial[:-1], intermediate1)
                 self.__moveDisk(disk, initial[-1], next_peg)
-                self.move(intermediate1, intermediate2)
+                self.__move_clockwise(intermediate1, intermediate2)
                 self.__moveDisk(disk, next_peg, final[-1])
-                self.move(intermediate2, final[:-1])
+                self.__move_clockwise(intermediate2, final[:-1])
 
 
     def __getMinMoves_clockwise(self, initial, final):
-        self.getMovesList(initial, final)
-        return sum(self.n_moves_of)
-
+        """I assume: len(initial) == len(final). Move all disks from initial configuration to final configuration"""
+        disk = len(initial)
+        if disk <= 0:
+            return 0
+        if (initial, final) in self.mem:
+            return self.mem[(initial, final)]
+        else:
+            sum = 0
+            if initial[-1] == final[-1]:
+                sum += self.__getMinMoves_clockwise(initial[:-1], final[:-1])
+            else:
+                next_peg = self.__getNextPeg(initial[-1])
+                if final[-1] == next_peg:
+                    intermediate = self.__getPegFrom(initial[-1], final[-1]) * (disk - 1)
+                    sum += self.__getMinMoves_clockwise(initial[:-1], intermediate)
+                    sum += 1
+                    sum += self.__getMinMoves_clockwise(intermediate, final[:-1])
+                else:
+                    intermediate1 = final[-1] * (disk - 1)
+                    intermediate2 = initial[-1] * (disk - 1)
+                    sum += self.__getMinMoves_clockwise(initial[:-1], intermediate1)
+                    sum += 1
+                    sum += self.__getMinMoves_clockwise(intermediate1, intermediate2)
+                    sum += 1
+                    sum += self.__getMinMoves_clockwise(intermediate2, final[:-1])
+            self.mem[(initial, final)] = sum
+            return sum
 
 
 if __name__ == "__main__":
@@ -352,7 +380,7 @@ if __name__ == "__main__":
     num_tests = 1000
     n_max = 10
     for h in [h_classic, h_toddler, h_clockwise]:
-        for t in range(num_tests):
+        for t in range(1, num_tests + 1):
             for n in range(1, n_max + 1):
                 initial = get_input_from('general', n, seed, 1)
                 final = get_input_from('general', n,  seed, 2)
