@@ -97,13 +97,18 @@ class HanoiTowerProblem():
         return True
     
 
+    def parseMove(self, move):
+            disk, tmp = move.split(": ")
+            disk = int(disk)
+            c, t = tmp.split("->")
+            return disk, c, t
+
+
     def checkSol(self, sol, initial, final):
         state = initial
         states = {state : 1}
         for e in sol:
-            disk, tmp = e.split(": ")
-            disk = int(disk)
-            c, t = tmp.split("->")
+            disk, c, t = self.parseMove(e)
             if not self.isValid(state, disk, c, t):
                 return 'move_not_valid', e
             state = state[:disk-1] + t + state[disk:]
@@ -133,10 +138,8 @@ class HanoiTowerProblem():
 
         i = 0
         while i < len(sol):
-            disk, tmp = sol[i].split(": ")
-            disk = int(disk)
+            disk, c, t = self.parseMove(sol[i])
             if disk == 1 and random.randint(1,10) > 2:
-                c, t = tmp.split("->")
                 if self.version == 'classic' or self.version == 'toddler':
                     s = self.__getPegFrom(c, t)
                     sol[i] = f"{disk}: {c}->{s}"
@@ -159,8 +162,7 @@ class HanoiTowerProblem():
         
         for _ in range(diff):
             move_index = random.randint(0, len(sol)-1)
-            disk, tmp = sol[move_index].split(": ")
-            c, t = tmp.split("->")
+            disk, c, t = self.parseMove(sol[move_index])
             sol.insert(move_index, f"{disk}: {c}->{c}")
         
         if self.version == "toddler":
@@ -169,6 +171,10 @@ class HanoiTowerProblem():
                 sol[i] = self.names[p] + sol[i]
                 p = (p + 1) % 2
         return sol
+
+
+    def getAvailableMovesIn(self, state):
+        return ["1:A->A", "1:B->B"]
 
 
     # PRIVATE ALL
@@ -377,7 +383,7 @@ if __name__ == "__main__":
 
     # CHECK CORRECTNESS MIN_MOVES OPTIMIZED
     seed = 13000
-    num_tests = 1000
+    num_tests = 10
     n_max = 10
     for h in [h_classic, h_toddler, h_clockwise]:
         for t in range(1, num_tests + 1):

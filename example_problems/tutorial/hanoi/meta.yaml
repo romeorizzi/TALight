@@ -195,6 +195,35 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
 
+
+  play_like:
+    explains: "this service plays with you like Daddy or like a Toddler. The Taddy start always first and make always the optimal move. The Toddler does not make invalid moves."
+    evaluator: [python, services/play_like_server.py]
+    args:
+      ai_role:
+        regex:  ^(toddler|daddy)$
+      start:
+        explains: "initial configuration of the puzzle"
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_A
+      final:
+        explains: "target configuration for the puzzle"
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_C
+      n:
+        explains: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
+        regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
+        default: -1 #implicit
+      feedback:
+        regex: ^(minimal|gimme_moves_available)$
+        default: minimal
+        explain: the options are as follows
+        explain1: -minimal= provide the minimum possible amount of feedback.
+        explain2: -gimme_moves_available= offers all moves available for ai.
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
 #eval_play: (come goal il problm solver deve potersi accontntare di realizzae un bot che dica: "move disk 1, move disk 2, move disk 1" snza dire da dove a dove)
 #eval_toddler:
 
