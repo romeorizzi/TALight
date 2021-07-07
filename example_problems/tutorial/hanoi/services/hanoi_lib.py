@@ -221,13 +221,18 @@ class HanoiTowerProblem():
             self.__move_classic(intermediate, final[:-1])
 
 
-    def __getMinMovesTowerInto(self, peg, final):
-        """Return the minimum moves for move the tower in peg to final configuration"""
+    def __getMinMovesTowerInto(self, peg, config):
+        """Return the minimum moves for move the tower in peg to the specified configuration"""
         counter = 0
         current = peg
-        for i in range(len(final), 0, -1):
-            if (current != final[i - 1]):
-                sub_target = self.__getPegFrom(current, final[i-1])
+        for i in range(len(config), 0, -1):
+            if (current != config[i - 1]):
+                sub_target = self.__getPegFrom(current, config[i-1])
+                # Explain:
+                # move_tower(i - 1, current, sub_target, final[i-1])
+                # -> min_moves = 2 ** (i-1) - 1
+                # move_disk(i, current, final[i-1])
+                # -> min_moves = 1
                 counter += 2 ** (i - 1)
                 current = sub_target
         return counter
@@ -241,9 +246,9 @@ class HanoiTowerProblem():
         if initial[-1] == final[-1]:
             return self.__getMinMoves_classic(initial[:-1], final[:-1])
         else:
-            intermediate = self.__getPegFrom(initial[-1], final[-1])
-            return self.__getMinMovesTowerInto(intermediate, initial[:-1]) + 1 + \
-                    self.__getMinMovesTowerInto(intermediate, final[:-1])
+            aux_peg = self.__getPegFrom(initial[-1], final[-1])
+            return self.__getMinMovesTowerInto(aux_peg, initial[:-1]) + 1 + \
+                    self.__getMinMovesTowerInto(aux_peg, final[:-1])
 
 
     # PRIVATE CLOCKWISE
@@ -262,12 +267,13 @@ class HanoiTowerProblem():
                 self.__moveDisk(disk, initial[-1], final[-1])
                 self.__move_clockwise(intermediate, final[:-1])
             else:
-                intermediate = final[-1] * (disk - 1)
-                self.__move_clockwise(initial[:-1], intermediate)
+                intermediate1 = final[-1] * (disk - 1)
+                intermediate2 = initial[-1] * (disk - 1)
+                self.move(initial[:-1], intermediate1)
                 self.__moveDisk(disk, initial[-1], next_peg)
-                self.__move_clockwise(intermediate, initial[:-1])
+                self.move(intermediate1, intermediate2)
                 self.__moveDisk(disk, next_peg, final[-1])
-                self.__move_clockwise(initial[:-1], final[:-1])
+                self.move(intermediate2, final[:-1])
 
 
     def __getMinMoves_clockwise(self, initial, final):
