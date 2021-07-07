@@ -81,6 +81,8 @@ class HanoiTowerProblem():
     
     def isValid(self, state, disk, c, t):
         """Assume valid state"""
+        if disk > len(state):
+            return False # invalid disk
         if (c != 'A' and c!= 'B' and c != 'C') or \
            (t != 'A' and t!= 'B' and t != 'C'):
            return False # invalid peg
@@ -119,12 +121,10 @@ class HanoiTowerProblem():
         if self.version == 'classic' or self.version == 'toddler':
             tmp = self.version
             self.version = 'classic'
-            self.moves.clear()
-            self.__move_classic(initial, final)
+            self.getMovesList(initial, final)
             self.version = tmp
         elif self.version == 'clockwise':
-            self.moves.clear()
-            self.__move_clockwise(initial, final)
+            self.getMovesList(initial, final)
         
         sol = self.moves.copy()
         diff = size - len(sol)

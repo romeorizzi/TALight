@@ -34,14 +34,22 @@ wait_start()
 # CASE: AA -> CC
 # move_tower(2, 'A', 'C', 'B')
 
+# CASE: AA -> CC simple-walk not-optimal
+print('1: A->C')
+print('1: C->B')
+print('2: A->C')
+print('1: B->A')
+print('1: A->C')
+
+
 # CASE: ABC -> CBA
-print('1: A->B')
-print('3: C->A')
-print('1: B->C')
-print('1: C->C')
-print('1: C->C')
-print('1: C->C')
-print('1: C->C')
+# print('1: A->B')
+# print('3: C->A')
+# print('1: B->C')
+# print('1: C->C')
+# print('1: C->C')
+# print('1: C->C')
+# print('1: C->C')
 ##############################
 print("end")
 wait_end() 

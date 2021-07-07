@@ -87,7 +87,7 @@ if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
             if user_sol < opt_sol:
                 TAc.print(LANG.render_feedback("use_check_lower_bounds", f'use check_lower_bounds service'), "red")
             else:
-                TAc.print(LANG.render_feedback("certificate", f'this is the certificate:'), "red")
+                TAc.print(LANG.render_feedback("certificate", f'this is a certificate of size {user_sol-1}:'), "red")
                 for e in hanoi.getNotOptimalSol(start, final, size=(user_sol-1)):
                     TAc.print(LANG.render_feedback("certificate_line", f'{e}'), "red")
 
