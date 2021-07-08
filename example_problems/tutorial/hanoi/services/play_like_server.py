@@ -58,102 +58,78 @@ TAc.print(LANG.render_feedback("format_moves", f'# Use format: N:FROM->TO (examp
 TAc.print(LANG.render_feedback("start_game", f'Start the Game'), "yellow", ["bold"])
 
 
-def startTurn(turn, player):
-    TAc.print(LANG.render_feedback("turn", f'\n#-----------\n# turn:   {turn}'), "blue", ["bold"])
+
+# PLAY GAME
+# define global vars
+state = start
+turn = 0
+player = 0
+last_disk = 1
+
+
+# define global functions
+def start_turn():
+    global hanoi, turn, player
+    TAc.print(LANG.render_feedback("turn", f'\n#-----------\n# turn:   {turn+1}'), "blue", ["bold"])
     TAc.print(LANG.render_feedback("player", f'# player: {hanoi.names[player]}'), "blue", ["reverse"])
     TAc.print(LANG.render_feedback("state", f'# state:  {state}'), "blue", ["reverse"])
 
 
-# PLAY GAME
-if ENV['role'] == 'toddler':
-    opt_moves = hanoi.getMovesList(start, final)
-    state = start
-    turn = 1
-    n_move = 0
-    player = 0
-    last_disk = 1
-
-    while state != final:
-        if player == 0: # Daddy
-            startTurn(turn, player)
-            disk, c, t, _ = hanoi.parseMove(opt_moves[n_move])
-            ai_move = hanoi.getStdMove(opt_moves[n_move])
-            TAc.print(LANG.render_feedback("ai_move", f'{hanoi.getStdMove(ai_move)}'), "green", ["bold"])
-            last_disk = disk
-            state = state[:disk-1] + t + state[disk:]
-            turn += 1
-            n_move += 1
-            player = (player + 1) % 2
-
-        else: # Toddler
-            startTurn(turn, player)
-            if ENV['help'] == 'gimme_moves_available':
-                TAc.print(LANG.render_feedback("help", 'This are the moves available:'), "yellow", ["bold"])
-                for e in hanoi.getAvailableMovesIn(state, player, last_disk):
-                    TAc.print(LANG.render_feedback("help-line", f'{hanoi.getStdMove(e)}'), "yellow", ["reverse"])
-            # get user move
-            user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO. Use 'end' to quit", exceptions={"end"}, TAc=TAc)
-            if user_move == 'end':
-                break
-            # parse user move
-            user_move = hanoi.names[player] + "|" + user_move
-            disk, c, t, _ = hanoi.parseMove(user_move)
-            # check correctness of move
-            code = hanoi.checkMove(state, disk, c, t, player, last_disk)
-            if code == 0:
-                last_disk = disk
-                state = state[:disk-1] + t + state[disk:]
-                n_move += 1
-                turn += 1
-                player = (player + 1) % 2
-            else:
-                TAc.print(LANG.render_feedback("invalid_move", f'{get_description_of(code)}\nRetry...'), "red", ["bold"])
+def ai_turn(move):
+    global hanoi, state, turn, player, last_disk
+    disk, c, t, _ = hanoi.parseMove(move)
+    TAc.print(LANG.render_feedback("ai_move", f'{hanoi.getStdMove(move)}'), "green", ["bold"])
+    last_disk = disk
+    state = state[:disk-1] + t + state[disk:]
+    turn += 1
+    player = (player + 1) % 2
 
 
-else:
-    state = start
-    turn = 1
-    n_move = 0
-    player = 0
-    last_disk = 1
-
-    while state != final:
-        available_moves = hanoi.getAvailableMovesIn(state, player, last_disk)
-
-        if player == 1: # Toddler
-            startTurn(turn, player)
-            ai_move = random.choice(available_moves)
-            disk, c, t, _ = hanoi.parseMove(ai_move)
-            TAc.print(LANG.render_feedback("ai_move", f'{hanoi.getStdMove(ai_move)}'), "green", ["bold"])
-            last_disk = disk
-            state = state[:disk-1] + t + state[disk:]
-            turn += 1
-            n_move += 1
-            player = (player + 1) % 2
-
-        else: # Daddy
-            startTurn(turn, player)
-            if ENV['help'] == 'gimme_moves_available':
-                TAc.print(LANG.render_feedback("help", 'This are the moves available:'), "yellow", ["bold"])
-                for e in available_moves:
-                    TAc.print(LANG.render_feedback("help-line", f'{hanoi.getStdMove(e)}'), "yellow", ["reverse"])
-            # get user move
-            user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO. Use 'end' to quit", exceptions={"end"}, TAc=TAc)
-            if user_move == 'end':
-                break
-            # parse user move
-            user_move = hanoi.names[player] + "|" + user_move
-            disk, c, t, _ = hanoi.parseMove(user_move)
-            # check correctness of move
-            code = hanoi.checkMove(state, disk, c, t, player, last_disk)
-            if code == 0:
-                last_disk = disk
-                state = state[:disk-1] + t + state[disk:]
-                n_move += 1
-                turn += 1
-                player = (player + 1) % 2
-            else:
-                TAc.print(LANG.render_feedback("invalid_move", f'{get_description_of(code)}\nRetry...'), "red", ["bold"])
+def user_turn(available_moves):
+    global hanoi, state, turn, player, last_disk
+    if ENV['help'] == 'gimme_moves_available':
+        TAc.print(LANG.render_feedback("help", 'This are the moves available:'), "yellow", ["bold"])
+        for e in available_moves:
+            TAc.print(LANG.render_feedback("help-line", f'{hanoi.getStdMove(e)}'), "yellow", ["reverse"])
+    # get user move
+    user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO. Use 'end' to quit", exceptions={"end"}, TAc=TAc)
+    if user_move == 'end':
+        end_game()
+    # parse user move
+    user_move = hanoi.names[player] + "|" + user_move
+    disk, c, t, _ = hanoi.parseMove(user_move)
+    # check correctness of move
+    code = hanoi.checkMove(state, disk, c, t, player, last_disk)
+    if code == 0:
+        last_disk = disk
+        state = state[:disk-1] + t + state[disk:]
+        turn += 1
+        player = (player + 1) % 2
+    else:
+        TAc.print(LANG.render_feedback("invalid_move", f'{get_description_of(code)}\nRetry...'), "red", ["bold"])
 
 
-exit(0)
+def end_game():
+    TAc.print(LANG.render_feedback("end-game", '\nEnd Game'), "blue", ["bold"])
+    exit(0)
+
+
+# play the game
+opt_moves = hanoi.getMovesList(start, final)
+while state != final:
+    start_turn()
+    available_moves = hanoi.getAvailableMovesIn(state, player, last_disk)
+    
+    if ENV['role'] == 'daddy' and player == 1:
+        # AI play like toddler and is the Toddler turn
+        ai_turn(move=random.choice(available_moves)) 
+    
+    elif ENV['role'] == 'toddler' and player == 0:
+        # AI play like Daddy and is the Daddy turn
+        ai_turn(move=opt_moves[turn])                
+
+    else:
+        # Other case
+        user_turn(available_moves)
+
+end_game()
