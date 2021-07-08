@@ -63,6 +63,12 @@ class HanoiTowerProblem():
     
 
     # PUBLIC INTERFACE
+    def getStdMove(self, move):
+        if self.version == 'toddler':
+            move = move[self.len_names+1:]
+        return move
+
+    
     def getMovesList(self, initial, final):
         assert len(initial) == len(final)
         self.moves.clear()
@@ -73,7 +79,7 @@ class HanoiTowerProblem():
         
         elif self.version == 'toddler':
             self.player = 0
-            self.__move_classic(initial, final) #equal to toddler version
+            self.__move_toddler(initial, final) #equal to toddler version
         
         elif self.version == 'clockwise':
             self.__move_clockwise(initial, final)
@@ -88,7 +94,7 @@ class HanoiTowerProblem():
                 return self.__getMinMoves_classic(initial, final)
             
             if self.version == 'toddler':
-                return self.__getMinMoves_classic(initial, final)
+                return self.__getMinMoves_toddler(initial, final)
             
             if self.version == 'clockwise':
                 # self.mem.clear()
@@ -219,7 +225,7 @@ class HanoiTowerProblem():
 
             p = 0
             for i in range(len(sol)):
-                sol[i] = self.names[p] + sol[i][self.len_names:]
+                sol[i] = self.names[p] + '|' + self.getStdMove(sol[i])
                 p = (p + 1) % 2
             return sol
 
@@ -370,6 +376,15 @@ class HanoiTowerProblem():
             aux_peg = self.__getPegFrom(initial[-1], final[-1])
             return self.__getMinMovesTowerInto(aux_peg, initial[:-1]) + 1 + \
                     self.__getMinMovesTowerInto(aux_peg, final[:-1])
+
+
+    # PRIVATE TODDLER
+    def __move_toddler(self, initial, final):
+        self.__move_classic(initial, final)
+  
+
+    def __getMinMoves_toddler(self, initial, final):
+        return self.__getMinMoves_classic(initial, final)
 
 
     # PRIVATE CLOCKWISE

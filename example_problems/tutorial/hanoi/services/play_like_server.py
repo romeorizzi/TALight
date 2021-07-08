@@ -67,19 +67,18 @@ def startTurn(turn, player):
 # PLAY GAME
 if ENV['role'] == 'toddler':
     opt_moves = hanoi.getMovesList(start, final)
-    print(f"#{opt_moves}")
     state = start
     turn = 1
     n_move = 0
     player = 0
-    last_disk = -1
-
+    last_disk = 1
 
     while state != final:
         if player == 0: # Daddy
             startTurn(turn, player)
             disk, c, t, _ = hanoi.parseMove(opt_moves[n_move])
-            TAc.print(LANG.render_feedback("ai_move", f'{opt_moves[n_move][hanoi.len_names+1:]}'), "green", ["bold"])
+            ai_move = hanoi.getStdMove(opt_moves[n_move])
+            TAc.print(LANG.render_feedback("ai_move", f'{hanoi.getStdMove(ai_move)}'), "green", ["bold"])
             last_disk = disk
             state = state[:disk-1] + t + state[disk:]
             turn += 1
@@ -91,7 +90,53 @@ if ENV['role'] == 'toddler':
             if ENV['help'] == 'gimme_moves_available':
                 TAc.print(LANG.render_feedback("help", 'This are the moves available:'), "yellow", ["bold"])
                 for e in hanoi.getAvailableMovesIn(state, player, last_disk):
-                    TAc.print(LANG.render_feedback("help-line", f'{e[hanoi.len_names+1:]}'), "yellow", ["reverse"])
+                    TAc.print(LANG.render_feedback("help-line", f'{hanoi.getStdMove(e)}'), "yellow", ["reverse"])
+            # get user move
+            user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO. Use 'end' to quit", exceptions={"end"}, TAc=TAc)
+            if user_move == 'end':
+                break
+            # parse user move
+            user_move = hanoi.names[player] + "|" + user_move
+            disk, c, t, _ = hanoi.parseMove(user_move)
+            # check correctness of move
+            code = hanoi.checkMove(state, disk, c, t, player, last_disk)
+            if code == 0:
+                last_disk = disk
+                state = state[:disk-1] + t + state[disk:]
+                n_move += 1
+                turn += 1
+                player = (player + 1) % 2
+            else:
+                TAc.print(LANG.render_feedback("invalid_move", f'{get_description_of(code)}\nRetry...'), "red", ["bold"])
+
+
+else:
+    state = start
+    turn = 1
+    n_move = 0
+    player = 0
+    last_disk = 1
+
+    while state != final:
+        available_moves = hanoi.getAvailableMovesIn(state, player, last_disk)
+
+        if player == 1: # Toddler
+            startTurn(turn, player)
+            ai_move = random.choice(available_moves)
+            disk, c, t, _ = hanoi.parseMove(ai_move)
+            TAc.print(LANG.render_feedback("ai_move", f'{hanoi.getStdMove(ai_move)}'), "green", ["bold"])
+            last_disk = disk
+            state = state[:disk-1] + t + state[disk:]
+            turn += 1
+            n_move += 1
+            player = (player + 1) % 2
+
+        else: # Daddy
+            startTurn(turn, player)
+            if ENV['help'] == 'gimme_moves_available':
+                TAc.print(LANG.render_feedback("help", 'This are the moves available:'), "yellow", ["bold"])
+                for e in available_moves:
+                    TAc.print(LANG.render_feedback("help-line", f'{hanoi.getStdMove(e)}'), "yellow", ["reverse"])
             # get user move
             user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO. Use 'end' to quit", exceptions={"end"}, TAc=TAc)
             if user_move == 'end':
