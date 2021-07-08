@@ -151,22 +151,21 @@ class HanoiTowerProblem():
         diff = desired_size - len(sol)
         if diff <= 0:
             return sol
-
+        
         i = 0
-        state = initial #Note: without [None] + the i = disk-1
-        while diff > 0:
-            disk, c, t, p = self.parseMove(sol[i])
-            state = state[:disk-1] + t + state[disk:]
-            if disk == 1 and random.randint(1,10) > 2:
-                if self.version == 'classic':
-                    s = self.__getPegFrom(c, t)
-                    sol[i] = f"{disk}: {c}->{s}"
-                    sol.insert(i+1, f"{disk}: {s}->{t}")
-                    diff = diff - 1
-                    if diff <= 0:
-                        break
-                    # deliberately not incrementing by 1+1 to add randomness
-                if self.version == 'toddler':
+        if self.version == 'toddler':
+            n_moves_t = len(sol) // 2           # toddler
+            n_moves_d = len(sol) - n_moves_t    # daddy
+            # n_moves_t + 3(n_upgrades) + 1(n_moves_d - n_upgrades) <= desired_size
+            # -> n_upgrades <= diff / 2
+            n_upgrades = diff // 2 if (diff // 2) < n_moves_d else n_moves_d
+            i_targets = random.sample(range(0, len(sol), 2), n_upgrades)
+
+            state = initial #Note: without [None] + the i = disk-1
+            while i < len(sol):
+                disk, c, t, p = self.parseMove(sol[i])
+                state = state[:disk-1] + t + state[disk:]
+                if i in i_targets:
                     s = self.__getPegFrom(c, t)
                     x = state[disk] #this is the state of disk+1
                     y = self.__getPegFrom(x, s)
@@ -174,31 +173,41 @@ class HanoiTowerProblem():
                     sol.insert(i+1, f"{self.names[0]}{disk+1}: {x}->{y}")
                     sol.insert(i+2, f"{self.names[0]}{disk+1}: {y}->{x}")
                     sol.insert(i+3, f"{self.names[0]}{disk}: {s}->{t}")
-                    diff = diff - 3
-                    if diff < 3:
-                        break
-                    # deliberately not incrementing by 1+3 to add randomness
-                elif self.version == 'clockwise':
-                    s = self.__getNextPeg(t)
-                    sol.insert(i+1, f"{disk}: {t}->{s}")
-                    sol.insert(i+2, f"{disk}: {s}->{c}")
-                    sol.insert(i+3, f"{disk}: {c}->{t}")
-                    diff = diff - 3
-                    # deliberately not incrementing by 1+3 to add randomness
-                    if diff < 3:
-                        break
-            i = i + 1
-            if i >= len(sol):
-                i = 0
-                state = initial #Note: without [None] + the i = disk-1
+                    i += 3
+                else:
+                    i += 1
 
-        
-        if self.version == "toddler":
             p = 0
             for i in range(len(sol)):
                 sol[i] = self.names[p] + sol[i][len(self.names[0]):]
                 p = (p + 1) % 2
-        return sol
+            return sol
+
+        else:
+            while diff > 0:
+                disk, c, t, p = self.parseMove(sol[i])
+                if disk == 1 and random.randint(1,10) > 2:
+                    if self.version == 'classic':
+                        s = self.__getPegFrom(c, t)
+                        sol[i] = f"{disk}: {c}->{s}"
+                        sol.insert(i+1, f"{disk}: {s}->{t}")
+                        diff = diff - 1
+                        if diff <= 0:
+                            break
+                        # deliberately not incrementing by 1+1 to add randomness
+                elif self.version == 'clockwise':
+                        s = self.__getNextPeg(t)
+                        sol.insert(i+1, f"{disk}: {t}->{s}")
+                        sol.insert(i+2, f"{disk}: {s}->{c}")
+                        sol.insert(i+3, f"{disk}: {c}->{t}")
+                        diff = diff - 3
+                        # deliberately not incrementing by 1+3 to add randomness
+                        if diff < 3:
+                            break
+                i = i + 1
+                if i >= len(sol):
+                    i = 0
+            return sol
 
 
     def getAvailableMovesIn(self, state):
@@ -409,9 +418,10 @@ if __name__ == "__main__":
             not_opt_sol = h_toddler.getNotOptimalSol(initial, final, 10)
             adm, info = h_toddler.checkSol(not_opt_sol, initial, final) 
             assert adm == 'admissible'
-        except:
+        except AssertionError:
             print("ERR")
-            print(not_opt_sol)
+            for e in not_opt_sol:
+                print(e)
             exit(0)
 
     # CLOCKWISE
