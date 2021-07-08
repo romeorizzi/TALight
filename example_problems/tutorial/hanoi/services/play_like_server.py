@@ -12,10 +12,11 @@ from hanoi_lib import get_input_from, HanoiTowerProblem, get_description_of
 problem="hanoi"
 service="play_like"
 args_list = [
-    ('ai_role',str),
+    ('role',str),
     ('start', str),
     ('final', str),
     ('n',int),
+    ('help', str),
     ('lang',str),
     ('ISATTY',bool),
 ]
@@ -64,7 +65,7 @@ def startTurn(turn, player):
 
 
 # PLAY GAME
-if ENV['ai_role'] == 'daddy':
+if ENV['role'] == 'toddler':
     opt_moves = hanoi.getMovesList(start, final)
     print(f"#{opt_moves}")
     state = start
@@ -87,8 +88,12 @@ if ENV['ai_role'] == 'daddy':
 
         else: # Toddler
             startTurn(turn, player)
+            if ENV['help'] == 'gimme_moves_available':
+                TAc.print(LANG.render_feedback("help", 'This are the moves available:'), "yellow", ["bold"])
+                for e in hanoi.getAvailableMovesIn(state, player, last_disk):
+                    TAc.print(LANG.render_feedback("help-line", f'{e[hanoi.len_names+1:]}'), "yellow", ["reverse"])
             # get user move
-            user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO", exceptions={"end"}, TAc=TAc)
+            user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO. Use 'end' to quit", exceptions={"end"}, TAc=TAc)
             if user_move == 'end':
                 break
             # parse user move

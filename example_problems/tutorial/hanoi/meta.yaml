@@ -195,12 +195,12 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
 
-
   play_like:
     explains: "this service plays with you like Daddy or like a Toddler. The Taddy start always first and make always the optimal move. The Toddler does not make invalid moves."
     evaluator: [python, services/play_like_server.py]
     args:
-      ai_role:
+      role:
+        explains: "your role."
         regex:  ^(toddler|daddy)$
       start:
         explains: "initial configuration of the puzzle"
@@ -214,7 +214,7 @@ services:
         explains: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
         regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
         default: -1 #implicit
-      feedback:
+      help:
         regex: ^(minimal|gimme_moves_available)$
         default: minimal
         explain: the options are as follows
