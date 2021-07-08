@@ -5,7 +5,7 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import get_input_from, HanoiTowerProblem
+from hanoi_lib import get_input_from, HanoiTowerProblem, get_description_of
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -48,7 +48,7 @@ if len(start) != len(final):
     exit(0)
 
 # Init Hanoi Tower
-hanoi = HanoiTowerProblem('classic')
+hanoi = HanoiTowerProblem('toddler')
 
 # Start the game
 TAc.print(LANG.render_feedback("start_config", f'# Start config: {start}'), "yellow", ["bold"])
@@ -56,29 +56,30 @@ TAc.print(LANG.render_feedback("final_config", f'# Final config: {final}'), "yel
 TAc.print(LANG.render_feedback("format_moves", f'# Use format: N:FROM->TO (example: 1:A->B)'), "yellow", ["bold"])
 TAc.print(LANG.render_feedback("start_game", f'Start the Game'), "yellow", ["bold"])
 
-names = ['Daddy', 'Toddler']
-
 
 def startTurn(turn, player):
     TAc.print(LANG.render_feedback("turn", f'\n#-----------\n# turn:   {turn}'), "blue", ["bold"])
-    TAc.print(LANG.render_feedback("player", f'# player: {names[player]}'), "blue", ["reverse"])
+    TAc.print(LANG.render_feedback("player", f'# player: {hanoi.names[player]}'), "blue", ["reverse"])
     TAc.print(LANG.render_feedback("state", f'# state:  {state}'), "blue", ["reverse"])
 
 
 # PLAY GAME
 if ENV['ai_role'] == 'daddy':
     opt_moves = hanoi.getMovesList(start, final)
+    print(f"#{opt_moves}")
     state = start
     turn = 1
     n_move = 0
     player = 0
+    last_disk = -1
 
 
     while state != final:
-        if player == 0: # Dadday
+        if player == 0: # Daddy
             startTurn(turn, player)
-            disk, c, t = hanoi.parseMove(opt_moves[n_move])
-            TAc.print(LANG.render_feedback("ai_move", f'{opt_moves[n_move]}'), "green", ["bold"])
+            disk, c, t, _ = hanoi.parseMove(opt_moves[n_move])
+            TAc.print(LANG.render_feedback("ai_move", f'{opt_moves[n_move][hanoi.len_names+1:]}'), "green", ["bold"])
+            last_disk = disk
             state = state[:disk-1] + t + state[disk:]
             turn += 1
             n_move += 1
@@ -86,25 +87,23 @@ if ENV['ai_role'] == 'daddy':
 
         else: # Toddler
             startTurn(turn, player)
-
             # get user move
-            user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}: (A|B|C)->(A|B|C)$", regex_explained="N: FROM->TO", exceptions={'end'}, TAc=TAc)
+            user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO", exceptions={"end"}, TAc=TAc)
             if user_move == 'end':
                 break
-
             # parse user move
-            disk, c, t = hanoi.parseMove(user_move)
-
-            # check validity move
-            if hanoi.isValid(state, disk, c, t):
+            user_move = hanoi.names[player] + "|" + user_move
+            disk, c, t, _ = hanoi.parseMove(user_move)
+            # check correctness of move
+            code = hanoi.checkMove(state, disk, c, t, player, last_disk)
+            if code == 0:
+                last_disk = disk
                 state = state[:disk-1] + t + state[disk:]
                 n_move += 1
+                turn += 1
+                player = (player + 1) % 2
             else:
-                TAc.print(LANG.render_feedback("invalid_move", 'invalid move'), "red", ["bold"])
-
-            turn += 1
-            player = (player + 1) % 2
-
+                TAc.print(LANG.render_feedback("invalid_move", f'{get_description_of(code)}\nRetry...'), "red", ["bold"])
 
 
 exit(0)

@@ -17,7 +17,7 @@ def wait_end():
 
 def move_disk(disk, current, target):
     if current != target:
-        print(f"{disk}: {current}->{target}")
+        print(f"{disk}:{current}{target}")
 
 
 def move_tower(n, current, target, support):
@@ -35,21 +35,21 @@ wait_start()
 # move_tower(2, 'A', 'C', 'B')
 
 # CASE: AA -> CC simple-walk not-optimal
-print('1: A->C')
-print('1: C->B')
-print('2: A->C')
-print('1: B->A')
-print('1: A->C')
+print('1:AC')
+print('1:CB')
+print('2:AC')
+print('1:BA')
+print('1:AC')
 
 
 # CASE: ABC -> CBA
-# print('1: A->B')
-# print('3: C->A')
-# print('1: B->C')
-# print('1: C->C')
-# print('1: C->C')
-# print('1: C->C')
-# print('1: C->C')
+# print('1:AB')
+# print('3:CA')
+# print('1:BC')
+# print('1:CC')
+# print('1:CC')
+# print('1:CC')
+# print('1:CC')
 ##############################
 print("end")
 wait_end() 

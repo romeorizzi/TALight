@@ -21,6 +21,28 @@ def get_input_from(config, n, seed = 0, n_query=1):
     return config
 
 
+def get_description_of(code):
+    if code == 0:
+        return "Correct"
+    if code == 1:
+        return "Invalid disk: not exist"
+    if code == 2:
+        return "Wrong current or state: they don't coincide"
+    if code == 3:
+        return "Invalid peg: not exist"
+    if code == 4:
+        return "Invalid move: current and target can't be equal"
+    if code == 5:
+        return "Invalid disk: Toddler can't move last disk"
+    if code == 6:
+        return "Invalid move: counterclockwise move"
+    if code == 7:
+        return "Invalid move: big disk on small disk"
+    if code == 8:
+        return "Invalid disk: is blocked"
+    return "This code not exist"
+
+
 class HanoiTowerProblem():
     def __init__(self, version):
         # All
@@ -30,10 +52,10 @@ class HanoiTowerProblem():
         self.n_moves_of = list()
 
         # toddler version
-        self.names = ["[Daddy  ] ", "[Toddler] "]
+        self.names = ["Daddy  ", "Toddler"]
         assert len(self.names[0]) == len(self.names[1])
+        self.len_names = len(self.names[0])
         self.player = 0
-        self.print_player = True
 
         # clockwise version
         self.mem = dict()
@@ -84,45 +106,56 @@ class HanoiTowerProblem():
     
     def parseMove(self, move):
         if self.version == 'toddler':
-            disk, tmp = move[len(self.names[0]):].split(": ")
-            disk = int(disk)
-            c, t = tmp.split("->")
-            if move[:len(self.names[0])] == self.names[0]:
+            player, tmp = move.split("|")
+            if player == self.names[0]:
                 p = 0
-            elif move[:len(self.names[0])] == self.names[1]:
+            elif player == self.names[1]:
                 p = 1
-        else:
-            disk, tmp = move.split(": ")
+            else:
+                p = -1
+            disk, tmp = tmp.split(":")
             disk = int(disk)
-            c, t = tmp.split("->")
-            p = None
-        return disk, c, t, p
+            c = tmp[0]
+            t = tmp[1]
+            return disk, c, t, p
+        else:
+            disk, tmp = move.split(":")
+            disk = int(disk)
+            c = tmp[0]
+            t = tmp[1]
+            return disk, c, t
 
 
-    def isValid(self, state, disk, c, t, player= None, last_disk = None):
+    def checkMove(self, state, disk, c, t, player = None, last_disk = None):
         """Assume valid state"""
-        if disk > len(state):
-            return False # invalid disk
+        if disk > len(state) or disk < 1:
+            return 1 #Invalid disk: not exist
+        if state[disk-1] != c:
+            return 2 #Wrong current or state: they don't coincide
         if (c != 'A' and c!= 'B' and c != 'C') or \
            (t != 'A' and t!= 'B' and t != 'C'):
-           return False # invalid peg
+           return 3 #Invalid Peg: not exist
         if c == t:
-            return False # invalid move (x->x)
-        if state[disk-1] != c:
-            return False # wrong current
+            return 4 #Invalid move: current and target can't be equal
         if self.version == 'toddler':
             assert player != None
             assert last_disk != None
             if player == 1 and disk == last_disk:
-                return False # toddler can't move last_disk
+                return 5 #Invalid disk: Toddler can't move last disk
         if self.version == 'clockwise':
             if t == self.__getPegFrom(self.__getNextPeg(c), c):
-                return False # peg counterclockwise
+                return 6 #Invalid move: counterclockwise move
+        for i in range(disk-1, 0, -1):
+            if state[i-1] == t:
+                return 7 #Invalid move: big disk on small disk
         for i in range(disk-1, 0, -1):
             if state[i-1] == state[disk-1]:
-                return False # disk is blocked
-        return True
+                return 8 #Invalid disk: is blocked
+        return 0 #Correct
     
+
+    def isValid(self, state, disk, c, t, player = None, last_disk = None):
+        return self.checkMove(state, disk, c, t, player, last_disk) == 0
 
 
     def checkSol(self, sol, initial, final):
@@ -130,9 +163,14 @@ class HanoiTowerProblem():
         states = {state : 1}
         last_disk = -1
         for e in sol:
-            disk, c, t, p = self.parseMove(e)
-            if not self.isValid(state, disk, c, t, p, last_disk):
-                return 'move_not_valid', e
+            if self.version == 'toddler':
+                disk, c, t, p = self.parseMove(e)
+                if not self.isValid(state, disk, c, t, p, last_disk):
+                    return 'move_not_valid', e
+            else:
+                disk, c, t = self.parseMove(e)
+                if not self.isValid(state, disk, c, t):
+                    return 'move_not_valid', e
             state = state[:disk-1] + t + state[disk:]
             states[state] = states.get(state, 0) + 1
             last_disk = disk
@@ -169,37 +207,37 @@ class HanoiTowerProblem():
                     s = self.__getPegFrom(c, t)
                     x = state[disk] #this is the state of disk+1
                     y = self.__getPegFrom(x, s)
-                    sol[i] = f"{self.names[0]}{disk}: {c}->{s}"
-                    sol.insert(i+1, f"{self.names[0]}{disk+1}: {x}->{y}")
-                    sol.insert(i+2, f"{self.names[0]}{disk+1}: {y}->{x}")
-                    sol.insert(i+3, f"{self.names[0]}{disk}: {s}->{t}")
+                    sol[i] = f"{self.names[0]}|{disk}:{c}{s}"
+                    sol.insert(i+1, f"{self.names[0]}|{disk+1}:{x}{y}")
+                    sol.insert(i+2, f"{self.names[0]}|{disk+1}:{y}{x}")
+                    sol.insert(i+3, f"{self.names[0]}|{disk}:{s}{t}")
                     i += 3
                 else:
                     i += 1
 
             p = 0
             for i in range(len(sol)):
-                sol[i] = self.names[p] + sol[i][len(self.names[0]):]
+                sol[i] = self.names[p] + sol[i][self.len_names:]
                 p = (p + 1) % 2
             return sol
 
         else:
             while diff > 0:
-                disk, c, t, p = self.parseMove(sol[i])
+                disk, c, t = self.parseMove(sol[i])
                 if disk == 1 and random.randint(1,10) > 2:
                     if self.version == 'classic':
                         s = self.__getPegFrom(c, t)
-                        sol[i] = f"{disk}: {c}->{s}"
-                        sol.insert(i+1, f"{disk}: {s}->{t}")
+                        sol[i] = f"{disk}:{c}{s}"
+                        sol.insert(i+1, f"{disk}:{s}{t}")
                         diff = diff - 1
                         if diff <= 0:
                             break
                         # deliberately not incrementing by 1+1 to add randomness
                     elif self.version == 'clockwise':
                         s = self.__getNextPeg(t)
-                        sol.insert(i+1, f"{disk}: {t}->{s}")
-                        sol.insert(i+2, f"{disk}: {s}->{c}")
-                        sol.insert(i+3, f"{disk}: {c}->{t}")
+                        sol.insert(i+1, f"{disk}:{t}{s}")
+                        sol.insert(i+2, f"{disk}:{s}{c}")
+                        sol.insert(i+3, f"{disk}:{c}{t}")
                         diff = diff - 3
                         # deliberately not incrementing by 1+3 to add randomness
                         if diff < 3:
@@ -241,17 +279,14 @@ class HanoiTowerProblem():
     def __moveDisk(self, disk, current, target):
         """Move the disk from current to target"""
         if self.version == 'classic':
-            self.moves.append(f"{disk}: {current}->{target}")
+            self.moves.append(f"{disk}:{current}{target}")
 
         elif self.version == 'toddler':
-            s = ""
-            if self.print_player:
-                s = f'{self.names[self.player]}'
-            self.moves.append(f"{s}{disk}: {current}->{target}")
+            self.moves.append(f"{self.names[self.player]}|{disk}:{current}{target}")
             self.player = (self.player + 1) % 2
 
         elif self.version == 'clockwise':
-            self.moves.append(f"{disk}: {current}->{target}")
+            self.moves.append(f"{disk}:{current}{target}")
         
         self.n_moves_of[disk] += 1
     
@@ -357,16 +392,17 @@ class HanoiTowerProblem():
 
 
 if __name__ == "__main__":
-    enable_test_classic = True
-    enable_test_toddler = True
-    enable_test_clockwise = True
-    print_feedback = False
+    enable_test_classic = 1
+    enable_test_toddler = 1
+    enable_test_clockwise = 1
+    print_feedback = 1
 
     seed = 13000
-    num_tests = 100
+    num_tests = 50
     num_tests_not_optimal = 10
     n_max = 10
     size_shorter = 10
+    
 
 
     # CLASSIC
@@ -375,13 +411,22 @@ if __name__ == "__main__":
         h_classic = HanoiTowerProblem(version='classic')
 
         # Check parseMove
-        assert h_classic.parseMove('130: A->B') == (130, 'A', 'B', None)
+        assert h_classic.parseMove('130:AB') == (130, 'A', 'B')
 
         # Check isValid
         assert h_classic.isValid('AA', 2, 'A', 'B') == False
         assert h_classic.isValid('AA', 1, 'A', 'B') == True
-        assert h_classic.isValid('AA', 1, 'A', 'D') == False
-        assert h_classic.isValid('AA', 1, 'C', 'B') == False
+
+        # Check checkMove
+        assert h_classic.checkMove('AA', 1, 'A', 'B') == 0
+        assert h_classic.checkMove('AA', -1, 'A', 'B') == 1
+        assert h_classic.checkMove('AA', 130, 'A', 'B') == 1
+        assert h_classic.checkMove('AA', 1, 'B', 'A') == 2
+        assert h_classic.checkMove('AA', 1, 'A', 'D') == 3
+        assert h_classic.checkMove('DA', 1, 'D', 'A') == 3
+        assert h_classic.checkMove('AA', 1, 'A', 'A') == 4
+        assert h_classic.checkMove('BA', 2, 'A', 'B') == 7
+        assert h_classic.checkMove('AA', 2, 'A', 'B') == 8
 
         # Check getMinMoves
         assert h_classic.getMinMoves('A', 'A') == 0
@@ -444,24 +489,35 @@ if __name__ == "__main__":
         h_toddler = HanoiTowerProblem(version='toddler')
 
         # Check parseMove
-        assert h_toddler.parseMove('[Daddy  ] 130: A->B') == (130, 'A', 'B', 0)
-        assert h_toddler.parseMove('[Daddy  ] 130: A->B') != (130, 'A', 'B', 1)
-        assert h_toddler.parseMove('[Toddler] 130: A->B') != (130, 'A', 'B', 0)
-        assert h_toddler.parseMove('[Toddler] 130: A->B') == (130, 'A', 'B', 1)
+        assert h_toddler.parseMove('Daddy  |130:AB') == (130, 'A', 'B', 0)
+        assert h_toddler.parseMove('Daddy  |130:AB') != (130, 'A', 'B', 1)
+        assert h_toddler.parseMove('Toddler|130:AB') != (130, 'A', 'B', 0)
+        assert h_toddler.parseMove('Toddler|130:AB') == (130, 'A', 'B', 1)
 
-        # Check isvalid
-        assert h_toddler.isValid('AA', 2, 'A', 'B', 1, 1) == False
-        assert h_toddler.isValid('AA', 1, 'A', 'B', 1, 2) == True
-        assert h_toddler.isValid('AA', 1, 'A', 'B', 1, 1) == False
+        # Check isValid
+        assert h_toddler.isValid('AA', 2, 'A', 'B', 0, 1) == False
         assert h_toddler.isValid('AA', 1, 'A', 'B', 0, 1) == True
-        assert h_toddler.isValid('AA', 1, 'A', 'D', 1, 2) == False
-        assert h_toddler.isValid('AA', 1, 'C', 'B', 1, 2) == False
+        assert h_toddler.isValid('AA', 1, 'A', 'B', 0, 1) == True
+        assert h_toddler.isValid('AA', 1, 'A', 'B', 1, 1) == False
+
+        # Check checkMove
+        assert h_toddler.checkMove('AA', 1, 'A', 'B', 0, 1) == 0
+        assert h_toddler.checkMove('AA', -1, 'A', 'B', 0, 1) == 1
+        assert h_toddler.checkMove('AA', 130, 'A', 'B', 0, 1) == 1
+        assert h_toddler.checkMove('AA', 1, 'B', 'A', 0, 1) == 2
+        assert h_toddler.checkMove('AA', 1, 'A', 'D', 0, 1) == 3
+        assert h_toddler.checkMove('DA', 1, 'D', 'A', 0, 1) == 3
+        assert h_toddler.checkMove('AA', 1, 'A', 'A', 0, 1) == 4
+        assert h_toddler.checkMove('AA', 1, 'A', 'B', 0, 1) == 0
+        assert h_toddler.checkMove('AA', 1, 'A', 'B', 1, 1) == 5
+        assert h_toddler.checkMove('BA', 2, 'A', 'B', 1, 1) == 7
+        assert h_toddler.checkMove('AA', 2, 'A', 'B', 0, 1) == 8
 
         # Check getMovesList
         assert h_toddler.getMovesList('AA', 'AC') == \
-            ['[Daddy  ] 1: A->B', '[Toddler] 2: A->C', '[Daddy  ] 1: B->A']
+            ['Daddy  |1:AB', 'Toddler|2:AC', 'Daddy  |1:BA']
         assert h_toddler.getMovesList('AAA', 'ABC') == \
-            ['[Daddy  ] 1: A->C', '[Toddler] 2: A->B', '[Daddy  ] 1: C->B', '[Toddler] 3: A->C', '[Daddy  ] 1: B->A']
+            ['Daddy  |1:AC', 'Toddler|2:AB', 'Daddy  |1:CB', 'Toddler|3:AC', 'Daddy  |1:BA']
 
         # Random tests
         for t in range(1, num_tests + 1):
@@ -514,10 +570,23 @@ if __name__ == "__main__":
         # Check isValid
         assert h_clockwise.isValid('AA', 2, 'A', 'B') == False
         assert h_clockwise.isValid('AA', 1, 'A', 'B') == True
-        assert h_clockwise.isValid('AA', 1, 'A', 'D') == False
         assert h_clockwise.isValid('AA', 1, 'A', 'C') == False
-        assert h_clockwise.isValid('BA', 1, 'B', 'A') == False
-        assert h_clockwise.isValid('AA', 1, 'C', 'B') == False
+        assert h_clockwise.isValid('CA', 1, 'C', 'A') == True
+        assert h_clockwise.isValid('CA', 1, 'C', 'B') == False
+
+        # Check checkMove
+        assert h_clockwise.checkMove('AA', 1, 'A', 'B') == 0
+        assert h_clockwise.checkMove('AA', -1, 'A', 'B') == 1
+        assert h_clockwise.checkMove('AA', 130, 'A', 'B') == 1
+        assert h_clockwise.checkMove('AA', 1, 'B', 'A') == 2
+        assert h_clockwise.checkMove('AA', 1, 'A', 'D') == 3
+        assert h_clockwise.checkMove('DA', 1, 'D', 'A') == 3
+        assert h_clockwise.checkMove('AA', 1, 'A', 'A') == 4
+        assert h_clockwise.checkMove('AA', 1, 'A', 'C') == 6
+        assert h_clockwise.checkMove('CA', 1, 'C', 'A') == 0
+        assert h_clockwise.checkMove('CA', 1, 'C', 'B') == 6
+        assert h_clockwise.checkMove('BA', 2, 'A', 'B') == 7
+        assert h_clockwise.checkMove('AA', 2, 'A', 'B') == 8
 
         # Check getMiMoves
         assert h_clockwise.getMinMoves('AA', 'BB') == 5

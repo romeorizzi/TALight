@@ -83,7 +83,7 @@ TAc.print(LANG.render_feedback("start_game", f'Start the Game'), "yellow", ["bol
 # Get user moves
 user_sol = list()
 while True:
-    move, = TALinput(str, sep="\n", regex="^\d{1,1000}: (A|B|C)->(A|B|C)$", regex_explained="N: FROM->TO", exceptions={"end"}, TAc=TAc)
+    move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO", exceptions={"end"}, TAc=TAc)
     if move == 'end':
         break
     user_sol.append(move)
