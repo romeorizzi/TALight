@@ -13,6 +13,7 @@ service="check_dynamic_strategy"
 args_list = [
     ('n', int),
     ('version', str),
+    ('goal', str),
     ('feedback', str),
     ('lang', str),
     ('ISATTY', bool),
@@ -55,15 +56,18 @@ def manageFinal(trueCoins, numberOfScale, differentWeight=False):
         if i not in trueCoins:
             result.append(i)
     if len(result) == 1:
-        if feedback == "optimal":
+        if ENV['goal'] == 'optimal':
             if differentWeight:
                 optimalNumOfScales = math.ceil(math.log((ENV['n'] * 2) + 1, 3))
             else:
                 optimalNumOfScales = math.ceil(math.log(ENV['n'], 3))
             if numberOfScale > optimalNumOfScales:
-                TAc.print(LANG.render_feedback("found-false-coin-not-optimal", 'Your strategy finds the false coin but it\'s not optimal.'), "red", ["bold"])
+                if feedback == 'provide_counterexample':
+                    TAc.print(LANG.render_feedback("found-false-coin-not-optimal", 'Your strategy finds the false coin but it\'s not optimal.'), "red", ["bold"])
+                else:
+                    TAc.print(LANG.render_feedback("found-false-coin-not-optimal-yes-no", 'Your strategy don\'t find the false coin or it\'s not optimal.'), "red", ["bold"])
             else:
-                TAc.print(LANG.render_feedback("found-false-coin-optimal", 'Congratulations! Your strategy finds the false coin and it\'s optimal.'), "green", ["bold"])        
+                TAc.print(LANG.render_feedback("found-false-coin-optimal", 'Congratulations! Your strategy finds the false coin and it\'s optimal.'), "green", ["bold"])
         else:
             TAc.print(LANG.render_feedback("found-false-coin", 'Congratulations! Your strategy finds the false coin.'), "green", ["bold"])
     else:
@@ -71,7 +75,10 @@ def manageFinal(trueCoins, numberOfScale, differentWeight=False):
         if feedback == "provide_counterexample":
             TAc.print(LANG.render_feedback("ambiguos-strategy", f'Your strategy is ambiguous because it doesn\'t distinguish the coins {result}.'), "red", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("fail-strategy", 'Your strategy doesn\'t find the false coin.'), "red", ["bold"])
+            if ENV['goal'] == 'optimal':
+                TAc.print(LANG.render_feedback("found-false-coin-not-optimal-yes-no", 'Your strategy don\'t find the false coin or it\'s not optimal.'), "red", ["bold"])
+            else:
+                TAc.print(LANG.render_feedback("fail-strategy", 'Your strategy doesn\'t find the false coin.'), "red", ["bold"])
 
 
 def getScales(falseCoinIsLeighter=None, differentWeight=False):
@@ -82,9 +89,9 @@ def getScales(falseCoinIsLeighter=None, differentWeight=False):
         line = TALinput(
             str,
             num_tokens=2,
-            sep=', ',
-            exceptions = stopping_command_set,
-            regex=r"^(([1-9][0-9]{0,9}\s+)*[1-9][0-9]{0,9}\s*)$",
+            sep=',',
+            exceptions = {stopping_command_set},
+            regex=r"^\s*(([1-9][0-9]{0,9}\s+)*[1-9][0-9]{0,9}\s*)$",
             regex_explained="a sequence of numbers from 1 to n, separated by a space. An example of what should go on a plate of the scale (one of the two expected token of the line) is: '2 5 7'.",
             TAc=TAc
         )
@@ -95,7 +102,7 @@ def getScales(falseCoinIsLeighter=None, differentWeight=False):
             if any(item in leftScale for item in rightScale):
                 TAc.print(LANG.render_feedback("error-same-coin", "A same coin can not be place on both plates of the scale (within a same maesure)."), "red", ["bold"])
                 exit(0)
-            if any(item > ENV['n'] for item in leftScale):
+            if any(item > ENV['n'] for item in leftScale) or any(item > ENV['n'] for item in rightScale):
                 TAc.print(LANG.render_feedback("error-coins-out-range", f"You have inserted a coin out of range! The range of coin labels goes from 1 to {ENV['n']}."), "red", ["bold"])
                 exit(0)
             trueCoin = manageScale(leftScale, rightScale, trueCoins, falseCoinIsLeighter, differentWeight)

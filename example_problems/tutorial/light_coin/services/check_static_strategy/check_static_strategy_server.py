@@ -13,6 +13,7 @@ service="check_static_strategy"
 args_list = [
     ('n', int),
     ('version', str),
+    ('goal', str),
     ('feedback', str),
     ('lang', str),
     ('ISATTY', bool),
@@ -48,8 +49,8 @@ def getStaticStrategy():
             if any(item in leftScale for item in rightScale):
                 TAc.print(LANG.render_feedback("error-same-coin", "A same coin can not be placed on both plates of the scale (within a same weighing)."), "red", ["bold"])
                 exit(0)
-            if any(item > ENV['n'] for item in leftScale):
-                TAc.print(LANG.render_feedback("error-coins-out-range", f"The coin {item} does not exist! The range of coin labels goes from 1 to {ENV['n']}."), "red", ["bold"])
+            if any(item > ENV['n'] for item in leftScale) or any(item > ENV['n'] for item in rightScale):
+                TAc.print(LANG.render_feedback("error-coins-out-range", f"You have inserted a coin out of range! The range of coin labels goes from 1 to {ENV['n']}."), "red", ["bold"])
                 exit(0)
             weighedList.append([leftScale, rightScale])
     return weighedList
@@ -78,12 +79,15 @@ def checkStaticStrategy(weighedList, falseCoinIsLeighter, output=True):
     numberOfScale = len(weighedList)
     feedback = ENV['feedback']
     if len(coinsNotDistinct) == 0 and output:
-        if feedback == "optimal":
+        if ENV['goal'] == 'optimal':
             optimalNumOfScales = math.ceil(math.log(ENV['n'], 3))
             if numberOfScale > optimalNumOfScales:
-                TAc.print(LANG.render_feedback("found-false-coin-not-optimal", 'Your strategy finds the false coin but it\'s not optimal.'), "red", ["bold"])
+                if feedback == 'provide_counterexample':
+                    TAc.print(LANG.render_feedback("found-false-coin-not-optimal", 'Your strategy finds the false coin but it\'s not optimal.'), "red", ["bold"])
+                else:
+                    TAc.print(LANG.render_feedback("found-false-coin-not-optimal-yes-no", 'Your strategy not find the false coin or it\'s not optimal.'), "red", ["bold"])
             else:
-                TAc.print(LANG.render_feedback("found-false-coin-optimal", 'Congratulations! Your strategy finds the false coin and it\'s optimal.'), "green", ["bold"])        
+                TAc.print(LANG.render_feedback("found-false-coin-optimal", 'Congratulations! Your strategy finds the false coin and it\'s optimal.'), "green", ["bold"])
         else:
             TAc.print(LANG.render_feedback("found-false-coin", 'Congratulations! Your strategy finds the false coin.'), "green", ["bold"])
     elif len(coinsNotDistinct) != 0 and output:
@@ -91,7 +95,10 @@ def checkStaticStrategy(weighedList, falseCoinIsLeighter, output=True):
         if feedback == "provide_counterexample":
             TAc.print(LANG.render_feedback("ambiguos-strategy", f'Your strategy is ambiguous because it doesn\'t distinguish the coins {coinsNotDistinct}.'), "red", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("fail-strategy", 'Your strategy doesn\'t find the false coin.'), "red", ["bold"])
+            if ENV['goal'] == 'optimal':
+                TAc.print(LANG.render_feedback("found-false-coin-not-optimal-yes-no", 'Your strategy not find the false coin or it\'s not optimal.'), "red", ["bold"])
+            else:
+                TAc.print(LANG.render_feedback("fail-strategy", 'Your strategy doesn\'t find the false coin.'), "red", ["bold"])
     return coinsNotDistinct
 
 
@@ -115,10 +122,13 @@ def manageDifferentFalseCoinWeight(weighedList):
     numberOfScale = len(weighedList)
     feedback = ENV['feedback']
     if resultCheckWeight and resultStrategy:
-        if feedback == "optimal":
+        if ENV['goal'] == 'optimal':
             optimalNumOfScales = math.ceil(math.log((ENV['n'] * 2) + 1, 3))
             if numberOfScale > optimalNumOfScales:
-                TAc.print(LANG.render_feedback("found-coin-weight-optimal", 'Congratulations! Your strategy finds the false coin weight and position but it\'s not optimal.'), "red", ["bold"])
+                if feedback == 'provide_counterexample':
+                    TAc.print(LANG.render_feedback("found-coin-weight-not-optimal", 'Your strategy finds the false coin weight and position but it\'s not optimal.'), "red", ["bold"])
+                else:
+                    TAc.print(LANG.render_feedback("found-coin-weight-not-optimal-yes-no", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter or it\'s not optimal.'), "red", ["bold"])
             else:
                 TAc.print(LANG.render_feedback("found-coin-weight-optimal", 'Congratulations! Your strategy finds the false coin weight and position and it\'s optimal.'), "green", ["bold"])
         else:
@@ -133,7 +143,10 @@ def manageDifferentFalseCoinWeight(weighedList):
             TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter.'), "red", ["bold"])
     else:
         TAc.NO()
-        TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter.'), "red", ["bold"])
+        if ENV['goal'] == 'optimal':
+            TAc.print(LANG.render_feedback("found-coin-weight-not-optimal-yes-no", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter or it\'s not optimal.'), "red", ["bold"])
+        else:  
+            TAc.print(LANG.render_feedback("not-found-coin-weight", 'Your strategy does not find the position of the false coin or whether it is heavier or lighter.'), "red", ["bold"])
 
 
 

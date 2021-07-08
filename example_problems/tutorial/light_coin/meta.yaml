@@ -49,13 +49,15 @@ services:
         explain1: "[false_is_leighter]  you are given to know that the false coin is leighter."
         explain2: "[false_is_heavier]  you are given to know that the false coin is heavier."
         explain3: "[false_has_different_weight]  you are only given to know that the weight of the false coin differs, but do not know whether it is leighter or heavier."
+      goal:
+        regex: ^(correct|optimal)$	
+        default: correct
       feedback: 
-        regex: ^(yes_no|provide_counterexample|optimal)$
+        regex: ^(yes_no|provide_counterexample)$
         default: yes_no
         explain: "choose the feedback level. Options are as follows:"
-        explain1: "[yes_no]  just confirm me that my strategy is correct (correct does not mean optimal)."
-        explain2: "[provide_counterexample]  please, provide me evidence that my strategy is not correct."
-        explain3: "[optimal]  please, confirm me that my strategy never uses the scale more then opt times. Here opt is the largest number such that every dynamic strategy is due to take at least opt weighings in some cases."
+        explain1: "[yes_no]  just confirm me that my strategy meets the goal."
+        explain2: "[provide_counterexample]  please, when my strategy is not correct, provide me evidence of that. Also, when my strategy does not meet the goal, give me evidence of its failure in the form of a correct strategy with a smaller number of weighings."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -70,15 +72,15 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   # TODO help
-  help:
-    evaluator: [python, services/help/help_server.py]
-    args:
-      page:
-        regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
-        default: help
-      lang:
-        regex: ^(en|it)$
-        default: it
+  # help:
+  #   evaluator: [python, services/help/help_server.py]
+  #   args:
+  #     page:
+  #       regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
+  #       default: help
+  #     lang:
+  #       regex: ^(en|it)$
+  #       default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
     args:

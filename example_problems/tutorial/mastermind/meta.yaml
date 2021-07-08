@@ -2,22 +2,9 @@
 ---
 public_folder: public
 services:
-  tell_score:
-    explain: "You provide both the secret code and a probing code that will be scored against the secret code according to the rules of the game."
-    evaluator: [python, services/tell_score_server.py]
-    args:
-      secret_code:
-        regex: ^((([0-9] *){0,9})|lazy_input)$
-        default: lazy_input
-      probing_code:
-        regex: ^((([0-9] *){0,9})|lazy_input)$
-        default: lazy_input
-      lang:
-        regex: ^(hardcoded|en|it)$
-        default: it
   check_scoring_competence:
     explain: "Your scoring competence is assessed. You are given both the secret code and a guessed code that you should score according to the rules."
-    evaluator: [python, services/check_scoring_competence_server.py]
+    evaluator: [python3, services/check_scoring_competence/check_scoring_competence_server.py]
     args:
       num_pegs:
         regex: ^([1-9])$
@@ -28,8 +15,21 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+  tell_score:
+    explain: "You provide both the secret code and a probing code that will be scored against the secret code according to the rules of the game."
+    evaluator: [python3, services/tell_score_server.py]
+    args:
+      secret_code:
+        regex: ^((([0-9] *){0,9})|lazy_input)$
+        default: lazy_input
+      probing_code:
+        regex: ^((([0-9] *){0,9})|lazy_input)$
+        default: lazy_input
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
   play:
-    evaluator: [python, services/play_server.py]
+    evaluator: [python3, services/play_server.py]
     args:
       max_num_attempts:
         regex: ^([1-9]|[1-4][0-9]|50)$
@@ -45,7 +45,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python3, services/synopsis/synopsis_server.py]
     args:
       service:
         regex: ^((\S)+)$
