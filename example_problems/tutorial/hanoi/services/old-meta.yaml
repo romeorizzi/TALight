@@ -1,0 +1,211 @@
+public_folder: public
+services:
+  check_one_sol:
+    explains: "this service checks whether a sequence of moves is a valid solution for the Hanoi tower puzzle."
+    evaluator: [python, services/check_one_sol_server.py]
+    args:    
+      v:      
+        regex:  ^(classic|toddler|clockwise)$
+        default: classic
+      start:
+        explains: "initial configuration of the puzzle"
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_A
+      final:
+        explains: "target configuration for the puzzle"
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_C
+      n:
+        explains: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
+        regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
+        default: -1 # implicit
+      goal:
+        regex:  ^(any|optimal|simple_walk)$
+        default: any
+        explain: the options are as follows
+        explain1: -any= just check that the solution is an admissible one.
+        explain2: -optimal= the solution is required to use a minimum possible number of moves.
+        explain3: -simple_walk= the solution is required to be admissible and not to visit a same configuration more than once.
+      feedback:
+        regex: ^(minimal|spot_first_non_optimal_move|gimme_shorter_solution|gimme_optimal_solution)$
+        default: minimal
+        explain: the options are as follows
+        explain1: -minimal= provide the minimum possible amount of feedback.
+        explain2: -spot_first_non_optimal_move= spots the first move that compromises reaching the target configuration in the smallest possible number of moves.
+        explain3: -gimme_shorter_solution= offers the certificate of non-optimality in the form of a shorter solution.
+        explain4: -gimme_optimal_solution= offers an optimal solution.
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  
+  check_opt_num_moves:
+    explains: "this service checks what is the minimum possible number of moves in a valid solution for an Hanoi tower puzzle."
+    evaluator: [python, services/check_opt_num_moves_server.py]
+    args:
+      v:      
+        regex:  ^(classic|toddler|clockwise)$
+        default: classic
+      start:
+        explains: "initial configuration of the puzzle"
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_A
+      final:
+        explains: "target configuration for the puzzle"
+        regex:  ^^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_C
+      n:
+        explains: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
+        regex: ^(-1|[1-9][0-9]{0,2}|1000)$
+        default: -1 # implicit
+      sol:
+        explains: "what you conjecture to be the minimum number of moves needed to solve the puzzle."
+        regex: ^(0|[1-9][0-9]{0,1000})$
+      ok_if_congruent_modulus:
+        explain: "when n grows the number of needed moves can be huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas."  
+        regex: ^(0|[1-9][0-9]{0,10})$
+        default: 0 #alternative: 1000000007
+      silent:
+        explains: "if your solution is ok then the service runs silently; otherwise it explains what is the problem in your solution."
+        regex: ^(0|1)$
+        default: 0
+      feedback:
+        regex: ^(minimal|smaller_or_bigger|true_val)$
+        default: minimal
+        explain: the options are as follows
+        explain1: -minimal= provide the minimum possible amount of feedback.
+        explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
+        explain3: -true_val= offers the lenght of an optimal solution.
+      with_certificate:
+        explains: "if your sol is bigger than optimal, the service provides you with a shorter solution."
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
+  check_lower_bounds:
+    explains: "this service checks what is the minimum possible number of times that each single disk is moved in an optimal solution."
+    evaluator: [python, services/check_lower_bounds_server.py]
+    args:
+      v:      
+        regex:  ^(classic|toddler|clockwise)$
+        default: classic   
+      start:
+        explains: "initial configuration of the puzzle"
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_A
+      final:
+        explains: "target configuration for the puzzle"
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_C
+      n:
+        explains: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
+        regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
+        default: -1 #implicit
+      disk:
+        explains: "an integer in the interval [1,n]: the disk for which you want to give the tightest possible lower-bound on the number of times it must be moved in any solution. Note: disks 1 is the smallest."
+        regex: ^([1-9][0-9]{0,2}|1000)$
+      sol:
+        explains: "what you conjecture to be the minimum number of times that disk <disk> needs to be moved in order to solve the puzzle."
+        regex: ^(0|[1-9][0-9]{0,1000})$ 
+      silent:
+        explains: "if your solution is ok then the service runs silently; otherwise it explains what is the problem in your solution."
+        regex: ^(0|1)$
+        default: 0
+      feedback:
+        regex: ^(minimal|smaller_or_bigger|true_val)$
+        default: minimal
+        explain: the options are as follows
+        explain1: -minimal= provide the minimum possible amount of feedback.
+        explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
+        explain3: -true_val= offers the lenght of an optimal solution.
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  
+  eval_opt_num_moves:
+    explains: "this service valuated correctness and efficiency of a bot that computes the minimum number of moves needed to solve an Hanoi tower puzzle."
+    evaluator: [python, services/eval_opt_num_moves_server.py]
+    args:
+      v:
+        regex:  ^(classic|toddler|clockwise)$
+        default: classic
+      start:
+        explains: "initial configuration of the puzzle"
+        regex:  ^(all_A|all_B|all_C|general)$
+        default: all_A
+      final:
+        explains: "target configuration for the puzzle"
+        regex:  ^(all_A|all_B|all_C|general)$
+        default: all_C
+      ok_if_congruent_modulus:
+        explain: "when the number of disks grows the number of moves can be huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas."  
+        regex: ^([1-9][0-9]{0,10}|0)$
+        default: 0 #alternative: 1000000007
+      goal:
+        explains: "set your goal (efficient includes also correct)."
+        regex: ^(correct|efficient)$
+        default: correct
+      seed:
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(-1|[1-9][0-9]{5,5})$
+        default: -1 #random_seed
+      num_tests:
+        explain: "specify the number of tests to run"
+        regex: ^(0|1000|([1-9][0-9]{0,2}))$
+        default: 50
+      n_max:
+        explain: "specify the maximum number of disks to be tested"
+        regex: ^(0|1000|([1-9][0-9]{0,2}))$
+        default: 10
+      code_lang: 
+        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  
+  gen_random_puzzle:
+    evaluator: [python, services/gen_random_puzzle_server.py]
+    args:
+      seed:
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=-1, the service chooses its seed at random (and communicates it to the user)."
+        regex: ^(-1|[1-9][0-9]{5,5})$
+        default: -1 #random_seed
+      n:
+        explains: "the number of disks."
+        regex: ^(0|[1-9][0-9]{0,2}|1000)$
+      start:
+        explains: "initial configuration of the puzzle"
+        regex:  ^(all_A|all_B|all_C|general)$
+        default: all_A
+      final:
+        explains: "target configuration for the puzzle"
+        regex:  ^(all_A|all_B|all_C|general)$
+        default: all_C
+      verbose:
+        explain: sets the verbosity level of the service. The options are as follows
+        explain1: "0. print only the n configurations."
+        explain2: "1. print the seed if seed=-1 and then the configurations"
+        explain3: "2. print the seed and then the configurations"
+        regex: ^(0|1|2)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
+#eval_play: (come goal il problm solver deve potersi accontntare di realizzae un bot che dica: "move disk 1, move disk 2, move disk 1" snza dire da dove a dove)
+#eval_toddler:
+
+# c'è spazio per un srvizio trilly che non spoileri?
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it

@@ -1,0 +1,27 @@
+check_one_sol:
+    n: implicit -> -1 per sfruttare meglio il parser
+    silent: rimosso
+
+
+check_opt_num_moves:
+    n: implicit -> -1 per sfruttare meglio il parser
+    opt->sol secondo me è piu chiaro per l'user capire dove mettere scrivere la sua soluzione, soprattutto se adottato da ogni servizio questa convenzione
+    sol: default=implicit rimosso
+    silent: aggiunto
+
+
+check_lower_bound:
+    n: implicit -> -1 per sfruttare meglio il parser
+    lower_bound->sol secondo me è piu chiaro per l'user capire dove mettere scrivere la sua soluzione, soprattutto se adottato da ogni servizio questa convenzione
+    with_certificate: rimosso
+    silent: aggiunto
+
+
+eval_opt_num_moves:
+    answ_modulus->ok_if_congruent_modulus secondo me è piu chiaro per usare la stessa convenzione
+    num_tests: aggiunto
+    n_max: aggiunto
+
+
+gen_random_puzzle:
+    seed: random_seed -> -1 per sfruttare meglio il parser

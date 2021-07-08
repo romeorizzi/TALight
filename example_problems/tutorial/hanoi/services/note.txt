@@ -1,0 +1,13 @@
+- silent tolto da check_one_sol perchè si usa un bot
+- silent aggiunto a check_opt_sol perchè li non serve un bot
+
+- len(user_sol) < len(opt_sol) and feedback=gimme_shorter -> non dare feedback
+- soluzione non ammissibile -> non dare feedback
+
+- se sol is_a_simple_walk e is_admissible allora sol is_optimal ?
+
+
+eval_play: (come goal il problm solver deve potersi accontntare di realizzae un bot che dica: "move disk 1, move disk 2, move disk 1" snza dire da dove a dove)
+-> può essere integrato come arg in check_one_sol
+
+
