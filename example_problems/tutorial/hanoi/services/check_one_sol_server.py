@@ -93,6 +93,22 @@ opt_sol = hanoi.getMovesList(start, final)
 
 
 # PROCESS DATA
+if ENV['goal'] == 'check_only_disk':
+    if len(user_sol) != len(opt_sol):
+        TAc.print(LANG.render_feedback("sol-len-wrong-disk", f'len(user_sol) != len(corr_moves)'), "red", ["bold"])
+        exit(0)
+        
+    for i in range(len(opt_sol)):
+        disk_user = hanoi.parseMove(user_sol[i])[0]
+        disk_opt = hanoi.parseMove(opt_sol[i])[0]
+        if disk_user != disk_opt:
+            TAc.print(LANG.render_feedback("sol-wrong-disk", f'Error on {i}: {disk_user}. The correct was {disk_opt}'), "red", ["bold"])
+            exit(0)
+
+    TAc.print(LANG.render_feedback("sol-correct-disk", f'all user_disk == disk_opt'), "red", ["bold"])
+    exit(0)
+
+
 # Check if surely the user_sol is invalid
 if (len(user_sol) < len(opt_sol)):
     TAc.print(LANG.render_feedback("sol-wrong-less", f'user_sol is wrong. len(user_sol) < len(corr_moves)'), "red", ["bold"])

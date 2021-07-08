@@ -20,7 +20,7 @@ services:
         regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
         default: -1 # implicit
       goal:
-        regex:  ^(any|optimal|simple_walk)$
+        regex:  ^(any|optimal|simple_walk|check_only_disk)$
         default: any
         explain: the options are as follows
         explain1: -any= just check that the solution is an admissible one.
@@ -254,11 +254,6 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  
-#eval_play: (come goal il problm solver deve potersi accontntare di realizzae un bot che dica: "move disk 1, move disk 2, move disk 1" snza dire da dove a dove)
-#eval_toddler:
-
-# c'è spazio per un srvizio trilly che non spoileri?
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
