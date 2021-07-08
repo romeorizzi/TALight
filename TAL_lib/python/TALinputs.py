@@ -43,7 +43,7 @@ def TALinput(token_type, num_tokens=None, sep=None, exceptions = set({}), commen
         if input_line in exceptions:
             return (input_line,)
         if len(input_line) == 0:
-            if num_tokens > 1 or token_type != str:
+            if (num_tokens and num_tokens > 1) or token_type != str:
                 TAc.print(f"You have entered an unexpected empty line. I assume you want to drop this TALight service call. See you next time ;))", "yellow")
                 exit(0)
             else:
