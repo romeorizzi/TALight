@@ -77,7 +77,7 @@ hanoi = HanoiTowerProblem(ENV['v'])
 # Start the game
 TAc.print(LANG.render_feedback("start_config", f'# Start config: {start}'), "yellow", ["bold"])
 TAc.print(LANG.render_feedback("final_config", f'# Final config: {final}'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("format_moves", f'# Use format: N:FROM->TO and print "end" as last move. (example: 1:A->B)'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("format_moves", f'# Use format: N:FROM->TO and print "end" as last move. (example: "1:AB")'), "yellow", ["bold"])
 TAc.print(LANG.render_feedback("start_game", f'Start the Game'), "yellow", ["bold"])
 
 # Get user moves

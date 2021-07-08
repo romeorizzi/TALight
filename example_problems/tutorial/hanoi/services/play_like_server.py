@@ -58,7 +58,6 @@ TAc.print(LANG.render_feedback("format_moves", f'# Use format: N:FROM->TO (examp
 TAc.print(LANG.render_feedback("start_game", f'Start the Game'), "yellow", ["bold"])
 
 
-
 # PLAY GAME
 # define global vars
 state = start
@@ -66,14 +65,12 @@ turn = 0
 player = 0
 last_disk = 1
 
-
 # define global functions
 def start_turn():
     global hanoi, turn, player
     TAc.print(LANG.render_feedback("turn", f'\n#-----------\n# turn:   {turn+1}'), "blue", ["bold"])
     TAc.print(LANG.render_feedback("player", f'# player: {hanoi.names[player]}'), "blue", ["reverse"])
     TAc.print(LANG.render_feedback("state", f'# state:  {state}'), "blue", ["reverse"])
-
 
 def ai_turn(move):
     global hanoi, state, turn, player, last_disk
@@ -83,7 +80,6 @@ def ai_turn(move):
     state = state[:disk-1] + t + state[disk:]
     turn += 1
     player = (player + 1) % 2
-
 
 def user_turn(available_moves):
     global hanoi, state, turn, player, last_disk
@@ -108,11 +104,9 @@ def user_turn(available_moves):
     else:
         TAc.print(LANG.render_feedback("invalid_move", f'{get_description_of(code)}\nRetry...'), "red", ["bold"])
 
-
 def end_game():
     TAc.print(LANG.render_feedback("end-game", '\nEnd Game'), "blue", ["bold"])
     exit(0)
-
 
 # play the game
 opt_moves = hanoi.getMovesList(start, final)
