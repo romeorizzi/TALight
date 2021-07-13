@@ -24,13 +24,13 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
+print("# Instance of the Knapsack problem in its optimization form you have to resolve.")
 size = ENV['size']
 seed = ENV['seed']
 
 a, W, wt, val, n = GenZopt(size, seed)
-
-TAc.print(f"\nSeed dell'istanza: {a}\n", "yellow")
-TAc.print(f"{n} {W}", "yellow")
+print(f"\nSeed dell'istanza: {a}")
+print(f"{n} {W}")
 a_wt = wt.split(",")
 a_val = val.split(",")
 for x,y in zip(a_wt,a_val):
@@ -39,6 +39,8 @@ a_wt = [int(i) for i in a_wt]
 a_val = [int(i) for i in a_val]
 answer = zopt(W, a_wt, a_val, n)
 print("\n")
+print("#? Oracle: waiting for answer or your instance of the Knapsack problem in its optimization form.")
+# NON USO TALINPUT IN QUANTO IL DATO IN INGRESSO NON è DEFINITO (PUò ESSERE UN'ALTRA CHAMATA AD ORACOLO O LA RISPOSTA!)
 start = monotonic()
 prompt = input()
 count = 0
@@ -49,24 +51,20 @@ while search != -1:
     if int(ps_n) >= n:
         print ("Le chiamate ad oracolo devono essere di istanze al massimo di n-1 elementi")
         exit(0)
-    ps_wt = ""
-    ps_val = ""
+    ps_wt = []
+    ps_val = []
     for i in range(int(ps_n)):
         if i == 0:
-            PSwt, PSval = input().split()
-            ps_wt = PSwt
-            ps_val = PSval
+            PSwt, PSval = TALinput(int, 2, TAc=TAc)
+            ps_wt.append(PSwt)
+            ps_val.append(PSval)
         else:
-            PSwt, PSval = input().split()
-            ps_wt = ps_wt+","+PSwt
-            ps_val = ps_val+","+PSval           
-    a_ps_wt = ps_wt.split(",")
-    a_ps_val = ps_val.split(",")
-    a_ps_wt = [int(i) for i in a_ps_wt]
-    a_ps_val = [int(i) for i in a_ps_val]
+            PSwt, PSval = TALinput(int, 2, TAc=TAc)
+            ps_wt.append(PSwt)
+            ps_val.append(PSval)
     o_zopt = zopt(int(ps_W), a_ps_wt, a_ps_val, int(ps_n))
     count += 1
-    TAc.print(o_zopt, "yellow")
+    print(f"# Output: {o_zopt}")
     prompt = input()
     search = prompt.find(' ')
 
@@ -75,33 +73,36 @@ time = end - start
 
 if ENV['goal'] == "correct":
     if str(answer) == prompt:
-            TAc.print("\nCORRETTO!", "green")
+            TAc.print(LANG.render_feedback("ok-correct-trilly", "Corretto!"),"green")
     else:
-            TAc.print("\nSBAGLIATO!", "red")
+            TAc.print(LANG.render_feedback("no-correct-trilly", "Sbagliato!"),"red")
 
-if ENV['goal'] == "polynomial_calls":
+if ENV['goal'] == "polynomial":
     if str(answer) == prompt:
         if time > 1:
-            TAc.print("\nCORRETTO! Il tuo algoritmo non è molto efficiente.\n", "yellow")
+            TAc.print(LANG.render_feedback("no-polynomial-trilly", f"Corretto! Il tuo algoritmo non è molto efficiente, ci mette {time}s sulla tua macchina."),"yellow")
         else:
-            TAc.print("\CORRETTO! Il tuo algoritmo è anche efficiente, hai raggiunto l'obiettivo!\n", "green")
+            TAc.print(LANG.render_feedback("ok-polynomial-trilly", f"Corretto! Il tuo algoritmo è molto efficiente, ci mette {time}s sulla tua macchina."),"green")
     else:
-        TAc.print("\nSBAGLIATO!", "red")
+        TAc.print(LANG.render_feedback("error-polynomial-trilly", "Sbagliato!"),"red")
 
 if ENV['goal'] == "at_most_n_opt_calls":
     if str(answer) == prompt:
             if count <= n:
-                TAc.print("\nCORRETTO! La tua soluzione è anche ottima, hai usato massimo n chiamate a oracolo.", "green")
+                TAc.print(LANG.render_feedback("ok-at-most-n-opt-trilly","Corretto! La tua soluzione è anche ottima, hai usato massimo n chiamate a oracolo."), "green")
             if count > n:
-                TAc.print("\nCORRETTO! Esiste una soluzione più efficiente però che usa massimo n chiamate a oracolo.", "yellow")
+                TAc.print(LANG.render_feedback("no-at-most-n-opt-trilly","Corretto! Esiste una soluzione più efficiente però che usa massimo n chiamate a oracolo."), "yellow")
     else:
-            TAc.print("\nSBAGLIATO!", "red")
+            TAc.print(LANG.render_feedback("error-at-most-n-opt-trilly", "Sbagliato!"),"red")
 
-if ENV['goal'] == "at_most_2_opt_calls":
+if ENV['goal'] == "at_most_2_opt_calls":   
     if str(answer) == prompt:
             if count <= 2:
-                TAc.print("\nCORRETTO! La tua soluzione è anche ottima, hai usato massimo 2 chiamate a oracolo.", "green")
+                TAc.print(LANG.render_feedback("ok-at-most-2-opt-trilly","Corretto! La tua soluzione è anche ottima, hai usato massimo 2 chiamate a oracolo."), "green")
             if count > 2:
-                TAc.print("\nCORRETTO! Esiste una soluzione più efficiente però che usa massimo 2 chiamate a oracolo.", "yellow")
+                TAc.print(LANG.render_feedback("no-at-most-2-opt-trilly","Corretto! Esiste una soluzione più efficiente però che usa massimo 2 chiamate a oracolo."), "yellow")
     else:
-            TAc.print("\nSBAGLIATO!", "red")
+            TAc.print(LANG.render_feedback("error-at-most-2-opt-trilly", "Sbagliato!"),"red")
+
+
+
