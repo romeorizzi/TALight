@@ -12,7 +12,7 @@ from euler_dir_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
 problem="euler-dir"
-service="check_YES_certificate"
+service="eval_YES_certificate"
 args_list = [
     ('goal',str),
     ('code_lang',str),
