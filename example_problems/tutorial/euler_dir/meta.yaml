@@ -1,6 +1,7 @@
 public_folder: public
 services:
   check_is_eulerian:
+  # fatto (risolvi per grafo diretto)
     explain: This service will check your assertion that a directed graph (that you provide us) admits an eulerian walk (of the specified type).
     evaluator: [python,services/is_eulerian_server.py]
     args:     
@@ -26,6 +27,7 @@ services:
         default: 1000
         explain: The number of arcs of your graph cannot exceed MAXM.
   check_is_not_eulerian:
+  # fatto (risolvi per grafo diretto)
     explain: This service will check your assertion that a directed graph (that you provide us) does NOT admit an eulerian walk of the specified type.
     evaluator: [python,services/is_eulerian_server.py]
     args:     
@@ -51,6 +53,7 @@ services:
         default: 1000
         explain: The number of arcs of your graph cannot exceed MAXM.
   check_eulerian_walk:
+  #da fare (file in locale)
     explain: This service checks the validity of an eulerian walk for a graph. The service is given both the graph and the walk.
     evaluator: [python,services/check_eulerian_walk_server.py]
     args:
@@ -72,6 +75,7 @@ services:
         default: 1000
         explain: The number of arcs of your graph cannot exceed MAXM.
   eval_eulerian_walk_checker:
+  #da fare (file in locale)
     explain: "Given a directed graph and a candidate eulerian walk for it, can you decide whether the eulerian walk is indeed valid?"
     evaluator: [python,services/eval_eulerian_walk_checker_server.py]
     args:
@@ -79,6 +83,14 @@ services:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      n:
+        regex: ^([1-9]|10|20|50|100|1000|10000)$
+        default: 10
+        explain: Choose the number of nodes for the random graph G that will be offered you.
+      m:
+        regex: ^([1-9]|10|20|50|100|1000|10000)$
+        default: 10
+        explain: Choose the number of arcs for the random graph G that will be offered you.
       goal:
         regex: ^(correct|efficient)$
         default: correct
@@ -89,6 +101,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_euler_dir:
+  #fatto funziona! (mancava aggiunta seed)
     explain: "Given a directed graph, can you decide whether it admists an eulerian walk? And can you do it efficiently?"
     evaluator: [python,services/eval_euler_dir_server.py]
     args:
@@ -96,6 +109,14 @@ services:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      n:
+        regex: ^([1-9]|10|20|50|100|1000|10000)$
+        default: 10
+        explain: Choose the number of nodes for the random graph G that will be offered you.
+      m:
+        regex: ^([1-9]|10|20|50|100|1000|10000)$
+        default: 10
+        explain: Choose the number of arcs for the random graph G that will be offered you.
       goal1:
         regex: ^(yes_no|with_yes_certificates)$
         default: yes_no
@@ -109,6 +130,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   trilly_decision:
+  #da fare (file in locale)
     evaluator: [python, services/trilly_server.py]
     explain: "Trilly the fairy helps you understand whether a graph admits an eulerian walk. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly whether the graph obtained from G with the removal of such an arc would admit an eulerian walk or not. You can call trilly as many times as you want but, in the end, you must tell whether G admits an eulerian walk or not."
     args:
@@ -132,6 +154,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   trilly_construction:
+  #da fare (file in locale)
     evaluator: [python, services/trilly_server.py]
     explain: "Trilly the fairy helps you construct an Eulerian walk within a graph that admits at least one. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly to return you an eulerian walk of the graph obtained from G with the removal of such an arc. Trilly will either tell you that no such walk exists or return you one. You can call trilly as many times as you want but, in the end, you must provide an eulerian walk of G."
     args:
@@ -146,8 +169,8 @@ services:
       num_calls:
         regex: ^(at_most_1|at_most_2|at_most_n|at_most_m|any)$
         default: any
-        explain: "Number of allowed Trilly calls."
-        explain: Number of allowed Trilly calls.
+        explain1: "Number of allowed Trilly calls."
+        explain2: Number of allowed Trilly calls.
       seed:
         explain: "specify the numeric code to reproduce the very same psudo-random instance G as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -164,4 +187,3 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-
