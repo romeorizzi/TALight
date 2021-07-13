@@ -49,7 +49,7 @@ if m > MAXM:
     exit(0)
 g = Graph(int(n))
     
-adj = [ [] for _ in range(m)]
+adj = [ [] for _ in range(n)]
 
 for i in range(m):
      head, tail = TALinput(int, 2, TAc=TAc)
