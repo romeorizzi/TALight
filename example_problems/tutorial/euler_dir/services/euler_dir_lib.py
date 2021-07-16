@@ -60,6 +60,41 @@ class Graph():
     
     ##########################
     #### per Eulerian Walk ###
+
+    def isConnected(self): 
+        visited = [False] * (self.V) 
+        v = 0
+        for v in range(self.V): 
+            if len(self.graph[v]) > 0: 
+                break
+        self.DFSUtil(v, visited) 
+        # If DFS traversal doesn't visit all vertices, then return false. 
+        for i in range(self.V): 
+            if visited[i] == False and len(self.graph[i])>0: 
+                return False
+        return True
+  
+    def isEulerianWalk(self):
+        # Check if all non-zero degree vertices are connected
+        if self.isConnected() == False:
+            return False
+        #Count vertices with odd degree
+        odd1 = 0
+        odd2 = 0
+        for i in range(self.V):
+            if len(self.graph[i]) - self.IN[i] == 1:
+                odd1 +=1
+            if self.IN[i] - len(self.graph[i]) == 1:
+                odd2 +=1
+            if len(self.graph[i]) - self.IN[i] > 1:
+                return False
+            if self.IN[i] - len(self.graph[i]) > 1:
+                return False
+        if odd1 > 1 and odd2 > 1:
+            return False
+        else:
+            return True
+
     # This function removes edge u-v from graph   
     def rmvEdge(self, u, v):
         for index, key in enumerate(self.graph[u]):
