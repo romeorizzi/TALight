@@ -46,7 +46,7 @@ if ENV["sorting_criterion"]=="loves_opening_par":
 else:
     first='()' * n_pairs
 if input_solution_list[-1] != first:
-    TAc.print(LANG.render_feedback("wrong-first", f'No. Your very first formula of parentheses is well-formed but but it is not the first well-formed-formula on that number of parentheses according to the order that has been set.'), "red", ["bold"], end=" ")
+    TAc.print(LANG.render_feedback("wrong-first", f'No. Your very first formula of parentheses is well-formed but it is not the first well-formed-formula on that number of parentheses according to the order that has been set.'), "red", ["bold"], end=" ")
     print(LANG.render_feedback("called-with", '(service called with'), end=" ")
     TAc.print('sorting_criterion=', "red", end="")
     TAc.print(ENV["sorting_criterion"], "yellow", end="")
