@@ -5,8 +5,8 @@ services:
     evaluator: [python, services/spot_magic_indexes_server.py]
     args:
       input_vector:
-        regex:  ^(lazy_input|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
-        default: lazy_input
+        regex:  ^(lazy|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
+        default: lazy
         explain: "an increasing sequence of integers separated by commas (no spaces)."
         example: "-12,0,34,56"
       lang:
@@ -20,17 +20,17 @@ services:
         regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
         explain: "an increasing sequence of integers separated by commas (no spaces)."
         example: "-12,0,2,3,34,56"
-      input_list:
-        regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
+      magic_indexes:
+        regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})|$
         explain: "the sorted sequence of magic indexes of input_vector (again an increasing sequence of integers separated by commas and no spaces)."
         example: "2,3"
       feedback:
         regex: ^(silent|yes_no|gimme_one_wrong)$
         default: silent
         explain: "the levels of feedback are as follows:"
-        explain1: "[silent]  if the input_list is correct then the service runs silently. Otherwise it signals that there is some problem."
-        explain2: "[yes_no]  only tells whether input_list is correct or not."
-        explain3: "[gimme_one_wrong]  tells whether input_list is correct or not, and in the second case points out precisely one of the errors."
+        explain1: "[silent]  if magic_indexes is correct then the service runs silently. Otherwise it signals that there is some problem."
+        explain2: "[yes_no]  only tells whether magic_indexes is correct or not."
+        explain3: "[gimme_one_wrong]  tells whether magic_indexes is correct or not, and in the second case points out precisely one of the errors."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

@@ -28,7 +28,7 @@ TAc.print(LANG.opening_msg, "green")
 if ENV['opponent'] == 'optimal':
     size, vec = random_vector_worst_case()
     vector_optmal_questions = generate_optimal_questions_order(vec) #stores the optimal question order
-    min_questions = check_n_questions_worst_case(len(vec))
+    min_questions = num_questions_worst_case(len(vec))
 elif ENV['opponent'] == 'random':
     vec, _ , size = random_vector()
     vector_optmal_questions = vector_optimal_questions_random_vec(vec)

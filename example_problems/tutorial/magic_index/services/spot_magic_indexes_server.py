@@ -21,10 +21,9 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
-if ENV['input_vector'] == 'lazy_input':
-    TAc.print("\n#Enter an increasing sequence of integer values separated by commas (no spaces). This will be your <input_vector> (example: -12,0,34,56). You will be returned the sorted list of magic indexes for this vector.", "green")
-    TAc.print("\n#Insert your input vector:", "green")
-    vec = TALinput(str, num_tokens=1, regex="^(lazy|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$", regex_explained="enter a sorted vector of distinct integer numbers separated by commas (example: -12,0,34,56)", TAc=TAc, LANG=None)
+if ENV['input_vector'] == 'lazy':
+    print(LANG.render_feedback("prompt-input-vector", "\n#Enter your <input_vector> (example: -12,0,34,56). You will be returned the list of magic indexes for this vector. Input format: an increasing sequence of integer values separated by commas (no spaces)."))
+    vec = TALinput(str, num_tokens=1, regex="^(lazy|(0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$", regex_explained="a sorted vector of distinct integer numbers separated by commas (example: -12,0,34,56)", TAc=TAc, LANG=None)
     vec = vec[0].split(',')
 else:
     vec = ENV['input_vector'].split(',')

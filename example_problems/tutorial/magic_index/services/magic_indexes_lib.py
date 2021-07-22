@@ -17,20 +17,34 @@ def random_vector():
 
 def random_vector_fixed(n, seed="random_seed"):
     if seed=="random_seed":
-        random.seed()
-        seed = random.randrange(0,1000000)
+        seed = random.randrange(100000,1000000)
     else:
         seed = int(seed)
     random.seed(seed)
-    first_magic = random.randint(0,n-1)
-    last_magic = random.randint(0,n-1)
-    vec = list(range(n))
-    for i in range(last_magic+1,n):
-        vec[i] = vec[i-1] + random.randint(2, 5)
-    if first_magic > last_magic:
-        first_magic = last_magic +1
-    for i in range(first_magic-1,-1,-1):
-        vec[i] = vec[i+1] - random.randint(2, 5)    
+    if seed >= 100000:
+        magics_run_length = min(random.randint(0,n),random.randint(0,n))
+        first_magic = random.randint(0,n-magics_run_length)
+        last_magic = first_magic + magics_run_length
+        vec = list(range(n))
+        for i in range(last_magic+1,n):
+            vec[i] = vec[i-1] + random.randint(2, 5)
+        if first_magic > last_magic:
+            first_magic = last_magic +1
+        for i in range(first_magic-1,-1,-1):
+            vec[i] = vec[i+1] - random.randint(2, 5)
+    else:
+        prefix = (seed%2 == 1) # gli indici magici sono un prefisso o un suffisso?
+        seed_rem=seed//2
+        magics_run_length = seed_rem % (n+1)
+        seed_rem=seed_rem//(n+1)
+        vec = list(range(magics_run_length))
+        base = magics_run_length + 1
+        while len(vec) < n:
+            delta = seed_rem % n
+            seed_rem=seed_rem//n            
+            vec.append(base+delta))
+            base = base+delta+1
+        
     return vec,seed
 
 def spot_magic_index(vec):
@@ -40,33 +54,20 @@ def spot_magic_index(vec):
             magic_indexes.append(i)
     return magic_indexes
 
-# The worst case is the one where there are n/2 (rounded up) magic indexes on the left of the array. 
-# After the first recursion we spot a magic index, so we don't have enough information to determine 
-# in which part of the vector we have to search for the rest of the indexes.
-# In O(log n base 2) we can spot the first left index, and then in n/2 rounded down (worst case) 
-# questions we can spot the last one on the right (assuming more than one magic index).
-# The final complexity is O(log n base 2 + n/2 rounded down)
+# The optimal strategy shoots always in the middle. The worst case is as follows: at the first shoot nature answers "yes, it is a magic index" (otherwise half of the positions are lost from the very beginning). The problem splits into two, left and right, which howevere have a different nature (since I now know that the magic positions will form a prefix or a suffix).
+# On this residual problem nature decides each time I can not split in precisely half, leaving me the biggest half.
 
-def check_n_questions_worst_case(n):
-	return check_n_questions_worst_case_support(n, n)
+def num_questions_worst_case(n):
+    if n==0:
+        return 0
+    else:
+	return 1 + num_questions_worst_case_support((n-1)//2) + num_questions_worst_case_support((n-1)//2 + ((n-1)%2) )
 
-def check_n_questions_worst_case_support(n, nOriginal):
-	"""
-	Args:
-		n: the vector lenght 
-		nOriginal: the original vector lenght. it is used at the end to sum n/2 rounded down
-
-	Returns:
-		questions: the minumum number of questions to spot all the magic indexes in the worst case
-	"""
-
-	#base case
-	if n == 0:
-		return 0 + nOriginal//2 #default rounded down
-	if n == 1:
-		return 1 + nOriginal//2 #default rounded down
-	
-	return 1 + check_n_questions_worst_case_support((int(math.ceil(n / 2))) - 1, nOriginal)
+def num_questions_worst_case_support(n):
+    if n==0:
+        return 0
+    else:
+        return 1+num_questions_worst_case_support( (n-1)//2 + ((n-1)%2) )
 
 
 # We define this method to create a random "worst-case" vector for the play service. 

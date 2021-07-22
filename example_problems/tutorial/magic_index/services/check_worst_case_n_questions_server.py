@@ -27,7 +27,7 @@ TAc.print(LANG.opening_msg, "green")
 n = int(ENV['n'])
 risp = int(ENV['risp'])
 
-correct_worst_answer = check_n_questions_worst_case(n)
+correct_worst_answer = num_questions_worst_case(n)
 
 TAc.print(LANG.render_feedback("n", f'Your vector lenght: [{ENV["n"]}] '), "yellow", ["bold"])
 TAc.print(LANG.render_feedback("risp", f'Your minimum question number in the worst case: [{ENV["risp"]}] '), "yellow", ["bold"])
