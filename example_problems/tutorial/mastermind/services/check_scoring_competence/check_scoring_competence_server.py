@@ -25,7 +25,6 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
 
-stopping_command_set="#end"
 print(f"# Notice: the number of pegs is {ENV['num_pegs']} and the number of colors is {ENV['num_colors']}.")
 print("# After the key and an attempted solution has been given, I expect to receive the correct punctuation in the form of a sequence of 'w' or 'b' separated by a space or an empty sequence. \nExample:\n   w b w w\n")
 # print("# waiting for ...")
@@ -45,7 +44,6 @@ def main():
     buffer = TALinput(
         str,
         sep=' ',
-        exceptions = {stopping_command_set},
         regex=r"^(\s|b|w)*$",
         regex_explained="a sequence of b or w separated by a space or an empty line. An example is: 'w b w'.",
         TAc=TAc

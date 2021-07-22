@@ -15,3 +15,9 @@ def checkAttempt(key: list, attempt: list):
             rightPositonAndColor += 1
             rightColor -= 1
     return rightColor, rightPositonAndColor
+
+def getStringOfResult(rightColor, rightPositonAndColor):
+    result = "b " * rightPositonAndColor
+    result += "w " * rightColor
+    result = result.rstrip()
+    return result

@@ -7,7 +7,6 @@ RIGHT = 1
 def doScale(left, right):
     print(*left, sep = " ", end=", ")
     print(*right, sep = " ")
-    wait = True
     while True:
         spoon = input().strip()
         possibleResult = spoon.split(',')[0]
