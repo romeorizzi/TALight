@@ -59,6 +59,7 @@ class Lang:
         self.TAc=TAc
         self.messages_book = None
         self.messages_book_file = None
+        self.num_calls_to_manage_opening_msg = 0
         if "lang" in ENV.arg.keys() and ENV["lang"] != "hardcoded":
             self.messages_book_file = join(ENV.META_DIR, ENV.exe_path, ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
             # BEGIN: try to load the message book
@@ -133,6 +134,10 @@ class Lang:
             return rendition_of_the_hardcoded_msg
         return eval(f"f'{self.messages_book[msg_code]}'")
 
+    def manage_opening_msg(self):
+        if 'silent' not in self.ENV.arg.keys() or not self.ENV['silent'] or self.num_calls_to_manage_opening_msg > 0:
+            TAc.print(LANG.opening_msg, "green")
+        self.num_calls_to_manage_opening_msg += 1
 
 class TALcolors:
     def __init__(self, ENV):
