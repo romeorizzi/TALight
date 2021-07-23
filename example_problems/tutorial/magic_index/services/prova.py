@@ -40,9 +40,9 @@ def num_questions_worst_case_support(n, nOriginal):
 for n in range(20):
     print(f"{n:3}", end=" ")
 print()
-for n in range(20):
-    print(f"{num_questions_worst_case(n):3}", end=" ")
-print()
-for n in range(20):
-    print(f"{num_questions_worst_case2(n):3}", end=" ")    
+#for n in range(20):
+    #print(f"{num_questions_worst_case(n):3}", end=" ")
+#print()
+#for n in range(20):
+print(f"{num_questions_worst_case2(10):3}", end=" ")    
 print()

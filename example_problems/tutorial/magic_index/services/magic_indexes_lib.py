@@ -42,7 +42,7 @@ def random_vector_fixed(n, seed="random_seed"):
         while len(vec) < n:
             delta = seed_rem % n
             seed_rem=seed_rem//n            
-            vec.append(base+delta))
+            vec.append(base+delta)
             base = base+delta+1
         
     return vec,seed
@@ -61,13 +61,13 @@ def num_questions_worst_case(n):
     if n==0:
         return 0
     else:
-	return 1 + num_questions_worst_case_support((n-1)//2) + num_questions_worst_case_support((n-1)//2 + ((n-1)%2) )
+	    return 1 + num_questions_worst_case_support((n-1)//2) + num_questions_worst_case_support((n-1)//2 + ((n-1)%2))
 
 def num_questions_worst_case_support(n):
     if n==0:
         return 0
     else:
-        return 1+num_questions_worst_case_support( (n-1)//2 + ((n-1)%2) )
+        return 1 + num_questions_worst_case_support((n-1)//2 + ((n-1)%2))
 
 
 # We define this method to create a random "worst-case" vector for the play service. 
