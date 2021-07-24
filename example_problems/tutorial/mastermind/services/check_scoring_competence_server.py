@@ -27,29 +27,27 @@ TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE:
 
-if ENV["seed"]=='random_seed':
-    seed=random.randint(100000,999999)    
+if ENV["seed"] == 'random_seed':
+    seed = random.randint(100000,999999)    
 else:
-    seed=int(ENV["seed"])
+    seed = int(ENV["seed"])
 
 numPegs = ENV["num_pegs"]
 numColors = ENV["num_colors"]
-key = Utilities.generateRandomPegsList(numPegs, numColors)
+secretCode = Utilities.generateRandomPegsList(numPegs, numColors, seed)
 print(LANG.render_feedback("assigned-instance", f"# The assigned instance is:\n#   number of pegs: {ENV['num_pegs']}\n#   number of colors: {ENV['num_colors']}\n#   Seed: "), end="")
 TAc.print(seed, "yellow")
-TAc.print(LANG.render_feedback("secret-code", f"secret code:  {' '.join(map(str, key))}"), ["bold"])
-attempt = Utilities.generateRandomPegsList(numPegs, numColors)
-TAc.print(LANG.render_feedback("guessed-code", f"guessed code: {' '.join(map(str, attempt))}"), ["bold"])
-print(LANG.render_feedback("prompt", "# Enter your evaluation in the form of a possibly empty sequence of 'w' and 'b' characters (separated by spaces). \nExample:\n   w b w w\n"))
-rightColor, rightPositonAndColor = Utilities.checkAttempt(key, attempt)
+TAc.print(LANG.render_feedback("secret-code", f"secret code:  {' '.join(map(str, secretCode))}"), ["bold"])
+guessedCode = Utilities.generateRandomPegsList(numPegs, numColors, random.randint(100000,999999))
+TAc.print(LANG.render_feedback("guessed-code", f"guessed code: {' '.join(map(str, guessedCode))}"), ["bold"])
+print(LANG.render_feedback("prompt", "# Enter your evaluation in the form of a possibly empty sequence of 'w' and 'b' characters (separated by spaces). \n# Example:\n#   b w w\n"))
+rightColor, rightPositonAndColor = Utilities.calculateScore(secretCode, guessedCode)
 buffer = TALinput(
     str,
-    sep=' ',
-    regex=r"^(\s\s*|b|w)*$",
+    regex=r"^(b|w)*$",
     regex_explained="a possibly empty sequence of 'w' and 'b' characters (separated by spaces). An example is: 'w b w'.",
     TAc=TAc
 )
-buffer = list(filter(None, buffer))
 result = Counter(buffer)
 if rightColor == result['w'] and rightPositonAndColor == result['b']:
     TAc.print(LANG.render_feedback("right", "Your scoring is correct!"), "green", ["bold"])

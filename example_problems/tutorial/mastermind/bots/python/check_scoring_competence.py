@@ -1,40 +1,45 @@
 #!/usr/bin/env python3
 
 
-def checkAttempt(key: list, attempt: list):
-    rightColor = len(key) - len(list(set(key) - set(attempt)))
+def calculateScore(secretCode: list, guessedCode: list):
+    assert len(secretCode) == len(guessedCode)
     rightPositonAndColor = 0
-    for i in range(0, len(key)):
-        if key[i] == attempt[i]:
+    for i in range(len(secretCode)):
+        if guessedCode[i] == secretCode[i]:
             rightPositonAndColor += 1
-            rightColor -= 1
+    rightColor = 0
+    for col in guessedCode:
+        if col in secretCode:
+            rightColor += 1
+    rightColor -= rightPositonAndColor
     return rightColor, rightPositonAndColor
 
 
-def startAlgo():
+def startAlgo(spoon):
+    while spoon[:len("secret code:")] != "secret code:":
+        spoon = input().strip()
+    secretCode = [int(s) for s in (spoon.split(':')[1]).split()]
+    while spoon[:len("guessed code:")] != "guessed code:":
+        spoon = input().strip()
+    guessedCode = [int(s) for s in (spoon.split(':')[1]).split()]
     spoon = input().strip()
-    while spoon[:len("key: ")] != "key: ":
+    while spoon[:len("# ")] == "# ":
         spoon = input().strip()
-    key = [int(s) for s in (spoon.split(':')[1]).split()]
-    while spoon[:len("attempt: ")] != "attempt: ":
-        spoon = input().strip()
-    attempt = [int(s) for s in (spoon.split(':')[1]).split()]
-    rightColor, rightPositonAndColor = checkAttempt(key, attempt)
+    rightColor, rightPositonAndColor = calculateScore(secretCode, guessedCode)
     result = []
-    for i in range(0, rightColor):
-        result.append('w')
     for i in range(0, rightPositonAndColor):
         result.append('b')
+    for i in range(0, rightColor):
+        result.append('w')
     print(*result)
+    spoon = input().strip()
 
 
 def main():
     spoon = input().strip()
-    while spoon[:len("# After ")] != "# After ":
+    while spoon[:len("# ")] == "# ":
         spoon = input().strip()
-        assert spoon[0] == "#"
-    startAlgo()
-    spoon = input().strip()
+    startAlgo(spoon)
 
 
 if __name__ == "__main__":

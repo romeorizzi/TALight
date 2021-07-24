@@ -37,6 +37,10 @@ def doAttempt(value):
             blackPegs = buffer.count('b')
             whitePegs = buffer.count('w')
             return blackPegs, whitePegs
+        elif len(buffer) > 0 and buffer[0] == '-':
+            blackPegs = 0
+            whitePegs = 0
+            return blackPegs, whitePegs
 
 
 def countBlackPegs(code, guess):
@@ -132,7 +136,6 @@ def startAlgo():
 
 
 spoon = input().strip()
-while spoon[:len("#? waiting for ")] != "#? waiting for ":
+while spoon[:len("# ")] == "# ":
     spoon = input().strip()
-    assert spoon[0] == "#"
 startAlgo()

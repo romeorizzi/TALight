@@ -26,12 +26,12 @@ TAc.print(LANG.opening_msg, "green")
 # START CODING YOUR SERVICE:
 
 print(LANG.render_feedback("your-input", f"Secret code entered:  {ENV['secret_code']}\nProbing code entered: {ENV['probing_code']}\n"))
-secret_code = [int(s) for s in ENV["secret_code"].split()]
-probing_code = [int(s) for s in ENV["probing_code"].split()]
-if len(secret_code) != len(probing_code):
+secretCode = [int(s) for s in ENV["secret_code"].split()]
+probingCode = [int(s) for s in ENV["probing_code"].split()]
+if len(secretCode) != len(probingCode):
     TAc.print(LANG.render_feedback("error-len-probing_code", f"The length of the probing code must be the same as that of the secret code."), "red", ["bold"])
     exit(0)
-rightColor, rightPositonAndColor = Utilities.checkAttempt(secret_code, probing_code)
+rightColor, rightPositonAndColor = Utilities.calculateScore(secretCode, probingCode)
 result = Utilities.getStringOfResult(rightColor, rightPositonAndColor)
 print(LANG.render_feedback("correct-evaluation", f"Evaluation: {result}"))
 

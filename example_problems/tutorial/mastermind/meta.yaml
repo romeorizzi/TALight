@@ -43,6 +43,10 @@ services:
       num_colors:
         regex: ^([2-8])$
         default: 6
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+        explain: "specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

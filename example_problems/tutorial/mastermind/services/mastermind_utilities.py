@@ -2,47 +2,37 @@
 import random
 
 
-def generateRandomPegsList(len: int, diffPegsNum: int):
-    pegsList = random.sample(range(1, diffPegsNum), len)
+def generateRandomPegsList(len: int, diffPegsNum: int, seed: int):
+    random.seed(seed)
+    pegsList = random.choices(range(1, diffPegsNum+1), k=len)
     return pegsList
 
-def blackScore(secret_code: list, guessed_code: list):
-    assert len(secret_code) == len(guessed_code)
-    risp = 0
-    for i in range(len(secret_code)):
-        if guessed_code[i] == secret_code[i]:
-            risp += 1
-    return risp
 
-def whiteScore(secret_code: list, guessed_code: list):
-    assert len(secret_code) == len(guessed_code)
-    risp = 0
-    secret_code_occur = {}
-    for col in secret_code:
-        if col in secret_code_occur.keys():
-            secret_code_occur[col] += 1
-        else:
-            secret_code_occur[col] = 1
-    for col in guessed_code:
-        if col in secret_code_occur.keys() and secret_code_occur[col] > 0:
-            secret_code_occur[col] -= 1
-            risp += 1
-    return risp - blackScore(secret_code, guessed_code)
-
-def checkAttempt(secret_code: list, guessed_code: list):
-    numB = 0
-    numW = 0
-    
-    rightColor = len(secret_code) - len(list(set(secret_code) - set(guessed_code)))
+def calculateScore(secretCode: list, guessedCode: list):
+    assert len(secretCode) == len(guessedCode)
     rightPositonAndColor = 0
-    for i in range(0, len(key)):
-        if key[i] == attempt[i]:
+    for i in range(len(secretCode)):
+        if guessedCode[i] == secretCode[i]:
             rightPositonAndColor += 1
-            rightColor -= 1
+    rightColor = 0
+    secretCode_occur = {}
+    for col in secretCode:
+        if col in secretCode_occur.keys():
+            secretCode_occur[col] += 1
+        else:
+            secretCode_occur[col] = 1
+    for col in guessedCode:
+        if col in secretCode_occur.keys() and secretCode_occur[col] > 0:
+            secretCode_occur[col] -= 1
+            rightColor += 1
+    rightColor -= rightPositonAndColor
     return rightColor, rightPositonAndColor
+
 
 def getStringOfResult(rightColor, rightPositonAndColor):
     result = "b " * rightPositonAndColor
     result += "w " * rightColor
     result = result.rstrip()
+    if result == "":
+        result = "-"
     return result
