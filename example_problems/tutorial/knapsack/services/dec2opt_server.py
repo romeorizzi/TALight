@@ -56,7 +56,7 @@ while prompt!= "y" and prompt!= "n":
             PSwt, PSval = TALinput(int, 2, TAc=TAc)
             ps_wt.append(PSwt)
             ps_val.append(PSval)
-    o_zopt = zopt(int(ps_W), a_ps_wt, a_ps_val, int(ps_n))
+    o_zopt = zopt(int(ps_W), ps_wt, ps_val, int(ps_n))
     count += 1
     print(f"# Output: {o_zopt}")
     prompt = input()
@@ -76,7 +76,7 @@ if ENV['goal'] == "correct":
 if ENV['goal'] == "at_most_one_call":
     if answer == True:
         if prompt == "y":
-            if count == 1: 
+            if count <= 1: 
                 TAc.print(LANG.render_feedback("ok-TrueOneCall-dec2opt", "Corretto! La tua soluzione è anche ottima, hai usato una sola chiamata a oracolo."),"green")
             if count > 1:
                 TAc.print(LANG.render_feedback("no-TrueOneCall-dec2opt", "Corretto! Esiste una soluzione più efficiente però che usa una sola chiamata all'oracolo."),"yellow") 
@@ -86,7 +86,7 @@ if ENV['goal'] == "at_most_one_call":
         if prompt == "y":
             TAc.print(LANG.render_feedback("error-FalseOneCall-dec2opt", "Sbagliato!"),"red")
         if prompt == "n":
-            if count == 1:
+            if count <= 1:
                 TAc.print(LANG.render_feedback("ok-FalseOneCall-dec2opt", "Corretto! La tua soluzione è anche ottima, hai usato una sola chiamata a oracolo."),"green")
             if count > 1:
                 TAc.print(LANG.render_feedback("no-FalseOneCall-dec2opt", "Corretto! Esiste una soluzione più efficiente però che usa una sola chiamata all'oracolo."),"yellow")

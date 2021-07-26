@@ -62,7 +62,7 @@ while search != -1:
             PSwt, PSval = TALinput(int, 2, TAc=TAc)
             ps_wt.append(PSwt)
             ps_val.append(PSval)
-    o_zopt = zopt(int(ps_W), a_ps_wt, a_ps_val, int(ps_n))
+    o_zopt = zopt(int(ps_W), ps_wt, ps_val, int(ps_n))
     count += 1
     print(f"# Output: {o_zopt}")
     prompt = input()

@@ -63,32 +63,17 @@ while search != -1:
     search = prompt.find(' ')
 
 if ENV['goal'] == "correct":
-    if answer == True:
-        if prompt == "y":
+    if answer == int(prompt):
             TAc.print(LANG.render_feedback("ok-Truecorrect-opt2con", "Corretto!"),"green")
-        if prompt == "n":
+    else:
             TAc.print(LANG.render_feedback("no-Truecorrect-opt2con", "Sbagliato!"),"red")
-    if answer == False:
-        if prompt == "y":
-            TAc.print(LANG.render_feedback("no-Falsecorrect-opt2con", "Sbagliato!"),"red")
-        if prompt == "n":
-            TAc.print(LANG.render_feedback("ok-Falsecorrect-opt2con", "Corretto!"),"green") 
 
 if ENV['goal'] == "at_most_one_call":
-    if answer == True:
-        if prompt == "y":
-            if count == 1: 
+    if answer == int(prompt):
+            if count <= 1: 
                 TAc.print(LANG.render_feedback("ok-TrueOneCall-opt2con", "Corretto! La tua soluzione è anche ottima, hai usato una sola chiamata a oracolo."),"green")
             if count > 1:
                 TAc.print(LANG.render_feedback("no-TrueOneCall-opt2con", "Corretto! Esiste una soluzione più efficiente però che usa una sola chiamata all'oracolo."),"yellow") 
-        if prompt == "n":
+    else:
             TAc.print(LANG.render_feedback("error-TrueOneCall-opt2con", "Sbagliato!"),"red")
-    if answer == False:
-        if prompt == "y":
-            TAc.print(LANG.render_feedback("error-FalseOneCall-opt2con", "Sbagliato!"),"red")
-        if prompt == "n":
-            if count == 1:
-                TAc.print(LANG.render_feedback("ok-FalseOneCall-opt2con", "Corretto! La tua soluzione è anche ottima, hai usato una sola chiamata a oracolo."),"green")
-            if count > 1:
-                TAc.print(LANG.render_feedback("no-FalseOneCall-opt2con", "Corretto! Esiste una soluzione più efficiente però che usa una sola chiamata all'oracolo."),"yellow")
-
+ 

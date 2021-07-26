@@ -76,7 +76,7 @@ if ENV['goal'] == "correct":
 if ENV['goal'] == "at_most_one_call":
     if answer == True:
         if prompt == "y":
-            if count == 1: 
+            if count <= 1: 
                 TAc.print(LANG.render_feedback("ok-TrueOneCall-dec2con", "Corretto! La tua soluzione è anche ottima, hai usato una sola chiamata a oracolo."),"green")
             if count > 1:
                 TAc.print(LANG.render_feedback("no-TrueOneCall-dec2con", "Corretto! Esiste una soluzione più efficiente però che usa una sola chiamata all'oracolo."),"yellow") 
@@ -86,7 +86,7 @@ if ENV['goal'] == "at_most_one_call":
         if prompt == "y":
             TAc.print(LANG.render_feedback("error-FalseOneCall-dec2con", "Sbagliato!"),"red")
         if prompt == "n":
-            if count == 1:
+            if count <= 1:
                 TAc.print(LANG.render_feedback("ok-FalseOneCall-dec2con", "Corretto! La tua soluzione è anche ottima, hai usato una sola chiamata a oracolo."),"green")
             if count > 1:
                 TAc.print(LANG.render_feedback("no-FalseOneCall-dec2con", "Corretto! Esiste una soluzione più efficiente però che usa una sola chiamata all'oracolo."),"yellow") 

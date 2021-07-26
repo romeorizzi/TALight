@@ -69,7 +69,7 @@ end = monotonic()
 time = end - start
 
 if ENV['goal'] == "correct":
-    if str(answer) == prompt:
+    if answer == int(prompt):
             TAc.print(LANG.render_feedback("ok-correct-opt2dec", "Corretto!"),"green")
     else:
             TAc.print(LANG.render_feedback("no-correct-opt2dec", "Sbagliato!"),"red")
@@ -79,7 +79,7 @@ if ENV['goal'] == "at_most_opt_calls":
     print("DA FARE")
 
 if ENV['goal'] == "polynomial":
-    if str(answer) == prompt:
+    if answer == int(prompt):
         if time > 1:
             TAc.print(LANG.render_feedback("no-polynomial-opt2dec", f"Corretto! Il tuo algoritmo non è molto efficiente, ci mette {time}s sulla tua macchina."),"yellow")
         else:
