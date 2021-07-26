@@ -79,14 +79,6 @@ services:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
-      n:
-        regex: ^([1-9]|10|20|50|100|1000|10000)$
-        default: 10
-        explain: Choose the number of nodes for the random graph G that will be offered you.
-      m:
-        regex: ^([1-9]|10|20|50|100|1000|10000)$
-        default: 10
-        explain: Choose the number of arcs for the random graph G that will be offered you.
       goal:
         regex: ^(correct|efficient)$
         default: correct
