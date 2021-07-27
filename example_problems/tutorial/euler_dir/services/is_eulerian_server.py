@@ -2,6 +2,7 @@
 
 # "This service will check your statement that a directed graph you provide us admits an eulerian walk (of the specified type)""
 
+from os import EX_TEMPFAIL
 from sys import stderr, exit, argv
 
 import collections
@@ -61,58 +62,112 @@ for i in range(m):
 
 eul = ENV['eulerian']
 
-if ENV['walk_type'] == "closed":
-    answer1 = g.isEulerianCycle()
-    if answer1 == eul:
-        TAc.OK()
-        if answer1 == True:
-            TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian cycle!"),"green")
-            if ENV['feedback'] == "with_YES_certificate":
-                TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"green")
-                printCircuit(adj)
-                exit(0)
-        else:
-            TAc.print(LANG.render_feedback("not-eulerian", f"Il grafo NON contiene alcun eulerian cycle!"),"red")
-            exit(0)
-    else:
-        TAc.NO()
-        exit(0)
+if eul == 1:
 
-if ENV['walk_type'] == "open":
-    answer1 = g.isEulerianWalk()
-    answer2 = g.isEulerianCycle()
-    if answer1 == eul and answer2==False and answer1 ==True :
-        TAc.OK()
-        if answer1 == True:
-            TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian walk!"),"green")
-            if ENV['feedback'] == "with_YES_certificate":
-                TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"green")
-                printCircuit(adj)
-                exit(0)
-        else:
-            TAc.print(LANG.render_feedback("not-eulerian", f"Il grafo NON contiene alcun eulerian walk!"),"red")
-            exit(0)
-    else:
-         TAc.NO()
-         exit(0)
-
-if ENV['walk_type'] == "any": 
-    answer1 = g.isEulerianCycle()
-    answer2 = g.isEulerianWalk()
-    if answer1 == eul or answer2 == eul:
-        TAc.OK()
+    if ENV['walk_type'] == "closed":
+        answer1 = g.isEulerianCycle()
         if answer1 == eul:
-            TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian cycle!"),"green")
-            if ENV['feedback'] == "with_YES_certificate":
-                TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"green")
-                printCircuit(adj)
-                exit(0) 
-        if answer2 == eul:
-            TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian walk!"),"green")
-            if ENV['feedback'] == "with_YES_certificate":
-                TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"green")
-                g.printEulerTour()
+            TAc.OK()
+            if answer1 == True:
+                TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian cycle!"),"green")
+                if ENV['feedback'] == "with_YES_certificate":
+                    TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"green")
+                    printCircuit(adj)
+                    exit(0)
+            else:
+                TAc.print(LANG.render_feedback("not-eulerian", f"Il grafo NON contiene alcun eulerian cycle!"),"red")
                 exit(0)
-    else:
-        TAc.print(LANG.render_feedback("not-eulerian", f"Il grafo NON contiene alcun eulerian walk/cycle!"),"red")
-        exit(0)
+        else:
+            TAc.NO()
+            exit(0)
+
+    if ENV['walk_type'] == "open":
+        answer1 = g.isEulerianWalk()
+        answer2 = g.isEulerianCycle()
+        if answer1 == eul and answer2==False and answer1 ==True :
+            TAc.OK()
+            if answer1 == True:
+                TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian walk!"),"green")
+                if ENV['feedback'] == "with_YES_certificate":
+                    TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"green")
+                    printCircuit(adj)
+                    exit(0)
+            else:
+                TAc.print(LANG.render_feedback("not-eulerian", f"Il grafo NON contiene alcun eulerian walk!"),"red")
+                exit(0)
+        else:
+            TAc.NO()
+            exit(0)
+
+    if ENV['walk_type'] == "any": 
+        answer1 = g.isEulerianCycle()
+        answer2 = g.isEulerianWalk()
+        if answer1 == eul or answer2 == eul:
+            TAc.OK()
+            if answer1 == eul:
+                TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian cycle!"),"green")
+                if ENV['feedback'] == "with_YES_certificate":
+                    TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"green")
+                    printCircuit(adj)
+                    exit(0) 
+            if answer2 == eul:
+                TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian walk!"),"green")
+                if ENV['feedback'] == "with_YES_certificate":
+                    TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"green")
+                    g.printEulerTour()
+                    exit(0)
+        else:
+            TAc.print(LANG.render_feedback("not-eulerian", f"Il grafo NON contiene alcun eulerian walk/cycle!"),"red")
+            exit(0)
+
+
+if eul == 0:
+
+    if ENV['walk_type'] == "closed":
+        answer1 = g.isEulerianCycle()
+        if answer1 == eul:
+            TAc.OK()
+        else:
+            TAc.NO()
+            if answer1 == True:
+                TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian cycle!"),"red")
+                if ENV['feedback'] == "with_YES_certificate":
+                    TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"red")
+                    printCircuit(adj)
+                    exit(0)
+            exit(0)
+
+    if ENV['walk_type'] == "open":
+        answer1 = g.isEulerianWalk()
+        answer2 = g.isEulerianCycle()
+        if answer1 == eul:
+            TAc.OK()
+        else:
+            TAc.NO()
+            TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian walk!"),"red")
+            if ENV['feedback'] == "with_YES_certificate":
+                TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"red")
+                printCircuit(adj)
+                exit(0)
+            
+
+    if ENV['walk_type'] == "any": 
+        answer1 = g.isEulerianCycle()
+        answer2 = g.isEulerianWalk()
+        if answer1 == True or answer2 == True:
+            TAc.NO()
+            if answer1 == True:
+                TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian cycle!"),"red")
+                if ENV['feedback'] == "with_YES_certificate":
+                    TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"red")
+                    printCircuit(adj)
+                    exit(0) 
+            if answer2 == True:
+                TAc.print(LANG.render_feedback("eulerian", f"Il grafo ammette un eulerian walk!"),"red")
+                if ENV['feedback'] == "with_YES_certificate":
+                    TAc.print(LANG.render_feedback("here-is-the-certificate", f"Eccone uno:"),"red")
+                    g.printEulerTour()
+                    exit(0)
+        else:
+            TAc.OK()
+            exit(0)
