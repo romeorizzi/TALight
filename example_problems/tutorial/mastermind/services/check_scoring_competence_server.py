@@ -16,6 +16,7 @@ args_list = [
     ('num_pegs',int),
     ('num_colors',int),
     ('seed',str),
+    ('feedback',str),
     ('lang',str),    
     ('ISATTY',bool),
 ]
@@ -52,4 +53,8 @@ result = Counter(buffer)
 if rightColor == result['w'] and rightPositonAndColor == result['b']:
     TAc.print(LANG.render_feedback("right", "Your scoring is correct!"), "green", ["bold"])
 else:
-    TAc.print(LANG.render_feedback("error", "Your scoring is wrong."), "red", ["bold"])
+    if ENV["feedback"] == "yes_no":
+        TAc.print(LANG.render_feedback("error", "Your scoring is wrong."), "red", ["bold"])
+    else:
+        result = Utilities.getStringOfResult(rightColor, rightPositonAndColor)
+        TAc.print(LANG.render_feedback("error-solution", f"Your scoring is wrong. The solution is {result}"), "red", ["bold"])

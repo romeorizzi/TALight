@@ -16,6 +16,12 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
         explain: "specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+      feedback:
+        regex: ^(yes_no|provide_solution)$
+        default: yes_no
+        explain: "choose the feedback level. Options are as follows:"
+        explain1: "[yes_no]  just confirm me that my strategy is correct ."
+        explain2: "[provide_solution]  please, when my strategy is not correct, provide me the solution."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -37,6 +43,34 @@ services:
         regex: ^([1-9]|[1-4][0-9]|50)$
         default: 10
         explain: "a number from 1 to 50, the number of questions posed to the problem solver to test the competence"
+      num_pegs:
+        regex: ^([1-9])$
+        default: 4
+      num_colors:
+        regex: ^([2-8])$
+        default: 6
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+        explain: "specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+      difficulty:
+        regex: ^(normal|hard)$
+        default: normal
+        explain: "choose the difficulty of the game."
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  eval:
+    evaluator: [python3, services/eval_server.py]
+    args:
+      max_num_attempts:
+        regex: ^([1-9]|[1-4][0-9]|50)$
+        default: 10
+        explain: "a number from 1 to 50, the number of questions posed to the problem solver to test the competence"
+      num_match:
+        regex: ^([1-9]|[1-4][0-9]|50)$
+        default: 10
+        explain: "a number from 1 to 50, the number of match posed to the problem solver to test the competence"
       num_pegs:
         regex: ^([1-9])$
         default: 4

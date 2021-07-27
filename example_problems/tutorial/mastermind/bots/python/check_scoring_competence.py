@@ -8,8 +8,15 @@ def calculateScore(secretCode: list, guessedCode: list):
         if guessedCode[i] == secretCode[i]:
             rightPositonAndColor += 1
     rightColor = 0
+    secretCode_occur = {}
+    for col in secretCode:
+        if col in secretCode_occur.keys():
+            secretCode_occur[col] += 1
+        else:
+            secretCode_occur[col] = 1
     for col in guessedCode:
-        if col in secretCode:
+        if col in secretCode_occur.keys() and secretCode_occur[col] > 0:
+            secretCode_occur[col] -= 1
             rightColor += 1
     rightColor -= rightPositonAndColor
     return rightColor, rightPositonAndColor

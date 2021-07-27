@@ -130,11 +130,25 @@ def startAlgo():
         recentBlackPegs, recentWhitePegs = doAttempt(nextGuess)
         removeImpossible(recentBlackPegs, recentWhitePegs)
         prevGuesses.append(recentGuess)
-
     spoon = input().strip()
+    while spoon[:len("# ")] == "# ":
+        spoon = input().strip()
 
 
 spoon = input().strip()
 while spoon[:len("# ")] == "# ":
     spoon = input().strip()
 startAlgo()
+
+while True:
+    spoon = input().strip()
+    if spoon == '#end':
+        exit(0)
+    else:
+        P = []
+        S = []
+        prevGuesses = []
+        firstGuess = [1, 1, 2, 2]
+        recentGuess = firstGuess
+        guessCount = 1
+        startAlgo()

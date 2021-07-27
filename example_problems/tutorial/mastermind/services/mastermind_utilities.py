@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import random
+import itertools
 
 
 def generateRandomPegsList(len: int, diffPegsNum: int, seed: int):
@@ -36,3 +37,32 @@ def getStringOfResult(rightColor, rightPositonAndColor):
     if result == "":
         result = "-"
     return result
+
+def getHardSecretCode(guessedCode, numPegs, numColors, secretCodeAlive = None):
+    if secretCodeAlive == None:
+        secretCodeAlive = []
+        colors = list(range(1, numColors + 1))
+        comb = itertools.product(colors, repeat=numPegs)
+        for i in comb:
+            secretCodeAlive.append(list(i))
+    possibilty = {
+        (0, 0): [],
+        (1, 0): [],
+        (2, 0): [],
+        (3, 0): [],
+        (4, 0): [],
+        (0, 1): [],
+        (1, 1): [],
+        (2, 1): [],
+        (3, 1): [],
+        (0, 2): [],
+        (1, 2): [],
+        (2, 2): [],
+        (0, 3): [],
+        (0, 4): [],
+    }
+    for secretCode in secretCodeAlive:
+        rightColor, rightPositonAndColor = calculateScore(secretCode, guessedCode)
+        possibilty[rightColor, rightPositonAndColor].append(secretCode)
+    maxKey=max(possibilty, key=lambda k: len(possibilty[k]))
+    return maxKey, possibilty[maxKey]
