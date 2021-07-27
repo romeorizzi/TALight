@@ -15,7 +15,7 @@ problem="mastermind"
 service="eval_server"
 args_list = [
     ('max_num_attempts',int),
-    ('num_match',int),
+    ('num_matches',int),
     ('num_pegs',int),
     ('num_colors',int),
     ('seed',str),
@@ -47,10 +47,10 @@ numColors = ENV["num_colors"]
 sumAttempts = []
 matchWin = 0
 matchDone = 0
-while matchDone < ENV["num_match"]:
+while matchDone < ENV["num_matches"]:
     matchDone += 1
     seed = random.randint(100000, 999999)
-    print(LANG.render_feedback("new-match", f"# match {matchDone} of {ENV['num_match']}. Seed: "), end="")
+    print(LANG.render_feedback("new-match", f"# match {matchDone} of {ENV['num_matches']}. Seed: "), end="")
     TAc.print(seed, "yellow")
     secretCode = Utilities.generateRandomPegsList(numPegs, numColors, seed)
     count = 0
@@ -87,4 +87,4 @@ while matchDone < ENV["num_match"]:
             TAc.print(LANG.render_feedback("wrong-secret-code", f"# You didn't find the secret code, the secret code is [{' '.join(map(str, secretCode))}].\n"), "red", ["bold"])
 
 print('#end')
-print(LANG.render_feedback("match-statistics", f"# Match Statistics:\n#   Matches won: {matchWin}/{ENV['num_match']}\n#   avg number of attempts: {mean(sumAttempts)}\n#   maximum number of attempts: {max(sumAttempts)}"))
+print(LANG.render_feedback("matches-statistics", f"# Statistics:\n#   Matches won: {matchWin}/{ENV['num_matches']}\n#   avg number of attempts (over won matches): {mean(sumAttempts)}\n#   maximum number of attempts (over won matches): {max(sumAttempts)}"))
