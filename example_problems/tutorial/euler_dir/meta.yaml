@@ -1,6 +1,7 @@
 public_folder: public
 services:
-  check_is_eulerian:
+# controllato: ok
+  check_is_eulerian: 
     explain: This service will check your assertion that a directed graph (that you provide us) admits an eulerian walk (of the specified type).
     evaluator: [python,services/is_eulerian_server.py]
     args:     
@@ -25,6 +26,7 @@ services:
         regex: ^1000$
         default: 1000
         explain: The number of arcs of your graph cannot exceed MAXM.
+# controllato: ok
   check_is_not_eulerian:
     explain: This service will check your assertion that a directed graph (that you provide us) does NOT admit an eulerian walk of the specified type.
     evaluator: [python,services/is_eulerian_server.py]
@@ -50,6 +52,7 @@ services:
         regex: ^1000$
         default: 1000
         explain: The number of arcs of your graph cannot exceed MAXM.
+ # ok!
   check_eulerian_walk:
     explain: This service checks the validity of an eulerian walk for a graph. The service is given both the graph and the walk.
     evaluator: [python,services/check_eulerian_walk_server.py]
@@ -71,6 +74,7 @@ services:
         regex: ^1000$
         default: 1000
         explain: The number of arcs of your graph cannot exceed MAXM.
+  # controllato
   eval_eulerian_walk_checker:
     explain: "Given a directed graph and a candidate eulerian walk for it, can you decide whether the eulerian walk is valid?"
     evaluator: [python,services/eval_eulerian_walk_checker_server.py]
@@ -88,8 +92,9 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+# corretto
   eval_euler_dir:
-    explain: "Given a directed graph, can you decide if it si eulerian? And can you do it efficiently?"
+    explain: "Given a directed graph, can you decide if it si eulerian (ciclo chiuso)? And can you do it efficiently?"
     evaluator: [python,services/eval_euler_dir_server.py]
     args:
       seed:
@@ -116,8 +121,9 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+# ok
   trilly_decision:
-    evaluator: [python, services/trilly_server.py]
+    evaluator: [python, services/trilly_decision_server.py]
     explain: "Trilly the fairy helps you understand whether a graph admits an eulerian walk. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly whether the graph obtained from G with the removal of such an arc would admit an eulerian walk or not. You can call trilly as many times as you want but, in the end, you must tell whether G admits an eulerian walk or not."
     args:
       n:
@@ -139,8 +145,9 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+# ok
   trilly_construction:
-    evaluator: [python, services/trilly_server.py]
+    evaluator: [python, services/trilly_construction_server.py]
     explain: "Trilly the fairy helps you construct an Eulerian walk within a graph that admits at least one. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly to return you an eulerian walk of the graph obtained from G with the removal of such an arc. Trilly will either tell you that no such walk exists or return you one. You can call trilly as many times as you want but, in the end, you must provide an eulerian walk of G."
     args:
       n:
