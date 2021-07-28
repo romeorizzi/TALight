@@ -31,6 +31,7 @@ def move_tower(n, current, target, support):
 
 wait_start()
 ##############################
+# TEST1:
 # CASE: AA -> CC
 # move_tower(2, 'A', 'C', 'B')
 
@@ -42,14 +43,13 @@ print('1:BA')
 print('1:AC')
 
 
+# TEST2:
 # CASE: ABC -> CBA
 # print('1:AB')
 # print('3:CA')
 # print('1:BC')
-# print('1:CC')
-# print('1:CC')
-# print('1:CC')
-# print('1:CC')
+# print('1:CB')
+# print('1:BC')
 ##############################
 print("end")
 wait_end() 

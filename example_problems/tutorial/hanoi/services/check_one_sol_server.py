@@ -127,7 +127,7 @@ else:
 
     # check if is a simple walk
     if (error != None):
-        TAc.print(LANG.render_feedback("sol-not-simplewalk", f'user_sol is not a simple walk'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("sol-not-simplewalk", f'user_sol is not a simple walk [{error}]'), "red", ["bold"])
     else:
         TAc.print(LANG.render_feedback("sol-simplewalk", f'user_sol is a simple walk'), "green", ["bold"])
 

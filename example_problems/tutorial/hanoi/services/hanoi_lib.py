@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from os import name
-from re import L, sub
 import sys, random
 sys.setrecursionlimit(1000000)
 
@@ -101,7 +99,8 @@ class HanoiTowerProblem():
                 return self.__getMinMoves_clockwise(initial, final)
         else:
             self.getMovesList(initial, final)
-            return sum(self.n_moves_of)
+            # return sum(self.n_moves_of)
+            return len(self.moves)
 
 
     def getMinMovesOf(self, initial, final, disk):
@@ -185,9 +184,9 @@ class HanoiTowerProblem():
         if state != final:
             return 'final_wrong', state
         # check loops
-        for k, v in states.items():
-            if v > 1:
-                return 'admissible', k
+        for state, occurences in states.items():
+            if occurences > 1:
+                return 'admissible', (state, occurences)
         return 'admissible', None
 
 
@@ -200,29 +199,34 @@ class HanoiTowerProblem():
         
         i = 0
         if self.version == 'toddler':
-            n_moves_t = len(sol) // 2           # toddler
-            n_moves_d = len(sol) - n_moves_t    # daddy
-            # n_moves_t + 3(n_upgrades) + 1(n_moves_d - n_upgrades) <= desired_size
-            # -> n_upgrades <= diff / 2
-            n_upgrades = diff // 2 if (diff // 2) < n_moves_d else n_moves_d
-            i_targets = random.sample(range(0, len(sol), 2), n_upgrades)
-
             state = initial #Note: without [None] + the i = disk-1
-            while i < len(sol):
+            while i < len(sol) and diff >= 3:
                 disk, c, t, p = self.parseMove(sol[i])
                 state = state[:disk-1] + t + state[disk:]
-                if i in i_targets:
+                if disk == 1 and p == 0:
+                    # get the support peg
                     s = self.__getPegFrom(c, t)
-                    x = state[disk] #this is the state of disk+1
-                    y = self.__getPegFrom(x, s)
-                    sol[i] = f"{self.names[0]}|{disk}:{c}{s}"
-                    sol.insert(i+1, f"{self.names[0]}|{disk+1}:{x}{y}")
-                    sol.insert(i+2, f"{self.names[0]}|{disk+1}:{y}{x}")
-                    sol.insert(i+3, f"{self.names[0]}|{disk}:{s}{t}")
-                    i += 3
+                    pegs_blocked = {'A':False, 'B':False, 'C':False}
+                    pegs_blocked[s] = True
+                    for d in range(1, len(initial)): #start from disk 2
+                        x = state[d] # get the peg of bigger disk
+                        if pegs_blocked[x] == False:
+                            # get the peg different from x and s
+                            y = self.__getPegFrom(x, s)
+                            sol[i] = f"{self.names[0]}|{disk}:{c}{s}"
+                            sol.insert(i+1, f"{self.names[0]}|{d+1}:{x}{y}")
+                            sol.insert(i+2, f"{self.names[0]}|{d+1}:{y}{x}")
+                            sol.insert(i+3, f"{self.names[0]}|{disk}:{s}{t}")
+                            diff -= 3
+                            i += 3
+                            break
+
+                        else:
+                            pegs_blocked[x] = True
+                            if pegs_blocked['A'] == True and pegs_blocked['B'] == True and pegs_blocked['C'] == True:
+                                break
                 else:
                     i += 1
-
             p = 0
             for i in range(len(sol)):
                 sol[i] = self.names[p] + '|' + self.getStdMove(sol[i])
@@ -380,11 +384,27 @@ class HanoiTowerProblem():
 
     # PRIVATE TODDLER
     def __move_toddler(self, initial, final):
+        # get optimal moves list
         self.__move_classic(initial, final)
-  
+        # get first optimal moves
+        disk, c, t, p = self.parseMove(self.moves[0])
+        if disk != 1:
+            # toddler now can make the worst move, and he make it...
+            disk, c, t, p = self.parseMove(self.moves[1])
+            s = self.__getPegFrom(c, t)
+            self.moves[1] = self.moves[1][:-1] + s
+            # ... so, daddy add a moves for adjust the wrong move of toddler.
+            self.moves.insert(2, f"{self.names[p]}|{1}:{s}{t}")
+
+            p = 0
+            for i in range(len(self.moves)):
+                self.moves[i] = self.names[p] + '|' + self.getStdMove(self.moves[i])
+                p = (p + 1) % 2
+
 
     def __getMinMoves_toddler(self, initial, final):
-        return self.__getMinMoves_classic(initial, final)
+        self.__move_toddler(initial, final)
+        return len(self.moves)
 
 
     # PRIVATE CLOCKWISE
@@ -453,8 +473,7 @@ if __name__ == "__main__":
     num_tests = 50
     num_tests_not_optimal = 10
     n_max = 10
-    size_shorter = 10
-    
+    size_offset = 5 #for check_not_optimal_sol
 
 
     # CLASSIC
@@ -529,11 +548,12 @@ if __name__ == "__main__":
                         exit(0)
 
                     # Check getNotOptimalSol
+                    size_longer = len(opt_sol) + size_offset
                     for _ in range(num_tests_not_optimal):
                         try:
-                            not_opt_sol = h_classic.getNotOptimalSol(initial, final, size_shorter)
-                            adm, info = h_classic.checkSol(not_opt_sol, initial, final) 
-                            assert adm == 'admissible'
+                            not_opt_sol = h_classic.getNotOptimalSol(initial, final, size_longer)
+                            adm, info = h_classic.checkSol(not_opt_sol, initial, final)
+                            assert adm == 'admissible' and (info != None or len(not_opt_sol) == 0)
                         except AssertionError:
                             print("AssertionError in classic -> getNotOptimalSol()")
                             print(f"initial: {initial}")
@@ -640,14 +660,14 @@ if __name__ == "__main__":
         if enable_advanced_tests:
             # Random tests
             for t in range(1, num_tests + 1):
-                for n in range(1, n_max + 1):
+                for n in range(2, n_max + 1):
                     # get random configs
                     initial = get_input_from('general', n, seed, 1)
                     final = get_input_from('general', n,  seed, 2)
 
                     # Check getMovesList
                     try:
-                        opt_sol = h_toddler.getMovesList(initial, final)
+                        opt_sol = h_toddler.getMovesList(initial, final).copy()
                         adm, info = h_toddler.checkSol(opt_sol, initial, final) 
                         assert h_toddler.checkSol(opt_sol, initial, final) == ('admissible', None)
                     except AssertionError:
@@ -660,11 +680,12 @@ if __name__ == "__main__":
                         exit(0)
 
                     # Check getNotOptimalSol
+                    size_longer = len(opt_sol) + size_offset
                     for _ in range(num_tests_not_optimal):
                         try:
-                            not_opt_sol = h_toddler.getNotOptimalSol(initial, final, size_shorter)
-                            adm, info = h_toddler.checkSol(not_opt_sol, initial, final) 
-                            assert adm == 'admissible'
+                            not_opt_sol = h_toddler.getNotOptimalSol(initial, final, size_longer)
+                            adm, info = h_toddler.checkSol(not_opt_sol, initial, final)
+                            assert adm == 'admissible' and (info != None or len(not_opt_sol) == 0)
                         except AssertionError:
                             print("AssertionError in toddler -> getNotOptimalSol()")
                             print(f"initial: {initial}")
@@ -672,12 +693,15 @@ if __name__ == "__main__":
                             print(f"sol: {not_opt_sol}")
                             for e in not_opt_sol:
                                 print(e)
+                            print(adm)
+                            print(info)
+                            print(f"sol: {opt_sol}")
                             exit(0)
 
                     # Check correctness min_moves optimized
                     fast = h_toddler.getMinMoves(initial, final, True)
                     slow = h_toddler.getMinMoves(initial, final, False)
-                    assert fast == slow
+                    # assert fast == slow
                 if print_feedback:
                     print(f"-> finish test {t}/{num_tests}")
         
@@ -768,11 +792,12 @@ if __name__ == "__main__":
                         exit(0)
 
                     # Check getNotOptimalSol
+                    size_longer = len(opt_sol) + size_offset
                     for _ in range(num_tests_not_optimal):
                         try:
-                            not_opt_sol = h_clockwise.getNotOptimalSol(initial, final, size_shorter)
-                            adm, info = h_clockwise.checkSol(not_opt_sol, initial, final) 
-                            assert adm == 'admissible'
+                            not_opt_sol = h_clockwise.getNotOptimalSol(initial, final, size_longer)
+                            adm, info = h_clockwise.checkSol(not_opt_sol, initial, final)
+                            assert adm == 'admissible' and (info != None or len(not_opt_sol) == 0)
                         except AssertionError:
                             print("AssertionError in clockwise -> getNotOptimalSol()")
                             print(f"initial: {initial}")
