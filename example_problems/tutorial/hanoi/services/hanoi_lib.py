@@ -3,72 +3,209 @@ import sys, random
 sys.setrecursionlimit(1000000)
 
 
-def get_input_from(config, n, seed = 0, n_query=1):
-    """Assume N!=-1 if start=all_X and final=all_X"""
-    if config == 'all_A':
-        return 'A' * n
-    if config == 'all_B':
-        return 'B' * n
-    if config == 'all_C':
-        return 'C' * n
-    if config == 'general':
+
+PEGS_LIST = ['A', 'B', 'C']
+
+
+
+class ConfigGenerator():
+    def __init__(self, seed = 0):
         random.seed(seed)
-        for _ in range(n_query):
-            config = ''
-            for _ in range(n):
-                config += random.choice(('A', 'B', 'C'))
-    return config
 
 
-def get_description_of(code):
-    if code == 0:
-        return "Correct"
-    if code == 1:
-        return "Invalid disk: not exist"
-    if code == 2:
-        return "Wrong current or state: they don't coincide"
-    if code == 3:
-        return "Invalid peg: not exist"
-    if code == 4:
-        return "Invalid move: current and target can't be equal"
-    if code == 5:
-        return "Invalid disk: Toddler can't move last disk"
-    if code == 6:
-        return "Invalid move: counterclockwise move"
-    if code == 7:
-        return "Invalid move: big disk on small disk"
-    if code == 8:
-        return "Invalid disk: is blocked"
-    return "This code not exist"
+    def getTower(self, type, n):
+        assert n > 0
+        assert type in PEGS_LIST
+        
+        return type * n
+
+
+    def getRandomFrom(self, n, seed):
+        """This method reset RndGenerator and then generate a config"""
+        random.seed(seed)
+        config = ''
+        for _ in range(n):
+            config += random.choice(PEGS_LIST)
+        return config
+
+
+    def getRandom(self, n):
+        """This method generate a config from previously initialized RndGenerator"""
+        config = ''
+        for _ in range(n):
+            config += random.choice(PEGS_LIST)
+        return config
+
+
+
+class HanoiState():
+    def __init__(self, initial):
+        # Note: I use a sentinel in 0 position
+        self.current = ["*"] + list(initial)
+        self.turn = 0
+        self.last_disk = 1 # for Toddler version
+    
+
+    def getTowerSize(self):
+        return len(self.current) - 1
+    
+
+    def getString(self):
+        return ''.join(self.current[1:])
+    
+
+    def update(self, disk, target):
+        """Assume valid disk"""
+        assert disk > 0 and disk < len(self.current)
+        
+        self.current[disk] = target
+        self.turn += 1
+        self.last_disk = disk
+    
+
+    def of(self, disk):
+        return self.current[disk]
+    
+
+    def isEqualTo(self, config):
+        return self.getString() == config
+
 
 
 class HanoiTowerProblem():
+    """
+    Move Format: {disk}:{from_peg}{to_peg} with bracked omitted
+    Example: move disk1 from pegA to pegB == 1:AB
+    """
     def __init__(self, version):
         # All
         assert version == 'classic' or version == 'toddler' or version == 'clockwise'
-        self.version = version  # classic|toddler|clockwise
-        self.moves = list()
-        self.n_moves_of = list()
+        self.version = version          # classic|toddler|clockwise
+        self.moves = list()             # for getMoveList
+        self.enable_n_moves_of = False  # for enable n_moves_of
+        self.n_moves_of = list()        # for getMinMovesOf
 
         # toddler version
-        self.names = ["Daddy  ", "Toddler"]
-        assert len(self.names[0]) == len(self.names[1])
-        self.len_names = len(self.names[0])
-        self.player = 0
+        # Note: in this version move-i odd -> Daddy; move-i+1 -> Toddler
 
         # clockwise version
-        self.mem = dict()
+        self.mem = dict()               # for  __getMinMoves_clockwise memoizzation
+
+
+    # PUBLIC INTERFACE 
+    def generateMoveFrom(self, disk, current, target):
+        """Generate a move string from info"""
+        return f"{disk}:{current}{target}"
     
 
-    # PUBLIC INTERFACE
-    def getStdMove(self, move):
+    def parseMove(self, move):
+        """Extract the info from the move string"""
+        disk, (c, t) = move.split(":")
+        return int(disk), c, t
+
+
+    def checkMove(self, state, disk, current, target):
+        """
+        Assume valid state
+        Return: Success, ErrorCode
+        """
+        assert isinstance(state, HanoiState)
+
+        if disk > state.getTowerSize() or disk < 1:
+            return False, 1     # "Invalid disk: not exist"
+        if current not in PEGS_LIST or \
+           target not in PEGS_LIST:
+           return False, 2      # "Invalid Peg: not exist"
+        if current == target:
+            return False, 3     # "Invalid move: current and target can't be equal"
+        if state.of(disk) != current:
+            return False, 4     # "Wrong current or state: they don't coincide"
         if self.version == 'toddler':
-            move = move[self.len_names+1:]
-        return move
+            # Assume that in all odd turns, Toddler plays
+            if disk == state.last_disk and state.turn % 2 == 1:
+                return False, 5 # "Invalid move: Toddler can't move last disk"
+        if self.version == 'clockwise':
+            if target != self.__getNextPeg(current):
+                return False, 6 # "Invalid move: can't make a counterclockwise move"
+        for i in range(disk-1, 0, -1):
+            #Note: this can be optimized using getAvailableMovesIn()
+            if state.current[i] == target:
+                return False, 7 # "Invalid move: can't move big disk on small disk"
+            if state.of(i) == state.of(disk):
+                return False, 8 # "Invalid disk: is blocked"
+        return True, 0          # "Correct"
 
     
+    def checkMoveList(self, move_list, initial, final):
+        """Check if the move list is admissible or not"""
+        state = HanoiState(initial)             # state class
+        states_occ = {state.getString() : 1}    # state occurences
+        
+        # check moves correctness
+        for move in move_list:
+            # check move
+            d, c, t = self.parseMove(move)
+            success, errorCode = self.checkMove(state, d, c, t)
+            if not success:
+                return 'move_wrong', (move, errorCode)
+            # update state and occurences
+            state.update(d, t)
+            # if state.current is not in states_occ, insert it with occ=1 else occ+=1
+            states_occ[state.getString()] = states_occ.get(state.getString(), 0) + 1
+        
+        # check final correctness
+        if not state.isEqualTo(final):
+            return 'final_wrong', state
+        
+        # check loops in move_list
+        occ = {k:v for k,v in states_occ.items() if v > 1}
+        if len(occ) != 0:
+            return 'admissible', occ
+        return 'admissible', None
+
+
+    def getAvailableMovesIn(self, state):
+        """ Assume valid state"""
+        assert isinstance(state, HanoiState)
+
+        move_list = list()
+        blocked = {i:False for i in PEGS_LIST}
+        
+        for disk in range(1, state.getTowerSize()+1):
+            # Check if the i-disk is blocked
+            if not blocked[state.of(disk)]:
+                # Get others pegs
+                for peg in self.__getPegsFrom(state.of(disk)):
+                    # Check if can move disk in this peg
+                    if not blocked[peg]:
+                        if self.version == 'toddler':
+                            # Assume that in all odd turns, Toddler plays
+                            if disk == state.last_disk and state.turn % 2 == 1:
+                                continue
+                        elif self.version == 'clockwise':
+                            if peg != self.__getNextPeg(state.of(disk)):
+                                continue
+                        # Add valid move
+                        move_list.append(f"{disk}:{state.of(disk)}{peg}")
+            # Blocking
+            blocked[state.of(disk)] = True
+            
+            # Check if all other moves are blocked
+            if all(v == True for v in blocked.values()):
+                break
+        
+        return move_list
+
+
     def getMovesList(self, initial, final):
+        """
+        Return the optimal moves list
+        Note1: the length of initial must be equal to the length of final
+        Note2: the return list is a pointer
+        """
         assert len(initial) == len(final)
+
+        # reset
         self.moves.clear()
         self.n_moves_of = [0] * (len(initial) + 1)
 
@@ -76,8 +213,7 @@ class HanoiTowerProblem():
             self.__move_classic(initial, final)
         
         elif self.version == 'toddler':
-            self.player = 0
-            self.__move_toddler(initial, final) #equal to toddler version
+            self.__move_toddler(initial, final)
         
         elif self.version == 'clockwise':
             self.__move_clockwise(initial, final)
@@ -86,7 +222,13 @@ class HanoiTowerProblem():
 
 
     def getMinMoves(self, initial, final, optimized=True):
+        """
+        Return the optimal minimum number of moves
+        Note1: in Toddler version assume always that Toddler make worst move.
+        Note2: the length of initial must be equal to the length of final
+        """
         assert len(initial) == len(final)
+
         if optimized:
             if self.version == 'classic':
                 return self.__getMinMoves_classic(initial, final)
@@ -95,161 +237,87 @@ class HanoiTowerProblem():
                 return self.__getMinMoves_toddler(initial, final)
             
             if self.version == 'clockwise':
-                # self.mem.clear()
+                # self.mem.clear() # If u want reset 
                 return self.__getMinMoves_clockwise(initial, final)
         else:
             self.getMovesList(initial, final)
-            # return sum(self.n_moves_of)
             return len(self.moves)
 
 
     def getMinMovesOf(self, initial, final, disk):
+        """
+        Note1: the length of initial must be equal to the length of final
+        Note2: the disk must be valid
+        """
         assert len(initial) == len(final)
         assert disk > 0 and disk <= len(initial)
+
+        self.enable_n_moves_of = True
         self.getMovesList(initial, final)
-        return self.n_moves_of[disk]
-    
-    
-    def parseMove(self, move):
-        if self.version == 'toddler':
-            player, tmp = move.split("|")
-            if player == self.names[0]:
-                p = 0
-            elif player == self.names[1]:
-                p = 1
-            else:
-                p = -1
-            disk, tmp = tmp.split(":")
-            disk = int(disk)
-            c = tmp[0]
-            t = tmp[1]
-            return disk, c, t, p
-        else:
-            disk, tmp = move.split(":")
-            disk = int(disk)
-            c = tmp[0]
-            t = tmp[1]
-            return disk, c, t
-
-
-    def checkMove(self, state, disk, c, t, player = None, last_disk = None):
-        """Assume valid state and valid last_disk"""
-        if disk > len(state) or disk < 1:
-            return 1 #Invalid disk: not exist
-        if state[disk-1] != c:
-            return 2 #Wrong current or state: they don't coincide
-        if (c != 'A' and c!= 'B' and c != 'C') or \
-           (t != 'A' and t!= 'B' and t != 'C'):
-           return 3 #Invalid Peg: not exist
-        if c == t:
-            return 4 #Invalid move: current and target can't be equal
-        if self.version == 'toddler':
-            assert player != None
-            assert last_disk != None
-            assert last_disk > 0 and last_disk <= len(state)
-            if player == 1 and disk == last_disk:
-                return 5 #Invalid disk: Toddler can't move last disk
-        if self.version == 'clockwise':
-            if t == self.__getPegFrom(self.__getNextPeg(c), c):
-                return 6 #Invalid move: counterclockwise move
-        for i in range(disk-1, 0, -1):
-            if state[i-1] == t:
-                return 7 #Invalid move: big disk on small disk
-        for i in range(disk-1, 0, -1):
-            if state[i-1] == state[disk-1]:
-                return 8 #Invalid disk: is blocked
-        return 0 #Correct
+        n = self.n_moves_of[disk]
+        self.enable_n_moves_of = False
+        return n
     
 
-    def isValid(self, state, disk, c, t, player = None, last_disk = None):
-        return self.checkMove(state, disk, c, t, player, last_disk) == 0
-
-
-    def checkSol(self, sol, initial, final):
-        state = initial
-        states = {state : 1}
-        last_disk = 1 #Daddy move always first, so first last_disk is ignored
-        for e in sol:
-            if self.version == 'toddler':
-                disk, c, t, p = self.parseMove(e)
-                if not self.isValid(state, disk, c, t, p, last_disk):
-                    return 'move_not_valid', e
-            else:
-                disk, c, t = self.parseMove(e)
-                if not self.isValid(state, disk, c, t):
-                    return 'move_not_valid', e
-            state = state[:disk-1] + t + state[disk:]
-            states[state] = states.get(state, 0) + 1
-            last_disk = disk
-        if state != final:
-            return 'final_wrong', state
-        # check loops
-        for state, occurences in states.items():
-            if occurences > 1:
-                return 'admissible', (state, occurences)
-        return 'admissible', None
-
-
-    def getNotOptimalSol(self, initial, final, desired_size):
+    def getNotOptimalMovesList(self, initial, final, desired_size):
         self.getMovesList(initial, final)
         sol = self.moves
         diff = desired_size - len(sol)
+
+        # if desired_size is too small return optimal solution
         if diff <= 0 or len(sol) == 0:
             return sol
         
         i = 0
         if self.version == 'toddler':
-            state = initial #Note: without [None] + the i = disk-1
+            state = HanoiState(initial)
             while i < len(sol) and diff >= 3:
-                disk, c, t, p = self.parseMove(sol[i])
-                state = state[:disk-1] + t + state[disk:]
-                if disk == 1 and p == 0:
+                d, c, t = self.parseMove(sol[i])
+                state.update(d, t)
+                # search Daddy move with disk 1
+                if d == 1 and state.turn % 2 == 0:
                     # get the support peg
                     s = self.__getPegFrom(c, t)
-                    pegs_blocked = {'A':False, 'B':False, 'C':False}
-                    pegs_blocked[s] = True
-                    for d in range(1, len(initial)): #start from disk 2
-                        x = state[d] # get the peg of bigger disk
-                        if pegs_blocked[x] == False:
+                    blocked = {i:False for i in PEGS_LIST}
+                    blocked[s] = True
+                    # search first bigger disk not blocked
+                    for big_d in range(2, state.getTowerSize()+1):
+                        # get potentially peg bigger disk
+                        x = state[big_d]
+                        if blocked[x] == False: # optimal case
                             # get the peg different from x and s
                             y = self.__getPegFrom(x, s)
-                            sol[i] = f"{self.names[0]}|{disk}:{c}{s}"
-                            sol.insert(i+1, f"{self.names[0]}|{d+1}:{x}{y}")
-                            sol.insert(i+2, f"{self.names[0]}|{d+1}:{y}{x}")
-                            sol.insert(i+3, f"{self.names[0]}|{disk}:{s}{t}")
+                            sol[i] = f"{d}:{c}{s}"
+                            sol.insert(i+1, f"{big_d}:{x}{y}")
+                            sol.insert(i+2, f"{big_d}:{y}{x}")
+                            sol.insert(i+3, f"{d}:{s}{t}")
                             diff -= 3
                             i += 3
                             break
-
                         else:
-                            pegs_blocked[x] = True
-                            if pegs_blocked['A'] == True and pegs_blocked['B'] == True and pegs_blocked['C'] == True:
+                            blocked[x] = True
+                            # Check if all other moves are blocked
+                            if all(v == True for v in blocked.values()):
                                 break
                 else:
                     i += 1
-            p = 0
-            for i in range(len(sol)):
-                sol[i] = self.names[p] + '|' + self.getStdMove(sol[i])
-                p = (p + 1) % 2
-            return sol
-
         else:
             while diff > 0:
-                disk, c, t = self.parseMove(sol[i])
-                if disk == 1 and random.randint(1,10) > 2:
+                d, c, t = self.parseMove(sol[i])
+                if d == 1 and random.randint(1,10) > 2:
                     if self.version == 'classic':
                         s = self.__getPegFrom(c, t)
-                        sol[i] = f"{disk}:{c}{s}"
-                        sol.insert(i+1, f"{disk}:{s}{t}")
+                        sol[i] = f"{d}:{c}{s}"
+                        sol.insert(i+1, f"{d}:{s}{t}")
                         diff = diff - 1
                         if diff <= 0:
                             break
                         # deliberately not incrementing by 1+1 to add randomness
                     elif self.version == 'clockwise':
                         s = self.__getNextPeg(t)
-                        sol.insert(i+1, f"{disk}:{t}{s}")
-                        sol.insert(i+2, f"{disk}:{s}{c}")
-                        sol.insert(i+3, f"{disk}:{c}{t}")
+                        sol.insert(i+1, f"{d}:{t}{s}")
+                        sol.insert(i+2, f"{d}:{s}{c}")
+                        sol.insert(i+3, f"{d}:{c}{t}")
                         diff = diff - 3
                         # deliberately not incrementing by 1+3 to add randomness
                         if diff < 3:
@@ -258,40 +326,6 @@ class HanoiTowerProblem():
                 if i >= len(sol):
                     i = 0
             return sol
-
-
-    def getAvailableMovesIn(self, state, player = None, last_disk = None):
-        '''I Assume valid state and valid last_dik'''
-        state = [None] + list(state)
-        move_list = list()
-        blocked = {'A': False, 'B': False, 'C': False}
-        
-        for disk in range(1, len(state)):
-            # Check if the i-disk is blocked
-            if not blocked[state[disk]]:
-                # Check if the other pegs have disk smaller
-                for t in self.__getPegsFrom(state[disk]):
-                    if not blocked[t]:
-                        if self.version == 'classic':
-                            move_list.append(f"{disk}:{state[disk]}{t}")
-                        elif self.version == 'toddler':
-                            assert player != None
-                            assert last_disk != None
-                            assert last_disk > 0 and last_disk <= len(state)
-                            if player == 0 or disk != last_disk:
-                                move_list.append(f"{self.names[player]}|{disk}:{state[disk]}{t}")
-                        elif self.version == 'clockwise':
-                            if t == self.__getNextPeg(state[disk]):
-                                move_list.append(f"{disk}:{state[disk]}{t}")
-            # Blocking
-            blocked[state[disk]] = True
-            
-            # Check if all other moves are blocked
-            if all(v == True for v in blocked.values()):
-                break
-        
-        # print(move_list)
-        return move_list
 
 
     # PRIVATE ALL
@@ -324,17 +358,10 @@ class HanoiTowerProblem():
 
     def __moveDisk(self, disk, current, target):
         """Move the disk from current to target"""
-        if self.version == 'classic':
-            self.moves.append(f"{disk}:{current}{target}")
-
-        elif self.version == 'toddler':
-            self.moves.append(f"{self.names[self.player]}|{disk}:{current}{target}")
-            self.player = (self.player + 1) % 2
-
-        elif self.version == 'clockwise':
-            self.moves.append(f"{disk}:{current}{target}")
+        self.moves.append(f"{disk}:{current}{target}")
         
-        self.n_moves_of[disk] += 1
+        if self.enable_n_moves_of:
+            self.n_moves_of[disk] += 1
     
 
     # PRIVATE CLASSIC
@@ -387,19 +414,15 @@ class HanoiTowerProblem():
         # get optimal moves list
         self.__move_classic(initial, final)
         # get first optimal moves
-        disk, c, t, p = self.parseMove(self.moves[0])
-        if disk != 1:
+        d, c, t = self.parseMove(self.moves[0])
+        if d != 1:
             # toddler now can make the worst move, and he make it...
-            disk, c, t, p = self.parseMove(self.moves[1])
+            d, c, t = self.parseMove(self.moves[1])
             s = self.__getPegFrom(c, t)
             self.moves[1] = self.moves[1][:-1] + s
             # ... so, daddy add a moves for adjust the wrong move of toddler.
-            self.moves.insert(2, f"{self.names[p]}|{1}:{s}{t}")
+            self.moves.insert(2, f"{1}:{s}{t}")
 
-            p = 0
-            for i in range(len(self.moves)):
-                self.moves[i] = self.names[p] + '|' + self.getStdMove(self.moves[i])
-                p = (p + 1) % 2
 
 
     def __getMinMoves_toddler(self, initial, final):
@@ -462,18 +485,171 @@ class HanoiTowerProblem():
             return sum
 
 
+
+# HANOI TOWER PROBLEM GENERAL
+def general_test(h, enable_advanced_tests, print_feedback, seed, n_max, num_tests, num_tests_not_optimal, size_offset=-1):
+    assert isinstance(h, HanoiTowerProblem)
+
+    # TEST generateMoveFrom() and parseMove()
+    assert h.generateMoveFrom(130, 'C', 'A') == '130:CA'
+    assert h.generateMoveFrom(10, 'A', 'C') == '10:AC'
+    assert h.generateMoveFrom(1291, 'B', 'A') == '1291:BA'
+
+    assert h.parseMove('130:CA') == (130, 'C', 'A')
+    assert h.parseMove('10:AC') == (10, 'A', 'C')
+    assert h.parseMove('1291:BA') == (1291, 'B', 'A')
+
+    for s in ['1:AB', '2:BC', '130:CA']:
+        d, c, t = h.parseMove(s)
+        assert s == h.generateMoveFrom(d, c, t)
+
+    
+    # TEST checkMove()
+    assert h.checkMove(HanoiState('AA'), 1,   'A', 'B') == \
+            (True, 0) # Correct
+    assert h.checkMove(HanoiState('AA'), -1,  'A', 'B') == \
+            (False, 1) # "Invalid disk: not exist"
+    assert h.checkMove(HanoiState('AA'), 130, 'A', 'B') == \
+            (False, 1) # "Invalid disk: not exist"
+    assert h.checkMove(HanoiState('AA'), 1,   'A', 'D') == \
+            (False, 2) # "Invalid Peg: not exist"
+    assert h.checkMove(HanoiState('DA'), 1,   'D', 'A') == \
+            (False, 2) # "Invalid Peg: not exist"
+    assert h.checkMove(HanoiState('DA'), 1,   'D', 'E') == \
+            (False, 2) # "Invalid Peg: not exist"
+    assert h.checkMove(HanoiState('AA'), 1,   'A', 'A') == \
+            (False, 3) # "Invalid move: current and target can't be equal"
+    assert h.checkMove(HanoiState('AA'), 1,   'B', 'A') == \
+            (False, 4) # "Wrong current or state: they don't coincide"
+    assert h.checkMove(HanoiState('BA'), 2,   'A', 'B') == \
+            (False, 7) # "Invalid move: can't move big disk on small disk"
+    assert h.checkMove(HanoiState('AA'), 2,   'A', 'B') == \
+            (False, 8) # "Invalid disk: is blocked"
+
+
+    if enable_advanced_tests:
+        gen = ConfigGenerator()
+
+        # Random tests
+        for t in range(1, num_tests + 1):
+            for n in range(1, n_max + 1):
+                # get random configs
+                initial = gen.getRandomFrom(n, seed)
+                final = gen.getRandom(n)
+
+                # TEST getMovesList()
+                try:
+                    opt_sol = h.getMovesList(initial, final)
+                    assert h.checkMoveList(opt_sol, initial, final) == ('admissible', None)
+                except AssertionError:
+                    print("AssertionError in classic -> getMovesList()")
+                    print(f"initial: {initial}")
+                    print(f"final:   {final}")
+                    print(f"sol: {opt_sol}")
+                    for e in opt_sol:
+                        print(e)
+                    exit(0)
+
+                # TEST getNotOptimalMovesList()
+                size_longer = len(opt_sol) + (size_offset if size_offset == -1 else random.randint(0, 20))
+                for _ in range(num_tests_not_optimal):
+                    try:
+                        not_opt_sol = h_classic.getNotOptimalMovesList(initial, final, size_longer)
+                        adm, info = h_classic.checkMoveList(not_opt_sol, initial, final)
+                        assert adm == 'admissible' and (info != None or len(not_opt_sol) == 0)
+                    except AssertionError:
+                        print("AssertionError in classic -> getNotOptimalSol()")
+                        print(f"initial: {initial}")
+                        print(f"final:   {final}")
+                        print(f"sol: {not_opt_sol}")
+                        for e in not_opt_sol:
+                            print(e)
+                        print("info: ", info)
+                        exit(0)
+
+                # TEST correctness min_moves() optimized
+                fast = h.getMinMoves(initial, final, True)
+                slow = h.getMinMoves(initial, final, False)
+                assert fast == slow
+            if print_feedback:
+                print(f"-> finish test {t}/{num_tests}")
+
+
+
+# TESTS
 if __name__ == "__main__":
-    enable_test_classic = 1
+    enable_test_ConfigGenerator = 1
+    enable_test_HanoiState = 1
+    
+    enable_test_classic = 0
     enable_test_toddler = 1
-    enable_test_clockwise = 1
+    enable_test_clockwise = 0
+
+
+    # HanoiTowerProblem tests addictional option
     enable_advanced_tests = 1
     print_feedback = 1
-
     seed = 13000
+    n_max = 10
     num_tests = 50
     num_tests_not_optimal = 10
-    n_max = 10
-    size_offset = 5 #for check_not_optimal_sol
+    size_offset = 5
+
+
+    # CONFIG GENERATOR
+    if enable_test_ConfigGenerator:
+        print("START  CONFIG GENERATOR TEST")
+
+        gen = ConfigGenerator()
+
+        assert gen.getTower('A', 1) == 'A'
+        assert gen.getTower('B', 6) == 'BBBBBB'
+        assert gen.getTower('C', 10) == 'CCCCCCCCCC'
+
+        assert gen.getRandom(3) == 'BBA'
+        assert gen.getRandom(3) == 'BCB'
+        assert gen.getRandom(3) != 'BCB'
+
+        assert gen.getRandomFrom(3, 0) == 'BBA'
+        assert gen.getRandom(3) == 'BCB'
+        assert gen.getRandom(3) != 'BCB'
+
+        assert gen.getRandomFrom(3, 13000) != 'BBA'
+        assert gen.getRandom(3) == 'BCB'
+        assert gen.getRandom(3) != 'BCB'
+    
+        print("FINISH CONFIG GENERATOR TEST")
+
+
+    # HANOI STATE
+    if enable_test_HanoiState:
+        print("START  HANOI STATE TEST")
+
+        state = HanoiState('ABCC')
+        state.update(1, 'C')
+        assert state.current == ['*'] + list('CBCC')
+
+        state.update(1, 'A')
+        assert state.current == ['*'] + list('ABCC')
+        assert state.last_disk == 1
+
+        state.update(2, 'C')
+        assert state.current == ['*'] + list('ACCC')
+        assert state.last_disk == 2
+
+        assert state.isEqualTo('ACCC')
+
+        assert state.getTowerSize() == 4
+
+        assert state.getString() == 'ACCC'
+
+        assert state.of(1) == 'A'
+        assert state.of(2) == 'C'
+        assert state.of(3) == 'C'
+        assert state.of(4) == 'C'
+
+        print("FINISH HANOI STATE TEST")
+
 
 
     # CLASSIC
@@ -481,95 +657,123 @@ if __name__ == "__main__":
         print("START  TEST CLASSIC")
         h_classic = HanoiTowerProblem(version='classic')
 
-        # Check parseMove
-        assert h_classic.parseMove('130:AB') == (130, 'A', 'B')
 
-        # Check isValid
-        assert h_classic.isValid('AA', 2, 'A', 'B') == False
-        assert h_classic.isValid('AA', 1, 'A', 'B') == True
+        # TEST checkMoveList()
+        moves = ['1:AB', '2:AC', '1:BC'] #optimal
+        assert h_classic.checkMoveList(moves, 'AA', 'CC') == ('admissible', None)
 
-        # Check checkMove
-        assert h_classic.checkMove('AA', 1, 'A', 'B') == 0
-        assert h_classic.checkMove('AA', -1, 'A', 'B') == 1
-        assert h_classic.checkMove('AA', 130, 'A', 'B') == 1
-        assert h_classic.checkMove('AA', 1, 'B', 'A') == 2
-        assert h_classic.checkMove('AA', 1, 'A', 'D') == 3
-        assert h_classic.checkMove('DA', 1, 'D', 'A') == 3
-        assert h_classic.checkMove('AA', 1, 'A', 'A') == 4
-        assert h_classic.checkMove('BA', 2, 'A', 'B') == 7
-        assert h_classic.checkMove('AA', 2, 'A', 'B') == 8
+        moves = ['1:AC', '1:CB', '2:AC', '1:BC'] # admissible without loops
+        assert h_classic.checkMoveList(moves, 'AA', 'CC') == ('admissible', None)
 
-        # Check getMinMoves
+        moves = ['1:AC', '1:CA', '1:AB', '2:AC', '1:BC'] # admissible with loops
+        assert h_classic.checkMoveList(moves, 'AA', 'CC') == ('admissible', {'AA': 2})
+
+
+        # TEST getMinMoves(), getMinMovesOf() and getMovesList()
         assert h_classic.getMinMoves('A', 'A') == 0
+        assert h_classic.getMinMovesOf('A', 'A', 1) == 0
+        assert h_classic.getMovesList('A', 'A') == \
+            []
+        
         assert h_classic.getMinMoves('A', 'C') == 1
+        assert h_classic.getMinMovesOf('A', 'C', 1) == 1
+        assert h_classic.getMovesList('A', 'C') == \
+            ['1:AC']
+        
         assert h_classic.getMinMoves('AA', 'CC') == 3
+        assert h_classic.getMinMovesOf('AA', 'CC', 1) == 2
+        assert h_classic.getMinMovesOf('AA', 'CC', 2) == 1
+        assert h_classic.getMovesList('AA', 'CC') == \
+            ['1:AB', '2:AC', '1:BC']
+        
         assert h_classic.getMinMoves('AAA', 'CCC') == 7
+        assert h_classic.getMinMovesOf('AAA', 'CCC', 1) == 4
+        assert h_classic.getMinMovesOf('AAA', 'CCC', 2) == 2
+        assert h_classic.getMinMovesOf('AAA', 'CCC', 3) == 1
+        assert h_classic.getMovesList('AAA', 'CCC') == \
+            ['1:AC', '2:AB', '1:CB', '3:AC', '1:BA', '2:BC', '1:AC']
+        
         assert h_classic.getMinMoves('AAAA', 'CCCC') == 15
+        assert h_classic.getMinMovesOf('AAAA', 'CCCC', 1) == 8
+        assert h_classic.getMinMovesOf('AAAA', 'CCCC', 2) == 4
+        assert h_classic.getMinMovesOf('AAAA', 'CCCC', 3) == 2
+        assert h_classic.getMinMovesOf('AAAA', 'CCCC', 4) == 1
+        assert h_classic.getMovesList('AAAA', 'CCCC') == \
+            ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB', '4:AC', '1:BC', '2:BA', '1:CA', '3:BC', '1:AB', '2:AC', '1:BC']
+        
         assert h_classic.getMinMoves('AA', 'BB') == 3
+        assert h_classic.getMinMovesOf('AA', 'BB', 1) == 2
+        assert h_classic.getMinMovesOf('AA', 'BB', 2) == 1
+        assert h_classic.getMovesList('AA', 'BB') == \
+            ['1:AC', '2:AB', '1:CB']
+        
         assert h_classic.getMinMoves('AAA', 'BBB') == 7
+        assert h_classic.getMinMovesOf('AAA', 'BBB', 1) == 4
+        assert h_classic.getMinMovesOf('AAA', 'BBB', 2) == 2
+        assert h_classic.getMinMovesOf('AAA', 'BBB', 3) == 1
+        assert h_classic.getMovesList('AAA', 'BBB') == \
+            ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB']
+        
         assert h_classic.getMinMoves('AA', 'AC') == 3
+        assert h_classic.getMinMovesOf('AA', 'AC', 1) == 2
+        assert h_classic.getMinMovesOf('AA', 'AC', 2) == 1
+        assert h_classic.getMovesList('AA', 'AC') == \
+            ['1:AB', '2:AC', '1:BA']
+        
         assert h_classic.getMinMoves('AAA', 'ABC') == 5
+        assert h_classic.getMinMovesOf('AAA', 'ABC', 1) == 3
+        assert h_classic.getMinMovesOf('AAA', 'ABC', 2) == 1
+        assert h_classic.getMinMovesOf('AAA', 'ABC', 3) == 1
+        assert h_classic.getMovesList('AAA', 'ABC') == \
+            ['1:AC', '2:AB', '1:CB', '3:AC', '1:BA']
+        
         assert h_classic.getMinMoves('AAAA', 'CBCC') == 14
+        assert h_classic.getMinMovesOf('AAAA', 'CBCC', 1) == 7
+        assert h_classic.getMinMovesOf('AAAA', 'CBCC', 2) == 4
+        assert h_classic.getMinMovesOf('AAAA', 'CBCC', 3) == 2
+        assert h_classic.getMinMovesOf('AAAA', 'CBCC', 4) == 1
+        assert h_classic.getMovesList('AAAA', 'CBCC') == \
+            ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB', '4:AC', '1:BC', '2:BA', '1:CA', '3:BC', '1:AC', '2:AB']
+        
+        assert h_classic.getMinMoves('AC', 'AA') == 3
+        assert h_classic.getMinMovesOf('AC', 'AA', 1) == 2
+        assert h_classic.getMinMovesOf('AC', 'AA', 2) == 1
+        assert h_classic.getMovesList('AC', 'AA') == \
+            ['1:AB', '2:CA', '1:BA']
+        
+        assert h_classic.getMinMoves('ABC', 'AAA') == 5
+        assert h_classic.getMinMovesOf('ABC', 'AAA', 1) == 3
+        assert h_classic.getMinMovesOf('ABC', 'AAA', 2) == 1
+        assert h_classic.getMinMovesOf('ABC', 'AAA', 3) == 1
+        assert h_classic.getMovesList('ABC', 'AAA') == \
+            ['1:AB', '3:CA', '1:BC', '2:BA', '1:CA']
 
-        # Check getAvailableMovesIn
-        assert h_classic.getAvailableMovesIn('A') == \
+        assert h_classic.getMinMoves('CBCC', 'AAAA') == 14
+        assert h_classic.getMinMovesOf('CBCC', 'AAAA', 1) == 7
+        assert h_classic.getMinMovesOf('CBCC', 'AAAA', 2) == 4
+        assert h_classic.getMinMovesOf('CBCC', 'AAAA', 3) == 2
+        assert h_classic.getMinMovesOf('CBCC', 'AAAA', 4) == 1
+        assert h_classic.getMovesList('CBCC', 'AAAA') == \
+            ['2:BA', '1:CA', '3:CB', '1:AC', '2:AB', '1:CB', '4:CA', '1:BA', '2:BC', '1:AC', '3:BA', '1:CB', '2:CA', '1:BA']
+
+
+        # TEST getAvailableMovesIn()
+        assert h_classic.getAvailableMovesIn(HanoiState('A')) == \
             ['1:AB', '1:AC']
-        assert h_classic.getAvailableMovesIn('AA') == \
+        assert h_classic.getAvailableMovesIn(HanoiState('AA')) == \
             ['1:AB', '1:AC']
-        assert h_classic.getAvailableMovesIn('AB') == \
+        assert h_classic.getAvailableMovesIn(HanoiState('AB')) == \
             ['1:AB', '1:AC', '2:BC']
-        assert h_classic.getAvailableMovesIn('AAA') == \
+        assert h_classic.getAvailableMovesIn(HanoiState('AAA')) == \
             ['1:AB', '1:AC']
-        assert h_classic.getAvailableMovesIn('ABB') == \
+        assert h_classic.getAvailableMovesIn(HanoiState('ABB')) == \
             ['1:AB', '1:AC', '2:BC']
-        assert h_classic.getAvailableMovesIn('ABC') == \
+        assert h_classic.getAvailableMovesIn(HanoiState('ABC')) == \
             ['1:AB', '1:AC', '2:BC']
         
 
-        if enable_advanced_tests:
-            # Random tests
-            for t in range(1, num_tests + 1):
-                for n in range(1, n_max + 1):
-                    # get random configs
-                    initial = get_input_from('general', n, seed, 1)
-                    final = get_input_from('general', n,  seed, 2)
-
-                    # Check getMovesList
-                    try:
-                        opt_sol = h_classic.getMovesList(initial, final)
-                        assert h_classic.checkSol(opt_sol, initial, final) == ('admissible', None)
-                    except AssertionError:
-                        print("AssertionError in classic -> getMovesList()")
-                        print(f"initial: {initial}")
-                        print(f"final:   {final}")
-                        print(f"sol: {opt_sol}")
-                        for e in opt_sol:
-                            print(e)
-                        exit(0)
-
-                    # Check getNotOptimalSol
-                    size_longer = len(opt_sol) + size_offset
-                    for _ in range(num_tests_not_optimal):
-                        try:
-                            not_opt_sol = h_classic.getNotOptimalSol(initial, final, size_longer)
-                            adm, info = h_classic.checkSol(not_opt_sol, initial, final)
-                            assert adm == 'admissible' and (info != None or len(not_opt_sol) == 0)
-                        except AssertionError:
-                            print("AssertionError in classic -> getNotOptimalSol()")
-                            print(f"initial: {initial}")
-                            print(f"final:   {final}")
-                            print(f"sol: {not_opt_sol}")
-                            for e in not_opt_sol:
-                                print(e)
-                            exit(0)
-
-                    # Check correctness min_moves optimized
-                    fast = h_classic.getMinMoves(initial, final, True)
-                    slow = h_classic.getMinMoves(initial, final, False)
-                    assert fast == slow
-                if print_feedback:
-                    print(f"-> finish test {t}/{num_tests}")
-        
+        # TESTS general
+        general_test(h_classic, enable_advanced_tests, print_feedback, seed, n_max, num_tests, num_tests_not_optimal, size_offset)
         print("FINISH TEST CLASSIC")
 
 
@@ -579,132 +783,90 @@ if __name__ == "__main__":
         print("START  TEST TODDLER")
         h_toddler = HanoiTowerProblem(version='toddler')
 
-        # Check parseMove
-        assert h_toddler.parseMove('Daddy  |130:AB') == (130, 'A', 'B', 0)
-        assert h_toddler.parseMove('Daddy  |130:AB') != (130, 'A', 'B', 1)
-        assert h_toddler.parseMove('Toddler|130:AB') != (130, 'A', 'B', 0)
-        assert h_toddler.parseMove('Toddler|130:AB') == (130, 'A', 'B', 1)
 
-        # Check isValid
-        assert h_toddler.isValid('AA', 2, 'A', 'B', 0, 1) == False
-        assert h_toddler.isValid('AA', 1, 'A', 'B', 0, 1) == True
-        assert h_toddler.isValid('AA', 1, 'A', 'B', 0, 1) == True
-        assert h_toddler.isValid('AA', 1, 'A', 'B', 1, 1) == False
+        # TEST checkMoveList()
+        moves = ['1:AB', '2:AC', '1:BC'] #optimal
+        assert h_toddler.checkMoveList(moves, 'AA', 'CC') == ('admissible', None)
 
-        # Check checkMove
-        assert h_toddler.checkMove('AA', 1, 'A', 'B', 0, 1) == 0
-        assert h_toddler.checkMove('AA', -1, 'A', 'B', 0, 1) == 1
-        assert h_toddler.checkMove('AA', 130, 'A', 'B', 0, 1) == 1
-        assert h_toddler.checkMove('AA', 1, 'B', 'A', 0, 1) == 2
-        assert h_toddler.checkMove('AA', 1, 'A', 'D', 0, 1) == 3
-        assert h_toddler.checkMove('DA', 1, 'D', 'A', 0, 1) == 3
-        assert h_toddler.checkMove('AA', 1, 'A', 'A', 0, 1) == 4
-        assert h_toddler.checkMove('AA', 1, 'A', 'B', 0, 1) == 0
-        assert h_toddler.checkMove('AA', 1, 'A', 'B', 1, 1) == 5
-        assert h_toddler.checkMove('BA', 2, 'A', 'B', 1, 1) == 7
-        assert h_toddler.checkMove('AA', 2, 'A', 'B', 0, 1) == 8
+        moves = ['1:AC', '1:CB', '2:AC', '1:BC'] # admissible without loops
+        assert h_toddler.checkMoveList(moves, 'AA', 'CC') == ('move_wrong', ('1:CB', 5))
 
-        # Check getMovesList
+
+        # TEST getMovesList()
+        print(h_toddler.getMovesList('AA', 'AC'))
         assert h_toddler.getMovesList('AA', 'AC') == \
-            ['Daddy  |1:AB', 'Toddler|2:AC', 'Daddy  |1:BA']
+            ['1:AB', '2:AC', '1:BA']
+
+        h_toddler.getMovesList('AA', 'BB')
         assert h_toddler.getMovesList('AA', 'BB') == \
-            ['Daddy  |1:AC', 'Toddler|2:AB', 'Daddy  |1:CB']
+            ['1:AC', '2:AB', '1:CB']
+
+        h_toddler.getMovesList('AAA', 'ABC')
         assert h_toddler.getMovesList('AAA', 'ABC') == \
-            ['Daddy  |1:AC', 'Toddler|2:AB', 'Daddy  |1:CB', 'Toddler|3:AC', 'Daddy  |1:BA']
-
-        # Check getAvailableMovesIn
-        assert h_toddler.getAvailableMovesIn('A', 0, 1) == \
-            ['Daddy  |1:AB', 'Daddy  |1:AC']
-        assert h_toddler.getAvailableMovesIn('A', 1, 1) == \
-            []
-        assert h_toddler.getAvailableMovesIn('A', 1, 2) == \
-            ['Toddler|1:AB', 'Toddler|1:AC']
-        assert h_toddler.getAvailableMovesIn('AA', 0, 1) == \
-            ['Daddy  |1:AB', 'Daddy  |1:AC']
-        assert h_toddler.getAvailableMovesIn('AA', 1, 1) == \
-            []
-        assert h_toddler.getAvailableMovesIn('AA', 1, 2) == \
-            ['Toddler|1:AB', 'Toddler|1:AC']
-        assert h_toddler.getAvailableMovesIn('AB', 0, 1) == \
-            ['Daddy  |1:AB', 'Daddy  |1:AC', 'Daddy  |2:BC']
-        assert h_toddler.getAvailableMovesIn('AB', 1, 1) == \
-            ['Toddler|2:BC']
-        assert h_toddler.getAvailableMovesIn('AB', 1, 2) == \
-            ['Toddler|1:AB', 'Toddler|1:AC']
-        assert h_toddler.getAvailableMovesIn('AAA', 0, 1) == \
-            ['Daddy  |1:AB', 'Daddy  |1:AC']
-        assert h_toddler.getAvailableMovesIn('AAA', 1, 1) == \
-            []
-        assert h_toddler.getAvailableMovesIn('AAA', 1, 2) == \
-            ['Toddler|1:AB', 'Toddler|1:AC']
-        assert h_toddler.getAvailableMovesIn('AAA', 1, 3) == \
-            ['Toddler|1:AB', 'Toddler|1:AC']
-        assert h_toddler.getAvailableMovesIn('ABB', 0, 1) == \
-            ['Daddy  |1:AB', 'Daddy  |1:AC', 'Daddy  |2:BC']
-        assert h_toddler.getAvailableMovesIn('ABB', 1, 1) == \
-            ['Toddler|2:BC']
-        assert h_toddler.getAvailableMovesIn('ABB', 1, 2) == \
-            ['Toddler|1:AB', 'Toddler|1:AC']
-        assert h_toddler.getAvailableMovesIn('ABB', 1, 3) == \
-            ['Toddler|1:AB', 'Toddler|1:AC', 'Toddler|2:BC']
-        assert h_toddler.getAvailableMovesIn('ABC', 0, 1) == \
-            ['Daddy  |1:AB', 'Daddy  |1:AC', 'Daddy  |2:BC']
-        assert h_toddler.getAvailableMovesIn('ABC', 1, 1) == \
-            ['Toddler|2:BC']
-        assert h_toddler.getAvailableMovesIn('ABC', 1, 2) == \
-            ['Toddler|1:AB', 'Toddler|1:AC']
-        assert h_toddler.getAvailableMovesIn('ABC', 1, 3) == \
-            ['Toddler|1:AB', 'Toddler|1:AC', 'Toddler|2:BC']
-
-
-        if enable_advanced_tests:
-            # Random tests
-            for t in range(1, num_tests + 1):
-                for n in range(2, n_max + 1):
-                    # get random configs
-                    initial = get_input_from('general', n, seed, 1)
-                    final = get_input_from('general', n,  seed, 2)
-
-                    # Check getMovesList
-                    try:
-                        opt_sol = h_toddler.getMovesList(initial, final).copy()
-                        adm, info = h_toddler.checkSol(opt_sol, initial, final) 
-                        assert h_toddler.checkSol(opt_sol, initial, final) == ('admissible', None)
-                    except AssertionError:
-                        print("AssertionError in toddler -> getMovesList()")
-                        print(f"initial: {initial}")
-                        print(f"final:   {final}")
-                        print(f"sol: {opt_sol}")
-                        for e in opt_sol:
-                            print(e)
-                        exit(0)
-
-                    # Check getNotOptimalSol
-                    size_longer = len(opt_sol) + size_offset
-                    for _ in range(num_tests_not_optimal):
-                        try:
-                            not_opt_sol = h_toddler.getNotOptimalSol(initial, final, size_longer)
-                            adm, info = h_toddler.checkSol(not_opt_sol, initial, final)
-                            assert adm == 'admissible' and (info != None or len(not_opt_sol) == 0)
-                        except AssertionError:
-                            print("AssertionError in toddler -> getNotOptimalSol()")
-                            print(f"initial: {initial}")
-                            print(f"final:   {final}")
-                            print(f"sol: {not_opt_sol}")
-                            for e in not_opt_sol:
-                                print(e)
-                            print(adm)
-                            print(info)
-                            print(f"sol: {opt_sol}")
-                            exit(0)
-
-                    # Check correctness min_moves optimized
-                    fast = h_toddler.getMinMoves(initial, final, True)
-                    slow = h_toddler.getMinMoves(initial, final, False)
-                    # assert fast == slow
-                if print_feedback:
-                    print(f"-> finish test {t}/{num_tests}")
+            ['1:AC', '2:AB', '1:CB', '3:AC', '1:BA']
         
+
+
+        # TEST getAvailableMovesIn()
+        state = HanoiState('A') #Daddy
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['1:AB', '1:AC']
+        state = HanoiState('B') #Toddler
+        state.update(1, 'A')
+        assert h_toddler.getAvailableMovesIn(state) == \
+            []
+
+        state = HanoiState('AA') #Daddy
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['1:AB', '1:AC']
+        state = HanoiState('BA') #Toddler
+        state.update(1, 'A')
+        assert h_toddler.getAvailableMovesIn(state) == \
+            []
+        state = HanoiState('AB') #Toddler
+        state.update(2, 'C')
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['1:AB', '1:AC']
+
+        state = HanoiState('AB') #Daddy
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['1:AB', '1:AC', '2:BC']
+        state = HanoiState('CB') #Toddler
+        state.update(1, 'A')
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['2:BC']
+        state = HanoiState('AC') #Toddler
+        state.update(2, 'B')
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['1:AB', '1:AC']
+
+
+        state = HanoiState('AAA') #Daddy
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['1:AB', '1:AC']
+        state = HanoiState('BAA') #Toddler
+        state.update(1, 'A')
+        assert h_toddler.getAvailableMovesIn(state) == \
+            []
+        state = HanoiState('ABA') #Toddler
+        state.update(2, 'C')
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['1:AB', '1:AC']
+        state = HanoiState('AAB') #Toddler
+        state.update(3, 'C')
+        assert h_toddler.getAvailableMovesIn(state) == \
+            ['1:AB', '1:AC']
+
+
+        # TEST checkMove()
+        state = HanoiState('CA')
+        state.update(1, 'A')
+        assert h_toddler.checkMove(state, 1, 'A', 'B') == \
+                (False, 5) # "Invalid move: Toddler can't move last disk"
+
+
+        # TESTS general
+        general_test(h_toddler, enable_advanced_tests, print_feedback, seed, n_max, num_tests, num_tests_not_optimal, size_offset)
         print("FINISH TEST TODDLER")
 
 
@@ -769,49 +931,6 @@ if __name__ == "__main__":
         assert h_clockwise.getAvailableMovesIn('ABC') == \
             ['1:AB', '2:BC']
 
-
-        if enable_advanced_tests:
-            # Random tests
-            for t in range(1, num_tests + 1):
-                for n in range(1, n_max + 1):
-                    # get random configs
-                    initial = get_input_from('general', n, seed, 1)
-                    final = get_input_from('general', n,  seed, 2)
-
-                    # Check getMovesList
-                    try:
-                        opt_sol = h_clockwise.getMovesList(initial, final)
-                        assert h_clockwise.checkSol(opt_sol, initial, final) == ('admissible', None)
-                    except AssertionError:
-                        print("AssertionError in clockwise -> getMovesList()")
-                        print(f"initial: {initial}")
-                        print(f"final:   {final}")
-                        print(f"sol: {opt_sol}")
-                        for e in opt_sol:
-                            print(e)
-                        exit(0)
-
-                    # Check getNotOptimalSol
-                    size_longer = len(opt_sol) + size_offset
-                    for _ in range(num_tests_not_optimal):
-                        try:
-                            not_opt_sol = h_clockwise.getNotOptimalSol(initial, final, size_longer)
-                            adm, info = h_clockwise.checkSol(not_opt_sol, initial, final)
-                            assert adm == 'admissible' and (info != None or len(not_opt_sol) == 0)
-                        except AssertionError:
-                            print("AssertionError in clockwise -> getNotOptimalSol()")
-                            print(f"initial: {initial}")
-                            print(f"final:   {final}")
-                            print(f"sol: {not_opt_sol}")
-                            for e in not_opt_sol:
-                                print(e)
-                            exit(0)
-
-                    # Check correctness min_moves optimized
-                    fast = h_clockwise.getMinMoves(initial, final, True)
-                    slow = h_clockwise.getMinMoves(initial, final, False)
-                    assert fast == slow
-                if print_feedback:
-                    print(f"-> finish test {t}/{num_tests}")
         
+        general_test(h_clockwise, enable_advanced_tests, print_feedback, seed, n_max, num_tests, num_tests_not_optimal, size_offset)
         print("FINISH TEST CLOCKWISE")
