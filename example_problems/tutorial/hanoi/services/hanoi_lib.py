@@ -268,8 +268,8 @@ class HanoiTowerProblem():
         if diff <= 0 or len(sol) == 0:
             return sol
         
-        i = 0
         if self.version == 'toddler':
+            i = 2
             state = HanoiState(initial)
             while i < len(sol) and diff >= 3:
                 d, c, t = self.parseMove(sol[i])
@@ -283,7 +283,7 @@ class HanoiTowerProblem():
                     # search first bigger disk not blocked
                     for big_d in range(2, state.getTowerSize()+1):
                         # get potentially peg bigger disk
-                        x = state[big_d]
+                        x = state.of(big_d)
                         if blocked[x] == False: # optimal case
                             # get the peg different from x and s
                             y = self.__getPegFrom(x, s)
@@ -302,6 +302,7 @@ class HanoiTowerProblem():
                 else:
                     i += 1
         else:
+            i = 0
             while diff > 0:
                 d, c, t = self.parseMove(sol[i])
                 if d == 1 and random.randint(1,10) > 2:
@@ -553,8 +554,6 @@ def general_test(h, enable_advanced_tests, print_feedback, seed, n_max, num_test
                     print(f"initial: {initial}")
                     print(f"final:   {final}")
                     print(f"sol: {opt_sol}")
-                    for e in opt_sol:
-                        print(e)
                     exit(0)
 
                 # TEST getNotOptimalMovesList()
@@ -565,22 +564,26 @@ def general_test(h, enable_advanced_tests, print_feedback, seed, n_max, num_test
                     try:
                         assert adm == 'admissible'
                     except AssertionError:
-                        print("AssertionError in -> getNotOptimalSol()")
+                        print("AssertionError in -> getNotOptimalSol() [admissible check]")
+                        print(f"size_offset: {size_offset}")
                         print(f"initial: {initial}")
                         print(f"final:   {final}")
                         print(f"opt_sol:     {opt_sol}")
                         print(f"not_opt_sol: {not_opt_sol}")
-                        for e in not_opt_sol:
-                            print(e)
                         print("info: ", info)
                         exit(0)
                     try:
-                        if enable_error_info_is_none:
-                            assert (info != None or len(not_opt_sol) == 0)
+                        assert (info != None or len(not_opt_sol) == 0)
                     except AssertionError:
-                        print("AssertionError in -> getNotOptimalSol()")
-                        print(f"info: {info}")
-                        exit(0)
+                        # print("AssertionError in -> getNotOptimalSol() [info check]")
+                        # print(f"size_offset: {size_offset}")
+                        # print(f"initial: {initial}")
+                        # print(f"final:   {final}")
+                        # print(f"opt_sol:     {opt_sol}")
+                        # print(f"not_opt_sol: {not_opt_sol}")
+                        # print("info: ", info)
+                        if not continue_if_info_is_none:
+                            exit(0)
 
                 # TEST correctness min_moves() optimized
                 fast = h.getMinMoves(initial, final, True)
@@ -596,9 +599,9 @@ if __name__ == "__main__":
     enable_test_ConfigGenerator = 1
     enable_test_HanoiState = 1
     
-    enable_test_classic = 0
+    enable_test_classic = 1
     enable_test_toddler = 1
-    enable_test_clockwise = 0
+    enable_test_clockwise = 1
 
 
     # HanoiTowerProblem tests addictional option
@@ -608,8 +611,8 @@ if __name__ == "__main__":
     n_max = 10
     num_tests = 50
     num_tests_not_optimal = 10
-    size_offset = -1  # for this use size_longer > 3 with enable_error_info_is_none=True
-    enable_error_info_is_none = False
+    size_offset = 10
+    continue_if_info_is_none = True
 
 
     # CONFIG GENERATOR
