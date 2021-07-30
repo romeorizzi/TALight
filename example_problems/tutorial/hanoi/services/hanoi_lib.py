@@ -325,7 +325,7 @@ class HanoiTowerProblem():
                 i = i + 1
                 if i >= len(sol):
                     i = 0
-            return sol
+        return sol
 
 
     # PRIVATE ALL
@@ -414,19 +414,26 @@ class HanoiTowerProblem():
         # get optimal moves list
         self.__move_classic(initial, final)
         # get first optimal moves
-        d, c, t = self.parseMove(self.moves[0])
-        if d != 1:
-            # toddler now can make the worst move, and he make it...
-            d, c, t = self.parseMove(self.moves[1])
-            s = self.__getPegFrom(c, t)
-            self.moves[1] = self.moves[1][:-1] + s
-            # ... so, daddy add a moves for adjust the wrong move of toddler.
-            self.moves.insert(2, f"{1}:{s}{t}")
+        if len(self.moves) > 1:
+            d, c, t = self.parseMove(self.moves[0])
+            # If Daddy move first with disk=1, he have the control of the game.
+            # So the solution is equal to optimal solution for classic version.
+            # Otherwise I assume that child do the worst move (on second move),
+            # and Daddy make the rollback
+            if d != 1:
+                # Toddler now can make the worst move, and he make it...
+                d, c, t = self.parseMove(self.moves[1])
+                s = self.__getPegFrom(c, t)
+                # change t in move {d}:{c}{t}
+                self.moves[1] = self.moves[1][:-1] + s
+                # ... so, daddy add a moves for adjust the wrong move of toddler.
+                self.moves.insert(2, f"{1}:{s}{t}")
+                self.n_moves_of[1] += 1
 
 
 
     def __getMinMoves_toddler(self, initial, final):
-        self.__move_toddler(initial, final)
+        self.getMovesList(initial, final)
         return len(self.moves)
 
 
@@ -539,10 +546,10 @@ def general_test(h, enable_advanced_tests, print_feedback, seed, n_max, num_test
 
                 # TEST getMovesList()
                 try:
-                    opt_sol = h.getMovesList(initial, final)
+                    opt_sol = h.getMovesList(initial, final).copy()
                     assert h.checkMoveList(opt_sol, initial, final) == ('admissible', None)
                 except AssertionError:
-                    print("AssertionError in classic -> getMovesList()")
+                    print("AssertionError in -> getMovesList()")
                     print(f"initial: {initial}")
                     print(f"final:   {final}")
                     print(f"sol: {opt_sol}")
@@ -551,20 +558,28 @@ def general_test(h, enable_advanced_tests, print_feedback, seed, n_max, num_test
                     exit(0)
 
                 # TEST getNotOptimalMovesList()
-                size_longer = len(opt_sol) + (size_offset if size_offset == -1 else random.randint(0, 20))
+                size_longer = len(opt_sol) + (random.randint(0, 20) if size_offset == -1 else size_offset)
                 for _ in range(num_tests_not_optimal):
+                    not_opt_sol = h.getNotOptimalMovesList(initial, final, size_longer)
+                    adm, info = h.checkMoveList(not_opt_sol, initial, final)
                     try:
-                        not_opt_sol = h_classic.getNotOptimalMovesList(initial, final, size_longer)
-                        adm, info = h_classic.checkMoveList(not_opt_sol, initial, final)
-                        assert adm == 'admissible' and (info != None or len(not_opt_sol) == 0)
+                        assert adm == 'admissible'
                     except AssertionError:
-                        print("AssertionError in classic -> getNotOptimalSol()")
+                        print("AssertionError in -> getNotOptimalSol()")
                         print(f"initial: {initial}")
                         print(f"final:   {final}")
-                        print(f"sol: {not_opt_sol}")
+                        print(f"opt_sol:     {opt_sol}")
+                        print(f"not_opt_sol: {not_opt_sol}")
                         for e in not_opt_sol:
                             print(e)
                         print("info: ", info)
+                        exit(0)
+                    try:
+                        if enable_error_info_is_none:
+                            assert (info != None or len(not_opt_sol) == 0)
+                    except AssertionError:
+                        print("AssertionError in -> getNotOptimalSol()")
+                        print(f"info: {info}")
                         exit(0)
 
                 # TEST correctness min_moves() optimized
@@ -593,7 +608,8 @@ if __name__ == "__main__":
     n_max = 10
     num_tests = 50
     num_tests_not_optimal = 10
-    size_offset = 5
+    size_offset = -1  # for this use size_longer > 3 with enable_error_info_is_none=True
+    enable_error_info_is_none = False
 
 
     # CONFIG GENERATOR
@@ -619,6 +635,7 @@ if __name__ == "__main__":
         assert gen.getRandom(3) != 'BCB'
     
         print("FINISH CONFIG GENERATOR TEST")
+
 
 
     # HANOI STATE
@@ -659,6 +676,7 @@ if __name__ == "__main__":
 
 
         # TEST checkMoveList()
+        # print(h_classic.getMovesList('AA', 'CC'))
         moves = ['1:AB', '2:AC', '1:BC'] #optimal
         assert h_classic.checkMoveList(moves, 'AA', 'CC') == ('admissible', None)
 
@@ -670,22 +688,26 @@ if __name__ == "__main__":
 
 
         # TEST getMinMoves(), getMinMovesOf() and getMovesList()
+        # print(h_classic.getMovesList('A','A'))
         assert h_classic.getMinMoves('A', 'A') == 0
         assert h_classic.getMinMovesOf('A', 'A', 1) == 0
         assert h_classic.getMovesList('A', 'A') == \
             []
         
+        # print(h_classic.getMovesList('A','C'))
         assert h_classic.getMinMoves('A', 'C') == 1
         assert h_classic.getMinMovesOf('A', 'C', 1) == 1
         assert h_classic.getMovesList('A', 'C') == \
             ['1:AC']
         
+        # print(h_classic.getMovesList('AA','CC'))
         assert h_classic.getMinMoves('AA', 'CC') == 3
         assert h_classic.getMinMovesOf('AA', 'CC', 1) == 2
         assert h_classic.getMinMovesOf('AA', 'CC', 2) == 1
         assert h_classic.getMovesList('AA', 'CC') == \
             ['1:AB', '2:AC', '1:BC']
         
+        # print(h_classic.getMovesList('AAA','CCC'))
         assert h_classic.getMinMoves('AAA', 'CCC') == 7
         assert h_classic.getMinMovesOf('AAA', 'CCC', 1) == 4
         assert h_classic.getMinMovesOf('AAA', 'CCC', 2) == 2
@@ -693,6 +715,7 @@ if __name__ == "__main__":
         assert h_classic.getMovesList('AAA', 'CCC') == \
             ['1:AC', '2:AB', '1:CB', '3:AC', '1:BA', '2:BC', '1:AC']
         
+        # print(h_classic.getMovesList('AAAA','CCCC'))
         assert h_classic.getMinMoves('AAAA', 'CCCC') == 15
         assert h_classic.getMinMovesOf('AAAA', 'CCCC', 1) == 8
         assert h_classic.getMinMovesOf('AAAA', 'CCCC', 2) == 4
@@ -701,12 +724,14 @@ if __name__ == "__main__":
         assert h_classic.getMovesList('AAAA', 'CCCC') == \
             ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB', '4:AC', '1:BC', '2:BA', '1:CA', '3:BC', '1:AB', '2:AC', '1:BC']
         
+        # print(h_classic.getMovesList('AA','BB'))
         assert h_classic.getMinMoves('AA', 'BB') == 3
         assert h_classic.getMinMovesOf('AA', 'BB', 1) == 2
         assert h_classic.getMinMovesOf('AA', 'BB', 2) == 1
         assert h_classic.getMovesList('AA', 'BB') == \
             ['1:AC', '2:AB', '1:CB']
         
+        # print(h_classic.getMovesList('AAA','BBB'))
         assert h_classic.getMinMoves('AAA', 'BBB') == 7
         assert h_classic.getMinMovesOf('AAA', 'BBB', 1) == 4
         assert h_classic.getMinMovesOf('AAA', 'BBB', 2) == 2
@@ -714,12 +739,14 @@ if __name__ == "__main__":
         assert h_classic.getMovesList('AAA', 'BBB') == \
             ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB']
         
+        # print(h_classic.getMovesList('AA','AC'))
         assert h_classic.getMinMoves('AA', 'AC') == 3
         assert h_classic.getMinMovesOf('AA', 'AC', 1) == 2
         assert h_classic.getMinMovesOf('AA', 'AC', 2) == 1
         assert h_classic.getMovesList('AA', 'AC') == \
             ['1:AB', '2:AC', '1:BA']
         
+        # print(h_classic.getMovesList('AAA','ABC'))
         assert h_classic.getMinMoves('AAA', 'ABC') == 5
         assert h_classic.getMinMovesOf('AAA', 'ABC', 1) == 3
         assert h_classic.getMinMovesOf('AAA', 'ABC', 2) == 1
@@ -727,6 +754,7 @@ if __name__ == "__main__":
         assert h_classic.getMovesList('AAA', 'ABC') == \
             ['1:AC', '2:AB', '1:CB', '3:AC', '1:BA']
         
+        # print(h_classic.getMovesList('AAAA','CBCC'))
         assert h_classic.getMinMoves('AAAA', 'CBCC') == 14
         assert h_classic.getMinMovesOf('AAAA', 'CBCC', 1) == 7
         assert h_classic.getMinMovesOf('AAAA', 'CBCC', 2) == 4
@@ -735,12 +763,14 @@ if __name__ == "__main__":
         assert h_classic.getMovesList('AAAA', 'CBCC') == \
             ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB', '4:AC', '1:BC', '2:BA', '1:CA', '3:BC', '1:AC', '2:AB']
         
+        # print(h_classic.getMovesList('AC','AA'))
         assert h_classic.getMinMoves('AC', 'AA') == 3
         assert h_classic.getMinMovesOf('AC', 'AA', 1) == 2
         assert h_classic.getMinMovesOf('AC', 'AA', 2) == 1
         assert h_classic.getMovesList('AC', 'AA') == \
             ['1:AB', '2:CA', '1:BA']
         
+        # print(h_classic.getMovesList('ABC','AAA'))
         assert h_classic.getMinMoves('ABC', 'AAA') == 5
         assert h_classic.getMinMovesOf('ABC', 'AAA', 1) == 3
         assert h_classic.getMinMovesOf('ABC', 'AAA', 2) == 1
@@ -748,6 +778,7 @@ if __name__ == "__main__":
         assert h_classic.getMovesList('ABC', 'AAA') == \
             ['1:AB', '3:CA', '1:BC', '2:BA', '1:CA']
 
+        # print(h_classic.getMovesList('CBCC','AAAA'))
         assert h_classic.getMinMoves('CBCC', 'AAAA') == 14
         assert h_classic.getMinMovesOf('CBCC', 'AAAA', 1) == 7
         assert h_classic.getMinMovesOf('CBCC', 'AAAA', 2) == 4
@@ -785,6 +816,7 @@ if __name__ == "__main__":
 
 
         # TEST checkMoveList()
+        # print(h_toddler.getMovesList('AA', 'CC'))
         moves = ['1:AB', '2:AC', '1:BC'] #optimal
         assert h_toddler.checkMoveList(moves, 'AA', 'CC') == ('admissible', None)
 
@@ -792,20 +824,116 @@ if __name__ == "__main__":
         assert h_toddler.checkMoveList(moves, 'AA', 'CC') == ('move_wrong', ('1:CB', 5))
 
 
-        # TEST getMovesList()
-        print(h_toddler.getMovesList('AA', 'AC'))
-        assert h_toddler.getMovesList('AA', 'AC') == \
-            ['1:AB', '2:AC', '1:BA']
+        # TEST getMinMoves(), getMinMovesOf() and getMovesList()
+        # print(h_toddler.getMovesList('A', 'A'))
+        assert h_toddler.getMinMoves('A', 'A') == 0
+        assert h_toddler.getMinMovesOf('A', 'A', 1) == 0
+        assert h_toddler.getMovesList('A', 'A') == \
+            []
+        
+        # print(h_toddler.getMovesList('A', 'C'))
+        assert h_toddler.getMinMoves('A', 'C') == 1
+        assert h_toddler.getMinMovesOf('A', 'C', 1) == 1
+        assert h_toddler.getMovesList('A', 'C') == \
+            ['1:AC']
+        
+        # print(h_toddler.getMovesList('AA', 'CC'))
+        assert h_toddler.getMinMoves('AA', 'CC') == 3
+        assert h_toddler.getMinMovesOf('AA', 'CC', 1) == 2
+        assert h_toddler.getMinMovesOf('AA', 'CC', 2) == 1
+        assert h_toddler.getMovesList('AA', 'CC') == \
+            ['1:AB', '2:AC', '1:BC']
+        
+        # print(h_toddler.getMovesList('AAA', 'CCC'))
+        assert h_toddler.getMinMoves('AAA', 'CCC') == 7
+        assert h_toddler.getMinMovesOf('AAA', 'CCC', 1) == 4
+        assert h_toddler.getMinMovesOf('AAA', 'CCC', 2) == 2
+        assert h_toddler.getMinMovesOf('AAA', 'CCC', 3) == 1
+        assert h_toddler.getMovesList('AAA', 'CCC') == \
+            ['1:AC', '2:AB', '1:CB', '3:AC', '1:BA', '2:BC', '1:AC']
+        
+        # print(h_toddler.getMovesList('AAAA', 'CCCC'))
+        assert h_toddler.getMinMoves('AAAA', 'CCCC') == 15
+        assert h_toddler.getMinMovesOf('AAAA', 'CCCC', 1) == 8
+        assert h_toddler.getMinMovesOf('AAAA', 'CCCC', 2) == 4
+        assert h_toddler.getMinMovesOf('AAAA', 'CCCC', 3) == 2
+        assert h_toddler.getMinMovesOf('AAAA', 'CCCC', 4) == 1
+        assert h_toddler.getMovesList('AAAA', 'CCCC') == \
+            ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB', '4:AC', '1:BC', '2:BA', '1:CA', '3:BC', '1:AB', '2:AC', '1:BC']
 
-        h_toddler.getMovesList('AA', 'BB')
+        # print(h_toddler.getMovesList('AA', 'BB'))
+        assert h_toddler.getMinMoves('AA', 'BB') == 3
+        assert h_toddler.getMinMovesOf('AA', 'BB', 1) == 2
+        assert h_toddler.getMinMovesOf('AA', 'BB', 2) == 1
         assert h_toddler.getMovesList('AA', 'BB') == \
             ['1:AC', '2:AB', '1:CB']
-
-        h_toddler.getMovesList('AAA', 'ABC')
+        
+        # print(h_toddler.getMovesList('AAA', 'BBB'))
+        assert h_toddler.getMinMoves('AAA', 'BBB') == 7
+        assert h_toddler.getMinMovesOf('AAA', 'BBB', 1) == 4
+        assert h_toddler.getMinMovesOf('AAA', 'BBB', 2) == 2
+        assert h_toddler.getMinMovesOf('AAA', 'BBB', 3) == 1
+        assert h_toddler.getMovesList('AAA', 'BBB') == \
+            ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB']
+        
+        # print(h_toddler.getMovesList('AA', 'AC'))
+        assert h_toddler.getMinMoves('AA', 'AC') == 3
+        assert h_toddler.getMinMovesOf('AA', 'AC', 1) == 2
+        assert h_toddler.getMinMovesOf('AA', 'AC', 2) == 1
+        assert h_toddler.getMovesList('AA', 'AC') == \
+            ['1:AB', '2:AC', '1:BA']
+        
+        # print(h_toddler.getMovesList('AAA', 'ABC'))
+        assert h_toddler.getMinMoves('AAA', 'ABC') == 5
+        assert h_toddler.getMinMovesOf('AAA', 'ABC', 1) == 3
+        assert h_toddler.getMinMovesOf('AAA', 'ABC', 2) == 1
+        assert h_toddler.getMinMovesOf('AAA', 'ABC', 3) == 1
         assert h_toddler.getMovesList('AAA', 'ABC') == \
             ['1:AC', '2:AB', '1:CB', '3:AC', '1:BA']
         
+        # print(h_toddler.getMovesList('AAAA', 'CBCC'))
+        assert h_toddler.getMinMoves('AAAA', 'CBCC') == 14
+        assert h_toddler.getMinMovesOf('AAAA', 'CBCC', 1) == 7
+        assert h_toddler.getMinMovesOf('AAAA', 'CBCC', 2) == 4
+        assert h_toddler.getMinMovesOf('AAAA', 'CBCC', 3) == 2
+        assert h_toddler.getMinMovesOf('AAAA', 'CBCC', 4) == 1
+        assert h_toddler.getMovesList('AAAA', 'CBCC') == \
+            ['1:AB', '2:AC', '1:BC', '3:AB', '1:CA', '2:CB', '1:AB', '4:AC', '1:BC', '2:BA', '1:CA', '3:BC', '1:AC', '2:AB']
+        
+        # print(h_toddler.getMovesList('AC', 'AA'))
+        assert h_toddler.getMinMoves('AC', 'AA') == 3
+        assert h_toddler.getMinMovesOf('AC', 'AA', 1) == 2
+        assert h_toddler.getMinMovesOf('AC', 'AA', 2) == 1
+        assert h_toddler.getMovesList('AC', 'AA') == \
+            ['1:AB', '2:CA', '1:BA']
+        
+        # print(h_toddler.getMovesList('ABC', 'AAA'))
+        assert h_toddler.getMinMoves('ABC', 'AAA') == 5
+        assert h_toddler.getMinMovesOf('ABC', 'AAA', 1) == 3
+        assert h_toddler.getMinMovesOf('ABC', 'AAA', 2) == 1
+        assert h_toddler.getMinMovesOf('ABC', 'AAA', 3) == 1
+        assert h_toddler.getMovesList('ABC', 'AAA') == \
+            ['1:AB', '3:CA', '1:BC', '2:BA', '1:CA']
 
+
+        # print(h_toddler.getMovesList('CBCC', 'AAAA'))
+        assert h_toddler.getMinMoves('CBCC', 'AAAA') == 15
+        assert h_toddler.getMinMovesOf('CBCC', 'AAAA', 1) == 8
+        assert h_toddler.getMinMovesOf('CBCC', 'AAAA', 2) == 4
+        assert h_toddler.getMinMovesOf('CBCC', 'AAAA', 3) == 2
+        assert h_toddler.getMinMovesOf('CBCC', 'AAAA', 4) == 1
+        assert h_toddler.getMovesList('CBCC', 'AAAA') == \
+            ['2:BA', '1:CB', '1:BA', '3:CB', '1:AC', '2:AB', '1:CB', '4:CA', '1:BA', '2:BC', '1:AC', '3:BA', '1:CB', '2:CA', '1:BA']
+        
+        # print(h_toddler.getMovesList('AABB', 'CBBA'))
+        assert h_toddler.getMinMoves('AABB', 'CBBA', False) == 12
+        assert h_toddler.getMinMovesOf('AABB', 'CBBA', 1) == 6
+        assert h_toddler.getMinMovesOf('AABB', 'CBBA', 2) == 3
+        assert h_toddler.getMinMovesOf('AABB', 'CBBA', 3) == 2
+        assert h_toddler.getMinMovesOf('AABB', 'CBBA', 4) == 1
+        assert h_toddler.getMovesList('AABB', 'CBBA') == \
+            ['3:BC', '1:AC', '1:CB', '2:AC', '1:BC', '4:BA', '1:CB', '2:CA', '1:BA', '3:CB', '1:AC', '2:AB']
+        
 
         # TEST getAvailableMovesIn()
         state = HanoiState('A') #Daddy
@@ -876,61 +1004,128 @@ if __name__ == "__main__":
         print("START  TEST CLOCKWISE")
         h_clockwise = HanoiTowerProblem(version='clockwise')
 
-        # Check isValid
-        assert h_clockwise.isValid('AA', 2, 'A', 'B') == False
-        assert h_clockwise.isValid('AA', 1, 'A', 'B') == True
-        assert h_clockwise.isValid('AA', 1, 'A', 'C') == False
-        assert h_clockwise.isValid('CA', 1, 'C', 'A') == True
-        assert h_clockwise.isValid('CA', 1, 'C', 'B') == False
 
-        # Check checkMove
-        assert h_clockwise.checkMove('AA', 1, 'A', 'B') == 0
-        assert h_clockwise.checkMove('AA', -1, 'A', 'B') == 1
-        assert h_clockwise.checkMove('AA', 130, 'A', 'B') == 1
-        assert h_clockwise.checkMove('AA', 1, 'B', 'A') == 2
-        assert h_clockwise.checkMove('AA', 1, 'A', 'D') == 3
-        assert h_clockwise.checkMove('DA', 1, 'D', 'A') == 3
-        assert h_clockwise.checkMove('AA', 1, 'A', 'A') == 4
-        assert h_clockwise.checkMove('AA', 1, 'A', 'C') == 6
-        assert h_clockwise.checkMove('CA', 1, 'C', 'A') == 0
-        assert h_clockwise.checkMove('CA', 1, 'C', 'B') == 6
-        assert h_clockwise.checkMove('BA', 2, 'A', 'B') == 7
-        assert h_clockwise.checkMove('AA', 2, 'A', 'B') == 8
+        # TEST checkMoveList()
+        # print(h_clockwise.getMovesList('AA', 'CC'))
+        moves = ['1:AB', '1:BC', '2:AB', '1:CA', '2:BC', '1:AB', '1:BC'] #optimal
+        assert h_clockwise.checkMoveList(moves, 'AA', 'CC') == ('admissible', None)
 
-        # Check getMiMoves
-        assert h_clockwise.getMinMoves('AA', 'BB') == 5
-        assert h_clockwise.getMinMoves('AAA', 'BBB') == 15
-        assert h_clockwise.getMinMoves('AA', 'CC') == 7
-        assert h_clockwise.getMinMoves('AA', 'AC') == 5
-        assert h_clockwise.getMinMoves('AAA', 'ABC') == 18
-        assert h_clockwise.getMinMoves('AAAA', 'CBCC') == 55
+        moves = ['1:AB', '1:BC', '1:CA', '1:AB', '1:BC', '2:AB', '1:CA', '2:BC', '1:AB', '1:BC']
+        assert h_clockwise.checkMoveList(moves, 'AA', 'CC') == ('admissible', {'AA': 2, 'BA': 2, 'CA': 2})
 
-        # Check getAvailableMovesIn
-        assert h_clockwise.getAvailableMovesIn('A') != \
-            ['1:AB', '1:AC']
-        assert h_clockwise.getAvailableMovesIn('A') == \
-            ['1:AB']
-        assert h_clockwise.getAvailableMovesIn('AA') != \
-            ['1:AB', '1:AC']
-        assert h_clockwise.getAvailableMovesIn('AA') == \
-            ['1:AB']
-        assert h_clockwise.getAvailableMovesIn('AB') != \
-            ['1:AB', '1:AC', '2:BC']
-        assert h_clockwise.getAvailableMovesIn('AB') == \
-            ['1:AB', '2:BC']
-        assert h_clockwise.getAvailableMovesIn('AAA') != \
-            ['1:AB', '1:AC']
-        assert h_clockwise.getAvailableMovesIn('AAA') == \
-            ['1:AB']
-        assert h_clockwise.getAvailableMovesIn('ABB') != \
-            ['1:AB', '1:AC', '2:BC']
-        assert h_clockwise.getAvailableMovesIn('ABB') == \
-            ['1:AB', '2:BC']
-        assert h_clockwise.getAvailableMovesIn('ABC') != \
-            ['1:AB', '1:AC', '2:BC']
-        assert h_clockwise.getAvailableMovesIn('ABC') == \
-            ['1:AB', '2:BC']
+        moves = ['1:AC', '2:AB', '1:CA', '2:BC', '1:AB', '1:BC']
+        assert h_clockwise.checkMoveList(moves, 'AA', 'CC') == ('move_wrong', ('1:AC', 6))
 
+
+        # TEST getMinMoves(), getMinMovesOf() and getMovesList()
+        # print(h_clockwise.getMovesList('A','A'))
+        assert h_clockwise.getMinMoves('A', 'A') == 0
+        assert h_clockwise.getMinMovesOf('A', 'A', 1) == 0
+        assert h_clockwise.getMovesList('A', 'A') == \
+            []
         
+        # print(h_clockwise.getMovesList('A','C'))
+        assert h_clockwise.getMinMoves('A', 'C') == 2
+        assert h_clockwise.getMinMovesOf('A', 'C', 1) == 2
+        assert h_clockwise.getMovesList('A', 'C') == \
+            ['1:AB', '1:BC']
+        
+        # print(h_clockwise.getMovesList('AA','CC'))
+        assert h_clockwise.getMinMoves('AA', 'CC') == 7
+        assert h_clockwise.getMinMovesOf('AA', 'CC', 1) == 5
+        assert h_clockwise.getMinMovesOf('AA', 'CC', 2) == 2
+        assert h_clockwise.getMovesList('AA', 'CC') == \
+            ['1:AB', '1:BC', '2:AB', '1:CA', '2:BC', '1:AB', '1:BC']
+        
+        # print(h_clockwise.getMovesList('AAA','CCC'))
+        assert h_clockwise.getMinMoves('AAA', 'CCC') == 21
+        assert h_clockwise.getMinMovesOf('AAA', 'CCC', 1) == 14
+        assert h_clockwise.getMinMovesOf('AAA', 'CCC', 2) == 5
+        assert h_clockwise.getMinMovesOf('AAA', 'CCC', 3) == 2
+        assert h_clockwise.getMovesList('AAA', 'CCC') == \
+            ['1:AB', '1:BC', '2:AB', '1:CA', '2:BC', '1:AB', '1:BC', '3:AB', '1:CA', '1:AB', '2:CA', '1:BC', '1:CA', '3:BC', '1:AB', '1:BC', '2:AB', '1:CA', '2:BC', '1:AB', '1:BC']
+        
+        # print(h_clockwise.getMovesList('AA','BB'))
+        assert h_clockwise.getMinMoves('AA', 'BB') == 5
+        assert h_clockwise.getMinMovesOf('AA', 'BB', 1) == 4
+        assert h_clockwise.getMinMovesOf('AA', 'BB', 2) == 1
+        assert h_clockwise.getMovesList('AA', 'BB') == \
+            ['1:AB', '1:BC', '2:AB', '1:CA', '1:AB']
+        
+        # print(h_clockwise.getMovesList('AAA','BBB'))
+        assert h_clockwise.getMinMoves('AAA', 'BBB') == 15
+        assert h_clockwise.getMinMovesOf('AAA', 'BBB', 1) == 10
+        assert h_clockwise.getMinMovesOf('AAA', 'BBB', 2) == 4
+        assert h_clockwise.getMinMovesOf('AAA', 'BBB', 3) == 1
+        assert h_clockwise.getMovesList('AAA', 'BBB') == \
+            ['1:AB', '1:BC', '2:AB', '1:CA', '2:BC', '1:AB', '1:BC', '3:AB', '1:CA', '1:AB', '2:CA', '1:BC', '2:AB', '1:CA', '1:AB']
+        
+        # print(h_clockwise.getMovesList('AA','AC'))
+        assert h_clockwise.getMinMoves('AA', 'AC') == 5
+        assert h_clockwise.getMinMovesOf('AA', 'AC', 1) == 3
+        assert h_clockwise.getMinMovesOf('AA', 'AC', 2) == 2
+        assert h_clockwise.getMovesList('AA', 'AC') == \
+            ['1:AB', '1:BC', '2:AB', '1:CA', '2:BC']
+        
+        # print(h_clockwise.getMovesList('AAA','ABC'))
+        assert h_clockwise.getMinMoves('AAA', 'ABC') == 18
+        assert h_clockwise.getMinMovesOf('AAA', 'ABC', 1) == 12
+        assert h_clockwise.getMinMovesOf('AAA', 'ABC', 2) == 4
+        assert h_clockwise.getMinMovesOf('AAA', 'ABC', 3) == 2
+        assert h_clockwise.getMovesList('AAA', 'ABC') == \
+            ['1:AB', '1:BC', '2:AB', '1:CA', '2:BC', '1:AB', '1:BC', '3:AB', '1:CA', '1:AB', '2:CA', '1:BC', '1:CA', '3:BC', '1:AB', '1:BC', '2:AB', '1:CA']
+        
+        # print(h_clockwise.getMovesList('AC','AA'))
+        assert h_clockwise.getMinMoves('AC', 'AA') == 4
+        assert h_clockwise.getMinMovesOf('AC', 'AA', 1) == 3
+        assert h_clockwise.getMinMovesOf('AC', 'AA', 2) == 1
+        assert h_clockwise.getMovesList('AC', 'AA') == \
+            ['1:AB', '2:CA', '1:BC', '1:CA']
+        
+        # print(h_clockwise.getMovesList('ABC','AAA'))
+        assert h_clockwise.getMinMoves('ABC', 'AAA') == 9
+        assert h_clockwise.getMinMovesOf('ABC', 'AAA', 1) == 6
+        assert h_clockwise.getMinMovesOf('ABC', 'AAA', 2) == 2
+        assert h_clockwise.getMinMovesOf('ABC', 'AAA', 3) == 1
+        assert h_clockwise.getMovesList('ABC', 'AAA') == \
+            ['1:AB', '3:CA', '1:BC', '1:CA', '2:BC', '1:AB', '2:CA', '1:BC', '1:CA']
+
+
+        # TEST getAvailableMovesIn()
+        assert h_clockwise.getAvailableMovesIn(HanoiState('A')) != \
+            ['1:AB', '1:AC']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('A')) == \
+            ['1:AB']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('AA')) != \
+            ['1:AB', '1:AC']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('AA')) == \
+            ['1:AB']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('AB')) != \
+            ['1:AB', '1:AC', '2:BC']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('AB')) == \
+            ['1:AB', '2:BC']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('AAA')) != \
+            ['1:AB', '1:AC']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('AAA')) == \
+            ['1:AB']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('ABB')) != \
+            ['1:AB', '1:AC', '2:BC']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('ABB')) == \
+            ['1:AB', '2:BC']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('ABC')) != \
+            ['1:AB', '1:AC', '2:BC']
+        assert h_clockwise.getAvailableMovesIn(HanoiState('ABC')) == \
+            ['1:AB', '2:BC']
+
+
+        # TEST checkMove()
+        state = HanoiState('AA')
+        assert h_clockwise.checkMove(state, 1, 'A', 'B') == \
+                (True, 0) # "Correct"
+        assert h_clockwise.checkMove(state, 1, 'A', 'C') == \
+                (False, 6) # "Invalid move: can't make a counterclockwise move"
+
+
+        # TESTS general
         general_test(h_clockwise, enable_advanced_tests, print_feedback, seed, n_max, num_tests, num_tests_not_optimal, size_offset)
         print("FINISH TEST CLOCKWISE")
