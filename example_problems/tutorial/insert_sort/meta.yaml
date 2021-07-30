@@ -1,0 +1,59 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  log_debug_your_insertion_sort_bot:
+    explain: |+
+     In a call to this service you plug in your insert_sort bot running on an instance of yours, in local, and we debug its behavior based on a log sent to our service and offering all of the following observable updates.
+        #LOG_input_array <n> <input_array_of_length_n>
+        #LOG_memory_load_from_pos <i>
+        #LOG_memory_write_on_pos <i>
+        #LOG_compare_what_in_pos <i> less_than_what_in_pos <j> <outcome>
+        #LOG_output_array <n> <output_array_of_length_n>
+     the service either confirms the correct execution of the Insertion Sort algorithm or signal the very first anomaly in its behaviour based only on the log lines (those prefixed by "#LOG_", all other lines are ignored).
+    evaluator: [python3, services/log_debug_your_insertion_sort_bot_server.py]
+    args:
+      feedback:
+        regex: ^(only_signal_first_error|also_tell_what_expected_instead)$
+        default: only_signal_first_error
+        explain: "choose the feedback level. Options are as follows:"
+        explain1: "[only_signal_first_error]  stops with a parsing error message at the very first unexpected log info."
+        explain2: "[also_tell_what_expected_instead]  stops at the very first unexpected log info but also explain what would have been the correct one. (On the very fist line of log, the log is not univocal and only a general explanation on the format is given, with example)"
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
+  remote_insertion_sort_api:
+    explain: |+
+     In a call to this service you plug in your insert_sort bot remotely running on an instance of us. Your bot will access the array to be sorted only through the following primities
+        CMD_GET_DIM <n>
+        CMD_MEMORY_LOAD_FROM_POS <i>
+        CMD_MEMORY_WRITE_ON_POS <i>
+        CMD_COMPARE_WHAT_IN_POS <i> LESS_THAN_WHAT_IN_POS <j>
+        CMD_FINISHED
+     the service will ignore all lines not beginning with the prefix "CMD_", and will ultimately tell whether the array is sorted but also confirm whether the algorithm executed was the Insertion Sort algorithm or signal the very first discrepancy in behaviour.
+    evaluator: [python3, services/remote_insertion_sort_api_server.py]
+    args:
+      goal:
+        regex: ^(just_sort_the_array|adhere_to_insertion_sort_algorithm)$
+        default: adhere_to_insertion_sort_algorithm
+      feedback:
+        regex: ^(only_signal_first_error|also_tell_what_expected_instead)$
+        default: only_signal_first_error
+        explain: "choose the feedback level. Options are as follows:"
+        explain1: "[only_signal_first_error]  stops with an error message at the very first unexpected behavior for the intended goal."
+        explain2: "[also_tell_what_expected_instead]  stops at the very first unexpected behavior but also explain what would have been the correct one"
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
+  synopsis:
+    evaluator: [python3, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+
