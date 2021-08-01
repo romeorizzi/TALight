@@ -4,7 +4,8 @@ from sys import stderr, exit, argv
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import get_input_from, HanoiTowerProblem
+from hanoi_lib import ConfigGenerator, HanoiTowerProblem
+from move_printer import get_move
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -27,32 +28,23 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-LANG.manage_opening_msg()
+# LANG.manage_opening_msg()
+
+
 
 # START CODING YOUR SERVICE: 
-
-# INITIALIZATION
-N = ENV['n']
-
-# Check arguments errors
-if (ENV['start'] != "all_A" and ENV['start'] != "all_B" and ENV['start'] != "all_C"):
-    N = len(ENV['start'])
-elif (ENV['final'] != "all_A" and ENV['final'] != "all_B" and ENV['final'] != "all_C"):
-    N = len(ENV['final'])
-elif (N == -1):
-    LANG.manage_opening_msg()
-    TAc.print(LANG.render_feedback("arg-err", f"N!=-1 if start=all_X and final=all_X"), "red", ["bold"])
-    exit(0)
-
 # Get configurations
-start = get_input_from(ENV['start'], N)
-final = get_input_from(ENV['final'], N)
+gen = ConfigGenerator()
+start, final, error = gen.getConfigs(ENV['start'], ENV['final'], ENV['n'])
 
-# Check configs error
-if len(start) != len(final):
-    LANG.manage_opening_msg()
-    TAc.print(LANG.render_feedback("arg-config-err", f'len(start) != len(final)'), "red", ["bold"])
+# Check errors
+if error == 'n_not_valid':
+    TAc.print(LANG.render_feedback("n_not_valid", f"If you use the all_* form for start and final, you must use a N >= 0."), "red", ["bold"])
     exit(0)
+elif error == 'different_len':
+    TAc.print(LANG.render_feedback("different_len", f'If you use a custom configuration for start and final, the length of start must be equal to the length of final'), "red", ["bold"])
+    exit(0)
+
 
 # Init Hanoi Tower
 hanoi = HanoiTowerProblem(ENV['v'])
@@ -69,57 +61,57 @@ if modulus != 0:
 if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
     if user_answ == opt_answ:
         if not ENV['silent']:
-            TAc.print(LANG.render_feedback("answ-equal", f'user_answ == opt_answ'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("answ-equal", f'Nice! Your answer is equal to the optimal minimum number '), "green", ["bold"])
 
     else:
-        TAc.print(LANG.render_feedback("answ-wrong", f'user_answ != opt_answ'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("answ-wrong", f'Oh no! Your answer is not equal to the optimal minimum number'), "red", ["bold"])
 
         # Provide feedback
         if ENV["feedback"] == "true_val":
-            TAc.print(LANG.render_feedback("get-answ", f'opt_answ = {opt_answ}'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("get-answ", f'The optimal minimum number of moves is {opt_answ}.'), "red", ["reverse"])
         
         elif ENV["feedback"] == "smaller_or_bigger":
-            if user_answ < opt_answ:
-                TAc.print(LANG.render_feedback("answ-less", f'user_answ < opt_answ'), "red")
+            if opt_answ < user_answ:
+                TAc.print(LANG.render_feedback("answ-less", f'The optimal minimum number of moves is smaller then your answer'), "red", ["reverse"])
             else:
-                TAc.print(LANG.render_feedback("answ-more", f'user_answ > opt_answ'), "red")
+                TAc.print(LANG.render_feedback("answ-more", f'The optimal minimum number of moves is bigger then your answer'), "red", ["reverse"])
 
         # Provide certificate
         if ENV["with_certificate"] == 1:
             if user_answ < opt_answ:
-                TAc.print(LANG.render_feedback("use_check_lower_bounds", f'use check_lower_bounds service'), "red")
+                TAc.print(LANG.render_feedback("use_check_lower_bounds", f'Use check_lower_bounds service for check it'), "red", ["reverse"])
             else:
-                TAc.print(LANG.render_feedback("certificate", f'this is a certificate of size desired {user_answ-1}:'), "red")
-                for e in hanoi.getNotOptimalSol(start, final, desired_size=(user_answ-1)):
-                    TAc.print(LANG.render_feedback("certificate_line", f'{e}'), "red")
+                TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves.'), "red", ["reverse"])
+                for e in hanoi.getNotOptimalMovesList(start, final, desired_size=(user_answ-1)):
+                    TAc.print(LANG.render_feedback("certificate_line", f'{get_move(*hanoi.parseMove(e))}'), "yellow", ["reverse"])
 
 
 else: # case: modulus
     if user_answ == mod_answ:
         if not ENV['silent']:
-            TAc.print(LANG.render_feedback("answ-equal-mod", f'user_answ = mod_answ'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("answ-equal-mod", f'Oh no! Your answer is equal to the optimal minimum number in modulo={modulus} '), "red", ["bold"])
 
     else:
-        TAc.print(LANG.render_feedback("answ-wrong-mod", f'user_answ != mod_answ'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("answ-wrong-mod", f'Oh no! Your answer is not equal to the optimal minimum number in modulo={modulus} '), "red", ["reverse"])
 
         # Provide feedback
         if ENV["feedback"] == "true_val":
-            TAc.print(LANG.render_feedback("get-answ-mod", f'mod_answ = {mod_answ} = {opt_answ} % {modulus}'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("get-answ-mode", f'The optimal minimum number in modulo={modulus} of moves is {mod_answ} = {opt_answ} % {modulus}.'), "red", ["reverse"])
         
         elif ENV["feedback"] == "smaller_or_bigger":
-            if user_answ < mod_answ:
-                TAc.print(LANG.render_feedback("answ-less-mod", f'user_answ < mod_answ'), "red")
+            if mod_answ < user_answ:
+                TAc.print(LANG.render_feedback("answ-less-mod", f'The optimal minimum number in modulo={modulus} of moves is smaller then your answer'), "red", ["reverse"])
             else:
-                TAc.print(LANG.render_feedback("answ-more-mod", f'user_answ > mod_answ'), "red")
+                TAc.print(LANG.render_feedback("answ-more-mod", f'The optimal minimum number in modulo={modulus} of moves is bigger then your answer'), "red", ["reverse"])
 
         # Provide certificate
         if ENV["with_certificate"] == 1:
             if user_answ < opt_answ:
-                TAc.print(LANG.render_feedback("use_check_lower_bounds", f'use check_lower_bounds service'), "red")
+                TAc.print(LANG.render_feedback("use_check_lower_bounds", f'Use check_lower_bounds service for check it'), "red", ["reverse"])
             else:
-                TAc.print(LANG.render_feedback("certificate", f'this is the certificate:'), "red")
-                for e in hanoi.getNotOptimalSol(start, final, desired_size=len(user_answ) -1):
-                    TAc.print(LANG.render_feedback("certificate_line", f'{e}'), "red")
+                TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves.'), "red", ["reverse"])
+                for e in hanoi.getNotOptimalMovesList(start, final, desired_size=len(user_answ) -1):
+                    TAc.print(LANG.render_feedback("certificate_line", f'{get_move(*hanoi.parseMove(e))}'), "yellow", ["reverse"])
 
 
 exit(0)

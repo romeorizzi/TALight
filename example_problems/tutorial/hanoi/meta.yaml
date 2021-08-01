@@ -54,7 +54,7 @@ services:
         regex:  ^^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_C
       n:
-        explain: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
+        explain: "the number of disks (required only when it can not be inferred from the initial or target configuration). If any of start or final are not in all_* form, then n is ignored."
         regex: ^(-1|[1-9][0-9]{0,2}|1000)$
         default: -1 # implicit
       answ:
@@ -74,7 +74,7 @@ services:
         explain: the options are as follows
         explain1: -yes_no= provide the minimum possible amount of feedback.
         explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
-        explain3: -true_val= offers the lenght of an optimal solution.
+        explain3: -true_val= offers the length of an optimal solution.
       with_certificate:
         explain: "if your answ is a bigger number than optimal, the service provides you with an explict solution on less moves. On the contrary, you can use the service check_one_sol to ask us to check your super-optimal solution."
         regex: ^(0|1)$

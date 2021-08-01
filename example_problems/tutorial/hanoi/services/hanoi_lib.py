@@ -11,9 +11,38 @@ PEGS_LIST = ['A', 'B', 'C']
 class ConfigGenerator():
     def __init__(self, seed = 0):
         random.seed(seed)
+        
+
+    def getConfigs(self, start, final, n):
+        """Assume valid config for start and final"""
+        if start[:4] == 'all_':
+            if final[:4] == 'all_':
+                if n == -1:
+                    return (None, None, 'n_not_valid')
+                else:
+                    return (self.getTower(start[4], n), \
+                            self.getTower(final[4], n), \
+                            None)
+            else:
+                new_n = len(final)
+                return (self.getTower(start[4], new_n), \
+                        final, \
+                        None)
+        else:
+            if final[:4] == 'all_':
+                new_n = len(start)
+                return (start, \
+                        self.getTower(final[4], new_n), \
+                        None)
+            else:
+                if len(start) != len(final):
+                    return None, None, 'different_len'
+                else:
+                    return start, final, None
 
 
     def getTower(self, type, n):
+        """Generate a n-tower of type 'A', 'B', or 'C'"""
         assert n > 0
         assert type in PEGS_LIST
         
@@ -21,7 +50,7 @@ class ConfigGenerator():
 
 
     def getRandomFrom(self, n, seed):
-        """This method reset RndGenerator and then generate a config"""
+        """Reset RndGenerator and then generate a config"""
         random.seed(seed)
         config = ''
         for _ in range(n):
@@ -30,7 +59,7 @@ class ConfigGenerator():
 
 
     def getRandom(self, n):
-        """This method generate a config from previously initialized RndGenerator"""
+        """Generate a config from previously initialized RndGenerator"""
         config = ''
         for _ in range(n):
             config += random.choice(PEGS_LIST)
@@ -636,6 +665,13 @@ if __name__ == "__main__":
         assert gen.getRandomFrom(3, 13000) != 'BBA'
         assert gen.getRandom(3) == 'BCB'
         assert gen.getRandom(3) != 'BCB'
+
+        assert gen.getConfigs('all_A', 'all_B', -1) == (None, None, 'n_not_valid')
+        assert gen.getConfigs('all_A', 'all_C', 2) == ('AA', 'CC', None)
+        assert gen.getConfigs('all_A', 'BBB', 10) == ('AAA', 'BBB', None)
+        assert gen.getConfigs('AAAA', 'all_B', 10) == ('AAAA', 'BBBB', None)
+        assert gen.getConfigs('AA', 'CC', 10) == ('AA', 'CC', None)
+        assert gen.getConfigs('AAA', 'BBBB', -1) == (None, None, 'different_len')
     
         print("FINISH CONFIG GENERATOR TEST")
 
