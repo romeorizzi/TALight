@@ -4,30 +4,7 @@ from sys import stderr, exit, argv
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import get_input_from, HanoiTowerProblem
-
-
-# FUNCTIONS
-def provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=False):
-    if ENV['feedback'] == 'spot_first_non_optimal_move':
-        # Check diff
-        diff = None
-        if len(opt_sol) == 0:
-            diff = [0, user_sol[0], None]
-        else:
-            for i in range(len(opt_sol)):
-                if user_sol[i] != opt_sol[i]:
-                    diff = [i+1, user_sol[i], opt_sol[i]]
-                    break
-        assert diff != None
-        TAc.print(LANG.render_feedback("spot-first-diff", f'diff: {diff}'), "yellow", ["bold"])
-
-    elif ENV['feedback'] == 'gimme_optimal_solution':
-        TAc.print(LANG.render_feedback("gimme-optimal", f'opt-sol: {opt_sol}'), "yellow", ["bold"])
-
-    elif ENV['feedback'] == 'gimme_shorter_solution' and not user_sol_is_wrong:
-            TAc.print(LANG.render_feedback("gimme-admissible", f'adm-sol: {hanoi.getNotOptimalSol(start, final, desired_size=len(user_sol)-1)}'), "yellow", ["bold"])
-    exit(0)
+from hanoi_lib import ConfigGenerator, HanoiTowerProblem
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -35,9 +12,10 @@ problem="hanoi"
 service="check_one_sol"
 args_list = [
     ('v',str),
-    ('start', str),
-    ('final', str),
+    ('start',str),
+    ('final',str),
     ('n',int),
+    ('format',str),
     ('goal',str),
     ('feedback',str),
     ('lang',str),
@@ -47,43 +25,68 @@ args_list = [
 ENV = Env(problem, service, args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
+# LANG.manage_opening_msg()
 
 
-# INITIALIZATION
-N = ENV['n']
 
-# Check arguments errors
-if (ENV['start'] != "all_A" and ENV['start'] != "all_B" and ENV['start'] != "all_C"):
-    N = len(ENV['start'])
-elif (ENV['final'] != "all_A" and ENV['final'] != "all_B" and ENV['final'] != "all_C"):
-    N = len(ENV['final'])
-elif (N == -1):
-    TAc.print(LANG.render_feedback("arg-err", f"N!=-1 if start=all_X and final=all_X"), "red", ["bold"])
+# START CODING YOUR SERVICE: 
+def provide_feedback_and_exit(user_sol_is_wrong=False):
+    if ENV['feedback'] == 'spot_first_non_optimal_move':
+        # Check diff
+        diff = [None, None]
+        for i in range(len(opt_sol)):
+            if user_sol[i] != opt_sol[i]:
+                diff = [i+1, user_sol[i], opt_sol[i]]
+        TAc.print(LANG.render_feedback("spot-first-diff", f'Line {diff[0]}:\nYour wrong move: {diff[1]}.\nCorrect move: {diff[2]}'), "yellow", ["bold"])
+
+    elif ENV['feedback'] == 'gimme_optimal_solution':
+        TAc.print(LANG.render_feedback("gimme-optimal", f'This is the optimal moves list.'), "yellow", ["reverse"])
+        for e in opt_sol:
+            disk, current, target = hanoi.parseMove(e)
+            TAc.print(LANG.render_feedback("gimme-optimal-line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
+
+    elif ENV['feedback'] == 'gimme_shorter_solution' and not user_sol_is_wrong:
+        TAc.print(LANG.render_feedback("gimme-admissible", f'This is a shorter admissible moves list:'), "yellow", ["reverse"])
+        for e in hanoi.getNotOptimalSol(start, final, desired_size=len(user_sol)-1):
+            disk, current, target = hanoi.parseMove(e)
+            TAc.print(LANG.render_feedback("gimme-admissible-line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
     exit(0)
+
 
 # Get configurations
-start = get_input_from(ENV['start'], N)
-final = get_input_from(ENV['final'], N)
+gen = ConfigGenerator()
+start, final, error = gen.getConfigs(ENV['start'], ENV['final'], ENV['n'])
 
-# Check configs error
-if len(start) != len(final):
-    TAc.print(LANG.render_feedback("arg-config-err", f"len(start) != len(final)"), "red", ["bold"])
+# Check errors
+if error == 'n_not_valid':
+    TAc.print(LANG.render_feedback("n_not_valid", f"If you use the all_* form for start and final, you must use a N >= 0."), "red", ["bold"])
     exit(0)
+elif error == 'different_len':
+    TAc.print(LANG.render_feedback("different_len", f'If you use a custom configuration for start and final, the length of start must be equal to the length of final'), "red", ["bold"])
+    exit(0)
+
+
+# Get format
+if format == 'extended':
+    regex="^move \d{1,1000} from (A|B|C) peg to (A|B|C) peg$"
+    regex_explained="move D from C peg to T peg (where N=DISK, F=FROM and T=TO)"
+else:
+    regex="^\d{1,1000}:(A|B|C)(A|B|C)$"
+    regex_explained="D:CT (where N=DISK, F=FROM and T=TO)"
+
 
 # Init Hanoi Tower
 hanoi = HanoiTowerProblem(ENV['v'])
 
 # Start the game
-TAc.print(LANG.render_feedback("start_config", f'# Start config: {start}'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("final_config", f'# Final config: {final}'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("format_moves", f'# Use format: N:FROM->TO and print "end" as last move. (example: "1:AB")'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("start_game", f'Start the Game'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("start_config", f'# Start config: {start}'), "yellow", ["reverse"])
+TAc.print(LANG.render_feedback("final_config", f'# Final config: {final}'), "yellow", ["reverse"])
+TAc.print(LANG.render_feedback("start_game", f'Start!'), "yellow", ["reverse"])
 
 # Get user moves
 user_sol = list()
 while True:
-    move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO", exceptions={"end"}, TAc=TAc)
+    move, = TALinput(str, sep="\n", regex=regex, regex_explained=regex_explained, exceptions={"end"}, TAc=TAc)
     if move == 'end':
         break
     user_sol.append(move)
@@ -93,48 +96,64 @@ opt_sol = hanoi.getMovesList(start, final)
 
 
 # PROCESS DATA
+# Check correct disks
 if ENV['goal'] == 'check_only_disk':
+    # check if the user solution is surely wrong
     if len(user_sol) != len(opt_sol):
-        TAc.print(LANG.render_feedback("sol-len-wrong-disk", f'len(user_sol) != len(corr_moves)'), "red", ["bold"])
-        exit(0)
-        
+        TAc.print(LANG.render_feedback("sol-len-wrong-equal", f'Your number of moves is different from the optimal number of moves. Use check_opt_num_moves service for check it.'), "red", ["bold"])
+        provide_feedback_and_exit(user_sol_is_wrong=True)
+
     for i in range(len(opt_sol)):
         disk_user = hanoi.parseMove(user_sol[i])[0]
         disk_opt = hanoi.parseMove(opt_sol[i])[0]
         if disk_user != disk_opt:
-            TAc.print(LANG.render_feedback("sol-wrong-disk", f'Error on {i}: {disk_user}. The correct was {disk_opt}'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("sol-wrong-disk", f'Move {i+1}:\nYou move the disk: {disk_user}.\nCorrect disk to move: {disk_opt}'), "red", ["bold"])
             exit(0)
 
-    TAc.print(LANG.render_feedback("sol-correct-disk", f'all user_disk == disk_opt'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("sol-correct-disk", f'Your disk moved are the same of the optimal solution.'), "red", ["bold"])
     exit(0)
 
 
-# Check if surely the user_sol is invalid
+if ENV['goal'] == 'optimal':
+    # check if the user solution is surely not admissible
+    if (user_sol != opt_sol):
+        TAc.print(LANG.render_feedback("sol-wrong-opt", f'Your solution is not optimal.'), "red", ["bold"])
+        provide_feedback_and_exit(user_sol_is_wrong=True)
+
+    TAc.print(LANG.render_feedback("sol-correct-opt", f'Your solution is optimal.'), "green", ["bold"])
+    exit(0)
+
+
+# check if the user solution is surely not admissible
 if (len(user_sol) < len(opt_sol)):
-    TAc.print(LANG.render_feedback("sol-wrong-less", f'user_sol is wrong. len(user_sol) < len(corr_moves)'), "red", ["bold"])
-    provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=True)
+    TAc.print(LANG.render_feedback("sol-wrong-less", f'Your number of moves is less than the optimal number of moves. Use check_opt_num_moves service for check it.'), "red", ["bold"])
+    provide_feedback_and_exit(user_sol_is_wrong=True)
 
 # Check admissibility
-info, error = hanoi.checkSol(user_sol, start, final)
-if (info == 'move_not_valid'):
-    TAc.print(LANG.render_feedback("move-not-valid", f'In user_sol move_not_valid: {error}'), "red", ["bold"])
-    provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=True)
-elif (info == 'final_wrong'):
-    TAc.print(LANG.render_feedback("final-wrong", f'In user_sol final_wrong: {error}'), "red", ["bold"])
-    provide_feedback_and_exit(user_sol, opt_sol, user_sol_is_wrong=True)
-else:
-    TAc.print(LANG.render_feedback("sol-admissible", f'user_sol is admissible'), "green", ["bold"])
-
-    # check if is a simple walk
-    if (error != None):
-        TAc.print(LANG.render_feedback("sol-not-simplewalk", f'user_sol is not a simple walk [{error}]'), "red", ["bold"])
-    else:
-        TAc.print(LANG.render_feedback("sol-simplewalk", f'user_sol is a simple walk'), "green", ["bold"])
-
-    # check optimality: sol admissible and len(user_sol) == len(opt_sol)
-    if len(user_sol) != len(opt_sol):
-        TAc.print(LANG.render_feedback("sol-not-opt", f'user_sol is not optimal'), "red", ["bold"])
-        provide_feedback_and_exit(user_sol, opt_sol)
-    else:
-        TAc.print(LANG.render_feedback("sol-opt", f'user_sol is optimal'), "green", ["bold"])
+res, info = hanoi.checkMoveList(user_sol, start, final)
+if (res == 'move_wrong'):
+    TAc.print(LANG.render_feedback("move-wrong", f'In user_sol move_not_valid: {info}'), "red", ["bold"])
+    provide_feedback_and_exit(user_sol_is_wrong=True)
+elif (res == 'final_wrong'):
+    TAc.print(LANG.render_feedback("final-wrong", f'Your solution finish in configuration: {info}.\nIt is different from the correct final configuration: {final}.'), "red", ["bold"])
+    provide_feedback_and_exit(user_sol_is_wrong=True)
+   
+if ENV['goal'] == 'admissible':
+    TAc.print(LANG.render_feedback("sol-admissible", f'Your solution is admissible.'), "green", ["bold"])
+    # check if also optimal
+    if len(user_sol) == len(opt_sol):
+        TAc.print(LANG.render_feedback("sol-correct-opt", f'Your solution is optimal.'), "green", ["bold"])
         exit(0)
+
+if ENV['goal'] == 'simple_walk':
+    # check if is a simple walk
+    if (info != None):
+        TAc.print(LANG.render_feedback("sol-not-simplewalk", f'Your solution is not a simple walk.\nThis states are repeated:'), "red", ["bold"])
+        for k,v in info.items():
+            TAc.print(LANG.render_feedback("occ-line", f'State {k} repeated {v} times.'), "red", ["reverse"])
+    else:
+        TAc.print(LANG.render_feedback("sol-simplewalk", f'Your solution is a simple walk.'), "green", ["bold"])
+        # check if also optimal
+        if len(user_sol) == len(opt_sol):
+            TAc.print(LANG.render_feedback("sol-correct-opt", f'Your solution is optimal.'), "green", ["reverse"])
+            exit(0)

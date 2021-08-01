@@ -12,8 +12,8 @@ problem="hanoi"
 service="check_opt_num_moves"
 args_list = [
     ('v',str),
-    ('start', str),
-    ('final', str),
+    ('start',str),
+    ('final',str),
     ('n',int),
     ('answ',int),
     ('ok_if_congruent_modulus',int),
@@ -78,12 +78,12 @@ if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
         # Provide certificate
         if ENV["with_certificate"] == 1:
             if user_answ < opt_answ:
-                TAc.print(LANG.render_feedback("use_check_lower_bounds", f'Use check_lower_bounds service for check it'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("use-check_lower_bounds", f'Use check_lower_bounds service for check it'), "red", ["reverse"])
             else:
-                TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves.'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves:'), "red", ["reverse"])
                 for e in hanoi.getNotOptimalMovesList(start, final, desired_size=(user_answ-1)):
                     disk, current, target = hanoi.parseMove(e)
-                    TAc.print(LANG.render_feedback("certificate_line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
+                    TAc.print(LANG.render_feedback("certificate-line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
 
 
 else: # case: modulus
@@ -107,12 +107,12 @@ else: # case: modulus
         # Provide certificate
         if ENV["with_certificate"] == 1:
             if user_answ < opt_answ:
-                TAc.print(LANG.render_feedback("use_check_lower_bounds", f'Use check_lower_bounds service for check it'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("use-check_lower_bounds", f'Use check_lower_bounds service for check it'), "red", ["reverse"])
             else:
-                TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves.'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves:'), "red", ["reverse"])
                 for e in hanoi.getNotOptimalMovesList(start, final, desired_size=len(user_answ) -1):
                     disk, current, target = hanoi.parseMove(e)
-                    TAc.print(LANG.render_feedback("certificate_line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
+                    TAc.print(LANG.render_feedback("certificate-line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
 
 
 exit(0)
