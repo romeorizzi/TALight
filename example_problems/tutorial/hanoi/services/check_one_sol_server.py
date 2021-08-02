@@ -133,7 +133,7 @@ if (len(user_sol) < len(opt_sol)):
 # Check admissibility
 res, info = hanoi.checkMoveList(user_sol, start, final)
 if (res == 'move_wrong'):
-    TAc.print(LANG.render_feedback("move-wrong", f'Error in move {info[0]}'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("move-wrong", f'Error in move {info[0]}.'), "red", ["bold"])
     print_move_error(info[1], TAc, LANG)
     provide_feedback_and_exit(user_sol_is_wrong=True)
 elif (res == 'final_wrong'):

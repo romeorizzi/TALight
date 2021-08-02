@@ -5,7 +5,8 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import get_input_from, HanoiTowerProblem, get_description_of
+from hanoi_lib import ConfigGenerator, HanoiTowerProblem, HanoiState
+from error_code import print_move_error
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -16,6 +17,7 @@ args_list = [
     ('start', str),
     ('final', str),
     ('n',int),
+    ('format',str),
     ('help', str),
     ('lang',str),
     ('ISATTY',bool),
@@ -24,106 +26,92 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
+# LANG.manage_opening_msg()
 
 
-# INITIALIZATION
-N = ENV['n']
 
-# Check arguments errors
-if (ENV['start'] != "all_A" and ENV['start'] != "all_B" and ENV['start'] != "all_C"):
-    N = len(ENV['start'])
-elif (ENV['final'] != "all_A" and ENV['final'] != "all_B" and ENV['final'] != "all_C"):
-    N = len(ENV['final'])
-elif (N == -1):
-    TAc.print(LANG.render_feedback("arg-err", f"N!=-1 if start=all_X and final=all_X"), "red", ["bold"])
-    exit(0)
-
+# START CODING YOUR SERVICE: 
 # Get configurations
-start = get_input_from(ENV['start'], N)
-final = get_input_from(ENV['final'], N)
+gen = ConfigGenerator()
+start, final, error = gen.getConfigs(ENV['start'], ENV['final'], ENV['n'])
 
-# Check configs error
-if len(start) != len(final):
-    TAc.print(LANG.render_feedback("arg-config-err", f"len(start) != len(final)"), "red", ["bold"])
+# Check errors
+if error == 'n_not_valid':
+    TAc.print(LANG.render_feedback("n_not_valid", f"If you use the all_* form for start and final, you must use a N >= 0."), "red", ["bold"])
     exit(0)
+elif error == 'different_len':
+    TAc.print(LANG.render_feedback("different_len", f'If you use a custom configuration for start and final, the length of start must be equal to the length of final'), "red", ["bold"])
+    exit(0)
+
+
+# Get format
+if format == 'extended':
+    regex="^move \d{1,1000} from [A-Z] peg to [A-Z] peg$"
+    regex_explained="move D from C peg to T peg (where N=DISK, F=FROM and T=TO)"
+    def print_move(d, c, t):
+        TAc.print(LANG.render_feedback("ai_move", f'move {d} from {c} peg to {t} peg.'), "green", ["bold"])
+else:
+    regex="^\d{1,1000}:[A-Z][A-Z]$"
+    regex_explained="D:CT (where N=DISK, F=FROM and T=TO)"
+    def print_move(d, c, t):
+        TAc.print(LANG.render_feedback("ai_move", f'{d}:{c}{t}'), "green", ["bold"])
+
 
 # Init Hanoi Tower
 hanoi = HanoiTowerProblem('toddler')
 
 # Start the game
-TAc.print(LANG.render_feedback("start_config", f'# Start config: {start}'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("final_config", f'# Final config: {final}'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("format_moves", f'# Use format: N:FROM->TO (example: 1:A->B)'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("start_game", f'Start the Game'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("start_config", f'# Start config: {start}'), "yellow", ["reverse"])
+TAc.print(LANG.render_feedback("final_config", f'# Final config: {final}'), "yellow", ["reverse"])
+TAc.print(LANG.render_feedback("start_game", f'Start!'), "yellow", ["bold"])
 
-
-# PLAY GAME
-# define global vars
-state = start
-turn = 0
-player = 0
-last_disk = 1
-
-# define global functions
-def start_turn():
-    global hanoi, turn, player
-    TAc.print(LANG.render_feedback("turn", f'\n#-----------\n# turn:   {turn+1}'), "blue", ["bold"])
-    TAc.print(LANG.render_feedback("player", f'# player: {hanoi.names[player]}'), "blue", ["reverse"])
-    TAc.print(LANG.render_feedback("state", f'# state:  {state}'), "blue", ["reverse"])
-
-def ai_turn(move):
-    global hanoi, state, turn, player, last_disk
-    disk, c, t, _ = hanoi.parseMove(move)
-    TAc.print(LANG.render_feedback("ai_move", f'{hanoi.getStdMove(move)}'), "green", ["bold"])
-    last_disk = disk
-    state = state[:disk-1] + t + state[disk:]
-    turn += 1
-    player = (player + 1) % 2
-
-def user_turn(available_moves):
-    global hanoi, state, turn, player, last_disk
-    if ENV['help'] == 'gimme_moves_available':
-        TAc.print(LANG.render_feedback("help", 'This are the moves available:'), "yellow", ["bold"])
-        for e in available_moves:
-            TAc.print(LANG.render_feedback("help-line", f'{hanoi.getStdMove(e)}'), "yellow", ["reverse"])
-    # get user move
-    user_move, = TALinput(str, sep="\n", regex="^\d{1,1000}:(A|B|C)(A|B|C)$", regex_explained="N:FT  where N=DISK, F=FROM and T=TO. Use 'end' to quit", exceptions={"end"}, TAc=TAc)
-    if user_move == 'end':
-        end_game()
-    # parse user move
-    user_move = hanoi.names[player] + "|" + user_move
-    disk, c, t, _ = hanoi.parseMove(user_move)
-    # check correctness of move
-    code = hanoi.checkMove(state, disk, c, t, player, last_disk)
-    if code == 0:
-        last_disk = disk
-        state = state[:disk-1] + t + state[disk:]
-        turn += 1
-        player = (player + 1) % 2
-    else:
-        TAc.print(LANG.render_feedback("invalid_move", f'{get_description_of(code)}\nRetry...'), "red", ["bold"])
-
-def end_game():
-    TAc.print(LANG.render_feedback("end-game", '\nEnd Game'), "blue", ["bold"])
-    exit(0)
 
 # play the game
+names = ['Daddy', 'Toddler']
 opt_moves = hanoi.getMovesList(start, final)
-while state != final:
-    start_turn()
-    available_moves = hanoi.getAvailableMovesIn(state, player, last_disk)
-    
-    if ENV['role'] == 'daddy' and player == 1:
-        # AI play like toddler and is the Toddler turn
-        ai_turn(move=random.choice(available_moves)) 
-    
-    elif ENV['role'] == 'toddler' and player == 0:
-        # AI play like Daddy and is the Daddy turn
-        ai_turn(move=opt_moves[turn])                
+state = HanoiState(start)
 
+while not state.isEqualTo(final):
+    # Initialize turn
+    TAc.print(LANG.render_feedback("turn", f'\n#-----------\n# turn:   {state.turn}'), "blue", ["bold"])
+    TAc.print(LANG.render_feedback("player", f'# player: {names[state.turn % 2]}'), "blue", ["reverse"])
+    TAc.print(LANG.render_feedback("state", f'# state:  {state.getString()}'), "blue", ["reverse"])
+
+    # Get availables moves
+    available_moves = hanoi.getAvailableMovesIn(state)
+
+    # This is the Daddy turn and AI play like Daddy:
+    if (state.turn % 2 == 0) and ENV['role'] == 'toddler':
+        d, c, t = hanoi.parseMove(opt_moves[state.turn])
+        print_move(d, c, t)
+        state.update(d, t)
+    
+    # This is the Toddler turn and AI play like Toddler
+    elif (state.turn % 2 == 1) and ENV['role'] == 'daddy':
+        d, c, t = hanoi.parseMove(random.choice(available_moves))
+        print_move(d, c, t)
+        state.update(d, t)
+
+    # Other cases
     else:
-        # Other case
-        user_turn(available_moves)
+        # help
+        if ENV['help'] == 'gimme_moves_available':
+            TAc.print(LANG.render_feedback("help", 'These are the moves available:'), "yellow", ["bold"])
+            for e in available_moves:
+                print_move(*hanoi.parseMove(e))
+        # get user move
+        user_move, = TALinput(str, sep="\n", regex=regex, regex_explained=regex_explained, exceptions={"end"}, TAc=TAc)
+        if user_move == 'end':
+            break
+        # parse user move
+        d, c, t = hanoi.parseMove(user_move)
+        # check correctness of move
+        success, code = hanoi.checkMove(state, d, c, t)
+        if success:
+            state.update(d, t)
+        else:
+            TAc.print(LANG.render_feedback("move-wrong", f'Error in current move.'), "red", ["bold"])
+            print_move_error(code, TAc, LANG)
 
-end_game()
+TAc.print(LANG.render_feedback("end_game", '\nFinish!'), "yellow", ["bold"])
+exit(0)

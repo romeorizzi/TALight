@@ -149,6 +149,12 @@ services:
         explain: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
         regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
         default: -1 #implicit
+      format:
+        regex: ^(minimal|extended)$
+        default: minimal
+        explain: "The move format. there are two type of format (D=disk, C=current_peg, T=target_peg):"
+        explain1: -minimal= D:CT
+        explain2: -extended= move D from C peg to T peg
       help:
         regex: ^(yes_no|gimme_moves_available)$
         default: yes_no
