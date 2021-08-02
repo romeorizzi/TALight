@@ -252,6 +252,12 @@ services:
         regex:  ^(all_A|all_B|all_C|general)$
         default: all_C
         explain: "target configuration for the puzzle."
+      format:
+        regex: ^(minimal|extended)$
+        default: minimal
+        explain: "The move format. there are two type of format (D=disk, C=current_peg, T=target_peg):"
+        explain1: -minimal= D:CT
+        explain2: -extended= move D from C peg to T peg
       seed:
         regex: ^(-1|[1-9][0-9]{5,5})$
         default: -1 #random_seed

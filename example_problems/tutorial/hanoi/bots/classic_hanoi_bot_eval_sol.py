@@ -55,10 +55,11 @@ while True:
     start = input()
     if start[0] == '#':
         continue
-    if start == 'end':
+    if start == 'Finish Tests':
         break
     final = input()
     h.move(start, final)
-    print("end")
+    # print(f"1:AC")
+    print('end')
 
 

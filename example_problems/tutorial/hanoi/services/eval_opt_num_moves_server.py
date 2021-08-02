@@ -46,14 +46,7 @@ hanoi = HanoiTowerProblem(ENV['v'])
 gen = ConfigGenerator(seed)
 
 
-# START TESTS
-num_tests = ENV['num_tests']
-if ENV['start'] != 'general' and ENV['final'] != 'general':
-    # in this case the test are equal, so num_tests must be 1
-    num_tests = 1
-TAc.print(LANG.render_feedback("start-tests", f"# Start Tests"), "green", ["bold"])
-
-
+# Functions
 def one_test(n):
     # get type of configurations
     start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
@@ -85,7 +78,8 @@ def one_test(n):
 
 
 # Execute all test
-for t in range(1, 2*num_tests, 2):
+TAc.print(LANG.render_feedback("start-tests", f"# Start Tests"), "green", ["bold"])
+for t in range(1, ENV['num_tests'] + 1):
     for n in range(1, ENV['n_max'] + 1):
         success, time = one_test(n)
         if success:
@@ -99,5 +93,5 @@ for t in range(1, 2*num_tests, 2):
             TAc.print(LANG.render_feedback("fail", f'# fail: wrong answer'), "red", ["bold"])
             break
 
-TAc.print(LANG.render_feedback("end", "Finish Test"), "green", ["bold"])
+TAc.print(LANG.render_feedback("end", "Finish Tests"), "green", ["bold"])
 exit(0)
