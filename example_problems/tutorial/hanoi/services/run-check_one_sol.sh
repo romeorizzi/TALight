@@ -5,8 +5,6 @@ SERVICE=check_one_sol
 
 V=classic
 
-FORMAT=minimal
-# FORMAT=extended
 
 GOAL=admissible
 # GOAL=optimal
@@ -20,7 +18,7 @@ FEEDBACK=gimme_shorter_solution
 
 BOT_PATH="../bots/classic_hanoi_bot_check.py"
 LANG=hardcoded
-# LANG=en
+FORMAT=minimal
 
 
 TEST=1
@@ -32,10 +30,22 @@ elif [ $TEST = 2 ]; then
     START=ABC
     FINAL=CBA
     N=-1
-else
+elif [ $TEST = 3 ]; then
     START=AABB
     FINAL=CBBA
     N=-1
+elif [ $TEST = 4 ]; then
+    START=all_A
+    FINAL=all_C
+    N=2
+    LANG=it
+    FORMAT=extended
+elif [ $TEST = 5 ]; then
+    START=all_A
+    FINAL=all_C
+    N=2
+    LANG=en
+    FORMAT=extended
 fi
 
 

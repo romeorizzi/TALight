@@ -24,7 +24,7 @@ services:
         default: minimal
         explain: "The move format. there are two type of format (D=disk, C=current_peg, T=target_peg):"
         explain1: -minimal= D:CT
-        explain2: -extended= move D from C peg to T peg
+        explain2: -extended= move disk D from C peg to T peg
       goal:
         regex:  ^(admissible|optimal|simple_walk|check_only_disk)$
         default: admissible
@@ -154,7 +154,7 @@ services:
         default: minimal
         explain: "The move format. there are two type of format (D=disk, C=current_peg, T=target_peg):"
         explain1: -minimal= D:CT
-        explain2: -extended= move D from C peg to T peg
+        explain2: -extended= move disk D from C peg to T peg
       help:
         regex: ^(yes_no|gimme_moves_available)$
         default: yes_no
@@ -257,7 +257,7 @@ services:
         default: minimal
         explain: "The move format. there are two type of format (D=disk, C=current_peg, T=target_peg):"
         explain1: -minimal= D:CT
-        explain2: -extended= move D from C peg to T peg
+        explain2: -extended= move disk D from C peg to T peg
       seed:
         regex: ^(-1|[1-9][0-9]{5,5})$
         default: -1 #random_seed

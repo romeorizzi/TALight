@@ -15,18 +15,36 @@ if [ $TEST = 1 ]; then
     FINAL=all_C
     TESTS=1
     N_MAX=5
-else
+elif [ $TEST = 2 ]; then
     START=general
     FINAL=general
     TESTS=2
     N_MAX=5
+elif [ $TEST = 3 ]; then
+    START=all_A
+    FINAL=all_C
+    TESTS=1
+    N_MAX=2
 fi
 
 
 
-FORMAT=minimal
-# FORMAT=extended
-LANG=hardcoded
+
+TEST=1
+if [ $TEST = 1 ]; then
+    FORMAT=minimal
+    LANG=hardcoded
+elif [ $TEST = 2 ]; then
+    FORMAT=extended
+    LANG=hardcoded
+elif [ $TEST = 3 ]; then
+    FORMAT=extended
+    LANG=it
+elif [ $TEST = 4 ]; then
+    FORMAT=extended
+    LANG=en
+fi
+
 BOT_PATH="../bots/classic_hanoi_bot_eval_sol.py"
 
 

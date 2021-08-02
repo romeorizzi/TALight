@@ -17,7 +17,21 @@ ROLE=daddy
 # HELP=minimal
 HELP=gimme_moves_available
 
-LANG=hardcoded
+
+TEST=1
+if [ $TEST = 1 ]; then
+    FORMAT=minimal
+    LANG=hardcoded
+elif [ $TEST = 2 ]; then
+    FORMAT=extended
+    LANG=hardcoded
+elif [ $TEST = 3 ]; then
+    FORMAT=extended
+    LANG=it
+elif [ $TEST = 4 ]; then
+    FORMAT=extended
+    LANG=en
+fi
 
 
 
@@ -29,6 +43,7 @@ rtal connect -e \
     -astart=$START \
     -afinal=$FINAL \
     -an=$N \
+    -aformat=$FORMAT \
     -ahelp=$HELP \
     -alang=$LANG
 

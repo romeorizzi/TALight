@@ -6,7 +6,7 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 from hanoi_lib import ConfigGenerator, HanoiTowerProblem, HanoiState
-from error_code import print_move_error
+from utils_lang import print_move_error, parse_move, get_formatted_move, get_regex, get_std_move
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -44,19 +44,6 @@ elif error == 'different_len':
     exit(0)
 
 
-# Get format
-if format == 'extended':
-    regex="^move \d{1,1000} from [A-Z] peg to [A-Z] peg$"
-    regex_explained="move D from C peg to T peg (where N=DISK, F=FROM and T=TO)"
-    def print_move(d, c, t):
-        TAc.print(LANG.render_feedback("ai_move", f'move {d} from {c} peg to {t} peg.'), "green", ["bold"])
-else:
-    regex="^\d{1,1000}:[A-Z][A-Z]$"
-    regex_explained="D:CT (where N=DISK, F=FROM and T=TO)"
-    def print_move(d, c, t):
-        TAc.print(LANG.render_feedback("ai_move", f'{d}:{c}{t}'), "green", ["bold"])
-
-
 # Init Hanoi Tower
 hanoi = HanoiTowerProblem('toddler')
 
@@ -67,6 +54,7 @@ TAc.print(LANG.render_feedback("start_game", f'Start!'), "yellow", ["bold"])
 
 
 # play the game
+regex, explain = get_regex(ENV['format'], ENV['lang'])
 names = ['Daddy', 'Toddler']
 opt_moves = hanoi.getMovesList(start, final)
 state = HanoiState(start)
@@ -82,14 +70,18 @@ while not state.isEqualTo(final):
 
     # This is the Daddy turn and AI play like Daddy:
     if (state.turn % 2 == 0) and ENV['role'] == 'toddler':
-        d, c, t = hanoi.parseMove(opt_moves[state.turn])
-        print_move(d, c, t)
+        m = opt_moves[state.turn]
+        d, c, t = parse_move(m)
+        move_formatted = get_formatted_move(m, ENV['format'], ENV['lang'])
+        TAc.print(LANG.render_feedback("ai_move", f'{move_formatted}'), "green", ["bold"])
         state.update(d, t)
     
     # This is the Toddler turn and AI play like Toddler
     elif (state.turn % 2 == 1) and ENV['role'] == 'daddy':
-        d, c, t = hanoi.parseMove(random.choice(available_moves))
-        print_move(d, c, t)
+        m = random.choice(available_moves)
+        d, c, t = parse_move(m)
+        move_formatted = get_formatted_move(m, ENV['format'], ENV['lang'])
+        TAc.print(LANG.render_feedback("ai_move", f'{move_formatted}'), "green", ["bold"])
         state.update(d, t)
 
     # Other cases
@@ -98,13 +90,14 @@ while not state.isEqualTo(final):
         if ENV['help'] == 'gimme_moves_available':
             TAc.print(LANG.render_feedback("help", 'These are the moves available:'), "yellow", ["bold"])
             for e in available_moves:
-                print_move(*hanoi.parseMove(e))
+                move_formatted = get_formatted_move(e, ENV['format'], ENV['lang'])
+                TAc.print(LANG.render_feedback("move-available", f'{move_formatted}'), "green", ["bold"])
         # get user move
-        user_move, = TALinput(str, sep="\n", regex=regex, regex_explained=regex_explained, exceptions={"end"}, TAc=TAc)
+        user_move, = TALinput(str, sep="\n", regex=regex, regex_explained=explain, exceptions={"end"}, TAc=TAc)
         if user_move == 'end':
             break
         # parse user move
-        d, c, t = hanoi.parseMove(user_move)
+        d, c, t = parse_move(get_std_move(user_move, ENV['format'], ENV['lang']))
         # check correctness of move
         success, code = hanoi.checkMove(state, d, c, t)
         if success:

@@ -32,6 +32,8 @@ class MyHanoi():
 
     def __moveDisk(self, disk, current, target):
         print(f"{disk}:{current}{target}")
+        # print(f"move disk {disk} from {current} peg to {target} peg")
+        # print(f"muovi disco {disk} dal piolo {current} al piolo {target}")
     
     def move(self, initial, final):
         """I assume: len(initial) == len(final). Move all disks from initial configuration to final configuration"""

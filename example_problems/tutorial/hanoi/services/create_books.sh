@@ -7,7 +7,7 @@ PATH_TO_PREAMBLE=$HOME/github/TALight/TAL_utils/problem_maker/python/multilangua
 # REMOVE BOOKS
 if [ "$1" = "clean" ]; then
     rm *en.yaml
-    # rm error_code_feedbackBook.en.yaml 
+    # rm utils_lang_feedbackBook.en.yaml 
 fi
 
 
@@ -26,7 +26,7 @@ if [ "$1" = "en" ]; then
         fi
     done
     # get extra files
-    file="error_code"
+    file="utils_lang"
     echo $file
     $PATH_TO_EXE/extract_feedbackBook_hardcoded.py ${file}.py fstring_count -preamble_file=$PATH_TO_PREAMBLE/preamble.en.yaml 1> ${file}_feedbackBook.en.yaml 
 fi
@@ -46,7 +46,7 @@ if [ "$1" = "it" ]; then
         fi
     done
     # get extra files
-    file="error_code"
+    file="utils_lang"
     echo $file
     $PATH_TO_EXE/extract_feedbackBook_hardcoded.py ${file}.py fstring_count -preamble_file=$PATH_TO_PREAMBLE/preamble.it.yaml 1> ${file}_feedbackBook.it.yaml 
 fi

@@ -5,6 +5,7 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 from hanoi_lib import ConfigGenerator, HanoiTowerProblem
+from utils_lang import get_formatted_move
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -82,8 +83,7 @@ if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
             else:
                 TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves:'), "red", ["reverse"])
                 for e in hanoi.getNotOptimalMovesList(start, final, desired_size=(user_answ-1)):
-                    disk, current, target = hanoi.parseMove(e)
-                    TAc.print(LANG.render_feedback("certificate-line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
+                    TAc.print(LANG.render_feedback("certificate-line", f'{get_formatted_move(e, "extended", ENV["lang"])}'), "yellow", ["reverse"])
 
 
 else: # case: modulus
@@ -111,8 +111,7 @@ else: # case: modulus
             else:
                 TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves:'), "red", ["reverse"])
                 for e in hanoi.getNotOptimalMovesList(start, final, desired_size=len(user_answ) -1):
-                    disk, current, target = hanoi.parseMove(e)
-                    TAc.print(LANG.render_feedback("certificate-line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
+                    TAc.print(LANG.render_feedback("certificate-line", f'{get_formatted_move(e, "extended", ENV["lang"])}'), "yellow", ["reverse"])
 
 
 exit(0)

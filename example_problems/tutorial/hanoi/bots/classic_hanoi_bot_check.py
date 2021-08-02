@@ -59,6 +59,18 @@ print('1:BC')
 # print('1:BC')
 
 
+# TEST4(AA->CC) + optimal + extended it
+# print('muovi disco 1 dal piolo A al piolo B')
+# print('muovi disco 2 dal piolo A al piolo C')
+# print('muovi disco 1 dal piolo B al piolo C')
+
+
+# TEST5(AA->CC) + optimal + extended en
+# print('move disk 1 from A peg to B peg')
+# print('move disk 2 from A peg to C peg')
+# print('move disk 1 from B peg to C peg')
+
+
 ##############################
 print("end")
 wait_end() 

@@ -7,6 +7,16 @@ sys.setrecursionlimit(1000000)
 PEGS_LIST = ['A', 'B', 'C']
 
 
+def generate_move(disk, current, target):
+    """Generate a move string from info"""
+    return f"{disk}:{current}{target}"
+
+
+def parse_move(move):
+    """Extract the info from the move string"""
+    disk, (c, t) = move.split(":")
+    return int(disk), c, t
+
 
 class ConfigGenerator():
     def __init__(self, seed = 0):
@@ -93,7 +103,6 @@ class ConfigGenerator():
         return config
 
 
-
 class HanoiState():
     def __init__(self, initial):
         # Note: I use a sentinel in 0 position
@@ -127,7 +136,6 @@ class HanoiState():
         return self.getString() == config
 
 
-
 class HanoiTowerProblem():
     """
     Move Format: {disk}:{from_peg}{to_peg} with bracked omitted
@@ -149,17 +157,6 @@ class HanoiTowerProblem():
 
 
     # PUBLIC INTERFACE 
-    def generateMoveFrom(self, disk, current, target):
-        """Generate a move string from info"""
-        return f"{disk}:{current}{target}"
-    
-
-    def parseMove(self, move):
-        """Extract the info from the move string"""
-        disk, (c, t) = move.split(":")
-        return int(disk), c, t
-
-
     def checkMove(self, state, disk, current, target):
         """
         Assume valid state
@@ -200,7 +197,7 @@ class HanoiTowerProblem():
         # check moves correctness
         for move in move_list:
             # check move
-            d, c, t = self.parseMove(move)
+            d, c, t = parse_move(move)
             success, errorCode = self.checkMove(state, d, c, t)
             if not success:
                 return 'move_wrong', (move, errorCode)
@@ -328,7 +325,7 @@ class HanoiTowerProblem():
             i = 2
             state = HanoiState(initial)
             while i < len(sol) and diff >= 3:
-                d, c, t = self.parseMove(sol[i])
+                d, c, t = parse_move(sol[i])
                 state.update(d, t)
                 # search Daddy move with disk 1
                 if d == 1 and state.turn % 2 == 0:
@@ -360,7 +357,7 @@ class HanoiTowerProblem():
         else:
             i = 0
             while diff > 0:
-                d, c, t = self.parseMove(sol[i])
+                d, c, t = parse_move(sol[i])
                 if d == 1 and random.randint(1,10) > 2:
                     if self.version == 'classic':
                         s = self.__getPegFrom(c, t)
@@ -472,14 +469,14 @@ class HanoiTowerProblem():
         self.__move_classic(initial, final)
         # get first optimal moves
         if len(self.moves) > 1:
-            d, c, t = self.parseMove(self.moves[0])
+            d, c, t = parse_move(self.moves[0])
             # If Daddy move first with disk=1, he have the control of the game.
             # So the solution is equal to optimal solution for classic version.
             # Otherwise I assume that child do the worst move (on second move),
             # and Daddy make the rollback
             if d != 1:
                 # Toddler now can make the worst move, and he make it...
-                d, c, t = self.parseMove(self.moves[1])
+                d, c, t = parse_move(self.moves[1])
                 s = self.__getPegFrom(c, t)
                 # change t in move {d}:{c}{t}
                 self.moves[1] = self.moves[1][:-1] + s
@@ -554,18 +551,18 @@ class HanoiTowerProblem():
 def general_test(h, enable_advanced_tests, print_feedback, seed, n_max, num_tests, num_tests_not_optimal, size_offset=-1):
     assert isinstance(h, HanoiTowerProblem)
 
-    # TEST generateMoveFrom() and parseMove()
-    assert h.generateMoveFrom(130, 'C', 'A') == '130:CA'
-    assert h.generateMoveFrom(10, 'A', 'C') == '10:AC'
-    assert h.generateMoveFrom(1291, 'B', 'A') == '1291:BA'
+    # TEST generate_move() and parse_move()
+    assert generate_move(130, 'C', 'A') == '130:CA'
+    assert generate_move(10, 'A', 'C') == '10:AC'
+    assert generate_move(1291, 'B', 'A') == '1291:BA'
 
-    assert h.parseMove('130:CA') == (130, 'C', 'A')
-    assert h.parseMove('10:AC') == (10, 'A', 'C')
-    assert h.parseMove('1291:BA') == (1291, 'B', 'A')
+    assert parse_move('130:CA') == (130, 'C', 'A')
+    assert parse_move('10:AC') == (10, 'A', 'C')
+    assert parse_move('1291:BA') == (1291, 'B', 'A')
 
     for s in ['1:AB', '2:BC', '130:CA']:
-        d, c, t = h.parseMove(s)
-        assert s == h.generateMoveFrom(d, c, t)
+        d, c, t = parse_move(s)
+        assert s == generate_move(d, c, t)
 
     
     # TEST checkMove()

@@ -4,8 +4,8 @@ from sys import stderr, exit, argv
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import ConfigGenerator, HanoiTowerProblem
-from error_code import print_move_error
+from hanoi_lib import ConfigGenerator, HanoiTowerProblem, parse_move
+from utils_lang import print_move_error, get_regex, get_std_move
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -43,13 +43,13 @@ def provide_feedback_and_exit(user_sol_is_wrong=False):
     elif ENV['feedback'] == 'gimme_optimal_solution':
         TAc.print(LANG.render_feedback("gimme-optimal", f'This is the optimal moves list.'), "yellow", ["reverse"])
         for e in opt_sol:
-            disk, current, target = hanoi.parseMove(e)
+            disk, current, target = parse_move(e)
             TAc.print(LANG.render_feedback("gimme-optimal-line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
 
     elif ENV['feedback'] == 'gimme_shorter_solution' and not user_sol_is_wrong:
         TAc.print(LANG.render_feedback("gimme-admissible", f'This is a shorter admissible moves list:'), "yellow", ["reverse"])
         for e in hanoi.getNotOptimalSol(start, final, desired_size=len(user_sol)-1):
-            disk, current, target = hanoi.parseMove(e)
+            disk, current, target = parse_move(e)
             TAc.print(LANG.render_feedback("gimme-admissible-line", f'Move disk {disk} from {current} peg to {target} peg.'), "yellow", ["reverse"])
     exit(0)
 
@@ -67,15 +67,6 @@ elif error == 'different_len':
     exit(0)
 
 
-# Get format
-if format == 'extended':
-    regex="^move \d{1,1000} from (A|B|C) peg to (A|B|C) peg$"
-    regex_explained="move D from C peg to T peg (where N=DISK, F=FROM and T=TO)"
-else:
-    regex="^\d{1,1000}:(A|B|C)(A|B|C)$"
-    regex_explained="D:CT (where N=DISK, F=FROM and T=TO)"
-
-
 # Init Hanoi Tower
 hanoi = HanoiTowerProblem(ENV['v'])
 
@@ -86,11 +77,12 @@ TAc.print(LANG.render_feedback("start_game", f'Start!'), "yellow", ["reverse"])
 
 # Get user moves
 user_sol = list()
+regex, explain = get_regex(ENV['format'], ENV['lang'])
 while True:
-    move, = TALinput(str, sep="\n", regex=regex, regex_explained=regex_explained, exceptions={"end"}, TAc=TAc)
-    if move == 'end':
+    user_move, = TALinput(str, sep="\n", regex=regex, regex_explained=explain, exceptions={"end"}, TAc=TAc)
+    if user_move == 'end':
         break
-    user_sol.append(move)
+    user_sol.append(get_std_move(user_move, ENV['format'], ENV['lang']))
 
 # Get optimal moves
 opt_sol = hanoi.getMovesList(start, final)
@@ -105,8 +97,8 @@ if ENV['goal'] == 'check_only_disk':
         provide_feedback_and_exit(user_sol_is_wrong=True)
 
     for i in range(len(opt_sol)):
-        disk_user = hanoi.parseMove(user_sol[i])[0]
-        disk_opt = hanoi.parseMove(opt_sol[i])[0]
+        disk_user = parse_move(user_sol[i])[0]
+        disk_opt = parse_move(opt_sol[i])[0]
         if disk_user != disk_opt:
             TAc.print(LANG.render_feedback("sol-wrong-disk", f'Move {i+1}:\nYou move the disk: {disk_user}.\nCorrect disk to move: {disk_opt}'), "red", ["bold"])
             exit(0)

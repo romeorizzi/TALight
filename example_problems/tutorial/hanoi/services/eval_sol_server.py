@@ -6,6 +6,7 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 from hanoi_lib import ConfigGenerator, HanoiTowerProblem
+from utils_lang import get_regex, get_std_move
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -15,6 +16,7 @@ args_list = [
     ('v',str),
     ('start', str),
     ('final', str),
+    ('format', str),
     ('seed',int),
     ('num_tests',int),
     ('n_max',int),
@@ -41,42 +43,32 @@ TAc.print(LANG.render_feedback("print-seed", f"# seed = {seed}"), "yellow", ["bo
 hanoi = HanoiTowerProblem(ENV['v'])
 gen = ConfigGenerator(seed)
 
-
-# Get format
-if format == 'extended':
-    regex="^move \d{1,1000} from (A|B|C) peg to (A|B|C) peg$"
-    regex_explained="move D from C peg to T peg (where N=DISK, F=FROM and T=TO)"
-else:
-    regex="^\d{1,1000}:(A|B|C)(A|B|C)$"
-    regex_explained="D:CT (where N=DISK, F=FROM and T=TO)"
-
-
-# Functions
-def one_test(n):
-    # get type of configurations
-    start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
-    assert error == None
-    TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
-    
-    # Get the correct solution
-    opt_sol = hanoi.getMovesList(start, final)
-
-    # Get user solution
-    user_sol = list()
-    while True:
-        move, = TALinput(str, sep="\n", regex=regex, regex_explained=regex_explained, exceptions={"end"}, TAc=TAc)
-        if move == 'end':
-            break
-        user_sol.append(move)
-
-    return user_sol == opt_sol
     
 # Execute all test
 TAc.print(LANG.render_feedback("start-tests", f"# Start Tests"), "green", ["bold"])
 for t in range(1, ENV['num_tests'] + 1):
     for n in range(1, ENV['n_max'] + 1):
-        success = one_test(n)
-        if success:
+        # RUN TEST --------------------
+        # get type of configurations
+        start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
+        assert error == None
+        TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
+        
+        # Get the correct solution
+        opt_sol = hanoi.getMovesList(start, final)
+
+        # Get user solution
+        user_sol = list()
+        regex, explain = get_regex(ENV['format'], ENV['lang'])
+        while True:
+            user_move, = TALinput(str, sep="\n", regex=regex, regex_explained=explain, exceptions={"end"}, TAc=TAc)
+            if user_move == 'end':
+                break
+            user_sol.append(get_std_move(user_move, ENV['format'], ENV['lang']))
+
+
+        # CHECK TEST ------------------
+        if user_sol == opt_sol:
             TAc.print(LANG.render_feedback("success", "# success"), "green", ["bold"])
         else:
             TAc.print(LANG.render_feedback("fail", "# fail"), "red", ["bold"])
