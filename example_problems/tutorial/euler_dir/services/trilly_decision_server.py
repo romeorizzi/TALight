@@ -54,7 +54,7 @@ while prompt!= "y" and prompt!= "n":
     if edges.find(prompt) == -1:
         TAc.print(LANG.render_feedback("error-arc", "L'arco non esiste nel grafo."),"red")
         exit(0)
-    g_new = g
+    g_new, graph_new, edges_new, a_new = GenerateGraph(seed,n,m)
     g_new.rmvEdge(int(head),int(tail))
     if g_new.isEulerianWalk() == True:
         print("Il nuovo grafo ottenuto contiene un cammino euleriano.")

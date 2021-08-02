@@ -23,6 +23,7 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
+
 # START CODING YOUR SERVICE:
 seed = ENV['seed']
 n = ENV['n']
@@ -39,18 +40,21 @@ print(f"{graph}")
 count = 0
 print("#? Trilly: waiting for your final answer (write 'walk' and then each arc of the walk in a new line) or a single arc of G.")
 prompt = input()
+
 while prompt!= "walk":
     count += 1
+    g_new, graph_new, edges_new, a_new = GenerateGraph(seed,n,m)
     head, tail = prompt.split()
-    if edges.find(prompt) == -1:
+    if edges_new.find(prompt) == -1:
         TAc.print(LANG.render_feedback("error-arc", "L'arco non esiste nel grafo."),"red")
         exit(0)
-    g_new = g
     g_new.rmvEdge(int(head),int(tail))
     if g_new.isEulerianWalk() == False:
-        print("Il nuovo grafo non contiene un cammino euleriano.")
+        print("Il nuovo grafo non contiene un cammino euleriano.\n")
     else:
+        print("walk:")
         g_new.printEulerTour()
+        print("\n")
     prompt = input()
 
 for i in range(m):

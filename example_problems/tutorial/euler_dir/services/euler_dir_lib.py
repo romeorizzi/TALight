@@ -61,18 +61,20 @@ class Graph():
     ##########################
     #### per Eulerian Walk ###
 
-    def isConnected(self): 
-        visited = [False] * (self.V) 
-        v = 0
-        for v in range(self.V): 
+    def isConnected(self):  
+        for v in range(self.V):
+            visited = [False] * (self.V)
+            r = True           
             if len(self.graph[v]) > 0: 
-                break
-        self.DFSUtil(v, visited) 
+                self.DFSUtil(v, visited) 
         # If DFS traversal doesn't visit all vertices, then return false. 
-        for i in range(self.V): 
-            if visited[i] == False and len(self.graph[i])>0: 
-                return False
-        return True
+                for i in range(self.V): 
+                    if visited[i] == False and len(self.graph[i])>0: 
+                        r = False
+                        break
+            if r == True:
+                return True
+        return False
   
     def isEulerianWalk(self):
         # Check if all non-zero degree vertices are connected
@@ -100,9 +102,8 @@ class Graph():
         for index, key in enumerate(self.graph[u]):
             if key == v:
                 self.graph[u].pop(index)
-        for index, key in enumerate(self.graph[v]):
-            if key == u:
-                self.graph[v].pop(index)
+                self.IN[v] = self.IN[v] -1
+
  
     # A DFS based function to count reachable vertices from v
     def DFSCount(self, v, visited):
@@ -159,11 +160,10 @@ class Graph():
         #Find a vertex with odd degree
         u = 0
         for i in range(self.V):
-            if len(self.graph[i]) %2 != 0 :
+            if len(self.graph[i]) - self.IN[i] == 1:
                 u = i
                 break
         # Print tour starting from odd vertex
-        print ("\n")
         self.printEulerUtil(u)
 ############################################################
 ############################################################
