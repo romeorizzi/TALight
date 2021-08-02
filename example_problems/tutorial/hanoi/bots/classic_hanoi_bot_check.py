@@ -34,7 +34,14 @@ wait_start()
 
 
 # TEST1(AA->CC) + optimal
-move_tower(2, 'A', 'C', 'B')
+# move_tower(2, 'A', 'C', 'B')
+
+
+# TEST1(AA->CC) + wrong move
+print('1:AB')
+print('2:BC')
+print('1:BC')
+
 
 # TEST1(AA->CC) + simple-walk not-optimal
 # print('1:AC')

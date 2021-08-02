@@ -5,6 +5,7 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 from hanoi_lib import ConfigGenerator, HanoiTowerProblem
+from error_code import print_move_error
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -132,7 +133,8 @@ if (len(user_sol) < len(opt_sol)):
 # Check admissibility
 res, info = hanoi.checkMoveList(user_sol, start, final)
 if (res == 'move_wrong'):
-    TAc.print(LANG.render_feedback("move-wrong", f'In user_sol move_not_valid: {info}'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("move-wrong", f'Error in move {info[0]}'), "red", ["bold"])
+    print_move_error(info[1], TAc, LANG)
     provide_feedback_and_exit(user_sol_is_wrong=True)
 elif (res == 'final_wrong'):
     TAc.print(LANG.render_feedback("final-wrong", f'Your solution finish in configuration: {info}.\nIt is different from the correct final configuration: {final}.'), "red", ["bold"])

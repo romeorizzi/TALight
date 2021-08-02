@@ -69,6 +69,6 @@ else:
         if opt_answ < user_answ:
             TAc.print(LANG.render_feedback("answ-less", f'The correct lower bound for the disk={disk} is smaller then your answer.'), "red", ["reverse"])
         else:
-            TAc.print(LANG.render_feedback("answ-less", f'The correct lower bound for the disk={disk} is bigger then your answer.'), "red", ["reverse"])
+            TAc.print(LANG.render_feedback("answ-more", f'The correct lower bound for the disk={disk} is bigger then your answer.'), "red", ["reverse"])
 
 exit(0)

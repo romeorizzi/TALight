@@ -7,6 +7,7 @@ PATH_TO_PREAMBLE=$HOME/github/TALight/TAL_utils/problem_maker/python/multilangua
 # REMOVE BOOKS
 if [ "$1" = "clean" ]; then
     rm *en.yaml
+    # rm error_code_feedbackBook.en.yaml 
 fi
 
 
@@ -17,12 +18,17 @@ if [ "$1" = "en" ]; then
     for entry in $files
     do
         file="${entry:2:-10}"
+        echo $file
         if [ -f ${file}_feedbackBook.en.yaml ]; then
             echo "WARNING: ${file}_feedbackBook.en.yaml  already exists."
         else
             $PATH_TO_EXE/extract_feedbackBook_hardcoded.py ${file}_server.py fstring_count -preamble_file=$PATH_TO_PREAMBLE/preamble.en.yaml 1> ${file}_feedbackBook.en.yaml 
         fi
     done
+    # get extra files
+    file="error_code"
+    echo $file
+    $PATH_TO_EXE/extract_feedbackBook_hardcoded.py ${file}.py fstring_count -preamble_file=$PATH_TO_PREAMBLE/preamble.en.yaml 1> ${file}_feedbackBook.en.yaml 
 fi
 
 
@@ -32,10 +38,15 @@ if [ "$1" = "it" ]; then
     for entry in $files
     do
         file="${entry:2:-10}"
+        echo $file
         if [ -f ${file}_feedbackBook.en.yaml ]; then
             echo "WARNING: ${file}_feedbackBook.it.yaml  already exists."
         else
             $PATH_TO_EXE/extract_feedbackBook_hardcoded.py ${file}_server.py fstring_count -preamble_file=$PATH_TO_PREAMBLE/preamble.it.yaml 1> ${file}_feedbackBook.it.yaml 
         fi
     done
+    # get extra files
+    file="error_code"
+    echo $file
+    $PATH_TO_EXE/extract_feedbackBook_hardcoded.py ${file}.py fstring_count -preamble_file=$PATH_TO_PREAMBLE/preamble.it.yaml 1> ${file}_feedbackBook.it.yaml 
 fi
