@@ -6,7 +6,7 @@ from time import monotonic
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import get_input_from, HanoiTowerProblem
+from hanoi_lib import ConfigGenerator, HanoiTowerProblem
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -29,10 +29,11 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
+# LANG.manage_opening_msg()
 
 
-# INITIALIZATION
+
+# START CODING YOUR SERVICE: 
 # get seed
 seed = ENV['seed']
 if seed == -1:
@@ -40,67 +41,63 @@ if seed == -1:
     seed += random.randint(0, 99999)
 TAc.print(LANG.render_feedback("print-seed", f"# seed = {seed}"), "yellow", ["bold"])
 
-# Init Hanoi Tower
+# Init Hanoi Tower and configGenerator
 hanoi = HanoiTowerProblem(ENV['v'])
+gen = ConfigGenerator(seed)
 
 
 # START TESTS
 num_tests = ENV['num_tests']
-n_max = ENV['n_max']
 if ENV['start'] != 'general' and ENV['final'] != 'general':
     # in this case the test are equal, so num_tests must be 1
     num_tests = 1
+TAc.print(LANG.render_feedback("start-tests", f"# Start Tests"), "green", ["bold"])
 
-def one_test(t, n):
+
+def one_test(n):
     # get type of configurations
-    start = get_input_from(ENV['start'], n, seed, t)
-    final = get_input_from(ENV['final'], n, seed, t + 1)
+    start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
+    assert error == None
     TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
     
     # Get the correct solution
     modulus = ENV['ok_if_congruent_modulus']
-    opt_sol = hanoi.getMinMoves(start, final)
+    opt_answ = hanoi.getMinMoves(start, final)
     if modulus != 0:
-        overflow = (opt_sol >= modulus)
-        mod_sol = opt_sol % modulus
+        overflow = (opt_answ >= modulus)
+        mod_answ = opt_answ % modulus
 
-    # Get user solution
+    # Get user answer
     t_start = monotonic()
-    user_sol, = TALinput(int, TAc=TAc)
+    user_answ, = TALinput(int, TAc=TAc)
     t_end = monotonic()
     time_user = t_end - t_start # seconds in float
     
-    # check the user solution
+    # check the user answer
     if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
-        if user_sol != opt_sol:
-            return False, (start, final)
-
+        if user_answ != opt_answ:
+            return False, None
     else: # case: modulus
-        if user_sol != mod_sol:
-            return False, (start, final)
+        if user_answ != mod_answ:
+            return False, None
 
     return True, time_user
 
 
 # Execute all test
-# avg_time = 0
 for t in range(1, 2*num_tests, 2):
-    for n in range(1, n_max + 1):
-        success, info = one_test(t, n)
+    for n in range(1, ENV['n_max'] + 1):
+        success, time = one_test(n)
         if success:
-            TAc.print(LANG.render_feedback("success", "# success"), "green", ["bold"])
-            # i = t * n_max + n
-            # avg_time = (avg_time * i + info) / (i + 1) 
-
-            # if abs(info[0] - info[1]) < 0.2:
-            #     TAc.print(LANG.render_feedback("not_efficient", f"# not efficient {info[0]} vs {info[1]}"), "red", ["bold"])
-            #     break
+            if ENV['goal'] == 'correct':
+                TAc.print(LANG.render_feedback("success", f'# success'), "green", ["bold"])
+            else:
+                pass
+                # if time is not efficient:
+                #     TAc.print(LANG.render_feedback("not_efficient", f'# fail: Not efficient'), "red", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("fail", "# fail with {info}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("fail", f'# fail: wrong answer'), "red", ["bold"])
             break
 
-
-# END
-TAc.print(LANG.render_feedback("end", "end"), "green", ["bold"])
-
+TAc.print(LANG.render_feedback("end", "Finish Test"), "green", ["bold"])
 exit(0)

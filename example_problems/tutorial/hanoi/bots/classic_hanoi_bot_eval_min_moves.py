@@ -48,7 +48,7 @@ while True:
     start = input()
     if start[0] == '#':
         continue
-    if start == 'end':
+    if start == 'Finish Test':
         break
     final = input()
     # print(h.getMin(start, final)) # not efficient

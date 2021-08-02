@@ -44,7 +44,7 @@ gen = ConfigGenerator(seed)
 start = gen.getRandom(ENV['n'])
 final = gen.getRandom(ENV['n'])
 
-TAc.print(LANG.render_feedback("print-configs", f"start: {start}\nfinal: {final}"), "green", ["bold"])
+TAc.print(LANG.render_feedback("print-configs", f"# start: {start}\n# final: {final}"), "green", ["bold"])
 TAc.print(LANG.render_feedback("print-configs-arg", f"-astart={start} -afinal={final}"), "yellow", ["bold"])
 
 exit(0)

@@ -23,22 +23,53 @@ class ConfigGenerator():
                     return (self.getTower(start[4], n), \
                             self.getTower(final[4], n), \
                             None)
+            elif final == 'general':
+                if n == -1:
+                    return (None, None, 'n_not_valid')
+                else:
+                    return (self.getTower(start[4], n), \
+                            self.getRandom(n), \
+                            None)
             else:
-                new_n = len(final)
-                return (self.getTower(start[4], new_n), \
+                return (self.getTower(start[4], len(final)), \
+                        final, \
+                        None)
+        elif start == 'general':
+            if final[:4] == 'all_':
+                if n == -1:
+                    return (None, None, 'n_not_valid')
+                else:
+                    return (self.getRandom(n), \
+                            self.getTower(final[4], n), \
+                            None)
+            elif final == 'general':
+                if n == -1:
+                    return (None, None, 'n_not_valid')
+                else:
+                    return (self.getRandom(n), \
+                            self.getRandom(n), \
+                            None)
+            else:
+                return (self.getRandom(len(final)), \
                         final, \
                         None)
         else:
             if final[:4] == 'all_':
-                new_n = len(start)
                 return (start, \
-                        self.getTower(final[4], new_n), \
+                        self.getTower(final[4], len(start)), \
+                        None)
+            elif final == 'general':
+                return (start, \
+                        self.getRandom(len(start)), \
                         None)
             else:
                 if len(start) != len(final):
                     return None, None, 'different_len'
                 else:
                     return start, final, None
+
+
+                    
 
 
     def getTower(self, type, n):
@@ -658,19 +689,37 @@ if __name__ == "__main__":
         gen.setSeed(0)
         assert gen.getRandom(3) == 'BBA'
         assert gen.getRandom(3) == 'BCB'
-        assert gen.getRandom(3) != 'BCB'
+        assert gen.getRandom(3) == 'BBB'
 
         gen.setSeed(13000)
         assert gen.getRandom(3) != 'BBA'
         assert gen.getRandom(3) == 'BCB'
         assert gen.getRandom(3) != 'BCB'
 
+        gen.setSeed(0)
+        assert gen.getConfigs('all_A', 'all_B', 2) == ('AA', 'BB', None)
         assert gen.getConfigs('all_A', 'all_B', -1) == (None, None, 'n_not_valid')
-        assert gen.getConfigs('all_A', 'all_C', 2) == ('AA', 'CC', None)
-        assert gen.getConfigs('all_A', 'BBB', 10) == ('AAA', 'BBB', None)
-        assert gen.getConfigs('AAAA', 'all_B', 10) == ('AAAA', 'BBBB', None)
-        assert gen.getConfigs('AA', 'CC', 10) == ('AA', 'CC', None)
-        assert gen.getConfigs('AAA', 'BBBB', -1) == (None, None, 'different_len')
+        assert gen.getConfigs('all_A', 'ABC', 10) == ('AAA', 'ABC', None)
+        assert gen.getConfigs('all_A', 'ABC', -1) == ('AAA', 'ABC', None)
+        assert gen.getConfigs('all_A', 'general', 3) == ('AAA', 'BBA', None)
+        assert gen.getConfigs('all_A', 'general', -1) == (None, None, 'n_not_valid')
+
+        assert gen.getConfigs('general', 'all_A', 3) == ('BCB', 'AAA', None)
+        assert gen.getConfigs('general', 'all_A', -1) == (None, None, 'n_not_valid')
+        assert gen.getConfigs('general', 'ABC', 3) == ('BBB', 'ABC', None)
+        assert gen.getConfigs('general', 'ABC', -1) == ('BCA', 'ABC', None)
+        assert gen.getConfigs('general', 'general', 3) == ('CAB', 'AAC', None)
+        assert gen.getConfigs('general', 'general', -1) == (None, None, 'n_not_valid')
+
+        assert gen.getConfigs('AA', 'all_C', 10) == ('AA', 'CC', None)
+        assert gen.getConfigs('AA', 'all_C', -1) == ('AA', 'CC', None)
+        assert gen.getConfigs('AAA', 'ABC', 10) == ('AAA', 'ABC', None)
+        assert gen.getConfigs('AAA', 'ABC', -1) == ('AAA', 'ABC', None)
+        assert gen.getConfigs('AAA', 'AB', 3) == (None, None, 'different_len')
+        assert gen.getConfigs('AAA', 'AB', 2) == (None, None, 'different_len')
+        assert gen.getConfigs('AAA', 'AB', -1) == (None, None, 'different_len')
+        assert gen.getConfigs('AAA', 'general', 3) == ('AAA', 'BCC', None)
+        assert gen.getConfigs('AAA', 'general', -1) == ('AAA', 'CAB', None)
     
         print("FINISH CONFIG GENERATOR TEST")
 
