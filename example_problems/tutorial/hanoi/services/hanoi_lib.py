@@ -49,13 +49,9 @@ class ConfigGenerator():
         return type * n
 
 
-    def getRandomFrom(self, n, seed):
-        """Reset RndGenerator and then generate a config"""
+    def setSeed(self, seed):
+        """Reset RndGenerator"""
         random.seed(seed)
-        config = ''
-        for _ in range(n):
-            config += random.choice(PEGS_LIST)
-        return config
 
 
     def getRandom(self, n):
@@ -571,7 +567,8 @@ def general_test(h, enable_advanced_tests, print_feedback, seed, n_max, num_test
         for t in range(1, num_tests + 1):
             for n in range(1, n_max + 1):
                 # get random configs
-                initial = gen.getRandomFrom(n, seed)
+                gen.setSeed(seed)
+                initial = gen.getRandom(n)
                 final = gen.getRandom(n)
 
                 # TEST getMovesList()
@@ -658,11 +655,13 @@ if __name__ == "__main__":
         assert gen.getRandom(3) == 'BCB'
         assert gen.getRandom(3) != 'BCB'
 
-        assert gen.getRandomFrom(3, 0) == 'BBA'
+        gen.setSeed(0)
+        assert gen.getRandom(3) == 'BBA'
         assert gen.getRandom(3) == 'BCB'
         assert gen.getRandom(3) != 'BCB'
 
-        assert gen.getRandomFrom(3, 13000) != 'BBA'
+        gen.setSeed(13000)
+        assert gen.getRandom(3) != 'BBA'
         assert gen.getRandom(3) == 'BCB'
         assert gen.getRandom(3) != 'BCB'
 

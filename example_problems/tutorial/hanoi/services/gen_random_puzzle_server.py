@@ -5,7 +5,7 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import get_input_from
+from hanoi_lib import ConfigGenerator
 
 
 
@@ -25,7 +25,7 @@ args_list = [
 ENV = Env(problem, service, args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
+# LANG.manage_opening_msg()
 
 
 # INITIALIZATION
@@ -40,10 +40,11 @@ if ENV['verbose'] == 2:
     TAc.print(LANG.render_feedback("print-seed", f"seed = {seed}"), "yellow", ["bold"])
 
 # get type of configurations
-start = get_input_from(ENV['start'], ENV['n'], seed, 1)
-final = get_input_from(ENV['final'], ENV['n'], seed, 2)
-TAc.print(LANG.render_feedback("print-configs", f"input:  {start}\noutput: {final}"), "green", ["bold"])
+gen = ConfigGenerator(seed)
+start = gen.getRandom(ENV['n'])
+final = gen.getRandom(ENV['n'])
 
+TAc.print(LANG.render_feedback("print-configs", f"start: {start}\nfinal: {final}"), "green", ["bold"])
 TAc.print(LANG.render_feedback("print-configs-arg", f"-astart={start} -afinal={final}"), "yellow", ["bold"])
 
 exit(0)
