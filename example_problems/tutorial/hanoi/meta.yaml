@@ -112,7 +112,7 @@ services:
       disk:
         regex: ^([1-9][0-9]{0,2}|1000)$
         explain: "an integer in the interval [1,n]: the disk for which you want to give the tightest possible lower-bound on the number of times it must be moved in any solution. Note: disks 1 is the smallest."
-      sol:
+      answ:
         regex: ^(0|[1-9][0-9]{0,1000})$ 
         explain: "what you conjecture to be the minimum number of times that disk <disk> needs to be moved in order to solve the puzzle."
       silent:

@@ -4,7 +4,7 @@ from sys import stderr, exit, argv
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import get_input_from, HanoiTowerProblem
+from hanoi_lib import ConfigGenerator, HanoiTowerProblem
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -16,7 +16,7 @@ args_list = [
     ('final', str),
     ('n',int),
     ('disk',int),
-    ('sol',int),
+    ('answ',int),
     ('silent',bool),
     ('feedback',str),
     ('lang',str),
@@ -26,54 +26,49 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-if not ENV['silent']:
-    TAc.print(LANG.opening_msg, "green")
+# LANG.manage_opening_msg()
 
 
-# INITIALIZATION
-N = ENV['n']
 
-# Check arguments errors
-if (ENV['start'] != "all_A" and ENV['start'] != "all_B" and ENV['start'] != "all_C"):
-    N = len(ENV['start'])
-elif (ENV['final'] != "all_A" and ENV['final'] != "all_B" and ENV['final'] != "all_C"):
-    N = len(ENV['final'])
-elif (N == -1):
-    TAc.print(LANG.render_feedback("arg-err", f"N!=-1 if start=all_X and final=all_X"), "red", ["bold"])
-    exit(0)
-
+# START CODING YOUR SERVICE: 
 # Get configurations
-start = get_input_from(ENV['start'], N)
-final = get_input_from(ENV['final'], N)
+gen = ConfigGenerator()
+start, final, error = gen.getConfigs(ENV['start'], ENV['final'], ENV['n'])
 
-# Check configs error
-if len(start) != len(final):
-    TAc.print(LANG.render_feedback("arg-config-err", f"len(start) != len(final)"), "red", ["bold"])
+# Check errors
+if error == 'n_not_valid':
+    TAc.print(LANG.render_feedback("n_not_valid", f"If you use the all_* form for start and final, you must use a N >= 0."), "red", ["bold"])
     exit(0)
+elif error == 'different_len':
+    TAc.print(LANG.render_feedback("different_len", f'If you use a custom configuration for start and final, the length of start must be equal to the length of final'), "red", ["bold"])
+    exit(0)
+
 
 # Init Hanoi Tower
 hanoi = HanoiTowerProblem(ENV['v'])
 
 # Get the correct solution
-user_sol = ENV['sol']
-opt_sol = hanoi.getMinMovesOf(start, final, ENV['disk'])
+disk = ENV['disk']
+user_answ = ENV['answ']
+opt_answ = hanoi.getMinMovesOf(start, final, disk)
+
 
 # check the user solution
-if user_sol == opt_sol:
+if user_answ == opt_answ:
     if not ENV['silent']:
-        TAc.print(LANG.render_feedback("sol-equal", f'user_sol == opt_sol'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("answ-equal", f'Nice! Your answer is correct.'), "green", ["bold"])
 
 else:
-    TAc.print(LANG.render_feedback("sol-wrong", f'user_sol != opt_sol'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("answ-wrong", f'Oh no! Your answer is wrong.'), "red", ["bold"])
 
     # Provide feedback
     if ENV["feedback"] == "true_val":
-        TAc.print(LANG.render_feedback("get-sol", f'opt_sol = {opt_sol}'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("get-answ", f'The lower bound for the disk={disk} is {opt_answ}.'), "red", ["reverse"])
     
     elif ENV["feedback"] == "smaller_or_bigger":
-        if user_sol < opt_sol:
-            TAc.print(LANG.render_feedback("sol-less", f'user_sol < opt_sol'), "red")
+        if opt_answ < user_answ:
+            TAc.print(LANG.render_feedback("answ-less", f'The correct lower bound for the disk={disk} is smaller then your answer.'), "red", ["reverse"])
         else:
-            TAc.print(LANG.render_feedback("sol-more", f'user_sol > opt_sol'), "red")
+            TAc.print(LANG.render_feedback("answ-less", f'The correct lower bound for the disk={disk} is bigger then your answer.'), "red", ["reverse"])
 
 exit(0)

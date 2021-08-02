@@ -60,10 +60,10 @@ if modulus != 0:
 if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
     if user_answ == opt_answ:
         if not ENV['silent']:
-            TAc.print(LANG.render_feedback("answ-equal", f'Nice! Your answer is equal to the optimal minimum number '), "green", ["bold"])
+            TAc.print(LANG.render_feedback("answ-equal", f'Nice! Your answer is equal to the optimal minimum number.'), "green", ["bold"])
 
     else:
-        TAc.print(LANG.render_feedback("answ-wrong", f'Oh no! Your answer is not equal to the optimal minimum number'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("answ-wrong", f'Oh no! Your answer is not equal to the optimal minimum number.'), "red", ["bold"])
 
         # Provide feedback
         if ENV["feedback"] == "true_val":
@@ -71,14 +71,14 @@ if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
         
         elif ENV["feedback"] == "smaller_or_bigger":
             if opt_answ < user_answ:
-                TAc.print(LANG.render_feedback("answ-less", f'The optimal minimum number of moves is smaller then your answer'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("answ-less", f'The optimal minimum number of moves is smaller then your answer.'), "red", ["reverse"])
             else:
-                TAc.print(LANG.render_feedback("answ-more", f'The optimal minimum number of moves is bigger then your answer'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("answ-more", f'The optimal minimum number of moves is bigger then your answer.'), "red", ["reverse"])
 
         # Provide certificate
         if ENV["with_certificate"] == 1:
             if user_answ < opt_answ:
-                TAc.print(LANG.render_feedback("use-check_lower_bounds", f'Use check_lower_bounds service for check it'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("use-check_lower_bounds", f'Use check_lower_bounds service for check it.'), "red", ["reverse"])
             else:
                 TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves:'), "red", ["reverse"])
                 for e in hanoi.getNotOptimalMovesList(start, final, desired_size=(user_answ-1)):
@@ -89,10 +89,10 @@ if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
 else: # case: modulus
     if user_answ == mod_answ:
         if not ENV['silent']:
-            TAc.print(LANG.render_feedback("answ-equal-mod", f'Oh no! Your answer is equal to the optimal minimum number in modulo={modulus} '), "red", ["bold"])
+            TAc.print(LANG.render_feedback("answ-equal-mod", f'Oh no! Your answer is equal to the optimal minimum number in modulo={modulus}.'), "red", ["bold"])
 
     else:
-        TAc.print(LANG.render_feedback("answ-wrong-mod", f'Oh no! Your answer is not equal to the optimal minimum number in modulo={modulus} '), "red", ["reverse"])
+        TAc.print(LANG.render_feedback("answ-wrong-mod", f'Oh no! Your answer is not equal to the optimal minimum number in modulo={modulus}.'), "red", ["reverse"])
 
         # Provide feedback
         if ENV["feedback"] == "true_val":
@@ -100,14 +100,14 @@ else: # case: modulus
         
         elif ENV["feedback"] == "smaller_or_bigger":
             if mod_answ < user_answ:
-                TAc.print(LANG.render_feedback("answ-less-mod", f'The optimal minimum number in modulo={modulus} of moves is smaller then your answer'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("answ-less-mod", f'The optimal minimum number in modulo={modulus} of moves is smaller then your answer.'), "red", ["reverse"])
             else:
-                TAc.print(LANG.render_feedback("answ-more-mod", f'The optimal minimum number in modulo={modulus} of moves is bigger then your answer'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("answ-more-mod", f'The optimal minimum number in modulo={modulus} of moves is bigger then your answer.'), "red", ["reverse"])
 
         # Provide certificate
         if ENV["with_certificate"] == 1:
             if user_answ < opt_answ:
-                TAc.print(LANG.render_feedback("use-check_lower_bounds", f'Use check_lower_bounds service for check it'), "red", ["reverse"])
+                TAc.print(LANG.render_feedback("use-check_lower_bounds", f'Use check_lower_bounds service for check it.'), "red", ["reverse"])
             else:
                 TAc.print(LANG.render_feedback("certificate", f'This is a certificate of a solution with less moves:'), "red", ["reverse"])
                 for e in hanoi.getNotOptimalMovesList(start, final, desired_size=len(user_answ) -1):
