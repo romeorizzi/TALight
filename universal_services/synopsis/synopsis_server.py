@@ -53,16 +53,17 @@ if ENV['service'] not in meta_yaml_book['services'].keys():
 TAc.print("\n"+ENV['service'], "yellow", ["bold"], end="")
 TAc.print(LANG.render_feedback("service-of", f'   (service of the {problem} problem)'), "yellow")
 
-if "explain" in meta_yaml_book['services'][ENV['service']].keys():
+if "description" in meta_yaml_book['services'][ENV['service']].keys():
     TAc.print('\nDescription:', "green", ["bold"])
-    print("   "+eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['explain'])}'"))
+    for line in meta_yaml_book['services'][ENV['service']]['description'].split('\n'):
+        print("   "+eval(f"f'{line}'"))
 if "example" in meta_yaml_book['services'][ENV['service']].keys():
     TAc.print('   Example: ', ["bold"], end="")
-    print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['example'])}'"))
+    print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['example']}'"))
     i = 1
     while ("example"+str(i)) in meta_yaml_book['services'][ENV['service']].keys():
       print(" "*6, end="")
-      print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['example'+str(i)])}'"))
+      print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['example'+str(i)]}'"))
       i += 1
 if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
     TAc.print(LANG.render_feedback("the-num-arguments", f'\nThe {len(meta_yaml_book["services"][ENV["service"]]["args"])} arguments of service {ENV["service"]}:'), "green", ["bold"])
@@ -73,23 +74,23 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
         print(meta_yaml_book['services'][ENV['service']]['args'][a]['regex'])
         if "explain" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             TAc.print('   Explanation: ', ["bold"], end="")
-            print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['explain'])}'"))
+            print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain']}'"))
             i = 1
             while ("explain"+str(i)) in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
               print(" "*6, end="")
-              print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)])}'"))
+              print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)]}'"))
               i += 1
         if "example" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             TAc.print('   Example: ', ["bold"], end="")
-            print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['example'])}'"))
+            print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['example']}'"))
             i = 1
             while ("example"+str(i)) in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
               print(" "*6, end="")
-              print(eval(f"f'{str(meta_yaml_book['services'][ENV['service']]['args'][a]['example'+str(i)])}'"))
+              print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['example'+str(i)]}'"))
               i += 1
         if "default" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             TAc.print('   Default Value: ', ["bold"], end="")
-            print(str(meta_yaml_book['services'][ENV['service']]['args'][a]['default']))
+            print(meta_yaml_book['services'][ENV['service']]['args'][a]['default'])
         else:
             TAc.print(f'   The argument {a} is mandatory.', ["bold"])
 

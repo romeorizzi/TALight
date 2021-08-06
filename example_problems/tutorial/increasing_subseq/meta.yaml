@@ -1,7 +1,7 @@
 public_folder: public
 services:
   is_subseq:
-    explain: "You are asked to enter two sequences S and T of positive integers. The service tells whether S is a subsquence of T."
+    description: "You are asked to enter two sequences S and T of positive integers. The service tells whether S is a subsquence of T."
     evaluator: [python, services/is_subseq_server.py]
     args:
       T:
@@ -22,7 +22,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   gen_subseq_instance:
-    explain: "It returns an instance of the eval_is_subseq service once you provide its description. The description has the form (m,n,max_val,yes_instance,seed)."
+    description: "It returns an instance of the eval_is_subseq service once you provide its description. The description has the form (m,n,max_val,yes_instance,seed)."
     evaluator: [python, services/gen_subseq_instance_server.py]
     args: # m n max_val
       yes_instance:
@@ -32,7 +32,7 @@ services:
       silent:
         regex: ^(0|1)$
   check_is_subseq_YES_certificate:
-    explain: "Given two sequences S and T and a set of indexes of T, the service checks that S is obtained from T after removing all elements with indexes in the given set. You can for example use this service if you are sure S is a subsequence of T but this disagrees with what said by one of our services. (Besides: we are happy to receive reports soliciting corrections.)"
+    description: "Given two sequences S and T and a set of indexes of T, the service checks that S is obtained from T after removing all elements with indexes in the given set. You can for example use this service if you are sure S is a subsequence of T but this disagrees with what said by one of our services. (Besides: we are happy to receive reports soliciting corrections.)"
     evaluator: [python, services/check_is_subseq_YES_certificate_server.py]
     args:
       T:
@@ -49,7 +49,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_subseq:
-    explain: "Evaluates correctness and efficiency of a program from the problem solver that, given in input two integer sequences T (on a first line) and S (on a second line), decides whether S is a subsequence of T or not (y/n). The evaluation is done on a set of pseudo-random instances (everything is fully reproducible from the seed)."
+    description: "Evaluates correctness and efficiency of a program from the problem solver that, given in input two integer sequences T (on a first line) and S (on a second line), decides whether S is a subsequence of T or not (y/n). The evaluation is done on a set of pseudo-random instances (everything is fully reproducible from the seed)."
     evaluator: [python, services/eval_subseq_server.py]
     args:
       seed:
@@ -105,7 +105,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_longest_increasing_subseq:
-    explain: this service helps you evaluating your program for computing the maximum length of a strictly increasing subsequence of a given sequence.
+    description: this service helps you evaluating your program for computing the maximum length of a strictly increasing subsequence of a given sequence.
     evaluator: [python, services/eval_longest_increasing_subseq_server.py]
     args:
       seed:

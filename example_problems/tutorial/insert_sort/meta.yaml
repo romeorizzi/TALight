@@ -3,7 +3,7 @@
 public_folder: public
 services:
   log_debug_your_insertion_sort_bot:
-    explain: |+
+    description: |+
      In a call to this service you plug in your insert_sort bot running on an instance of yours, in local, and we debug its behavior based on a log sent to our service and offering all of the following observable updates.
         #LOG_input_array <n> <input_array_of_length_n>
         #LOG_memory_load_from_pos <i>
@@ -24,7 +24,7 @@ services:
         default: it
 
   remote_insertion_sort_api:
-    explain: |+
+    description: |+
      In a call to this service you plug in your insert_sort bot remotely running on an instance of us. Your bot will access the array to be sorted only through the following primities
         CMD_GET_DIM <n>
         CMD_MEMORY_LOAD_FROM_POS <i>

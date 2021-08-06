@@ -1,7 +1,7 @@
 public_folder: public
 services:
   decimal_to_binary:
-    explain: "We give you a number(or you can choose it) in decimal form and you have to convert it in binary form."
+    description: "We give you a number(or you can choose it) in decimal form and you have to convert it in binary form."
     evaluator: [python,services/decimal_to_binary_server.py]
     args:
       number:
@@ -16,7 +16,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   total_steps:
-    explain: "You are asked to tranform the binary number to 0 using a minimum number of steps."
+    description: "You are asked to tranform the binary number to 0 using a minimum number of steps."
     evaluator: [python, services/total_steps_server.py]
     args:
       number:
@@ -29,13 +29,13 @@ services:
         default: it
   next_step:
     evaluator: [python, services/next_step_server.py]
-    explain: "We give you a random number and you have to insert which is the right move."
+    description: "We give you a random number and you have to insert which is the right move."
     args:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   trilly:
-    explain: "You ask to trilly which is the best next step to do, giving her a binary number."
+    description: "You ask to trilly which is the best next step to do, giving her a binary number."
     evaluator: [python, services/trilly_server.py]
     args:
       lang:

@@ -1,5 +1,5 @@
   dec2opt:
-    explains: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
+    explain: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
 
 > rtal connect knapsack -an=5 -a goal=at_most_one_call dec2opt -- mybot
 # sono il servizio dec2opt del problma knapsack
@@ -26,7 +26,7 @@
 ==========================================
 
   opt2con:
-    explains: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
+    explain: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
 
 > rtal connect knapsack -an=5 -a goal=at_most_one_call opt2con -- mybot
 # sono il servizio opt2con del problma knapsack
@@ -53,7 +53,7 @@
 ==========================================
 
   con2dec:
-    explains: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle for the decision form as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange. Posing yourself a different set of goals, you might also ask for one single call to an oracle for the Knapsack problem in its optimization form (see the arguments of the service to know more)."
+    explain: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle for the decision form as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange. Posing yourself a different set of goals, you might also ask for one single call to an oracle for the Knapsack problem in its optimization form (see the arguments of the service to know more)."
       goal:
         regex: ^(correct|polynomial_dec_calls|at_most_n_dec_calls)$
         default: correct
@@ -109,7 +109,7 @@ n
 
 
   trilly:
-    explains: "this service poses you an n elements instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange."
+    explain: "this service poses you an n elements instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange."
 
 > rtal connect knapsack -an=5 -a goal=at_most_two_calls trilly -- mybot
 # sono il servizio opt2con del problma knapsack

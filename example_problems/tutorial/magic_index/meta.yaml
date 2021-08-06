@@ -1,7 +1,7 @@
 public_folder: public
 services:
   spot_magic_indexes:
-    explain: "You give us a sorted array of distinct integers and we return you the sorted list of magic indexes."
+    description: "You give us a sorted array of distinct integers and we return you the sorted list of magic indexes."
     evaluator: [python, services/spot_magic_indexes_server.py]
     args:
       input_vector:
@@ -13,7 +13,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_magic_indexes:
-    explain: "You give us a sorted vector of distinct integers and the sorted list of its magic indexes. We check it out."
+    description: "You give us a sorted vector of distinct integers and the sorted list of its magic indexes. We check it out."
     evaluator: [python, services/check_magic_indexes_server.py]
     args:
       input_vector:
@@ -35,7 +35,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   gimme_input_vector:
-    explain: "Call this service to ask for an instance, that is, an increasing sequence of integers comprising an input vector."
+    description: "Call this service to ask for an instance, that is, an increasing sequence of integers comprising an input vector."
     evaluator: [python, services/gimme_input_vector_server.py]
     args:
       n:
@@ -48,7 +48,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_worst_case_num_questions:
-    explain: "You give us a natural n and what you conjecture to be the smallest number r such that there exists a strategy for knowing the truth in at most r queries. We check out your conjecture."
+    description: "You give us a natural n and what you conjecture to be the smallest number r such that there exists a strategy for knowing the truth in at most r queries. We check out your conjecture."
     evaluator: [python, services/check_worst_case_n_questions_server.py]
     args:
       n:
@@ -67,7 +67,7 @@ services:
         default: it
   play1:
     evaluator: [python, services/play1_server.py]
-    explain: "You give us a natural n to start a play, that corresponds to the selected index for which you want to know the value. The server holds the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense."
+    description: "You give us a natural n to start a play, that corresponds to the selected index for which you want to know the value. The server holds the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense."
     args:
       #n:
         #regex: ^(0|[1-9][0-9]{0,5}|1000000)$
@@ -102,7 +102,7 @@ services:
         default: it
   play2:
     evaluator: [python, services/play2_server.py]
-    explain: "You give us a natural n to start a play where you hold the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense."
+    description: "You give us a natural n to start a play where you hold the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense."
     args:
       n:
         regex: ^(0|[1-9][0-9]{0,5}|1000000)$

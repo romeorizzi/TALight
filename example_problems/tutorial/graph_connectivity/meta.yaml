@@ -1,7 +1,7 @@
 public_folder: public
 services:
   tell_if_graph_connected:
-    explain: 'this service tells whether a user provided graph is connected or not.'
+    description: 'this service tells whether a user provided graph is connected or not.'
     evaluator: [python, services/tell_if_graph_connected_server.py]
     args:
       with_yes_certificate:
@@ -16,7 +16,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_certificate_of_connectivity:
-    explain: 'this service checks whether a list of edges forms a spanning tree in a given graph'
+    description: 'this service checks whether a list of edges forms a spanning tree in a given graph'
     evaluator: [python, services/check_certificate_of_connectivity_server.py]
     args:
       n:
@@ -33,7 +33,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_certificate_of_nonconnectivity:
-    explain: 'this service checks whether a bipartition of the nodes is a valid certificate of the non-connectivity of a given graph'
+    description: 'this service checks whether a bipartition of the nodes is a valid certificate of the non-connectivity of a given graph'
     evaluator: [python, services/check_certificate_of_nonconnectivity_server.py]
     args:
       n:

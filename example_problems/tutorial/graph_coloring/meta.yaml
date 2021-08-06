@@ -3,7 +3,7 @@
 public_folder: public
 services:
   recognize_proper_colorings:
-    explain: "This service gives you a graph and a coloring of its nodes. You are invited to tell whether the coloring is proper (that is, any two adjacent vertices have different color) or not. The coloring is always proper (improper, resp.) when the service is called with the argument 'coloring' set to 'proper' (to 'improper', resp.)."
+    description: "This service gives you a graph and a coloring of its nodes. You are invited to tell whether the coloring is proper (that is, any two adjacent vertices have different color) or not. The coloring is always proper (improper, resp.) when the service is called with the argument 'coloring' set to 'proper' (to 'improper', resp.)."
     evaluator: [python3, services/recognize_proper_colorings_server.py]
     args:
       num_nodes:
@@ -24,7 +24,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_recognize_proper_colorings:
-    explain: "This service evaluates the correctness and efficiency of your bot for recognizing proper colorings."
+    description: "This service evaluates the correctness and efficiency of your bot for recognizing proper colorings."
     evaluator: [python3, services/eval_recognize_proper_colorings_server.py]
     args:
       num_nodes:
@@ -48,7 +48,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   yield_proper_colorings:
-    explain: "This service gives you a graph and asks for a proper k-coloring of its nodes. The service will check that your coloring is proper, and that it uses at most k colors."
+    description: "This service gives you a graph and asks for a proper k-coloring of its nodes. The service will check that your coloring is proper, and that it uses at most k colors."
     evaluator: [python3, services/yield_proper_colorings_server.py]
     args:
       num_nodes:
@@ -69,7 +69,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   yield_proper_2colorings:
-    explain: "This service gives you a graph and asks for a proper 2-coloring of its nodes. The service will check that your coloring is proper, and that it uses at most 2 colors."
+    description: "This service gives you a graph and asks for a proper 2-coloring of its nodes. The service will check that your coloring is proper, and that it uses at most 2 colors."
     evaluator: [python3, services/yield_proper_colorings_server.py]
     args:
       num_nodes:
@@ -90,7 +90,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_yield_proper_2coloring:
-    explain: "This service evaluates the correctness and efficiency of your bot for recognizing the 2-colorability of graphs."
+    description: "This service evaluates the correctness and efficiency of your bot for recognizing the 2-colorability of graphs."
     evaluator: [python3, services/yield_proper_colorings_server.py]
     args:
       seed:

@@ -1,7 +1,7 @@
 public_folder: public
 services:
   TAL_recognizes:
-    explain: "Submit a regular expression r and a string s over the same alphabet. The service recognizes whether s belongs to the language described by r."
+    description: "Submit a regular expression r and a string s over the same alphabet. The service recognizes whether s belongs to the language described by r."
     evaluator: [python,services/TAL_recognizes_server.py]
     args:
       s:
@@ -14,7 +14,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   you_recognize:
-    explain: "We give you a regular expression r and a string s over the same alphabet. Your aim is to recognize whether s belongs to the language described by r. You have control on the size of the instance (r,s) by means of parameters m and n. The instance is pseudo-random and fully spcifified by m,n, and the seed."
+    description: "We give you a regular expression r and a string s over the same alphabet. Your aim is to recognize whether s belongs to the language described by r. You have control on the size of the instance (r,s) by means of parameters m and n. The instance is pseudo-random and fully spcifified by m,n, and the seed."
     evaluator: [python,services/TAL_you_recognize_server.py]
     args:
       seed:
@@ -36,7 +36,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_recognize:
-    explain: "This service assesses the correctness and efficiency of your machinery to recognize whether s in L_r."
+    description: "This service assesses the correctness and efficiency of your machinery to recognize whether s in L_r."
     evaluator: [python,services/eval_recognize_server.py]
     args:
       goal:
@@ -57,7 +57,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_regex2NFA:
-    explain: "This service assesses the correctness and efficiency of your machinery to compute the non-deterministic automaton for a regex given in input."
+    description: "This service assesses the correctness and efficiency of your machinery to compute the non-deterministic automaton for a regex given in input."
     evaluator: [python,services/eval_regex2NFA.py]
     args:
       goal:
@@ -78,7 +78,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_NFA2DFA:
-    explain: "This service assesses the correctness and efficiency of your machinery to yield a deterministic automaton equivalent to a non-deterministic automaton given in input."
+    description: "This service assesses the correctness and efficiency of your machinery to yield a deterministic automaton equivalent to a non-deterministic automaton given in input."
     evaluator: [python,services/eval_NFA2DFA.py]
     args:
       goal:

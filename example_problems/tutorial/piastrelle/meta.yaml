@@ -1,25 +1,25 @@
 public_folder: public
 services:
   check_one_sol:
-    explains: "this service checks whether an input string correctly encodes a tiling of a corridor with '[]' and '[--]' tiles."
+    description: "this service checks whether an input string correctly encodes a tiling of a corridor with '[]' and '[--]' tiles."
     evaluator: [python, services/check_one_sol_server.py]
     args:
       input_formula:
         regex:  ^(\[|\]|-){0,1000}$
         example: "[][][--][]"
       silent:
-        explains: "if nothing is wrong with your input string then the service runs silently; otherwise it explains what is the problem in clear."
+        explain: "if nothing is wrong with your input string then the service runs silently; otherwise it explains what is the problem in clear."
         regex: ^(0|1)$
         default: 0
       n:
-        explains: "set this to require that the corridor length must be a precise value (the tiles '[]' and '[--]' take length 1 and 2, respectively)."
+        explain: "set this to require that the corridor length must be a precise value (the tiles '[]' and '[--]' take length 1 and 2, respectively)."
         regex: ^(free|0|[1-9][0-9]{0,1000})$
         default: free
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_num_sol:
-    explains: "call this service to check that the number of different tilings with '[]' and '[--]' tiles of a corridor of length <n> is what you think."
+    description: "call this service to check that the number of different tilings with '[]' and '[--]' tiles of a corridor of length <n> is what you think."
     evaluator: [python, services/check_num_sol_server.py]
     args:
       n:
@@ -37,7 +37,7 @@ services:
         regex: ^(0|1)$
         default: 0
       silent:
-        explains: "the service runs silently unless your conjectured answer is wrong (or for wrong calls)."
+        explain: "the service runs silently unless your conjectured answer is wrong (or for wrong calls)."
         regex: ^(0|1)$
         default: 0
       lang:
@@ -52,11 +52,11 @@ services:
 #        default: 0
         default: 1000000007
       goal:
-        explains: "set your goal (efficient includes also correct)."
+        explain: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       code_lang: 
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
@@ -103,13 +103,13 @@ services:
         regex: ^(loves_short_tiles|loves_long_tiles)$
         default: loves_short_tiles
       goal:
-        explains: "set your goal (efficient includes also correct)."
+        explain: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -127,7 +127,7 @@ services:
         regex: ^(0|1)$
         default: 0
       silent:
-        explains: "if nothing is wrong then the service runs silently."
+        explain: "if nothing is wrong then the service runs silently."
         regex: ^(0|1)$
         default: 0
       lang:
@@ -140,7 +140,7 @@ services:
         regex: ^(loves_short_tiles|loves_long_tiles)$
         default: loves_short_tiles
       goal:
-        explains: "set your goal (efficient includes also correct)."
+        explain: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       seed:
@@ -150,7 +150,7 @@ services:
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -186,7 +186,7 @@ services:
         regex: ^(loves_short_tiles|loves_long_tiles)$
         default: loves_short_tiles
       goal:
-        explains: "set your goal (efficient includes also correct)."
+        explain: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       seed:
@@ -196,7 +196,7 @@ services:
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -207,7 +207,7 @@ services:
         regex: ^(loves_short_tiles|loves_long_tiles)$
         default: loves_short_tiles
       goal:
-        explains: "set your goal (efficient includes also correct)."
+        explain: "set your goal (efficient includes also correct)."
         regex: ^(correct|efficient)$
         default: correct
       seed:
@@ -217,7 +217,7 @@ services:
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explains: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

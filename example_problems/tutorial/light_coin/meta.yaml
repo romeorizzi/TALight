@@ -2,7 +2,7 @@ public_folder: public
 services:
   check_static_strategy:
 #    explain: "What is the smallest number of two-pan scale weighings required to distinguish a single heavier coin from a set of n otherwise identical coins?"
-    explain: "choose an n and specify a set of two-pan scale weighings that always allow to identify the false coin among n otherwise identical coins."
+    description: "choose an n and specify a set of two-pan scale weighings that always allow to identify the false coin among n otherwise identical coins."
     example: "with n=3, a correct (and optimal) static strategy would be:"
     example1: "1, 2"
     example2: "with n=4, a correct (and not optimal) static strategy would be:"
@@ -35,7 +35,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_dynamic_strategy:
-    explain: "Your goal is to identify the false coin in a set of n coins of otherwise equal weight. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
+    description: "Your goal is to identify the false coin in a set of n coins of otherwise equal weight. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
     evaluator: [python3, services/check_dynamic_strategy/check_dynamic_strategy_server.py]
     args:
       n:
@@ -62,7 +62,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   empass_static_strategy_lighter_or_heavier:
-    explain: "this service proves that, for an infinite number of n, two experiments are not enough to understand whether the false coin is heavier or lighter than the others. To do so, you provide us with a lower bound lb and we return you the smalles n >= lb such that no static strategy with only two expriments exists. You then provide us a static strategy for that n, with at most two experiments, and we explain why your static strategy fails."
+    description: "this service proves that, for an infinite number of n, two experiments are not enough to understand whether the false coin is heavier or lighter than the others. To do so, you provide us with a lower bound lb and we return you the smalles n >= lb such that no static strategy with only two expriments exists. You then provide us a static strategy for that n, with at most two experiments, and we explain why your static strategy fails."
     evaluator: [python3, services/empass_static_strategy_lighter_or_heavier/empass_static_strategy_lighter_or_heavier_server.py]
     args:
       lb:

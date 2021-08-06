@@ -1,7 +1,7 @@
 public_folder: public
 services:
   minimum_laser:
-    explain: "We give you a matrix with asteroids and you have to return the minimum number of laser beams to destroy all of them."
+    description: "We give you a matrix with asteroids and you have to return the minimum number of laser beams to destroy all of them."
     evaluator: [python,services/minimum_laser_server.py]
     args:
       level:
@@ -16,7 +16,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   indipendent_asteroids:
-    explain: "You have to give us the set of indipendent asteroids."
+    description: "You have to give us the set of indipendent asteroids."
     evaluator: [python, services/indipendent_asteroids_server.py]
     args:
       level:

@@ -1,7 +1,7 @@
 public_folder: public
 services:
   check_one_sol:
-    explain: "this service checks whether a sequence of moves is a valid solution for the Hanoi tower puzzle."
+    description: "this service checks whether a sequence of moves is a valid solution for the Hanoi tower puzzle."
     evaluator: [python, services/check_one_sol_server.py]
     args:    
       v:      
@@ -46,7 +46,7 @@ services:
         default: it
   
   check_opt_num_moves:
-    explain: "this service checks what is the minimum possible number of moves in a valid solution for an Hanoi tower puzzle."
+    description: "this service checks what is the minimum possible number of moves in a valid solution for an Hanoi tower puzzle."
     evaluator: [python, services/check_opt_num_moves_server.py]
     args:
       v:      
@@ -91,7 +91,7 @@ services:
         default: it
 
   check_lower_bounds:
-    explain: "this service checks what is the minimum possible number of times that each single disk is moved in an optimal solution."
+    description: "this service checks what is the minimum possible number of times that each single disk is moved in an optimal solution."
     evaluator: [python, services/check_lower_bounds_server.py]
     args:
       v:      
@@ -131,7 +131,7 @@ services:
         default: it
   
   play_like:
-    explain: "this service plays with you like Daddy or like a Toddler. The Taddy start always first and make always the optimal move. The Toddler does not make invalid moves."
+    description: "this service plays with you like Daddy or like a Toddler. The Taddy start always first and make always the optimal move. The Toddler does not make invalid moves."
     evaluator: [python, services/play_like_server.py]
     args:
       role:
@@ -195,7 +195,7 @@ services:
         default: it
 
   eval_opt_num_moves:
-    explain: "this service valuated correctness and efficiency of a bot that computes the minimum number of moves needed to solve an Hanoi tower puzzle."
+    description: "this service valuated correctness and efficiency of a bot that computes the minimum number of moves needed to solve an Hanoi tower puzzle."
     evaluator: [python, services/eval_opt_num_moves_server.py]
     args:
       v:
@@ -238,7 +238,7 @@ services:
         default: it
   
   eval_sol:
-    explain: "this service valuated correctness of a bot that solve an Hanoi tower puzzle."
+    description: "this service valuated correctness of a bot that solve an Hanoi tower puzzle."
     evaluator: [python, services/eval_sol_server.py]
     args:
       v:

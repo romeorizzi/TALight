@@ -1,7 +1,7 @@
 public_folder: public
 services:
   compact_solution:
-    explain: "We give you a matrix and a sequence of switch rows/columns operations that leads to the all 0 matrix. You are required to shorten this sequence."
+    description: "We give you a matrix and a sequence of switch rows/columns operations that leads to the all 0 matrix. You are required to shorten this sequence."
     evaluator: [python,services/compact_solution_server.py]
     args:
       seed:
@@ -31,7 +31,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   order_of_rows_columns:
-    explain: "You are asked to prove that the solvability of a 0/1-matrix is invariant under permutation of its rows (or columns). We give you a good 0/1-matrix and a sequence of switch row/column operations turnig it off (a certificate of goodness). We also give you a permutation of the rows and a permutation of the columns of the matrix. You are required to give us a certificate of goodness for the permuted matrix."
+    description: "You are asked to prove that the solvability of a 0/1-matrix is invariant under permutation of its rows (or columns). We give you a good 0/1-matrix and a sequence of switch row/column operations turnig it off (a certificate of goodness). We also give you a permutation of the rows and a permutation of the columns of the matrix. You are required to give us a certificate of goodness for the permuted matrix."
 #    example: "rtal connect pirellone -am=2 -an=3\\n1 0 1\\n0 1 0\\nr1 c2\\n2 1\\n3 2 1\\n>r2 c2"
     example: "rtal connect pirellone -am=2 -an=3"
     example1: "> 1 0 1"
@@ -58,7 +58,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   sub_closure:
-    explain: "You are asked to prove that a 0/1-matrix containing a bad submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/column operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us."
+    description: "You are asked to prove that a 0/1-matrix containing a bad submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/column operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us."
     evaluator: [python, services/sub_closure_server.py]
     args:
       m:
@@ -84,7 +84,7 @@ services:
         default: it
   check_unsol:
     evaluator: [python, services/check_unsol_server.py]
-    explain: "You provide a matrix that you believe to be unsolvable (or minimal/minimum unsolvable). The service checks its unsolvability (or your stronger assertion). In case your matrix is not unsolvable, You can also check the minimality of your unsolvable matrix."
+    description: "You provide a matrix that you believe to be unsolvable (or minimal/minimum unsolvable). The service checks its unsolvability (or your stronger assertion). In case your matrix is not unsolvable, You can also check the minimality of your unsolvable matrix."
     args:
       assertion:
         regex: ^(any|minimal|minimum)$
@@ -98,7 +98,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_sol:
-    explain: "The service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed."
+    description: "The service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed."
     evaluator: [python, services/check_sol_server.py]
     args:
       seed:
@@ -132,7 +132,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_sol:
-    explain: "si basa su un dialogo dove il bot chiede il valore di alcune entris prima di tornar la soluzione."
+    description: "si basa su un dialogo dove il bot chiede il valore di alcune entris prima di tornar la soluzione."
     evaluator: [python, services/eval_sol_server.py]
     args:
       goal:
@@ -149,7 +149,7 @@ services:
         default: it
   trilly:
     evaluator: [python, services/trilly_server.py]
-    explain: "Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix. When you call this service a dialogue is set up where, after being told the number of rows and columns, you can either ask to switch the boolean values over entire rows or columns, query the current value of specific entries of the matrix, or ask Trilly how she would now act in order to turn off all of the entries in a submatrix of your choice (other than the whole matrix, of course; remember that Trilly is the tiny fairy). When the submatrix is unsolvable, Trilly will return a minimal unsolvable submatrix. In the end you must either turn off the entire matrix or claim the unsovability of the whole matrix. Try to use just one call, or just two calls to Trilly (these will be the most instructive). Also, when the whole matrix is unsolvable, try to claim the unsolvability of a minimal unsolvable submatrix rather then the unsolvability of the whole matrix."
+    description: "Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix. When you call this service a dialogue is set up where, after being told the number of rows and columns, you can either ask to switch the boolean values over entire rows or columns, query the current value of specific entries of the matrix, or ask Trilly how she would now act in order to turn off all of the entries in a submatrix of your choice (other than the whole matrix, of course; remember that Trilly is the tiny fairy). When the submatrix is unsolvable, Trilly will return a minimal unsolvable submatrix. In the end you must either turn off the entire matrix or claim the unsovability of the whole matrix. Try to use just one call, or just two calls to Trilly (these will be the most instructive). Also, when the whole matrix is unsolvable, try to claim the unsolvability of a minimal unsolvable submatrix rather then the unsolvability of the whole matrix."
     args:
       m:
         regex: ^([1-9]|10|20|50|100|1000|10000)$

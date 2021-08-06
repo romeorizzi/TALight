@@ -2,7 +2,7 @@ public_folder: public
 services:
   #fatto - controllato: ok
   dec2opt:
-    explains: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
+    description: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
     evaluator: [python, services/dec2opt_server.py]
     args:
       size:
@@ -20,7 +20,7 @@ services:
         default: it
   #fatto (sistemato) - controllato: ok
   opt2con:
-    explains: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
+    description: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
     evaluator: [python, services/opt2con_server.py]
     args:
       size:
@@ -38,7 +38,7 @@ services:
         default: it
   #fatto - controllato: ok
   dec2con:
-    explains: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
+    description: "this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange."
     evaluator: [python, services/dec2con_server.py]
     args:
       size:
@@ -56,7 +56,7 @@ services:
         default: it
   #da completare goal "at-most-opt-calls". - Il resto controllato: ok
   opt2dec:
-    explains: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
+    description: "this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange."
     evaluator: [python, services/opt2dec_server.py]
     args:
       size:
@@ -79,7 +79,7 @@ services:
         default: it
   # fatto - controllato:ok
   con2opt:
-    explains: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange."
+    description: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange."
     evaluator: [python, services/con2opt_server.py]
     args:
       size:
@@ -97,7 +97,7 @@ services:
         default: it
   #fatto - controllato: ok
   con2dec:
-    explains: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle for the decision form as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange. Posing yourself a different set of goals, you might also ask for one single call to an oracle for the Knapsack problem in its optimization form (see the arguments of the service to know more)."
+    description: "this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle for the decision form as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange. Posing yourself a different set of goals, you might also ask for one single call to an oracle for the Knapsack problem in its optimization form (see the arguments of the service to know more)."
     evaluator: [python, services/con2dec_server.py]
     args:
       size:
@@ -119,7 +119,7 @@ services:
         default: it
  # fatto - controllato:ok
   trilly:
-    explain: "this service poses you an n elements instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange."
+    description: "this service poses you an n elements instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange."
     evaluator: [python, services/trilly_server.py]
     args:
       size:

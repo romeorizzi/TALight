@@ -2,7 +2,7 @@ public_folder: public
 services:
 # controllato: ok
   check_is_eulerian: 
-    explain: This service will check your assertion that a directed graph (that you provide us) admits an eulerian walk (of the specified type).
+    description: This service will check your assertion that a directed graph (that you provide us) admits an eulerian walk (of the specified type).
     evaluator: [python,services/is_eulerian_server.py]
     args:     
       walk_type:
@@ -26,14 +26,14 @@ services:
       check_my_YES_certificate:
         regex: ^(0|1)$
         default: 0
-        explains: (introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives an eulerian walk of type "walk_type" for the received graph, and checks the validity of this walk.
+        explain: (introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives an eulerian walk of type "walk_type" for the received graph, and checks the validity of this walk.
       check_my_NO_certificate:
         regex: ^0$
         default: 0
       gimme_your_YES_certificate:
         regex: ^(0|1)$
         default: 0
-        explains: (introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits an eulerian walk of type "walk_type", then the service also returns one such walk.
+        explain: (introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits an eulerian walk of type "walk_type", then the service also returns one such walk.
       gimme_your_NO_certificate:
         regex: ^0$
         default: 0
@@ -43,7 +43,7 @@ services:
       
 # controllato: ok
   check_is_not_eulerian:
-    explain: This service will check your assertion that a directed graph (that you provide us) does NOT admit an eulerian walk of the specified type.
+    description: This service will check your assertion that a directed graph (that you provide us) does NOT admit an eulerian walk of the specified type.
     evaluator: [python,services/is_eulerian_server.py]
     args:     
       walk_type:
@@ -70,21 +70,21 @@ services:
       check_my_NO_certificate:
         regex: ^(0|1)$
         default: 0
-        explains: "(introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives a compact and convincing evidence for the non-existence of a walk of the prescribed type. This piece of evidence should have the form of a general argument that can be conveniently verified. When this flag is set to 1 the service also receives and checks this certificate. Since the form of the argument ought to be general/universal, it can be standardized and encoded. CAUTION: We hope you will first enquiry and conjecture yourself about what could be the form of this general argument/reason for non-existence (what are the necessary and sufficient conditions for the existence of such a walk?), and we have designed the materials of this problem as to support this main quest of you on this classical problem. However, you can also get essentially told about this form (spoiler) and get exposed to its specific encoding by calling this same service (possibly on another input graph) with the flag 'gimme_your_NO_certificate' set to 1. Decide yourself, with caution, the best timing for you (and your ultimate goals) to access the various services."   
+        explain: "(introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives a compact and convincing evidence for the non-existence of a walk of the prescribed type. This piece of evidence should have the form of a general argument that can be conveniently verified. When this flag is set to 1 the service also receives and checks this certificate. Since the form of the argument ought to be general/universal, it can be standardized and encoded. CAUTION: We hope you will first enquiry and conjecture yourself about what could be the form of this general argument/reason for non-existence (what are the necessary and sufficient conditions for the existence of such a walk?), and we have designed the materials of this problem as to support this main quest of you on this classical problem. However, you can also get essentially told about this form (spoiler) and get exposed to its specific encoding by calling this same service (possibly on another input graph) with the flag 'gimme_your_NO_certificate' set to 1. Decide yourself, with caution, the best timing for you (and your ultimate goals) to access the various services."   
       gimme_your_YES_certificate:
         regex: ^0$
         default: 0
       gimme_your_NO_certificate:
         regex: ^(0|1)$
         default: 0
-        explains: (introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits no eulerian walk of type "walk_type", then the service also returns a compact and convincing evidence of non-existence that adheres to a general (standardized) argument that can be conveniently verified.
+        explain: (introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits no eulerian walk of type "walk_type", then the service also returns a compact and convincing evidence of non-existence that adheres to a general (standardized) argument that can be conveniently verified.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
 
 # ok!
   check_eulerian_walk:
-    explain: (one could then remove, or just comment out, this whole service. 2021-08-06, Romeo) This service checks the validity of an eulerian walk for a graph. The service is given both the graph and the walk.
+    description: (one could then remove, or just comment out, this whole service. 2021-08-06, Romeo) This service checks the validity of an eulerian walk for a graph. The service is given both the graph and the walk.
     evaluator: [python,services/check_eulerian_walk_server.py]
     args:
       walk_type:
@@ -106,13 +106,13 @@ services:
         explain: The number of arcs of your graph cannot exceed MAXM.
   # controllato
   eval_eulerian_walk_checker:
-    explain: "Let's invert our roles! Given a directed graph and a candidate eulerian walk for it, can you check whether the given eulerian walk is valid for the given directed graph?"
+    description: "Let's invert our roles! Given a directed graph and a candidate eulerian walk for it, can you check whether the given eulerian walk is valid for the given directed graph?"
     evaluator: [python,services/eval_eulerian_walk_checker_server.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
         default: closed
-        explains: (introduced 2021-08-06, Romeo)
+        explain: (introduced 2021-08-06, Romeo)
       seed:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{0,5})$
@@ -128,13 +128,13 @@ services:
         default: it
 # corretto
   eval_eulerian_recognize:
-    explain: "Given a directed graph, can you decide whether it contains an eulerian walk? And can you do it efficiently?"
+    description: "Given a directed graph, can you decide whether it contains an eulerian walk? And can you do it efficiently?"
     evaluator: [python,services/eval_eulerian_recognize_server.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
         default: closed
-        explains: (introduced 2021-08-06, Romeo)
+        explain: (introduced 2021-08-06, Romeo)
       seed:
         explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
         regex: ^(random_seed|[1-9][0-9]{0,5})$
@@ -164,7 +164,7 @@ services:
 # ok
   trilly_decision:
     evaluator: [python, services/trilly_decision_server.py]
-    explain: "Trilly the fairy helps you understand whether a graph admits an eulerian walk. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly whether the graph obtained from G with the removal of such an arc would admit an eulerian walk or not. You can call trilly as many times as you want but, in the end, you must tell whether G admits an eulerian walk or not."
+    description: "Trilly the fairy helps you understand whether a graph admits an eulerian walk. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly whether the graph obtained from G with the removal of such an arc would admit an eulerian walk or not. You can call trilly as many times as you want but, in the end, you must tell whether G admits an eulerian walk or not."
     args:
       n:
         regex: ^([1-9]|10|20|50|100|1000|10000)$
@@ -188,7 +188,7 @@ services:
 # ok
   trilly_construction:
     evaluator: [python, services/trilly_construction_server.py]
-    explain: "Trilly the fairy helps you construct an Eulerian walk within a graph that admits at least one. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly to return you an eulerian walk of the graph obtained from G with the removal of such an arc. Trilly will either tell you that no such a walk exists or return you one. You can call trilly as many times as you want but, in the end, you must provide an eulerian walk of G."
+    description: "Trilly the fairy helps you construct an Eulerian walk within a graph that admits at least one. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly to return you an eulerian walk of the graph obtained from G with the removal of such an arc. Trilly will either tell you that no such a walk exists or return you one. You can call trilly as many times as you want but, in the end, you must provide an eulerian walk of G."
     args:
       n:
         regex: ^([1-9]|10|20|50|100|1000|10000)$
