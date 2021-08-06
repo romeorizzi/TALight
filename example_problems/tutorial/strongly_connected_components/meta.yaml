@@ -1,8 +1,8 @@
 public_folder: public
 services:
-  check_is_gsc:
+  check_is_sc:
     explain: "This service will check your statement that a directed graph you provide us is strongly connected"
-    evaluator: [python,services/is_gsc_server.py]
+    evaluator: [python,services/is_sc_server.py]
     args:     
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
@@ -21,9 +21,9 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  check_is_not_gsc:
+  check_is_not_sc:
     explain: "This service will check your statement that a directed graph you provide us is not strongly connected"
-    evaluator: [python,services/is_gsc_server.py]
+    evaluator: [python,services/is_sc_server.py]
     args:
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
@@ -42,9 +42,9 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-  eval_gsc:
+  eval_recognizer_sc:
     explain: "Given a directed graph, can you decide whether it is strongly connected?"
-    evaluator: [python,services/eval_gsc_server.py]
+    evaluator: [python,services/eval_recognizer_sc_server.py]
     args:
       goal:
         regex: ^(yes_no)$
@@ -60,7 +60,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   gimme_scc:
-    explain: "This service will check the strongly connected components of a graph that you provide us"
+    explain: "This service receives from you a directed graph and then separates its strongly connected components listing them out according to a topological sort"
     evaluator: [python,services/gimme_scc_server.py]
     args:   
       n:
