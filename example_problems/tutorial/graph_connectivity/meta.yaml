@@ -81,6 +81,7 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
