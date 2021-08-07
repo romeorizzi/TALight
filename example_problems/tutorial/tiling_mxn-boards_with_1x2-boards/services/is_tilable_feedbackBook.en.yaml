@@ -1,7 +1,0 @@
-%YAML 1.2
----
-open-channel: '# I will serve: problem={problem}, service={service}'
-FALSE-is-not-tilable: 'Contrary to what you have asserted, the {ENV["m"]}x{ENV["n"]}-grid is NOT tilable. If you are not convinced you can submit a tiling of that grid to the service "check_my_tiling".'
-TRUE-is-not-tilable: 'You are perfecty right: the {ENV["m"]}x{ENV["n"]}-grid is NOT tilable.'
-TRUE-is-tilable: 'We agree on the fact that the {ENV["m"]}x{ENV["n"]}-grid is tilable. If you want to exhibit us a tiling for this grid you can submit it to the service "check_my_tiling".'
-FALSE-is-tilable: 'No, the {ENV["m"]}x{ENV["n"]}-grid is tilable. If you can not believe a tiling of the {ENV["m"]}x{ENV["n"]}-grid exists try the service "gimme_hints_on_a_tiling".'

@@ -118,7 +118,7 @@ for report in reports:
                 problem_has_got_wrecked_services = True
         if problem_has_got_wrecked_services:
             num_problems_with_wrecked_services += 1
-    print("-"*(36+len({problem_name})))
+    print("-"*(36+len(problem_name)))
 
 print("=== GROSS SUMMARY ===")
 print(f"num_problems examined = {num_problems}")

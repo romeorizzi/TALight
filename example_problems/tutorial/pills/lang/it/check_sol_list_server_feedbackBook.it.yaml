@@ -1,0 +1,20 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problema={problem}, servizio={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+at-least-one-line: 'No. Ti è richiesto di introdurre almeno un trattamento (eventualmente anche quello vuoto) prima di chiudere.'
+first-line-not-feasible: 'No. Il tuo primissimo trattamento NON è ammissibile.'
+wrong-first: 'No. Il primissimo trattamento ammissibile cha hai introdotto non è però il primo secondo l\''ordinamento impostato'
+called-with: '(servizio chiamato con'
+different_lengths: 'No. Il trattamento che hai appena introdotto in posizione {len(input_solution_list)+1} è di lunghezza diversa dai precedenti.'
+order-violation: 'No. Il trattamento ammissibile che hai introdotto in posizione {len(input_solution_list)+1} non viene dopo ma prima della precedente secondo l\''ordinamento impostato'
+repeated: 'No. Il trattamento ammissibile che hai appena introdotto in posizione {len(input_solution_list)+1}) è lo stesso della riga immediatamente precedente. Nulla è perduto: questo doppio inserimento verrà ignorato. Puoi procedere.'
+your-treatments-all-ok: 'Tutti i trattamenti che hai introdotto sono ammissibili e correttamente ordinati.'
+one-treatment-is-missing-no-feedback: 'No. Alla tua lista manca almeno un trattamento ammissibile.'
+give-missing-treatment: 'Considera ad esempio:'
+not-consecutive: 'No. I due trattamenti ammissibili:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nche appaiono consecutivamente nella tua lista NON sono consecutivi secondo l\''ordinamento impostato. Ne manca uno che si colloca in mezzo ai due.'
+first-missing-prefix: 'Ti forniamo un prefisso di trattamento ammissibile tale che nessuno dei trattamenti nella tua lista ha questo prefisso:'
+list-ok: 'Hai prodotto e listato nell\''ordine corretto tutti i trattamenti ammissibili con {n_pills} pillole.'
+unfeasible: 'No. Giunti in posizione {i} il flaconcino non contiene alcuna mezza pillola che noi si possa mangiare. Questa prescrizione non è consistente.'
+pointer: '^ nessun "H" è disponibile a questo punto'

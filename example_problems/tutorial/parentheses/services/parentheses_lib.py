@@ -12,10 +12,10 @@ def recognize(formula_of_parentheses, TAc, LANG, yield_feedback=True):
             if num_dangling_open == 0:
                 if yield_feedback:
                     TAc.print(formula_of_parentheses, "yellow", ["underline"])
-                    TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed."), "red", ["bold"])
+                    TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed.", {'i': i}), "red", ["bold"])
                     TAc.print(formula_of_parentheses, "yellow", ["underline"])
                     print(" "*(i-1),end="")
-                    TAc.print("^ unmatched ')'", "yellow", ["underline"])
+                    TAc.print(LANG.render_feedback("pointer", '^ unmatched ")"'), "yellow", ["underline"])
                 return False
             num_dangling_open -= 1
 

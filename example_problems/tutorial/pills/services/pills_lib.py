@@ -12,10 +12,10 @@ def recognize(treatement, TAc, LANG, yield_feedback=True):
             if num_dangling_broken_pills == 0:
                 if yield_feedback:
                     TAc.print(treatement, "yellow", ["underline"])
-                    TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no broken pill left to be eaten. This prescription is not consistent."), "red", ["bold"])
+                    TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no broken pill left to be eaten. This prescription is not consistent.", {'i': i}), "red", ["bold"])
                     TAc.print(treatement, "yellow", ["underline"])
                     print(" "*(i-1),end="")
-                    TAc.print("^ no 'H' is available at this point", "yellow", ["underline"])
+                    TAc.print(LANG.render_feedback("pointer", '^ no "H" is available at this point'), "yellow", ["underline"])
                 return False
             num_dangling_broken_pills -= 1
 

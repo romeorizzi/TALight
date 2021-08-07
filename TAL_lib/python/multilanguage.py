@@ -24,7 +24,6 @@ except Exception as e:
             
 class Env:
     def __init__(self, problem, service, args_list):
-        self.service_server_fullname = argv[0]
         self.exe_path = split(argv[0])[0]
         self.META_DIR = environ["TAL_META_DIR"]
         self.problem = problem
@@ -61,7 +60,7 @@ class Lang:
         self.messages_book_file = None
         self.num_calls_to_manage_opening_msg = 0
         if "lang" in ENV.arg.keys() and ENV["lang"] != "hardcoded":
-            self.messages_book_file = join(ENV.META_DIR, ENV.exe_path, ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
+            self.messages_book_file = join(ENV.META_DIR, "lang", ENV["lang"], ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
             # BEGIN: try to load the message book
 #        def try_to_load_the_message_book():
             if not yaml_is_installed:
@@ -114,16 +113,18 @@ class Lang:
                 self.opening_msg += f"{arg_name}={arg_val}, "
         self.opening_msg = self.opening_msg[:-2] + ".\n"
         if self.messages_book == None:
-            self.opening_msg += f"# The feedback_source is the one hardcoded in the service server ({ENV.service_server_fullname})"
+            self.opening_msg += f"# The feedback_source is the one hardcoded in the service server ({argv[0]})"
         else:
             self.opening_msg += self.render_Langinternal_feedback("feedback_source",f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder.")
         TAc.print(self.opening_msg, "yellow", ["underline"], file=stderr)
 
-    def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg):
+    def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionay=None):
         if self.messages_book != None and msg_code not in self.messages_book:
             self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book","red", file=stderr)
         if self.messages_book == None or msg_code not in self.messages_book:
             return rendition_of_the_hardcoded_msg
+        if trans_dictionay != None:
+            return self.messages_book[msg_code].format(**trans_dictionay)
         msg_encoded = self.messages_book[msg_code]
         return self.service_server_eval(msg_encoded)
 

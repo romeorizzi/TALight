@@ -1,0 +1,8 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problema={problem}, servizio={service}\n#  con argomenti: '
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+ok: '♥  La tua stringa è un trattamento ammissibile di parentesi.'
+unfeasible: 'No. Giunti in posizione {i} il flaconcino non contiene alcuna mezza pillola che noi si possa mangiare. Questa prescrizione non è consistente.'
+pointer: '^ nessun "H" è disponibile a questo punto'

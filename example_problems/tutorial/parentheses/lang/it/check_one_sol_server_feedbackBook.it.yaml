@@ -1,0 +1,8 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problema={problem}, servizio={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+ok: '♥  La tua stringa è una formula ben formata di parentesi.'
+unfeasible: 'No. Giunti in posizione {i} non abbiamo lasciato alcuna parentesi aperta da poter chiudered. Questa formula non è ben formata.'
+pointer: '^ questa ")" non ha compagna'
