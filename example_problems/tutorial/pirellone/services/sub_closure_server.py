@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr, exit, argv
+from sys import stderr, exit
 import random
 import copy
 

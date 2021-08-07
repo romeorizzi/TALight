@@ -1,7 +1,7 @@
 public_folder: public
 services:
   verify_tiling:
-    description: "Provide this service with a triple (k, r, c) and a tiling of the 2^k x 2^k grid. The service checks that no tiles overlap and that cell (r,c) is the only cell left uncovered (row and column indexes start from 0)."
+    description: Provide this service with a triple (k, r, c) and a tiling of the 2^k x 2^k grid. The service checks that no tiles overlap and that cell (r,c) is the only cell left uncovered (row and column indexes start from 0).
     evaluator: [python,services/verify_tiling_server.py]
     args:
       k:
@@ -10,20 +10,20 @@ services:
       r:
         regex: ^(0|[1-9][0-9]{0,3})$
         default: 0
-        explain: "the row index of the cell left uncovered."
+        explain: the row index of the cell left uncovered.
       c:
         regex: ^(0|[1-9][0-9]{0,3})$
         default: 0
-        explain: "the column index of the cell left uncovered."
+        explain: the column index of the cell left uncovered.
       silent:
-        explain: "if nothing is wrong with your tiling then the service runs silently; otherwise it explains what is the problem in clear."
+        explain: if nothing is wrong with your tiling then the service runs silently; otherwise it explains what is the problem in clear.
         regex: ^(0|1)$
         default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   gimme_tiling:
-    description: "given a triple (k, r, c), this service tells whether the 2^k x 2^k grid admits a tiling where no two tiles overlap and the cell (r,c) is the only cell left uncovered (row and column indexes start from 0). You can also ask the service to dispel a tiling, in part or as a whole."
+    description: given a triple (k, r, c), this service tells whether the 2^k x 2^k grid admits a tiling where no two tiles overlap and the cell (r,c) is the only cell left uncovered (row and column indexes start from 0). You can also ask the service to dispel a tiling, in part or as a whole.
     evaluator: [python,services/gimme_tiling_server.py]
     args:
       k:
@@ -32,37 +32,37 @@ services:
       r:
         regex: ^(0|[1-9][0-9]{0,3})$
         default: 0
-        explain: "the row index of the cell left uncovered."
+        explain: the row index of the cell left uncovered.
       c:
         regex: ^(0|[1-9][0-9]{0,3})$
         default: 0
-        explain: "the column index of the cell left uncovered."
+        explain: the column index of the cell left uncovered.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
       dispel_first_rows_of_a_tiling:
         regex: ^(0|[1-9][0-9]{0,3})$
         default: 0
-        explain: "the service will dispel the first <dispel_first_rows_of_a_tiling> rows of a possible tiling."
+        explain: the service will dispel the first <dispel_first_rows_of_a_tiling> rows of a possible tiling.
   trilly:
     evaluator: [python, services/trilly_server.py]
-    description: "Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix."
+    description: Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix.
     args:
       k:
         regex: ^([0-9]|10)$
         default: 3
       only_corner_cell:
-        explain: "both in the first request of the server and in the later requsts of the problem solver, the cell (r,c) should always be a corner cell."
+        explain: both in the first request of the server and in the later requsts of the problem solver, the cell (r,c) should always be a corner cell.
         regex: ^(0|1)$
         default: 1
       goal_min_calls_to_place_tile:
         regex: ^(any|k|1)$
         default: 1
-        explain: "try to minimize the number of calls to place_tile."
+        explain: try to minimize the number of calls to place_tile.
       goal_min_calls_to_trilly:
         regex: ^(any|4|one_and_gain_three_calls_at_every_placed_tile|gain_three_calls_at_every_placed_tile)$
         default: 4
-        explain: "number of allowed calls to trilly. Try to minimize it, but, at a certain point, this goal will conflict with the main one given above."
+        explain: number of allowed calls to trilly. Try to minimize it, but, at a certain point, this goal will conflict with the main one given above.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

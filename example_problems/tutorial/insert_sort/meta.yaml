@@ -42,17 +42,18 @@ services:
         default: only_signal_first_error
         explain: "choose the feedback level. Options are as follows:"
         explain1: "[only_signal_first_error]  stops with an error message at the very first unexpected behavior for the intended goal."
-        explain2: "[also_tell_what_expected_instead]  stops at the very first unexpected behavior but also explain what would have been the correct one"
+        explain2: "[also_tell_what_expected_instead]  stops at the very first unexpected behavior but also explain what would have been the correct one."
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
 
   synopsis:
-    evaluator: [python3, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_server.py]
     args:
       service:
         regex: ^((\S)+)$
         default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

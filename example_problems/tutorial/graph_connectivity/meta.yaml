@@ -1,22 +1,22 @@
 public_folder: public
 services:
   tell_if_graph_connected:
-    description: 'this service tells whether a user provided graph is connected or not.'
+    description: this service tells whether a user provided graph is connected or not.
     evaluator: [python, services/tell_if_graph_connected_server.py]
     args:
       with_yes_certificate:
-        explain: "when the input graph is connected, please, send me a certificate in the form of a spanning tree."
+        explain: when the input graph is connected, please, send me a certificate in the form of a spanning tree.
         regex: ^(0|1)$
         default: 0
       with_no_certificate:
-        explain: "when the input graph is NOT connected, please, send me a certificate in the form of a non-trivial partition of the nodes such that no arc has ndpoints on different sides of the bipartition."
+        explain: when the input graph is NOT connected, please, send me a certificate in the form of a non-trivial partition of the nodes such that no arc has ndpoints on different sides of the bipartition.
         regex: ^(0|1)$
         default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_certificate_of_connectivity:
-    description: 'this service checks whether a list of edges forms a spanning tree in a given graph'
+    description: this service checks whether a list of edges forms a spanning tree in a given graph
     evaluator: [python, services/check_certificate_of_connectivity_server.py]
     args:
       n:
@@ -24,16 +24,16 @@ services:
         explain: the number of nodes nodes of the graph
       how_to_input_the_graph:
         regex: ^(lazy|([1-9]|[0-9]{5,5}))$
-        explain: "you can either enter the code (random seed) of one of our instances (n,seed) defining a graph you may have already encountered in other services for this problem or ask to enter your graph after the service has started up (lazy)"
+        explain: you can either enter the code (random seed) of one of our instances (n,seed) defining a graph you may have already encountered in other services for this problem or ask to enter your graph after the service has started up (lazy)
       silent:
-        explain: "if nothing is wrong with your spanning tree for the graph you have specified us (through seed) then the service runs silently; otherwise it explains what is the problem in clear."
+        explain: if nothing is wrong with your spanning tree for the graph you have specified us (through seed) then the service runs silently; otherwise it explains what is the problem in clear.
         regex: ^(0|1)$
         default: 0
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   check_certificate_of_nonconnectivity:
-    description: 'this service checks whether a bipartition of the nodes is a valid certificate of the non-connectivity of a given graph'
+    description: this service checks whether a bipartition of the nodes is a valid certificate of the non-connectivity of a given graph
     evaluator: [python, services/check_certificate_of_nonconnectivity_server.py]
     args:
       n:
@@ -41,11 +41,11 @@ services:
         explain: the number of nodes nodes of the graph
       how_to_input_the_graph:
         regex: ^(lazy|([1-9]|[0-9]{5,5}))$
-        explain: "you can either enter the code (random seed) of one of our instances (n,seed) defining a graph you may have already encountered in other services for this problem or ask to enter your graph after the service has started up (lazy)"
+        explain: you can either enter the code (random seed) of one of our instances (n,seed) defining a graph you may have already encountered in other services for this problem or ask to enter your graph after the service has started up (lazy)
       the_bipartition:
         regex: ^(lazy|(0  *|[1-9][0-9]{0,4}  *){1,999}versus  *(0  *|[1-9][0-9]{0,4}  *){0,998}(0|[1-9][0-9]{0,4}) *)$
       silent:
-        explain: "if nothing is wrong with your spanning tree for the graph you have specified us (through seed) then the service runs silently; otherwise it explains what is the problem in clear."
+        explain: if nothing is wrong with your spanning tree for the graph you have specified us (through seed) then the service runs silently; otherwise it explains what is the problem in clear.
         regex: ^(0|1)$
         default: 0
       lang:
@@ -55,19 +55,19 @@ services:
     evaluator: [python, services/eval_bot_deciding_connectivity_server.py]
     args:
       goal:
-        explain: "set your goal (efficient includes also correct)."
+        explain: set your goal (efficient includes also correct).
         regex: ^(correct|quadratic|linear)$
         default: correct
       check_also_yes_certificate:
-        explain: "when the instance is a connected graph my bot will also produce a spanning tree of it, please, check also my certificate."
+        explain: when the instance is a connected graph my bot will also produce a spanning tree of it, please, check also my certificate.
         regex: ^(0|1)$
         default: 0
       check_also_no_certificate:
-        explain: "when the instance is a non-connected graph my bot will also produce a bipartition, please, check also my certificate."
+        explain: when the instance is a non-connected graph my bot will also produce a bipartition, please, check also my certificate.
         regex: ^(0|1)$
         default: 0
       code_lang: 
-        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:

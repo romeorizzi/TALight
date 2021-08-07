@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr, exit, argv
+from sys import stderr, exit
 from time import monotonic
 
 from TALinputs import TALinput

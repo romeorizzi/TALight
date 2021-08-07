@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr, exit, argv
+from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
 
@@ -60,8 +60,15 @@ elif goal=="m_plus_n_half":
 elif goal=="min":
     g=len(shortsol)
     
-
-risultato,_=pl.check_off_lights(pirellone,solu)
+risultato,_ = pl.check_off_lights(pirellone, solu, LANG, TAc)
+if risultato:
+    TAc.OK()
+    TAc.print(LANG.render_feedback("correct","Your solution turns off the entire binary matrix.", ["bold"])
+else:
+    TAc.NO()
+    TAc.print(LANG.render_feedback("same-on","Some lights are on!"), "red", ["bold"])
+    exit(0)
+    
 if risultato and len(solu)<g:
     TAc.OK()
     TAc.print(LANG.render_feedback("shoter","Shorter than what you set in goal and all lights are off."), "green", ["bold"])
@@ -71,9 +78,5 @@ elif risultato and len(solu)==g:
 elif risultato and len(solu)>g:
     TAc.NO()
     TAc.print(LANG.render_feedback("bigger","Bigger than what you set in goal but all lights are off."), "red", ["bold"])
-else:
-    TAc.NO()
-    TAc.print(LANG.render_feedback("same-on","Some lights are on!"), "red", ["bold"])
-
     
 exit(0)

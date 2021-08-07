@@ -88,9 +88,9 @@ def num_mosse(n):
 
 
 def mossa(n):
-    s=0
+    if len(n)==1 and n[0]==0:
+        return 0
     if count1(n)==0:
-        s=2
+        return 2
     else:
-        s=1
-    return s
+        return 1

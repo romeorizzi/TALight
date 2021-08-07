@@ -1,17 +1,17 @@
 public_folder: public
 services:
   check_is_sc:
-    description: "This service will check your statement that a directed graph you provide us is strongly connected"
+    description: This service will check your statement that a directed graph you provide us is strongly connected
     evaluator: [python,services/is_sc_server.py]
     args:     
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
-        explain: "Number of nodes."
+        explain: Number of nodes.
       m:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
-        explain: "Number of arcs."
+        explain: Number of arcs.
       sc_bool:
         regex: ^1$
         default: 1
@@ -22,17 +22,17 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   check_is_not_sc:
-    description: "This service will check your statement that a directed graph you provide us is not strongly connected"
+    description: This service will check your statement that a directed graph you provide us is not strongly connected
     evaluator: [python,services/is_sc_server.py]
     args:
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
-        explain: "Number of nodes."
+        explain: Number of nodes.
       m:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
-        explain: "Number of arcs."
+        explain: Number of arcs.
       sc_bool:
         regex: ^0$
         default: 0
@@ -43,7 +43,7 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_recognizer_sc:
-    description: "Given a directed graph, can you decide whether it is strongly connected?"
+    description: Given a directed graph, can you decide whether it is strongly connected?
     evaluator: [python,services/eval_recognizer_sc_server.py]
     args:
       goal:
@@ -53,36 +53,36 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       seed:
-        explain: "specify the numeric code to reproduce the very same psudo-random instance G as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: specify the numeric code to reproduce the very same psudo-random instance G as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   gimme_scc:
-    description: "This service receives from you a directed graph and then separates its strongly connected components listing them out according to a topological sort"
+    description: This service receives from you a directed graph and then separates its strongly connected components listing them out according to a topological sort
     evaluator: [python,services/gimme_scc_server.py]
     args:   
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
-        explain: "Number of nodes."
+        explain: Number of nodes.
       m:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
         default: lazy
-        explain: "Number of arcs."
+        explain: Number of arcs.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_find_scc:
-    description: "Given a directed graph, can you find its strongly connected components?"
+    description: Given a directed graph, can you find its strongly connected components?
     evaluator: [python,services/eval_find_scc_server.py]
     args:
      goal:
         regex: ^(yes_no)$
         default: yes_no
      seed:
-        explain: "specify the numeric code to reproduce the very same psudo-random instance G as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: specify the numeric code to reproduce the very same psudo-random instance G as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
      code_lang: 
@@ -97,6 +97,7 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

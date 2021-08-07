@@ -35,7 +35,7 @@ services:
         regex: ^(0|1)$
         default: 0
       silent:
-        explain: "the service runs silently unless your conjectured answer is wrong (or for wrong calls)."
+        explain: when the flag silent is set then the service runs silently unless your conjectured answer is wrong (or for wrong calls).
         regex: ^(0|1)$
         default: 0
       lang:
@@ -45,16 +45,16 @@ services:
     evaluator: [python, services/eval_num_sol_server.py]
     args:
       answ_modulus:
-        explain: "when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <answ_modulus> will suffice in assessing you got the right ideas."  
+        explain: when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <answ_modulus> will suffice in assessing you got the right ideas.  
         regex: ^([1-9][0-9]{0,10}|0)$
         default: 0
 #        default: 1000000007
       goal:
-        explain: "set your goal (efficient includes also correct)."
+        explain: set your goal (efficient includes also correct).
         regex: ^(correct|efficient)$
         default: correct
       code_lang: 
-        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
@@ -108,7 +108,7 @@ services:
         regex: ^(0|1)$
         default: 0
       silent:
-        explain: "if nothing is wrong then the service runs silently."
+        explain: if nothing is wrong then the service runs silently.
         regex: ^(0|1)$
         default: 0
       lang:
@@ -121,17 +121,17 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
-        explain: "set your goal (efficient includes also correct)."
+        explain: set your goal (efficient includes also correct).
         regex: ^(correct|efficient)$
         default: correct
       seed:
         regex: ^(random_seed|[1-9]|[0-9]{5,5})$
         default: random_seed
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -180,17 +180,17 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
-        explain: "set your goal (efficient includes also correct)."
+        explain: set your goal (efficient includes also correct).
         regex: ^(correct|efficient)$
         default: correct
       seed:
         regex: ^(random_seed|[1-9]|[0-9]{5,5})$
         default: random_seed
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -201,17 +201,17 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       goal:
-        explain: "set your goal (efficient includes also correct)."
+        explain: set your goal (efficient includes also correct).
         regex: ^(correct|efficient)$
         default: correct
       seed:
         regex: ^(random_seed|[1-9]|[0-9]{5,5})$
         default: random_seed
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)"
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

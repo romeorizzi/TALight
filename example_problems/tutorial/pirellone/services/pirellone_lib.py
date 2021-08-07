@@ -77,11 +77,10 @@ def print_pirellone(pirellone):
     for l in pirellone:
         print(*l) 
         
-def check_off_lights(pirellone,solu,LANG, TAc):
+def check_off_lights(pirellone,solu, LANG, TAc):
     pirellone1=[line[:] for line in pirellone]
     m=len(pirellone)
     n=len(pirellone[0])
-    #pirellone1=copy.deepcopy(pirellone)
     empty=[[0 for j in range(0,len(pirellone[0]))] for i in range(0,len(pirellone))]
     for i in range(0,len(solu)):
         if solu[i][0]=='r':

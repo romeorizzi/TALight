@@ -1,7 +1,7 @@
 public_folder: public
 services:
   TAL_recognizes:
-    description: "Submit a regular expression r and a string s over the same alphabet. The service recognizes whether s belongs to the language described by r."
+    description: Submit a regular expression r and a string s over the same alphabet. The service recognizes whether s belongs to the language described by r.
     evaluator: [python,services/TAL_recognizes_server.py]
     args:
       s:
@@ -14,21 +14,21 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   you_recognize:
-    description: "We give you a regular expression r and a string s over the same alphabet. Your aim is to recognize whether s belongs to the language described by r. You have control on the size of the instance (r,s) by means of parameters m and n. The instance is pseudo-random and fully spcifified by m,n, and the seed."
+    description: We give you a regular expression r and a string s over the same alphabet. Your aim is to recognize whether s belongs to the language described by r. You have control on the size of the instance (r,s) by means of parameters m and n. The instance is pseudo-random and fully spcifified by m,n, and the seed.
     evaluator: [python,services/TAL_you_recognize_server.py]
     args:
       seed:
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same instance as in a previous run."
+        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same instance as in a previous run.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 12
-        explain: "Length of the regular expression r."
+        explain: Length of the regular expression r.
       n:
         regex: ^([1-9][0-9]{0,4})$
         default: 20
-        explain: "Length of the string s."
+        explain: Length of the string s.
       feedback:
         regex: ^(yes_no|with_construction_of_s)$
         default: yes_no
@@ -36,20 +36,20 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_recognize:
-    description: "This service assesses the correctness and efficiency of your machinery to recognize whether s in L_r."
+    description: This service assesses the correctness and efficiency of your machinery to recognize whether s in L_r.
     evaluator: [python,services/eval_recognize_server.py]
     args:
       goal:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run."
+        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       code_lang:
         regex: ^(CIF|python|java|nodejs|compiled)$
         default: CIF
-        explain: "You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        explain: You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints.
       feedback:
         regex: ^(yes_no|with_construction_of_s)$
         default: yes_no
@@ -57,20 +57,20 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_regex2NFA:
-    description: "This service assesses the correctness and efficiency of your machinery to compute the non-deterministic automaton for a regex given in input."
+    description: This service assesses the correctness and efficiency of your machinery to compute the non-deterministic automaton for a regex given in input.
     evaluator: [python,services/eval_regex2NFA.py]
     args:
       goal:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run."
+        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       code_lang:
         regex: ^(CIF|python|java|nodejs|compiled)$
         default: CIF
-        explain: "You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        explain: You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints.
       feedback:
         regex: ^(yes_no|correct_NDF_when_wrong)$
         default: yes_no
@@ -78,23 +78,34 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_NFA2DFA:
-    description: "This service assesses the correctness and efficiency of your machinery to yield a deterministic automaton equivalent to a non-deterministic automaton given in input."
+    description: This service assesses the correctness and efficiency of your machinery to yield a deterministic automaton equivalent to a non-deterministic automaton given in input.
     evaluator: [python,services/eval_NFA2DFA.py]
     args:
       goal:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        explain: "Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run."
+        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       code_lang:
         regex: ^(CIF|python|java|nodejs|compiled)$
         default: CIF
-        explain: "You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints."
+        explain: You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints.
       feedback:
         regex: ^(yes_no|correct_DFA_when_wrong)$
         default: yes_no
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|en|it)$
+        default: it
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

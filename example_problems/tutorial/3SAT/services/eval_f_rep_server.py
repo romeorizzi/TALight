@@ -12,7 +12,7 @@ args_list = [
     ('ISATTY', bool),
 ]
 
-from sys import stderr, exit, argv
+from sys import stderr, exit
 import SAT_lib
 from multilanguage import Env, Lang, TALcolors
 import re

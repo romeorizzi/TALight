@@ -10,7 +10,7 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import stderr, exit, argv
+from sys import stderr, exit
 import pirellone_lib as pl
 from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)

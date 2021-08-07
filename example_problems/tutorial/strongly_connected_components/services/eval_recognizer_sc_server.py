@@ -2,7 +2,7 @@
 
 # This service will check if given a directed graph, you can decide whether it is Eulerian? And can you do it efficiently?
 
-from sys import stderr, exit, argv
+from sys import stderr, exit
 
 import collections
 import random

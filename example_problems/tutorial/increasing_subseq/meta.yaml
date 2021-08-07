@@ -1,28 +1,28 @@
 public_folder: public
 services:
   is_subseq:
-    description: "You are asked to enter two sequences S and T of positive integers. The service tells whether S is a subsquence of T."
+    description: You are asked to enter two sequences S and T of positive integers. The service tells whether S is a subsquence of T.
     evaluator: [python, services/is_subseq_server.py]
     args:
       T:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
-        explain: "T is a sequence of positive integers separated by spaces"
-        example: "12 34 56"
+        explain: T is a sequence of positive integers separated by spaces
+        example: 12 34 56
       S:
-        explain: "S is a sequence of positive integers separated by spaces"
-        example: "12 34 56"
+        explain: S is a sequence of positive integers separated by spaces
+        example: 12 34 56
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
       YES_cert:
-        explain: "in case S is a subsequence of T, the service underlines |S| elemements in T to give evidence to its positive answers."
+        explain: in case S is a subsequence of T, the service underlines |S| elemements in T to give evidence to its positive answers.
         regex: ^(0|1)$
         default: 1
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   gen_subseq_instance:
-    description: "It returns an instance of the eval_is_subseq service once you provide its description. The description has the form (m,n,max_val,yes_instance,seed)."
+    description: It returns an instance of the eval_is_subseq service once you provide its description. The description has the form (m,n,max_val,yes_instance,seed).
     evaluator: [python, services/gen_subseq_instance_server.py]
     args: # m n max_val
       yes_instance:
@@ -42,22 +42,22 @@ services:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
       YES_cert:
-        explain: "the set of elements (specified by their indexes in T) to be removed from T to obtain S."
+        explain: the set of elements (specified by their indexes in T) to be removed from T to obtain S.
         regex: ^((([1-9][0-9]{0,5} *)*)|lazy_input)$
         default: 1
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   eval_subseq:
-    description: "Evaluates correctness and efficiency of a program from the problem solver that, given in input two integer sequences T (on a first line) and S (on a second line), decides whether S is a subsequence of T or not (y/n). The evaluation is done on a set of pseudo-random instances (everything is fully reproducible from the seed)."
+    description: Evaluates correctness and efficiency of a program from the problem solver that, given in input two integer sequences T (on a first line) and S (on a second line), decides whether S is a subsequence of T or not (y/n). The evaluation is done on a set of pseudo-random instances (everything is fully reproducible from the seed).
     evaluator: [python, services/eval_subseq_server.py]
     args:
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       goal:
-        explain: "set your goal (efficient includes also correct)."
+        explain: set your goal (efficient includes also correct).
         regex: ^(correct|efficient)$
         default: correct
       code_lang: 
@@ -95,7 +95,7 @@ services:
         regex: ^(0|1)$
         default: 1
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       silent:
@@ -109,13 +109,13 @@ services:
     evaluator: [python, services/eval_longest_increasing_subseq_server.py]
     args:
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user for replicability purposes)."
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user for replicability purposes).
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       yield:
         regex: ^(only_opt_val|a_max_subseq|a_min_col|both_certificates)$
         default: only_opt_val
-        explain: "use this argument to specify what your bot is required to yield."
+        explain: use this argument to specify what your bot is required to yield.
         explain1: "[only_opt_val]  your bot is required to yield only the maximum length of a longest strictly increasing subsequence."
         explain2: "[a_max_subseq]  the bot is required to yield not only the length but also a longest strictly increasing subsequence."
         explain3: "[a_min_col]  the bot is required to yield not only the minimum number k of non-decreasing subsequences needed to cover all elements of the input sequence (this k is always equal to the maximum length of a longest strictly increasing subsequence) but also to specify, for each element of the input sequence, the non-decreasing subsequence including it (a number from 1 to k)."
@@ -123,15 +123,15 @@ services:
       feedback_level:
         regex: ^(0|1|2|3)$
         default: 3
-        explain: "(IGNORE THIS ARGUMENT IN THE CURRENT IMPLEMENTATION. Use full feedback) Set the feedback level (the levels form a total order where each level implies the previous one)."
+        explain: (IGNORE THIS ARGUMENT IN THE CURRENT IMPLEMENTATION. Use full feedback) Set the feedback level (the levels form a total order where each level implies the previous one).
         explain1: "[0] silent - it warns you only in case you have not reached your goals."
         explain2: "[1] only report - it reports on the achievement of the goals you have set."
         explain3: "[2] report on first problem - it provides you the details on the first problem encounterd in the achievement of your goals."
         explain4: "[3] full feedback - it also reports on the positive test cases towards your goal."
       goal:
-        explain: "set your goal (the goals form a total order where each goal implies the previous one)."
         regex: ^(correct|quadratic|n_times_opt|quasi_linear)$
         default: correct
+        explain: set your goal (the goals form a total order where each goal implies the previous one).
         explain1: "[correct] this is the minimal requirement."
         explain2: "[quadratic] this goal can be achieved by a correct algorithm taking time O(n^2), where n is the length of the input sequence."
         explain3: "[n_times_opt] this goal can be achieved by a correct algorithm taking time O(n * opt), where opt is the maximum length of an strictly increasing subsequence."
@@ -155,7 +155,7 @@ services:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
         default: lazy_input
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       len_T:
@@ -180,14 +180,14 @@ services:
     evaluator: [python, services/eval_num_subseq_server.py]
     args:
       goal:
-        explain: "set your goal (the goals form a total order where each goal implies the previous one)."
         regex: ^(correct|quadratic|quasi_linear)$
         default: correct
+        explain: set your goal (the goals form a total order where each goal implies the previous one).
         explain1: "[correct] this is the minimal requirement."
         explain2: "[quadratic] this goal can be achieved by a correct algorithm taking time O(n^2), where n is the length of the input sequence."
         explain3: "[quasi_linear] this goal can be achieved by a correct algorithm taking time O(n * log n)."
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       code_lang: 
@@ -264,7 +264,7 @@ services:
       goal:
         regex: ^(correct|efficient)$
         default: correct
-        explain: "set your goal (efficient includes also correct)."
+        explain: set your goal (efficient includes also correct).
       code_lang: 
         regex: ^(python|java|nodejs|compiled)$
         default: python
@@ -278,14 +278,14 @@ services:
     evaluator: [python, services/eval_count_increasing_subseq.py]
     args:
       goal:
-        explain: "set your goal (the goals form a total order where each goal implies the previous one)."
         regex: ^(correct|quadratic|quasi_linear)$
         default: correct
+        explain: set your goal (the goals form a total order where each goal implies the previous one).
         explain1: "[correct] this is the minimal requirement."
         explain2: "[quadratic] this goal can be achieved by a correct algorithm taking time O(n^2), where n is the length of the input sequence."
         explain3: "[quasi_linear] this goal can be achieved by a correct algorithm taking time O(n * log n)."
       seed:
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       code_lang: 
@@ -300,6 +300,7 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

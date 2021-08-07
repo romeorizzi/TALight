@@ -1,18 +1,18 @@
 public_folder: public
 services:
   game123:
-    description: "Which is the best move 1,2,3 ? Or you have lose from begging? "
+    description: Which is the best move 1,2,3 ? Or you have lose from begging? 
     evaluator: [python, services/game123_server.py]
     args:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
-        explain: "Number from 1 to 30, the number of questions posed to the problem solver."
+        explain: Number from 1 to 30, the number of questions posed to the problem solver.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
   game123_interactive:
-    description: "Which is the best move 1,2,3 ? Or you have lose from begging? Play with a strong mate."
+    description: Which is the best move 1,2,3 ? Or you have lose from begging? Play with a strong mate.
     evaluator: [python, services/game123_interactive_server.py]
     args:
       instance:
@@ -22,13 +22,13 @@ services:
         regex: ^(hardcoded|en|it)$
         default: it
   game2stack:
-    description: "Now you have two stack and you can move all pawns you want."
+    description: Now you have two stack and you can move all pawns you want.
     evaluator: [python, services/game2stack_server.py]
     args:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
         default: 10
-        explain: "Number from 1 to 30, the number of questions posed to the problem solver."
+        explain: Number from 1 to 30, the number of questions posed to the problem solver.
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
@@ -38,7 +38,7 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
-        explain: "Any string without space characters but meant to specify one of the services of the problem {problem}"
+        explain: Any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|en|it)$
         default: it

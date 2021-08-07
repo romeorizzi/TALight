@@ -12,7 +12,7 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import stderr, exit, argv
+from sys import stderr, exit
 from random import randrange
 from math import inf as IMPOSSIBLE
 

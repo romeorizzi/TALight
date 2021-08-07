@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr, exit, argv
+from sys import stderr, exit
 from random import randrange
 from math import inf as IMPOSSIBLE
 

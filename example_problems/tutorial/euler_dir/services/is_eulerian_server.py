@@ -3,7 +3,7 @@
 # "This service will check your statement that a directed graph you provide us admits an eulerian walk (of the specified type)""
 
 from os import EX_TEMPFAIL
-from sys import stderr, exit, argv
+from sys import stderr, exit
 
 import collections
 

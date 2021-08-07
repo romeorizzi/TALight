@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr, exit, argv
+from sys import stderr, exit
 import networkx as nx
 from networkx.algorithms.matching import max_weight_matching
 import random
