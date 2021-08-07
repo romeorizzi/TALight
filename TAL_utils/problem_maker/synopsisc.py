@@ -121,11 +121,11 @@ for report in reports:
     print("-"*(36+len({problem_name})))
 
 print("=== GROSS SUMMARY ===")
-print(f"num_problems examined={num_problems}")
-print(f"num_wrecked_problems={num_wrecked_problems}/{num_problems}")
-print(f"={num_problems_with_wrecked_services}/{num_problems}")
-print(f"num_TOT_services in the {num_problems-num_wrecked_problems} not completely wrecked problems ={num_TOT_services}")
-print(f"num_TOT_wrecked_services={num_TOT_wrecked_services}")
+print(f"num_problems examined = {num_problems}")
+print(f"num_wrecked_problems = {num_wrecked_problems}/{num_problems}")
+print(f"num_problems_with_wrecked_services={num_problems_with_wrecked_services}/{num_problems-num_wrecked_problems}")
+print(f"num_TOT_services in the {num_problems-num_wrecked_problems} not completely wrecked problems = {num_TOT_services}")
+print(f"num_TOT_wrecked_services = {num_TOT_wrecked_services}")
 print("---  END  SUMMARY ---")
 
 exit(0)
