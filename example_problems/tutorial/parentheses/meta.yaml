@@ -1,3 +1,5 @@
+%YAML 1.2
+---
 public_folder: public
 services:
   check_one_sol:
@@ -299,4 +301,4 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-
+...

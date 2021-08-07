@@ -1,3 +1,5 @@
+%YAML 1.2
+---
 public_folder: public
 services:
   spot_magic_indexes:
@@ -145,4 +147,4 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-
+...

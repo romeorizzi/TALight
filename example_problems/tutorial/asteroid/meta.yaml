@@ -1,3 +1,5 @@
+%YAML 1.2
+---
 public_folder: public
 services:
   minimum_laser:
@@ -62,3 +64,4 @@ services:
         default: it
 
 ##possibili altri servizi ? , ora sono presenti le domande come nell'esame di ricerca operativa
+...

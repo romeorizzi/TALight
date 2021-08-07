@@ -1,3 +1,5 @@
+%YAML 1.2
+---
 public_folder: public
 services:
   free_sum:
@@ -67,4 +69,4 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-
+...

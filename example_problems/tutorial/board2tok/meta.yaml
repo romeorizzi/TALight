@@ -1,3 +1,5 @@
+%YAML 1.2
+---
 public_folder: public
 services:
   verify_tiling:
@@ -75,4 +77,4 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
-
+...

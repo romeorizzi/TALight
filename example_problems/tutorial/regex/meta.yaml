@@ -1,3 +1,5 @@
+%YAML 1.2
+---
 public_folder: public
 services:
   TAL_recognizes:
@@ -109,3 +111,4 @@ services:
       lang:
         regex: ^(hardcoded|en|it)$
         default: it
+...
