@@ -87,25 +87,46 @@ reports = []
 if os.path.isfile(os.path.join(folder_path, 'meta.yaml')):
     reports.append(check_one_problem(problem_folder=folder_path))
 else:
+    num_problems = 0
+    num_wrecked_problems = 0
+    num_problems_with_wrecked_services = 0
+    num_TOT_services = 0
+    num_TOT_wrecked_services = 0
     for problem_folder in os.listdir(folder_path):
         problem_folder_fullpath = os.path.join(folder_path, problem_folder)
         if os.path.isdir(problem_folder_fullpath) and os.path.isfile(os.path.join(problem_folder_fullpath, 'meta.yaml')):
+            num_problems += 1
             reports.append(check_one_problem(problem_folder=problem_folder_fullpath))
 for report in reports:
     problem_name, first_check, early_checks, service_specific_report = report
     print(f"====== REPORT for problem {problem_name}  ======")
     if not first_check:
+        num_wrecked_problems += 1
         print(f"NO. Already the basic synopsis service for problem {problem_name}  has problems.\n{service_specific_report}")
     elif not early_checks:
         print(f"NO. But this is quite strange: the basic synopsis service for problem {problem_name} worked fine but ...\n{service_specific_report}")
     else:
         print(f"Ok. The basic synopsis service for problem {problem_name} works great!")
+        problem_has_got_wrecked_services = False
         for service in service_specific_report.keys():
+            num_TOT_services += 1 
             if service_specific_report[service]:
                 print(f"Ok. The synopsis info flows ok for service {service}")
             else:
                 print(f"No. The synopsis info flow is wrecked for service {service}")
+                num_TOT_wrecked_services += 1
+                problem_has_got_wrecked_services = True
+        if problem_has_got_wrecked_services:
+            num_problems_with_wrecked_services += 1
     print("-"*(36+len({problem_name})))
+
+print("=== GROSS SUMMARY ===")
+print(f"num_problems examined={num_problems}")
+print(f"num_wrecked_problems={num_wrecked_problems}/{num_problems}")
+print(f"={num_problems_with_wrecked_services}/{num_problems}")
+print(f"num_TOT_services in the {num_problems-num_wrecked_problems} not completely wrecked problems ={num_TOT_services}")
+print(f"num_TOT_wrecked_services={num_TOT_wrecked_services}")
+print("---  END  SUMMARY ---")
 
 exit(0)
 
