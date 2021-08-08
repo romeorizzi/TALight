@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+rank-ok: '♥  Correct! It is indeed this one the treatment that appears with rank={ENV["input_rank"]} among the feasible treatments on {n_pills} pills (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'
+ranks-higher: 'No. Your treatment ranks higher than {ENV["input_rank"]} among those with {n_pills} pills (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'
+ranks-lower: 'No. Your treatment ranks lower than {ENV["input_rank"]} among those with {n_pills} pills (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'

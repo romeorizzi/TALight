@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+rows: 'Rows:'
+col: 'Columns:'
+insert-counter: 'Insert your counterexample:'
+no-min: 'Not minimum matrix.'
+solvable: 'Solvable!'
+sol: 'This is the solution: '
+correct: 'Correct: it is not solvable and minimum.'

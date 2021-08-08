@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+instance-seed: 'Instance (of seed {seed}): '
+long-sol: 'Too long solution: '
+correct: 'Your solution turns off the entire binary matrix.", ["bold'
+same-on: 'Some lights are on!'
+shoter: 'Shorter than what you set in goal and all lights are off.'
+same: 'Same lenght as you set in goal and all lights are off.'
+bigger: 'Bigger than what you set in goal but all lights are off.'

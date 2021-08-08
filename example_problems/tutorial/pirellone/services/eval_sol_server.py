@@ -55,14 +55,14 @@ def one_test(m,n,seed,max_queries=None):
             break
         matched = re.match("^(\?\s[1-9][0-9]{0,3}\s[1-9][0-9]{0,3})$", line)
         if not bool(matched):
-            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! Your query line ({line}) is not accordant (it does not match the regular expression "^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$"'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("query-line-wrong-format",f'# Error! Your query line ({line}) is not accordant (it does not match the regular expression "^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$"'), "red", ["bold"])
             exit(0)
         i,j = map(int, line[1:].split())
         if i > m:
-            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! In your query line ({line}) the row index ({i}) exceeds the number of rows ({m})'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("query-line-rows-exceeded",f'# Error! In your query line ({line}) the row index ({i}) exceeds the number of rows ({m})'), "red", ["bold"])
             exit(0)
         if j > n:
-            TAc.print(LANG.render_feedback("wrong-query-line",f'# Error! In your query line ({line}) the column index ({j}) exceeds the number of columns ({n})'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("query-line-cols-exceeded",f'# Error! In your query line ({line}) the column index ({j}) exceeds the number of columns ({n})'), "red", ["bold"])
             exit(0)
         TAc.print(M[i-1][j-1], "yellow", ["bold"])    
         #TAc.print((switches_row[i-1] + switches_col[j-1]) % 2, "yellow", ["bold"])
@@ -74,7 +74,7 @@ def one_test(m,n,seed,max_queries=None):
     line=line.split()
     correction,_=pl.check_off_lights(M,line,LANG, TAc)
     if not correction:
-        TAc.print(LANG.render_feedback("wrong",f"# No! The solution of the matrix {m}x{n} of seed={seed} does not turn off all lights."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("wrong",f"# No! Your solution does not turn off all the lights in the {m}x{n} matrix of seed={seed}."), "red", ["bold"])
         print(f"# pirellone spento?{M}")
         print(f"# {line}")
         exit(0)
@@ -92,7 +92,7 @@ def one_test(m,n,seed,max_queries=None):
 def eval_correct():
     for _ in range(5):
         one_test(7,7,seed_service,max_queries=None)
-    TAc.print(LANG.render_feedback("correct-efficient", '# Your solution stays in the goal you set: correct .'), "green",["bold"])    
+    TAc.print(LANG.render_feedback("correct", '# Your solution meets the goal you set: correct .'), "green",["bold"])    
     return
 
 def eval_polynomial_in_m():
@@ -100,7 +100,7 @@ def eval_polynomial_in_m():
         if not one_test(29,10,seed_service,max_queries=None):
             TAc.print(LANG.render_feedback("not-polynomial-in-m", '# No. Your solution is not polynomial in m. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])   
             exit(0)
-    TAc.print(LANG.render_feedback("correct-polynomial-in-m", '# Your solution stays in the goal you set: polynomial_in_m .'), "green",["bold"])
+    TAc.print(LANG.render_feedback("correct-polynomial-in-m", '# Your solution meets the goal you set: polynomial_in_m .'), "green",["bold"])
     return
 
 def eval_efficient():
@@ -108,7 +108,7 @@ def eval_efficient():
         if not one_test(50,50,seed_service,max_queries=None):
             TAc.print(LANG.render_feedback("not-efficient", '# No. Your solution is efficient. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])   
             exit(0)
-    TAc.print(LANG.render_feedback("correct-efficient", '# Your solution stays in the goal you set: efficient .'), "green",["bold"])
+    TAc.print(LANG.render_feedback("correct-efficient", '# Your solution meets the goal you set: efficient .'), "green",["bold"])
     return
 
 def eval_sub_linear():
@@ -116,7 +116,7 @@ def eval_sub_linear():
         if not one_test(10000,10000,seed_service,max_queries=None):
             TAc.print(LANG.render_feedback("not-sub_linear", '# No. Your solution is sub linear. Run on your machine, it took more than one second to compute the solution.'), "red", ["bold"])   
             exit(0)
-    TAc.print(LANG.render_feedback("correct-sub_linear", '# Your solution stays in the goal you set: sub_linear .'), "green",["bold"])
+    TAc.print(LANG.render_feedback("correct-sub_linear", '# Your solution meets the goal you set: sub_linear .'), "green",["bold"])
     return
 
 eval_correct()
@@ -197,7 +197,7 @@ for i in range(15):
         time=b-a
         moff,_=pl.check_off_lights(pirellone,sol_to_ver)
         if not moff:
-            TAc.print(LANG.render_feedback("wrong",f"# No!The solution of the matrix of seed={_} is not correct."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong",f"# No! The solution of the matrix of seed={_} is not correct."), "red", ["bold"])
             exit(0)
         if len(sol_to_ver)>len(sol_togive):
             TAc.print(LANG.render_feedback("semi-correct",f"# The solution of the matrix of seed={_} is not minimum."), "yellow", ["bold"])

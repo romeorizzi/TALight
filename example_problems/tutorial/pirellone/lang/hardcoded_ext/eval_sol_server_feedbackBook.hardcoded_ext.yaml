@@ -1,0 +1,29 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+seed-service: '# The service is running with seed={seed_service}'
+explain-protocol: '# The test instances are all 0,1-matrices that can be turned off with the allowed moves. Instances are dealt with subsequently, one at the time, up to termination of the evaluation or first detected fault. For each instance, the service prints only m and n (its number of rows and columns) separated by spaces and then answers your queries about the entries of the matrix. A query is a line beginning with \'?\' followed by a row index (in the interval [1,m]) and a column index (in the interval [1,n]) again separated by spaces. After the needed queries, you should answer with a solution, i.e., a sequence of moves leading to the all zero matrix (example: r1 c3 r5)'
+seed-all-run: '#Check on Instance (m={m}, n={n}, solvable=True, seed={seed}): '
+query-line-wrong-format: '# Error! Your query line ({line}) is not accordant (it does not match the regular expression "^(?\n*[1-9][0-9]{0,3}\n*[1-9][0-9]{0,3})$"'), "red", ["bold'
+query-line-rows-exceeded: '# Error! In your query line ({line}) the row index ({i}) exceeds the number of rows ({m})'
+query-line-cols-exceeded: '# Error! In your query line ({line}) the column index ({j}) exceeds the number of columns ({n})'
+wrong: '# No! Your solution does not turn off all the lights in the {m}x{n} matrix of seed={seed}.'
+correct: '# Your solution meets the goal you set: correct .'
+not-polynomial-in-m: '# No. Your solution is not polynomial in m. Run on your machine, it took more than one second to compute the solution.'
+correct-polynomial-in-m: '# Your solution meets the goal you set: polynomial_in_m .'
+not-efficient: '# No. Your solution is efficient. Run on your machine, it took more than one second to compute the solution.'
+correct-efficient: '# Your solution meets the goal you set: efficient .'
+not-sub_linear: '# No. Your solution is sub linear. Run on your machine, it took more than one second to compute the solution.'
+correct-sub_linear: '# Your solution meets the goal you set: sub_linear .'
+wrong-all-1: '# No! The submitted solution is not correct for the matrix (m={m},n={n},solvable=True,seed={seed}): all the elements in the resultant matrix will be set to 1. Your mission was to bring all them to 0!'
+wrong-first-col: '# No! The submitted solution of the matrix of seed={seed} is not correct: at least one element of the first column will end up set to 1'
+wrong-first-row: '# No! The submitted solution of the matrix of seed={seed} is not correct: at least one element of the first row will end up set to 1'
+wrong: '# No! The solution of the matrix of seed={_} is not correct.'
+semi-correct: '# The solution of the matrix of seed={_} is not minimum.'
+not-efficient: '# No. Your solution is not efficient. Run on your machine, it took more than one second to compute the solution.'
+efficient: '# ♥ Ok. Your solution is efficient.'
+correct: '# ♥ Your solution is the best one.'

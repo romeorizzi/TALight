@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+different_lengths: 'No. The tiling introduced in 'next_sol' is different in length from the 'current_sol'.'
+repeated: 'No. The tiling you introduced in 'next_sol' is the same as the 'current_sol'.'
+repeated: 'The tiling {next_sol} is right only for the prefix{next_sol[:min_len-1]}.'
+repeated: 'The tiling {next_sol} has no prefix in common with the next solution of {current_sol}.'
+repeated: 'No. The tiling {next_sol} is not the next of {current_sol}. (The service was called with 'sorting_criterion'={ENV['sorting_criterion']})'
+repeated: 'No. The tiling {next_sol} is not the next of {current_sol}. (The service was called with 'sorting_criterion'={ENV['sorting_criterion']})'
+repeated: 'The tiling {current_sol} is already the last you can enter.'
+list-ok: 'Ok! You have listed two consecutive tilings of a corridor of dimension 1x{n_tiles}.'

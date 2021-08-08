@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+instance: 'Instance {m}x{n} (of seed {seed}): '
+instance-sol: 'Solution of instance: '
+sub-matrix-sol: 'Solution of the consecutive submatrix {sub_m}x{sub_n} : '
+sub-matrix: 'Submatrix {sub_m}x{sub_n} defined by:'
+rows: 'Rows of the big matrix:'
+col: 'Columns of the big matrix:'
+sub-matrix-sol: 'Solution of the submatrix {sub_m}x{sub_n} : '
+correct: 'This sequence turns off all lights.'
+not-correct: 'This sequence doesn't turn off all lights see what happens using your solution:'
+no-more-lights: 'You can not turn off more lights.'
+do-better: 'You can turn off more lights, check it: '

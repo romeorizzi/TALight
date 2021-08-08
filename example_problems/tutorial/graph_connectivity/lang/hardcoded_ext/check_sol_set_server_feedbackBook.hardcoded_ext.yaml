@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+at-least-one-line: 'No. You are required to enter at least one valid formula before closing.'
+first-line-not-well-formed: 'No. Your very first formula of parentheses is not well formed.'
+different_lengths: 'No. The parentheses formula you just introduced (your line {len(input_solution_list)+1}) is different in length from the previous ones.'
+repeated: 'No.The parentheses formula you just introduced (your line {len(input_solution_list)+1}) is the same as the one in line {input_solution_list.index(line)+1}. Nothing is lost: this double entry will be ignored. You can go on.'
+your-formulas-all-ok: 'All the formulas you have introduced are ok (well formed).'
+one-formula-is-missing-no-feedback: 'No. Your set is missing at least one well-formed formula.'
+give-missing-formula: 'Consider for example:'
+first-missing-prefix: 'As a strong hint, here is the prefix of a well-formed formula and no formula in your list has this prefix:'
+not-consecutive(last): 'In green you find the longest prefix that a solution you are missing has in common with a solution you have given:'
+first-missing-till-already-present: 'In green you find the longest prefix that a solution you are missing has in common with a solution you have given:'
+one-missing-prefix-length: '\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:'

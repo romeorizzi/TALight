@@ -1,0 +1,12 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+not-correct: '# No. Your solution is NOT correct. The correct rank is {risp_correct}. Not {risp}.'
+seems-correct-weak: '# Ok. ♥ Your solution correctly computes the rank of feasible treatments (checked with treatments up to {n_pills} pills).'
+not-efficient: '# No. You solution is NOT efficient. When run on your machine, it took more than one second to compute the rank of a feasible treatments with {n_pills} pills.'
+seems-correct-strong: '# Ok. ♥  Your solution appears to be correct (checked on several instances).'
+efficient: '# Ok. ♥ Your solution is efficient: its running time is polynomial in the length of the treatment it ranks.'

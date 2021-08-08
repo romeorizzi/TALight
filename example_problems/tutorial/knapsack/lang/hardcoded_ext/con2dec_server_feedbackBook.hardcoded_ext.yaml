@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+ok-correct-con2dec: 'Corretto!'
+no-correct-con2dec: 'Sbagliato!'
+no-polynomial-con2dec: 'Corretto! Il tuo algoritmo non è molto efficiente, ci mette {time}s sulla tua macchina.'
+ok-polynomial-con2dec: 'Corretto! Il tuo algoritmo è molto efficiente, ci mette {time}s sulla tua macchina.'
+error-polynomial-con2dec: 'Sbagliato!'
+yes-most-n-dec-calls-con2dec: 'Corretto! La tua soluzione è anche ottima, hai usato massimo n numero di chiamate a oracolo.'
+no-most-n-dec-calls-con2dec: 'Corretto! Esiste una soluzione più efficiente però che usa massimo n numero di chiamate a oracolo.'
+error-most-n-dec-calls-con2dec: 'Sbagliato!'

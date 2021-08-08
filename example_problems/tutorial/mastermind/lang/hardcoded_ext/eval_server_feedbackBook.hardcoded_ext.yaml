@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+assigned-instance: '# The assigned instance is:\n#   number of pegs: {ENV['num_pegs']}\n#   number of colors: {ENV['num_colors']}\n#   Seed: '
+prompt: '# Enter your first attempt which must be a sequence of {ENV['num_pegs']} colors separated by spaces.\n# example: \n#   1 4 3 \n# The server will respond with as many 'b' as the colors in the correct position and as many 'w' as the correct colors. \n'
+new-match: '# match {matchDone} of {ENV['num_matches']}. Seed: '
+right-secret-code: '# You found the secret code in {count} attempts.\n'
+wrong-secret-code: '# You didn't find the secret code, the secret code is [{' '.join(map(str, secretCode))}].\n'
+matches-statistics: '# Statistics:\n#   Matches won: {matchWin}/{ENV['num_matches']}\n#   avg number of attempts (over won matches): {mean(sumAttempts)}\n#   maximum number of attempts (over won matches): {max(sumAttempts)}'

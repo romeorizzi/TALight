@@ -1,0 +1,12 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+ok-correct-con2opt: 'Corretto!'
+no-correct-con2opt: 'Sbagliato!'
+ok-number-calls-linear-con2opt: 'Corretto! La tua soluzione è anche ottima, hai usato un numero lienare di chiamate a oracolo.'
+no-number-calls-linear-con2opt: 'Corretto! Esiste una soluzione più efficiente però che usa un numero lienare di chiamate all'oracolo.'
+error-number-calls-linear-con2opt: 'Sbagliato!'

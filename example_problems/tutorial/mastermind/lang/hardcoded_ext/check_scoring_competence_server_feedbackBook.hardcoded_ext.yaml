@@ -1,0 +1,16 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+assigned-instance: '# The assigned instance is:\n#   number of pegs: {ENV['num_pegs']}\n#   number of colors: {ENV['num_colors']}\n#   Seed: '
+secret-code: 'secret code:  {' '.join(map(str, secretCode))}'
+probing-code: 'probing code: {' '.join(map(str, probingCode))}'
+prompt: '# Enter your evaluation in the form of a possibly empty sequence of 'w' and 'b' characters (separated by spaces). \n# Example:\n#   b w w\n'
+right: 'Ok! Your scoring is correct!'
+error: 'No! Your scoring is wrong.'
+error-score: 'No! Your scoring is wrong. The correct score is {correct_scoring}'
+black-score: 'No! The number of positions where the probing code and the secret code have the same color is not {user_scoring['b']}.'
+black-score: 'No! We agree that the number of positions where the probing code and the secret code have the same color is {user_scoring['b']} (ok!). However, the number of correct but out of place colors is not {user_scoring['w']}.'

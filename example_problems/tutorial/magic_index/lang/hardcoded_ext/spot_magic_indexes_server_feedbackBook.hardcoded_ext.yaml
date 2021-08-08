@@ -1,0 +1,8 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+prompt-input-vector: '\n#Enter your <input_vector> (example: -12,0,34,56). You will be returned the list of magic indexes for this vector. Input format: an increasing sequence of integer values separated by commas (no spaces).'
