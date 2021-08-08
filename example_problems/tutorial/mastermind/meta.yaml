@@ -24,7 +24,7 @@ services:
         explain2: "[black_white]  just confirm me that my score is correct ."
         explain3: "[provide_correct_score]  please, when my score is not correct, provide me the correct one."
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   tell_score:
     description: You provide both the secret code and a probing code that will be scored against the secret code according to the rules of the game.
@@ -35,7 +35,7 @@ services:
       probing_code:
         regex: ^(([0-9] *){0,9})$
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play:
     evaluator: [python3, services/play_server.py]
@@ -61,7 +61,7 @@ services:
         explain1: "[random]  the game starts with the choice of a secret code (uniform at random)."
         explain2: "[malicious]  your adversary does not commit to a specific secret code at the start of the game but decides it during the match with the aim to resist as long as possible to your attempts."
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval:
     evaluator: [python3, services/eval_server.py]
@@ -85,7 +85,7 @@ services:
         default: random_seed
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python3, services/synopsis/synopsis_server.py]
@@ -95,6 +95,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

@@ -17,7 +17,7 @@ services:
         regex: ^(free|0|[1-9][0-9]{0,1000})$
         default: free
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_num_sol:
     description: call this service to check that the number of well formed formulas with <n_pairs> pairs of parenthes is what you think (<risp>).
@@ -41,7 +41,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_num_sol:
     evaluator: [python, services/eval_num_sol_server.py]
@@ -60,7 +60,7 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_sol_set:
     evaluator: [python, services/check_sol_set_server.py]
@@ -75,7 +75,7 @@ services:
         explain4: -give_a_missing_sol= just spoil me out a solution I have missed.
         explain5: -tell_a_missing_prefix_of_len_?= please, of one solution I am missing, give me the prefix of the specified length (the number put in place of ?).
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_sol_list:
     evaluator: [python, services/check_sol_list_server.py]
@@ -94,7 +94,7 @@ services:
         explain5: -give_first_missing= just spoil me out a solution I have missed.
         explain6: -tell_first_missing_prefix_of_len_?= please, of the first solution I am missing, give me the prefix of the specified length (the number put in place of ?).
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_sol_list:
     evaluator: [python, services/eval_sol_list_server.py]
@@ -111,7 +111,7 @@ services:
         default: python
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gen_random_sol:
     evaluator: [python, services/gen_random_sol_server.py]
@@ -131,7 +131,7 @@ services:
         default: random_seed
         explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_next_sol:
     evaluator: [python, services/check_next_sol_server.py]
@@ -151,7 +151,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_next:
     evaluator: [python, services/eval_next_server.py]
@@ -172,7 +172,7 @@ services:
         default: python
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_rank:
     evaluator: [python, services/check_rank_server.py]
@@ -191,7 +191,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_unrank:
     evaluator: [python, services/check_unrank_server.py]
@@ -210,7 +210,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_rank:
     evaluator: [python, services/eval_rank_server.py]
@@ -231,7 +231,7 @@ services:
         default: python
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_unrank:
     evaluator: [python, services/eval_unrank_server.py]
@@ -252,7 +252,7 @@ services:
         default: python
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_rank:
     evaluator: [python, services/gimme_rank_server.py]
@@ -263,7 +263,7 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_unrank:
     evaluator: [python, services/gimme_unrank_server.py]
@@ -276,7 +276,7 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_next_sol:
     evaluator: [python, services/gimme_next_sol_server.py]
@@ -287,7 +287,7 @@ services:
         regex: ^(loves_opening_par|loves_closing_par)$
         default: loves_opening_par
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -297,6 +297,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

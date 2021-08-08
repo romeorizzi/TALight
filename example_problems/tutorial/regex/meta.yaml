@@ -13,7 +13,7 @@ services:
         regex: ^(lazy|([a-z]|[A-Z]|\*|\+|\(|\)){0,100})$
         default: lazy
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   you_recognize:
     description: We give you a regular expression r and a string s over the same alphabet. Your aim is to recognize whether s belongs to the language described by r. You have control on the size of the instance (r,s) by means of parameters m and n. The instance is pseudo-random and fully spcifified by m,n, and the seed.
@@ -35,7 +35,7 @@ services:
         regex: ^(yes_no|with_construction_of_s)$
         default: yes_no
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_recognize:
     description: This service assesses the correctness and efficiency of your machinery to recognize whether s in L_r.
@@ -56,7 +56,7 @@ services:
         regex: ^(yes_no|with_construction_of_s)$
         default: yes_no
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_regex2NFA:
     description: This service assesses the correctness and efficiency of your machinery to compute the non-deterministic automaton for a regex given in input.
@@ -77,7 +77,7 @@ services:
         regex: ^(yes_no|correct_NDF_when_wrong)$
         default: yes_no
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_NFA2DFA:
     description: This service assesses the correctness and efficiency of your machinery to yield a deterministic automaton equivalent to a non-deterministic automaton given in input.
@@ -99,7 +99,7 @@ services:
         default: yes_no
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -109,6 +109,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

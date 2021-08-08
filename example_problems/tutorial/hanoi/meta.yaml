@@ -44,7 +44,7 @@ services:
         explain3: -gimme_shorter_solution= offers the certificate of non-optimality in the form of a shorter solution.
         explain4: -gimme_optimal_solution= offers an optimal solution.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
   check_opt_num_moves:
@@ -89,7 +89,7 @@ services:
         default: 0
         explain: if your answ is a bigger number than optimal, the service provides you with an explict solution on less moves. On the contrary, you can use the service check_one_sol to ask us to check your super-optimal solution.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
   check_lower_bounds:
@@ -129,7 +129,7 @@ services:
         explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
         explain3: -true_val= offers the lenght of an optimal solution.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
   play_like:
@@ -164,7 +164,7 @@ services:
         explain1: -yes_no= provide the minimum possible amount of feedback.
         explain2: -gimme_moves_available= offers all moves available for ai.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
   gen_random_puzzle:
@@ -193,7 +193,7 @@ services:
         explain2: 1. print the seed if seed=-1 and then the configurations
         explain3: 2. print the seed and then the configurations
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
   eval_opt_num_moves:
@@ -236,7 +236,7 @@ services:
         default: python
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
   eval_sol:
@@ -273,7 +273,7 @@ services:
         default: 10
         explain: specify the maximum number of disks to be tested
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
   synopsis:
@@ -284,6 +284,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

@@ -17,7 +17,7 @@ services:
         regex: ^(free|0|[1-9][0-9]{0,1000})$
         default: free
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_num_sol:
     description: call this service to check that the number of different treatments from a flask of <n> pills is what you think (<risp>).
@@ -41,7 +41,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_num_sol:
     evaluator: [python, services/eval_num_sol_server.py]
@@ -60,7 +60,7 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_sol_set:
     evaluator: [python, services/check_sol_set_server.py]
@@ -73,7 +73,7 @@ services:
         explain2: -tell_a_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution then I get a new one.
         explain3: -give_one_missing= just spoil me out a solution I have missed.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_sol_list:
     evaluator: [python, services/check_sol_list_server.py]
@@ -90,7 +90,7 @@ services:
         explain3: -tell_first_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution I get a new one.
         explain4: -give_first_missing= just spoil me out a solution I have missed.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_next_sol:
     evaluator: [python, services/check_next_sol_server.py]
@@ -110,7 +110,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_next:
     evaluator: [python, services/eval_next_server.py]
@@ -131,7 +131,7 @@ services:
         default: python
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_rank:
     evaluator: [python, services/check_rank_server.py]
@@ -147,7 +147,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_unrank:
     evaluator: [python, services/check_unrank_server.py]
@@ -163,7 +163,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_rank:
     evaluator: [python, services/eval_rank_server.py]
@@ -184,7 +184,7 @@ services:
         default: python
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_unrank:
     evaluator: [python, services/eval_unrank_server.py]
@@ -205,7 +205,7 @@ services:
         default: python
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_rank:
     evaluator: [python, services/gimme_rank_server.py]
@@ -216,7 +216,7 @@ services:
         regex: ^(lovesI|lovesH)$
         default: lovesI
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_unrank:
     evaluator: [python, services/gimme_unrank_server.py]
@@ -237,7 +237,7 @@ services:
         regex: ^(lovesI|lovesH)$
         default: lovesI
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -247,6 +247,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

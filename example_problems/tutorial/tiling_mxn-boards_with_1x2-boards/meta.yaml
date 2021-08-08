@@ -26,7 +26,7 @@ services:
         default: 2
         explain: a number from 1 to 20, the second dimension of the tile.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   is_not_tilable:
     evaluator: [python, services/tell_if_tilable_server.py]
@@ -52,7 +52,7 @@ services:
         default: 2
         explain: a number from 1 to 20, the second dimension of the tile.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_hints_on_a_tiling:
     evaluator: [python, services/gimme_hints_on_a_tiling_server.py]
@@ -84,7 +84,7 @@ services:
         regex: ^([1-9]|[1-9][0-9][0-9]|1000)$
         default: 777
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -94,6 +94,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

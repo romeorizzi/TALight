@@ -40,7 +40,7 @@ services:
         regex: ^0$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
       
 # controllato: ok
@@ -81,7 +81,7 @@ services:
         default: 0
         explain: (introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits no eulerian walk of type "walk_type", then the service also returns a compact and convincing evidence of non-existence that adheres to a general (standardized) argument that can be conveniently verified.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
 # ok!
@@ -96,7 +96,7 @@ services:
         regex: ^(yes_no|full)$
         default: full
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
       MAXN:
         regex: ^100$
@@ -126,7 +126,7 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 # corretto
   eval_eulerian_recognize:
@@ -161,7 +161,7 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 # ok
   trilly_decision:
@@ -185,7 +185,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 # ok
   trilly_construction:
@@ -210,7 +210,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -220,6 +220,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

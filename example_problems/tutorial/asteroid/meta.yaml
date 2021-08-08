@@ -15,7 +15,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   indipendent_asteroids:
     description: You have to give us the set of indipendent asteroids.
@@ -30,7 +30,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_sol:
     evaluator: [python, services/eval_sol_server.py]
@@ -51,7 +51,7 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it  
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -61,7 +61,7 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
 ##possibili altri servizi ? , ora sono presenti le domande come nell'esame di ricerca operativa

@@ -18,7 +18,7 @@ services:
         default: 10
         explain: a number from 1 to 30, the number of questions posed to the problem solver
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   sum_and_difference:
     description: You are given the sum and difference of two natural numbers and your goal is to identify the two numbers.
@@ -33,7 +33,7 @@ services:
         default: 10
         explain: a number from 1 to 30, the number of questions posed to the problem solver
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   sum_and_product:
     description: You are given the sum and the product of two natural numbers and your goal is to identify the two numbers.
@@ -48,7 +48,7 @@ services:
         default: 10
         explain: a number from 1 to 30, the number of questions posed to the problem solver
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   help:
     evaluator: [python, services/help/help_server.py]
@@ -67,6 +67,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

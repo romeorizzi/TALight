@@ -22,8 +22,8 @@ try:
 except Exception as e:
     print(e)
     for out in [stdout, stderr]:
-        TAc.print(LANG.render_feedback("ruamel-missing", 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package \'\'ruamel\'\' on your machine)).'), "red", ["bold"], file=out)
-        print(LANG.render_feedback("ruamel-required", ' the service \'\'synopsis\'\' needs to access .yaml files in order to provide you with the information required. As long as \'\'ruamel\'\' is not installed in the environment where the \'\'rtald\'\' daemon runs, the service \'\'synopsis\'\' can not perform.'), file=out)
+        TAc.print(LANG.render_feedback("ruamel-missing", 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package \'\'ruamel\'\' on your machine).'), "red", ["bold"], file=out)
+        print(LANG.render_feedback("ruamel-required", ' the service \'\'synopsis\'\' needs to read .yaml files in order to provide you with the information required. As long as \'\'ruamel\'\' is not installed in the environment where the \'\'rtald\'\' daemon runs, the service \'\'synopsis\'\' can not perform.'), file=out)
         print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
     exit(1)
 
@@ -34,24 +34,24 @@ try:
         meta_yaml_book = ruamel.yaml.safe_load(stream)
     except:
         for out in [stdout, stderr]:
-            TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file \'\'{meta_yaml_file}\'\' could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
+            TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have alterered the file yourself): The meta.yaml file \'\'{meta_yaml_file}\'\' could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
             print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
         exit(1)
 except IOError as ioe:
     for out in [stdout, stderr]:
-        TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file of the problem \'\'{problem}\'\' could not be accessed for the required information. The file should have been: \'\'{meta_yaml_file}\'\''), "red", ["bold"], file=out)
+        TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file of the problem "{problem}" could not be accessed for the required information. File not found: \'\'{meta_yaml_file}\'\''), "red", ["bold"], file=out)
         print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
         print(ioe, file=out)
     exit(1)
 
 if ENV['service'] not in meta_yaml_book['services'].keys():
-    TAc.print(LANG.render_feedback("wrong-service-name", f'\nSorry, you asked information about {ENV["service"]} which however does not appear among the services currently supported for the problem {problem}.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-service-name", f'\nSorry, you asked information about {ENV["service"]} which however does not appear among the services currently supported for the problem "{problem}".'), "red", ["bold"])
     TAc.print('\n\nList of all Services:', "red", ["bold", "underline"], end="  ")
     print(", ".join(meta_yaml_book['services'].keys()),end="\n\n")
     exit(0)
 
 TAc.print("\n"+ENV['service'], "yellow", ["bold"], end="")
-TAc.print(LANG.render_feedback("service-of", f'   (service of the {problem} problem)'), "yellow")
+TAc.print(LANG.render_feedback("service-of", f'   (service of the "{problem}" problem)'), "yellow")
 
 if "description" in meta_yaml_book['services'][ENV['service']].keys():
     TAc.print('\nDescription:', "green", ["bold"])
@@ -100,7 +100,7 @@ print(LANG.render_feedback("regex-cloud-resource", '\nAll arguments of all TALig
 if "help" in meta_yaml_book['services'].keys():
     TAc.print(LANG.render_feedback("index-help-pages", 'Index of the Help Pages:'), "red", ["bold", "underline"], end="  ")
     print(meta_yaml_book['services']['help']['args']['page']['regex'][2:-2])
-TAc.print(LANG.render_feedback("list-services", 'List of all services for problem \'\'{problem}\'\':'), "red", ["bold", "underline"], end="  ")
+TAc.print(LANG.render_feedback("list-services", f'List of all services for problem "{problem}":'), "red", ["bold", "underline"], end="  ")
 print(",  ".join(TAc.colored(_, "yellow", ["bold"]) for _ in meta_yaml_book['services'].keys()))
     
 exit(0)

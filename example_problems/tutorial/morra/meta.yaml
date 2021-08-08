@@ -12,7 +12,7 @@ services:
         regex: ^(rabin_karp|sha1|sha256|sha512)$
         default: rabin_karp
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   compute_hash:
     evaluator: [python, services/compute_hash/advanced/compute_hash_server.py]
@@ -24,7 +24,7 @@ services:
         regex: ^(rabin_karp|sha1|sha256|sha512)$
         default: rabin_karp
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   verify_hash:
     evaluator: [python, services/verify_hash/advanced/verify_hash_server.py]
@@ -42,7 +42,7 @@ services:
         regex: ^([1-9][0-9]{0,2}|100)$
         default: 64  
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -52,6 +52,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

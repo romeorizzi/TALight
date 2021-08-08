@@ -18,7 +18,7 @@ services:
         regex: ^(correct|at_most_one_call)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   #fatto (sistemato) - controllato: ok
   opt2con:
@@ -36,7 +36,7 @@ services:
         regex: ^(correct|at_most_one_call)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   #fatto - controllato: ok
   dec2con:
@@ -54,7 +54,7 @@ services:
         regex: ^(correct|at_most_one_call)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   #da completare goal "at-most-opt-calls". - Il resto controllato: ok
   opt2dec:
@@ -76,7 +76,7 @@ services:
         regex: ^(correct|at_most_opt_calls|polynomial)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   # fatto - controllato:ok
   con2opt:
@@ -94,7 +94,7 @@ services:
         regex: ^(correct|number_of_calls_linear_in_n)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   #fatto - controllato: ok
   con2dec:
@@ -116,7 +116,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
  # fatto - controllato:ok
   trilly:
@@ -134,7 +134,7 @@ services:
         regex: ^(correct|polynomial_calls|at_most_n_opt_calls|at_most_2_opt_calls)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -144,6 +144,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

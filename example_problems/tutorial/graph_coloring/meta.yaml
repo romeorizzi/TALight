@@ -21,7 +21,7 @@ services:
         regex: ^(yes_no|give_violated_arc)$
         default: give_violated_arc
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_recognize_proper_colorings:
     description: This service evaluates the correctness and efficiency of your bot for recognizing proper colorings.
@@ -45,7 +45,7 @@ services:
         regex: ^(correct|linear)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   yield_proper_colorings:
     description: This service gives you a graph and asks for a proper k-coloring of its nodes. The service will check that your coloring is proper, and that it uses at most k colors.
@@ -66,7 +66,7 @@ services:
         regex: ^(yes_no|give_coloring|give_minimal_uncolorable_induced_subgraph)$
         default: give_coloring
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   yield_proper_2colorings:
     description: This service gives you a graph and asks for a proper 2-coloring of its nodes. The service will check that your coloring is proper, and that it uses at most 2 colors.
@@ -87,7 +87,7 @@ services:
         regex: ^(yes_no|give_coloring|give_minimal_uncolorable_induced_subgraph)$
         default: give_coloring
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_yield_proper_2coloring:
     description: This service evaluates the correctness and efficiency of your bot for recognizing the 2-colorability of graphs.
@@ -104,7 +104,7 @@ services:
         regex: ^(correct|linear)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python3, services/synopsis/synopsis_server.py]
@@ -114,6 +114,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

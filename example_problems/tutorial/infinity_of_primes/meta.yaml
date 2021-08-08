@@ -9,7 +9,7 @@ services:
         regex: ^([1-9][0-9]{0,2}|100)$
         default: 3
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   common_non_multiple:
     evaluator: [python, services/common_non_multiple/simple/common_non_multiple_server.py]
@@ -18,7 +18,7 @@ services:
         regex: ^([1-9][0-9]{0,2}|100)$
         default: 3
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   extract_prime:
     evaluator: [python, services/extract_prime/simple/extract_prime_server.py]
@@ -27,7 +27,7 @@ services:
         regex: ^(twodigits|fourdigits|big)$
         default: twodigits
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -37,6 +37,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

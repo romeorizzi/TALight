@@ -21,7 +21,7 @@ services:
         regex: ^(correct|with_certificate)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_is_not_sc:
     description: This service will check your statement that a directed graph you provide us is not strongly connected
@@ -42,7 +42,7 @@ services:
         regex: ^(correct|with_certificate)$
         default: correct
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_recognizer_sc:
     description: Given a directed graph, can you decide whether it is strongly connected?
@@ -59,7 +59,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_scc:
     description: This service receives from you a directed graph and then separates its strongly connected components listing them out according to a topological sort
@@ -74,7 +74,7 @@ services:
         default: lazy
         explain: Number of arcs.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_find_scc:
     description: Given a directed graph, can you find its strongly connected components?
@@ -91,7 +91,7 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
      lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -101,6 +101,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

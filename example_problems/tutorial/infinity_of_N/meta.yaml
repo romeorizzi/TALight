@@ -9,7 +9,7 @@ services:
         regex: ^([1-9][0-9]{0,3}|1000)$
         default: 20
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   rationals_are_dense_into_reals:
     evaluator: [python, services/archimede/simple/archimede_server.py]
@@ -18,7 +18,7 @@ services:
         regex: ^([1-9][0-9]{0,3}|1000)$
         default: 10
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   archimede:
     evaluator: [python, services/archimede/simple/archimede_server.py]
@@ -27,7 +27,7 @@ services:
         regex: ^([1-9][0-9]{0,3}|1000)$
         default: 10
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -37,6 +37,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

@@ -15,7 +15,7 @@ services:
         default: 0
         explain: if this flag is set, and your solution is not correct, then we give you the correct one
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   min_num_steps:
     description: "Have you conquered the puzzle? We give you a random natural number (in its binary representation) and you are asked to tranform it to number 0 using a minimum number of steps. However, by setting the argument \\'number\\' to \\'my\\' you are let to also specify the starting number. If you have conquered the puzzle you can assess your solution by passing a bot implementing it to the service. Otherwise, the service can be used to support your quest."
@@ -35,14 +35,14 @@ services:
         explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
         explain3: -true_val= if your answer for the length of an optimal solution is wrong then the service tells you the correct answer.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   next_step:
     evaluator: [python, services/next_step_server.py]
     description: We give you a random number (in its binary representation) and you have to insert which one is the optimal first move (the one that allows to get to 0 in a minimum number of moves).
     args:
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   oracle:
     description: As a further aid for your quest, you can ask to this oracle service what is the very first step to do in order to get to zero as fast as possible, starting from the binary number offered from you to the oracle.
@@ -52,7 +52,7 @@ services:
         regex: ^(lazy|0|1(0|1){0,10000})$
         default: lazy
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_sol:
     evaluator: [python, services/eval_sol_server.py]
@@ -64,7 +64,7 @@ services:
         regex: ^(0|1)$
         default: 1
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
   synopsis:
@@ -75,7 +75,7 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
 ##possibili altri servizi più avanzati: dare la combinazione di mosse

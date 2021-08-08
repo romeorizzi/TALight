@@ -11,7 +11,7 @@ services:
         default: 10
         explain: Number from 1 to 30, the number of questions posed to the problem solver.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   game123_interactive:
     description: Which is the best move 1,2,3 ? Or you have lose from begging? Play with a strong mate.
@@ -21,7 +21,7 @@ services:
         regex: ^(my|random)$
         default: random
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   game2stack:
     description: Now you have two stack and you can move all pawns you want.
@@ -32,7 +32,7 @@ services:
         default: 10
         explain: Number from 1 to 30, the number of questions posed to the problem solver.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -42,6 +42,6 @@ services:
         default: synopsis
         explain: Any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

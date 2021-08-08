@@ -4,7 +4,7 @@ services:
     evaluator: [python, services/make_triangular/python/simple/make_triangular_server.py]
     args:
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
 1. dato un grafo planare 3-connesso G, dire quanti archi t devono essere aggiunti a G per ottenere un grafo planare triangolato e semplice. (il server lo fà | il server lo verifica)

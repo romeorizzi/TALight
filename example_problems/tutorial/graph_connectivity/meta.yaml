@@ -15,7 +15,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_certificate_of_connectivity:
     description: this service checks whether a list of edges forms a spanning tree in a given graph
@@ -32,7 +32,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_certificate_of_nonconnectivity:
     description: this service checks whether a bipartition of the nodes is a valid certificate of the non-connectivity of a given graph
@@ -51,7 +51,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_bot_deciding_connectivity:
     evaluator: [python, services/eval_bot_deciding_connectivity_server.py]
@@ -73,7 +73,7 @@ services:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -83,6 +83,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

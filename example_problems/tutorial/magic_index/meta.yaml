@@ -12,7 +12,7 @@ services:
         explain: an increasing sequence of integers separated by commas (no spaces).
         example: -12,0,34,56
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_magic_indexes:
     description: You give us a sorted vector of distinct integers and the sorted list of its magic indexes. We check it out.
@@ -34,7 +34,7 @@ services:
         explain2: "[yes_no]  only tells whether magic_indexes is correct or not."
         explain3: "[gimme_one_wrong]  tells whether magic_indexes is correct or not, and in the second case points out precisely one of the errors."
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_input_vector:
     description: Call this service to ask for an instance, that is, an increasing sequence of integers comprising an input vector.
@@ -47,7 +47,7 @@ services:
         default: random_seed
         explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_worst_case_num_questions:
     description: You give us a natural n and what you conjecture to be the smallest number r such that there exists a strategy for knowing the truth in at most r queries. We check out your conjecture.
@@ -65,7 +65,7 @@ services:
         regex: ^(0|1)$
         default: 0
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play1:
     evaluator: [python, services/play1_server.py]
@@ -88,7 +88,7 @@ services:
         explain3: "[spot_first_gift]  during the game signals out (in a commented line, not to disturb the bot that could possibly play in your place) your first move where your goal is compromised."
         explain4: "[spot_every_gift]  during the game signals out (in a commented line) every move where you waste one dollar."
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_play1:
     evaluator: [python, services/eval_play1_server.py]
@@ -100,7 +100,7 @@ services:
         regex: ^(yes_no_goal|how_far|spot_first_gift|spot_every_gift)$
         default: yes_no_goal
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play2:
     evaluator: [python, services/play2_server.py]
@@ -123,7 +123,7 @@ services:
         explain3: "[spot_first_gift]  during the game signals out (in a commented line, not to disturb the bot that could possibly play in your place) your first move where your goal is compromised."
         explain4: "[spot_every_gift]  during the game signals out (in a commented line) every move where you waste one dollar."
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   optimal_move1:
     evaluator: [python, services/optimal_move_server.py]
@@ -134,7 +134,7 @@ services:
         regex: ^(know_nothing|first_is_magic|last_is_magic)$
         explain: three possible categories for what we might know at the beginning of the game.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
   synopsis:
@@ -145,6 +145,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

@@ -30,7 +30,7 @@ services:
         default: medium
         explain: Level of the exercise.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   order_of_rows_columns:
     description: You are asked to prove that the solvability of a 0/1-matrix is invariant under permutation of its rows (or columns). We give you a good 0/1-matrix and a sequence of switch row/column operations turnig it off (a certificate of goodness). We also give you a permutation of the rows and a permutation of the columns of the matrix. You are required to give us a certificate of goodness for the permuted matrix.
@@ -57,7 +57,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   sub_closure:
     description: You are asked to prove that a 0/1-matrix containing a bad submatrix is also bad. We give you a good 0/1-matrix and a sequence of swich row/column operations turnig it off (a certificate of goodness). You are required to give us a certificate of goodness for a 0/1-submatrix specified by us.
@@ -82,7 +82,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_unsol:
     evaluator: [python, services/check_unsol_server.py]
@@ -97,7 +97,7 @@ services:
         default: 0
         explain: if this flag is set to 1 and your assertion is false, then the service offers evidence of the fault.
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_sol:
     description: "The service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed."
@@ -113,7 +113,7 @@ services:
         explain: "[seq] list of commands for example r1 c3 r4, subset is two string of 1,0 as long as the number of rows and columns that indicate which switch is on or off."
         example: "[subset] r2 c4 r3 r1, subset: 1 0 1, 0 1 1 if the matrix is 3x3"
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_decision:
     evaluator: [python, services/eval_decision_server.py]
@@ -131,7 +131,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_sol:
     description: si basa su un dialogo dove il bot chiede il valore di alcune entris prima di tornar la soluzione.
@@ -147,7 +147,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   trilly:
     evaluator: [python, services/trilly_server.py]
@@ -186,7 +186,7 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
@@ -196,6 +196,6 @@ services:
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
       lang:
-        regex: ^(hardcoded|en|it)$
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 ...

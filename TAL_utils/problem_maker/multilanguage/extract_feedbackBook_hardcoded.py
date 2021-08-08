@@ -11,17 +11,27 @@ The second argument is optional and takes up one of the following values:
 "only_fstring_phrases" --> cats to stdout only those phrases that undergo fstring interpretation
 "only_plain_phrases" --> cats to stdout only those phrases that do NOT undergo fstring interpretation
 "fstring_signal" --> cats to stdout all phrases (like in standard usage, when no optional parameter is provided) but those that undergo fstring interpretation are clarly marked (WARNING: this means that the feedbackBook cat to stdout is NOT a valid feedbackBook)
-"fstring_count" --> cats to stdout all phrases (like in standard usage, when no optional parameter is provided) but it also prints on stderr the stats about those phrases that undergo fstring interpretation (NOTE: this means that the feedbackBook cat to stdout is a valid feedbackBook and you CAN use it by redirecting only stdout to a file (pipe with " 1>" rather than with just " >")).
+"fstring_count" --> cats to stdout all phrases (like in standard usage, when no optional parameter is provided) but it also prints on stderr the stats about those phrases that undergo fstring interpretation (NOTE: this means that the feedbackBook cat to stdout is a valid feedbackBook and you CAN use it by redirecting only stdout to a file).
 
-The third argument is optional and should begin with "-preamble_file=" followed by the name of a correct preamble file for the intended language (see for example the files preamble.en.yaml and preamble.it.yaml contained in the folder of this script). When this argument is provided that preamble file is prepended in order to obtain a complete feedbackBook for that language (of course, the sentences following the preamble will still need to get translated from the hardcoded language, which we suggest should be English to facilitate translating in any other language. The other languages will need to use other characters. On one side this is greatly simplified since .yaml files are UTF-8. Still it could be a problem to have to use some characters like unpairs ' and ". The rules to follow to deal with these with no trouble are here more below.
+The third argument is optional and should begin with "-preamble_file=" followed by the name of a correct preamble file for the intended language (see for example the files preamble.en.yaml and preamble.it.yaml contained in the folder of this script). When this argument is provided that preamble file is prepended in order to obtain a complete feedbackBook for that language (of course, the sentences following the preamble will still need to get translated from the hardcoded language, which we suggest should be English to facilitate translating in any other language. The other languages will need to use other characters. On one side this is greatly simplified since .yaml files are UTF-8. Still it could be a problem to have to use some characters like  ' and ". The rules to follow to deal with these with no trouble are collected and reported here more below.
 
 This utility is guaranteed to work for servers written in python whose mutilanguage support rests on the multilanguage.py module of the TALight library in support to the problem maker. The utility also works for (or can be readily adapted (and possibly also translated into) other languages for which the Lang class offered by the multilanguage.py module has been translated or implemented.
 In his *_server.py files one should also adhere to:
 1. use single quotes ' to embrace the whole message string
 2. always alternate between ' and " when nesting them
-3. when you need to use an unpaired ' write \\'' i.e. a backslash followed by two '
-4. when you need to use an unpaired " write \\"" i.e. a backslash followed by two "
+3. when you need to use an unpaired ' then in the feedbackBook yaml file write \\'' i.e. a backslash followed by two ', whereas in the code whas written \\'\\'
+4. when you need to use an unpaired " then in the feedbackBook yaml file write \\"" i.e. a backslash followed by two ", whereas in the code whas written \\"\\"
+5. for simplicity, consider using ` more frequently instead
 """
+
+def adapt_string_to_yaml_book(string):
+    #print("before: " + string, file=stderr)
+    orderd_list_of_substitutions = [("\\'\\'","\\''"),
+                                    ('\\"\\"','\\""')]
+    for before,after in orderd_list_of_substitutions:
+       string = string.replace(before, after)
+    #print("after: " + string, file=stderr)
+    return(string)
 
 fstring_arg = None
 if len(argv) not in {2,3,4}:
@@ -114,17 +124,18 @@ while re.search("LANG.render_feedback", source_good_suffix, 1) != None:
         num_fstring_phrases +=1
     else:
         num_plain_phrases += 1
+        
     if fstring_arg in {None, "fstring_count"}:
-        print(f"{phrase_code}: '{phrase_text}'")
+        print(f"{phrase_code}: '{adapt_string_to_yaml_book(phrase_text)}'")
     elif fstring_arg == "only_fstring_phrases" and fstring_flag:
-        print(f"{phrase_code}: '{phrase_text}'")
+        print(f"{phrase_code}: '{adapt_string_to_yaml_book(phrase_text)}'")
     elif fstring_arg == "only_plain_phrases" and not fstring_flag:
-        print(f"{phrase_code}: '{phrase_text}'")
+        print(f"{phrase_code}: '{adapt_string_to_yaml_book(phrase_text)}'")
     elif fstring_arg in {"fstring_signal"}:
         if fstring_flag:
-            print(f"{phrase_code}: [THIS IS AN FSTRING] '{phrase_text}'")
+            print(f"{phrase_code}: [THIS IS AN FSTRING] '{adapt_string_to_yaml_book(phrase_text)}'")
         else:
-            print(f"{phrase_code}: '{phrase_text}'")
+            print(f"{phrase_code}: '{adapt_string_to_yaml_book(phrase_text)}'")
 
 if fstring_arg == "fstring_count":
     print(f"\nSUMMARY:\n num_phrases (TOTAL): {num_plain_phrases+num_fstring_phrases}\n num_plain_phrases: {num_plain_phrases}\n num_fstring_phrases: {num_fstring_phrases}\n",file=stderr)
