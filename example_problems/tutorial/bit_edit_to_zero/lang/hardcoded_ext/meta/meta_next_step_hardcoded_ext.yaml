@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+decimal_to_binary:
+min_num_steps:
+next_step:
+  evaluator: [python, services/next_step_server.py]
+  description: We give you a random number (in its binary representation) and you have to insert which one is the optimal first move (the one that allows to get to 0 in a minimum number of moves).
+  args:
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+oracle:
+eval_sol:
+
+synopsis:
+...

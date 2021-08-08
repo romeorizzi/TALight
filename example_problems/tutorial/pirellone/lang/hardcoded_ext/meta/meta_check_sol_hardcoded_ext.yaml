@@ -1,0 +1,29 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+compact_solution:
+order_of_rows_columns:
+sub_closure:
+check_unsol:
+check_sol:
+  description: "The service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed."
+  evaluator: [python, services/check_sol_server.py]
+  args:
+    seed:
+      explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+      regex: ^(random_seed|[1-9][0-9]{5,5})$
+      default: random_seed
+    coding:
+      regex: ^(seq|subset)$
+      default: seq
+      explain: "[seq] list of commands for example r1 c3 r4, subset is two string of 1,0 as long as the number of rows and columns that indicate which switch is on or off."
+      example: "[subset] r2 c4 r3 r1, subset: 1 0 1, 0 1 1 if the matrix is 3x3"
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+eval_decision:
+eval_sol:
+trilly:
+synopsis:
+...

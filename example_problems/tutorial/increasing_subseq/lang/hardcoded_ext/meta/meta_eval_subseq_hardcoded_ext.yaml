@@ -1,0 +1,43 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+is_subseq:
+gen_subseq_instance:
+check_is_subseq_YES_certificate:
+eval_subseq:
+  description: Evaluates correctness and efficiency of a program from the problem solver that, given in input two integer sequences T (on a first line) and S (on a second line), decides whether S is a subsequence of T or not (y/n). The evaluation is done on a set of pseudo-random instances (everything is fully reproducible from the seed).
+  evaluator: [python, services/eval_subseq_server.py]
+  args:
+    seed:
+      explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+      regex: ^(random_seed|[1-9][0-9]{5,5})$
+      default: random_seed
+    goal:
+      explain: set your goal (efficient includes also correct).
+      regex: ^(correct|efficient)$
+      default: correct
+    code_lang: 
+      regex: ^(python|java|nodejs|compiled)$
+      default: python
+    cert: 
+      explain: if set to 1 the service bot program should also return (on a second line, when its first is 'y') a sequence of indexes where S can be read out from T (idexes start from 0).
+      regex: ^(0|1)$
+      default: 0
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+check_longest_increasing_subseq:
+eval_longest_increasing_subseq:
+check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
+eval_num_occurrences_of_S_in_T:
+
+check_subseq_set:
+check_subseq_list:
+check_next_subseq_gen:
+eval_next_subseq_gen:
+check_rank_of_seq:
+eval_rank_of_seq:
+eval_count_increasing_subseq:
+synopsis:
+...

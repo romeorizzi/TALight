@@ -1,0 +1,24 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+tell_if_graph_connected:
+  description: this service tells whether a user provided graph is connected or not.
+  evaluator: [python, services/tell_if_graph_connected_server.py]
+  args:
+    with_yes_certificate:
+      explain: when the input graph is connected, please, send me a certificate in the form of a spanning tree.
+      regex: ^(0|1)$
+      default: 0
+    with_no_certificate:
+      explain: when the input graph is NOT connected, please, send me a certificate in the form of a non-trivial partition of the nodes such that no arc has ndpoints on different sides of the bipartition.
+      regex: ^(0|1)$
+      default: 0
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+check_certificate_of_connectivity:
+check_certificate_of_nonconnectivity:
+eval_bot_deciding_connectivity:
+synopsis:
+...

@@ -1,0 +1,32 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+TAL_recognizes:
+you_recognize:
+  description: We give you a regular expression r and a string s over the same alphabet. Your aim is to recognize whether s belongs to the language described by r. You have control on the size of the instance (r,s) by means of parameters m and n. The instance is pseudo-random and fully spcifified by m,n, and the seed.
+  evaluator: [python,services/TAL_you_recognize_server.py]
+  args:
+    seed:
+      explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same instance as in a previous run.
+      regex: ^(random_seed|[1-9][0-9]{5,5})$
+      default: random_seed
+    m:
+      regex: ^([1-9][0-9]{0,1})$
+      default: 12
+      explain: Length of the regular expression r.
+    n:
+      regex: ^([1-9][0-9]{0,4})$
+      default: 20
+      explain: Length of the string s.
+    feedback:
+      regex: ^(yes_no|with_construction_of_s)$
+      default: yes_no
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+eval_recognize:
+eval_regex2NFA:
+eval_NFA2DFA:
+synopsis:
+...

@@ -1,0 +1,58 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+is_subseq:
+  description: You are asked to enter two sequences S and T of positive integers. The service tells whether S is a subsquence of T.
+  evaluator: [python, services/is_subseq_server.py]
+  args:
+    T:
+      regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
+      default: lazy_input
+      explain: T is a sequence of positive integers separated by spaces
+      example: 12 34 56
+    S:
+      explain: S is a sequence of positive integers separated by spaces
+      example: 12 34 56
+      regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
+      default: lazy_input
+    YES_cert:
+      explain: in case S is a subsequence of T, the service underlines |S| elemements in T to give evidence to its positive answers.
+      regex: ^(0|1)$
+      default: 1
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+gen_subseq_instance:
+check_is_subseq_YES_certificate:
+  description: "Given two sequences S and T and a set of indexes of T, the service checks that S is obtained from T after removing all elements with indexes in the given set. You can for example use this service if you are sure S is a subsequence of T but this disagrees with what said by one of our services. (Besides: we are happy to receive reports soliciting corrections.)"
+  evaluator: [python, services/check_is_subseq_YES_certificate_server.py]
+  args:
+    T:
+      regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
+      default: lazy_input
+    S:
+      regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
+      default: lazy_input
+    YES_cert:
+      explain: the set of elements (specified by their indexes in T) to be removed from T to obtain S.
+      regex: ^((([1-9][0-9]{0,5} *)*)|lazy_input)$
+      default: 1
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+eval_subseq:
+check_longest_increasing_subseq:
+eval_longest_increasing_subseq:
+check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
+eval_num_occurrences_of_S_in_T:
+
+check_subseq_set:
+check_subseq_list:
+check_next_subseq_gen:
+eval_next_subseq_gen:
+check_rank_of_seq:
+eval_rank_of_seq:
+eval_count_increasing_subseq:
+synopsis:
+...

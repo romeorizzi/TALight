@@ -1,0 +1,26 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+spot_magic_indexes:
+check_magic_indexes:
+gimme_input_vector:
+check_worst_case_num_questions:
+play1:
+eval_play1:
+  evaluator: [python, services/eval_play1_server.py]
+  args:
+    goal:
+      regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
+      default: at_most_twice_the_opt
+    feedback:
+      regex: ^(yes_no_goal|how_far|spot_first_gift|spot_every_gift)$
+      default: yes_no_goal
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+play2:
+optimal_move1:
+
+synopsis:
+...

@@ -1,0 +1,20 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+TAL_recognizes:
+you_recognize:
+eval_recognize:
+eval_regex2NFA:
+eval_NFA2DFA:
+synopsis:
+  evaluator: [python, services/synopsis/synopsis_server.py]
+  args:
+    service:
+      regex: ^((\S)+)$
+      default: synopsis
+      explain: any string without space characters but meant to specify one of the services of the problem {problem}
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+...

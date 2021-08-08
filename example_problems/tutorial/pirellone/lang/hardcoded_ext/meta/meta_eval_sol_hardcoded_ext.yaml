@@ -1,0 +1,29 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+compact_solution:
+order_of_rows_columns:
+sub_closure:
+check_unsol:
+check_sol:
+eval_decision:
+eval_sol:
+  description: si basa su un dialogo dove il bot chiede il valore di alcune entris prima di tornar la soluzione.
+  evaluator: [python, services/eval_sol_server.py]
+  args:
+    goal:
+      regex: ^(correct|polynomial_in_m|efficient|sub_linear)$
+      default: correct
+      explain: Set your goal from the following total order
+      explain1: "[correct]  bla bla"
+    seed:
+      explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+      regex: ^(random_seed|[1-9][0-9]{5,5})$
+      default: random_seed
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+trilly:
+synopsis:
+...

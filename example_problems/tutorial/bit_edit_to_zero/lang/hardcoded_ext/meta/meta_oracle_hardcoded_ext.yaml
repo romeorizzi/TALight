@@ -1,0 +1,21 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+decimal_to_binary:
+min_num_steps:
+next_step:
+oracle:
+  description: As a further aid for your quest, you can ask to this oracle service what is the very first step to do in order to get to zero as fast as possible, starting from the binary number offered from you to the oracle.
+  evaluator: [python, services/oracle_server.py]
+  args:
+    binary_starting_number:
+      regex: ^(lazy|0|1(0|1){0,10000})$
+      default: lazy
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+eval_sol:
+
+synopsis:
+...

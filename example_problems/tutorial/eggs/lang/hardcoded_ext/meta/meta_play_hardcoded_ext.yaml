@@ -1,0 +1,47 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+confirm_min_throws:
+check_table:
+gimme_table:
+opt_move:
+play:
+  evaluator: [python, services/play_server.py]
+  args:
+    n_floors:
+      regex: ^([1-9][0-9]{0,1}|100)$
+      default: 100
+    n_eggs:
+      regex: ^([1-9][0-9]{0,1}|100)$
+      default: 100
+    egg_launcher_goal:
+      regex: ^(minmax|minmax_minavg|minavg_minmax)$
+      default: minmax
+    nature:
+      regex: ^(adversial|indifferent)$
+      default: indifferent
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+play_nature:
+  evaluator: [python, services/play_nature_server.py]
+  args:
+    n_floors:
+      regex: ^([1-9][0-9]{0,1}|100)$
+      default: 100
+    n_eggs:
+      regex: ^([1-9][0-9]{0,1}|100)$
+      default: 100
+    egg_launcher_goal:
+      regex: ^(minmax|minmax_minavg|minavg_minmax)$
+      default: minmax
+    nature:
+      regex: ^(adversial|indifferent)$
+      default: indifferent
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+eval_strategy_table:
+synopsis:
+...

@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+common_multiple:
+  evaluator: [python, services/common_multiple/simple/common_multiple_server.py]
+  args:
+    num_naturals:
+      regex: ^([1-9][0-9]{0,2}|100)$
+      default: 3
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+common_non_multiple:
+extract_prime:
+synopsis:
+...

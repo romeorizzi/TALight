@@ -1,0 +1,30 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+confirm_min_throws:
+check_table:
+gimme_table:
+  evaluator: [python, services/gimme_table_server.py]
+  args:
+    n_floors:
+      regex: ^([1-9][0-9]{0,1}|100)$
+      default: 10
+    n_eggs:
+      regex: ^([1-9][0-9]{0,1}|100)$
+      default: 2
+    eggs_from_zero:
+      regex: ^(0|1)$
+      default: 0
+    floors_from_zero:
+      regex: ^(0|1)$
+      default: 0
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+opt_move:
+play:
+play_nature:
+eval_strategy_table:
+synopsis:
+...

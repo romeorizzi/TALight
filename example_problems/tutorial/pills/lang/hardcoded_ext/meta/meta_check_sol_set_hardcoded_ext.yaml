@@ -1,0 +1,32 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_one_sol:
+check_num_sol:
+eval_num_sol:
+check_sol_set:
+  evaluator: [python, services/check_sol_set_server.py]
+  args:
+    feedback:
+      regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
+      default: yes_no
+      explain: "the options are as follows:"
+      explain1: -yes_no= just tell me if I am missing one solution.
+      explain2: -tell_a_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution then I get a new one.
+      explain3: -give_one_missing= just spoil me out a solution I have missed.
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+check_sol_list:
+check_next_sol:
+eval_next:
+check_rank:
+check_unrank:
+eval_rank:
+eval_unrank:
+gimme_rank:
+gimme_unrank:
+gimme_next_sol:
+synopsis:
+...

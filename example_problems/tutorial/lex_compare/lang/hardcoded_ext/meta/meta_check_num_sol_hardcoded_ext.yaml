@@ -1,0 +1,44 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_one_sol:
+check_num_sol:
+  description: call this service to check that the number of well formed formulas with <n_pairs> pairs of parenthes is what you think (<risp>).
+  evaluator: [python, services/check_num_sol_server.py]
+  args:
+    n_pairs:
+      regex: ^(0|[1-9][0-9]{0,1}|100)$
+    risp:
+      regex: ^(0|[1-9][0-9]{0,50})$
+      explain: what you conjecture to be the number of well-formed formulas on <n_pairs> pairs of parentheses.
+    ok_if_congruent_modulus:
+      explain: when n grows the number of well formed formulas gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas.  
+      regex: ^(0|[1-9][0-9]{0,10})$
+      default: 0
+    more_or_less_hint_if_wrong:
+      regex: ^(0|1)$
+      default: 0
+    silent:
+      explain: when the flag silent is set then the service runs silently unless your conjectured answer is wrong (or for wrong calls).
+      regex: ^(0|1)$
+      default: 0
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+eval_num_sol:
+check_sol_set:
+check_sol_list:
+eval_sol_list:
+gen_random_sol:
+check_next_sol:
+eval_next:
+check_rank:
+check_unrank:
+eval_rank:
+eval_unrank:
+gimme_rank:
+gimme_unrank:
+gimme_next_sol:
+synopsis:
+...

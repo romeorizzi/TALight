@@ -1,0 +1,28 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+game123:
+  description: Which is the best move 1,2,3 ? Or you have lose from begging? 
+  evaluator: [python, services/game123_server.py]
+  args:
+    num_questions:
+      regex: ^([1-9]|[1-2][0-9]|30)$
+      default: 10
+      explain: Number from 1 to 30, the number of questions posed to the problem solver.
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+game123_interactive:
+  description: Which is the best move 1,2,3 ? Or you have lose from begging? Play with a strong mate.
+  evaluator: [python, services/game123_interactive_server.py]
+  args:
+    instance:
+      regex: ^(my|random)$
+      default: random
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+game2stack:
+synopsis:
+...

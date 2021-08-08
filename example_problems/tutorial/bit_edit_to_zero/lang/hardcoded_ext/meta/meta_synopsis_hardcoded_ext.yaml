@@ -1,0 +1,21 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+decimal_to_binary:
+min_num_steps:
+next_step:
+oracle:
+eval_sol:
+
+synopsis:
+  evaluator: [python, services/synopsis/synopsis_server.py]
+  args:
+    service:
+      regex: ^((\S)+)$
+      default: synopsis
+      explain: any string without space characters but meant to specify one of the services of the problem {problem}
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+...

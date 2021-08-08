@@ -1,0 +1,23 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+minimum_laser:
+indipendent_asteroids:
+  description: You have to give us the set of indipendent asteroids.
+  evaluator: [python, services/indipendent_asteroids_server.py]
+  args:
+    level:
+      regex: ^(easy|medium|difficult)$
+      default: medium
+      explain: Level of difficulty of the problem.
+    seed:
+      explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run.
+      regex: ^(random_seed|[1-9][0-9]{5,5})$
+      default: random_seed
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+eval_sol:
+synopsis:
+...

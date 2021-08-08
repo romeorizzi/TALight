@@ -1,0 +1,51 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_one_sol:
+
+check_opt_num_moves:
+check_lower_bounds:
+
+play_like:
+gen_random_puzzle:
+eval_opt_num_moves:
+
+eval_sol:
+  description: this service valuated correctness of a bot that solve an Hanoi tower puzzle.
+  evaluator: [python, services/eval_sol_server.py]
+  args:
+    v:
+      regex: ^(classic|toddler|clockwise)$
+      default: classic
+    start:
+      regex:  ^(all_A|all_B|all_C|general)$
+      default: all_A
+      explain: initial configuration of the puzzle.
+    final:
+      regex:  ^(all_A|all_B|all_C|general)$
+      default: all_C
+      explain: target configuration for the puzzle.
+    format:
+      regex: ^(minimal|extended)$
+      default: minimal
+      explain: "The move format. there are two type of format (D=disk, C=current_peg, T=target_peg):"
+      explain1: "-minimal= D:CT"
+      explain2: "-extended= move disk D from C peg to T peg"
+    seed:
+      regex: ^(-1|[1-9][0-9]{5,5})$
+      default: -1 #random_seed
+      explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+    num_tests:
+      regex: ^(0|1000|([1-9][0-9]{0,2}))$
+      default: 50
+      explain: specify the number of tests to run
+    n_max:
+      regex: ^(0|1000|([1-9][0-9]{0,2}))$
+      default: 10
+      explain: specify the maximum number of disks to be tested
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+synopsis:
+...

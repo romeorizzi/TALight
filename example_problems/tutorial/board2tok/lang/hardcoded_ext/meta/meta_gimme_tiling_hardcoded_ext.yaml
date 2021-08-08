@@ -1,0 +1,30 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+verify_tiling:
+gimme_tiling:
+  description: given a triple (k, r, c), this service tells whether the 2^k x 2^k grid admits a tiling where no two tiles overlap and the cell (r,c) is the only cell left uncovered (row and column indexes start from 0). You can also ask the service to dispel a tiling, in part or as a whole.
+  evaluator: [python,services/gimme_tiling_server.py]
+  args:
+    k:
+      regex: ^([0-9]|10)$
+      default: 3
+    r:
+      regex: ^(0|[1-9][0-9]{0,3})$
+      default: 0
+      explain: the row index of the cell left uncovered.
+    c:
+      regex: ^(0|[1-9][0-9]{0,3})$
+      default: 0
+      explain: the column index of the cell left uncovered.
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+    dispel_first_rows_of_a_tiling:
+      regex: ^(0|[1-9][0-9]{0,3})$
+      default: 0
+      explain: the service will dispel the first <dispel_first_rows_of_a_tiling> rows of a possible tiling.
+trilly:
+synopsis:
+...

@@ -1,0 +1,33 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_is_eulerian: 
+check_is_not_eulerian:
+check_eulerian_walk:
+eval_eulerian_walk_checker:
+  description: "Let's invert our roles! Given a directed graph and a candidate eulerian walk for it, can you check whether the given eulerian walk is valid for the given directed graph?"
+  evaluator: [python,services/eval_eulerian_walk_checker_server.py]
+  args:
+    walk_type:
+      regex: ^(open|closed|any)$
+      default: closed
+      explain: (introduced 2021-08-06, Romeo)
+    seed:
+      explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+      regex: ^(random_seed|[1-9][0-9]{0,5})$
+      default: random_seed
+    goal:
+      regex: ^(correct|efficient)$
+      default: correct
+    code_lang: 
+      regex: ^(python|java|nodejs|compiled)$
+      default: python
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+eval_eulerian_recognize:
+trilly_decision:
+trilly_construction:
+synopsis:
+...

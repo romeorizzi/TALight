@@ -1,0 +1,27 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_is_sc:
+check_is_not_sc:
+eval_recognizer_sc:
+  description: Given a directed graph, can you decide whether it is strongly connected?
+  evaluator: [python,services/eval_recognizer_sc_server.py]
+  args:
+    goal:
+      regex: ^(yes_no)$
+      default: yes_no
+    code_lang: 
+      regex: ^(python|java|nodejs|compiled)$
+      default: python
+    seed:
+      explain: specify the numeric code to reproduce the very same psudo-random instance G as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+      regex: ^(random_seed|[1-9][0-9]{0,5})$
+      default: random_seed
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+gimme_scc:
+eval_find_scc:
+synopsis:
+...

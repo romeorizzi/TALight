@@ -1,0 +1,45 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_is_eulerian: 
+check_is_not_eulerian:
+check_eulerian_walk:
+eval_eulerian_walk_checker:
+eval_eulerian_recognize:
+  description: "Given a directed graph, can you decide whether it contains an eulerian walk? And can you do it efficiently?"
+  evaluator: [python,services/eval_eulerian_recognize_server.py]
+  args:
+    walk_type:
+      regex: ^(open|closed|any)$
+      default: closed
+      explain: (introduced 2021-08-06, Romeo)
+    seed:
+      explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+      regex: ^(random_seed|[1-9][0-9]{0,5})$
+      default: random_seed
+    n:
+      regex: ^([1-9]|10|20|50|100|1000|10000)$
+      default: 10
+      explain: Choose the number of nodes for the random graph G that will be offered you.  (in realà n ed m non dovrebbe darli l'utente, per valutare non si usa una sola istanza ma diverse, scelte anche a seconda dei goal. 2021-08-06, Romeo)
+    m:
+      regex: ^([1-9]|10|20|50|100|1000|10000)$
+      default: 10
+      explain: Choose the number of arcs for the random graph G that will be offered you.
+    goal1:
+      regex: ^(yes_no|with_yes_certificates|with_no_certificates|with_both_certificates)$
+      default: yes_no
+      explain:  (ho aggiunto delle opzioni to this argument. 2021-08-06, Romeo)
+    goal2:
+      regex: ^(correct|efficient)$
+      default: correct
+    code_lang: 
+      regex: ^(python|java|nodejs|compiled)$
+      default: python
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+trilly_decision:
+trilly_construction:
+synopsis:
+...

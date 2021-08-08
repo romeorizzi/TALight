@@ -1,0 +1,30 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+verify_tiling:
+gimme_tiling:
+trilly:
+  evaluator: [python, services/trilly_server.py]
+  description: Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix.
+  args:
+    k:
+      regex: ^([0-9]|10)$
+      default: 3
+    only_corner_cell:
+      explain: both in the first request of the server and in the later requsts of the problem solver, the cell (r,c) should always be a corner cell.
+      regex: ^(0|1)$
+      default: 1
+    goal_min_calls_to_place_tile:
+      regex: ^(any|k|1)$
+      default: 1
+      explain: try to minimize the number of calls to place_tile.
+    goal_min_calls_to_trilly:
+      regex: ^(any|4|one_and_gain_three_calls_at_every_placed_tile|gain_three_calls_at_every_placed_tile)$
+      default: 4
+      explain: number of allowed calls to trilly. Try to minimize it, but, at a certain point, this goal will conflict with the main one given above.
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+synopsis:
+...

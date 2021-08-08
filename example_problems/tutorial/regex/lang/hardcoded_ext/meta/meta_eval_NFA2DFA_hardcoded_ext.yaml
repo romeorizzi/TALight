@@ -1,0 +1,32 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+TAL_recognizes:
+you_recognize:
+eval_recognize:
+eval_regex2NFA:
+eval_NFA2DFA:
+  description: This service assesses the correctness and efficiency of your machinery to yield a deterministic automaton equivalent to a non-deterministic automaton given in input.
+  evaluator: [python,services/eval_NFA2DFA.py]
+  args:
+    goal:
+      regex: ^(correct|efficient)$
+      default: correct
+    seed:
+      explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run.
+      regex: ^(random_seed|[1-9][0-9]{5,5})$
+      default: random_seed
+    code_lang:
+      regex: ^(CIF|python|java|nodejs|compiled)$
+      default: CIF
+      explain: You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints.
+    feedback:
+      regex: ^(yes_no|correct_DFA_when_wrong)$
+      default: yes_no
+      explain: any string without space characters but meant to specify one of the services of the problem {problem}
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+synopsis:
+...

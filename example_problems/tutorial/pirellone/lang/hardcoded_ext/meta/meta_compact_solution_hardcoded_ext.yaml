@@ -1,0 +1,43 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+compact_solution:
+  description: We give you a matrix and a sequence of switch rows/columns operations that leads to the all 0 matrix. You are required to shorten this sequence.
+  evaluator: [python,services/compact_solution_server.py]
+  args:
+    seed:
+      explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+      regex: ^(random_seed|[1-9][0-9]{5,5})$
+      default: random_seed
+    m:
+      regex: ^([1-9][0-9]{0,1})$
+      default: 4
+      explain: Number of rows of the pirellone.
+    n:
+      regex: ^([1-9][0-9]{0,1})$
+      default: 4
+      explain: Number of columns of the pirellone.
+    goal:
+      regex: ^(m_plus_n|m_plus_n_half|min)$
+      default: m_plus_n
+      explain: "Set an upper-bound on the length of your solution. The choiches are as follows:"
+      explain1: "[m_plus_n]  yield a solution with at most m+n moves."
+      explain2: "[m_plus_n_half]  yield a solution with at most (m+n)/2 moves."
+      explain3: "[min]  yield a solution with the minimum possible number of moves."
+    level:
+      regex: ^(easy|medium|difficult)$
+      default: medium
+      explain: Level of the exercise.
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+order_of_rows_columns:
+sub_closure:
+check_unsol:
+check_sol:
+eval_decision:
+eval_sol:
+trilly:
+synopsis:
+...

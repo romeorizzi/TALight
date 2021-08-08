@@ -16,7 +16,7 @@ services:
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       coloring:
         regex: ^(proper|improper|surprise)$
-        default: surprise      	
+        default: surprise
       goal:
         regex: ^(yes_no|give_violated_arc)$
         default: give_violated_arc
@@ -37,7 +37,7 @@ services:
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       coloring:
         regex: ^(improper|surprise)$
-        default: surprise      	
+        default: surprise
       commitment:
         regex: ^(yes_no|give_violated_arc)$
         default: yes_no
@@ -61,7 +61,7 @@ services:
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       k:
         regex: ^(num_nodes|[1-9][0-9]{0,2}|1000)$
-        default: num_nodes      	
+        default: num_nodes
       goal:
         regex: ^(yes_no|give_coloring|give_minimal_uncolorable_induced_subgraph)$
         default: give_coloring
@@ -82,7 +82,7 @@ services:
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       k:
         regex: ^2$
-        default: 2      	
+        default: 2
       goal:
         regex: ^(yes_no|give_coloring|give_minimal_uncolorable_induced_subgraph)$
         default: give_coloring

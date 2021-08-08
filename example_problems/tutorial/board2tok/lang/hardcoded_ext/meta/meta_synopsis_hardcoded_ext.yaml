@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+verify_tiling:
+gimme_tiling:
+trilly:
+synopsis:
+  evaluator: [python, services/synopsis/synopsis_server.py]
+  args:
+    service:
+      regex: ^((\S)+)$
+      default: synopsis
+      explain: any string without space characters but meant to specify one of the services of the problem {problem}
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+...

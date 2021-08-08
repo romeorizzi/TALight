@@ -24,6 +24,21 @@ In his *_server.py files one should also adhere to:
 5. for simplicity, consider using ` more frequently instead
 """
 
+
+CEND      = '\33[0m'
+CBOLD     = '\33[1m'
+CITALIC   = '\33[3m'
+CURL      = '\33[4m'
+CBLINK    = '\33[5m'
+CRED    = '\33[31m'
+CGREEN  = '\33[32m'
+CYELLOW = '\33[33m'
+CBLUE   = '\33[34m'
+CVIOLET = '\33[35m'
+CBEIGE  = '\33[36m'
+CWHITE  = '\33[37m'
+
+
 def adapt_string_to_yaml_book(string):
     #print("before: " + string, file=stderr)
     orderd_list_of_substitutions = [("\\'\\'","\\''"),
@@ -43,7 +58,7 @@ if len(argv) in {3,4}:
     fstring_arg = argv[2]
     if not fstring_arg in {None, "only_fstring_phrases", "only_plain_phrases","fstring_signal","fstring_count"}:
         for out in {stdout, stderr}:
-            print("Wrong call to the TAL_util {argv[0]}.\n see what gone on stdout to know more", file=out)
+            print(f"{CBOLD}{CRED}Error:{CEND} Wrong call to the TAL_util {argv[0]}.\n see what gone on stdout to know more", file=out)
         print(f"Your optional argument ({fstring_arg}) in not among those allowed")
         print(usage)
         exit(1)
@@ -51,7 +66,7 @@ if len(argv) in {4}:
     string_arg3 = argv[3]
     if not string_arg3[0:15] == '-preamble_file=':
         for out in {stdout, stderr}:
-            print("Wrong call to the TAL_util {argv[0]}.\n see what gone on stdout to know more", file=out)
+            print(f"{CBOLD}{CRED}Error:{CEND} Wrong call to the TAL_util {argv[0]}.\n see what gone on stdout to know more", file=out)
         print(f"Your third optional argument ({string_arg3}) in not among those allowed")
         print(usage)
         exit(1)
@@ -61,7 +76,7 @@ if len(argv) in {4}:
         preamble = premble_file.read()
     except IOError as ioe:
         for out in {stdout, stderr}:
-            print(f'Problem detected: file "{premble_file_name}" could not be accessed.', file=out)
+            print(f'{CBOLD}{CRED}Problem detected:{CEND} file "{premble_file_name}" could not be accessed.', file=out)
             print(' This operation is necessary given what you have required to do. Util aborted.', file=out)
         print(ioe, file=stderr)
         exit(1)
@@ -71,7 +86,7 @@ try:
     program_lines = service_server_program_file.readlines()
 except IOError as ioe:
     for out in {stdout, stderr}:
-        print(f'Problem detected: file "{argv[1]}" could not be accessed.', file=out)
+        print(f'{CBOLD}{CRED}Problem detected:{CEND} file "{argv[1]}" could not be accessed.', file=out)
         print(' This operation is necessary given what you have required to do. Util aborted.', file=out)
     print(ioe, file=stderr)
     exit(1)
@@ -117,7 +132,7 @@ while re.search("LANG.render_feedback", source_good_suffix, 1) != None:
         if phrase_text == found_phrases[phrase_code]:
             continue
         else:
-            print(f"\nWARNING:\n duplicated code: {phrase_code}\n -message sentence in first occurrence:\n--->{found_phrases[phrase_code]}\n -different message sentence in later occurrences:\n--->{phrase_text}\nNOTICE: we deal with this issue by discarding the later occurrences and keeping only the very first one encountered (which might had been the one commented out).",file=stderr)
+            print(f"\n{CBOLD}{CRED}WARNING:\n duplicated code:{CEND} {phrase_code}\n -message sentence in first occurrence:\n--->{found_phrases[phrase_code]}\n -different message sentence in later occurrences:\n--->{phrase_text}\n{CBOLD}{CRED}NOTICE:{CEND} we deal with this issue by discarding the later occurrences and keeping only the very first one encountered (which might had been the one commented out).",file=stderr)
     else:
         found_phrases[phrase_code] = phrase_text
     if fstring_flag:
@@ -138,7 +153,7 @@ while re.search("LANG.render_feedback", source_good_suffix, 1) != None:
             print(f"{phrase_code}: '{adapt_string_to_yaml_book(phrase_text)}'")
 
 if fstring_arg == "fstring_count":
-    print(f"\nSUMMARY:\n num_phrases (TOTAL): {num_plain_phrases+num_fstring_phrases}\n num_plain_phrases: {num_plain_phrases}\n num_fstring_phrases: {num_fstring_phrases}\n",file=stderr)
+    print(f"\n{CBOLD}{CGREEN}SUMMARY:{CEND}\n num_phrases (TOTAL): {num_plain_phrases+num_fstring_phrases}\n num_plain_phrases: {num_plain_phrases}\n num_fstring_phrases: {num_fstring_phrases}\n",file=stderr)
         
 exit(0)
 

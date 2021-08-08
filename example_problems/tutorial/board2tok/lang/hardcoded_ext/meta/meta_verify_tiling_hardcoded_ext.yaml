@@ -1,0 +1,30 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+verify_tiling:
+  description: Provide this service with a triple (k, r, c) and a tiling of the 2^k x 2^k grid. The service checks that no tiles overlap and that cell (r,c) is the only cell left uncovered (row and column indexes start from 0).
+  evaluator: [python,services/verify_tiling_server.py]
+  args:
+    k:
+      regex: ^([0-9]|10)$
+      default: 3
+    r:
+      regex: ^(0|[1-9][0-9]{0,3})$
+      default: 0
+      explain: the row index of the cell left uncovered.
+    c:
+      regex: ^(0|[1-9][0-9]{0,3})$
+      default: 0
+      explain: the column index of the cell left uncovered.
+    silent:
+      explain: if nothing is wrong with your tiling then the service runs silently; otherwise it explains what is the problem in clear.
+      regex: ^(0|1)$
+      default: 0
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+gimme_tiling:
+trilly:
+synopsis:
+...

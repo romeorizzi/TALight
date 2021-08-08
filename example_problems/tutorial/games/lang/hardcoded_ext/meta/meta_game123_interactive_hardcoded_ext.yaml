@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+game123:
+game123_interactive:
+  description: Which is the best move 1,2,3 ? Or you have lose from begging? Play with a strong mate.
+  evaluator: [python, services/game123_interactive_server.py]
+  args:
+    instance:
+      regex: ^(my|random)$
+      default: random
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+game2stack:
+synopsis:
+...

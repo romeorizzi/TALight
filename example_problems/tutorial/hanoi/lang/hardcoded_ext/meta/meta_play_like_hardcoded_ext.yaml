@@ -1,0 +1,49 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_one_sol:
+
+check_opt_num_moves:
+check_lower_bounds:
+
+play_like:
+  description: this service plays with you like Daddy or like a Toddler. The Taddy start always first and make always the optimal move. The Toddler does not make invalid moves.
+  evaluator: [python, services/play_like_server.py]
+  args:
+    role:
+      regex:  ^(toddler|daddy)$
+      explain: your role.
+    start:
+      regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+      default: all_A
+      explain: initial configuration of the puzzle.
+    final:
+      regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+      default: all_C
+      explain: target configuration for the puzzle.
+    n:
+      explain: the number of disks (required only when it can not be inferred from the initial or target configuration).
+      regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
+      default: -1 #implicit
+    format:
+      regex: ^(minimal|extended)$
+      default: minimal
+      explain: "The move format. there are two type of format (D=disk, C=current_peg, T=target_peg):"
+      explain1: "-minimal= D:CT"
+      explain2: "-extended= move disk D from C peg to T peg"
+    help:
+      regex: ^(yes_no|gimme_moves_available)$
+      default: yes_no
+      explain: the options are as follows
+      explain1: -yes_no= provide the minimum possible amount of feedback.
+      explain2: -gimme_moves_available= offers all moves available for ai.
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+gen_random_puzzle:
+eval_opt_num_moves:
+
+eval_sol:
+synopsis:
+...

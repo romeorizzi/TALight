@@ -1,0 +1,39 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_one_sol:
+check_num_sol:
+eval_num_sol:
+  evaluator: [python, services/eval_num_sol_server.py]
+  args:
+    answ_modulus:
+      explain: when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <answ_modulus> will suffice in assessing you got the right ideas.  
+      regex: ^([1-9][0-9]{0,10}|0)$
+      default: 0
+    goal:
+      explain: set your goal (efficient includes also correct).
+      regex: ^(correct|efficient)$
+      default: correct
+    code_lang: 
+      explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
+      regex: ^(python|java|nodejs|compiled)$
+      default: python
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+check_sol_set:
+check_sol_list:
+eval_sol_list:
+gen_random_sol:
+check_next_sol:
+eval_next:
+check_rank:
+check_unrank:
+eval_rank:
+eval_unrank:
+gimme_rank:
+gimme_unrank:
+gimme_next_sol:
+synopsis:
+...

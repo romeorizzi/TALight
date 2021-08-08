@@ -1,0 +1,21 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+confirm_min_throws:
+check_table:
+gimme_table:
+opt_move:
+play:
+play_nature:
+eval_strategy_table:
+  evaluator: [python, services/eval_strategy_table_server.py]
+  args:
+    separator:
+      regex: ^(None|[^#])$
+      default: None
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+synopsis:
+...

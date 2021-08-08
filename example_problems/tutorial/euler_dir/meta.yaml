@@ -142,10 +142,9 @@ services:
         regex: ^(random_seed|[1-9][0-9]{0,5})$
         default: random_seed
       n:
-        explain:  (in realà n ed m non dovrebbe darli l'utente, per valutare non si usa una sola istanza ma diverse, scelte anche a seconda dei goal. 2021-08-06, Romeo)
         regex: ^([1-9]|10|20|50|100|1000|10000)$
         default: 10
-        explain: Choose the number of nodes for the random graph G that will be offered you.
+        explain: Choose the number of nodes for the random graph G that will be offered you.  (in realà n ed m non dovrebbe darli l'utente, per valutare non si usa una sola istanza ma diverse, scelte anche a seconda dei goal. 2021-08-06, Romeo)
       m:
         regex: ^([1-9]|10|20|50|100|1000|10000)$
         default: 10

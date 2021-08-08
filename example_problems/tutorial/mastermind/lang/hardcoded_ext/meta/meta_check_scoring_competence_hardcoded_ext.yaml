@@ -1,0 +1,33 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+check_scoring_competence:
+  description: Your scoring competence is assessed. You are given both the secret code and a probing code that you should score against the former according to the rules.
+  evaluator: [python3, services/check_scoring_competence_server.py]
+  args:
+    num_pegs:
+      regex: ^([1-9])$
+      default: 4
+    num_colors:
+      regex: ^([2-8])$
+      default: 6
+    seed:
+      regex: ^(random_seed|[1-9][0-9]{5,5})$
+      default: random_seed
+      explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+    feedback:
+      regex: ^(yes_no|black_white|provide_correct_score)$
+      default: yes_no
+      explain: "choose the feedback level. Options are as follows:"
+      explain1: "[yes_no]  just confirm me that my score is correct ."
+      explain2: "[black_white]  just confirm me that my score is correct ."
+      explain3: "[provide_correct_score]  please, when my score is not correct, provide me the correct one."
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+tell_score:
+play:
+eval:
+synopsis:
+...

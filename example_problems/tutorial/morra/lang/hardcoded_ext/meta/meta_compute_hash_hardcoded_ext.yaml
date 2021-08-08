@@ -1,0 +1,20 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+play:
+compute_hash:
+  evaluator: [python, services/compute_hash/advanced/compute_hash_server.py]
+  args:
+    white_string:
+      regex: ^([[:alnum:]]|_){4,100}$
+      default: None
+    hash_type:
+      regex: ^(rabin_karp|sha1|sha256|sha512)$
+      default: rabin_karp
+    lang:
+      regex: ^(hardcoded|hardcoded_ext|en|it)$
+      default: it
+verify_hash:
+synopsis:
+...
