@@ -1,0 +1,55 @@
+CLOSED:
+ - condizione necessaraia 1: 
+      per ogni nodo v:
+          grado_entrante[v]==grado_uscente[v]
+ - condizione necessaraia 2:
+      grafo strongly-connected
+
+
+mi arriva in input un grafo e mi si chiede di controllore se ammette (è) un closed Eulerian walk oppure certificare la non esistenza di un closed Eulerian walk per esso:
+
+1. verifico la condizione sui gradi dei nodi.
+       se nel ciclo for sui nodi sgamo un problema su un qualsiasi nodo v allora quel nodo v è cio che segnalo all'utenza
+       "# How can you ask for an Eulerian walk in this graph?"
+       "# Don't you see there is a node for which the in-degree and the out-digree differ?'
+       '# Node:'
+       f"{v}"
+       '# in-degree:'
+       f"{{in_degree[v]}"
+       '# out-degree:'
+       f"{{out_degree[v]}"
+       '# You can easily check yourself that no arc enters the above set of nodes! Did I got you convinced my Lord King Arthur?'
+
+2. verifico la condizione di grafo strongly-connected, ma siccome nodi isolati andrebbero benissimo allora portati a forma elementare i problemi sono di due tipi:
+   TIPO 1:  un insieme di nodi S\subseteq V ed un arco con coda in S e testa in V\S, e con l'ulteriore proprietaà che (claim la cui banale verifica lineare è lasciata a King Arthur)  è che non esista alcun arco con coda in V\S e testa in S
+   TIPO 2:  un insieme di nodi S\subseteq V, un arco con entrambi gli estremi in S, ed un arco con entrambi gli estremi in T, e con l'ulteriore proprietaà che (claim la cui banale verifica lineare è lasciata a King Arthur)  è che non esista alcun arco con coda in V\S e testa in S
+
+OSSIA:
+
+   TIPO 1:  un insieme di nodi S\subseteq V ed un arco con coda in S e testa in V\S, e con l'ulteriore proprietaà che (claim la cui banale verifica lineare è lasciata a King Arthur)  è che non esista alcun arco con coda in V\S e testa in S
+>
+       "# How can you ask for an Eulerian walk in this graph?"
+       "# Don't you see there is a set of nodes from which an arc exits an into which no arc comes back?'
+       '# Set of nodes:'
+       f"{" ".join(S)}"
+       '# arc exiting:'
+       f"{{" ".join(exiting_arc)}"
+       '# You can easily check yourself that no arc enters the above set of nodes! Did I got you convinced my Lord King Arthur?'
+
+   TIPO 2:  un insieme di nodi S\subseteq V, un arco con entrambi gli estremi in S, ed un arco con entrambi gli estremi in T, e con l'ulteriore proprietaà che (claim la cui banale verifica lineare è lasciata a King Arthur)  è che non esista alcun arco con coda in V\S e testa in S
+>
+       "# How can you ask for an Eulerian walk in this graph?"
+       "# Don't you see there is a set of nodes from which no arc exits but also an arc with both endnodes in the set and an arc with both endnodes outside the set?'
+       '# Set of nodes:'
+       f"{" ".join(S)}"
+       '# arc with both endnodes in the set:'
+       f"{{" ".join(exiting_arc)}"
+       '# arc with both endnodes outside the set:'
+       f"{{" ".join(exiting_arc)}"
+       '# You can easily check yourself that no arc enters the above set of nodes! Did I got you convinced my Lord King Arthur?'
+
+
+OPEN:
+
+ANY:
+
