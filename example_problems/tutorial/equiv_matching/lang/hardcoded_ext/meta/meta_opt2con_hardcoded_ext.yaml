@@ -2,28 +2,28 @@
 ---
 public_folder: public
 services:
-dec2opt:
-opt2con:
-  description: this service poses you an instance of the maximum weight matching problem in its optimization form and remains available as an oracle for the maximum weight matching problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange.
-  evaluator: [python, services/opt2con_server.py]
-  args:
-    size:
-      regex: ^(small|large)$
-      default: small
-    seed:
-      explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      regex: ^(random_seed|[1-9][0-9]{5,5})$
-      default: random_seed
-    goal:
-      regex: ^(correct|at_most_one_call)$
-      default: correct
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-dec2con:
-opt2dec:
-con2opt:
-con2dec:
-trilly:
-synopsis:
+  dec2opt:
+  opt2con:
+    description: this service poses you an instance of the maximum weight matching problem in its optimization form and remains available as an oracle for the maximum weight matching problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange.
+    evaluator: [python, services/opt2con_server.py]
+    args:
+      size:
+        regex: ^(small|large)$
+        default: small
+      seed:
+        explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      goal:
+        regex: ^(correct|at_most_one_call)$
+        default: correct
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  dec2con:
+  opt2dec:
+  con2opt:
+  con2dec:
+  trilly:
+  synopsis:
 ...

@@ -2,33 +2,33 @@
 ---
 public_folder: public
 services:
-is_tilable:
-  evaluator: [python, services/tell_if_tilable_server.py]
-  description: "You assert that a certain grid is tilable to get a confirm or be contradicted."
-  args:
-    m:
-      regex: ^([1-9]|[1-9][0-9]|100)$
-      default: 5
-      explain: a number from 1 to 100, the number of rows of your grid.
-    n:
-      regex: ^([1-9]|[1-9][0-9]|100)$
-      default: 5
-      explain: a number from 1 to 100, the number of columns of your grid.
-    my_conjecture:
-      regex: ^yes$
-      default: yes
-    h:
-      regex: ^([1-9]|[1-2][0-9]|20)$
-      default: 1
-      explain: a number from 1 to 20, the first dimension of the tile.
-    k:
-      regex: ^([1-9]|[1-2][0-9]|20)$
-      default: 2
-      explain: a number from 1 to 20, the second dimension of the tile.
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-is_not_tilable:
-gimme_hints_on_a_tiling:
-synopsis:
+  is_tilable:
+    evaluator: [python, services/tell_if_tilable_server.py]
+    description: "You assert that a certain grid is tilable to get a confirm or be contradicted."
+    args:
+      m:
+        regex: ^([1-9]|[1-9][0-9]|100)$
+        default: 5
+        explain: a number from 1 to 100, the number of rows of your grid.
+      n:
+        regex: ^([1-9]|[1-9][0-9]|100)$
+        default: 5
+        explain: a number from 1 to 100, the number of columns of your grid.
+      my_conjecture:
+        regex: ^yes$
+        default: yes
+      h:
+        regex: ^([1-9]|[1-2][0-9]|20)$
+        default: 1
+        explain: a number from 1 to 20, the first dimension of the tile.
+      k:
+        regex: ^([1-9]|[1-2][0-9]|20)$
+        default: 2
+        explain: a number from 1 to 20, the second dimension of the tile.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  is_not_tilable:
+  gimme_hints_on_a_tiling:
+  synopsis:
 ...

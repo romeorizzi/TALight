@@ -2,31 +2,31 @@
 ---
 public_folder: public
 services:
-spot_magic_indexes:
-check_magic_indexes:
-gimme_input_vector:
-check_worst_case_num_questions:
-  description: You give us a natural n and what you conjecture to be the smallest number r such that there exists a strategy for knowing the truth in at most r queries. We check out your conjecture.
-  evaluator: [python, services/check_worst_case_n_questions_server.py]
-  args:
-    n:
-      regex: ^(0|[1-9][0-9]{0,1}|100)$
-    risp:
-      regex: ^(0|[1-9][0-9]{0,50})$
-      explain: the smallest number r such that there exists a strategy for finding out precisely which indexes are magic in at most r queries.
-    more_or_less_hint_if_wrong:
-      regex: ^(0|1)$
-      default: 0
-    silent:
-      regex: ^(0|1)$
-      default: 0
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-play1:
-eval_play1:
-play2:
-optimal_move1:
-
-synopsis:
+  spot_magic_indexes:
+  check_magic_indexes:
+  gimme_input_vector:
+  check_worst_case_num_questions:
+    description: You give us a natural n and what you conjecture to be the smallest number r such that there exists a strategy for knowing the truth in at most r queries. We check out your conjecture.
+    evaluator: [python, services/check_worst_case_n_questions_server.py]
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]{0,1}|100)$
+      risp:
+        regex: ^(0|[1-9][0-9]{0,50})$
+        explain: the smallest number r such that there exists a strategy for finding out precisely which indexes are magic in at most r queries.
+      more_or_less_hint_if_wrong:
+        regex: ^(0|1)$
+        default: 0
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  play1:
+  eval_play1:
+  play2:
+  optimal_move1:
+  
+  synopsis:
 ...

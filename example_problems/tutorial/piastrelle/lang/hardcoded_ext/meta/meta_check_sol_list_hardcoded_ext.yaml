@@ -2,35 +2,35 @@
 ---
 public_folder: public
 services:
-check_one_sol:
-check_num_sol:
-eval_num_sol:
-check_sol_set:
-check_sol_list:
-  evaluator: [python, services/check_sol_list_server.py]
-  args:
-    sorting_criterion:
-      regex: ^(loves_short_tiles|loves_long_tiles)$
-      default: loves_short_tiles
-    feedback:
-      regex: ^(yes_no|dispell_first_missing_longest_seen_prefix|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing|tell_prefix_of_missing_len_[1-9][0-9]{0,10})$
-      default: yes_no
-      explain: the options are as follows
-      explain1: -yes_no= just tell me if I am missing one solution.
-      explain2: -dispell_first_missing_longest_seen_prefix= please, of one solution I am missing, give me the longest prefix it has in common with a solution I have given.
-      explain3: -spot_first_wrong_consec= please, point me out two solutions I have placed consecutive whereas at least one missing solutions sits betwen them.
-      explain4: -tell_first_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution I get a new one.
-      explain5: -give_first_missing= just spoil me out a solution I have missed.
-      explain6: -tell_prefix_of_missing_len_<len>= please, of one solution I am missing, give me the prefix of length <len>.
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-eval_sol_list:
-check_next_sol_gen:
-eval_next:
-check_rank_of_sol:
-check_unrank:
-eval_rank:
-eval_unrank:
-synopsis:
+  check_one_sol:
+  check_num_sol:
+  eval_num_sol:
+  check_sol_set:
+  check_sol_list:
+    evaluator: [python, services/check_sol_list_server.py]
+    args:
+      sorting_criterion:
+        regex: ^(loves_short_tiles|loves_long_tiles)$
+        default: loves_short_tiles
+      feedback:
+        regex: ^(yes_no|dispell_first_missing_longest_seen_prefix|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing|tell_prefix_of_missing_len_[1-9][0-9]{0,10})$
+        default: yes_no
+        explain: the options are as follows
+        explain1: -yes_no= just tell me if I am missing one solution.
+        explain2: -dispell_first_missing_longest_seen_prefix= please, of one solution I am missing, give me the longest prefix it has in common with a solution I have given.
+        explain3: -spot_first_wrong_consec= please, point me out two solutions I have placed consecutive whereas at least one missing solutions sits betwen them.
+        explain4: -tell_first_minimal_missing_prefix= please, of one solution I am missing, give me a long enough prefix so that if I complete it to a feasible solution I get a new one.
+        explain5: -give_first_missing= just spoil me out a solution I have missed.
+        explain6: -tell_prefix_of_missing_len_<len>= please, of one solution I am missing, give me the prefix of length <len>.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  eval_sol_list:
+  check_next_sol_gen:
+  eval_next:
+  check_rank_of_sol:
+  check_unrank:
+  eval_rank:
+  eval_unrank:
+  synopsis:
 ...

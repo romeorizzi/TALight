@@ -2,25 +2,25 @@
 ---
 public_folder: public
 services:
-tell_if_graph_connected:
-check_certificate_of_connectivity:
-  description: this service checks whether a list of edges forms a spanning tree in a given graph
-  evaluator: [python, services/check_certificate_of_connectivity_server.py]
-  args:
-    n:
-      regex: ^([1-9][0-9]{0,4}|1000)$
-      explain: the number of nodes nodes of the graph
-    how_to_input_the_graph:
-      regex: ^(lazy|([1-9]|[0-9]{5,5}))$
-      explain: you can either enter the code (random seed) of one of our instances (n,seed) defining a graph you may have already encountered in other services for this problem or ask to enter your graph after the service has started up (lazy)
-    silent:
-      explain: if nothing is wrong with your spanning tree for the graph you have specified us (through seed) then the service runs silently; otherwise it explains what is the problem in clear.
-      regex: ^(0|1)$
-      default: 0
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-check_certificate_of_nonconnectivity:
-eval_bot_deciding_connectivity:
-synopsis:
+  tell_if_graph_connected:
+  check_certificate_of_connectivity:
+    description: this service checks whether a list of edges forms a spanning tree in a given graph
+    evaluator: [python, services/check_certificate_of_connectivity_server.py]
+    args:
+      n:
+        regex: ^([1-9][0-9]{0,4}|1000)$
+        explain: the number of nodes nodes of the graph
+      how_to_input_the_graph:
+        regex: ^(lazy|([1-9]|[0-9]{5,5}))$
+        explain: you can either enter the code (random seed) of one of our instances (n,seed) defining a graph you may have already encountered in other services for this problem or ask to enter your graph after the service has started up (lazy)
+      silent:
+        explain: if nothing is wrong with your spanning tree for the graph you have specified us (through seed) then the service runs silently; otherwise it explains what is the problem in clear.
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_certificate_of_nonconnectivity:
+  eval_bot_deciding_connectivity:
+  synopsis:
 ...

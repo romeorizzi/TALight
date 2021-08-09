@@ -2,29 +2,29 @@
 ---
 public_folder: public
 services:
-dec2opt:
-opt2con:
-dec2con:
-opt2dec:
-con2opt:
-  description: this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange.
-  evaluator: [python, services/con2opt_server.py]
-  args:
-    size:
-      regex: ^(small|large)$
-      default: small
-    seed:
-      explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      regex: ^(random_seed|[1-9][0-9]{0,5})$
-      default: random_seed
-    goal:
-      regex: ^(correct|number_of_calls_linear_in_n)$
-      default: correct
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-#fatto - controllato: ok
-con2dec:
-trilly:
-synopsis:
+  dec2opt:
+  opt2con:
+  dec2con:
+  opt2dec:
+  con2opt:
+    description: this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its optimization form. You can call the oracle as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange.
+    evaluator: [python, services/con2opt_server.py]
+    args:
+      size:
+        regex: ^(small|large)$
+        default: small
+      seed:
+        explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
+        default: random_seed
+      goal:
+        regex: ^(correct|number_of_calls_linear_in_n)$
+        default: correct
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  #fatto - controllato: ok
+  con2dec:
+  trilly:
+  synopsis:
 ...

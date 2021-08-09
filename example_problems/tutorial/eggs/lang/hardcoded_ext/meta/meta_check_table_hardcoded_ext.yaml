@@ -2,26 +2,26 @@
 ---
 public_folder: public
 services:
-confirm_min_throws:
-check_table:
-  evaluator: [python, services/check_table_server.py]
-  args:
-    eggs_from_zero:
-      regex: ^(0|1)$
-      default: 0
-    floors_from_zero:
-      regex: ^(0|1)$
-      default: 0
-    separator:
-      regex: ^(None|[^#])$
-      default: None
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-gimme_table:
-opt_move:
-play:
-play_nature:
-eval_strategy_table:
-synopsis:
+  confirm_min_throws:
+  check_table:
+    evaluator: [python, services/check_table_server.py]
+    args:
+      eggs_from_zero:
+        regex: ^(0|1)$
+        default: 0
+      floors_from_zero:
+        regex: ^(0|1)$
+        default: 0
+      separator:
+        regex: ^(None|[^#])$
+        default: None
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  gimme_table:
+  opt_move:
+  play:
+  play_nature:
+  eval_strategy_table:
+  synopsis:
 ...

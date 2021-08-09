@@ -2,24 +2,24 @@
 ---
 public_folder: public
 services:
-check_is_sc:
-check_is_not_sc:
-eval_recognizer_sc:
-gimme_scc:
-  description: This service receives from you a directed graph and then separates its strongly connected components listing them out according to a topological sort
-  evaluator: [python,services/gimme_scc_server.py]
-  args:   
-    n:
-      regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-      default: lazy
-      explain: Number of nodes.
-    m:
-      regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-      default: lazy
-      explain: Number of arcs.
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-eval_find_scc:
-synopsis:
+  check_is_sc:
+  check_is_not_sc:
+  eval_recognizer_sc:
+  gimme_scc:
+    description: This service receives from you a directed graph and then separates its strongly connected components listing them out according to a topological sort
+    evaluator: [python,services/gimme_scc_server.py]
+    args:   
+      n:
+        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
+        default: lazy
+        explain: Number of nodes.
+      m:
+        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
+        default: lazy
+        explain: Number of arcs.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  eval_find_scc:
+  synopsis:
 ...

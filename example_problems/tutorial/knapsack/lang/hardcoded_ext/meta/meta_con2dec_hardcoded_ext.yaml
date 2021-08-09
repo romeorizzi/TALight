@@ -2,32 +2,32 @@
 ---
 public_folder: public
 services:
-dec2opt:
-opt2con:
-dec2con:
-opt2dec:
-con2opt:
-con2dec:
-  description: this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle for the decision form as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange. Posing yourself a different set of goals, you might also ask for one single call to an oracle for the Knapsack problem in its optimization form (see the arguments of the service to know more).
-  evaluator: [python, services/con2dec_server.py]
-  args:
-    size:
-      regex: ^(small|large)$
-      default: small
-    seed:
-      explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      regex: ^(random_seed|[1-9][0-9]{0,5})$
-      default: random_seed
-    goal:
-      regex: ^(correct|polynomial_dec_calls|at_most_n_dec_calls)$
-      default: correct
-    ask_for_one_opt_oracle_call:
-      explain: setting this flag to 1, your very first call to an oracle is interpreted as a call to an oracle for the Knapsack problem in its optimization form. By resorting on a suitable such call, you can reduce to at most n the calls to the decision oracle.
-      regex: ^(0|1)$
-      default: 0
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-trilly:
-synopsis:
+  dec2opt:
+  opt2con:
+  dec2con:
+  opt2dec:
+  con2opt:
+  con2dec:
+    description: this service poses you an instance of the Knapsack problem in its construction form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle for the decision form as many times as you want but are asked to ultimately yield an optimal solution for the single construction question posed by the server at the very start of the exchange. Posing yourself a different set of goals, you might also ask for one single call to an oracle for the Knapsack problem in its optimization form (see the arguments of the service to know more).
+    evaluator: [python, services/con2dec_server.py]
+    args:
+      size:
+        regex: ^(small|large)$
+        default: small
+      seed:
+        explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
+        default: random_seed
+      goal:
+        regex: ^(correct|polynomial_dec_calls|at_most_n_dec_calls)$
+        default: correct
+      ask_for_one_opt_oracle_call:
+        explain: setting this flag to 1, your very first call to an oracle is interpreted as a call to an oracle for the Knapsack problem in its optimization form. By resorting on a suitable such call, you can reduce to at most n the calls to the decision oracle.
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  trilly:
+  synopsis:
 ...

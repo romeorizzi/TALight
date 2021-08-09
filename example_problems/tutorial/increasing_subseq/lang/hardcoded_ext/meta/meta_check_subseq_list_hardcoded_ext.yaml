@@ -2,32 +2,32 @@
 ---
 public_folder: public
 services:
-is_subseq:
-gen_subseq_instance:
-check_is_subseq_YES_certificate:
-eval_subseq:
-check_longest_increasing_subseq:
-eval_longest_increasing_subseq:
-check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
-eval_num_occurrences_of_S_in_T:
-
-check_subseq_set:
-check_subseq_list:
-  evaluator: [python, services/check_subseq_list_server.py]
-  args:
-    sorting_criterion:
-      regex: ^(loves_opening_par|loves_closing_par)$
-      default: loves_opening_par
-    feedback:
-      regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
-      default: yes_no
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-check_next_subseq_gen:
-eval_next_subseq_gen:
-check_rank_of_seq:
-eval_rank_of_seq:
-eval_count_increasing_subseq:
-synopsis:
+  is_subseq:
+  gen_subseq_instance:
+  check_is_subseq_YES_certificate:
+  eval_subseq:
+  check_longest_increasing_subseq:
+  eval_longest_increasing_subseq:
+  check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
+  eval_num_occurrences_of_S_in_T:
+  
+  check_subseq_set:
+  check_subseq_list:
+    evaluator: [python, services/check_subseq_list_server.py]
+    args:
+      sorting_criterion:
+        regex: ^(loves_opening_par|loves_closing_par)$
+        default: loves_opening_par
+      feedback:
+        regex: ^(yes_no|spot_first_wrong_consec|tell_first_minimal_missing_prefix|give_first_missing)$
+        default: yes_no
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_next_subseq_gen:
+  eval_next_subseq_gen:
+  check_rank_of_seq:
+  eval_rank_of_seq:
+  eval_count_increasing_subseq:
+  synopsis:
 ...

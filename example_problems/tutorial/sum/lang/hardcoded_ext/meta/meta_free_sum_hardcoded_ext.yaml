@@ -2,26 +2,26 @@
 ---
 public_folder: public
 services:
-free_sum:
-  description: You are given a sum value and are asked to return two natural numbers having that sum. You can also pose yourself the challenge to return such a pair of numbers for which the product is largest possible.
-  evaluator: [python, services/free_sum/advanced/free_sum_server.py]
-  #evaluator: [python, services/free_sum/simple/free_sum_server.py]
-  args:
-    numbers:
-      regex: ^(onedigit|twodigits|big)$
-      default: twodigits
-    obj:
-      regex: ^(any|max_product)$
-      default: any
-    num_questions:
-      regex: ^([1-9]|[1-2][0-9]|30)$
-      default: 10
-      explain: a number from 1 to 30, the number of questions posed to the problem solver
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-sum_and_difference:
-sum_and_product:
-help:
-synopsis:
+  free_sum:
+    description: You are given a sum value and are asked to return two natural numbers having that sum. You can also pose yourself the challenge to return such a pair of numbers for which the product is largest possible.
+    evaluator: [python, services/free_sum/advanced/free_sum_server.py]
+    #evaluator: [python, services/free_sum/simple/free_sum_server.py]
+    args:
+      numbers:
+        regex: ^(onedigit|twodigits|big)$
+        default: twodigits
+      obj:
+        regex: ^(any|max_product)$
+        default: any
+      num_questions:
+        regex: ^([1-9]|[1-2][0-9]|30)$
+        default: 10
+        explain: a number from 1 to 30, the number of questions posed to the problem solver
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  sum_and_difference:
+  sum_and_product:
+  help:
+  synopsis:
 ...

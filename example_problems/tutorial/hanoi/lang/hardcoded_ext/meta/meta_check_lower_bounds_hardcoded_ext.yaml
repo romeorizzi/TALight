@@ -2,53 +2,53 @@
 ---
 public_folder: public
 services:
-check_one_sol:
-
-check_opt_num_moves:
-check_lower_bounds:
-  description: this service checks what is the minimum possible number of times that each single disk is moved in an optimal solution.
-  evaluator: [python, services/check_lower_bounds_server.py]
-  args:
-    v:      
-      regex:  ^(classic|toddler|clockwise)$
-      default: classic   
-    start:
-      regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
-      default: all_A
-      explain: initial configuration of the puzzle.
-    final:
-      regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
-      default: all_C
-      explain: target configuration for the puzzle.
-    n:
-      regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
-      default: -1 #implicit
-      explain: the number of disks (required only when it can not be inferred from the initial or target configuration).
-    disk:
-      regex: ^([1-9][0-9]{0,2}|1000)$
-      explain: "an integer in the interval [1,n]: the disk for which you want to give the tightest possible lower-bound on the number of times it must be moved in any solution. Note: disks 1 is the smallest."
-    answ:
-      regex: ^(0|[1-9][0-9]{0,1000})$ 
-      explain: what you conjecture to be the minimum number of times that disk <disk> needs to be moved in order to solve the puzzle.
-    silent:
-      regex: ^(0|1)$
-      default: 0
-      explain: if your solution is ok then the service runs silently; otherwise it explain what is the problem in your solution.
-    feedback:
-      regex: ^(yes_no|smaller_or_bigger|true_val)$
-      default: yes_no
-      explain: the options are as follows
-      explain1: -yes_no= provide the minimum possible amount of feedback.
-      explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
-      explain3: -true_val= offers the lenght of an optimal solution.
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-
-play_like:
-gen_random_puzzle:
-eval_opt_num_moves:
-
-eval_sol:
-synopsis:
+  check_one_sol:
+  
+  check_opt_num_moves:
+  check_lower_bounds:
+    description: this service checks what is the minimum possible number of times that each single disk is moved in an optimal solution.
+    evaluator: [python, services/check_lower_bounds_server.py]
+    args:
+      v:      
+        regex:  ^(classic|toddler|clockwise)$
+        default: classic   
+      start:
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_A
+        explain: initial configuration of the puzzle.
+      final:
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        default: all_C
+        explain: target configuration for the puzzle.
+      n:
+        regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
+        default: -1 #implicit
+        explain: the number of disks (required only when it can not be inferred from the initial or target configuration).
+      disk:
+        regex: ^([1-9][0-9]{0,2}|1000)$
+        explain: "an integer in the interval [1,n]: the disk for which you want to give the tightest possible lower-bound on the number of times it must be moved in any solution. Note: disks 1 is the smallest."
+      answ:
+        regex: ^(0|[1-9][0-9]{0,1000})$ 
+        explain: what you conjecture to be the minimum number of times that disk <disk> needs to be moved in order to solve the puzzle.
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: if your solution is ok then the service runs silently; otherwise it explain what is the problem in your solution.
+      feedback:
+        regex: ^(yes_no|smaller_or_bigger|true_val)$
+        default: yes_no
+        explain: the options are as follows
+        explain1: -yes_no= provide the minimum possible amount of feedback.
+        explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
+        explain3: -true_val= offers the lenght of an optimal solution.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  play_like:
+  gen_random_puzzle:
+  eval_opt_num_moves:
+  
+  eval_sol:
+  synopsis:
 ...

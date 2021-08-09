@@ -2,17 +2,17 @@
 ---
 public_folder: public
 services:
-free_sum:
-sum_and_difference:
-sum_and_product:
-help:
-  evaluator: [python, services/help/help_server.py]
-  args:
-    page:
-      regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
-      default: help
-    lang:
-      regex: ^(en|it)$
-      default: it
-synopsis:
+  free_sum:
+  sum_and_difference:
+  sum_and_product:
+  help:
+    evaluator: [python, services/help/help_server.py]
+    args:
+      page:
+        regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
+        default: help
+      lang:
+        regex: ^(en|it)$
+        default: it
+  synopsis:
 ...

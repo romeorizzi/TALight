@@ -2,6 +2,7 @@
 from sys import stderr, stdout, exit, argv
 import re
 import ruamel
+import ast
 
 usage = f"""\nUsage:\nLaunch as:\n
 > {argv[0]} service_server.py ["only_fstring_phrases"|"only_plain_phrases"|"fstring_signal"|"fstring_count"] [-preamble_file=<premble_file_name>]\n
@@ -41,12 +42,34 @@ CWHITE  = '\33[37m'
 
 def adapt_string_to_yaml_book(string):
     #print("before: " + string, file=stderr)
-    orderd_list_of_substitutions = [("\\'\\'","\\''"),
-                                    ('\\"\\"','\\""')]
+    orderd_list_of_substitutions = [("\\'\\'","\\''")  # sostituisce '' con \''
+                                   ]
     for before,after in orderd_list_of_substitutions:
        string = string.replace(before, after)
     #print("after: " + string, file=stderr)
     return(string)
+
+
+def is_valid_python(code):
+   try:
+       ast.parse(code)
+   except SyntaxError:
+       return False
+   return True
+
+def the_longest_valid_python_string_which_is_prefix_of(blob):
+   first_char = blob[0]
+   mate_of = { "(":")", "'":"'", '"':'"' }
+   assert first_char in mate_of.keys()
+   expected_last_char = mate_of[first_char]
+   j = len(blob) -1
+   while True:
+       while blob[j] != expected_last_char:
+           j -= 1
+       assert j > 0
+       if is_valid_python(blob[:j+1]):
+           return blob[:j+1]
+       j -= 1
 
 fstring_arg = None
 if len(argv) not in {2,3,4}:
@@ -99,35 +122,37 @@ program_source = f"ORIGINAL CONTENT OF FILE {argv[1]}" + "".join(program_lines)
 
 # We should search and treat patterns like:
 #   LANG.render_feedback("insert-num-rows", 'Insert the number of rows:')
-
-def extract_phrase(good_suffix):
-    interesting_part = ""
-    balance = 0
-    for char in good_suffix:
-        interesting_part += char 
-        if char == '(':
-            balance += 1
-        if char == ')':
-            balance -= 1
-            if balance == 0:
-                break
-    #print(interesting_part)
-    while interesting_part[-1] not in {"'",'"'}:
-        interesting_part = interesting_part[0:-1]
-    interesting_part = interesting_part[0:-1]
-    #print(re.split('(\"|\')', interesting_part, 3))
-    _,_,phrase_code,_,fstring_flag,_,phrase_text = re.split('(\"|\')', interesting_part, 3)
-    return phrase_code, phrase_text, "f" in fstring_flag
+#                           ^ phrase_code       ^ phrase_text
+def extract_phrase(good_prefix):
+    assert good_prefix[0] == '(' # which is the open parentheses of the next LANG.render_feedback(...  call
+#                                                                                                ^ more precisely, this one
+    embraced_call = the_longest_valid_python_string_which_is_prefix_of(good_prefix)
+    #print(f"good_prefix={good_prefix}")
+    #print(f"embraced_call={embraced_call}")
+    start_pos_phrase_code = 1
+    while embraced_call[start_pos_phrase_code] not in { "'", '"' }:
+        start_pos_phrase_code += 1
+    delimiter = embraced_call[start_pos_phrase_code]
+    stop_pos_phrase_code = start_pos_phrase_code + 1
+    while embraced_call[stop_pos_phrase_code] != delimiter:
+        stop_pos_phrase_code += 1
+    phrase_code = embraced_call[start_pos_phrase_code+1:stop_pos_phrase_code]
+    #print(f"phrase_code={phrase_code}")
+    start_pos_hardcoded_phrase = stop_pos_phrase_code + 1
+    while embraced_call[start_pos_hardcoded_phrase] not in { "'", '"' }:
+        start_pos_hardcoded_phrase += 1
+    phrase_text = the_longest_valid_python_string_which_is_prefix_of(embraced_call[start_pos_hardcoded_phrase:])[1:-1]
+    #print(f"phrase_text={phrase_text}")
+    return phrase_code, phrase_text, "f" in embraced_call[stop_pos_phrase_code:start_pos_hardcoded_phrase]
 
 
 found_phrases = {}
 
-source_good_suffix = program_source
 num_plain_phrases = 0
 num_fstring_phrases = 0
-while re.search("LANG.render_feedback", source_good_suffix, 1) != None:
-    gone_away_part, source_good_suffix = re.split("LANG.render_feedback", source_good_suffix, 1)
-    phrase_code, phrase_text,fstring_flag = extract_phrase(source_good_suffix)
+segments=program_source.split("LANG.render_feedback")[1:]
+for segment_starting_with_LANG_call_open_par in segments:
+    phrase_code, phrase_text,fstring_flag = extract_phrase(segment_starting_with_LANG_call_open_par)
     if phrase_code in found_phrases.keys():
         if phrase_text == found_phrases[phrase_code]:
             continue

@@ -2,16 +2,16 @@
 ---
 public_folder: public
 services:
-common_multiple:
-common_non_multiple:
-extract_prime:
-  evaluator: [python, services/extract_prime/simple/extract_prime_server.py]
-  args:
-    n:
-      regex: ^(twodigits|fourdigits|big)$
-      default: twodigits
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-synopsis:
+  common_multiple:
+  common_non_multiple:
+  extract_prime:
+    evaluator: [python, services/extract_prime/simple/extract_prime_server.py]
+    args:
+      n:
+        regex: ^(twodigits|fourdigits|big)$
+        default: twodigits
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
 ...

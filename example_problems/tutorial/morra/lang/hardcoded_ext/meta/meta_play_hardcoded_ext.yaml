@@ -2,19 +2,19 @@
 ---
 public_folder: public
 services:
-play:
-  evaluator: [python, services/play/advanced/play_server.py]
-  args:
-    num_rounds:
-      regex: ^([1-9][0-9]{0,2}|100)$
-      default: 10
-    hash_type:
-      regex: ^(rabin_karp|sha1|sha256|sha512)$
-      default: rabin_karp
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-compute_hash:
-verify_hash:
-synopsis:
+  play:
+    evaluator: [python, services/play/advanced/play_server.py]
+    args:
+      num_rounds:
+        regex: ^([1-9][0-9]{0,2}|100)$
+        default: 10
+      hash_type:
+        regex: ^(rabin_karp|sha1|sha256|sha512)$
+        default: rabin_karp
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  compute_hash:
+  verify_hash:
+  synopsis:
 ...

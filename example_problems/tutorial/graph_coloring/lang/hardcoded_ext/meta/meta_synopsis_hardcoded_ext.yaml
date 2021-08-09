@@ -2,19 +2,19 @@
 ---
 public_folder: public
 services:
-recognize_proper_colorings:
-eval_recognize_proper_colorings:
-yield_proper_colorings:
-yield_proper_2colorings:
-eval_yield_proper_2coloring:
-synopsis:
-  evaluator: [python3, services/synopsis/synopsis_server.py]
-  args:
-    service:
-      regex: ^((\S)+)$
-      default: synopsis
-      explain: any string without space characters but meant to specify one of the services of the problem {problem}
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
+  recognize_proper_colorings:
+  eval_recognize_proper_colorings:
+  yield_proper_colorings:
+  yield_proper_2colorings:
+  eval_yield_proper_2coloring:
+  synopsis:
+    evaluator: [python3, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
 ...

@@ -2,51 +2,51 @@
 ---
 public_folder: public
 services:
-compact_solution:
-order_of_rows_columns:
-sub_closure:
-check_unsol:
-check_sol:
-eval_decision:
-eval_sol:
-trilly:
-  evaluator: [python, services/trilly_server.py]
-  description: Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix. When you call this service a dialogue is set up where, after being told the number of rows and columns, you can either ask to switch the boolean values over entire rows or columns, query the current value of specific entries of the matrix, or ask Trilly how she would now act in order to turn off all of the entries in a submatrix of your choice (other than the whole matrix, of course; remember that Trilly is the tiny fairy). When the submatrix is unsolvable, Trilly will return a minimal unsolvable submatrix. In the end you must either turn off the entire matrix or claim the unsovability of the whole matrix. Try to use just one call, or just two calls to Trilly (these will be the most instructive). Also, when the whole matrix is unsolvable, try to claim the unsolvability of a minimal unsolvable submatrix rather then the unsolvability of the whole matrix.
-  args:
-    m:
-      regex: ^([1-9]|10|20|50|100|1000|10000)$
-      default: 10
-      explain: Choose the number of rows of the whole random matrix.
-    n:
-      regex: ^([1-9]|10|20|50|100|1000|10000)$
-      default: 10
-      explain: Choose the number of columns of the whole random matrix.
-    trilly1:
-      regex: ^(only_tells|tells_and_acts|only_acts)$
-      default: only_acts
-      explain: This parameter influences the behaviour of trilly when assigned a solvable submatrix. She can either suggest a set of moves that would turn it off, or just perform those moves, of perform those moves while spelling them out.
-    trilly2:
-      regex: ^(any_sol|dont_touch_first_submatrix_row)$
-      default: any_sol
-      explain: This parameter influences the behaviour of trilly when assigned a solvable submatrix. We can ask her to turn it off avoiding to invert the first row of the submatrix.
-    num_calls:
-      regex: ^(1|2|any)$
-      default: 2
-      explain: Number of allowed Trilly calls.
-    num_queries:
-      regex: ^([0-9]|10|20|50|100|1000|10000|10001|any)$
-      default: any
-      explain: Number of allowed entry queries.
-    num_your_moves:
-      regex: ^([0-9]|10|20|50|100|1000|10000|10001|any)$
-      default: any
-      explain: Number of your moves (those made by Trilly do not count).
-    seed:
-      explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      regex: ^(random_seed|[1-9][0-9]{5,5})$
-      default: random_seed
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-synopsis:
+  compact_solution:
+  order_of_rows_columns:
+  sub_closure:
+  check_unsol:
+  check_sol:
+  eval_decision:
+  eval_sol:
+  trilly:
+    evaluator: [python, services/trilly_server.py]
+    description: Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix. When you call this service a dialogue is set up where, after being told the number of rows and columns, you can either ask to switch the boolean values over entire rows or columns, query the current value of specific entries of the matrix, or ask Trilly how she would now act in order to turn off all of the entries in a submatrix of your choice (other than the whole matrix, of course; remember that Trilly is the tiny fairy). When the submatrix is unsolvable, Trilly will return a minimal unsolvable submatrix. In the end you must either turn off the entire matrix or claim the unsovability of the whole matrix. Try to use just one call, or just two calls to Trilly (these will be the most instructive). Also, when the whole matrix is unsolvable, try to claim the unsolvability of a minimal unsolvable submatrix rather then the unsolvability of the whole matrix.
+    args:
+      m:
+        regex: ^([1-9]|10|20|50|100|1000|10000)$
+        default: 10
+        explain: Choose the number of rows of the whole random matrix.
+      n:
+        regex: ^([1-9]|10|20|50|100|1000|10000)$
+        default: 10
+        explain: Choose the number of columns of the whole random matrix.
+      trilly1:
+        regex: ^(only_tells|tells_and_acts|only_acts)$
+        default: only_acts
+        explain: This parameter influences the behaviour of trilly when assigned a solvable submatrix. She can either suggest a set of moves that would turn it off, or just perform those moves, of perform those moves while spelling them out.
+      trilly2:
+        regex: ^(any_sol|dont_touch_first_submatrix_row)$
+        default: any_sol
+        explain: This parameter influences the behaviour of trilly when assigned a solvable submatrix. We can ask her to turn it off avoiding to invert the first row of the submatrix.
+      num_calls:
+        regex: ^(1|2|any)$
+        default: 2
+        explain: Number of allowed Trilly calls.
+      num_queries:
+        regex: ^([0-9]|10|20|50|100|1000|10000|10001|any)$
+        default: any
+        explain: Number of allowed entry queries.
+      num_your_moves:
+        regex: ^([0-9]|10|20|50|100|1000|10000|10001|any)$
+        default: any
+        explain: Number of your moves (those made by Trilly do not count).
+      seed:
+        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
 ...

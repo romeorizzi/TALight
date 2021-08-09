@@ -2,33 +2,33 @@
 ---
 public_folder: public
 services:
-dec2opt:
-opt2con:
-dec2con:
-opt2dec:
-  description: this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange.
-  evaluator: [python, services/opt2dec_server.py]
-  args:
-    size:
-      regex: ^(small|large)$
-      default: small
-    seed:
-      explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      regex: ^(random_seed|[1-9][0-9]{0,5})$
-      default: random_seed
-    goal:
-      explain: "the options are as follows:" 
-      explain1: "[correct] we only check that your answer to the optimization problem is correct."
-      explain2: "[at_most_opt_calls] we check that your answer to the optimization problem is correct and that you do not make more than opt_calls to the oracle."
-      explain3: "[polynomial] when numbers are encoded by means of a positional notation, as we do, then the share value of natural numbers grows exponentially in the length of the strings encoding them. Therefore, the opt value might be exponentially big in the length of the string encoding the input. As such, in this context polynomial means polynomial in log opt. We are asking you to exhibit a polynomial reduction, not just a pseudo-polynomial one."
-      regex: ^(correct|at_most_opt_calls|polynomial)$
-      default: correct
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-# fatto - controllato:ok
-con2opt:
-con2dec:
-trilly:
-synopsis:
+  dec2opt:
+  opt2con:
+  dec2con:
+  opt2dec:
+    description: this service poses you an instance of the Knapsack problem in its optimization form and remains available as an oracle for the Knapsack problem in its decision form. You can call the oracle as many times as you want but are asked to ultimately answer with the optimum value for the single optimization question posed by the server at the very start of the exchange.
+    evaluator: [python, services/opt2dec_server.py]
+    args:
+      size:
+        regex: ^(small|large)$
+        default: small
+      seed:
+        explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
+        default: random_seed
+      goal:
+        explain: "the options are as follows:" 
+        explain1: "[correct] we only check that your answer to the optimization problem is correct."
+        explain2: "[at_most_opt_calls] we check that your answer to the optimization problem is correct and that you do not make more than opt_calls to the oracle."
+        explain3: "[polynomial] when numbers are encoded by means of a positional notation, as we do, then the share value of natural numbers grows exponentially in the length of the strings encoding them. Therefore, the opt value might be exponentially big in the length of the string encoding the input. As such, in this context polynomial means polynomial in log opt. We are asking you to exhibit a polynomial reduction, not just a pseudo-polynomial one."
+        regex: ^(correct|at_most_opt_calls|polynomial)$
+        default: correct
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  # fatto - controllato:ok
+  con2opt:
+  con2dec:
+  trilly:
+  synopsis:
 ...

@@ -2,29 +2,29 @@
 ---
 public_folder: public
 services:
-check_one_sol:
-check_num_sol:
-eval_num_sol:
-check_sol_set:
-check_sol_list:
-check_next_sol:
-eval_next:
-check_rank:
-check_unrank:
-eval_rank:
-eval_unrank:
-gimme_rank:
-gimme_unrank:
-gimme_next_sol:
-  evaluator: [python, services/gimme_next_sol_server.py]
-  args:
-    current_sol:
-      regex:  ^((I|H)){0,1000}$
-    sorting_criterion:
-      regex: ^(lovesI|lovesH)$
-      default: lovesI
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-synopsis:
+  check_one_sol:
+  check_num_sol:
+  eval_num_sol:
+  check_sol_set:
+  check_sol_list:
+  check_next_sol:
+  eval_next:
+  check_rank:
+  check_unrank:
+  eval_rank:
+  eval_unrank:
+  gimme_rank:
+  gimme_unrank:
+  gimme_next_sol:
+    evaluator: [python, services/gimme_next_sol_server.py]
+    args:
+      current_sol:
+        regex:  ^((I|H)){0,1000}$
+      sorting_criterion:
+        regex: ^(lovesI|lovesH)$
+        default: lovesI
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
 ...

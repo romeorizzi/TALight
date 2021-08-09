@@ -3,10 +3,10 @@
 public_folder: public
 services:
 # controllato: ok
-  check_is_eulerian: 
+  check_is_eulerian:
     description: This service will check your assertion that a directed graph (that you provide us) admits an eulerian walk (of the specified type).
-    evaluator: [python,services/is_eulerian_server.py]
-    args:     
+    evaluator: [python, services/is_eulerian_server.py]
+    args:
       walk_type:
         regex: ^(open|closed|any)$
         default: closed
@@ -29,25 +29,25 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: (introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives an eulerian walk of type "walk_type" for the received graph, and checks the validity of this walk.
-      check_my_NO_certificate:
-        regex: ^0$
-        default: 0
       gimme_your_YES_certificate:
         regex: ^(0|1)$
         default: 0
         explain: (introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits an eulerian walk of type "walk_type", then the service also returns one such walk.
+      check_my_NO_certificate:
+        regex: ^0$
+        default: 0
       gimme_your_NO_certificate:
         regex: ^0$
         default: 0
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-      
+
 # controllato: ok
   check_is_not_eulerian:
     description: This service will check your assertion that a directed graph (that you provide us) does NOT admit an eulerian walk of the specified type.
-    evaluator: [python,services/is_eulerian_server.py]
-    args:     
+    evaluator: [python, services/is_eulerian_server.py]
+    args:
       walk_type:
         regex: ^(open|closed|any)$
         default: closed
@@ -72,14 +72,14 @@ services:
       check_my_NO_certificate:
         regex: ^(0|1)$
         default: 0
-        explain: "(introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives a compact and convincing evidence for the non-existence of a walk of the prescribed type. This piece of evidence should have the form of a general argument that can be conveniently verified. When this flag is set to 1 the service also receives and checks this certificate. Since the form of the argument ought to be general/universal, it can be standardized and encoded. CAUTION: We hope you will first enquiry and conjecture yourself about what could be the form of this general argument/reason for non-existence (what are the necessary and sufficient conditions for the existence of such a walk?), and we have designed the materials of this problem as to support this main quest of you on this classical problem. However, you can also get essentially told about this form (spoiler) and get exposed to its specific encoding by calling this same service (possibly on another input graph) with the flag 'gimme_your_NO_certificate' set to 1. Decide yourself, with caution, the best timing for you (and your ultimate goals) to access the various services."   
+        explain: "(introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives a compact and convincing evidence for the non-existence of a walk of the prescribed type. This piece of evidence should have the form of a general argument that can be conveniently verified. When this flag is set to 1 the service also receives and checks this certificate. Since the form of the argument ought to be general/universal, it can be standardized and encoded. CAUTION: We hope you will first enquiry and conjecture yourself about what could be the form of this general argument/reason for non-existence (what are the necessary and sufficient conditions for the existence of such a walk?), and we have designed the materials of this problem as to support this main quest of you on this classical problem. However, you can also get essentially told about this form (spoiler) and get exposed to its specific encoding by calling this same service (possibly on another input graph) with the flag 'gimme_your_NO_certificate' set to 1. This will expose you (spoiler) to examples of the general form to argue for the NO. Decide yourself, with caution, the best timing for you (and your ultimate goals) to access the various services."
       gimme_your_YES_certificate:
         regex: ^0$
         default: 0
       gimme_your_NO_certificate:
         regex: ^(0|1)$
         default: 0
-        explain: (introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits no eulerian walk of type "walk_type", then the service also returns a compact and convincing evidence of non-existence that adheres to a general (standardized) argument that can be conveniently verified.
+        explain: "(introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits no eulerian walk of type 'walk_type', then the service also returns a compact and convincing evidence of non-existence that adheres to a general (standardized) argument that can be conveniently verified (what we call a NO-certificate). CAUTION: We hope you will first enquiry and conjecture yourself about what could be the form of this general argument/reason for non-existence (what are the necessary and sufficient conditions for the existence of such a walk?), and we have designed the materials of this problem as to support this main quest of you on this classical problem. However, you can also get essentially told about this form (spoiler) and get exposed to its specific encoding by calling this same service (possibly on another input graph) with the flag 'gimme_your_NO_certificate' set to 1. This will expose you (spoiler) to examples of the general form to argue for the NO. Decide yourself, with caution, the best timing for you (and your ultimate goals) to access the various services."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -87,7 +87,7 @@ services:
 # ok!
   check_eulerian_walk:
     description: (one could then remove, or just comment out, this whole service. 2021-08-06, Romeo) This service checks the validity of an eulerian walk for a graph. The service is given both the graph and the walk.
-    evaluator: [python,services/check_eulerian_walk_server.py]
+    evaluator: [python, services/check_eulerian_walk_server.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
@@ -109,7 +109,7 @@ services:
   # controllato
   eval_eulerian_walk_checker:
     description: "Let's invert our roles! Given a directed graph and a candidate eulerian walk for it, can you check whether the given eulerian walk is valid for the given directed graph?"
-    evaluator: [python,services/eval_eulerian_walk_checker_server.py]
+    evaluator: [python, services/eval_eulerian_walk_checker_server.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
@@ -122,7 +122,7 @@ services:
       goal:
         regex: ^(correct|efficient)$
         default: correct
-      code_lang: 
+      code_lang:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:
@@ -131,7 +131,7 @@ services:
 # corretto
   eval_eulerian_recognize:
     description: "Given a directed graph, can you decide whether it contains an eulerian walk? And can you do it efficiently?"
-    evaluator: [python,services/eval_eulerian_recognize_server.py]
+    evaluator: [python, services/eval_eulerian_recognize_server.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
@@ -144,7 +144,7 @@ services:
       n:
         regex: ^([1-9]|10|20|50|100|1000|10000)$
         default: 10
-        explain: Choose the number of nodes for the random graph G that will be offered you.  (in realà n ed m non dovrebbe darli l'utente, per valutare non si usa una sola istanza ma diverse, scelte anche a seconda dei goal. 2021-08-06, Romeo)
+        explain: Choose the number of nodes for the random graph G that will be offered you.  (in realtà gli argomenti n ed m non dovrebbero essere chiesti, per valutare non si usa una sola istanza ma diverse, scelte anche a seconda dei goal. 2021-08-06, Romeo)
       m:
         regex: ^([1-9]|10|20|50|100|1000|10000)$
         default: 10
@@ -156,7 +156,7 @@ services:
       goal2:
         regex: ^(correct|efficient)$
         default: correct
-      code_lang: 
+      code_lang:
         regex: ^(python|java|nodejs|compiled)$
         default: python
       lang:

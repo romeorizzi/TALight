@@ -2,29 +2,29 @@
 ---
 public_folder: public
 services:
-dec2opt:
-opt2con:
-dec2con:
-  description: this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange.
-  evaluator: [python, services/dec2con_server.py]
-  args:
-    size:
-      regex: ^(small|large)$
-      default: small
-    seed:
-      explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      regex: ^(random_seed|[1-9][0-9]{0,5})$
-      default: random_seed
-    goal:
-      regex: ^(correct|at_most_one_call)$
-      default: correct
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-#da completare goal "at-most-opt-calls". - Il resto controllato: ok
-opt2dec:
-con2opt:
-con2dec:
-trilly:
-synopsis:
+  dec2opt:
+  opt2con:
+  dec2con:
+    description: this service poses you an instance of the Knapsack problem in its decision form and remains available as an oracle for the Knapsack problem in its construction form. You can call the oracle as many times as you want but are asked to ultimately answer yes or no for the single decision question posed by the server at the very start of the exchange.
+    evaluator: [python, services/dec2con_server.py]
+    args:
+      size:
+        regex: ^(small|large)$
+        default: small
+      seed:
+        explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{0,5})$
+        default: random_seed
+      goal:
+        regex: ^(correct|at_most_one_call)$
+        default: correct
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  #da completare goal "at-most-opt-calls". - Il resto controllato: ok
+  opt2dec:
+  con2opt:
+  con2dec:
+  trilly:
+  synopsis:
 ...

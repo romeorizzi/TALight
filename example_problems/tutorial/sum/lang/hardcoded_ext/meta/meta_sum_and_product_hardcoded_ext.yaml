@@ -2,23 +2,23 @@
 ---
 public_folder: public
 services:
-free_sum:
-sum_and_difference:
-sum_and_product:
-  description: You are given the sum and the product of two natural numbers and your goal is to identify the two numbers.
-  evaluator: [python, services/sum_and_product/simple/sum_and_product_server.py]
-  #evaluator: [python, services/sum_and_product/advanced/sum_and_product_server.py]
-  args:
-    numbers:
-      regex: ^(onedigit|twodigits|big)$
-      default: onedigit
-    num_questions:
-      regex: ^([1-9]|[1-2][0-9]|30)$
-      default: 10
-      explain: a number from 1 to 30, the number of questions posed to the problem solver
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-help:
-synopsis:
+  free_sum:
+  sum_and_difference:
+  sum_and_product:
+    description: You are given the sum and the product of two natural numbers and your goal is to identify the two numbers.
+    evaluator: [python, services/sum_and_product/simple/sum_and_product_server.py]
+    #evaluator: [python, services/sum_and_product/advanced/sum_and_product_server.py]
+    args:
+      numbers:
+        regex: ^(onedigit|twodigits|big)$
+        default: onedigit
+      num_questions:
+        regex: ^([1-9]|[1-2][0-9]|30)$
+        default: 10
+        explain: a number from 1 to 30, the number of questions posed to the problem solver
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  help:
+  synopsis:
 ...

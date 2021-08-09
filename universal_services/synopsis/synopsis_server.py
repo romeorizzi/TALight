@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from sys import stderr, stdout, exit, argv
 from os import environ
+import os.path
 
 from multilanguage import Env, Lang, TALcolors
 
@@ -17,33 +18,49 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TAc.print(LANG.opening_msg, "green")
 
-try:
-    import ruamel.yaml
-except Exception as e:
-    print(e)
-    for out in [stdout, stderr]:
-        TAc.print(LANG.render_feedback("ruamel-missing", 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package \'\'ruamel\'\' on your machine).'), "red", ["bold"], file=out)
-        print(LANG.render_feedback("ruamel-required", ' the service \'\'synopsis\'\' needs to read .yaml files in order to provide you with the information required. As long as \'\'ruamel\'\' is not installed in the environment where the \'\'rtald\'\' daemon runs, the service \'\'synopsis\'\' can not perform.'), file=out)
-        print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
-    exit(1)
-
-meta_yaml_file = environ["TAL_META_DIR"] + "/meta.yaml"
-try:
-  with open(meta_yaml_file, 'r') as stream:
+def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
     try:
-        meta_yaml_book = ruamel.yaml.safe_load(stream)
-    except:
+        import ruamel.yaml
+    except Exception as e:
+        print(e)
         for out in [stdout, stderr]:
-            TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have alterered the file yourself): The meta.yaml file \'\'{meta_yaml_file}\'\' could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
+            TAc.print(LANG.render_feedback("ruamel-missing", 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package ''ruamel'' on your machine).'), "red", ["bold"], file=out)
+            print(LANG.render_feedback("ruamel-required", ' the service ''synopsis'' needs to read .yaml files in order to provide you with the information required. As long as ''ruamel'' is not installed in the environment where the ''rtald'' daemon runs, the service ''synopsis'' can not perform.'), file=out)
             print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
         exit(1)
-except IOError as ioe:
-    for out in [stdout, stderr]:
-        TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker): The meta.yaml file of the problem "{problem}" could not be accessed for the required information. File not found: \'\'{meta_yaml_file}\'\''), "red", ["bold"], file=out)
-        print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
-        print(ioe, file=out)
-    exit(1)
+    environ["TAL_META_DIR"] + "/meta.yaml"
+    try:
+      with open(meta_yaml_file, 'r') as stream:
+        try:
+            meta_yaml_book = ruamel.yaml.safe_load(stream)
+        except:
+            for out in [stdout, stderr]:
+                TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file ''{meta_yaml_file}'' for problem {problem} could not be loaded as a .yaml file.', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
+            if succeed_or_die:
+                print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
+                exit(1)
+            else:
+                print(LANG.render_feedback("operation-not-necessary", ' We overcome this problem by resorting on the information hardcoded within the meta.yaml file of the problem. Hope that getting this updated information in English is good enough for you.'), file=out)
+                return None
+    except IOError as ioe:
+        for out in [stdout, stderr]:
+            TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file of problem "{problem}" could not be accessed for the required information. File not found: ''{meta_yaml_file}''', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
+            print(ioe, file=out)
+        if succeed_or_die:
+            print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
+            exit(1)
+        else:
+            print(LANG.render_feedback("operation-not-necessary", ' We overcome this problem by resorting on the information hardcoded within the meta.yaml file of the problem. Hope that getting this updated information in English is good enough for you.'), file=out)
+            return None
+    return meta_yaml_book
 
+
+meta_yaml_book = None
+if environ["TAL_lang"] != "hardcoded":
+    meta_yaml_book = load_meta_yaml_file(meta_yaml_file=os.path.join(environ["TAL_META_DIR"],"lang",environ["TAL_lang"],"meta","meta_"+ENV["service"]+"_"+environ["TAL_lang"]+".yaml"), succeed_or_die = False)
+if meta_yaml_book == None:
+    meta_yaml_book = load_meta_yaml_file(meta_yaml_file=os.path.join(environ["TAL_META_DIR"],"meta.yaml"), succeed_or_die = True)
+    
 if ENV['service'] not in meta_yaml_book['services'].keys():
     TAc.print(LANG.render_feedback("wrong-service-name", f'\nSorry, you asked information about {ENV["service"]} which however does not appear among the services currently supported for the problem "{problem}".'), "red", ["bold"])
     TAc.print('\n\nList of all Services:', "red", ["bold", "underline"], end="  ")
@@ -94,7 +111,7 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
         else:
             TAc.print(f'   The argument {a} is mandatory.', ["bold"])
 
-print(LANG.render_feedback("regex-cloud-resource", '\nAll arguments of all TALight services take in as possible values only simple strings that can be streamed from the \'\'rtal\'\' client to the \'\'rtald\'\' daemon (and finally acquired as environment variables). For each argument, the family of allowed string values is described by means of a regex. If the correct interpretation of the regex confuses you, then take profit of the online support at \'\'https://extendsclass.com/regex-tester.html\'\'.\n'))
+print(LANG.render_feedback("regex-cloud-resource", '\nAll arguments of all TALight services take in as possible values only simple strings that can be streamed from the ''rtal'' client to the ''rtald'' daemon (and finally acquired as environment variables). For each argument, the family of allowed string values is described by means of a regex. If the correct interpretation of the regex confuses you, then take profit of the online support at ''https://extendsclass.com/regex-tester.html''.\n'))
 
 # Now printing the footing lines:
 if "help" in meta_yaml_book['services'].keys():

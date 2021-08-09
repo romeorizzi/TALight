@@ -56,8 +56,8 @@ def yield_one_service(problem_folder, service_name):
     meta_yaml = open(meta_yaml_file, 'r')
     service_meta_yaml_file = os.path.join(problem_folder, 'lang', 'hardcoded_ext', 'meta', f'meta_{service_name}_hardcoded_ext.yaml')
     if os.path.exists(service_meta_yaml_file):
-        print(f"{CRED}WARNING:{CEND} mi chiedi di creare un file che già è presente:\n    {service_meta_yaml_file}")
-        answ = input("Immetti 'p' o 'P' per prosguire,  'k' o 'K'  per skippare queste servizio. Con ogni altra immissione esci: ").upper()
+        print(f"{CRED}WARNING:{CEND} mi chiedi di creare un file che già è presente:\n    {service_meta_yaml_file}\n")
+        answ = input("Immetti 'p' o 'P' per proseguire sovrascivendo il vecchio file,  'k' o 'K'  per skippare su questo servizio del problema e passare ai successivi. Con ogni altra immissione esci: ").upper()
         if answ == 'K':
             return
         if answ != 'P': 
@@ -68,7 +68,7 @@ def yield_one_service(problem_folder, service_name):
     left_margin_width = 0
     for line in meta_yaml.readlines():
         if not section_services_begun:
-            print(line[left_margin_width:], file=service_meta_yaml, end="")
+            print(line, file=service_meta_yaml, end="")
             if line[:9] == "services:":
                 section_services_begun = True
         else:
@@ -79,13 +79,13 @@ def yield_one_service(problem_folder, service_name):
                 left_margin_width = len(line) - len(without_margin)
             if line[:left_margin_width] == " "*(left_margin_width):
                 if line[left_margin_width] not in {" ","#"}:
-                    print(line[left_margin_width:], file=service_meta_yaml, end="")
+                    print(line, file=service_meta_yaml, end="")
                     if service_name in line:
                         inside_my_service = True
                     else:
                         inside_my_service = False
                 elif inside_my_service:
-                    print(line[left_margin_width:], file=service_meta_yaml, end="")
+                    print(line, file=service_meta_yaml, end="")
     print('...', file=service_meta_yaml)
     print(f"  {CBOLD}{CGREEN}Ok{CEND}")
 

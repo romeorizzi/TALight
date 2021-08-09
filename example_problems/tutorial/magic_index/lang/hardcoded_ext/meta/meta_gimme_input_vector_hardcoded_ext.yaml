@@ -2,26 +2,26 @@
 ---
 public_folder: public
 services:
-spot_magic_indexes:
-check_magic_indexes:
-gimme_input_vector:
-  description: Call this service to ask for an instance, that is, an increasing sequence of integers comprising an input vector.
-  evaluator: [python, services/gimme_input_vector_server.py]
-  args:
-    n:
-      regex:  ^([1-9][0-9]{0,1}|1000})$
-    seed:
-      regex: ^(random_seed|[1-9][0-9]{5,5})$
-      default: random_seed
-      explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-check_worst_case_num_questions:
-play1:
-eval_play1:
-play2:
-optimal_move1:
-
-synopsis:
+  spot_magic_indexes:
+  check_magic_indexes:
+  gimme_input_vector:
+    description: Call this service to ask for an instance, that is, an increasing sequence of integers comprising an input vector.
+    evaluator: [python, services/gimme_input_vector_server.py]
+    args:
+      n:
+        regex:  ^([1-9][0-9]{0,1}|1000})$
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_worst_case_num_questions:
+  play1:
+  eval_play1:
+  play2:
+  optimal_move1:
+  
+  synopsis:
 ...

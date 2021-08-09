@@ -2,34 +2,34 @@
 ---
 public_folder: public
 services:
-check_static_strategy:
-check_dynamic_strategy:
-  description: "Your goal is to identify the false coin in a set of n coins of otherwise equal weight. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
-  evaluator: [python3, services/check_dynamic_strategy/check_dynamic_strategy_server.py]
-  args:
-    n:
-      regex: ^[1-9][0-9]?$|^100$
-      default: 7
-      explain: number of coins (1-100)
-    version: 
-      regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
-      default: false_is_leighter
-      explain: "choose the version of the puzzle among the following:"
-      explain1: "[false_is_leighter]  you are given to know that the false coin is leighter."
-      explain2: "[false_is_heavier]  you are given to know that the false coin is heavier."
-      explain3: "[false_has_different_weight]  you are only given to know that the weight of the false coin differs, but do not know whether it is leighter or heavier."
-    goal:
-      regex: ^(correct|optimal)$
-      default: correct
-    feedback: 
-      regex: ^(yes_no|provide_counterexample)$
-      default: yes_no
-      explain: "choose the feedback level. Options are as follows:"
-      explain1: "[yes_no]  just confirm me that my strategy meets the goal."
-      explain2: "[provide_counterexample]  please, when my strategy is not correct, provide me evidence of that. Also, when my strategy does not meet the goal, give me evidence of its failure in the form of a correct strategy with a smaller number of weighings."
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-empass_static_strategy_lighter_or_heavier:
-synopsis:
+  check_static_strategy:
+  check_dynamic_strategy:
+    description: "Your goal is to identify the false coin in a set of n coins of otherwise equal weight. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
+    evaluator: [python3, services/check_dynamic_strategy/check_dynamic_strategy_server.py]
+    args:
+      n:
+        regex: ^[1-9][0-9]?$|^100$
+        default: 7
+        explain: number of coins (1-100)
+      version: 
+        regex: ^(false_is_leighter|false_is_heavier|false_has_different_weight)$
+        default: false_is_leighter
+        explain: "choose the version of the puzzle among the following:"
+        explain1: "[false_is_leighter]  you are given to know that the false coin is leighter."
+        explain2: "[false_is_heavier]  you are given to know that the false coin is heavier."
+        explain3: "[false_has_different_weight]  you are only given to know that the weight of the false coin differs, but do not know whether it is leighter or heavier."
+      goal:
+        regex: ^(correct|optimal)$
+        default: correct
+      feedback: 
+        regex: ^(yes_no|provide_counterexample)$
+        default: yes_no
+        explain: "choose the feedback level. Options are as follows:"
+        explain1: "[yes_no]  just confirm me that my strategy meets the goal."
+        explain2: "[provide_counterexample]  please, when my strategy is not correct, provide me evidence of that. Also, when my strategy does not meet the goal, give me evidence of its failure in the form of a correct strategy with a smaller number of weighings."
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  empass_static_strategy_lighter_or_heavier:
+  synopsis:
 ...

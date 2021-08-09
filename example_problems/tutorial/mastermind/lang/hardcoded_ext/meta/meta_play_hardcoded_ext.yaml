@@ -2,34 +2,34 @@
 ---
 public_folder: public
 services:
-check_scoring_competence:
-tell_score:
-play:
-  evaluator: [python3, services/play_server.py]
-  args:
-    max_num_attempts:
-      regex: ^([1-9]|[1-4][0-9]|50)$
-      default: 10
-      explain: a number from 1 to 50, the number of questions posed to the problem solver to test the competence
-    num_pegs:
-      regex: ^([1-9])$
-      default: 4
-    num_colors:
-      regex: ^([2-8])$
-      default: 6
-    seed:
-      regex: ^(random_seed|[1-9][0-9]{5,5})$
-      default: random_seed
-      explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-    adversary:
-      regex: ^(random|malicious)$
-      default: random
-      explain: "choose the difficulty of the game. Options are as follows:"
-      explain1: "[random]  the game starts with the choice of a secret code (uniform at random)."
-      explain2: "[malicious]  your adversary does not commit to a specific secret code at the start of the game but decides it during the match with the aim to resist as long as possible to your attempts."
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-eval:
-synopsis:
+  check_scoring_competence:
+  tell_score:
+  play:
+    evaluator: [python3, services/play_server.py]
+    args:
+      max_num_attempts:
+        regex: ^([1-9]|[1-4][0-9]|50)$
+        default: 10
+        explain: a number from 1 to 50, the number of questions posed to the problem solver to test the competence
+      num_pegs:
+        regex: ^([1-9])$
+        default: 4
+      num_colors:
+        regex: ^([2-8])$
+        default: 6
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+        explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+      adversary:
+        regex: ^(random|malicious)$
+        default: random
+        explain: "choose the difficulty of the game. Options are as follows:"
+        explain1: "[random]  the game starts with the choice of a secret code (uniform at random)."
+        explain2: "[malicious]  your adversary does not commit to a specific secret code at the start of the game but decides it during the match with the aim to resist as long as possible to your attempts."
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  eval:
+  synopsis:
 ...

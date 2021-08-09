@@ -2,29 +2,29 @@
 ---
 public_folder: public
 services:
-confirm_min_throws:
-check_table:
-gimme_table:
-opt_move:
-  evaluator: [python, services/opt_move_server.py]
-  args:
-    n_floors:
-      regex: ^([1-9][0-9]{0,1}|100)$
-      default: 100
-    n_eggs:
-      regex: ^([1-9][0-9]{0,1}|100)$
-      default: 100
-    egg_launcher_goal:
-      regex: ^(minmax|minmax_minavg|minavg_minmax)$
-      default: minmax
-    tell_min_spoiler:
-      regex: ^(0|1)$
-      default: 0
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-play:
-play_nature:
-eval_strategy_table:
-synopsis:
+  confirm_min_throws:
+  check_table:
+  gimme_table:
+  opt_move:
+    evaluator: [python, services/opt_move_server.py]
+    args:
+      n_floors:
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 100
+      n_eggs:
+        regex: ^([1-9][0-9]{0,1}|100)$
+        default: 100
+      egg_launcher_goal:
+        regex: ^(minmax|minmax_minavg|minavg_minmax)$
+        default: minmax
+      tell_min_spoiler:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  play:
+  play_nature:
+  eval_strategy_table:
+  synopsis:
 ...

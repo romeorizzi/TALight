@@ -2,22 +2,22 @@
 ---
 public_folder: public
 services:
-TAL_recognizes:
-  description: Submit a regular expression r and a string s over the same alphabet. The service recognizes whether s belongs to the language described by r.
-  evaluator: [python,services/TAL_recognizes_server.py]
-  args:
-    s:
-      regex: ^(lazy|([a-z]|[A-Z]){0,100})$
-      default: lazy
-    r:
-      regex: ^(lazy|([a-z]|[A-Z]|\*|\+|\(|\)){0,100})$
-      default: lazy
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-you_recognize:
-eval_recognize:
-eval_regex2NFA:
-eval_NFA2DFA:
-synopsis:
+  TAL_recognizes:
+    description: Submit a regular expression r and a string s over the same alphabet. The service recognizes whether s belongs to the language described by r.
+    evaluator: [python,services/TAL_recognizes_server.py]
+    args:
+      s:
+        regex: ^(lazy|([a-z]|[A-Z]){0,100})$
+        default: lazy
+      r:
+        regex: ^(lazy|([a-z]|[A-Z]|\*|\+|\(|\)){0,100})$
+        default: lazy
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  you_recognize:
+  eval_recognize:
+  eval_regex2NFA:
+  eval_NFA2DFA:
+  synopsis:
 ...

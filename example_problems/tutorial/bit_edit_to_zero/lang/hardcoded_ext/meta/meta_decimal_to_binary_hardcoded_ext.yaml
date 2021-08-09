@@ -2,25 +2,25 @@
 ---
 public_folder: public
 services:
-decimal_to_binary:
-  description: We give you a number (or you can choose it) in decimal form and you have to produce its binary representation.
-  evaluator: [python,services/decimal_to_binary_server.py]
-  args:
-    number:
-      regex: ^(my|any)$
-      default: any
-      explain: the decimal number whose binary representation is sought for
-    please_do_it_for_me:
-      regex: ^(0|1)$
-      default: 0
-      explain: if this flag is set, and your solution is not correct, then we give you the correct one
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-min_num_steps:
-next_step:
-oracle:
-eval_sol:
-
-synopsis:
+  decimal_to_binary:
+    description: We give you a number (or you can choose it) in decimal form and you have to produce its binary representation.
+    evaluator: [python,services/decimal_to_binary_server.py]
+    args:
+      number:
+        regex: ^(my|any)$
+        default: any
+        explain: the decimal number whose binary representation is sought for
+      please_do_it_for_me:
+        regex: ^(0|1)$
+        default: 0
+        explain: if this flag is set, and your solution is not correct, then we give you the correct one
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  min_num_steps:
+  next_step:
+  oracle:
+  eval_sol:
+  
+  synopsis:
 ...

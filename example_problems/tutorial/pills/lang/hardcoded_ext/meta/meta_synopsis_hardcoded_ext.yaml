@@ -2,28 +2,28 @@
 ---
 public_folder: public
 services:
-check_one_sol:
-check_num_sol:
-eval_num_sol:
-check_sol_set:
-check_sol_list:
-check_next_sol:
-eval_next:
-check_rank:
-check_unrank:
-eval_rank:
-eval_unrank:
-gimme_rank:
-gimme_unrank:
-gimme_next_sol:
-synopsis:
-  evaluator: [python, services/synopsis/synopsis_server.py]
-  args:
-    service:
-      regex: ^((\S)+)$
-      default: synopsis
-      explain: any string without space characters but meant to specify one of the services of the problem {problem}
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
+  check_one_sol:
+  check_num_sol:
+  eval_num_sol:
+  check_sol_set:
+  check_sol_list:
+  check_next_sol:
+  eval_next:
+  check_rank:
+  check_unrank:
+  eval_rank:
+  eval_unrank:
+  gimme_rank:
+  gimme_unrank:
+  gimme_next_sol:
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
 ...

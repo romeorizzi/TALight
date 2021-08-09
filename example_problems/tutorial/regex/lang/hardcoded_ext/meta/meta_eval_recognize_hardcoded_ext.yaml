@@ -2,30 +2,30 @@
 ---
 public_folder: public
 services:
-TAL_recognizes:
-you_recognize:
-eval_recognize:
-  description: This service assesses the correctness and efficiency of your machinery to recognize whether s in L_r.
-  evaluator: [python,services/eval_recognize_server.py]
-  args:
-    goal:
-      regex: ^(correct|efficient)$
-      default: correct
-    seed:
-      explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run.
-      regex: ^(random_seed|[1-9][0-9]{5,5})$
-      default: random_seed
-    code_lang:
-      regex: ^(CIF|python|java|nodejs|compiled)$
-      default: CIF
-      explain: You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints.
-    feedback:
-      regex: ^(yes_no|with_construction_of_s)$
-      default: yes_no
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-eval_regex2NFA:
-eval_NFA2DFA:
-synopsis:
+  TAL_recognizes:
+  you_recognize:
+  eval_recognize:
+    description: This service assesses the correctness and efficiency of your machinery to recognize whether s in L_r.
+    evaluator: [python,services/eval_recognize_server.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+      seed:
+        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same set of instances as in a previous run.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      code_lang:
+        regex: ^(CIF|python|java|nodejs|compiled)$
+        default: CIF
+        explain: You can specify the language/framework that you used. The more we know about your bot the better we can estimate the efficiency of your algorithm and your approach to provide our best hints.
+      feedback:
+        regex: ^(yes_no|with_construction_of_s)$
+        default: yes_no
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  eval_regex2NFA:
+  eval_NFA2DFA:
+  synopsis:
 ...

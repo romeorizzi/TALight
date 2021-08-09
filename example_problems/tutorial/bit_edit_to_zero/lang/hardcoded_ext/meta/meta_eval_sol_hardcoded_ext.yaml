@@ -2,22 +2,22 @@
 ---
 public_folder: public
 services:
-decimal_to_binary:
-min_num_steps:
-next_step:
-oracle:
-eval_sol:
-  evaluator: [python, services/eval_sol_server.py]
-  args:
-    size:
-      regex: ^(small|medium|large)$
-      default: medium
-    with_NO_cert:
-      regex: ^(0|1)$
-      default: 1
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-
-synopsis:
+  decimal_to_binary:
+  min_num_steps:
+  next_step:
+  oracle:
+  eval_sol:
+    evaluator: [python, services/eval_sol_server.py]
+    args:
+      size:
+        regex: ^(small|medium|large)$
+        default: medium
+      with_NO_cert:
+        regex: ^(0|1)$
+        default: 1
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  synopsis:
 ...

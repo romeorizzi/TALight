@@ -2,54 +2,54 @@
 ---
 public_folder: public
 services:
-is_subseq:
-gen_subseq_instance:
-check_is_subseq_YES_certificate:
-eval_subseq:
-check_longest_increasing_subseq:
-  evaluator: [python, services/check_longest_increasing_subseq_server.py]
-  args:
-    T:
-      regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input)$
-      default: lazy_input
-    max_len_min_k:
-      regex: ^(0|[1-9][0-9]{0,50}|lazy_input)$
-      default: lazy_input
-    feas_subseq:
-      regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
-      default: lazy_input
-    coloring:
-      regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
-      default: none
-    feedback_level:
-      regex: ^(complete_subseq|subseq_prefix|no_feedback)$
-      default: complete_subseq
-    more_or_less_hint_if_wrong_max_len_min_k:
-      regex: ^(0|1)$
-      default: 0
-    YES_cert:
-      regex: ^(0|1)$
-      default: 1
-    seed:
-      explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      regex: ^(random_seed|[1-9][0-9]{5,5})$
-      default: random_seed
-    silent:
-      regex: ^(0|1)$
-      default: 0
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-eval_longest_increasing_subseq:
-check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
-eval_num_occurrences_of_S_in_T:
-
-check_subseq_set:
-check_subseq_list:
-check_next_subseq_gen:
-eval_next_subseq_gen:
-check_rank_of_seq:
-eval_rank_of_seq:
-eval_count_increasing_subseq:
-synopsis:
+  is_subseq:
+  gen_subseq_instance:
+  check_is_subseq_YES_certificate:
+  eval_subseq:
+  check_longest_increasing_subseq:
+    evaluator: [python, services/check_longest_increasing_subseq_server.py]
+    args:
+      T:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input)$
+        default: lazy_input
+      max_len_min_k:
+        regex: ^(0|[1-9][0-9]{0,50}|lazy_input)$
+        default: lazy_input
+      feas_subseq:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
+        default: lazy_input
+      coloring:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
+        default: none
+      feedback_level:
+        regex: ^(complete_subseq|subseq_prefix|no_feedback)$
+        default: complete_subseq
+      more_or_less_hint_if_wrong_max_len_min_k:
+        regex: ^(0|1)$
+        default: 0
+      YES_cert:
+        regex: ^(0|1)$
+        default: 1
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      silent:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  eval_longest_increasing_subseq:
+  check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
+  eval_num_occurrences_of_S_in_T:
+  
+  check_subseq_set:
+  check_subseq_list:
+  check_next_subseq_gen:
+  eval_next_subseq_gen:
+  check_rank_of_seq:
+  eval_rank_of_seq:
+  eval_count_increasing_subseq:
+  synopsis:
 ...

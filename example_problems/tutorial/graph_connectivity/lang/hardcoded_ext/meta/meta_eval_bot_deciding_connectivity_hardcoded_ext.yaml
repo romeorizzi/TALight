@@ -2,30 +2,30 @@
 ---
 public_folder: public
 services:
-tell_if_graph_connected:
-check_certificate_of_connectivity:
-check_certificate_of_nonconnectivity:
-eval_bot_deciding_connectivity:
-  evaluator: [python, services/eval_bot_deciding_connectivity_server.py]
-  args:
-    goal:
-      explain: set your goal (efficient includes also correct).
-      regex: ^(correct|quadratic|linear)$
-      default: correct
-    check_also_yes_certificate:
-      explain: when the instance is a connected graph my bot will also produce a spanning tree of it, please, check also my certificate.
-      regex: ^(0|1)$
-      default: 0
-    check_also_no_certificate:
-      explain: when the instance is a non-connected graph my bot will also produce a bipartition, please, check also my certificate.
-      regex: ^(0|1)$
-      default: 0
-    code_lang: 
-      explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
-      regex: ^(python|java|nodejs|compiled)$
-      default: python
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-synopsis:
+  tell_if_graph_connected:
+  check_certificate_of_connectivity:
+  check_certificate_of_nonconnectivity:
+  eval_bot_deciding_connectivity:
+    evaluator: [python, services/eval_bot_deciding_connectivity_server.py]
+    args:
+      goal:
+        explain: set your goal (efficient includes also correct).
+        regex: ^(correct|quadratic|linear)$
+        default: correct
+      check_also_yes_certificate:
+        explain: when the instance is a connected graph my bot will also produce a spanning tree of it, please, check also my certificate.
+        regex: ^(0|1)$
+        default: 0
+      check_also_no_certificate:
+        explain: when the instance is a non-connected graph my bot will also produce a bipartition, please, check also my certificate.
+        regex: ^(0|1)$
+        default: 0
+      code_lang: 
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
 ...

@@ -2,17 +2,17 @@
 ---
 public_folder: public
 services:
-bigger_and_bigger:
-rationals_are_dense_into_reals:
-archimede:
-synopsis:
-  evaluator: [python, services/synopsis/synopsis_server.py]
-  args:
-    service:
-      regex: ^((\S)+)$
-      default: synopsis
-      explain: any string without space characters but meant to specify one of the services of the problem {problem}
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
+  bigger_and_bigger:
+  rationals_are_dense_into_reals:
+  archimede:
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
 ...

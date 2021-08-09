@@ -2,30 +2,30 @@
 ---
 public_folder: public
 services:
-is_subseq:
-gen_subseq_instance:
-  description: It returns an instance of the eval_is_subseq service once you provide its description. The description has the form (m,n,max_val,yes_instance,seed).
-  evaluator: [python, services/gen_subseq_instance_server.py]
-  args: # m n max_val
-    yes_instance:
-      regex: ^(0|1)$
-    seed:
-      regex: ^([1-9][0-9]{5,5})$
-    silent:
-      regex: ^(0|1)$
-check_is_subseq_YES_certificate:
-eval_subseq:
-check_longest_increasing_subseq:
-eval_longest_increasing_subseq:
-check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
-eval_num_occurrences_of_S_in_T:
-
-check_subseq_set:
-check_subseq_list:
-check_next_subseq_gen:
-eval_next_subseq_gen:
-check_rank_of_seq:
-eval_rank_of_seq:
-eval_count_increasing_subseq:
-synopsis:
+  is_subseq:
+  gen_subseq_instance:
+    description: It returns an instance of the eval_is_subseq service once you provide its description. The description has the form (m,n,max_val,yes_instance,seed).
+    evaluator: [python, services/gen_subseq_instance_server.py]
+    args: # m n max_val
+      yes_instance:
+        regex: ^(0|1)$
+      seed:
+        regex: ^([1-9][0-9]{5,5})$
+      silent:
+        regex: ^(0|1)$
+  check_is_subseq_YES_certificate:
+  eval_subseq:
+  check_longest_increasing_subseq:
+  eval_longest_increasing_subseq:
+  check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
+  eval_num_occurrences_of_S_in_T:
+  
+  check_subseq_set:
+  check_subseq_list:
+  check_next_subseq_gen:
+  eval_next_subseq_gen:
+  check_rank_of_seq:
+  eval_rank_of_seq:
+  eval_count_increasing_subseq:
+  synopsis:
 ...

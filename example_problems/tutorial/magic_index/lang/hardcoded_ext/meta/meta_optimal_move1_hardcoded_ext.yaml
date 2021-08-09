@@ -2,24 +2,24 @@
 ---
 public_folder: public
 services:
-spot_magic_indexes:
-check_magic_indexes:
-gimme_input_vector:
-check_worst_case_num_questions:
-play1:
-eval_play1:
-play2:
-optimal_move1:
-  evaluator: [python, services/optimal_move_server.py]
-  args:
-    n:
-      regex: ^(0|[1-9][0-9]{0,1}|100)$
-    situation:
-      regex: ^(know_nothing|first_is_magic|last_is_magic)$
-      explain: three possible categories for what we might know at the beginning of the game.
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-
-synopsis:
+  spot_magic_indexes:
+  check_magic_indexes:
+  gimme_input_vector:
+  check_worst_case_num_questions:
+  play1:
+  eval_play1:
+  play2:
+  optimal_move1:
+    evaluator: [python, services/optimal_move_server.py]
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]{0,1}|100)$
+      situation:
+        regex: ^(know_nothing|first_is_magic|last_is_magic)$
+        explain: three possible categories for what we might know at the beginning of the game.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  synopsis:
 ...

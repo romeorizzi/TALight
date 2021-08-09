@@ -2,35 +2,35 @@
 ---
 public_folder: public
 services:
-check_one_sol:
-  description: this service checks whether a path is a fasible solution for a given triangle and evaluates its value.
-  evaluator: [python, services/check_one_sol_server.py]
-  args:
-    n:
-      regex: ^([1-9][0-9]{0,1}|100)$
-      explain: the number of rows of the triangle
-      default: 5
-    MIN_VAL:
-      regex: ^(0|[1-9][0-9]{0,1})$
-      explain: defines the valid range for the numbers comprising the triangle
-      default: 0
-    MAX_VAL:
-      regex: ^(0|[1-9][0-9]{0,1})$
-      explain: defines the valid range for the numbers comprising the triangle
-      default: 99
-    how_to_input_the_triangle:
-      regex: ^(lazy|([1-9]|[0-9]{5,5}))$
-      explain: you can either enter the code (random seed) of one of our instances (n,MIN_VAL,MAX_VAL,seed) defining a triangle you may have already encountered in other services for this problem or ask to enter your triangle after the service has started up (lazy)
-    sol_value:
-      regex: ^((0|[1-9][0-9]{0,4})|none)$
-      default: none
-      explain: choose none if you are not interested in checking the value of your solution
-    silent:
-      explain: if nothing is wrong with your solution for the triangle you have specified us (through seed) then the service runs silently; otherwise it explain what is the problem in clear.
-      regex: ^(0|1)$
-      default: 0
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-synopsis:
+  check_one_sol:
+    description: this service checks whether a path is a fasible solution for a given triangle and evaluates its value.
+    evaluator: [python, services/check_one_sol_server.py]
+    args:
+      n:
+        regex: ^([1-9][0-9]{0,1}|100)$
+        explain: the number of rows of the triangle
+        default: 5
+      MIN_VAL:
+        regex: ^(0|[1-9][0-9]{0,1})$
+        explain: defines the valid range for the numbers comprising the triangle
+        default: 0
+      MAX_VAL:
+        regex: ^(0|[1-9][0-9]{0,1})$
+        explain: defines the valid range for the numbers comprising the triangle
+        default: 99
+      how_to_input_the_triangle:
+        regex: ^(lazy|([1-9]|[0-9]{5,5}))$
+        explain: you can either enter the code (random seed) of one of our instances (n,MIN_VAL,MAX_VAL,seed) defining a triangle you may have already encountered in other services for this problem or ask to enter your triangle after the service has started up (lazy)
+      sol_value:
+        regex: ^((0|[1-9][0-9]{0,4})|none)$
+        default: none
+        explain: choose none if you are not interested in checking the value of your solution
+      silent:
+        explain: if nothing is wrong with your solution for the triangle you have specified us (through seed) then the service runs silently; otherwise it explain what is the problem in clear.
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
 ...

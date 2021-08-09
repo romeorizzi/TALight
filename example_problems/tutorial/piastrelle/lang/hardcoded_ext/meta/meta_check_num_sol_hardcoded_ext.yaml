@@ -2,40 +2,40 @@
 ---
 public_folder: public
 services:
-check_one_sol:
-check_num_sol:
-  description: call this service to check that the number of different tilings with "[]" and "[--]" tiles of a corridor of length <n> is what you think.
-  evaluator: [python, services/check_num_sol_server.py]
-  args:
-    n:
-      regex: ^(0|[1-9][0-9]{0,1000})$
-      explain: use to specify the length of the corridor  
-    risp:
-      regex: ^(0|[1-9][0-9]{0,100000})$
-      explain: use to specify your conjectured answer for the number of tilings of a corridor of length <n>.  
-    ok_if_congruent_modulus:
-      explain: when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas.  
-      regex: ^(0|[1-9][0-9]{0,10})$
-      default: 0
-    more_or_less_hint_if_wrong:
-      regex: ^(0|1)$
-      default: 0
-    silent:
-      explain: the service runs silently unless your conjectured answer is wrong (or for wrong calls).
-      regex: ^(0|1)$
-      default: 0
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-eval_num_sol:
-check_sol_set:
-check_sol_list:
-eval_sol_list:
-check_next_sol_gen:
-eval_next:
-check_rank_of_sol:
-check_unrank:
-eval_rank:
-eval_unrank:
-synopsis:
+  check_one_sol:
+  check_num_sol:
+    description: call this service to check that the number of different tilings with "[]" and "[--]" tiles of a corridor of length <n> is what you think.
+    evaluator: [python, services/check_num_sol_server.py]
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]{0,1000})$
+        explain: use to specify the length of the corridor  
+      risp:
+        regex: ^(0|[1-9][0-9]{0,100000})$
+        explain: use to specify your conjectured answer for the number of tilings of a corridor of length <n>.  
+      ok_if_congruent_modulus:
+        explain: when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas.  
+        regex: ^(0|[1-9][0-9]{0,10})$
+        default: 0
+      more_or_less_hint_if_wrong:
+        regex: ^(0|1)$
+        default: 0
+      silent:
+        explain: the service runs silently unless your conjectured answer is wrong (or for wrong calls).
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  eval_num_sol:
+  check_sol_set:
+  check_sol_list:
+  eval_sol_list:
+  check_next_sol_gen:
+  eval_next:
+  check_rank_of_sol:
+  check_unrank:
+  eval_rank:
+  eval_unrank:
+  synopsis:
 ...

@@ -2,35 +2,35 @@
 ---
 public_folder: public
 services:
-spot_magic_indexes:
-check_magic_indexes:
-  description: You give us a sorted vector of distinct integers and the sorted list of its magic indexes. We check it out.
-  evaluator: [python, services/check_magic_indexes_server.py]
-  args:
-    input_vector:
-      regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
-      explain: an increasing sequence of integers separated by commas (no spaces).
-      example: -12,0,2,3,34,56
-    magic_indexes:
-      regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})|$
-      explain: the sorted sequence of magic indexes of input_vector (again an increasing sequence of integers separated by commas and no spaces).
-      example: 2,3
-    feedback:
-      regex: ^(silent|yes_no|gimme_one_wrong)$
-      default: silent
-      explain: "the levels of feedback are as follows:"
-      explain1: "[silent]  if magic_indexes is correct then the service runs silently. Otherwise it signals that there is some problem."
-      explain2: "[yes_no]  only tells whether magic_indexes is correct or not."
-      explain3: "[gimme_one_wrong]  tells whether magic_indexes is correct or not, and in the second case points out precisely one of the errors."
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-gimme_input_vector:
-check_worst_case_num_questions:
-play1:
-eval_play1:
-play2:
-optimal_move1:
-
-synopsis:
+  spot_magic_indexes:
+  check_magic_indexes:
+    description: You give us a sorted vector of distinct integers and the sorted list of its magic indexes. We check it out.
+    evaluator: [python, services/check_magic_indexes_server.py]
+    args:
+      input_vector:
+        regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})$
+        explain: an increasing sequence of integers separated by commas (no spaces).
+        example: -12,0,2,3,34,56
+      magic_indexes:
+        regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})|$
+        explain: the sorted sequence of magic indexes of input_vector (again an increasing sequence of integers separated by commas and no spaces).
+        example: 2,3
+      feedback:
+        regex: ^(silent|yes_no|gimme_one_wrong)$
+        default: silent
+        explain: "the levels of feedback are as follows:"
+        explain1: "[silent]  if magic_indexes is correct then the service runs silently. Otherwise it signals that there is some problem."
+        explain2: "[yes_no]  only tells whether magic_indexes is correct or not."
+        explain3: "[gimme_one_wrong]  tells whether magic_indexes is correct or not, and in the second case points out precisely one of the errors."
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  gimme_input_vector:
+  check_worst_case_num_questions:
+  play1:
+  eval_play1:
+  play2:
+  optimal_move1:
+  
+  synopsis:
 ...

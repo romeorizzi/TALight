@@ -2,32 +2,32 @@
 ---
 public_folder: public
 services:
-is_subseq:
-gen_subseq_instance:
-check_is_subseq_YES_certificate:
-eval_subseq:
-check_longest_increasing_subseq:
-eval_longest_increasing_subseq:
-check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
-eval_num_occurrences_of_S_in_T:
-
-check_subseq_set:
-check_subseq_list:
-check_next_subseq_gen:
-eval_next_subseq_gen:
-check_rank_of_seq:
-  evaluator: [python, services/check_rank_of_seq_server.py]
-  args:
-    T:
-      regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
-      default: lazy_input
-    sorting_criterion:
-      regex: ^([1-4]|lazy_input)$
-      default: lazy_input
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it  
-eval_rank_of_seq:
-eval_count_increasing_subseq:
-synopsis:
+  is_subseq:
+  gen_subseq_instance:
+  check_is_subseq_YES_certificate:
+  eval_subseq:
+  check_longest_increasing_subseq:
+  eval_longest_increasing_subseq:
+  check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
+  eval_num_occurrences_of_S_in_T:
+  
+  check_subseq_set:
+  check_subseq_list:
+  check_next_subseq_gen:
+  eval_next_subseq_gen:
+  check_rank_of_seq:
+    evaluator: [python, services/check_rank_of_seq_server.py]
+    args:
+      T:
+        regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
+        default: lazy_input
+      sorting_criterion:
+        regex: ^([1-4]|lazy_input)$
+        default: lazy_input
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it  
+  eval_rank_of_seq:
+  eval_count_increasing_subseq:
+  synopsis:
 ...

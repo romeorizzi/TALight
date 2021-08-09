@@ -2,50 +2,50 @@
 ---
 public_folder: public
 services:
-check_is_eulerian: 
-check_is_not_eulerian:
-  description: This service will check your assertion that a directed graph (that you provide us) does NOT admit an eulerian walk of the specified type.
-  evaluator: [python,services/is_eulerian_server.py]
-  args:     
-    walk_type:
-      regex: ^(open|closed|any)$
-      default: closed
-    feedback:
-      regex: ^(yes_no|with_YES_certificate)$
-      default: yes_no
-      explain: (we could then remove this argument. 2021-08-06, Romeo) when the feedback parameter is set to "with_YES_certificate" and the graph admits an eulerian walk of type "walk_type" then the service returns you one such walk. Otherwise the service will only confirm you that such a walk does NOT exists, or deny your assertion.
-    eulerian:
-      regex: ^0$
-      default: 0
-    MAXN:
-      regex: ^100$
-      default: 100
-      explain: The number of nodes of your graph cannot exceed MAXN.
-    MAXM:
-      regex: ^1000$
-      default: 1000
-      explain: The number of arcs of your graph cannot exceed MAXM.
-    check_my_YES_certificate:
-      regex: ^0$
-      default: 0
-    check_my_NO_certificate:
-      regex: ^(0|1)$
-      default: 0
-      explain: "(introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives a compact and convincing evidence for the non-existence of a walk of the prescribed type. This piece of evidence should have the form of a general argument that can be conveniently verified. When this flag is set to 1 the service also receives and checks this certificate. Since the form of the argument ought to be general/universal, it can be standardized and encoded. CAUTION: We hope you will first enquiry and conjecture yourself about what could be the form of this general argument/reason for non-existence (what are the necessary and sufficient conditions for the existence of such a walk?), and we have designed the materials of this problem as to support this main quest of you on this classical problem. However, you can also get essentially told about this form (spoiler) and get exposed to its specific encoding by calling this same service (possibly on another input graph) with the flag 'gimme_your_NO_certificate' set to 1. Decide yourself, with caution, the best timing for you (and your ultimate goals) to access the various services."   
-    gimme_your_YES_certificate:
-      regex: ^0$
-      default: 0
-    gimme_your_NO_certificate:
-      regex: ^(0|1)$
-      default: 0
-      explain: (introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits no eulerian walk of type "walk_type", then the service also returns a compact and convincing evidence of non-existence that adheres to a general (standardized) argument that can be conveniently verified.
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-check_eulerian_walk:
-eval_eulerian_walk_checker:
-eval_eulerian_recognize:
-trilly_decision:
-trilly_construction:
-synopsis:
+  check_is_eulerian:
+  check_is_not_eulerian:
+    description: This service will check your assertion that a directed graph (that you provide us) does NOT admit an eulerian walk of the specified type.
+    evaluator: [python, services/is_eulerian_server.py]
+    args:
+      walk_type:
+        regex: ^(open|closed|any)$
+        default: closed
+      feedback:
+        regex: ^(yes_no|with_YES_certificate)$
+        default: yes_no
+        explain: (we could then remove this argument. 2021-08-06, Romeo) when the feedback parameter is set to "with_YES_certificate" and the graph admits an eulerian walk of type "walk_type" then the service returns you one such walk. Otherwise the service will only confirm you that such a walk does NOT exists, or deny your assertion.
+      eulerian:
+        regex: ^0$
+        default: 0
+      MAXN:
+        regex: ^100$
+        default: 100
+        explain: The number of nodes of your graph cannot exceed MAXN.
+      MAXM:
+        regex: ^1000$
+        default: 1000
+        explain: The number of arcs of your graph cannot exceed MAXM.
+      check_my_YES_certificate:
+        regex: ^0$
+        default: 0
+      check_my_NO_certificate:
+        regex: ^(0|1)$
+        default: 0
+        explain: "(introduced 2021-08-06, Romeo) when this flag is set to 1 then the service also receives a compact and convincing evidence for the non-existence of a walk of the prescribed type. This piece of evidence should have the form of a general argument that can be conveniently verified. When this flag is set to 1 the service also receives and checks this certificate. Since the form of the argument ought to be general/universal, it can be standardized and encoded. CAUTION: We hope you will first enquiry and conjecture yourself about what could be the form of this general argument/reason for non-existence (what are the necessary and sufficient conditions for the existence of such a walk?), and we have designed the materials of this problem as to support this main quest of you on this classical problem. However, you can also get essentially told about this form (spoiler) and get exposed to its specific encoding by calling this same service (possibly on another input graph) with the flag 'gimme_your_NO_certificate' set to 1. This will expose you (spoiler) to examples of the general form to argue for the NO. Decide yourself, with caution, the best timing for you (and your ultimate goals) to access the various services."
+      gimme_your_YES_certificate:
+        regex: ^0$
+        default: 0
+      gimme_your_NO_certificate:
+        regex: ^(0|1)$
+        default: 0
+        explain: "(introduced 2021-08-06, Romeo) when this flag is set to 1 and it is indeed true that the graph admits no eulerian walk of type 'walk_type', then the service also returns a compact and convincing evidence of non-existence that adheres to a general (standardized) argument that can be conveniently verified (what we call a NO-certificate). CAUTION: We hope you will first enquiry and conjecture yourself about what could be the form of this general argument/reason for non-existence (what are the necessary and sufficient conditions for the existence of such a walk?), and we have designed the materials of this problem as to support this main quest of you on this classical problem. However, you can also get essentially told about this form (spoiler) and get exposed to its specific encoding by calling this same service (possibly on another input graph) with the flag 'gimme_your_NO_certificate' set to 1. This will expose you (spoiler) to examples of the general form to argue for the NO. Decide yourself, with caution, the best timing for you (and your ultimate goals) to access the various services."
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_eulerian_walk:
+  eval_eulerian_walk_checker:
+  eval_eulerian_recognize:
+  trilly_decision:
+  trilly_construction:
+  synopsis:
 ...

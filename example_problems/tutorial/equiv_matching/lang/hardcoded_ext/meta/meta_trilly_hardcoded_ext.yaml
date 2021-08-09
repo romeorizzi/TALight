@@ -2,28 +2,28 @@
 ---
 public_folder: public
 services:
-dec2opt:
-opt2con:
-dec2con:
-opt2dec:
-con2opt:
-con2dec:
-trilly:
-  description: this service poses you an n elements instance of the maximum weight matching problem in its optimization form and remains available as an oracle for the maximum weight matching problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange.
-  evaluator: [python, services/trilly_server.py]
-  args:
-    size:
-      regex: ^(small|large)$
-      default: small
-    seed:
-      explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      regex: ^(random_seed|[1-9][0-9]{5,5})$
-      default: random_seed
-    goal:
-      regex: ^(correct|polynomial_calls|at_most_n_dec_calls|at_most_2_dec_calls)$
-      default: correct
-    lang:
-      regex: ^(hardcoded|hardcoded_ext|en|it)$
-      default: it
-synopsis:
+  dec2opt:
+  opt2con:
+  dec2con:
+  opt2dec:
+  con2opt:
+  con2dec:
+  trilly:
+    description: this service poses you an n elements instance of the maximum weight matching problem in its optimization form and remains available as an oracle for the maximum weight matching problem, again in its optimization form, but considering only instances on at most n-1 elements. You can call this oracle as many times as you want but are asked to ultimately yield an optimal solution for the single optimization question posed by the server at the very start of the exchange.
+    evaluator: [python, services/trilly_server.py]
+    args:
+      size:
+        regex: ^(small|large)$
+        default: small
+      seed:
+        explain: specify the numeric code to reproduce the very same behaviour as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      goal:
+        regex: ^(correct|polynomial_calls|at_most_n_dec_calls|at_most_2_dec_calls)$
+        default: correct
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
 ...
