@@ -1,9 +1,0 @@
-%YAML 1.2
----
-open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
-feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
-
-#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
-
-not-equal: '# No. You solution is NOT correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is:\n {risp_correct}. Not {risp}.'
-not-equiv: '#No. You solution is not correct. The number of well-formed formulas with {n_pairs} pairs of parentheses is {risp_correct}. Taken modulus {ENV["answ_modulus"]} this value boils down to {risp_correct % ENV["answ_modulus"]}. Not {risp}.'

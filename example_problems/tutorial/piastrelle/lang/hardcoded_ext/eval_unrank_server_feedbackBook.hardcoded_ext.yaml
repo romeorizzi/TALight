@@ -1,8 +1,0 @@
-%YAML 1.2
----
-open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
-feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
-
-#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
-
-not-correct: '# No. Your solution is NOT correct. The wff of rank {rank} is\n {risp_correct}. Not\n {risp}.'
