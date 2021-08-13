@@ -3,6 +3,7 @@ from hanoi_lib import generate_move, parse_move
 
 
 def print_move_error(code, TAc, LANG):
+    '''Print the cause of invalid move.'''
     if code == 1:
         TAc.print(LANG.render_feedback("code1", f'-> Invalid disk: not exist'), "red", ["reverse"])
     elif code == 2:
@@ -26,6 +27,7 @@ def print_move_error(code, TAc, LANG):
 
 
 def get_regex(format, lang):
+    '''Get regex and regex_explained for TAInput.'''
     if format == 'extended':
         if lang == 'it':
             regex="^muovi disco \d{1,1000} dal piolo [A-Z] al piolo [A-Z]$"
@@ -44,6 +46,7 @@ def get_regex(format, lang):
 
 
 def get_formatted_move(move, format, lang):
+    '''From <move> transform it a formatted string'''
     if format == 'extended':
         d, c, t = parse_move(move)
         if lang == 'it':
@@ -55,6 +58,7 @@ def get_formatted_move(move, format, lang):
 
 
 def get_std_move(move, format, lang):
+    '''From <move> transform it a standard string. E.g: 1:AB'''
     if format == 'extended':
         words = move.split()
         if lang == 'it':

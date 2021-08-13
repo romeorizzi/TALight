@@ -3,6 +3,15 @@ import os, sys
 
 
 
+# ====================================================================== #
+# FUNCTIONS
+def help():
+        print("for execute test call:")
+        print("./services_test name_service test_type")
+        print("for get tests availables call:")
+        print("./services_test name_service help")
+
+
 def check_opt_num_moves(v, start, final, n, answ, modulus, silent, feedback, certificate, lang):
     print(f"rtal connect hanoi check_opt_num_moves")
     print(f"> v={v}")
@@ -87,7 +96,7 @@ def play_like(role, start, final, n, format, gimme_moves_available, lang):
                 -alang={lang}")
 
 
-def check_one_sol(v, start, final, n, format, goal, ignore_peg_from, ignore_peg_to, feedback, lang):
+def check_one_sol(v, start, final, n, format, goal, ignore_peg_from, ignore_peg_to, feedback, lang, test):
     print(f"rtal connect -e hanoi check_one_sol")
     print(f"> v={v}")
     print(f"> start={start}")
@@ -99,7 +108,7 @@ def check_one_sol(v, start, final, n, format, goal, ignore_peg_from, ignore_peg_
     print(f"> ignore_peg_to={ignore_peg_to}")
     print(f"> feedback={feedback}")
     print(f"> lang={lang}")
-    os.system(f"rtal connect hanoi check_one_sol \
+    os.system(f"rtal connect -e hanoi check_one_sol \
                 -astart={start} \
                 -afinal={final} \
                 -an={n} \
@@ -109,20 +118,18 @@ def check_one_sol(v, start, final, n, format, goal, ignore_peg_from, ignore_peg_
                 -aignore_peg_from={ignore_peg_from} \
                 -aignore_peg_to={ignore_peg_to} \
                 -afeedback={feedback} \
-                -alang={lang} ")
-                # -- ../bots/classic_hanoi_bot_check.py")
+                -alang={lang} \
+                -- ../utils/fake_bot.py bot_mode {service} {test}")
 
 
 
+# ====================================================================== #
 # TESTS
 if __name__ == "__main__":
     # get service and test
     if len(sys.argv) != 3:
         print("Wrong call.")
-        print("for execute test call:")
-        print("./services_test name_service test_type")
-        print("for get tests availables call:")
-        print("./services_test name_service help")
+        help()
         exit(0)
     service = sys.argv[1]
     test = sys.argv[2]
@@ -297,11 +304,77 @@ if __name__ == "__main__":
         if test == 'help':
             print(f"tests availables for {service} are:")
             print('  optimal')
+            print('  optimal_custom_config')
+            print('  optimal_wrong_short')
+            print('  optimal_wrong')
+            print('  simple_walk_not_optimal1')
+            print('  simple_walk_not_optimal2')
+            print('  admissible')
+            print('  admissible_optimal')
+            print('  no_simple_walk')
+            print('  spot_first_non_optimal_move')
+            print('  gimme_shorter_solution')
+            print('  gimme_optimal_solution')
 
         elif test == 'optimal':
             print(f"TEST: {test}")
-            check_one_sol('classic', 'all_A', 'all_C', 1, 'minimal', 'optimal', 0, 0, 'yes_no', 'hardcoded')
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'yes_no', 'hardcoded', 'optimal')
+
+        elif test == 'optimal_custom_config':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'ABC', 'CBA', 2, 'minimal', 'optimal', '0', '0', 'yes_no', 'hardcoded', 'optimal_custom_config')
+
+        elif test == 'optimal_wrong_short':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'yes_no', 'hardcoded', 'wrong_short')
+
+        elif test == 'optimal_wrong':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'yes_no', 'hardcoded', 'wrong')
+
+        elif test == 'simple_walk_not_optimal1':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'yes_no', 'hardcoded', 'simple_walk_not_optimal')
+
+        elif test == 'simple_walk_not_optimal2':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'simple_walk', '0', '0', 'yes_no', 'hardcoded', 'simple_walk_not_optimal')
+
+        elif test == 'admissible':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'admissible', '0', '0', 'yes_no', 'hardcoded', 'admissible_loop')
+
+        elif test == 'admissible_optimal':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'admissible', '0', '0', 'yes_no', 'hardcoded', 'optimal')
+
+        elif test == 'no_simple_walk':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'simple_walk', '0', '0', 'yes_no', 'hardcoded', 'admissible_loop')
+
+        elif test == 'spot_first_non_optimal_move':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'spot_first_non_optimal_move', 'hardcoded', 'admissible_loop')
+
+        elif test == 'gimme_shorter_solution1':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'admissible', '0', '0', 'gimme_shorter_solution', 'hardcoded', 'admissible_loop')
+
+        elif test == 'gimme_shorter_solution2':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'gimme_shorter_solution', 'hardcoded', 'admissible_loop')
+
+        elif test == 'gimme_optimal_solution':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'gimme_optimal_solution', 'hardcoded', 'admissible_loop')
         
         else:
-            print("invalid test")
+            print("Invalid test")
         exit(0)
+
+
+    ######################################################################
+    # invalid service
+    print("Invalid service.")
+    help()
+    exit(0)

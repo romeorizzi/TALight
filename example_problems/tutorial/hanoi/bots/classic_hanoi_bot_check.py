@@ -10,7 +10,6 @@ def wait_start():
         if spoon[0] != '#':
             break
 
-
 def wait_end():
     while True:
         spoon = input()
@@ -29,48 +28,8 @@ def move_tower(n, current, target, support):
 
 
 
+# START
 wait_start()
-##############################
-
-
-# TEST1(AA->CC) + optimal
 move_tower(2, 'A', 'C', 'B')
-
-
-# TEST1(AA->CC) + wrong move
-# print('1:AB')
-# print('2:BC')
-# print('1:BC')
-
-
-# TEST1(AA->CC) + simple-walk not-optimal
-# print('1:AC')
-# print('1:CB')
-# print('2:AC')
-# print('1:BA')
-# print('1:AC')
-
-
-# TEST2(ABC->CBA):
-# print('1:AB')
-# print('3:CA')
-# print('1:BC')
-# print('1:CB')
-# print('1:BC')
-
-
-# TEST4(AA->CC) + optimal + extended it
-# print('muovi disco 1 dal piolo A al piolo B')
-# print('muovi disco 2 dal piolo A al piolo C')
-# print('muovi disco 1 dal piolo B al piolo C')
-
-
-# TEST5(AA->CC) + optimal + extended en
-# print('move disk 1 from A peg to B peg')
-# print('move disk 2 from A peg to C peg')
-# print('move disk 1 from B peg to C peg')
-
-
-##############################
 print("end")
 wait_end()
