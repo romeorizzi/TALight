@@ -117,16 +117,18 @@ if ENV['goal'] == 'optimal':
                 TAc.print(LANG.render_feedback("sol-wrong-disk", f'You moved some wrong disk.'), "red", ["bold"])
                 must_exit = True
             # check peg from
-            if ENV['ignore_peg_from'] and from_user != from_opt:
+            if not ENV['ignore_peg_from'] and from_user != from_opt:
                 TAc.print(LANG.render_feedback("sol-wrong-peg-from", f'You moved some disk from wrong peg.'), "red", ["bold"])
                 must_exit = True
             # check peg to
-            if ENV['ignore_peg_to'] and to_user != to_opt:
+            if not ENV['ignore_peg_to'] and to_user != to_opt:
                 TAc.print(LANG.render_feedback("sol-wrong-peg-to", f'You moved some disk to wrong peg.'), "red", ["bold"])
                 must_exit = True
             # exit?
             if must_exit:
                 provide_feedback_and_exit('not_optimal')
+        TAc.print(LANG.render_feedback("sol-correct-ignore", f'Your solution is optimal with the specificated ignore constraints.'), "green", ["bold"])
+        exit(0)
 
 # check if the user solution is surely not admissible
 if (len(user_sol) < len(opt_sol)):

@@ -315,6 +315,10 @@ if __name__ == "__main__":
             print('  spot_first_non_optimal_move')
             print('  gimme_shorter_solution')
             print('  gimme_optimal_solution')
+            print('  ignore_correct')
+            print('  ignore_peg_from')
+            print('  ignore_peg_to')
+            print('  ignore_both')
 
         elif test == 'optimal':
             print(f"TEST: {test}")
@@ -367,6 +371,22 @@ if __name__ == "__main__":
         elif test == 'gimme_optimal_solution':
             print(f"TEST: {test}")
             check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'gimme_optimal_solution', 'hardcoded', 'admissible_loop')
+
+        elif test == 'ignore_correct':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '1', '1', 'yes_no', 'hardcoded', 'optimal')
+
+        elif test == 'ignore_peg_from':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '1', '0', 'yes_no', 'hardcoded', 'ignore_peg_from')
+
+        elif test == 'ignore_peg_to':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '1', 'yes_no', 'hardcoded', 'ignore_peg_to')
+
+        elif test == 'ignore_both':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '1', '1', 'yes_no', 'hardcoded', 'ignore_both')
         
         else:
             print("Invalid test")

@@ -66,3 +66,21 @@ if len(sys.argv) == 4 and sys.argv[1] == 'bot_mode':
             print('1:BA')
             print('1:AC')
             wait_end()
+
+        if test == 'ignore_peg_from':
+            print('1:XB')
+            print('2:XC')
+            print('1:XC')
+            wait_end()
+
+        if test == 'ignore_peg_to':
+            print('1:AX')
+            print('2:AX')
+            print('1:BX')
+            wait_end()
+
+        if test == 'ignore_both':
+            print('1:XX')
+            print('2:XX')
+            print('1:XX')
+            wait_end()
