@@ -10,7 +10,7 @@ FINAL=all_C
 # N=-1
 
 N=2
-SOL=5
+SOL=3
 MODULUS=0
 
 # N=3
@@ -21,7 +21,7 @@ V=classic
 # V=toddler
 # V=clockwise
 
-SILENT=0
+SILENT=1
 
 # FEEDBACK=yes_no
 # FEEDBACK=smaller_or_bigger
