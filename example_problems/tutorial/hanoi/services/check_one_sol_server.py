@@ -59,7 +59,7 @@ start, final, error = gen.getConfigs(ENV['start'], ENV['final'], ENV['n'])
 
 # Check errors
 if error == 'n_not_valid':
-    TAc.print(LANG.render_feedback("n_not_valid", f"If you use the all_* form for start and final, you must use a N >= 0."), "red", ["bold"])
+    TAc.print(LANG.render_feedback("n_not_valid", f'If you use the all_* form for the arguments \'start\' and \'final\', then you must use a value other than -1 for the argument \'n\'.'), "red", ["bold"])
     exit(0)
 elif error == 'different_len':
     TAc.print(LANG.render_feedback("different_len", f'If you use a custom configuration for start and final, the length of start must be equal to the length of final'), "red", ["bold"])

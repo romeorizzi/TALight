@@ -9,6 +9,7 @@ services:
       v:      
         regex:  ^(classic|toddler|clockwise)$
         default: classic
+        explain: use this argument to select the version of the game you are interested into
       start:
         regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_A
@@ -28,13 +29,21 @@ services:
         explain1: "-minimal= D:CT"
         explain2: "-extended= move disk D from C peg to T peg"
       goal:
-        regex:  ^(admissible|optimal|simple_walk|check_only_disk)$
+        regex:  ^(admissible|simple_walk|optimal)$
         default: admissible
         explain: the options are as follows
         explain1: -admissible= just check that the solution is an admissible one.
         explain2: -optimal= the solution is required to use a minimum possible number of moves.
         explain3: -simple_walk= the solution is required to be admissible and not to visit a same configuration more than once.
         explain4: -check_only_disk= the solution is required to move the correct disk to obtain the optimal solution.
+      ignore_peg_from:
+        regex: ^(0|1)$
+        default: 0
+        explain: "this flag can be set only when <goal>='optimal'. When <ignore_peg_from>='1' then, for each move, the service ignores the specification for the peg from which the disk ought to be taken."
+      ignore_peg_to:
+        regex: ^(0|1)$
+        default: 0
+        explain: "this flag can be set only when <goal>='optimal'. When <ignore_peg_to>='1' then, for each move, the service ignores the specification for the peg to which the disk ought to be delivered."
       feedback:
         regex: ^(yes_no|spot_first_non_optimal_move|gimme_shorter_solution|gimme_optimal_solution)$
         default: yes_no
@@ -133,7 +142,7 @@ services:
         default: it
   
   play_like:
-    description: this service plays with you like Daddy or like a Toddler. The Taddy start always first and make always the optimal move. The Toddler does not make invalid moves.
+    description: this service plays with you like Daddy or like Toddler. Daddy starts always first and makes always the optimal move. Toddler is only bound not to make invalid moves.
     evaluator: [python, services/play_like_server.py]
     args:
       role:
