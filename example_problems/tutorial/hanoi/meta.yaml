@@ -9,19 +9,19 @@ services:
       v:      
         regex:  ^(classic|toddler|clockwise)$
         default: classic
-        explain: use this argument to select the version of the game you are interested into
+        explain: "use this argument to select the version of the game you are interested into."
       start:
         regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_A
-        explain: initial configuration of the puzzle
+        explain: "initial configuration of the puzzle."
       final:
         regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_C
-        explain: target configuration for the puzzle
+        explain: "target configuration for the puzzle."
       n:
         regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
         default: -1 # implicit
-        explain: the number of disks (required only when it can not be inferred from the initial or target configuration).
+        explain: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
       format:
         regex: ^(minimal|extended)$
         default: minimal
@@ -31,11 +31,10 @@ services:
       goal:
         regex:  ^(admissible|simple_walk|optimal)$
         default: admissible
-        explain: the options are as follows
-        explain1: -admissible= just check that the solution is an admissible one.
-        explain2: -optimal= the solution is required to use a minimum possible number of moves.
-        explain3: -simple_walk= the solution is required to be admissible and not to visit a same configuration more than once.
-        explain4: -check_only_disk= the solution is required to move the correct disk to obtain the optimal solution.
+        explain: "the options are as follows:"
+        explain1: "-admissible= just check that the solution is an admissible one."
+        explain2: "-optimal= the solution is required to use a minimum possible number of moves."
+        explain3: "-simple_walk= the solution is required to be admissible and not to visit a same configuration more than once."
       ignore_peg_from:
         regex: ^(0|1)$
         default: 0
@@ -47,11 +46,11 @@ services:
       feedback:
         regex: ^(yes_no|spot_first_non_optimal_move|gimme_shorter_solution|gimme_optimal_solution)$
         default: yes_no
-        explain: the options are as follows
-        explain1: -yes_no= provide the minimum possible amount of feedback.
-        explain2: -spot_first_non_optimal_move= spots the first move that compromises reaching the target configuration in the smallest possible number of moves.
-        explain3: -gimme_shorter_solution= offers the certificate of non-optimality in the form of a shorter solution.
-        explain4: -gimme_optimal_solution= offers an optimal solution.
+        explain: "the options are as follows:"
+        explain1: "-yes_no= provide the minimum possible amount of feedback."
+        explain2: "-spot_first_non_optimal_move= spots the first move that compromises reaching the target configuration in the smallest possible number of moves."
+        explain3: "-gimme_shorter_solution= offers the certificate of non-optimality in the form of a shorter solution."
+        explain4: "-gimme_optimal_solution= offers an optimal solution."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -66,37 +65,37 @@ services:
       start:
         regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_A
-        explain: initial configuration of the puzzle
+        explain: "initial configuration of the puzzle."
       final:
-        regex:  ^^((A|B|C){0,1000}|all_A|all_B|all_C)$
+        regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_C
-        explain: target configuration for the puzzle
+        explain: "target configuration for the puzzle."
       n:
-        explain: the number of disks (required only when it can not be inferred from the initial or target configuration). If any of start or final are not in all_* form, then n is ignored.
+        explain: "the number of disks (required only when it can not be inferred from the initial or target configuration). If any of start or final are not in all_* form, then n is ignored."
         regex: ^(-1|[1-9][0-9]{0,2}|1000)$
         default: -1 # implicit
       answ:
-        explain: what you conjecture to be the minimum number of moves needed to solve the puzzle.
+        explain: "what you conjecture to be the minimum number of moves needed to solve the puzzle."
         regex: ^(0|[1-9][0-9]{0,1000})$
       ok_if_congruent_modulus:
         regex: ^(0|[1-9][0-9]{0,10})$
         default: 0 #alternative: 1000000007
-        explain: when n grows the number of needed moves can be huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers (or n is small). Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas.  
+        explain: "when n grows the number of needed moves can be huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers (or n is small). Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas."
       silent:
         regex: ^(0|1)$
         default: 0
-        explain: if your solution is ok then the service runs silently; otherwise it explain what is the problem in your solution.
+        explain: "if your solution is ok then the service runs silently; otherwise it explain what is the problem in your solution."
       feedback:
         regex: ^(yes_no|smaller_or_bigger|true_val)$
         default: yes_no
-        explain: the options are as follows
-        explain1: -yes_no= provide the minimum possible amount of feedback.
-        explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
-        explain3: -true_val= offers the length of an optimal solution.
+        explain: "the options are as follows:"
+        explain1: "-yes_no= provide the minimum possible amount of feedback."
+        explain2: "-smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated."
+        explain3: "-true_val= offers the length of an optimal solution."
       with_certificate:
         regex: ^(0|1)$
         default: 0
-        explain: if your answ is a bigger number than optimal, the service provides you with an explict solution on less moves. On the contrary, you can use the service check_one_sol to ask us to check your super-optimal solution.
+        explain: "if your answ is a bigger number than optimal, the service provides you with an explict solution on less moves. On the contrary, you can use the service check_one_sol to ask us to check your super-optimal solution."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -107,36 +106,37 @@ services:
     args:
       v:      
         regex:  ^(classic|toddler|clockwise)$
-        default: classic   
+        default: classic
+        explain: "use this argument to select the version of the game you are interested into."
       start:
         regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_A
-        explain: initial configuration of the puzzle.
+        explain: "initial configuration of the puzzle."
       final:
         regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_C
-        explain: target configuration for the puzzle.
+        explain: "target configuration for the puzzle."
       n:
         regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
         default: -1 #implicit
-        explain: the number of disks (required only when it can not be inferred from the initial or target configuration).
+        explain: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
       disk:
         regex: ^([1-9][0-9]{0,2}|1000)$
         explain: "an integer in the interval [1,n]: the disk for which you want to give the tightest possible lower-bound on the number of times it must be moved in any solution. Note: disks 1 is the smallest."
       answ:
         regex: ^(0|[1-9][0-9]{0,1000})$ 
-        explain: what you conjecture to be the minimum number of times that disk <disk> needs to be moved in order to solve the puzzle.
+        explain: "what you conjecture to be the minimum number of times that disk <disk> needs to be moved in order to solve the puzzle."
       silent:
         regex: ^(0|1)$
         default: 0
-        explain: if your solution is ok then the service runs silently; otherwise it explain what is the problem in your solution.
+        explain: "if your solution is ok then the service runs silently; otherwise it explain what is the problem in your solution."
       feedback:
         regex: ^(yes_no|smaller_or_bigger|true_val)$
         default: yes_no
-        explain: the options are as follows
-        explain1: -yes_no= provide the minimum possible amount of feedback.
-        explain2: -smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated.
-        explain3: -true_val= offers the lenght of an optimal solution.
+        explain: "the options are as follows:"
+        explain1: "-yes_no= provide the minimum possible amount of feedback."
+        explain2: "-smaller_or_bigger= tells whether the minimum number of moves is smaller or bigger than what stated."
+        explain3: "-true_val= offers the lenght of an optimal solution."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -147,17 +147,17 @@ services:
     args:
       role:
         regex:  ^(toddler|daddy)$
-        explain: your role.
+        explain: "your role."
       start:
         regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_A
-        explain: initial configuration of the puzzle.
+        explain: "initial configuration of the puzzle."
       final:
         regex:  ^((A|B|C){0,1000}|all_A|all_B|all_C)$
         default: all_C
-        explain: target configuration for the puzzle.
+        explain: "target configuration for the puzzle."
       n:
-        explain: the number of disks (required only when it can not be inferred from the initial or target configuration).
+        explain: "the number of disks (required only when it can not be inferred from the initial or target configuration)."
         regex: ^(-1|0|[1-9][0-9]{0,2}|1000)$
         default: -1 #implicit
       format:
@@ -166,12 +166,10 @@ services:
         explain: "The move format. there are two type of format (D=disk, C=current_peg, T=target_peg):"
         explain1: "-minimal= D:CT"
         explain2: "-extended= move disk D from C peg to T peg"
-      help:
-        regex: ^(yes_no|gimme_moves_available)$
-        default: yes_no
-        explain: the options are as follows
-        explain1: -yes_no= provide the minimum possible amount of feedback.
-        explain2: -gimme_moves_available= offers all moves available for ai.
+      gimme_moves_available:
+        regex: ^(0|1)$
+        default: 0
+        explain: "offers all moves available."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -182,25 +180,25 @@ services:
       seed:
         regex: ^(-1|[1-9][0-9]{5,5})$
         default: -1 #random_seed
-        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=-1, the service chooses its seed at random (and communicates it to the user).
-      n:
-        regex: ^(0|[1-9][0-9]{0,2}|1000)$
-        explain: the number of disks.
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=-1, the service chooses its seed at random (and communicates it to the user)."
       start:
         regex:  ^(all_A|all_B|all_C|general)$
         default: all_A
-        explain: initial configuration of the puzzle.
+        explain: "initial configuration of the puzzle."
       final:
         regex:  ^(all_A|all_B|all_C|general)$
         default: all_C
-        explain: target configuration for the puzzle.
+        explain: "target configuration for the puzzle."
+      n:
+        regex: ^(0|[1-9][0-9]{0,2}|1000)$
+        explain: "the number of disks."
       verbose:
         regex: ^(0|1|2)$
         default: 0
         explain: "sets the verbosity level of the service. The options are as follows:"
-        explain1: 0. print only the n configurations.
-        explain2: 1. print the seed if seed=-1 and then the configurations
-        explain3: 2. print the seed and then the configurations
+        explain1: "0. print only the n configurations."
+        explain2: "1. print the seed if seed=-1 and then the configurations"
+        explain3: "2. print the seed and then the configurations"
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -212,38 +210,39 @@ services:
       v:
         regex:  ^(classic|toddler|clockwise)$
         default: classic
+        explain: "use this argument to select the version of the game you are interested into."
       start:
         regex:  ^(all_A|all_B|all_C|general)$
         default: all_A
-        explain: initial configuration of the puzzle.
+        explain: "initial configuration of the puzzle."
       final:
         regex:  ^(all_A|all_B|all_C|general)$
         default: all_C
-        explain: target configuration for the puzzle.
+        explain: "target configuration for the puzzle."
       ok_if_congruent_modulus:
         regex: ^([1-9][0-9]{0,10}|0)$
         default: 0 #alternative: 1000000007
-        explain: when the number of disks grows the number of moves can be huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas.  
+        explain: "when the number of disks grows the number of moves can be huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas." 
       goal:
         regex: ^(correct|efficient)$
         default: correct
-        explain: set your goal (efficient includes also correct).
+        explain: "set your goal (efficient includes also correct)."
       seed:
         regex: ^(-1|[1-9][0-9]{5,5})$
         default: -1 #random_seed
-        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
       num_tests:
         regex: ^(0|1000|([1-9][0-9]{0,2}))$
         default: 50
-        explain: specify the number of tests to run.
+        explain: "specify the number of tests to run."
       n_max:
         regex: ^(0|1000|([1-9][0-9]{0,2}))$
         default: 10
-        explain: specify the maximum number of disks to be tested.
+        explain: "specify the maximum number of disks to be tested."
       code_lang:
         regex: ^(python|java|nodejs|compiled)$
         default: python
-        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
+        explain: "the more we know about your bot the better we can estimate the efficiency of your algorithm."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -255,14 +254,15 @@ services:
       v:
         regex: ^(classic|toddler|clockwise)$
         default: classic
+        explain: "use this argument to select the version of the game you are interested into."
       start:
         regex:  ^(all_A|all_B|all_C|general)$
         default: all_A
-        explain: initial configuration of the puzzle.
+        explain: "initial configuration of the puzzle."
       final:
         regex:  ^(all_A|all_B|all_C|general)$
         default: all_C
-        explain: target configuration for the puzzle.
+        explain: "target configuration for the puzzle."
       format:
         regex: ^(minimal|extended)$
         default: minimal
@@ -272,15 +272,15 @@ services:
       seed:
         regex: ^(-1|[1-9][0-9]{5,5})$
         default: -1 #random_seed
-        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
       num_tests:
         regex: ^(0|1000|([1-9][0-9]{0,2}))$
         default: 50
-        explain: specify the number of tests to run
+        explain: "specify the number of tests to run."
       n_max:
         regex: ^(0|1000|([1-9][0-9]{0,2}))$
         default: 10
-        explain: specify the maximum number of disks to be tested
+        explain: "specify the maximum number of disks to be tested."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -291,7 +291,7 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
-        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+        explain: "any string without space characters but meant to specify one of the services of the problem {problem}"
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

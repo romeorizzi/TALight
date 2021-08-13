@@ -18,7 +18,7 @@ args_list = [
     ('final', str),
     ('n',int),
     ('format',str),
-    ('help', str),
+    ('gimme_moves_available', bool),
     ('lang',str),
     ('ISATTY',bool),
 ]
@@ -85,12 +85,12 @@ while not state.isEqualTo(final):
 
     # Other cases
     else:
-        # help
-        if ENV['help'] == 'gimme_moves_available':
-            TAc.print(LANG.render_feedback("help", 'These are the moves available:'), "yellow", ["bold"])
+        # gimme_moves_available
+        if ENV['gimme_moves_available']:
+            TAc.print(LANG.render_feedback("move-available", 'These are the moves available:'), "yellow", ["bold"])
             for e in available_moves:
                 move_formatted = get_formatted_move(e, ENV['format'], ENV['lang'])
-                TAc.print(LANG.render_feedback("move-available", f'{move_formatted}'), "green", ["bold"])
+                TAc.print(LANG.render_feedback("move-available-line", f'{move_formatted}'), "green", ["bold"])
         # get user move
         user_move, = TALinput(str, sep="\n", regex=regex, regex_explained=explain, exceptions={"end"}, TAc=TAc)
         if user_move == 'end':

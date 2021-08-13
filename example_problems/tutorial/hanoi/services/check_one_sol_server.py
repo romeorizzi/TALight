@@ -88,33 +88,42 @@ opt_sol = hanoi.getMovesList(start, final)
 
 
 # PROCESS DATA
-# Check correct disks
-if ENV['goal'] == 'check_only_disk':
+# Check optimality
+if ENV['goal'] == 'optimal':
     # check if the user solution is surely wrong
     if len(user_sol) != len(opt_sol):
         TAc.print(LANG.render_feedback("sol-len-wrong-equal", f'Your number of moves is different from the optimal number of moves. Use check_opt_num_moves service for check it.'), "red", ["bold"])
         provide_feedback_and_exit(user_sol_is_wrong=True)
 
-    for i in range(len(opt_sol)):
-        disk_user = parse_move(user_sol[i])[0]
-        disk_opt = parse_move(opt_sol[i])[0]
-        if disk_user != disk_opt:
-            TAc.print(LANG.render_feedback("sol-wrong-disk", f'Move {i+1}:\nYou move the disk: {disk_user}.\nCorrect disk to move: {disk_opt}'), "red", ["bold"])
+    if ENV['ignore_peg_from'] == 0 and ENV['ignore_peg_to'] == 0:
+        # check both pegs
+        if (user_sol != opt_sol):
+            TAc.print(LANG.render_feedback("sol-wrong-opt", f'Your solution is not optimal.'), "red", ["bold"])
+            provide_feedback_and_exit(user_sol_is_wrong=True)
+        else:
+            TAc.print(LANG.render_feedback("sol-correct-opt", f'Your solution is optimal.'), "green", ["bold"])
             exit(0)
-
-    TAc.print(LANG.render_feedback("sol-correct-disk", f'Your disk moved are the same of the optimal solution.'), "red", ["bold"])
-    exit(0)
-
-
-if ENV['goal'] == 'optimal':
-    # check if the user solution is surely not admissible
-    if (user_sol != opt_sol):
-        TAc.print(LANG.render_feedback("sol-wrong-opt", f'Your solution is not optimal.'), "red", ["bold"])
-        provide_feedback_and_exit(user_sol_is_wrong=True)
-
-    TAc.print(LANG.render_feedback("sol-correct-opt", f'Your solution is optimal.'), "green", ["bold"])
-    exit(0)
-
+    else:
+        # ignore the specificated pegs
+        must_exit = False
+        for i in range(len(opt_sol)):
+            disk_user, from_user, to_user = parse_move(user_sol[i])
+            disk_opt, from_opt, to_opt = parse_move(opt_sol[i])
+            # check disk
+            if disk_user != disk_opt:
+                TAc.print(LANG.render_feedback("sol-wrong-disk", f'You moved some wrong disk.'), "red", ["bold"])
+                must_exit = True
+            # check peg from
+            if ENV['ignore_peg_from'] and from_user != from_opt:
+                TAc.print(LANG.render_feedback("sol-wrong-peg-from", f'You moved some disk from wrong peg.'), "red", ["bold"])
+                must_exit = True
+            # check peg to
+            if ENV['ignore_peg_to'] and to_user != to_opt:
+                TAc.print(LANG.render_feedback("sol-wrong-peg-to", f'You moved some disk to wrong peg.'), "red", ["bold"])
+                must_exit = True
+            # exit?
+            if must_exit:
+                provide_feedback_and_exit(user_sol_is_wrong=True)
 
 # check if the user solution is surely not admissible
 if (len(user_sol) < len(opt_sol)):
