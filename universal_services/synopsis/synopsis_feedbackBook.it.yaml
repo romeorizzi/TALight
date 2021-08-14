@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
-feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+feedback_source: '# Questo feedback in italiano poggia su più dizionari delle frasi:\n#   per quanto riguarda la strutturazione generale delle schede di aiuto la sorgente è il file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.it.yaml\''  contenuto nella cartella dove il servizio {service} è implementato\n#   per quanto riguarda le informazioni specifiche ai servizi del problema in oggetto le sorgenti sono il riporto del file meta.yaml del problema nel file \''{messages_book_file}\'''
 
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 
@@ -9,7 +9,7 @@ ruamel-missing: 'Internal error (se stai invocando un servizio TALight dal cloud
 ruamel-required: ' il servizio \''synopsis\'' deve leggere dei file .yaml del problema per fornirti le informazioni richieste. Se \''ruamel\'' non è installato nell\''ambiente dove lavora il daemon \''rtald\'' allora synopsis non può operare.'
 operation-necessary: ' Questa operazione è necessaria al funzionamento di synopsis. Il servizio synopsis abortisce e chiude il canale.'
 metafile-unparsable: 'Internal error (se stai invocando un servizio TALight dal cloud puoi segnalare il problema a chi responsabile del servizio; altrimenti segnalalo al problem maker se non hai tu stesso alterato il file): Impossibile interpretare come .yaml file il file meta.yaml del problema "{problem}".'
-metafile-missing: 'Internal error (se stai invocando un servizio TALight dal cloud puoi segnalare il problema a chi responsabile del servizio; altrimenti segnalalo al problem maker): Non è stato possibile accedere al file meta.yaml del problema "{problem}" per estrarne le informazioni richieste. File non trovato: \''{meta_yaml_file}\'''
+metafile-missing: 'Internal error (se stai invocando un servizio TALight dal cloud puoi segnalare il problema a chi responsabile del servizio; altrimenti segnalalo al problem maker): Non è stato possibile accedere al file meta.yaml del problema "{problem}" per estrarne le informazioni richieste. File non trovato: ''{meta_yaml_file}'''
 wrong-service-name: '\nAhi, hai chiesto informazioni su {ENV["service"]} ma esso non appare nella lista dei servizi attualmente supportati dal problema "{problem}".'
 service-of: '   (servizio del problema "{problem}")'
 the-num-arguments: '\nIl servizio {ENV["service"]} ha {len(meta_yaml_book["services"][ENV["service"]]["args"])} argomenti:'

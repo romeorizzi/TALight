@@ -58,7 +58,7 @@ class Lang:
         self.TAc=TAc
         self.messages_book = None
         self.messages_book_file = None
-        self.print_opening_msg = False
+        self.to_be_printed_opening_msg = True
         if "lang" in ENV.arg.keys() and ENV["lang"] != "hardcoded":
             self.messages_book_file = join(ENV.META_DIR, "lang", ENV["lang"], ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
             # BEGIN: try to load the message book
@@ -102,11 +102,12 @@ class Lang:
                         print(ioe, file=stderr)
                         print(f"# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
         #END:  try_to_load_the_message_book():
-
-                    
-        self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={ENV.problem}, service={ENV.service}\n#  with arguments: ")
-        for arg_name, arg_type in ENV.args_list:
-            arg_val = ENV[arg_name]
+        
+    def print_opening_msg(self):
+        self.to_be_printed_opening_msg = False
+        self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={self.ENV.problem}, service={self.ENV.service}\n#  with arguments: ")
+        for arg_name, arg_type in self.ENV.args_list:
+            arg_val = self.ENV[arg_name]
             if arg_type == bool:
                 self.opening_msg += f"{arg_name}={'1' if arg_val else '0'} (i.e., {arg_val}), "
             else:
@@ -115,14 +116,14 @@ class Lang:
         if self.messages_book == None:
             self.opening_msg += f"# The feedback_source is the one hardcoded in the service server ({argv[0]})"
         else:
-            self.opening_msg += self.render_Langinternal_feedback("feedback_source",f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder.")
-        self.TAc.print(self.opening_msg, "yellow", ["underline"], file=stderr)
-        self.print_opening_msg = True
+            self.opening_msg += self.render_feedback("feedback_source",f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder.", {"problem":self.ENV.problem, "service":self.ENV.service, "messages_book_file":self.messages_book_file})
+        self.TAc.print(self.opening_msg, "green")
 
     def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionay=None):
-        if self.print_opening_msg:
-            self.print_opening_msg = False
-            self.TAc.print(self.opening_msg, "green")
+        """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the harcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
+        if self.to_be_printed_opening_msg:
+            self.print_opening_msg()
+            
         if self.messages_book != None and msg_code not in self.messages_book:
             self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book","red", file=stderr)
         if self.messages_book == None or msg_code not in self.messages_book:
@@ -132,12 +133,6 @@ class Lang:
         msg_encoded = self.messages_book[msg_code]
         return self.service_server_eval(msg_encoded)
 
-    def render_Langinternal_feedback(self, msg_code, rendition_of_the_hardcoded_msg):
-        if self.messages_book != None and msg_code not in self.messages_book:
-            self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book","red", file=stderr)
-        if self.messages_book == None or msg_code not in self.messages_book:
-            return rendition_of_the_hardcoded_msg
-        return eval(f"f'{self.messages_book[msg_code]}'")
 
 class TALcolors:
     def __init__(self, ENV):

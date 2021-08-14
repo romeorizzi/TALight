@@ -16,7 +16,6 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
 
 def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
     try:
