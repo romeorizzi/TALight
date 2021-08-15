@@ -198,7 +198,7 @@ services:
         explain: "sets the verbosity level of the service. The options are as follows:"
         explain1: "0. print only the n configurations."
         explain2: "1. print the seed if seed=-1 and then the configurations"
-        explain3: "2. print the seed and then the configurations"
+        explain3: "2. print the seed and then the configurations (also the opening message)."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

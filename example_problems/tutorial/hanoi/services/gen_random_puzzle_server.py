@@ -26,6 +26,10 @@ ENV = Env(problem, service, args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
+# START CODING YOUR SERVICE:
+if ENV["verbose"] < 2:
+  LANG.suppress_opening_msg()
+
 
 # INITIALIZATION
 # get seed
