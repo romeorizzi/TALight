@@ -59,8 +59,6 @@ class Lang:
         self.messages_book = None
         self.messages_book_file = None
         self.to_be_printed_opening_msg = True
-        def suppress_opening_msg(self):
-            self.to_be_printed_opening_msg = False
         if "lang" in ENV.arg.keys() and ENV["lang"] != "hardcoded":
             self.messages_book_file = join(ENV.META_DIR, "lang", ENV["lang"], ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
             # BEGIN: try to load the message book
@@ -124,7 +122,6 @@ class Lang:
         """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the harcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
         if self.to_be_printed_opening_msg:
             self.print_opening_msg()
-            
         if self.messages_book != None and msg_code not in self.messages_book:
             self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book","red", file=stderr)
         if self.messages_book == None or msg_code not in self.messages_book:
@@ -133,6 +130,9 @@ class Lang:
             return self.messages_book[msg_code].format(**trans_dictionay)
         msg_encoded = self.messages_book[msg_code]
         return self.service_server_eval(msg_encoded)
+    
+    def suppress_opening_msg(self):
+        self.to_be_printed_opening_msg = False
 
 
 class TALcolors:

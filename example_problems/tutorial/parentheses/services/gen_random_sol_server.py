@@ -23,8 +23,8 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
-if ENV["verbose"] < 3:
-  LANG.suppress_opening_msg()
+if ENV["verbose"] == 3:
+    LANG.print_opening_msg()
 
 if ENV["seed"]=='random_seed':
     seed=random.randint(100000,999999)
