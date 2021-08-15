@@ -42,7 +42,8 @@ CWHITE  = '\33[37m'
 
 def adapt_string_to_yaml_book(string):
     #print("before: " + string, file=stderr)
-    orderd_list_of_substitutions = [("\\'\\'","\\''")  # sostituisce '' con \''
+    orderd_list_of_substitutions = [("\\'\\'","\\''"),  # substitutes an \' placed in the code with an \'' placed in the wordbook yaml. file
+                                    ("\\'\\'","\\''"),  # substitutes an \" placed in the code with an \"" placed in the wordbook yaml. file
                                    ]
     for before,after in orderd_list_of_substitutions:
        string = string.replace(before, after)

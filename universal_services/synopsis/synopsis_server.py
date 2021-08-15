@@ -23,8 +23,8 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
     except Exception as e:
         print(e)
         for out in [stdout, stderr]:
-            TAc.print(LANG.render_feedback("ruamel-missing", 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package ''ruamel'' on your machine).'), "red", ["bold"], file=out)
-            print(LANG.render_feedback("ruamel-required", ' the service ''synopsis'' needs to read .yaml files in order to provide you with the information required. As long as ''ruamel'' is not installed in the environment where the ''rtald'' daemon runs, the service ''synopsis'' can not perform.'), file=out)
+            TAc.print(LANG.render_feedback("ruamel-missing", 'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package \'ruamel\' on your machine).'), "red", ["bold"], file=out)
+            print(LANG.render_feedback("ruamel-required", ' the service \'synopsis\' needs to read .yaml files in order to provide you with the information required. As long as \'ruamel\' is not installed in the environment where the \'rtald\' daemon runs, the service \'synopsis\' can not perform.'), file=out)
             print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
         exit(1)
     environ["TAL_META_DIR"] + "/meta.yaml"
@@ -34,7 +34,7 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
             meta_yaml_book = ruamel.yaml.safe_load(stream)
         except:
             for out in [stdout, stderr]:
-                TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file ''{meta_yaml_file}'' for problem {problem} could not be loaded as a .yaml file.', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
+                TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file \'{meta_yaml_file}\' for problem {problem} could not be loaded as a .yaml file.', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
             if succeed_or_die:
                 print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
                 exit(1)
@@ -43,7 +43,7 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
                 return None
     except IOError as ioe:
         for out in [stdout, stderr]:
-            TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file of problem "{problem}" could not be accessed for the required information. File not found: ''{meta_yaml_file}''', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
+            TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file of problem "{problem}" could not be accessed for the required information. File not found: \'{meta_yaml_file}\'', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
             print(ioe, file=out)
         if succeed_or_die:
             print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
@@ -110,7 +110,7 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
         else:
             TAc.print(f'   The argument {a} is mandatory.', ["bold"])
 
-print(LANG.render_feedback("regex-cloud-resource", '\nAll arguments of all TALight services take in as possible values only simple strings that can be streamed from the ''rtal'' client to the ''rtald'' daemon (and finally acquired as environment variables). For each argument, the family of allowed string values is described by means of a regex. If the correct interpretation of the regex confuses you, then take profit of the online support at ''https://extendsclass.com/regex-tester.html''.\n'))
+print(LANG.render_feedback("regex-cloud-resource", '\nAll arguments of all TALight services take in as possible values only simple strings that can be streamed from the \'rtal\' client to the \'rtald\' daemon (and finally acquired as environment variables). For each argument, the family of allowed string values is described by means of a regex. If the correct interpretation of the regex confuses you, then take profit of the online support at \'https://extendsclass.com/regex-tester.html\'.\n'))
 
 # Now printing the footing lines:
 if "help" in meta_yaml_book['services'].keys():
