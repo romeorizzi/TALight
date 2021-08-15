@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+from sys import stderr, exit
+
+from TALinputs import TALinput
+from multilanguage import Env, Lang, TALcolors
+from piastrelle_lib import Par
 
 # METADATA OF THIS TAL_SERVICE:
 problem="piastrelle"
@@ -13,16 +18,9 @@ args_list = [
     ('ISATTY',bool),
 ]
 
-from sys import stderr, exit
-
-from TALinputs import TALinput
-from multilanguage import Env, Lang, TALcolors
-from piastrelle_lib import Par
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-if not ENV['silent']:
-    TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
 p = Par(ENV["n"])

@@ -26,9 +26,6 @@ inst_efficint = []
 
 
 times = 20
-#if not ENV['silent']:
-#    TAc.print(LANG.opening_msg, "green")
-
 string_T = ""
 type_seq = [1,2,3,4]
 

@@ -19,7 +19,6 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
 TAc.print(LANG.render_feedback("insert-num-rows", 'Insert the number of rows:'), "yellow", ["bold"])

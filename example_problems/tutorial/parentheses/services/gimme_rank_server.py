@@ -20,9 +20,7 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
-if not recognize(ENV['formula'], TAc, LANG, yield_feedback=False):
-    TAc.print(LANG.opening_msg, "green")
-    recognize(ENV['formula'], TAc, LANG)
+if not recognize(ENV['formula'], TAc, LANG)
     exit(0)
 n_pairs = len(ENV['formula'])//2 
 p = Par(n_pairs)

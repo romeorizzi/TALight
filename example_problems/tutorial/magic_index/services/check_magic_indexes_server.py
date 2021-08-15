@@ -36,7 +36,6 @@ risp_correct = spot_magic_index(vec)
 
 ok = (ans == risp_correct)
 if not ok or not ENV['feedback'] == 'silent':
-    TAc.print(LANG.opening_msg, "green")
     TAc.print(LANG.render_feedback("input_vector", f'Your vector: [{ENV["input_vector"]}] '), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("magic_indexes", f'Your answer: [{ENV["magic_indexes"]}] '), "yellow", ["bold"])
     if not ok:

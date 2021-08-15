@@ -26,10 +26,8 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 answ=ENV["rank"]
 input_form=ENV["input_formula"]
-if not recognize(input_form, TAc, LANG, yield_feedback=False) or not ENV["silent"]:
-    TAc.print(LANG.opening_msg, "green")
-    if not recognize(input_form, TAc, LANG):
-        exit(0)
+if not recognize(input_form, TAc, LANG):
+    exit(0)
 
 n_pairs = len(input_form)//2 
 p = Par(n_pairs)

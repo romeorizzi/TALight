@@ -23,11 +23,10 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+
+# START CODING YOUR SERVICE: 
 seed = ENV['seed']
 print(seed, type(seed))
-#if not ENV['silent']:
-#    TAc.print(LANG.opening_msg, "green")
-
 string_T = ""
 string_s = ""
 

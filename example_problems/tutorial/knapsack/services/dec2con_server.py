@@ -20,7 +20,6 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
 
 # START CODING OF YOUR SERVICE
 print("# Instance of the Knapsack problem in its decision form you have to resolve.")

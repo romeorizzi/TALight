@@ -31,12 +31,9 @@ if ENV["ok_if_congruent_modulus"] != 0:
     overflow = ( risp_correct >= ENV["ok_if_congruent_modulus"] )
     risp_correct %= ENV["ok_if_congruent_modulus"] 
 
-if ENV["risp"] != risp_correct or not ENV["silent"]:
-    TAc.print(LANG.opening_msg, "green")
-
 if ENV["risp"] == risp_correct:
-    TAc.OK()
     if not ENV["silent"]:
+        TAc.OK()
         if overflow:
             TAc.print(LANG.render_feedback("ok-congruent", f'♥  We agree. The number of feasible treatments with {ENV["n_pills"]} pills is congruent to {ENV["risp"]} modulo {ENV["ok_if_congruent_modulus"]}.'), "green", ["bold"])
         else:

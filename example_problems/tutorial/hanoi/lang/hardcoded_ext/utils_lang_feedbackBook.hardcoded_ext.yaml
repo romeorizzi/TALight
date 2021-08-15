@@ -5,13 +5,13 @@ feedback_source: '# This feedback in english comes from the dictionary of the ph
 
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 
-code1: '-> EHI MAMA Invalid disk: not exist'
-code2: '-> EHI MAMA Invalid Peg: not exist'
-code3: '-> EHI MAMA Invalid move: current and target can\'t be equal'
-code4: '-> EHI MAMA Wrong current or state: they don\'t coincide'
-code5: '-> EHI MAMA Invalid move: Toddler can\'t move last disk'
-code6: '-> EHI MAMA Invalid move: can\'t make a counterclockwise move'
-code7: '-> EHI MAMA Invalid move: can\'t move big disk on small disk'
-code8: '-> EHI MAMA Invalid disk: is blocked'
-code0: '-> EHI MAMA Correct move'
-codeErr: '-> EHI MAMA This codeError is invalid'
+code1: '-> Invalid disk: not exist'
+code2: '-> Invalid Peg: not exist'
+code3: '-> Invalid move: current and target can\'t be equal'
+code4: '-> Wrong current or state: they don\'t coincide'
+code5: '-> Invalid move: Toddler can\'t move last disk'
+code6: '-> Invalid move: can\'t make a counterclockwise move'
+code7: '-> Invalid move: can\'t move big disk on small disk'
+code8: '-> Invalid disk: is blocked'
+code0: '-> Correct move'
+codeErr: '-> This codeError is invalid'

@@ -20,9 +20,7 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
-if not recognize(ENV["current_sol"], TAc, LANG, yield_feedback=False):
-    TAc.print(LANG.opening_msg, "green")
-    recognize(ENV["current_sol"], TAc, LANG)
+if not recognize(ENV["current_sol"], TAc, LANG)
     exit(0)
 n_pills = len(ENV["current_sol"])//2 
 p = Flask(n_pills)

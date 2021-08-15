@@ -24,8 +24,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE: 
 n=ENV['n']
 len_input = len(ENV["input_treatment"])//2
-if not ENV["silent"]:
-    TAc.print(LANG.opening_msg, "green")
 def answer():
     if recognize(ENV["input_treatment"], TAc, LANG) and not ENV["silent"]:
         TAc.OK()
@@ -35,6 +33,6 @@ if n=='free':
 else:
     if len_input==int(n):
         answer()
-    elif recognize(ENV["input_treatment"], TAc, LANG) and not ENV['silent']:
+    elif recognize(ENV["input_treatment"], TAc, LANG):
         TAc.print(LANG.render_feedback("different_lengths", f"No! Your string represents a feasible treatment but not of {n} pills."), "red", ["bold"])
 exit(0)

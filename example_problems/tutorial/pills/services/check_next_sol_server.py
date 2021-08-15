@@ -24,20 +24,13 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
-if ( len(ENV['current_sol']) != len(ENV['next_sol'])
-     or not recognize(ENV['current_sol'], TAc, LANG, yield_feedback=False)
-     or not recognize(ENV['next_sol'], TAc, LANG, yield_feedback=False)
+if ( not recognize(ENV['current_sol'], TAc, LANG)
+     or not recognize(ENV['next_sol'], TAc, LANG)
    ):
-    ENV['silent'] = False
-if not ENV['silent']:
-    TAc.print(LANG.opening_msg, "green")
-    if ( not recognize(ENV['current_sol'], TAc, LANG)
-         or not recognize(ENV['next_sol'], TAc, LANG)
-       ):
-        exit(0)
-    if len(ENV['current_sol']) != len(ENV['next_sol']):
-        TAc.print(LANG.render_feedback("different-n", f'No. The two treatments you have provided have different lengths! As such, they do not belong to the same list.'), "red", ["bold"])
-        exit(0)
+    exit(0)
+if len(ENV['current_sol']) != len(ENV['next_sol']):
+    TAc.print(LANG.render_feedback("different-n", f'No. The two treatments you have provided have different lengths! As such, they do not belong to the same list.'), "red", ["bold"])
+    exit(0)
         
 n_pills = len(ENV['current_sol'])//2 
 p = Flask(n_pills)

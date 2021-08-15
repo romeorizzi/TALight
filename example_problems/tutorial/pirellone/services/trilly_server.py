@@ -16,7 +16,6 @@ from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
 if ENV['size']=='small':

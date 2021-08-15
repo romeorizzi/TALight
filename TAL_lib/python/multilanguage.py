@@ -59,10 +59,11 @@ class Lang:
         self.messages_book = None
         self.messages_book_file = None
         self.to_be_printed_opening_msg = True
+        def suppress_opening_msg(self):
+            self.to_be_printed_opening_msg = False
         if "lang" in ENV.arg.keys() and ENV["lang"] != "hardcoded":
             self.messages_book_file = join(ENV.META_DIR, "lang", ENV["lang"], ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
             # BEGIN: try to load the message book
-#        def try_to_load_the_message_book():
             if not yaml_is_installed:
                 if book_strictly_required:
                     for out in [stdout, stderr]:

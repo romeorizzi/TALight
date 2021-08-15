@@ -21,6 +21,7 @@ ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
+# START CODING YOUR SERVICE: 
 seed = ENV['seed']
 input_type = ENV['input_type']
 n_seed = None
@@ -28,8 +29,6 @@ if re.match(r"^[1-9]|[0-9]{2,5}$", seed):
     n_seed = int(seed)
 
 '''
-#if not ENV['silent']:
-#    TAc.print(LANG.opening_msg, "green")
 TAc.print("\nYou will be given a sequence of numbers, and you have to enter a minimum coloring, where all elements of the same color represent a non-increasing sequence.", "green")
 T = generate_random_seq(10,100)
 string_T = list_to_string(T)

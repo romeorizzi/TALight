@@ -24,8 +24,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE: 
 n=ENV['n']
 len_input = len(ENV["input_formula"])//2
-if not ENV["silent"]:
-    TAc.print(LANG.opening_msg, "green")
 def answer():
     if recognize(ENV["input_formula"], TAc, LANG) and not ENV["silent"]:
         TAc.OK()
@@ -36,6 +34,6 @@ if n=='free':
 else:
     if len_input==int(n):
         answer()
-    elif recognize(ENV["input_formula"], TAc, LANG) and not ENV['silent']:
+    elif recognize(ENV["input_formula"], TAc, LANG):
         TAc.print(LANG.render_feedback("different_lengths", f"No! Your string represents a valid formula of parentheses but not of {n} pairs."), "red", ["bold"])
 exit(0)

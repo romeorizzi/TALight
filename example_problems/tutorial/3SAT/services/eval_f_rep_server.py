@@ -1,5 +1,12 @@
-
 #!/usr/bin/env python3
+from sys import stderr, exit
+import re
+import itertools
+import random
+
+from multilanguage import Env, Lang, TALcolors
+
+import SAT_lib
 
 # METADATA OF THIS TAL_SERVICE:
 
@@ -12,13 +19,11 @@ args_list = [
     ('ISATTY', bool),
 ]
 
-from sys import stderr, exit
-import SAT_lib
-from multilanguage import Env, Lang, TALcolors
-import re
-import itertools
-import random
+ENV = Env(problem, service, args_list)
+TAc = TALcolors(ENV)
+LANG = Lang(ENV, TAc, lambda fstring:  eval(f"f'{fstring}'"))
 
+# START CODING YOUR SERVICE: 
 
 def input_is_valid(string, regex):
     matches = re.match(regex,
@@ -36,12 +41,6 @@ def input_is_valid(string, regex):
     return False
 
 
-
-ENV = Env(problem, service, args_list)
-TAc = TALcolors(ENV)
-LANG = Lang(ENV, TAc, lambda fstring:  eval(f"f'{fstring}'"))
-if not ENV['silent']:
-    print(LANG.opening_msg, "green")
 
 def check_if_3cnf(cnf):
     for disj in cnf:

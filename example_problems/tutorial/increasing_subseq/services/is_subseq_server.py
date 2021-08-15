@@ -21,11 +21,7 @@ ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
-if not ENV['silent']:
-    TAc.print(LANG.opening_msg, "green")
-
 # START CODING YOUR SERVICE:
-
 if ENV['T'] == 'lazy_input' or ENV['S'] == 'lazy_input':
     TAc.print("\n#Given two sequences S and T of positive integers, this service tells whether S is a subsquence of T.", "green")
 if ENV['T'] == 'lazy_input':

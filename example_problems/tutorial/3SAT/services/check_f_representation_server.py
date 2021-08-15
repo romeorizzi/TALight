@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+from sys import stderr, exit
+import re
+import itertools
+
+from multilanguage import Env, Lang, TALcolors
+
+import SAT_lib
 
 # METADATA OF THIS TAL_SERVICE:
 problem = "3SAT"
@@ -10,19 +17,11 @@ args_list = [
     ('ISATTY', bool),
 ]
 
-from sys import stderr, exit
-import SAT_lib
-from multilanguage import Env, Lang, TALcolors
-import re
-import itertools
-
-
 ENV = Env(problem, service, args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-if not ENV['silent']:
-    TAc.print(LANG.opening_msg, "green")
 
+# START CODING YOUR SERVICE: 
 def valid_cnf_string(string, regex):
     matches = re.match(regex,
                        string)

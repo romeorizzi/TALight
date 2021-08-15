@@ -19,9 +19,8 @@ ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
+# START CODING YOUR SERVICE: 
 level = ENV['feedback']
-#if not ENV['silent']:
-#    TAc.print(LANG.opening_msg, "green")
 TAc.print("\nYou will be given a sequence of numbers, and you have to enter all the different subsequences", "green")
 T = generate_random_seq(5,100)
 string_T = list_to_string(T)
