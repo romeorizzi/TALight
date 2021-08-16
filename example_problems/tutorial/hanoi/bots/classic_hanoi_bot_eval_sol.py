@@ -61,7 +61,4 @@ while True:
         break
     final = input()
     h.move(start, final)
-    # print(f"1:AC")
     print('end')
-
-

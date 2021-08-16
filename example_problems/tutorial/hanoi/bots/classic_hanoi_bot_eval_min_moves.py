@@ -51,7 +51,7 @@ while True:
     if start == 'Finish Tests':
         break
     final = input()
-    # print(h.getMin(start, final)) # not efficient
-    print(h.getMinTowerOf(len(start))) # efficient
+    print(h.getMin(start, final)) # not efficient
+    # print(h.getMinTowerOf(len(start))) # efficient
 
 

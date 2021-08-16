@@ -32,13 +32,13 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 
-# START CODING YOUR SERVICE: 
+# START CODING YOUR SERVICE:
 # get seed
 seed = ENV['seed']
 if seed == -1:
-    seed = random.randint(1,9) * 100000
-    seed += random.randint(0, 99999)
-TAc.print(LANG.render_feedback("print-seed", f"# seed = {seed}"), "yellow", ["bold"])
+    seed = random.randint(100000, 999999)
+TAc.print(LANG.render_feedback("print-service-seed", f"# service seed = {seed}"), "yellow", ["bold"])
+
 
 # Init Hanoi Tower and configGenerator
 hanoi = HanoiTowerProblem(ENV['v'])
@@ -46,12 +46,7 @@ gen = ConfigGenerator(seed)
 
 
 # Functions
-def one_test(n):
-    # get type of configurations
-    start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
-    assert error == None
-    TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
-    
+def one_test(start, final):
     # Get the correct solution
     modulus = ENV['ok_if_congruent_modulus']
     opt_answ = hanoi.getMinMoves(start, final)
@@ -80,7 +75,13 @@ def one_test(n):
 TAc.print(LANG.render_feedback("start-tests", f"# Start Tests"), "green", ["bold"])
 for t in range(1, ENV['num_tests'] + 1):
     for n in range(1, ENV['n_max'] + 1):
-        success, time = one_test(n)
+        # get type of configurations
+        start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
+        assert error == None
+        TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
+
+        # run instance
+        success, time = one_test(start, final)
         if success:
             if ENV['goal'] == 'correct':
                 TAc.print(LANG.render_feedback("success", f'# success'), "green", ["bold"])
@@ -90,7 +91,9 @@ for t in range(1, ENV['num_tests'] + 1):
                 #     TAc.print(LANG.render_feedback("not_efficient", f'# fail: Not efficient'), "red", ["bold"])
         else:
             TAc.print(LANG.render_feedback("fail", f'# fail: wrong answer'), "red", ["bold"])
-            break
+            TAc.print(LANG.render_feedback("print-service-seed", f"# service seed: {seed}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
+
 
 TAc.print(LANG.render_feedback("end", "Finish Tests"), "green", ["bold"])
 exit(0)

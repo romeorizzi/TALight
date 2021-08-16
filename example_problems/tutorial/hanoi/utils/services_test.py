@@ -60,12 +60,13 @@ def check_lower_bounds(v, start, final, n, answ, disk, silent, feedback, lang):
                 -alang={lang}")
 
 
-def gen_random_puzzle(seed, start, final, n, verbose, lang):
+def gen_random_puzzle(seed, start, final, n, n_instances, verbose, lang):
     print(f"rtal connect hanoi gen_random_puzzle")
     print(f"> seed={seed}")
     print(f"> start={start}")
     print(f"> final={final}")
     print(f"> n={n}")
+    print(f"> n_instances={n_instances}")
     print(f"> verbose={verbose}")
     print(f"> lang={lang}")
     os.system(f"rtal connect hanoi gen_random_puzzle \
@@ -73,6 +74,7 @@ def gen_random_puzzle(seed, start, final, n, verbose, lang):
                 -astart={start} \
                 -afinal={final} \
                 -an={n} \
+                -an_instances={n_instances} \
                 -averbose={verbose} \
                 -alang={lang}")
 
@@ -108,18 +110,92 @@ def check_one_sol(v, start, final, n, format, goal, ignore_peg_from, ignore_peg_
     print(f"> ignore_peg_to={ignore_peg_to}")
     print(f"> feedback={feedback}")
     print(f"> lang={lang}")
-    os.system(f"rtal connect -e hanoi check_one_sol \
+    if test == 'use_real_bot':
+        os.system(f"rtal connect -e hanoi check_one_sol \
+                    -astart={start} \
+                    -afinal={final} \
+                    -an={n} \
+                    -av={v} \
+                    -aformat={format} \
+                    -agoal={goal} \
+                    -aignore_peg_from={ignore_peg_from} \
+                    -aignore_peg_to={ignore_peg_to} \
+                    -afeedback={feedback} \
+                    -alang={lang} \
+                    -- ../bots/classic_hanoi_bot_check.py")
+    else:
+        os.system(f"rtal connect -e hanoi check_one_sol \
+                    -astart={start} \
+                    -afinal={final} \
+                    -an={n} \
+                    -av={v} \
+                    -aformat={format} \
+                    -agoal={goal} \
+                    -aignore_peg_from={ignore_peg_from} \
+                    -aignore_peg_to={ignore_peg_to} \
+                    -afeedback={feedback} \
+                    -alang={lang} \
+                    -- ../utils/fake_bot.py {service} {test}")
+
+
+def eval_sol(v, start, final, format, seed, num_tests, n_max, lang, test):
+    print(f"rtal connect -e hanoi eval_sol")
+    print(f"> v={v}")
+    print(f"> start={start}")
+    print(f"> final={final}")
+    print(f"> format={format}")
+    print(f"> seed={seed}")
+    print(f"> num_tests={num_tests}")
+    print(f"> n_max={n_max}")
+    print(f"> lang={lang}")
+    if test == 'use_real_bot':
+        os.system(f"rtal connect -e hanoi eval_sol \
+                    -av={v} \
+                    -astart={start} \
+                    -afinal={final} \
+                    -aformat={format} \
+                    -aseed={seed} \
+                    -anum_tests={num_tests} \
+                    -an_max={n_max} \
+                    -alang={lang} \
+                    -- ../bots/classic_hanoi_bot_eval_sol.py")
+    else:
+        os.system(f"rtal connect -e hanoi eval_sol \
+                    -av={v} \
+                    -astart={start} \
+                    -afinal={final} \
+                    -aformat={format} \
+                    -aseed={seed} \
+                    -anum_tests={num_tests} \
+                    -an_max={n_max} \
+                    -alang={lang} \
+                    -- ../utils/fake_bot.py {service} {test}")
+
+
+def eval_opt_num_moves(v, start, final, modulus, goal, seed, num_tests, n_max, code_lang, lang):
+    print(f"rtal connect -e hanoi eval_opt_num_moves")
+    print(f"> v={v}")
+    print(f"> start={start}")
+    print(f"> final={final}")
+    print(f"> ok_if_congruent_modulus={modulus}")
+    print(f"> goal={goal}")
+    print(f"> seed={seed}")
+    print(f"> num_tests={num_tests}")
+    print(f"> n_max={n_max}")
+    print(f"> code_lang={code_lang}")
+    print(f"> lang={lang}")
+    os.system(f"rtal connect -e hanoi eval_opt_num_moves \
+                -av={v} \
                 -astart={start} \
                 -afinal={final} \
-                -an={n} \
-                -av={v} \
-                -aformat={format} \
+                -aok_if_congruent_modulus={modulus} \
                 -agoal={goal} \
-                -aignore_peg_from={ignore_peg_from} \
-                -aignore_peg_to={ignore_peg_to} \
-                -afeedback={feedback} \
+                -aseed={seed} \
+                -anum_tests={num_tests} \
+                -an_max={n_max} \
+                -acode_lang={code_lang} \
                 -alang={lang} \
-                -- ../utils/fake_bot.py bot_mode {service} {test}")
+                -- ../bots/classic_hanoi_bot_eval_min_moves.py")
 
 
 
@@ -235,23 +311,23 @@ if __name__ == "__main__":
 
         elif test == 'random':
             print(f"TEST: {test}")
-            gen_random_puzzle(-1, 'all_A', 'all_C', 3, '0', 'hardcoded')
+            gen_random_puzzle(-1, 'all_A', 'all_C', 3, 3, '0', 'hardcoded')
 
         elif test == 'verbose0':
             print(f"TEST: {test}")
-            gen_random_puzzle(130000, 'all_A', 'all_C', 3, '0', 'hardcoded')
+            gen_random_puzzle(130000, 'all_A', 'all_C', 3, 3, '0', 'hardcoded')
 
         elif test == 'verbose1_rnd':
             print(f"TEST: {test}")
-            gen_random_puzzle(-1, 'all_A', 'all_C', 3, '1', 'hardcoded')
+            gen_random_puzzle(-1, 'all_A', 'all_C', 3, 3, '1', 'hardcoded')
 
         elif test == 'verbose1_fixed':
             print(f"TEST: {test}")
-            gen_random_puzzle(130000, 'all_A', 'all_C', 3, '1', 'hardcoded')
+            gen_random_puzzle(130000, 'all_A', 'all_C', 3, 3, '1', 'hardcoded')
 
         elif test == 'verbose2':
             print(f"TEST: {test}")
-            gen_random_puzzle(130000, 'all_A', 'all_C', 3, '2', 'hardcoded')
+            gen_random_puzzle(130000, 'all_A', 'all_C', 3, 3, '2', 'hardcoded')
         
         else:
             print("invalid test")
@@ -304,6 +380,7 @@ if __name__ == "__main__":
         if test == 'help':
             print(f"tests availables for {service} are:")
             print('  optimal')
+            print('  optimal_bot')
             print('  optimal_custom_config')
             print('  optimal_wrong_short')
             print('  optimal_wrong')
@@ -323,6 +400,10 @@ if __name__ == "__main__":
         elif test == 'optimal':
             print(f"TEST: {test}")
             check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'yes_no', 'hardcoded', 'optimal')
+
+        elif test == 'optimal_bot':
+            print(f"TEST: {test}")
+            check_one_sol('classic', 'all_A', 'all_C', 2, 'minimal', 'optimal', '0', '0', 'yes_no', 'hardcoded', 'use_real_bot')
 
         elif test == 'optimal_custom_config':
             print(f"TEST: {test}")
@@ -391,6 +472,72 @@ if __name__ == "__main__":
         else:
             print("Invalid test")
         exit(0)
+
+
+    ######################################################################
+    # eval_sol
+    if service == 'eval_sol':
+        print(f"TEST: {service} service")
+        # run selected test:
+        if test == 'help':
+            print(f"tests availables for {service} are:")
+            print('  A_to_C')
+            print('  general')
+            print('  fail')
+            print('  random')
+
+        elif test == 'A_to_C':
+            print(f"TEST: {test}")
+            eval_sol('classic', 'all_A', 'all_C', 'minimal', 130000, 1, 10, 'hardcoded', 'use_real_bot')
+
+        elif test == 'general':
+            print(f"TEST: {test}")
+            eval_sol('classic', 'general', 'general', 'minimal', 130000, 2, 5, 'hardcoded', 'use_real_bot')
+
+        elif test == 'fake_correct':
+            print(f"TEST: {test}")
+            eval_sol('classic', 'all_A', 'all_C', 'minimal', 130000, 1, 2, 'hardcoded', 'fake_correct')
+
+        elif test == 'fake_fail':
+            print(f"TEST: {test}")
+            eval_sol('classic', 'all_A', 'all_C', 'minimal', 130000, 1, 2, 'hardcoded', 'fake_fail')
+        
+        elif test == 'random':
+            print(f"TEST: {test}")
+            eval_sol('classic', 'general', 'general', 'minimal', -1, 2, 2, 'hardcoded', 'use_real_bot')
+
+        else:
+            print("Invalid test")
+        exit(0)
+
+
+    ######################################################################
+    # eval_opt_num_moves
+    if service == 'eval_opt_num_moves':
+        print(f"TEST: {service} service")
+        # run selected test:
+        if test == 'help':
+            print(f"tests availables for {service} are:")
+            print('  A_to_C')
+            print('  general')
+            print('  random')
+
+        elif test == 'A_to_C':
+            print(f"TEST: {test}")
+            eval_opt_num_moves('classic', 'all_A', 'all_C', 0, 'correct', 130000, 1, 10, 'python', 'hardcoded')
+
+        elif test == 'general':
+            print(f"TEST: {test}")
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'correct', 130000, 1, 10, 'python', 'hardcoded')
+
+        elif test == 'random':
+            print(f"TEST: {test}")
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'correct', -1, 1, 5, 'python', 'hardcoded')
+
+        else:
+            print("Invalid test")
+        exit(0)
+
 
 
     ######################################################################

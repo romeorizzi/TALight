@@ -13,10 +13,11 @@ from hanoi_lib import ConfigGenerator
 problem="hanoi"
 service="gen_random_puzzle"
 args_list = [
-    ('n',int),
+    ('n_instances',int),
     ('seed',int),
     ('start', str),
     ('final', str),
+    ('n',int),
     ('verbose',int),
     ('lang',str),
     ('ISATTY',bool),
@@ -35,8 +36,7 @@ if ENV["verbose"] < 2:
 # get seed
 seed = ENV['seed']
 if seed == -1:
-    seed = random.randint(1,9) * 100000
-    seed += random.randint(0, 99999)
+    seed = random.randint(100000, 999999)
     if ENV['verbose'] == 1:
         TAc.print(LANG.render_feedback("print-seed", f"seed = {seed}"), "yellow", ["bold"])
 if ENV['verbose'] == 2:
@@ -44,10 +44,13 @@ if ENV['verbose'] == 2:
 
 # get type of configurations
 gen = ConfigGenerator(seed)
-start = gen.getRandom(ENV['n'])
-final = gen.getRandom(ENV['n'])
 
-TAc.print(LANG.render_feedback("print-configs", f"# start: {start}\n# final: {final}"), "green", ["bold"])
-TAc.print(LANG.render_feedback("print-configs-arg", f"-astart={start} -afinal={final}"), "yellow", ["bold"])
+
+for _ in range(ENV['n_instances']):
+    start = gen.getRandom(ENV['n'])
+    final = gen.getRandom(ENV['n'])
+
+    TAc.print(LANG.render_feedback("print-configs", f"# start: {start}\n# final: {final}"), "green", ["bold"])
+    TAc.print(LANG.render_feedback("print-configs-arg", f"-astart={start} -afinal={final}"), "yellow", ["bold"])
 
 exit(0)
