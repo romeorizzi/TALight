@@ -172,7 +172,7 @@ def eval_sol(v, start, final, format, seed, num_tests, n_max, lang, test):
                     -- ../utils/fake_bot.py {service} {test}")
 
 
-def eval_opt_num_moves(v, start, final, modulus, goal, seed, num_tests, n_max, code_lang, lang):
+def eval_opt_num_moves(v, start, final, modulus, goal, seed, code_lang, lang):
     print(f"rtal connect -e hanoi eval_opt_num_moves")
     print(f"> v={v}")
     print(f"> start={start}")
@@ -180,8 +180,6 @@ def eval_opt_num_moves(v, start, final, modulus, goal, seed, num_tests, n_max, c
     print(f"> ok_if_congruent_modulus={modulus}")
     print(f"> goal={goal}")
     print(f"> seed={seed}")
-    print(f"> num_tests={num_tests}")
-    print(f"> n_max={n_max}")
     print(f"> code_lang={code_lang}")
     print(f"> lang={lang}")
     os.system(f"rtal connect -e hanoi eval_opt_num_moves \
@@ -191,11 +189,9 @@ def eval_opt_num_moves(v, start, final, modulus, goal, seed, num_tests, n_max, c
                 -aok_if_congruent_modulus={modulus} \
                 -agoal={goal} \
                 -aseed={seed} \
-                -anum_tests={num_tests} \
-                -an_max={n_max} \
                 -acode_lang={code_lang} \
                 -alang={lang} \
-                -- ../bots/classic_hanoi_bot_eval_min_moves.py")
+                -- ../bots/classic_hanoi_bot_eval_min_moves.py {goal}")
 
 
 
@@ -518,21 +514,36 @@ if __name__ == "__main__":
         # run selected test:
         if test == 'help':
             print(f"tests availables for {service} are:")
-            print('  A_to_C')
-            print('  general')
-            print('  random')
+            print('  tower_correct')
+            print('  tower_efficient')
+            print('  general_efficient')
+            print('  general_correct')
+            print('  random_efficient')
+            print('  random_correct')
 
-        elif test == 'A_to_C':
+        elif test == 'tower_correct':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'all_A', 'all_C', 0, 'correct', 130000, 1, 10, 'python', 'hardcoded')
+            eval_opt_num_moves('classic', 'all_A', 'all_C', 0, 'correct', 130000, 'python', 'hardcoded')
 
-        elif test == 'general':
+        elif test == 'tower_efficient':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'general', 'general', 0, 'correct', 130000, 1, 10, 'python', 'hardcoded')
+            eval_opt_num_moves('classic', 'all_A', 'all_C', 0, 'efficient', 130000, 'python', 'hardcoded')
 
-        elif test == 'random':
+        elif test == 'general_correct':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'general', 'general', 0, 'correct', -1, 1, 5, 'python', 'hardcoded')
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'correct', 130000, 'python', 'hardcoded')
+
+        elif test == 'general_efficient':
+            print(f"TEST: {test}")
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', 130000, 'python', 'hardcoded')
+
+        elif test == 'random_correct':
+            print(f"TEST: {test}")
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'correct', -1, 'python', 'hardcoded')
+
+        elif test == 'random_efficient':
+            print(f"TEST: {test}")
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', -1, 'python', 'hardcoded')
 
         else:
             print("Invalid test")

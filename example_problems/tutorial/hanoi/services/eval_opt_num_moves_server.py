@@ -19,8 +19,6 @@ args_list = [
     ('ok_if_congruent_modulus',int),
     ('goal',str),
     ('seed',int),
-    ('num_tests',int),
-    ('n_max',int),
     ('code_lang',str),
     ('lang',str),
     ('ISATTY',bool),
@@ -73,26 +71,29 @@ def one_test(start, final):
 
 # Execute all test
 TAc.print(LANG.render_feedback("start-tests", f"# Start Tests"), "green", ["bold"])
-for t in range(1, ENV['num_tests'] + 1):
-    for n in range(1, ENV['n_max'] + 1):
-        # get type of configurations
-        start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
-        assert error == None
-        TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
+for n in range(1, 20):
+    # get type of configurations
+    start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
+    assert error == None
+    TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
 
-        # run instance
-        success, time = one_test(start, final)
-        if success:
-            if ENV['goal'] == 'correct':
-                TAc.print(LANG.render_feedback("success", f'# success'), "green", ["bold"])
-            else:
-                pass
-                # if time is not efficient:
-                #     TAc.print(LANG.render_feedback("not_efficient", f'# fail: Not efficient'), "red", ["bold"])
+    # run instance
+    success, time = one_test(start, final)
+    if success:
+        if ENV['goal'] == 'correct':
+            TAc.print(LANG.render_feedback("time", f'# time: {time}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
+            TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("fail", f'# fail: wrong answer'), "red", ["bold"])
-            TAc.print(LANG.render_feedback("print-service-seed", f"# service seed: {seed}"), "red", ["bold"])
-            TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
+            TAc.print(LANG.render_feedback("success", f'# success'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("time", f'# time: {time}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
+            TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("fail", f'# fail: wrong answer'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("print-service-seed", f"# service seed: {seed}"), "red", ["bold"])
+        TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
+        break
 
 
 TAc.print(LANG.render_feedback("end", "Finish Tests"), "green", ["bold"])
