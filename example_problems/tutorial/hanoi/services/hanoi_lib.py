@@ -79,9 +79,6 @@ class ConfigGenerator():
                     return start, final, None
 
 
-                    
-
-
     def getTower(self, type, n):
         """Generate a n-tower of type 'A', 'B', or 'C'"""
         assert n > 0

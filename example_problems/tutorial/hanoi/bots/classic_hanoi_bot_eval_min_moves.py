@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-from os import wait
 import sys
 sys.setrecursionlimit(1000000)
+
+if len(sys.argv) == 2 and sys.argv[1] == 'efficient':
+    use_efficient_method = True
+else:
+    use_efficient_method = False
 
 
 class MyHanoi():
@@ -21,11 +25,6 @@ class MyHanoi():
             return 'A'
         return 'B'
 
-    def getMin(self, initial, final):
-        self.n_moves = 0
-        self.move(initial, final)
-        return self.n_moves
-
     def move(self, initial, final):
         """I assume: len(initial) == len(final). Move all disks from initial configuration to final configuration"""
         disk = len(initial)
@@ -39,8 +38,38 @@ class MyHanoi():
             self.n_moves += 1
             self.move(intermediate, final[:-1])
 
-    def getMinTowerOf(self, n):
-        return 2**n -1
+    def getMinMoves(self, initial, final, efficient=True):
+        assert len(initial) == len(final)
+        if efficient:
+            # return self.__getMinMoves_classic(initial, final)
+            return (2 ** len(initial)) -1
+        else:
+            self.n_moves = 0
+            self.move(initial, final)
+            return self.n_moves
+
+    def __getMinMovesTowerInto(self, peg, config):
+        """Return the minimum moves for move the tower in peg to the specified configuration"""
+        counter = 0
+        current = peg
+        for i in range(len(config), 0, -1):
+            if (current != config[i - 1]):
+                sub_target = self.__getPegFrom(current, config[i-1])
+                counter += 2 ** (i - 1)
+                current = sub_target
+        return counter
+    
+    def __getMinMoves_classic(self, initial, final):
+        """I assume: len(initial) == len(final). Return the minimum of moves to move all disks from initial configuration to final configuration"""
+        disk = len(initial)
+        if disk <= 0:
+            return 0
+        if initial[-1] == final[-1]:
+            return self.__getMinMoves_classic(initial[:-1], final[:-1])
+        else:
+            aux_peg = self.__getPegFrom(initial[-1], final[-1])
+            return self.__getMinMovesTowerInto(aux_peg, initial[:-1]) + 1 + \
+                    self.__getMinMovesTowerInto(aux_peg, final[:-1])
 
 h = MyHanoi()
 
@@ -51,7 +80,4 @@ while True:
     if start == 'Finish Tests':
         break
     final = input()
-    # print(h.getMin(start, final)) # not efficient
-    print(h.getMinTowerOf(len(start))) # efficient
-
-
+    print(h.getMinMoves(start, final, use_efficient_method))

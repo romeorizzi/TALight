@@ -18,15 +18,15 @@ def wait_end():
 
 ######################################################################
 # main
-if len(sys.argv) == 4 and sys.argv[1] == 'bot_mode':
-    service = sys.argv[2]
-    test = sys.argv[3]
+if len(sys.argv) == 3:
+    service = sys.argv[1]
+    test = sys.argv[2]
     # wait start
     wait_start()
     
 
     ######################################################################
-    # check_opt_num_moves
+    # check_one_sol
     if service == 'check_one_sol':
         if test == 'optimal':
             print('1:AB')
@@ -83,4 +83,35 @@ if len(sys.argv) == 4 and sys.argv[1] == 'bot_mode':
             print('1:XX')
             print('2:XX')
             print('1:XX')
+            wait_end()
+
+    
+
+    ######################################################################
+    # eval_sol
+    if service == 'eval_sol':
+        if test == 'fake_correct':
+            wait_start()
+            print('1:AC')
+            print('end')
+
+            wait_start()
+            wait_start()
+            print('1:AB')
+            print('2:AC')
+            print('1:BC')
+            print('end')
+            wait_end()
+
+        if test == 'fake_fail':
+            wait_start()
+            print('1:AC')
+            print('end')
+
+            wait_start()
+            wait_start()
+            print('1:AB')
+            print('2:BC')
+            print('1:BC')
+            print('end')
             wait_end()

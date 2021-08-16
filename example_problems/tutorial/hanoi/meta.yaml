@@ -192,6 +192,9 @@ services:
       n:
         regex: ^(0|[1-9][0-9]{0,2}|1000)$
         explain: "the number of disks."
+      n_instances:
+        regex: ^(0|[1-9][0-9]{0,2}|1000)$
+        explain: "the number of istance to generate."
       verbose:
         regex: ^(0|1|2)$
         default: 0
@@ -230,15 +233,7 @@ services:
       seed:
         regex: ^(-1|[1-9][0-9]{5,5})$
         default: -1 #random_seed
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
-      num_tests:
-        regex: ^(0|1000|([1-9][0-9]{0,2}))$
-        default: 50
-        explain: "specify the number of tests to run."
-      n_max:
-        regex: ^(0|1000|([1-9][0-9]{0,2}))$
-        default: 10
-        explain: "specify the maximum number of disks to be tested."
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=-1, the service chooses its seed at random (and communicates it to the user)."
       code_lang:
         regex: ^(python|java|nodejs|compiled)$
         default: python
@@ -272,7 +267,7 @@ services:
       seed:
         regex: ^(-1|[1-9][0-9]{5,5})$
         default: -1 #random_seed
-        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)."
+        explain: "specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=-1, the service chooses its seed at random (and communicates it to the user)."
       num_tests:
         regex: ^(0|1000|([1-9][0-9]{0,2}))$
         default: 50

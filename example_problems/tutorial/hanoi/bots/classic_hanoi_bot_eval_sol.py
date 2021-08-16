@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from os import wait
 import sys
 sys.setrecursionlimit(1000000)
 
@@ -61,7 +60,4 @@ while True:
         break
     final = input()
     h.move(start, final)
-    # print(f"1:AC")
     print('end')
-
-

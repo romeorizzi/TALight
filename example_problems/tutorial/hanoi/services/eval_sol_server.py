@@ -30,15 +30,15 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 
-# START CODING YOUR SERVICE: 
+# START CODING YOUR SERVICE:
 # get seed
 seed = ENV['seed']
 if seed == -1:
-    seed = random.randint(1,9) * 100000
-    seed += random.randint(0, 99999)
-TAc.print(LANG.render_feedback("print-seed", f"# seed = {seed}"), "yellow", ["bold"])
+    seed = random.randint(100000, 999999)
+TAc.print(LANG.render_feedback("print-service-seed", f"# service seed = {seed}"), "yellow", ["bold"])
 
-# Init Hanoi Tower
+
+# Init Hanoi Tower and configGenerator
 hanoi = HanoiTowerProblem(ENV['v'])
 gen = ConfigGenerator(seed)
 
@@ -68,10 +68,12 @@ for t in range(1, ENV['num_tests'] + 1):
 
         # CHECK TEST ------------------
         if user_sol == opt_sol:
-            TAc.print(LANG.render_feedback("success", "# success"), "green", ["bold"])
+            TAc.print(LANG.render_feedback("success", f"# success"), "green", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("fail", "# fail"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("fail", f"# fail: wrong answer"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("print-service-seed", f"# service seed: {seed}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
             break
 
-TAc.print(LANG.render_feedback("end", "Finish Tests"), "green", ["bold"])
+TAc.print(LANG.render_feedback("end", f"Finish Tests"), "green", ["bold"])
 exit(0)
