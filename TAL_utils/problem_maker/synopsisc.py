@@ -4,6 +4,8 @@ import os
 import ruamel.yaml
 
 usage=f"""
+This utility checks that the service synopsis works for every service of a problem. The utility can be asked to check this for every problem in a problem collection.
+
 Usage: argv[0] [ fullname_problem_folder | fullname_problems_collection ]
 
 When no argument is given then it is assumed that the folder is the current one.
@@ -19,7 +21,7 @@ Example 1 of use:
     argv[0]
 
 What will happen here:
-    if you are in the main folder of a problem (the one containing its meta.yaml file) then the utility will check that one problem. Otherwise, for each direct subfolder of the current folder the utility checks whether is contains a meta.yaml file and, in the positive case, that problem gets checked. 
+    if you are in the main folder of a problem (the one containing its meta.yaml file) then the utility will check that one problem. Otherwise, for each direct subfolder of the current folder the utility checks whether it contains a meta.yaml file and, in the positive case, that problem gets checked. 
 
 Example 2 of use:
     argv[0] ~/TALight/example_problems/tutorial/pills

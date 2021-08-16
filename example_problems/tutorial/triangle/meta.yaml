@@ -19,12 +19,12 @@ services:
         explain: defines the valid range for the numbers comprising the triangle
         default: 99
       how_to_input_the_triangle:
-        regex: ^(lazy|([1-9]|[0-9]{5,5}))$
+        regex: ^(lazy|([1-9][0-9]{5,5}))$
         explain: you can either enter the code (random seed) of one of our instances (n,MIN_VAL,MAX_VAL,seed) defining a triangle you may have already encountered in other services for this problem or ask to enter your triangle after the service has started up (lazy)
       sol_value:
-        regex: ^((0|[1-9][0-9]{0,4})|none)$
-        default: none
-        explain: choose none if you are not interested in checking the value of your solution
+        explain: when this flag is set to 1 then the service also checks the value of the given path in the given triangle
+        regex: ^(0|1)$
+        default: 1
       silent:
         explain: if nothing is wrong with your solution for the triangle you have specified us (through seed) then the service runs silently; otherwise it explain what is the problem in clear.
         regex: ^(0|1)$
@@ -39,6 +39,49 @@ services:
         regex: ^((\S)+)$
         default: synopsis
         explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_num_sol:
+    description: call this service to check that the number of different paths in a triangle of <n> rows is what you think (<risp>).
+    evaluator: [python, services/check_num_sol_server.py]
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]{0,1}|100)$
+      risp:
+        regex: ^(0|[1-9][0-9]{0,50})$
+        explain: use to specify your conjectured answer for the number of possible paths in a triangle of <n> rows.
+      ok_if_congruent_modulus:
+        explain: when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <ok_if_congruent_modulus> will suffice in assessing you got the right ideas.  
+        regex: ^(0|[1-9][0-9]{0,10})$
+#        default: 0
+        default: 1000000007
+      more_or_less_hint_if_wrong:
+        regex: ^(0|1)$
+        default: 0
+      silent:
+        explain: when the flag silent is set then the service runs silently unless your conjectured answer is wrong (or for wrong calls).
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  eval_num_sol:
+    evaluator: [python, services/eval_num_sol_server.py]
+    args:
+      answ_modulus:
+        explain: when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <answ_modulus> will suffice in assessing you got the right ideas.  
+        regex: ^(0|[1-9][0-9]{0,10})$
+#        default: 0
+        default: 1000000007
+      goal:
+        explain: set your goal (efficient includes also correct).
+        regex: ^(correct|efficient)$
+        default: correct
+      code_lang: 
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

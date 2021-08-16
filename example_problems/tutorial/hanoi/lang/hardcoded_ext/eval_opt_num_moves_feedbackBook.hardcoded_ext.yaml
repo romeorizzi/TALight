@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+print-seed: '# seed = {seed}'
+print-configs: '{start}\n{final}'
+start-tests: '# Start Tests'
+success: '# success'
+not_efficient: '# fail: Not efficient'
+fail: '# fail: wrong answer'
+end: 'Finish Tests'

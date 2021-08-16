@@ -1,0 +1,23 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+seed-service: '# The service is running with seed={seed_service}'
+explain-protocol: '# Each instance gives you a sequence of numbers T. You should answer with the length of the longest increasing sub-sequence.'
+seed-all-run: '#Check on Instance (m={m},max_val={max_val},opt={opt},strictly={strictly},seed={seed}): '
+not-correct-cert: '# No. Your YES certificate is NOT correct. This isn\'t the longest increasing sequence'
+to-retry: '# To retry this very same eval run the service with seed={seed_service}. The description of this very last instance is <m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed={seed}>'
+not-correct-cert: '# No. Your YES certificate is NOT correct. The sequence is not increasing'
+not-correct-cert: '# No. Your YES certificate is NOT correct. The number {i} isn\'t in T'
+correct-cert: '# Ok. ♥ Your YES certificate is valid.'
+not-correct-cert: '# No. Your coloring is not valid. It is not the minimum decreasing coloring for T'
+not-correct-cert: '# No. Your coloring is not valid'
+correct-cert: '# Ok. ♥ Your coloring is valid.'
+seems-correct-weak: '# Ok. ♥ Your solution answers correctly on a first set of instances (with |T|, the length of T, up to {instance["m"]}.'
+not-efficient: '# No. You solution is NOT {ENV["goal"]}. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]}.'
+seems-correct-strong: '# Ok. ♥  Your solution appears to be correct (checked on several instances).'
+quasi_linear: '# Ok. ♥ The running time of your solution is quasi_linear. You achieved our highest efficiency goal!'
+efficient: '# Ok. ♥ The running time of your solution is at most {ENV["goal"]}. You achieved your efficiency goal!'

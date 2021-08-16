@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+seed-service: '# The service is running with seed={seed_service}'
+explain-protocol: '# Each instance gives you a sequence of numbers T and then, on the next row, a sequence of numbers S. You should say how may occurences of S in T.'
+seed-all-run: '#Check on Instance (m={m},n={n},max_val={max_val},yes_instance={yes_instance},seed {seed}): '
+seems-correct-weak: '# Ok. ♥ Your solution answers correctly on a first set of instances (with |T|, the length of T, up to {instance["m"]}.'
+not-efficient: '# No. You solution is NOT {ENV["goal"]}. When run on your machine, it took more than one second to answer on an instance where |T|={instance["m"]} and |S|={instance["n"]}.'
+seems-correct-strong: '# Ok. ♥  Your solution appears to be correct (checked on several instances).'
+efficient: '# Ok. ♥ Your solution is {ENV["goal"]}: its running time is linear in the length of T and S.'

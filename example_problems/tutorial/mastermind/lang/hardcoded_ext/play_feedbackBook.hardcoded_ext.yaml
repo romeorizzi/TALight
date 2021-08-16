@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+assigned-instance: '# The assigned instance is:\n#   number of pegs: {ENV['num_pegs']}\n#   number of colors: {ENV['num_colors']}\n#   Seed: '
+assigned-instance: '# The assigned instance is:\n#   number of pegs: {ENV['num_pegs']}\n#   number of colors: {ENV['num_colors']}'
+prompt: '# Enter your first attempt which must be a sequence of {ENV['num_pegs']} colors separated by spaces.\n# example: \n#   1 4 3 \n# The server will respond with as many 'b' as the colors in the correct position and as many 'w' as the correct colors. \n'
+right-secret-code: 'You found the secret code in {count} attempts.'
+wrong-secret-code: 'You didn't find the secret code, the secret code is [{' '.join(map(str, secretCode))}]'
+wrong-secret-code: 'You didn't find the secret code, the secret code is [{' '.join(map(str, secretCodeAlive[0]))}]'

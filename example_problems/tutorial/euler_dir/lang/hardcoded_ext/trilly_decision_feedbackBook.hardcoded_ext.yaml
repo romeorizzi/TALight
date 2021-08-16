@@ -1,0 +1,26 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+error-arc: 'L'arco non esiste nel grafo.'
+ok-yes-any-calls: 'Corretto!'
+ok-no-any-calls: 'Corretto!'
+error-any-calls: 'Sbagliato!'
+ok-yes-2-calls: 'Corretto! Hai utilizzato massimo 2 chiamate al servizio trilly.'
+no-yes-2-calls: 'Corretto! Hai utilizzato però più di 2 chiamate al servizio trilly.'
+ok-no-2-calls: 'Corretto! Hai utilizzato massimo 2 chiamate al servizio trilly.'
+no-no-2-calls: 'Corretto! Hai utilizzato però più di 2 chiamate al servizio trilly.'
+error-2-calls: 'Sbagliato!'
+ok-yes-n-calls: 'Corretto! Hai utilizzato massimo {n} chiamate al servizio trilly.'
+no-yes-n-calls: 'Corretto! Hai utilizzato però più di {n} chiamate al servizio trilly.'
+ok-no-n-calls: 'Corretto! Hai utilizzato massimo {n} chiamate al servizio trilly.'
+no-no-n-calls: 'Corretto! Hai utilizzato però più di {n} chiamate al servizio trilly.'
+error-n-calls: 'Sbagliato!'
+ok-yes-m-calls: 'Corretto! Hai utilizzato massimo {m} chiamate al servizio trilly.'
+no-yes-m-calls: 'Corretto! Hai utilizzato però più di {m} chiamate al servizio trilly.'
+ok-no-m-calls: 'Corretto! Hai utilizzato massimo {m} chiamate al servizio trilly.'
+no-no-m-calls: 'Corretto! Hai utilizzato però più di {m} chiamate al servizio trilly.'
+error-m-calls: 'Sbagliato!'

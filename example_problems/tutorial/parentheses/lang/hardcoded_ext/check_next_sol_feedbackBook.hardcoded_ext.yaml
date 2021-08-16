@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+different-n: 'No. The two formulas you have provided have different lengths! As such, they do not belong to the same list.'
+next-ok: ':)  The next_sol wff is indeed the wff that comes just after the current_sol wff (according to sorting_criterion={ENV["sorting_criterion"]}).'
+next-wrong: 'No. The next_sol wff you have provided is NOT the wff coming just after the current_sol wff according to sorting_criterion={ENV["sorting_criterion"]}.'
+feedback: 'The maximal prefix of your next_sol wff that is actually correct is the following:'

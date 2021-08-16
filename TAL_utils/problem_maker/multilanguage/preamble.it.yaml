@@ -1,6 +1,7 @@
 %YAML 1.2
+%YAML 1.2
 ---
 open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
-feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+feedback_source: '# Queste informazioni in italiano provengono dai seguenti file:\n#   le frasi che strutturano esternamente le schede di aiuto del servizio synopsis provengono dal file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.it.yaml\''\n#   le informazioni specifiche al servizio del problema oggetto di questa scheda (servizio {self.ENV.service} del problema {self.ENV.problem})  provengono da un dizionario delle frasi di feedback del servizio (più precisamente il file \''{messages_book_file}\'').'
 
-#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:

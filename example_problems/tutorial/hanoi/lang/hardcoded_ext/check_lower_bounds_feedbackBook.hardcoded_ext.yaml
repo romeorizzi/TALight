@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+n_not_valid: 'If you use the all_* form for start and final, you must use a N >= 0.'
+different_len: 'If you use a custom configuration for start and final, the length of start must be equal to the length of final'
+answ-equal: 'Nice! Your answer is correct.'
+answ-wrong: 'Oh no! Your answer is wrong.'
+get-answ: 'The lower bound for the disk={disk} is {opt_answ}.'
+answ-less: 'The correct lower bound for the disk={disk} is smaller then your answer.'
+answ-more: 'The correct lower bound for the disk={disk} is bigger then your answer.'

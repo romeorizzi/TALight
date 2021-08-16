@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+ok-Truecorrect-dec2opt: 'Corretto!'
+no-Truecorrect-dec2opt: 'Sbagliato!'
+no-Falsecorrect-dec2opt: 'Sbagliato!'
+ok-Falsecorrect-dec2opt: 'Corretto!'
+ok-TrueOneCall-dec2opt: 'Corretto! La tua soluzione è anche ottima, hai usato una sola chiamata a oracolo.'
+no-TrueOneCall-dec2opt: 'Corretto! Esiste una soluzione più efficiente però che usa una sola chiamata all'oracolo.'
+error-TrueOneCall-dec2opt: 'Sbagliato!'
+error-FalseOneCall-dec2opt: 'Sbagliato!'
+ok-FalseOneCall-dec2opt: 'Corretto! La tua soluzione è anche ottima, hai usato una sola chiamata a oracolo.'
+no-FalseOneCall-dec2opt: 'Corretto! Esiste una soluzione più efficiente però che usa una sola chiamata all'oracolo.'

@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+rank-ok: ':)  You correctly ranked the formula among those on {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'
+ranked-too-low: 'No. Your formula ranks higher than {answ} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'
+ranked-too-high: 'No. Your formula ranks lower than {answ} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'
+risp-no: 'No, {answ} is not the position of {input_form} in the list of {n_pairs} pairs of parentheses.'

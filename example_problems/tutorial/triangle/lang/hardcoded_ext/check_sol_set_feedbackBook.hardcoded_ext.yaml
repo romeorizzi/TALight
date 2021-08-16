@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+at-least-one-line: 'No. You are required to enter at least one valid formula before closing.'
+first-line-not-well-formed: 'No. Your very first tiling is not well formed.'
+different_lengths: 'No. The tiling you just introduced (your line {len(input_solution_list)+1}) is different in length from the previous ones.'
+repeated: 'No. The well-formed tiling you just introduced (your line {len(input_solution_list)+1}) is the same as the entry number {input_solution_list.index(line)+1}.'
+your-formulas-all-ok: 'All the tilings you have introduced are ok (well formed).'
+one-formula-is-missing-no-feedback: 'No. Your set is missing at least one well-formed tiling.'
+one-formula-is-missing-no-feedback: 'No. Your set is missing at least one well-formed tiling.\nConsider for example:'
+one-missing-minimal-prefix: 'No. Your set is missing at least one well-formed tiling.\nHere is the prefix of a well-formed formula that is missing from the set you entered:'
+not-consecutive(last): 'In green you find the longest prefix that a solution you are missing has in common with a solution you have given:'
+first-missing-till-already-present: 'In green you find the longest prefix that a solution you are missing has in common with a solution you have given:'
+one-missing-prefix-length: 'No. Your set is missing at least one well-formed tiling.\nHere is the prefix of length {length} of a well-formed formula that is missing from the set you entered:'

@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+ok-correct-trilly: 'Corretto!'
+no-correct-trilly: 'Sbagliato!'
+no-polynomial-trilly: 'Corretto! Il tuo algoritmo non è molto efficiente, ci mette {time}s sulla tua macchina.'
+ok-polynomial-trilly: 'Corretto! Il tuo algoritmo è molto efficiente, ci mette {time}s sulla tua macchina.'
+error-polynomial-trilly: 'Sbagliato!'
+ok-at-most-n-opt-trilly: 'Corretto! La tua soluzione è anche ottima, hai usato massimo n chiamate a oracolo.'
+no-at-most-n-opt-trilly: 'Corretto! Esiste una soluzione più efficiente però che usa massimo n chiamate a oracolo.'
+error-at-most-n-opt-trilly: 'Sbagliato!'
+ok-at-most-2-opt-trilly: 'Corretto! La tua soluzione è anche ottima, hai usato massimo 2 chiamate a oracolo.'
+no-at-most-2-opt-trilly: 'Corretto! Esiste una soluzione più efficiente però che usa massimo 2 chiamate a oracolo.'
+error-at-most-2-opt-trilly: 'Sbagliato!'
