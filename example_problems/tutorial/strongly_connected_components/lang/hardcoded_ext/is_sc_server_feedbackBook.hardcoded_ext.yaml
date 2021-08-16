@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+n-LB: '# ERRORE: il numero di nodi del grafo deve essere almeno 1. Invece il primo dei numeri che hai inserito è n={n}.'
+m-LB: '# ERRORE: il numero di archi del grafo non può essere negativo. Invece il secondo dei numeri che hai inserito è m={m}.'
+n-at-least-1: '# ERRORE: entrambi gli estremi di un arco devono essere nodi del grafo, ossia numeri interi ricompresi nell'intervallo [0,{ENV['MAXN']}.'

@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+random-num: 'Random number: {n}'
+insert-num: 'Insert the number in decimal form:'
+insert-solu: 'Insert your solution:'
+correct: 'Correct!'
+not-correct: 'This is not correct.'
+correct-num: 'The correct number is:{correct_bin}'

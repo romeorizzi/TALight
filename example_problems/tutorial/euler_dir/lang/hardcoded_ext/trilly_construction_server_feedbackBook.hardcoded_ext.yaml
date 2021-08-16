@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+error-arc: 'L'arco non esiste nel grafo.'
+correct-trilly_con: 'Corretto!'
+ok-1-calls: 'Corretto! Hai utilizzato 1 chiamata al servizio trilly.'
+no-1-calls: 'Corretto! Hai utilizzato però più di 1 chiamata al servizio trilly.'
+ok-2-calls: 'Corretto! Hai utilizzato massimo 2 chiamate al servizio trilly.'
+no-2-calls: 'Corretto! Hai utilizzato però più di 2 chiamate al servizio trilly.'
+ok-2-calls: 'Corretto! Hai utilizzato massimo {n} chiamate al servizio trilly.'
+no-2-calls: 'Corretto! Hai utilizzato però più di {n} chiamate al servizio trilly.'
+ok-2-calls: 'Corretto! Hai utilizzato massimo {m} chiamate al servizio trilly.'
+no-2-calls: 'Corretto! Hai utilizzato però più di {m} chiamate al servizio trilly.'

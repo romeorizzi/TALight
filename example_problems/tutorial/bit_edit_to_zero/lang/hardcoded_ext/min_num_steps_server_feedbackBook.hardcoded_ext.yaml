@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+random-num: '# Random binary number from where to start:'
+insert-num-bin: 'Insert the starting number in binary form:'
+insert-answ: '# Insert your answer (minimum numbr of total steps):'
+correct: 'Correct!'
+not-correct: 'This is not correct.'
+true-val: 'The minimum number of steps needed is {correct_steps}.'
+more: 'More than {answ} steps are required in order to go from {s} to zero.'
+less: 'You can go from {s} to zero in strictly less than {answ} steps.'

@@ -1,0 +1,9 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+insert-num-bin: 'Insert the number in binary form:'
+oracle_response: 'You should play a step of type {mossa} as your very first move (in order to get down to zero as fast as possible).'

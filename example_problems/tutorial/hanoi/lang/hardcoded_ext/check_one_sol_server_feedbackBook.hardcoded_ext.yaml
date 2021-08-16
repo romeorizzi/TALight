@@ -1,0 +1,31 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+spot-first-diff: 'Line {diff[0]}:\nYour wrong move: {diff[1]}.\nCorrect move: {diff[2]}'
+gimme-optimal: 'This is the optimal moves list.'
+gimme-optimal-line: 'Move disk {disk} from {current} peg to {target} peg.'
+gimme-admissible: 'This is a shorter admissible moves list:'
+gimme-admissible-line: 'Move disk {disk} from {current} peg to {target} peg.'
+n_not_valid: 'If you use the all_* form for the arguments \''start\'' and \''final\'', then you must use a value other than -1 for the argument \''n\''.'
+different_len: 'If you use a custom configuration for start and final, the length of start must be equal to the length of final'
+start_config: '# Start config: {start}'
+final_config: '# Final config: {final}'
+start_game: 'Start!'
+sol-len-wrong-equal: 'Your number of moves is different from the optimal number of moves. Use check_opt_num_moves service for check it.'
+sol-wrong-opt: 'Your solution is not optimal.'
+sol-correct-opt: 'Your solution is optimal.'
+sol-wrong-disk: 'You moved some wrong disk.'
+sol-wrong-peg-from: 'You moved some disk from wrong peg.'
+sol-wrong-peg-to: 'You moved some disk to wrong peg.'
+sol-correct-ignore: 'Your solution is optimal with the specificated ignore constraints.'
+sol-wrong-less: 'Your number of moves is less than the optimal number of moves. Use check_opt_num_moves service for check it.'
+move-wrong: 'Error in move {info[0]}.'
+final-wrong: 'Your solution finish in configuration: {info}.\nIt is different from the correct final configuration: {final}.'
+sol-admissible: 'Your solution is admissible.'
+sol-not-simplewalk: 'Your solution is not a simple walk.\nThis states are repeated:'
+occ-line: 'State {k} repeated {v} times.'
+sol-simplewalk: 'Your solution is a simple walk.'

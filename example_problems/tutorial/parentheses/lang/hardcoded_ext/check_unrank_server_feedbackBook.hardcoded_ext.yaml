@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+rank-ok: ':)  Correct! It is indeed this one the formula that appears with rank={rank+1} among the well formed formulas on {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={crit}).'
+ranks-higher: 'No. Your formula ranks higher than {rank+1} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={crit}).'
+ranks-lower: 'No. Your formula ranks lower than {rank+1} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={crit}).'
+risp-no: 'No. Your formula does not rank {rank+1} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={crit}).'

@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+your-input: 'Secret code entered:  {ENV['secret_code']}\nProbing code entered: {ENV['probing_code']}\n'
+error-len-probing_code: 'The length of the probing code must be the same as that of the secret code.'
+correct-evaluation: 'Evaluation: {result}'

@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+different-n: 'No. The two treatments you have provided have different lengths! As such, they do not belong to the same list.'
+next-ok: '♥  The next_sol treatment is indeed the treatment that comes just after the current_sol treatment (according to sorting_criterion={ENV["sorting_criterion"]}).'
+next-wrong: 'No. The next_sol treatment you have provided is NOT the treatment coming just after the current_sol treatment according to sorting_criterion={ENV["sorting_criterion"]}.'
+feedback: 'The maximal prefix of your next_sol treatment that is actually correct is the following:'

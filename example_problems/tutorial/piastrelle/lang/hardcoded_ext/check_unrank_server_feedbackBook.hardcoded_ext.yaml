@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+first-line-not-well-formed: 'No. Your very first tailing is not well formed.'
+different_lengths: 'No. The tiling you just introduced is not of length {n_tiles}.'
+answer-no: 'No. The tiling you introduced is not at the position {pos}.'
+answer-yes: 'Yes! The tiling introduced is right.'

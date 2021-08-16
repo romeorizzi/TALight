@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+print-seed: '# seed = {seed}'
+start-tests: '# Start Tests'
+print-configs: '{start}\n{final}'
+success: '# success'
+fail: '# fail'
+end: 'Finish Tests'

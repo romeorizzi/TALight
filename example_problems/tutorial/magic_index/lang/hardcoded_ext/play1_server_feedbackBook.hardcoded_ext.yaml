@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+random_vector: 'I generated a vector of size: {size}.'
+random_vector: 'Choose an index to play:'
+error: 'The input value for the index is not between 0 and {size-1}. Insert another index to play:'
+first error: '# Here you made your first mistake!'
+error: '# Here you made a mistake!'
+solution proposed: 'Do you want to give the solution? (y for yes, otherwise any other character)'
+solution proposed: 'Enter your vector of magic indexes here: (example: 1,2,3)'
+the game continues: 'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'

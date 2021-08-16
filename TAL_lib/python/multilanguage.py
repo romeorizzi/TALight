@@ -104,7 +104,9 @@ class Lang:
         
     def print_opening_msg(self):
         self.to_be_printed_opening_msg = False
-        self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={self.ENV.problem}, service={self.ENV.service}\n#  with arguments: ")
+        problem=self.ENV.problem
+        service=self.ENV.service
+        self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={problem}, service={service}\n#  with arguments: ", {"problem":self.ENV.problem, "service":self.ENV.service})
         for arg_name, arg_type in self.ENV.args_list:
             arg_val = self.ENV[arg_name]
             if arg_type == bool:
@@ -112,23 +114,27 @@ class Lang:
             else:
                 self.opening_msg += f"{arg_name}={arg_val}, "
         self.opening_msg = self.opening_msg[:-2] + ".\n"
-        if self.messages_book == None:
-            self.opening_msg += f"# The feedback_source is the one hardcoded in the service server ({argv[0]})"
-        else:
-            self.opening_msg += self.render_feedback("feedback_source",f".\n# The feedback_source is the dictionary of phrases yaml file ({self.messages_book_file}) in the service server folder.", {"problem":self.ENV.problem, "service":self.ENV.service, "messages_book_file":self.messages_book_file})
+        self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {argv[0]}).')
         self.TAc.print(self.opening_msg, "green")
 
-    def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionay=None):
+    def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionary=None, obj=None):
         """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the harcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
         if self.to_be_printed_opening_msg:
             self.print_opening_msg()
         if self.messages_book != None and msg_code not in self.messages_book:
-            self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book","red", file=stderr)
+            self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book. We overcome this inconvenience by using the hardcoded phrase which follows next.","red", file=stderr)
         if self.messages_book == None or msg_code not in self.messages_book:
             return rendition_of_the_hardcoded_msg
-        if trans_dictionay != None:
-            return self.messages_book[msg_code].format(**trans_dictionay)
+        if trans_dictionary != None:
+            #print(self.messages_book[msg_code])
+            #print(f"trans_dictionary={trans_dictionary}")
+            fstring=self.messages_book[msg_code].format_map(trans_dictionary)
+            return eval(f"f'{fstring}'")
+        if obj != None:
+            fstring=self.messages_book[msg_code].format(obj)
+            return eval(f"f'{fstring}'")
         msg_encoded = self.messages_book[msg_code]
+        #print(f"msg_encoded={msg_encoded}")
         return self.service_server_eval(msg_encoded)
     
     def suppress_opening_msg(self):

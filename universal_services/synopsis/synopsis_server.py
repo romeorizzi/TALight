@@ -56,9 +56,11 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
 
 meta_yaml_book = None
 if environ["TAL_lang"] != "hardcoded":
-    meta_yaml_book = load_meta_yaml_file(meta_yaml_file=os.path.join(environ["TAL_META_DIR"],"lang",environ["TAL_lang"],"meta","meta_"+ENV["service"]+"_"+environ["TAL_lang"]+".yaml"), succeed_or_die = False)
+    meta_yaml_file = os.path.join(environ["TAL_META_DIR"],"lang",environ["TAL_lang"],"meta","meta_"+ENV["service"]+"_"+environ["TAL_lang"]+".yaml")
+    meta_yaml_book = load_meta_yaml_file(meta_yaml_file, succeed_or_die = False)
 if meta_yaml_book == None:
-    meta_yaml_book = load_meta_yaml_file(meta_yaml_file=os.path.join(environ["TAL_META_DIR"],"meta.yaml"), succeed_or_die = True)
+    meta_yaml_file = os.path.join(environ["TAL_META_DIR"],"meta.yaml")
+    meta_yaml_book = load_meta_yaml_file(meta_yaml_file, succeed_or_die = True)
     
 if ENV['service'] not in meta_yaml_book['services'].keys():
     TAc.print(LANG.render_feedback("wrong-service-name", f'\nSorry, you asked information about {ENV["service"]} which however does not appear among the services currently supported for problem "{problem}".'), "red", ["bold"])
@@ -66,8 +68,10 @@ if ENV['service'] not in meta_yaml_book['services'].keys():
     print(", ".join(meta_yaml_book['services'].keys()),end="\n\n")
     exit(0)
 
+service_of = LANG.render_feedback("service-of", f'   (service of the "{problem}" problem)')
 TAc.print("\n"+ENV['service'], "yellow", ["bold"], end="")
-TAc.print(LANG.render_feedback("service-of", f'   (service of the "{problem}" problem)'), "yellow")
+TAc.print(service_of, "yellow", end="")
+TAc.print(LANG.render_feedback("info-source", f' [the problem specific information for this SYNOPSIS help sheet is gathered from the .yaml file \'{meta_yaml_file}\']'), "green")
 
 if "description" in meta_yaml_book['services'][ENV['service']].keys():
     TAc.print('\nDescription:', "green", ["bold"])
