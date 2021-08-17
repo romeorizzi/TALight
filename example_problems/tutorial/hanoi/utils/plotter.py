@@ -19,7 +19,7 @@ def plotting(data, figure_size):
         n = data[i][1]
         t_no_efficient = data[i][2]
         t_efficient = data[i][3]
-        diff = np.array(t_no_efficient) - np.array(t_efficient)
+        diff = data[i][4]
 
 
         # plotting times comparison
