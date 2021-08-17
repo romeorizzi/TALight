@@ -482,10 +482,28 @@ class HanoiTowerProblem():
                 self.n_moves_of[1] += 1
 
 
-
     def __getMinMoves_toddler(self, initial, final):
-        self.getMovesList(initial, final)
-        return len(self.moves)
+        # get optimal moves list
+        res = self.__getMinMoves_classic(initial, final)
+        # check if Daddy must adjust toddler move
+        if res > 1 and self.__daddy_must_adjust_move(initial, final):
+            res += 1
+        # return result
+        return res
+
+
+    def __daddy_must_adjust_move(self, initial, final):
+        """Return True if Daddy must adjust the Toddler move in Toddler version"""
+        disk = len(initial)
+        if disk <= 0:
+            return False
+        if disk == 1:
+            return (initial == final)
+        if initial[-1] == final[-1]:
+            return self.__daddy_must_adjust_move(initial[:-1], final[:-1])
+        else:
+            intermediate = self.__getPegFrom(initial[-1], final[-1]) * (disk - 1)
+            return self.__daddy_must_adjust_move(initial[:-1], intermediate)
 
 
     # PRIVATE CLOCKWISE
