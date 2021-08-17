@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-from sys import stderr, exit
+import sys, os
 import random
 from time import monotonic
 import matplotlib.pyplot as plt
 
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../services")))
 from hanoi_lib import ConfigGenerator, HanoiTowerProblem
 from plotter import plotting
 
@@ -59,4 +61,4 @@ if __name__ == "__main__":
     one_test('clockwise', seed, n_max_check=10, inc_check=1, n_max_perform=16, inc_perform=2)
 
     # call plotter
-    plotting(data, (10,5))
+    plotting(data, (12,10))

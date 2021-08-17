@@ -5,9 +5,6 @@ from time import monotonic
 import matplotlib.pyplot as plt
 import numpy as np
 
-from hanoi_lib import ConfigGenerator, HanoiTowerProblem
-
-
 
 def plotting(data, figure_size):
     """data=(n, t_no_efficient, t_efficient) is a list of data to plotting."""
