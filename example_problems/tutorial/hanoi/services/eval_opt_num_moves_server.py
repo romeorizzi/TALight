@@ -6,7 +6,7 @@ from time import monotonic
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from hanoi_lib import ConfigGenerator, HanoiTowerProblem
+from hanoi_lib import ConfigGenerator, HanoiTowerProblem, generate_n_list
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -47,16 +47,24 @@ gen = ConfigGenerator(seed)
 def one_test(start, final):
     # Get the correct solution
     modulus = ENV['ok_if_congruent_modulus']
-    opt_answ = hanoi.getMinMoves(start, final)
+    opt_answ = hanoi.getMinMoves(start, final, True)
     if modulus != 0:
         overflow = (opt_answ >= modulus)
         mod_answ = opt_answ % modulus
 
     # Get user answer
     t_start = monotonic()
-    user_answ, = TALinput(int, TAc=TAc)
+    user_answ, = TALinput(int, TAc=TAc, comment_lines_start_with='T:')
     t_end = monotonic()
-    time_user = t_end - t_start # seconds in float
+    time = t_end - t_start # seconds in float
+
+
+    # FOR DEBUGGING --------------------------------------------
+    # time_user, = TALinput(str, TAc=TAc)
+    # time_user = float(time_user[2:])
+    # time = time_user
+    # ----------------------------------------------------------
+
     
     # check the user answer
     if modulus == 0 or not overflow: #case: not modulus or modulus irrilevant
@@ -66,12 +74,16 @@ def one_test(start, final):
         if user_answ != mod_answ:
             return False, None
 
-    return True, time_user
+    return True, time
 
+
+times = list()
 
 # Execute all test
 TAc.print(LANG.render_feedback("start-tests", f"# Start Tests"), "green", ["bold"])
-for n in range(1, 20):
+TAc.print(LANG.render_feedback("print-version", f"# version={ENV['v']}"), "green", ["bold"])
+n_list = generate_n_list(n_max=14, scaling_factor=1.2)
+for n in n_list:
     # get type of configurations
     start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
     assert error == None
@@ -79,13 +91,13 @@ for n in range(1, 20):
 
     # run instance
     success, time = one_test(start, final)
+    times.append(time)
     if success:
         if ENV['goal'] == 'correct':
-            TAc.print(LANG.render_feedback("time", f'# time: {time}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("success", f'# success'), "green", ["bold"])
             TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
             TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("success", f'# success'), "green", ["bold"])
             TAc.print(LANG.render_feedback("time", f'# time: {time}'), "green", ["bold"])
             TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
             TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
@@ -93,8 +105,33 @@ for n in range(1, 20):
         TAc.print(LANG.render_feedback("fail", f'# fail: wrong answer'), "red", ["bold"])
         TAc.print(LANG.render_feedback("print-service-seed", f"# service seed: {seed}"), "red", ["bold"])
         TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
-        break
-
+        # break
 
 TAc.print(LANG.render_feedback("end", "Finish Tests"), "green", ["bold"])
+
+
+# FOR DEBUGGING --------------------------------------------
+# try:
+#     with open('utils/data/mode.txt', 'r') as mode_file:
+#         mode = mode_file.read()
+# except FileNotFoundError:
+#     with open('utils/data/mode.txt', 'w') as mode_file:
+#         mode_file.write('0')
+#         mode = '0'
+
+# v = ENV['v']
+# if mode == '0':
+#     with open(f'utils/data/{v}_n.txt', 'w') as file:
+#         file.write(f'{n_list}\n')
+#     with open(f'utils/data/{v}_correct.txt', 'w') as file:
+#         file.write(f'{times}')
+#     with open('utils/data/mode.txt', 'w') as mode_file:
+#         mode_file.write('1')
+# else:
+#     with open(f'utils/data/{v}_efficient.txt', 'w') as file:
+#         file.write(f'{times}')
+#     with open('utils/data/mode.txt', 'w') as mode_file:
+#         mode_file.write('0')
+# ----------------------------------------------------------
+
 exit(0)

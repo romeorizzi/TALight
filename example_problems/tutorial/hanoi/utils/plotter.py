@@ -3,11 +3,10 @@ from sys import stderr, exit
 import random
 from time import monotonic
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def plotting(data, figure_size):
-    """data=(n, t_no_efficient, t_efficient) is a list of data to plotting."""
+    """data=(name, n, t_no_efficient, t_efficient) is a list of data to plotting."""
 
     # plotting settings
     plt.figure(figsize = figure_size)
@@ -19,7 +18,12 @@ def plotting(data, figure_size):
         n = data[i][1]
         t_no_efficient = data[i][2]
         t_efficient = data[i][3]
-        diff = data[i][4]
+        assert len(t_no_efficient) == len(t_efficient)
+        diff = [t_no_efficient[i] - t_efficient[i] for i in range(len(t_no_efficient))]
+
+        # print stats
+        print(f'n={n}')
+        # print(f'diff={diff}')
 
 
         # plotting times comparison
@@ -34,9 +38,8 @@ def plotting(data, figure_size):
 
         # plotting difference
         plt.subplot(len(data), 2, counter+1)
-        if i == 0:
-            plt.title('Difference between comparison',fontweight="bold")
-        plt.plot(n, diff, marker = 'o', color='r')
+        plt.plot(n, diff, marker = 'o', color='r', label='difference')
+        plt.legend(loc="upper left")
         plt.xlabel('N')
         plt.ylabel('difference (seconds)')
         plt.grid(color = 'green', linestyle = '--', linewidth = 0.5)
@@ -44,6 +47,6 @@ def plotting(data, figure_size):
         #update counter
         counter += 2
 
-    plt.suptitle('Efficiency comparison',fontweight="bold")
+    plt.suptitle('EFFICIENCY COMPARISON',fontweight="bold")
     plt.show()
 

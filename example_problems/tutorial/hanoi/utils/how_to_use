@@ -1,0 +1,7 @@
+FILES:
+
+- services_test is a quickly script for test use-cases. It use fake_bot
+
+- generate_data generate the data for efficiency comparison. It use test_bot
+
+- efficiency_comparasion do the comparasion beetween data extracted. It use the local library plotter

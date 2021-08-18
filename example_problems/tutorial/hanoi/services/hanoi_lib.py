@@ -6,6 +6,17 @@ sys.setrecursionlimit(1000000)
 
 PEGS_LIST = ['A', 'B', 'C']
 
+def generate_n_list(n_max, scaling_factor):
+    """Generate a list of values for n"""
+    n_list = list()
+    n = 0
+    while True:
+        n = 1 + int(n * scaling_factor)
+        if n > n_max:
+            break
+        n_list.append(n)
+    return n_list
+
 
 def generate_move(disk, current, target):
     """Generate a move string from info"""
