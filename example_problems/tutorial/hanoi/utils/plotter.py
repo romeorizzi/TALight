@@ -23,12 +23,15 @@ def plotting(data, figure_size):
 
         # print stats
         print(f'n={n}')
-        # print(f'diff={diff}')
+        print(f'last_no_eff={t_no_efficient[-1]}')
+        print(f'last_eff={t_efficient[-1]}')
+        print(f'last_diff={diff[-1]}')
+        print()
 
 
         # plotting times comparison
         plt.subplot(len(data), 2, counter)
-        plt.title(f'{name}',fontweight="bold", loc="left")
+        plt.title(f'{name}',fontweight="bold", loc="right")
         plt.plot(n, t_no_efficient, marker = 'o', color='b', label='only_correct')
         plt.plot(n, t_efficient, marker = 'o', color='g', label='also_efficient')
         plt.legend(loc="upper left")

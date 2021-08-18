@@ -77,61 +77,75 @@ def one_test(start, final):
     return True, time
 
 
-times = list()
+# Generate test list
+if ENV['goal'] == 'efficient':
+    n_list = generate_n_list(n_max=50, scaling_factor=1.2)
+else:
+    n_list = generate_n_list(n_max=14, scaling_factor=1.2)
+    if ENV['v'] != 'clockwise':
+        n_list += [n_list[-1] + 1]
+    if ENV["code_lang"]=="compiled":
+        n_list += [n_list[-1] + 1]
+
 
 # Execute all test
 TAc.print(LANG.render_feedback("start-tests", f"# Start Tests"), "green", ["bold"])
 TAc.print(LANG.render_feedback("print-version", f"# version={ENV['v']}"), "green", ["bold"])
-n_list = generate_n_list(n_max=14, scaling_factor=1.2)
+times = list()
 for n in n_list:
     # get type of configurations
     start, final, error = gen.getConfigs(ENV['start'], ENV['final'], n)
     assert error == None
+    TAc.print(LANG.render_feedback("print-n", f"# Test with n={n}"), "green", ["bold"])
     TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
 
     # run instance
     success, time = one_test(start, final)
     times.append(time)
+    TAc.print(LANG.render_feedback("time", f'# time={time} (sec)'), "green", ["bold"])
     if success:
         if ENV['goal'] == 'correct':
             TAc.print(LANG.render_feedback("success", f'# success'), "green", ["bold"])
-            TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
-            TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("time", f'# time: {time}'), "green", ["bold"])
-            TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
-            TAc.print(LANG.render_feedback("divisor", f'#             '), "green", ["bold"])
+            if ((ENV['v'] == 'classic'   and time > 0.0400) or \
+                (ENV['v'] == 'toddler'   and time > 0.0400) or \
+                (ENV['v'] == 'clockwise' and time > 0.8000) ):
+                TAc.print(LANG.render_feedback("fail", f'# fail: too slow'), "red", ["bold"])
+                break
+            else:
+                TAc.print(LANG.render_feedback("success", f'# success'), "green", ["bold"])
+
     else:
         TAc.print(LANG.render_feedback("fail", f'# fail: wrong answer'), "red", ["bold"])
         TAc.print(LANG.render_feedback("print-service-seed", f"# service seed: {seed}"), "red", ["bold"])
         TAc.print(LANG.render_feedback("print-configs", f"{start}\n{final}"), "green", ["bold"])
-        # break
+        break
 
 TAc.print(LANG.render_feedback("end", "Finish Tests"), "green", ["bold"])
 
 
 # FOR DEBUGGING --------------------------------------------
-# try:
-#     with open('utils/data/mode.txt', 'r') as mode_file:
-#         mode = mode_file.read()
-# except FileNotFoundError:
-#     with open('utils/data/mode.txt', 'w') as mode_file:
-#         mode_file.write('0')
-#         mode = '0'
+try:
+    with open('utils/data/mode.txt', 'r') as mode_file:
+        mode = mode_file.read()
+except FileNotFoundError:
+    with open('utils/data/mode.txt', 'w') as mode_file:
+        mode_file.write('0')
+        mode = '0'
 
-# v = ENV['v']
-# if mode == '0':
-#     with open(f'utils/data/{v}_n.txt', 'w') as file:
-#         file.write(f'{n_list}\n')
-#     with open(f'utils/data/{v}_correct.txt', 'w') as file:
-#         file.write(f'{times}')
-#     with open('utils/data/mode.txt', 'w') as mode_file:
-#         mode_file.write('1')
-# else:
-#     with open(f'utils/data/{v}_efficient.txt', 'w') as file:
-#         file.write(f'{times}')
-#     with open('utils/data/mode.txt', 'w') as mode_file:
-#         mode_file.write('0')
+v = ENV['v']
+if mode == '0':
+    with open(f'utils/data/{v}_n.txt', 'w') as file:
+        file.write(f'{n_list}\n')
+    with open(f'utils/data/{v}_correct.txt', 'w') as file:
+        file.write(f'{times}')
+    with open('utils/data/mode.txt', 'w') as mode_file:
+        mode_file.write('1')
+else:
+    with open(f'utils/data/{v}_efficient.txt', 'w') as file:
+        file.write(f'{times}')
+    with open('utils/data/mode.txt', 'w') as mode_file:
+        mode_file.write('0')
 # ----------------------------------------------------------
 
 exit(0)

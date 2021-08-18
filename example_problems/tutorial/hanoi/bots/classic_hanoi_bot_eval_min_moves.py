@@ -2,10 +2,10 @@
 import sys
 sys.setrecursionlimit(1000000)
 
-if len(sys.argv) == 2 and sys.argv[1] == 'efficient':
-    use_efficient_method = True
+if len(sys.argv) == 2 and sys.argv[1] == 'yes':
+    be_efficient = True
 else:
-    use_efficient_method = False
+    be_efficient = False
 
 
 class MyHanoi():
@@ -80,4 +80,4 @@ while True:
     if start == 'Finish Tests':
         break
     final = input()
-    print(h.getMinMoves(start, final, use_efficient_method))
+    print(h.getMinMoves(start, final, be_efficient))
