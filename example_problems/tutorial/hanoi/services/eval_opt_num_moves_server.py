@@ -125,27 +125,27 @@ TAc.print(LANG.render_feedback("end", "Finish Tests"), "green", ["bold"])
 
 
 # FOR DEBUGGING --------------------------------------------
-try:
-    with open('utils/data/mode.txt', 'r') as mode_file:
-        mode = mode_file.read()
-except FileNotFoundError:
-    with open('utils/data/mode.txt', 'w') as mode_file:
-        mode_file.write('0')
-        mode = '0'
+# try:
+#     with open('utils/data/mode.txt', 'r') as mode_file:
+#         mode = mode_file.read()
+# except FileNotFoundError:
+#     with open('utils/data/mode.txt', 'w') as mode_file:
+#         mode_file.write('0')
+#         mode = '0'
 
-v = ENV['v']
-if mode == '0':
-    with open(f'utils/data/{v}_n.txt', 'w') as file:
-        file.write(f'{n_list}\n')
-    with open(f'utils/data/{v}_correct.txt', 'w') as file:
-        file.write(f'{times}')
-    with open('utils/data/mode.txt', 'w') as mode_file:
-        mode_file.write('1')
-else:
-    with open(f'utils/data/{v}_efficient.txt', 'w') as file:
-        file.write(f'{times}')
-    with open('utils/data/mode.txt', 'w') as mode_file:
-        mode_file.write('0')
+# v = ENV['v']
+# if mode == '0':
+#     with open(f'utils/data/{v}_n.txt', 'w') as file:
+#         file.write(f'{n_list}\n')
+#     with open(f'utils/data/{v}_correct.txt', 'w') as file:
+#         file.write(f'{times}')
+#     with open('utils/data/mode.txt', 'w') as mode_file:
+#         mode_file.write('1')
+# else:
+#     with open(f'utils/data/{v}_efficient.txt', 'w') as file:
+#         file.write(f'{times}')
+#     with open('utils/data/mode.txt', 'w') as mode_file:
+#         mode_file.write('0')
 # ----------------------------------------------------------
 
 exit(0)
