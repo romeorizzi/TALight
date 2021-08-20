@@ -22,9 +22,9 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE: 
 TAc.print(LANG.render_feedback("insert-num-rows", 'Insert the number of rows:'), "yellow", ["bold"])
-m=TALinput(int, 1, TAc=TAc)
+m=TALinput(int, 1, TAc=TAc)[0]
 TAc.print(LANG.render_feedback("insert-num-col", 'Insert the number of columns:'), "yellow", ["bold"])
-n=TALinput(int, 1, TAc=TAc)
+n=TALinput(int, 1, TAc=TAc)[0]
 
 if ENV['seed']=='random_seed':
     pirellone, seed=pl.random_pirellone(m, n, seed="random_seed", solvable=True)

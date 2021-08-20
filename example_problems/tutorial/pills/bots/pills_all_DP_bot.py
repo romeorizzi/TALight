@@ -20,7 +20,7 @@ def num_sol(n_pills):
 def unrank(n_pills, pos, sorting_criterion="loves_I"):
     if n_pills == 0:
         return ""
-    """(  ... )  ...
+    """I  ... H  ...
            A      B
     """    
     count = 0
@@ -30,14 +30,14 @@ def unrank(n_pills, pos, sorting_criterion="loves_I"):
         if count + num_A*num_B > pos:
             break
         count += num_A*num_B
-    return "(" + unrank(n_pills_in_A, (pos-count) // num_B, sorting_criterion) + ")" + unrank(n_pills - n_pills_in_A -1, (pos-count) % num_B, sorting_criterion)
+    return "I" + unrank(n_pills_in_A, (pos-count) // num_B, sorting_criterion) + "H" + unrank(n_pills - n_pills_in_A -1, (pos-count) % num_B, sorting_criterion)
 
 def rank(sol, sorting_criterion="loves_I"):
     if sol == "":
         return 0
     num_dangling_broken_pills = 0
     for char, i in zip(sol,range(len(sol))):
-        if char == '(':
+        if char == 'I':
             num_dangling_broken_pills += 1
         else:
             num_dangling_broken_pills -= 1
@@ -45,7 +45,7 @@ def rank(sol, sorting_criterion="loves_I"):
                 break
     assert  i%2 == 1
     """
-       (  ... )  ...    with len(A) even
+       I  ... H  ...    with len(A) even
        0   A  i    B
     """
     n_pills = len(sol)//2

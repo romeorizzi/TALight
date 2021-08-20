@@ -21,9 +21,9 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE: 
 TAc.print(LANG.render_feedback("rows","Rows:"), "yellow", ["bold"])
-m=TALinput(int, 1, TAc=TAc)
+m=TALinput(int, 1, TAc=TAc)[0]
 TAc.print(LANG.render_feedback("col","Columns:"), "yellow", ["bold"])
-n=TALinput(int, 1, TAc=TAc)
+n=TALinput(int, 1, TAc=TAc)[0]
 TAc.print(LANG.render_feedback("insert-counter","Insert your counterexample:"), "yellow", ["bold"])
 p=[]
 for i in range(m):

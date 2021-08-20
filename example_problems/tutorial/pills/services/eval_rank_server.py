@@ -49,7 +49,7 @@ def one_test(treatment):
     risp_correct = p.rank(treatment, ENV["sorting_criterion"])
     TAc.print(treatment, "yellow", ["bold"])
     start = monotonic()
-    risp = TALinput(int, 1, TAc=TAc)
+    risp = TALinput(int, 1, TAc=TAc)[0]
     end = monotonic()
     t = end - start # è un float, in secondi
     if risp != risp_correct:

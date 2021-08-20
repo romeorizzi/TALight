@@ -33,7 +33,7 @@ mossa=el.mossa(n)
 
       
 TAc.print(LANG.render_feedback("insert-solu", 'Insert your move, 1 or 2?'), "yellow", ["bold"])
-solu=TALinput(int, 1, TAc=TAc)
+solu=TALinput(int, 1, TAc=TAc)[0]
 
 if solu==mossa:
     TAc.OK()

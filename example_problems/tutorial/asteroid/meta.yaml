@@ -36,7 +36,7 @@ services:
     evaluator: [python, services/eval_sol_server.py]
     args:
       seed:
-        regex: ^(random_seed|[1-9]|[0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
         explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user)
       goal:

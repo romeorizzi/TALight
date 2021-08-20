@@ -25,11 +25,11 @@ if ENV['instance']=='random':
     s = randrange(5,30)
 if ENV['instance']=='my':
     TAc.print("Insert the instance:", "yellow", ["bold"])
-    s = TALinput(int, 1, TAc=TAc)  
+    s = TALinput(int, 1, TAc=TAc)[0]  
 while s!=0:
     TAc.print(f"Round {i}", "blue", ["bold"])
     TAc.print(f"Number of pawns: {s}. Your move?  ", "yellow", ["bold"])
-    a= TALinput(int, 1, TAc=TAc)
+    a= TALinput(int, 1, TAc=TAc)[0]
     if a>3:
         TAc.NO() 
         TAc.print(LANG.render_feedback("wrong-intput", "Attention! Wrong input!"), "red", ["bold"]) 

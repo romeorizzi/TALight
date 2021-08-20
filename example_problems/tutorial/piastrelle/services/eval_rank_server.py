@@ -49,7 +49,7 @@ def one_test(wff):
     risp_correct = p.rank(wff, ENV["sorting_criterion"])
     TAc.print(f"{wff} {ENV['sorting_criterion']}", "yellow", ["bold"])
     start = monotonic()
-    risp = TALinput(int, 1, TAc=TAc)
+    risp = TALinput(int, 1, TAc=TAc)[0]
     end = monotonic()
     t = end - start # è un float, in secondi
     if risp != risp_correct:

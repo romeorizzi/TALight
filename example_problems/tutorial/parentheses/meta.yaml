@@ -246,7 +246,7 @@ services:
         regex: ^(correct|efficient)$
         default: correct
       seed:
-        regex: ^(random_seed|[1-9]|[0-9]{5,5})$
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
         explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       code_lang: 

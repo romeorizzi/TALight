@@ -48,7 +48,7 @@ def one_test(n_pairs):
     risp_correct = p.num_sol(n_pairs)
     TAc.print(n_pairs, "yellow", ["bold"])
     start = monotonic()
-    risp = TALinput(int, 1, TAc=TAc)
+    risp = TALinput(int, 1, TAc=TAc)[0]
     end = monotonic()
     t = end - start # è un float, in secondi
     if ENV["answ_modulus"] == 0:
