@@ -40,7 +40,7 @@ g = Graph(int(n))
 for i in range(m):
      head, tail = TALinput(int, 2, TAc=TAc)
      if tail >= n or head >= n or tail < 0 or head < 0:
-        TAc.print(LANG.render_feedback("n-at-least-1", f"# ERRORE: entrambi gli estremi di un arco devono essere nodi del grafo, ossia numeri interi ricompresi nell'intervallo [0,{ENV['MAXN']}."), "red")
+        TAc.print(LANG.render_feedback("n-at-least-1", f"# ERRORE: entrambi gli estremi di un arco devono essere nodi del grafo, ossia numeri interi ricompresi nell'intervallo [0,{n-1}]."), "red")
         exit(0)
 
      g.addEdge(int(head),int(tail))

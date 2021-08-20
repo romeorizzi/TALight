@@ -3,23 +3,21 @@
 public_folder: public
 services:
   check_is_sc:
-    description: This service will check your statement that a directed graph you provide us is strongly connected
+    description: This service will check your statement that a directed graph you provide us is strongly connected.
     evaluator: [python,services/is_sc_server.py]
     args:     
-      n:
-        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-        default: lazy
-        explain: Number of nodes.
-      m:
-        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-        default: lazy
-        explain: Number of arcs.
       sc_bool:
         regex: ^1$
         default: 1
+      input_mode:
+        regex: ^(from_terminal|through_TA_transfer_files_bot)$
+        default: from_terminal
       goal:
         regex: ^(correct|with_certificate)$
         default: correct
+      feedback:
+        regex: ^(silent|yes_no|gimme_your_certificate)$
+        default: silent
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -27,20 +25,18 @@ services:
     description: This service will check your statement that a directed graph you provide us is not strongly connected
     evaluator: [python,services/is_sc_server.py]
     args:
-      n:
-        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-        default: lazy
-        explain: Number of nodes.
-      m:
-        regex: ^([1-9][0-9]{0,2}|1000|lazy)$
-        default: lazy
-        explain: Number of arcs.
       sc_bool:
         regex: ^0$
         default: 0
+      input_mode:
+        regex: ^(from_terminal|through_TA_transfer_files_bot)$
+        default: from_terminal
       goal:
         regex: ^(correct|with_certificate)$
         default: correct
+      feedback:
+        regex: ^(silent|yes_no|gimme_your_certificate)$
+        default: silent
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

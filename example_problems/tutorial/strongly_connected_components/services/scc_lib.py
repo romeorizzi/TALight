@@ -22,14 +22,14 @@ class Graph():
             if visited[node] == False: 
                 self.DFSUtil(node, visited) 
 
-    #pec printSCCs
-    def DFSUtility(self, v, visited, cfc): 
+    #per printSCCs
+    def DFSUtility(self, v, visited): 
         visited[v] = True
-        cfc = cfc+f"{v}"
+        cfc = [v]
         #print (v, end=" ") 
         for node in self.graph[v]: 
             if visited[node] == False: 
-                cfc = self.DFSUtility(node, visited,cfc)
+                cfc += self.DFSUtility(node, visited)
         return cfc
   
     def getTranspose(self): 
@@ -67,7 +67,7 @@ class Graph():
     #aggiunto per stampa scc
     def printSCCs(self):
         stack = []
-        cfc = ""
+        SCCs = []
         visited =[False]*(self.V)
         for i in range(self.V):
             if visited[i]==False:
@@ -77,9 +77,8 @@ class Graph():
         while stack:
              i = stack.pop()
              if visited[i]==False:
-                cfc = gr.DFSUtility(i, visited,cfc)
-                cfc = cfc+" "
-        return cfc
+                SCCs.append(gr.DFSUtility(i, visited))
+        return SCCs
 
 #per confronto input e cfc con permutazione
 def contaspazi(s):
