@@ -7,7 +7,6 @@ args_list = [
     ('level',str),
     ('seed',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 from sys import exit

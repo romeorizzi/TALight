@@ -19,7 +19,6 @@ args_list = [
     ('coloring',str),
     ('goal',str),
     ('lang',str),    
-    ('ISATTY',bool),
 ]
 
 ENV = Env(problem, service, args_list)

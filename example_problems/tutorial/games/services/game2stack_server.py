@@ -10,7 +10,6 @@ service="game2stack"
 args_list = [
     ('num_questions',int),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

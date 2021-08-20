@@ -15,7 +15,6 @@ args_list = [
     ('secret_code',str),
     ('probing_code',str),
     ('lang',str),    
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

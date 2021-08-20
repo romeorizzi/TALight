@@ -21,7 +21,6 @@ args_list = [
     ('num_tests',int),
     ('n_max',int),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

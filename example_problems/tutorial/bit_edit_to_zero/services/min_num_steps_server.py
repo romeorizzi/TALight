@@ -13,7 +13,6 @@ args_list = [
     ('number',str),
     ('feedback',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

@@ -12,7 +12,6 @@ args_list = [
     ('n_pairs',int),
     ('rank',int),
     ('sorting_criterion',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

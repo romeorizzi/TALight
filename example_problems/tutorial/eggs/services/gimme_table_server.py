@@ -9,7 +9,6 @@ args_list = [
     ('eggs_from_zero',bool),
     ('floors_from_zero',bool),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 from sys import stderr, exit

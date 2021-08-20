@@ -14,7 +14,6 @@ args_list = [
     ('more_or_less_hint_if_wrong',bool),
     ('silent',bool),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

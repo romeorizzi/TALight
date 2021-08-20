@@ -12,7 +12,6 @@ args_list = [
     ('treatment',str),
     ('sorting_criterion',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

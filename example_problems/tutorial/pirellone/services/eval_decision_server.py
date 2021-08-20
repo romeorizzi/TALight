@@ -15,7 +15,6 @@ args_list = [
     ('goal',str),
     ('with_check_of_sol',bool),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

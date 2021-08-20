@@ -11,7 +11,6 @@ service="game123"
 args_list = [
     ('num_questions',int),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

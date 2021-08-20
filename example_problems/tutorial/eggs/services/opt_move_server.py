@@ -8,7 +8,6 @@ args_list = [
     ('n_floors',int),
     ('tell_min_spoiler',bool),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 from sys import stderr, exit

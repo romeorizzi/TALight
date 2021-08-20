@@ -12,7 +12,6 @@ service="check_sol_set"
 args_list = [
     ('feedback',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

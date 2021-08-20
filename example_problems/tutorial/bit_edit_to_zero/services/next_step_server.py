@@ -5,7 +5,6 @@ problem="bit_edit_to_zero"
 service="next_step"
 args_list = [
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 from sys import exit

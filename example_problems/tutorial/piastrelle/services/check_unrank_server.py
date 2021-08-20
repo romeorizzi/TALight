@@ -7,7 +7,6 @@ args_list = [
     ('n',int),
     ('sorting_criterion',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
  
 from sys import stderr, exit

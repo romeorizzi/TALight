@@ -22,7 +22,6 @@ args_list = [
     ('feedback',str),
     ('with_certificate',bool),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

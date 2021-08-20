@@ -7,7 +7,6 @@ args_list = [
     ('please_do_it_for_me',int),
     ('number',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 from sys import exit

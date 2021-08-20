@@ -22,7 +22,6 @@ args_list = [
     ('ignore_peg_to',bool),
     ('feedback',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV = Env(problem, service, args_list)

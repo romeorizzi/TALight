@@ -14,7 +14,6 @@ args_list = [
     ('magic_indexes',str),
     ('feedback',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 

@@ -12,7 +12,6 @@ args_list = [
     ('current_sol',str),
     ('sorting_criterion',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

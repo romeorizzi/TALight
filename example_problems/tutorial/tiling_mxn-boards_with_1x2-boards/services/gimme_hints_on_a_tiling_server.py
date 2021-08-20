@@ -18,7 +18,6 @@ args_list = [('m',int), # Grid dimension
     ('num_piece',int),
     ('seed_of_the_tiling',int),
     ('lang',str),
-    ('ISATTY',bool),]
 
 ENV = Env(problem, service, args_list)
 TAc = TALcolors(ENV)

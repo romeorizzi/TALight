@@ -10,7 +10,6 @@ args_list = [
     ('more_or_less_hint_if_wrong',bool),
     ('silent',bool),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 from sys import stderr, exit

@@ -7,7 +7,6 @@ args_list = [
     ('size',str),
     ('num_calls',int),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 from sys import stderr, exit

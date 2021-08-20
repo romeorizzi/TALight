@@ -14,7 +14,6 @@ args_list = [
     ('f', str),
     ('f_3', str),
     ('lang', str),
-    ('ISATTY', bool),
 ]
 
 ENV = Env(problem, service, args_list)

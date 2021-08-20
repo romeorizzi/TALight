@@ -22,7 +22,6 @@ args_list = [
     ('eulerian',bool),
     ('MAXN',int),
     ('MAXM',int),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

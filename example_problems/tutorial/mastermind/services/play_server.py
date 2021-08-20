@@ -19,7 +19,6 @@ args_list = [
     ('seed',str),
     ('adversary',str),
     ('lang',str),    
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

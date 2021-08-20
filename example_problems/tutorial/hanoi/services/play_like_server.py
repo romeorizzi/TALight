@@ -20,7 +20,6 @@ args_list = [
     ('format',str),
     ('gimme_moves_available', bool),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

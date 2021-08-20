@@ -20,7 +20,6 @@ args_list = [
     ('commitment',str),
     ('goal',str),
     ('lang',str),    
-    ('ISATTY',bool),
 ]
 
 ENV = Env(problem, service, args_list)

@@ -15,7 +15,6 @@ args_list = [
     ('S',str),
     ('lang',str),
     ('YES_cert',bool),
-    ('ISATTY',bool),
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)

@@ -13,7 +13,6 @@ args_list = [
     ('floors_from_zero',bool),
     ('separator',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

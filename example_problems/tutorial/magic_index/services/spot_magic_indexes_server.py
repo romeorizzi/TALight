@@ -13,7 +13,6 @@ service="spot_magic_indexes_server"
 args_list = [
     ('input_vector',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)

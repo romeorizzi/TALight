@@ -11,7 +11,6 @@ service="eval_strategy_table"
 args_list = [
     ('separator',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

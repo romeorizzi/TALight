@@ -15,7 +15,6 @@ args_list = [
     ('seed',str),
     ('verbose',int),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

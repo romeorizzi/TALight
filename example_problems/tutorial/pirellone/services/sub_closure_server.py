@@ -17,7 +17,6 @@ args_list = [
     ('seed',str),
     ('submatrix_type',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

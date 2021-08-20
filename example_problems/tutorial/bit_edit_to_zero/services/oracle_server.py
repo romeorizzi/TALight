@@ -12,7 +12,6 @@ service="trilly"
 args_list = [
     ('binary_starting_number',str),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

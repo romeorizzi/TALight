@@ -20,7 +20,6 @@ args_list = [
     ('n',int),
     ('verbose',int),
     ('lang',str),
-    ('ISATTY',bool),
 ]
 
 ENV = Env(problem, service, args_list)
