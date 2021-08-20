@@ -35,10 +35,12 @@ if ENV["verbose"] < 2:
 # INITIALIZATION
 # get seed
 seed = ENV['seed']
-if seed == -1:
+if seed == 'random_seed':
     seed = random.randint(100000, 999999)
     if ENV['verbose'] == 1:
         TAc.print(LANG.render_feedback("print-seed", f"seed = {seed}"), "yellow", ["bold"])
+else:
+    seed = int(seed)
 if ENV['verbose'] == 2:
     TAc.print(LANG.render_feedback("print-seed", f"seed = {seed}"), "yellow", ["bold"])
 
