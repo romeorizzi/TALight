@@ -33,8 +33,10 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 # get seed
 seed = ENV['seed']
-if seed == -1:
+if seed == 'random_seed':
     seed = random.randint(100000, 999999)
+else:
+    seed = int(seed)
 TAc.print(LANG.render_feedback("print-service-seed", f"# service seed = {seed}"), "yellow", ["bold"])
 
 

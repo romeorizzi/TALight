@@ -319,23 +319,23 @@ if __name__ == "__main__":
 
         elif test == 'random':
             print(f"TEST: {test}")
-            gen_random_puzzle(-1, 'all_A', 'all_C', 3, 3, '0', 'hardcoded')
+            gen_random_puzzle('random_seed', 'all_A', 'all_C', 3, 3, '0', 'hardcoded')
 
         elif test == 'verbose0':
             print(f"TEST: {test}")
-            gen_random_puzzle(130000, 'all_A', 'all_C', 3, 3, '0', 'hardcoded')
+            gen_random_puzzle('130000', 'all_A', 'all_C', 3, 3, '0', 'hardcoded')
 
         elif test == 'verbose1_rnd':
             print(f"TEST: {test}")
-            gen_random_puzzle(-1, 'all_A', 'all_C', 3, 3, '1', 'hardcoded')
+            gen_random_puzzle('random_seed', 'all_A', 'all_C', 3, 3, '1', 'hardcoded')
 
         elif test == 'verbose1_fixed':
             print(f"TEST: {test}")
-            gen_random_puzzle(130000, 'all_A', 'all_C', 3, 3, '1', 'hardcoded')
+            gen_random_puzzle('130000', 'all_A', 'all_C', 3, 3, '1', 'hardcoded')
 
         elif test == 'verbose2':
             print(f"TEST: {test}")
-            gen_random_puzzle(130000, 'all_A', 'all_C', 3, 3, '2', 'hardcoded')
+            gen_random_puzzle('130000', 'all_A', 'all_C', 3, 3, '2', 'hardcoded')
         
         else:
             print("invalid test")
@@ -496,23 +496,23 @@ if __name__ == "__main__":
 
         elif test == 'A_to_C':
             print(f"TEST: {test}")
-            eval_sol('classic', 'all_A', 'all_C', 'minimal', 130000, 1, 10, 'hardcoded', 'use_real_bot')
+            eval_sol('classic', 'all_A', 'all_C', 'minimal', '130000', 1, 10, 'hardcoded', 'use_real_bot')
 
         elif test == 'general':
             print(f"TEST: {test}")
-            eval_sol('classic', 'general', 'general', 'minimal', 130000, 2, 5, 'hardcoded', 'use_real_bot')
+            eval_sol('classic', 'general', 'general', 'minimal', '130000', 2, 5, 'hardcoded', 'use_real_bot')
 
         elif test == 'fake_correct':
             print(f"TEST: {test}")
-            eval_sol('classic', 'all_A', 'all_C', 'minimal', 130000, 1, 2, 'hardcoded', 'fake_correct')
+            eval_sol('classic', 'all_A', 'all_C', 'minimal', '130000', 1, 2, 'hardcoded', 'fake_correct')
 
         elif test == 'fake_fail':
             print(f"TEST: {test}")
-            eval_sol('classic', 'all_A', 'all_C', 'minimal', 130000, 1, 2, 'hardcoded', 'fake_fail')
+            eval_sol('classic', 'all_A', 'all_C', 'minimal', '130000', 1, 2, 'hardcoded', 'fake_fail')
         
         elif test == 'random':
             print(f"TEST: {test}")
-            eval_sol('classic', 'general', 'general', 'minimal', -1, 2, 2, 'hardcoded', 'use_real_bot')
+            eval_sol('classic', 'general', 'general', 'minimal', 'random_seed', 2, 2, 'hardcoded', 'use_real_bot')
 
         else:
             print("Invalid test")
@@ -540,47 +540,47 @@ if __name__ == "__main__":
 
         elif test == 'goal_correct':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'general', 'general', 0, 'correct', -1, 'python', 'hardcoded', 'normal_bot', 'no')
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'correct', 'random_seed', 'python', 'hardcoded', 'normal_bot', 'no')
 
         elif test == 'goal_eff_fail':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', -1, 'python', 'hardcoded', 'normal_bot', 'no')
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', 'random_seed', 'python', 'hardcoded', 'normal_bot', 'no')
 
         elif test == 'goal_eff':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', -1, 'python', 'hardcoded', 'normal_bot', 'yes')
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', 'random_seed', 'python', 'hardcoded', 'normal_bot', 'yes')
 
         elif test == 'tower_eff_fail':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'all_A', 'all_C', 0, 'efficient', 130000, 'python', 'hardcoded', 'normal_bot', 'no')
+            eval_opt_num_moves('classic', 'all_A', 'all_C', 0, 'efficient', '130000', 'python', 'hardcoded', 'normal_bot', 'no')
 
         elif test == 'tower_eff':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'all_A', 'all_C', 0, 'efficient', 130000, 'python', 'hardcoded', 'normal_bot', 'yes')
+            eval_opt_num_moves('classic', 'all_A', 'all_C', 0, 'efficient', '130000', 'python', 'hardcoded', 'normal_bot', 'yes')
 
         elif test == 'classic_correct':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', 130000, 'python', 'hardcoded', 'test_bot', 'no')
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', '130000', 'python', 'hardcoded', 'test_bot', 'no')
 
         elif test == 'classic_efficient':
             print(f"TEST: {test}")
-            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', 130000, 'python', 'hardcoded', 'test_bot', 'yes')
+            eval_opt_num_moves('classic', 'general', 'general', 0, 'efficient', '130000', 'python', 'hardcoded', 'test_bot', 'yes')
 
         elif test == 'toddler_correct':
             print(f"TEST: {test}")
-            eval_opt_num_moves('toddler', 'general', 'general', 0, 'efficient', 130000, 'python', 'hardcoded', 'test_bot', 'no')
+            eval_opt_num_moves('toddler', 'general', 'general', 0, 'efficient', '130000', 'python', 'hardcoded', 'test_bot', 'no')
 
         elif test == 'toddler_efficient':
             print(f"TEST: {test}")
-            eval_opt_num_moves('toddler', 'general', 'general', 0, 'efficient', 130000, 'python', 'hardcoded', 'test_bot', 'yes')
+            eval_opt_num_moves('toddler', 'general', 'general', 0, 'efficient', '130000', 'python', 'hardcoded', 'test_bot', 'yes')
 
         elif test == 'clockwise_correct':
             print(f"TEST: {test}")
-            eval_opt_num_moves('clockwise', 'general', 'general', 0, 'efficient', 130000, 'python', 'hardcoded', 'test_bot', 'no')
+            eval_opt_num_moves('clockwise', 'general', 'general', 0, 'efficient', '130000', 'python', 'hardcoded', 'test_bot', 'no')
 
         elif test == 'clockwise_efficient':
             print(f"TEST: {test}")
-            eval_opt_num_moves('clockwise', 'general', 'general', 0, 'efficient', 130000, 'python', 'hardcoded', 'test_bot', 'yes')
+            eval_opt_num_moves('clockwise', 'general', 'general', 0, 'efficient', '130000', 'python', 'hardcoded', 'test_bot', 'yes')
 
         else:
             print("Invalid test")
