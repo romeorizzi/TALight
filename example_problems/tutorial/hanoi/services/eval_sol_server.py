@@ -17,7 +17,7 @@ args_list = [
     ('start', str),
     ('final', str),
     ('format', str),
-    ('seed',int),
+    ('seed',str),
     ('num_tests',int),
     ('n_max',int),
     ('lang',str),

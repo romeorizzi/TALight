@@ -3,6 +3,7 @@
 from sys import stdout, stderr, exit, argv
 from os import environ
 from os.path import join, split
+import random
 
 termcolor_is_installed = True
 try:
@@ -30,11 +31,20 @@ class Env:
         self.service = service
         self.args_list = args_list
         self.arg = {}
+        self.seed_created = False
+        if "TAL_seed" in environ:
+            if environ["TAL_seed"] == "random_seed":
+                self.arg["seed"] = random.randint(100000,999999)
+                self.seed_created = True 
+            else:
+                self.arg["seed"] = int(environ["TAL_seed"])
         for name, val_type in args_list:
             if not f"TAL_{name}" in environ:
                 for out in [stdout, stderr]:
                     print(f"# Unrecoverable Error: the environment variable TAL_{name} for the argument {name} has not been set. Check out if this argument is indeed present in the meta.yaml file of the problem for this service {service}. If not, consider adding it to the meta.yaml file or removing it from the service server code.", file=out)
-                exit(1)                
+                exit(1)
+            if name == "seed":
+                continue
             if val_type == str:
                 self.arg[name] = environ[f"TAL_{name}"]
             elif val_type == bool:
@@ -110,7 +120,9 @@ class Lang:
         for arg_name, arg_type in self.ENV.args_list:
             arg_val = self.ENV[arg_name]
             if arg_type == bool:
-                self.opening_msg += f"{arg_name}={'1' if arg_val else '0'} (i.e., {arg_val}), "
+                self.opening_msg += f"{arg_name}={'1 (True)' if arg_val else '0 (False)'} (i.e., {arg_val}), "
+            elif arg_name=="seed" and self.ENV.seed_created:
+                self.opening_msg += f"{arg_name}={arg_val} (randomly generated, as 'random_seed' was passed), "
             else:
                 self.opening_msg += f"{arg_name}={arg_val}, "
         self.opening_msg = self.opening_msg[:-2] + ".\n"

@@ -14,7 +14,7 @@ problem="hanoi"
 service="gen_random_puzzle"
 args_list = [
     ('n_instances',int),
-    ('seed',int),
+    ('seed',str),
     ('start', str),
     ('final', str),
     ('n',int),

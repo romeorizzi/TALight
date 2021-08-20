@@ -14,7 +14,7 @@ service="eval_unrank"
 args_list = [
     ('sorting_criterion',str),
     ('goal',str),
-    ('seed',int),
+    ('seed',str),
     ('code_lang',str),
     ('lang',str),
     ('ISATTY',bool),

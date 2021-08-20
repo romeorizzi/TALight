@@ -18,7 +18,7 @@ args_list = [
     ('final', str),
     ('ok_if_congruent_modulus',int),
     ('goal',str),
-    ('seed',int),
+    ('seed',str),
     ('code_lang',str),
     ('lang',str),
     ('ISATTY',bool),
