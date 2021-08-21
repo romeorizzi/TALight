@@ -12,6 +12,9 @@ services:
       input_mode:
         regex: ^(from_terminal|through_TA_transfer_files_bot)$
         default: from_terminal
+        explain: "choose the way to input your graph among:" 
+        explain1: "[from_terminal] you enter the graph directly by either typing it line after line or through cut and paste operations."
+        explain2: "[through_TA_transfer_files_bot] at the rtal connect subcommand plug in the TAL_utils bot TA_transfer_files_bot.py. With this bot you can avoid using the -e flag and, for this service, the handle of the unique input file you have to pass to the bot is `graph.txt`."
       goal:
         regex: ^(correct|with_certificate)$
         default: correct
@@ -31,6 +34,9 @@ services:
       input_mode:
         regex: ^(from_terminal|through_TA_transfer_files_bot)$
         default: from_terminal
+        explain: "choose the way to input your graph among:" 
+        explain1: "[from_terminal] you enter the graph directly by either typing it line after line or through cut and paste operations."
+        explain2: "[through_TA_transfer_files_bot] at the rtal connect subcommand plug in the TAL_utils bot TA_transfer_files_bot.py. With this bot you can avoid using the -e flag and, for this service, the handle of the unique input file you have to pass to the bot is `graph.txt`."
       goal:
         regex: ^(correct|with_certificate)$
         default: correct

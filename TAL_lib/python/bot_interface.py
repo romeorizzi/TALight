@@ -48,7 +48,7 @@ class BotInterface:
         line = input()
         if self.display_lines_from_server:
             if self.coloring_policy != 'original':
-                print("Original server line: ",line)
+                #print("Original server line: ",line, file=stderr)
                 reaesc = re.compile(r'\x1b[^m]*m')
                 new_line = reaesc.sub('', line)
             if self.coloring_policy == 'standard-e':
@@ -61,7 +61,7 @@ class BotInterface:
         print(line)
         if self.display_lines_from_bot:
             if self.coloring_policy != 'original':
-                print("Original bot line: ",line)
+                #print("Original bot line: ",line, file=stderr)
                 reaesc = re.compile(r'\x1b[^m]*m')
                 new_line = reaesc.sub('', line)
             if self.coloring_policy == 'standard-e':
@@ -71,27 +71,27 @@ class BotInterface:
 
     def bot_sends_required_files(self, conventional_names_to_files_map : Dict[str, BinaryIO]):
         while conventional_names_to_files_map:
-            next_string=input()
+            next_string=self.input_line()
             assert next_string[0] == '#'
-            if next_string.startswith("#!gimme "):
-                name = next_string[8:]
+            if next_string.startswith("#!gimme_file "):
+                name = next_string[13:]
                 if name not in conventional_names_to_files_map:
                     print(colored(self.lines_from_bot_prefix + f"You have not programmed me to send a file with handle `{name}` in this situation.", 'red'), file=stderr)
                     exit(0)
-                print(b64encode(conventional_names_to_files_map[name].read()))
+                print(b64encode(conventional_names_to_files_map[name].read()).decode())
                 del conventional_names_to_files_map[name]
 
 
     def bot_collects_eventually_sent_files(self):
         while True:
-            next_string=input()
+            next_string=self.input_line()
             assert next_string[0] == '#'
             if next_string.startswith("#!now_sending_files "):
                 break
         num_files = int(next_string[20:])
         res = {}
         for i in range(num_files):
-            filename, data = input().split()
+            filename, data = self.input_line().split()
             res[filename] = b64decode(data)
         return res
 
@@ -103,11 +103,10 @@ class BotInterface:
 
                         
 def service_server_requires_and_gets_file(conventional_name):
-    print(f"#!gimme {conventional_name}")
-    #print("ciao0")
+    print(f"#!gimme_file {conventional_name}")
     string_got=input()
-    print("ciao1")
-    return b64decode(string_got)
+    print(f"# ok. File {conventional_name} has been received.")    
+    return b64decode(string_got.encode())
                         
 def service_server_to_send_files(filenames_to_files_map : Dict[str, BinaryIO]):
     """The server calls this function when the protocol enters a point where the server could send some files. In case there are no files to be sent, then use an empty dictionary as argument."""

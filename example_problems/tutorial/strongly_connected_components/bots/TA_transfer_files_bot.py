@@ -37,3 +37,5 @@ for i in range(1,len(argv)):
 BTI = BotInterface(coloring_policy='standard-e')
 BTI.bot_sends_required_files(map_handles_filenames)
 
+while True:
+    line = BTI.input_line()

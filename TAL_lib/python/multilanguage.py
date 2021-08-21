@@ -25,6 +25,7 @@ except Exception as e:
             
 class Env:
     def __init__(self, problem, service, args_list):
+        args_list.append(('ISATTY',bool))
         self.exe_path = split(argv[0])[0]
         self.META_DIR = environ["TAL_META_DIR"]
         self.problem = problem

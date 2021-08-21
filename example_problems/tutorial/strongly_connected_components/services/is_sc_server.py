@@ -38,17 +38,29 @@ if ENV['input_mode'] == 'from_terminal':
         TAc.print(LANG.render_feedback("m-LB", f"# ERRORE: il numero di archi del grafo non può essere negativo. Invece il secondo dei numeri che hai inserito è m={m}."), "red")
         exit(0)
     g = Graph(int(n))
-
     for i in range(m):
          head, tail = TALinput(int, 2, TAc=TAc)
          if tail >= n or head >= n or tail < 0 or head < 0:
-            TAc.print(LANG.render_feedback("n-at-least-1", f"# ERRORE: entrambi gli estremi di un arco devono essere nodi del grafo, ossia numeri interi ricompresi nell'intervallo [0,{n-1}]."), "red")
+            TAc.print(LANG.render_feedback("node-label-out-of-range", f"# ERRORE alla linea {i} dove (tail,head)=({tail},{head}): entrambi gli estremi di un arco devono essere nodi del grafo, ossia numeri interi ricompresi nell'intervallo [0,{n-1}]."), "red")
             exit(0)
          g.addEdge(int(head),int(tail))
 else:
     graph=service_server_requires_and_gets_file('graph.txt').decode()
-    print("ciao")
-    print(graph)
+    lines=graph.splitlines()
+    n , m = map(int,lines[0].split())
+    if n < 1:
+        TAc.print(LANG.render_feedback("n-LB", f"# ERRORE: il numero di nodi del grafo deve essere almeno 1. Invece il primo dei numeri che hai inserito è n={n}."), "red")
+        exit(0)
+    if m < 0:
+        TAc.print(LANG.render_feedback("m-LB", f"# ERRORE: il numero di archi del grafo non può essere negativo. Invece il secondo dei numeri che hai inserito è m={m}."), "red")
+        exit(0)
+    g = Graph(int(n))
+    for i in range(1,1+m):
+         head, tail = map(int,lines[i].split())
+         if tail >= n or head >= n or tail < 0 or head < 0:
+            TAc.print(LANG.render_feedback("node-label-out-of-range", f"# ERRORE alla linea {i} dove (tail,head)=({tail},{head}): entrambi gli estremi di un arco devono essere nodi del grafo, ossia numeri interi ricompresi nell'intervallo [0,{n-1}]."), "red")
+            exit(0)
+         g.addEdge(int(head),int(tail))
 
 g_is_sc_bool=g.isSC()
 SCCs = g.printSCCs()

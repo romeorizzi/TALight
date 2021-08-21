@@ -5,12 +5,11 @@ import os.path
 
 from multilanguage import Env, Lang, TALcolors
 
-problem=environ["TAL_META_DIR"].split("/")[-1]
+problem=os.path.split(environ["TAL_META_DIR"])[-1]
 service="synopsis"
 args_list = [
-    ('lang',str),
     ('service',str),
-    ('ISATTY',bool),
+    ('lang',str),
 ]
 
 ENV =Env(problem, service, args_list)
@@ -27,7 +26,6 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
             print(LANG.render_feedback("ruamel-required", ' the service \'synopsis\' needs to read the .yaml files of the problem in order to provide you with the information required. If \'ruamel\' is not installed in the environment where the \'rtald\' daemon runs, the service \'synopsis\' can not perform.'), file=out)
             print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
         exit(1)
-    environ["TAL_META_DIR"] + "/meta.yaml"
     try:
       with open(meta_yaml_file, 'r') as stream:
         try:
