@@ -45,6 +45,7 @@ if ENV['input_mode'] == 'from_terminal':
             exit(0)
          g.addEdge(int(head),int(tail))
 else:
+    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input file (handler `graph.txt`)."), "yellow")
     graph=service_server_requires_and_gets_file('graph.txt').decode()
     lines=graph.splitlines()
     n , m = map(int,lines[0].split())
