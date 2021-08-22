@@ -50,7 +50,7 @@ class BotInterface:
             if self.coloring_policy != 'original':
                 #print("Original server line: ",line, file=stderr)
                 reaesc = re.compile(r'\x1b[^m]*m')
-                new_line = reaesc.sub('', line)
+                line = reaesc.sub('', line)
             if self.coloring_policy == 'standard-e':
                 print(colored(self.lines_from_server_prefix + line, 'yellow'), file=stderr)
             else:
@@ -99,7 +99,7 @@ class BotInterface:
         os.makedirs(basedir,exist_ok=True)
         for filename in filenames_to_files_map:
             with open(filename, 'wb') as file_down:
-                flie_down.write(filenames_to_files_map[filename])
+                file_down.write(filenames_to_files_map[filename])
 
                         
 def service_server_requires_and_gets_file(conventional_name):
@@ -112,7 +112,7 @@ def service_server_to_send_files(filenames_to_files_map : Dict[str, BinaryIO]):
     """The server calls this function when the protocol enters a point where the server could send some files. In case there are no files to be sent, then use an empty dictionary as argument."""
     print(f"#!now_sending_files {len(filenames_to_files_map)}")
     for filename in filenames_to_files_map:
-        print("{filename} {b64encode(filenames_to_files_map[name].read())}")
+        print(filename + " " + b64encode(filenames_to_files_map[filename].read()))
                         
                 
 """
