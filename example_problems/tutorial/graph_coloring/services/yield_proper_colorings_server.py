@@ -24,7 +24,7 @@ args_list = [
 ENV = Env(problem, service, args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
+TAc.print(LANG.print_opening_msg(), "green")
 
 # START CODING YOUR SERVICE:
 
@@ -72,7 +72,7 @@ if ENV['goal'] == 'yes_no':
         TAc.NO()
         print()
 elif ENV['goal'] == 'give_coloring':
-    print(LANG.render_feedback("give_coloring", f"# Enter a color in the form of a number for each node separated by a space: "))
+    print(LANG.render_feedback("give_coloring", f"# Enter colors in the form of a number for each node separated by a space: "))
     buffer = TALinput(
         str,
         num_tokens=numNodes,

@@ -47,6 +47,7 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+  # TODO Wait to do this service
   check_colorings:
     description: The service checks that your coloring is a proper-coloring for your graph. You provide the service both the graph and the coloring.
     evaluator: [python3, services/yield_proper_colorings_server.py]
@@ -129,12 +130,10 @@ services:
         default: it
   reduction_3col_from_gen_graph_to_4regular_graph:
     description: "This service gives you a graph G. You return a 4-regular graph G' which is meant to be 3-colorable if and only if G is 3-colorable. The service checks your graph G' and also makes an attempt to check the equivalence (might give up for time limits)."
-    evaluator: [python3, services/x_server.py]
+    evaluator: [python3, services/reduction_3col_from_gen_graph_to_4regular_graph_server.py]
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
-      num_arcs:
-        regex: ^([1-9][0-9]{0,3}|10000)$
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
@@ -144,42 +143,30 @@ services:
         default: it
   easy_lemma_3col_from_gen_graph_to_4regular_graph:
     description: "This service gives you a graph G. You return a 4-regular graph G' which is meant to be 3-colorable if and only if G is 3-colorable (you are meant to use the same reduction as for the service `reduction_3col_from_gen_graph_to_4regular_graph`). Then the service gives you a proper 3-coloring of G. At this point you obtain a 3-coloring of G' starting from the 3-coloring of G and give it to the service that will check it."
-    evaluator: [python3, services/x_server.py]
+    evaluator: [python3, services/easy_lemma_3col_from_gen_graph_to_4regular_graph_server.py]
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
-      num_arcs:
-        regex: ^([1-9][0-9]{0,3}|10000)$
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      coloring:
-        regex: ^(proper|improper|surprise)$
-        default: surprise
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  easy_lemma_3col_from_gen_graph_to_4regular_graph:
+  hard_lemma_3col_from_gen_graph_to_4regular_graph:
     description: "This service gives you a graph G. You return a 4-regular graph G' which is meant to be 3-colorable if and only if G is 3-colorable (you are meant to use the same reduction as for the service `reduction_3col_from_gen_graph_to_4regular_graph`). Then, if the service can find a proper 3-coloring of G' within a limited time bound, it returns this coloring to you. At this point you should obtain a 3-coloring of G starting from the 3-coloring of G' and give it to the service that will check it."
-    evaluator: [python3, services/x_server.py]
+    evaluator: [python3, services/hard_lemma_3col_from_gen_graph_to_4regular_graph_server.py]
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
-      num_arcs:
-        regex: ^([1-9][0-9]{0,3}|10000)$
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-      coloring:
-        regex: ^(proper|improper|surprise)$
-        default: surprise
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-
-
   synopsis:
     evaluator: [python3, services/synopsis/synopsis_server.py]
     args:
