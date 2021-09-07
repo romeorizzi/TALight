@@ -77,18 +77,22 @@ if ENV['goal'] == "yes_no":
     else:
         TAc.NO()
 else:
-    print(LANG.render_feedback("give_violated_arc", "if the coloring is not proper, indicate the violated arcs by inserting an arc like a tuple of the two nodes connected by that arc, if the coloring is proper insert an empty line."))
+    print(LANG.render_feedback("give_violated_arc", 'if the coloring is proper then insert "yes". Otherwise, provide a violated arc (in the format (endpoint1,endpoint2)) as certificate for your "no":'))
     buffer = TALinput(
         str,
-        regex=r"^(\(([0-9][0-9]{0,2}|1000),([0-9][0-9]{0,2}|1000)\)|\s*)$",
-        regex_explained="an empty line or a sequence of tuple with number from 0 to " + str(numNodes - 1) + " separated by spaces. An example is: '(1,2) (3,4)'.",
+        regex=r"^(\s*yes\s*|\(\s*[0-9][0-9]{0,2}|1000\s*,\s*[0-9][0-9]{0,2}|1000\s*\))$",
+        regex_explained="the 'yes' string or a violated arc in the form of an ordered pair of its endpoints (two numbers in [0," + str(numNodes - 1) + "] separated by comma and enclosed in a pair of parentheses. For example: '(3,4)'.",
         TAc=TAc
     )
-    buffer = list(filter(None, buffer))
-    inputArcs = [make_tuple(i) for i in buffer]
-    if not inputArcs and not wrongArcs:
-        TAc.OK()
-    elif not inputArcs and wrongArcs:
+    if buffer[0].trim() == 'yes':
+        if not wrongArcs:
+            TAc.OK()
+        else:
+            TAc.print(LANG.render_feedback("wrong-proper", f"NO! There are violated arcs like {wrongArcs[0]}"), "red", ["bold"])
+            exit(0)
+    else:
+        buffer = list(filter(None, buffer))
+        inputArcs = [make_tuple(i) for i in buffer]
         TAc.print(LANG.render_feedback("wrong-arcs", f"NO! The coloring is not proper, the violated arcs is {' '.join(map(str, wrongArcs))}"), "red", ["bold"])
     elif not wrongArcs and inputArcs:
         TAc.print(LANG.render_feedback("wrong-not-proper", f"NO! The coloring is proper!"), "red", ["bold"])
