@@ -3,44 +3,6 @@ import sys
 
 board = [['0' for _ in range(1024)] for _ in range(1024)]
 
-def check_tile(r, c, border_cells, reference_board):
-    if border_cells[0] == reference_board[r][c]:
-        pass
-    else:
-        return False
-    if border_cells[1] == 'N' and reference_board[r - 1][c] == 'N':
-        pass
-    elif border_cells[1] == 'S' and reference_board[r + 1][c] == 'S':
-        pass
-    else:
-        return False
-    if border_cells[2] == 'W' and reference_board[r][c - 1] == 'W':
-        pass
-    elif border_cells[2] == 'E' and reference_board[r][c + 1] == 'E':
-        pass
-    else:
-        return False
-    return True
-
-def out_of_borders(k, r, c, border_cells):
-    if r < 0:
-        return False
-    if c < 0:
-        return False
-    if r > 2**k:
-        return False
-    if c > 2**k:
-        return False
-    if border_cells[1] == 'N' and r - 1 < 0:
-        return False
-    if border_cells[1] == 'S' and r + 1 > 2**k:
-        return False
-    if border_cells[2] == 'W' and c - 1 < 0:
-        return False
-    if border_cells[2] == 'E' and c + 1 > 2**k:
-        return False
-    return True
-
 def compute_tiling(first_row, last_row, first_col, last_col, hole_row, hole_col):
     tiling(first_row, last_row, first_col, last_col, hole_row, hole_col)
     return board    

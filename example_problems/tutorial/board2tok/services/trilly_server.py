@@ -45,6 +45,43 @@ TAc.print(LANG.render_feedback("notice-hole-coordinates", f"The position of the 
 
 reference_board = utilities.compute_tiling(0, 2**k, 0, 2**k, r, c)
 
+def check_tile(r, c, border_cells):
+    if border_cells[0] == reference_board[r][c]:
+        pass
+    else:
+        return False
+    if border_cells[1] == 'N' and reference_board[r - 1][c] == 'N':
+        pass
+    elif border_cells[1] == 'S' and reference_board[r + 1][c] == 'S':
+        pass
+    else:
+        return False
+    if border_cells[2] == 'W' and reference_board[r][c - 1] == 'W':
+        pass
+    elif border_cells[2] == 'E' and reference_board[r][c + 1] == 'E':
+        pass
+    else:
+        return False
+    return True
+
+def out_of_borders(k, r, c, border_cells):
+    if r < 0:
+        return False
+    if c < 0:
+        return False
+    if r > 2**k:
+        return False
+    if c > 2**k:
+        return False
+    if border_cells[1] == 'N' and r - 1 < 0:
+        return False
+    if border_cells[1] == 'S' and r + 1 > 2**k:
+        return False
+    if border_cells[2] == 'W' and c - 1 < 0:
+        return False
+    if border_cells[2] == 'E' and c + 1 > 2**k:
+        return False
+    return True
 
 def trilly_tile(hole_row, hole_col, length):
     utilities.tiling(0, length - 1, 0, length - 1, hole_row, hole_col)
@@ -125,7 +162,7 @@ while line[0] not in(exceptions):
         num_tokens=1,
         exceptions = exceptions,
         regex="([0-9]+,[0-9]+);[0-4]([nN]|[sS])([eE]|[wW])|(trilly|TRILLY);[0-9]+;[0-9]+,[0-9]+|(place_tile|PLACE_TILE)|(print_your_board|PRINT_YOUR_BOARD)",
-        regex_explained="two numbers (row and col index) separated by a ',' followed by a ';' and the specific tile. Otherwise 'trilly'. (it is not case sensitive)",
+        regex_explained="two numbers (row and col index) separated by a ',' followed by a ';' and the specific tile. Otherwise 'trilly' or another function. (it is not case sensitive)",
         TAc=TAc
     )
     if line[0] not in(exceptions):
@@ -166,7 +203,7 @@ while line[0] not in(exceptions):
                 TAc.print(LANG.render_feedback("error-empty-cell-covered", "You have covered the cell that must remain empty."), "red", ["bold"])
             elif not utilities.out_of_borders(k, r_corner_cell, c_corner_cell, border_cells):
                 TAc.print(LANG.render_feedback("error-out-of-borders", "You have place a tile out of the borders."), "red", ["bold"])
-            elif not utilities.check_tile(r_corner_cell, c_corner_cell, border_cells, reference_board):
+            elif not utilities.check_tile(r_corner_cell, c_corner_cell, border_cells):
                 TAc.print(LANG.render_feedback("error-wrong-tile", "You have place a tile in the wrong place."), "red", ["bold"])
             else:
                 fill_your_board(r_corner_cell,c_corner_cell, border_cells)
