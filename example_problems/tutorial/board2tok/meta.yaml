@@ -8,7 +8,7 @@ services:
     args:
       k:
         regex: ^([0-9]|10)$
-        default: 3
+        default: 1
       r:
         regex: ^(0|[1-9][0-9]{0,3})$
         default: 0
@@ -30,7 +30,7 @@ services:
     args:
       k:
         regex: ^([0-9]|10)$
-        default: 3
+        default: 1
       r:
         regex: ^(0|[1-9][0-9]{0,3})$
         default: 0
@@ -48,11 +48,11 @@ services:
         explain: the service will dispel the first <dispel_first_rows_of_a_tiling> rows of a possible tiling.
   trilly:
     evaluator: [python, services/trilly_server.py]
-    description: Trilly the fairy helps you understand whether and how you can solve a 0/1-matrix.
+    description: Trilly the fairy helps you understand whether and how you can tile a board.
     args:
       k:
         regex: ^([0-9]|10)$
-        default: 3
+        default: 1
       only_corner_cell:
         explain: both in the first request of the server and in the later requsts of the problem solver, the cell (r,c) should always be a corner cell.
         regex: ^(0|1)$
