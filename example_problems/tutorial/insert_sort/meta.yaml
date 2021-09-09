@@ -8,7 +8,8 @@ services:
         #LOG_input_array <n> <input_array_of_length_n>
         #LOG_memory_load_from_pos <i>
         #LOG_memory_write_on_pos <i>
-        #LOG_compare_what_in_pos <i> less_than_what_in_pos <j> <outcome>
+        #LOG_copy_from_pos <i> to_pos <j>
+        #LOG_compare_what_in_pos <i> less_than_what_in_memory <outcome>
         #LOG_output_array <n> <output_array_of_length_n>
      the service either confirms the correct execution of the Insertion Sort algorithm or signal the very first anomaly in its behaviour based only on the log lines (those prefixed by "#LOG_", all other lines are ignored).
     evaluator: [python3, services/log_debug_your_insertion_sort_bot_server.py]
@@ -29,7 +30,8 @@ services:
         CMD_GET_DIM <n>
         CMD_MEMORY_LOAD_FROM_POS <i>
         CMD_MEMORY_WRITE_ON_POS <i>
-        CMD_COMPARE_WHAT_IN_POS <i> LESS_THAN_WHAT_IN_POS <j>
+        CMD_COPY_FROM_POS <i> TO_POS <j>
+        CMD_COMPARE_WHAT_IN_POS <i> LESS_THAN_WHAT_IN_MEMORY
         CMD_FINISHED
      the service will ignore all lines not beginning with the prefix "CMD_", and will ultimately tell whether the array is sorted but also confirm whether the algorithm executed was the Insertion Sort algorithm or signal the very first discrepancy in behaviour.
     evaluator: [python3, services/remote_insertion_sort_api_server.py]
