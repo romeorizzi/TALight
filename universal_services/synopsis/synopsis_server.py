@@ -16,6 +16,16 @@ ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
+def die_or_overcome(succeed_or_die):
+    if succeed_or_die:
+        for out in [stdout, stderr]:
+            print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
+        exit(1)
+    else:
+        for out in [stdout, stderr]:
+            print(LANG.render_feedback("operation-not-necessary", ' We overcome this problem by resorting on the information hardcoded within the meta.yaml file of the problem. Hope that getting this information in English is good enough for you (usually the hardcoded messages are not less updated than their translations in other languages).'), file=out)
+        return None
+
 def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
     try:
         import ruamel.yaml
@@ -33,22 +43,12 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
         except:
             for out in [stdout, stderr]:
                 TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The file \'{meta_yaml_file}\' could not be loaded as a .yaml file.', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
-            if succeed_or_die:
-                print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
-                exit(1)
-            else:
-                print(LANG.render_feedback("operation-not-necessary", ' We overcome this problem by resorting on the information hardcoded within the meta.yaml file of the problem. Hope that getting this updated information in English is good enough for you.'), file=out)
-                return None
+            return die_or_overcome(succeed_or_die)
     except IOError as ioe:
         for out in [stdout, stderr]:
             TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file of problem "{problem}" could not be accessed for the required information. File not found: \'{meta_yaml_file}\'', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
             print(ioe, file=out)
-        if succeed_or_die:
-            print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
-            exit(1)
-        else:
-            print(LANG.render_feedback("operation-not-necessary", ' We overcome this problem by resorting on the information hardcoded within the meta.yaml file of the problem. Hope that getting this updated information in English is good enough for you.'), file=out)
-            return None
+        return die_or_overcome(succeed_or_die)
     return meta_yaml_book
 
 
@@ -72,11 +72,11 @@ TAc.print(service_of, "yellow", end="")
 TAc.print(LANG.render_feedback("info-source", f' [the problem specific information for this SYNOPSIS help sheet is gathered from the .yaml file \'{meta_yaml_file}\']'), "green")
 
 if "description" in meta_yaml_book['services'][ENV['service']].keys():
-    TAc.print('\nDescription:', "green", ["bold"])
+    TAc.print(f"\n{LANG.render_feedback('description', 'Description')}:", "green", ["bold"])
     for line in meta_yaml_book['services'][ENV['service']]['description'].split('\n'):
         print("   "+eval(f"f'{line}'"))
 if "example" in meta_yaml_book['services'][ENV['service']].keys():
-    TAc.print('   Example: ', ["bold"], end="")
+    TAc.print(f"   {LANG.render_feedback('example', 'Example')}: ", ["bold"], end="")
     print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['example']}'"))
     i = 1
     while ("example"+str(i)) in meta_yaml_book['services'][ENV['service']].keys():
@@ -91,7 +91,7 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
         TAc.print('   regex: ', ["bold"], end="")
         print(meta_yaml_book['services'][ENV['service']]['args'][a]['regex'])
         if "explain" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
-            TAc.print('   Explanation: ', ["bold"], end="")
+            TAc.print(f"   {LANG.render_feedback('explanation', 'Explanation')}: ", ["bold"], end="")
             print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain']}'"))
             i = 1
             while ("explain"+str(i)) in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
@@ -99,7 +99,7 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
               print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)]}'"))
               i += 1
         if "example" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
-            TAc.print('   Example: ', ["bold"], end="")
+            TAc.print(f"   {LANG.render_feedback('example', 'Example')}: ", ["bold"], end="")
             print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['example']}'"))
             i = 1
             while ("example"+str(i)) in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
