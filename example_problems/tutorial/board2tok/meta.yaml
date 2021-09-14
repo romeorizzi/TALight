@@ -3,24 +3,24 @@
 public_folder: public
 services:
   verify_tiling:
-    description: Provide this service with a triple (k, r, c) and a tiling of the 2^k x 2^k grid. The service checks that no tiles overlap and that cell (r,c) is the only cell left uncovered (row and column indexes start from 0).
+    description: Provide this service with a pair (m, n) and a labeling of the m x n grid with symbols from the alphabet [N,E,S,W,0,1,2,3,4]. The service checks that your labeling correctly encodes a packing of L-shaped trominos in the mxn grid. A tromino is any 3 adjacent squares in the plane grid (see https://en.wikipedia.org/wiki/Tromino). The 5 possible labelings for m=n=2 are contained in the files `examples/2x2_*.txt`. In particular, `2x2_empty.txt` is the empty packing placing no tile on the `2,2-board`, while each `2x2_L*.txt` file packs precisely one L-shaped tromino and corresponds to one of the 4 possible orientations of this piece.
     evaluator: [python,services/verify_tiling_server.py]
     args:
-      k:
-        regex: ^([0-9]|10)$
-        default: 1
-      r:
-        regex: ^(0|[1-9][0-9]{0,3})$
-        default: 0
-        explain: the row index of the cell left uncovered.
-      c:
-        regex: ^(0|[1-9][0-9]{0,3})$
-        default: 0
-        explain: the column index of the cell left uncovered.
-      silent:
-        explain: if nothing is wrong with your tiling then the service runs silently; otherwise it explains what is the problem in clear.
-        regex: ^(0|1)$
-        default: 0
+      m:
+        regex: ^(lazy|0|[1-9][0-9]{0,1}|100)$
+        default: lazy
+        explain: the number of rows of our grid.
+      n:
+        regex: ^(lazy|0|[1-9][0-9]{0,1}|100)$
+        default: lazy
+        explain: the number of columns of our grid.
+      loading:
+        regex: ^(from_terminal|from_file|from_file_silent)$
+        explain: the options are as follows
+        explain1: -from_terminal= manage the input with direct immission (possibly with copy and paste).
+        explain2: -from_file= use the bot TA_transfer_files_bot.py to load your file with the tiling. See the file yyy for an example of such a file (note that the number of rows and columns should be on the first line of the file).
+        explain3: -from_file_silent= like the above, but if nothing is wrong with your tiling then the service runs silently; otherwise it explains what is the problem in clear.
+        default: from_terminal
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -48,23 +48,29 @@ services:
         explain: the service will dispel the first <dispel_first_rows_of_a_tiling> rows of a possible tiling.
   trilly:
     evaluator: [python, services/trilly_server.py]
-    description: Trilly the fairy helps you understand whether and how you can tile a board.
+    description: "Trilly the fairy helps you in constructing a tiling of a 2^kx2^k board with L-shaped trominos (leaving out one single cell).
+    Every standard move lays down a tromino piece: assume that the cells (r,c),(r+1,c)(r,c+1),(r+1,c+1) are still empty, and let r0=r,r+1, c0=c,c+1. Writing a line in the format '2 <r> <c> <r0> <c0>' commands to place the unique tromino that would cover these 4 cells exept cell (r0,c0).  After being assigned the number k (the first board), and as many times as you want, you can call Trilly and assign her a 2^hx2^h sub-board, with h<k, and specify one single cell of such sub-board. Trilly checks that this sub-board is still empty and then details a list of standard moves for its filling (except for the specified cell that she leaves empty).
+    A call to Trilly is like a macro-move and you command it writing a line in the format '<h> <r> <c> <r0> <c0>'; this asks to cover all cells in the sub-grid [r,r+2^h)x[c,c+2^h), except cell (r0,c0).
+    Playing with the arguments of this service you might also allow Trilly to use macro-moves, the agreement being that a macro-move of one player should be entireley fullfilled by moves of the other player; these might in turn be macro-moves but with strictly smaller value for the h parameter."
     args:
       k:
         regex: ^([0-9]|10)$
         default: 1
-      only_corner_cell:
-        explain: both in the first request of the server and in the later requsts of the problem solver, the cell (r,c) should always be a corner cell.
+      left_out_cell_must_be_a_corner_cell:
+        explain: both in the first request of the server and in the later requests of the problem solver, the cell (r,c) should always be a corner cell.
         regex: ^(0|1)$
         default: 1
-      goal_min_calls_to_place_tile:
+      goal_min_calls_to_standard_moves:
         regex: ^(any|k|1)$
         default: 1
-        explain: try to minimize the number of calls to place_tile.
+        explain: try to minimize the number of calls to standard moves in reply to the original request.
       goal_min_calls_to_trilly:
-        regex: ^(any|4|one_and_gain_three_calls_at_every_placed_tile|gain_three_calls_at_every_placed_tile)$
+        regex: ^(any|4|one_and_gain_three_calls_at_every_standard_move|gain_three_calls_at_every_standard_move)$
         default: 4
         explain: number of allowed calls to trilly. Try to minimize it, but, at a certain point, this goal will conflict with the main one given above.
+      trilly_requests:
+        regex: ^(poses_only_the_starting_problem|might_pose_smaller_problems_in_reply|might_pose_non_bigger_problems_in_reply)$
+        default: poses_only_the_starting_problem
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

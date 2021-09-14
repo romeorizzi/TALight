@@ -1,0 +1,5 @@
+# the first line gives m (number of rows) and n (number of colums)
+2 2
+# now the labeling of the mxn-grid:
+2E
+S0

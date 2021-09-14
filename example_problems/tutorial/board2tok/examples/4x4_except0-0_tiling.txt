@@ -1,0 +1,7 @@
+# the first line gives m (number of rows) and n (number of colums)
+4 4
+# now the labeling of the mxn-grid:
+0NW3
+W4NS
+NW4N
+1EW4

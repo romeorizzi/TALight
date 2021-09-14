@@ -14,7 +14,7 @@ problem="board2tok"
 service="trilly_server"
 args_list = [
     ('k',int),
-    ('only_corner_cell',int),
+    ('left_out_cell_must_be_a_corner_cell',int),
     ('goal_min_calls_to_place_tile',str),
     ('goal_min_calls_to_trilly',str),
     ('lang',str),
@@ -32,7 +32,7 @@ k=ENV['k']
 exceptions={'end'}
 
 def set_empty_cell():    
-    if ENV['only_corner_cell'] == 0:
+    if ENV['left_out_cell_must_be_a_corner_cell'] == 0:
         r = random.randint(0, 2**k)
         c = random.randint(0, 2**k)
     else:
