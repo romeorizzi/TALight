@@ -33,7 +33,7 @@ if ENV["seed"] == 'random_seed':
     seed = random.randint(100000,999999)    
 else:
     seed = int(ENV["seed"])
-print(LANG.render_feedback("assigned-instance", f"# The assigned instance is:\n#   number of nodes: {ENV['num_nodes']}\n#   number of arcs: {ENV['num_arcs']}\n#   Seed: "), end="")
+print(LANG.render_feedback("assigned-instance", f"# The assigned instance graph is:\n#   number of nodes: {ENV['num_nodes']}\n#   number of arcs: {ENV['num_arcs']}\n#   Seed: "), end="")
 TAc.print(seed, "yellow")
 
 
@@ -56,6 +56,7 @@ for i in range(len(graph)):
 
 newColors = None
 wrongArcs = None
+print(LANG.render_feedback("assigned-coloring", f"# The assigned instance coloring also depends on the 'coloring' argument to this service."))
 print(LANG.render_feedback("coloring", "coloring: "), end="")
 if ENV['coloring'] == 'improper' or (ENV['coloring'] == 'surprise' and bool(random.randint(0, 1))):
     newColors, wrongArcs = Utilities.breakGraphColoring(graph, rightColors, seed)
@@ -63,12 +64,12 @@ if ENV['coloring'] == 'improper' or (ENV['coloring'] == 'surprise' and bool(rand
 else:  
     print(*rightColors, sep = ", ")
 if ENV['goal'] == "yes_no":
-    print(LANG.render_feedback("yes_no", "is the coloring proper? (yes/no): "))
+    print(LANG.render_feedback("yes_no", "is the coloring proper? ('yes'/'no'): "))
     buffer = TALinput(
         str,
         num_tokens=1,
         regex=r"^(yes|no)$",
-        regex_explained="yes or no",
+        regex_explained="either yes or no",
         TAc=TAc
     )
     userInput = buffer[0]
