@@ -121,7 +121,7 @@ services:
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
       commitment:
         regex: ^(yes_no|give_violated_arc|give_minimal_uncolorable_induced_subgraph|give_coloring_or_minimal_uncolorable_induced_subgraph)$
-        default: give_coloring_or_minimal_uncolorable_induced_subgraph
+        default: yes_no
       goal:
         regex: ^(correct|linear)$
         default: correct

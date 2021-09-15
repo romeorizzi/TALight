@@ -74,14 +74,9 @@ if not nx.is_k_regular(newGraph, 4):
     TAc.print(LANG.render_feedback("not-4regular", f"NO! The new graph is not 4-regular."), "red", ["bold"])
     exit(0)
 
-GM = nx.algorithms.isomorphism.GraphMatcher(newGraph, graph)
-if not GM.subgraph_is_isomorphic():
-    TAc.print(LANG.render_feedback("not-equivalent", f"NO! The new graph is not equivalent."), "red", ["bold"])
-    exit(0)
-
 newGraphColors = nx.greedy_color(newGraph, strategy='largest_first')
 if len(set(newGraph.values())) != 3:
-    TAc.print(LANG.render_feedback("not-3colorable", f"NO! The new graph is meant to be 3-colorable if and only if G is 3-colorable."), "red", ["bold"])
+    TAc.print(LANG.render_feedback("not-3colorable", f"NO! The new graph is meant to be 3-colorable if G is 3-colorable."), "red", ["bold"])
     exit(0)
 
 print(LANG.render_feedback("coloring", f"coloring of G: {graphColors}"))

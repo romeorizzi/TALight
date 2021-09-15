@@ -32,6 +32,10 @@ def startAlgo():
     colors = colors.split(',')
     colors = [int(x) for x in colors]
     result = isSafeColored(graph, colors)
+
+    spoon = input().strip()
+    while spoon[:len("# ?")] != "# ?":
+        spoon = input().strip()
     if result:
         print('yes')
     else:

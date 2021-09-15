@@ -126,3 +126,53 @@ elif ENV['goal'] == 'give_minimal_uncolorable_induced_subgraph':
     
     TAc.OK()
     print()
+
+elif ENV['goal'] == 'give_coloring_or_minimal_uncolorable_induced_subgraph':
+    print(LANG.render_feedback("give_violated_arc", "Insert the arcs of the minimal uncolorable induced subgraph like a tuple of the two nodes connected by that arc, if the graph is uncorable insert colors in the form of a number for each node separated by a space"))
+    buffer = TALinput(
+        str,
+        regex=r"^(\(([0-9][0-9]{0,2}|1000),([0-9][0-9]{0,2}|1000)\)|[1-9]|1[0-9]|20)$",
+        regex_explained="a sequence of colors or of tuple with number from 0 to " + str(numNodes - 1) + " separated by spaces. An example is: '(1,2) (3,4)'.",
+        TAc=TAc
+    )
+    if buffer[0] == '(':
+        buffer = list(filter(None, buffer))
+        arcsSubgraph = [make_tuple(i) for i in buffer]
+
+        if arcsSubgraph:
+            if not Utilities.isSubgraph(graph, arcsSubgraph):
+                TAc.print(LANG.render_feedback("wrong-subgraph", f"NO! This is not a valid subgraph"), "red", ["bold"])
+                exit(0)
+
+            if not Utilities.isInducedSubgraph(graph, arcsSubgraph):
+                TAc.print(LANG.render_feedback("wrong-induced-subgraph", f"NO! This is not a valid induced subgraph"), "red", ["bold"])
+                exit(0)
+
+            subgraph = Utilities.arcsListToGraph(arcsSubgraph)
+        else:
+            subgraph = graph
+
+        isBipartite = Utilities.isBipartite(subgraph)
+        if isBipartite:
+            TAc.print(LANG.render_feedback("wrong-induced-subgraph-colorable", f"NO! This is {colorsNum}-colorable"), "red", ["bold"])
+            exit(0)
+
+        if colorsNum < len(subgraph) - 1:
+            minimalArcsSubgraph, colors = Utilities.getNotKColorableSubgraph(graph, colorsNum, len(subgraph) - 1)
+            if minimalArcsSubgraph:
+                TAc.print(LANG.render_feedback("wrong-induced-subgraph-minimal", f"NO! This is not minimal not {colorsNum}-colorable induced subgraph"), "red", ["bold"])
+                exit(0)
+        
+        TAc.OK()
+        print()
+    else:
+        colors = [int(i) for i in buffer]
+        if len(set(colors)) > colorsNum:
+            TAc.print(LANG.render_feedback("wrong-colors-num", f"NO! You can't use more than {colorsNum} colors"), "red", ["bold"])
+        else:
+            result = Utilities.isSafeColored(graph, colors)
+            if result:
+                TAc.OK()
+                print()
+            else:
+                TAc.print(LANG.render_feedback("wrong-colors-num", f"NO! The graph is not {colorsNum}-colorable so you have to insert the minimal uncolorable induced subgraph"), "red", ["bold"])

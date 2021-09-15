@@ -80,28 +80,26 @@ else:
     print(LANG.render_feedback("give_violated_arc", 'if the coloring is proper then insert "yes". Otherwise, provide a violated arc (in the format (endpoint1,endpoint2)) as certificate for your "no":'))
     buffer = TALinput(
         str,
-        regex=r"^(\s*yes\s*|\(\s*[0-9][0-9]{0,2}|1000\s*,\s*[0-9][0-9]{0,2}|1000\s*\))$",
+        num_tokens=1,
+        regex=r"^(\s*yes\s*|\(([0-9][0-9]{0,2}|1000),([0-9][0-9]{0,2}|1000)\))$",
         regex_explained="the 'yes' string or a violated arc in the form of an ordered pair of its endpoints (two numbers in [0," + str(numNodes - 1) + "] separated by comma and enclosed in a pair of parentheses. For example: '(3,4)'.",
         TAc=TAc
     )
-    if buffer[0].trim() == 'yes':
+    if "".join(buffer[0].split()) == 'yes':
         if not wrongArcs:
             TAc.OK()
+            exit(0)
         else:
-            TAc.print(LANG.render_feedback("wrong-proper", f"NO! There are violated arcs like {wrongArcs[0]}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-proper", f"NO! There are violated arcs like {wrongArcs.pop()}"), "red", ["bold"])
             exit(0)
     else:
-        buffer = list(filter(None, buffer))
-        inputArcs = [make_tuple(i) for i in buffer]
-        TAc.print(LANG.render_feedback("wrong-arcs", f"NO! The coloring is not proper, the violated arcs is {' '.join(map(str, wrongArcs))}"), "red", ["bold"])
-    elif not wrongArcs and inputArcs:
-        TAc.print(LANG.render_feedback("wrong-not-proper", f"NO! The coloring is proper!"), "red", ["bold"])
-    else:
-        if len(wrongArcs) != len(inputArcs):
-            TAc.print(LANG.render_feedback("wrong-proper", f"NO! The violated arc is {' '.join(map(str, wrongArcs))}"), "red", ["bold"])
+        inputArcs = make_tuple(buffer[0])
+        if not wrongArcs and inputArcs:
+            TAc.print(LANG.render_feedback("wrong-not-proper", f"NO! The coloring is proper!"), "red", ["bold"])
             exit(0)
-        for i in wrongArcs:
-            if i not in inputArcs and i[::-1] not in inputArcs:
-                TAc.print(LANG.render_feedback("wrong-proper", f"NO! The violated arc is {' '.join(map(str, wrongArcs))}"), "red", ["bold"])
+        elif inputArcs not in wrongArcs and inputArcs[::-1] not in wrongArcs:
+                TAc.print(LANG.render_feedback("wrong-proper", f"NO! There are violated arcs like {wrongArcs.pop()}"), "red", ["bold"])
                 exit(0)
-        TAc.OK()
+        else:
+            TAc.OK()
+            exit(0)
