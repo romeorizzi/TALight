@@ -127,6 +127,43 @@ services:
         default: correct
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it	
+  check_gadget_5deg:
+    description: Can you find a 4-colorable graph G all of whose nodes have degree 4 except of five nodes of degree 3 and bound to have all the same color in every possible 4-coloring of G? Such a graph would allow you to cast the question of the 3-colorability of a given graph of maximum degree at most 5 down to the question of the 3-colorability of a graph of maximum degree at most 4. This service checks whether a graph provide by you has indeed these properties. If so, it can play as the basic gadget for such a reduction.
+    evaluator: [python3, services/check_gadget_5deg.py]
+    args:
+      goal:
+        regex: ^(correct|at_most_20_nodes|)$
+        default: correct
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  # FOR OTHER STUDENTS
+  check_gadget_gen_deg:
+    description: In order to reduce 3-colorability from general degree graphs down to graphs of degree at most 4 a more general gadget is needed. We need a family of graphs like the following. For every even natural number t, a 4-colorable graph G(t) all of whose nodes have degree 4 except of t nodes of degree 3. For every odd natural number t=2h+1, a 4-colorable graph G(t) all of whose nodes have degree 4 except for a node of degree 2 and 2h-1 nodes of degree 3. Moreover, all these nodes of degree less than 4 ought to have all the same color in every possible 4-coloring of G. Such a graph would allow you to cast the question of the 3-colorability of any given graph to the question of the 3-colorability of a graph of maximum degree at most 4. This service checks whether the first graphs of your infinite family indeed have the required properties.
+    evaluator: [python3, services/check_gadget_gen_deg.py]
+    args:
+      goal:
+        regex: ^(correct|at_most_20_nodes|)$
+        default: correct
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  # FOR OTHER STUDENTS
+  check_gadget_planar_crossover:
+    description: "Costrire un grafo planare G=(V,E) con x1,y1,x2,y2 in V e tale che:
+             1. il grafo aumentato G'=(V,E + x1y1,y1x2,x2y2,y2x1) sia ancora planare;
+             2. G sia 3-colorabile ma per ogni 3-coloring c di G valga che:
+                c(x1)=c(x2), e
+                c(y1)=c(y2).
+             This service checks whether a graph provide by you has indeed these properties."
+    evaluator: [python3, services/check_gadget_planar_crossover.py]
+    args:
+      goal:
+        regex: ^(correct|at_most_20_nodes|)$
+        default: correct
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   reduction_3col_from_gen_graph_to_4regular_graph:
     description: This service gives you a graph G. You return a 4-regular graph G\' which is meant to be 3-colorable if and only if G is 3-colorable. The service checks your graph G\' and also makes an attempt (it might give up for excessive load on the server and internal time limits) to check the intended equivalence (i.e., G is 3-colorable if and only if G\' is 3-colorable).
@@ -134,6 +171,9 @@ services:
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
+      format:
+        regex: ^(adjacency_matrix|list_of_edges)$
+        default: list_of_edges
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed

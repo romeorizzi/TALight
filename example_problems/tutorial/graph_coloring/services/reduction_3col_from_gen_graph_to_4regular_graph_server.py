@@ -15,6 +15,7 @@ problem="graph_coloring"
 service="reduction_3col_from_gen_graph_to_4regular_graph"
 args_list = [
     ('num_nodes',int),
+    ('format',str),    
     ('seed',str),
     ('lang',str),    
     ('ISATTY',bool),
@@ -40,13 +41,16 @@ numNodes = ENV["num_nodes"]
 numArcs = ENV["num_arcs"]
 
 graph = nx.fast_gnp_random_graph(numNodes, 0.5, seed=seed)
-adjacencyMatrix = nx.adjacency_matrix(graph)
-adjacencyMatrix = adjacencyMatrix.todense().tolist()
 print(LANG.render_feedback("graph", "graph: "))
-for i in range(len(adjacencyMatrix)):
-    print(f"\t{i}:  ", end="")
-    print(*adjacencyMatrix[i], sep = ", ")
-
+print(f"{len(graph.nodes())} {len(graph.edges())}")
+if ENV['format'] == 'list_of_edges':
+    for u,v in graph.edges():
+        print(f"{u} {v}")
+elif ENV['format'] == 'adjacency_matrix':
+    adjacencyMatrix = Utilities.arcsListToGraph(graph.edges())
+    for i in range(len(adjacencyMatrix)):
+        print(f"\t{i}:  ", end="")
+        print(*adjacencyMatrix[i], sep = ", ")
 
 print(LANG.render_feedback("give_new_graph", "# Insert the new graph as a list of edges, where an edge is a tuple of the two nodes connected by that edge:"))
 buffer = TALinput(
