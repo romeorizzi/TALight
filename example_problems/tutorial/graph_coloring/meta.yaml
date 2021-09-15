@@ -187,6 +187,9 @@ services:
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
+      format:
+        regex: ^(adjacency_matrix|list_of_edges)$
+        default: list_of_edges
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
@@ -204,6 +207,9 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
         explain: specify the numeric code to reproduce the very same instance as in a previous run (also in other services). Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+      format:
+        regex: ^(adjacency_matrix|list_of_edges)$
+        default: list_of_edges
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
