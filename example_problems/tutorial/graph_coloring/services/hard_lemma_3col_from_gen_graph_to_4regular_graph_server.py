@@ -16,6 +16,7 @@ service="hard_lemma_3col_from_gen_graph_to_4regular_graph"
 args_list = [
     ('num_nodes',int),
     ('seed',str),
+    ('format',str),
     ('lang',str),    
     ('ISATTY',bool),
 ]
@@ -50,12 +51,16 @@ while notFind:
     else:
         seed = random.randint(100000,999999) 
 
-adjacencyMatrix = nx.adjacency_matrix(graph)
-adjacencyMatrix = adjacencyMatrix.todense().tolist()
 print(LANG.render_feedback("graph", "graph: "))
-for i in range(len(adjacencyMatrix)):
-    print(f"\t{i}:  ", end="")
-    print(*adjacencyMatrix[i], sep = ", ")
+print(f"{len(graph.nodes())} {len(graph.edges())}")
+if ENV['format'] == 'list_of_edges':
+    for u,v in graph.edges():
+        print(f"{u} {v}")
+elif ENV['format'] == 'adjacency_matrix':
+    adjacencyMatrix = Utilities.arcsListToGraph(graph.edges())
+    for i in range(len(adjacencyMatrix)):
+        print(f"\t{i}:  ", end="")
+        print(*adjacencyMatrix[i], sep = ", ")
 
 
 print(LANG.render_feedback("give_new_graph", "# Insert the new graph as a list of edges, where an edge is a tuple of the two nodes connected by that edge:"))
@@ -94,8 +99,7 @@ if len(set(graphColorsOfUser)) > 3:
     TAc.print(LANG.render_feedback("wrong-colors-num", f"NO! You can't use more than {3} colors."), "red", ["bold"])
     exit(0)
 
-adjacencyMatrixOfUser = nx.adjacency_matrix(newGraph)
-adjacencyMatrixOfUser = adjacencyMatrixOfUser.todense().tolist()
+adjacencyMatrixOfUser = Utilities.arcsListToGraph(newGraph.edges())
 result = Utilities.isSafeColored(adjacencyMatrixOfUser, graphColorsOfUser)
 if not result:
     TAc.print(LANG.render_feedback("wrong-3coloring", f"NO! The coloring of the G graph is incorrect."), "red", ["bold"])
