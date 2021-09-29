@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 from sys import stdout, stderr, exit, argv
-from os import environ
-import random
+
 
 class InsertSort:
     def __init__(self, input_array):
@@ -11,7 +10,6 @@ class InsertSort:
         self.tmp_buffer = None
         self.input_stream = input_array
         self.log = []
-
 
     def load_next_element_in_tmp_buffer(self):
         if len(self.input_stream) == 0:
@@ -36,15 +34,17 @@ class InsertSort:
     def what_in_tmp_buffer_goes_before_than_what_in_pos(self, pos):
         if self.working_array[pos] < self.tmp_buffer:
             self.log.append(f"LOG_compare_what_in_pos {pos} with_what_in_tmp_buffer <")
-            return False
+
         elif self.working_array[pos] > self.tmp_buffer:
             self.log.append(f"LOG_compare_what_in_pos {pos} with_what_in_tmp_buffer >")
+            self.working_array[pos + 1] = self.working_array[pos]
             return True
+
         else:
             self.log.append(f"LOG_compare_what_in_pos {pos} with_what_in_tmp_buffer =")
-            return False
-        
+
         self.working_array[pos+1] = self.working_array[pos]
+        return False
         
     def generate_log_when_sorting(self):
         while self.load_next_element_in_tmp_buffer():
@@ -58,7 +58,7 @@ class InsertSort:
 
     
 if __name__ == "__main__":
-    input_array = list(map(int,argv[1:])) 
+    input_array = list(map(int, argv[1:]))
     insert_sort = InsertSort(input_array)
-    log=insert_sort.generate_log_when_sorting()
+    log = insert_sort.generate_log_when_sorting()
     print(log)
