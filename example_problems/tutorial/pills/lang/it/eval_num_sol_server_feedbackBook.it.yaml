@@ -1,7 +1,8 @@
 %YAML 1.2
 ---
-open-channel: '# Servirò: problema={problem}, servizio={service}'
-feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 not-equal: '# No. La tua soluzione NON è corretta. Il numero corretto di formule ben formate di rank {n_pills} coppie di parentesi è:\n {risp_correct}. Non:\n {risp}.'
 not-equiv: '# No. La tua soluzione NON è corretta. Il numero corretto di formule ben formate di rank {n_pills} coppie di parentesi è:\n {risp_correct}. Che preso modulo {ENV["answ_modulus"]} fà {risp_correct % ENV["answ_modulus"]}. Non: {risp}.'

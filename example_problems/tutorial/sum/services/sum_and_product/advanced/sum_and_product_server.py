@@ -2,8 +2,8 @@
 from sys import stderr, exit, argv
 from random import randrange
 
-from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
+from TALinputs import TALinput
 
 # METADATA OF THIS TAL_SERVICE:
 problem="sum"
@@ -18,10 +18,10 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-TAc.print(LANG.opening_msg, "green")
 
 # START CODING YOUR SERVICE: 
 
+LANG.print_opening_msg()
 gen_new_pair = True    
 for _ in range(ENV['num_questions']):
     if gen_new_pair:

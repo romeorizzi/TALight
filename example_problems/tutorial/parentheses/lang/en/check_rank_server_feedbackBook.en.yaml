@@ -1,10 +1,13 @@
 %YAML 1.2
 ---
-open-channel: '# I will serve: problem={problem}, service={service}'
-feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 rank-ok: '♥  You correctly ranked the formula among those on {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'
 ranked-too-low: 'No. Your formula ranks higher than {ENV["rank"]} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'
 ranked-too-high: 'No. Your formula ranks lower than {ENV["rank"]} among those with {n_pairs} pairs of parentheses (when sorted according to sorting_criterion={ENV["sorting_criterion"]}).'
-unfeasible: 'No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed.'
+not-well-formed-formula: 'We have a problem. The following formula in not well formed:'
+unfeasible: 'Indeed on position {i} there is no open parenthesis left to be closed:'
 pointer: '^ unmatched ")"'
+unfinished: 'Indeed {num_dangling_open} open parenthesis are left unclosed. The formula contains more \''(\'' than \'')\'' characters.'

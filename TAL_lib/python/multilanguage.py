@@ -67,12 +67,13 @@ class Lang:
         self.service_server_eval = service_server_eval
         self.ENV=ENV
         self.TAc=TAc
+        self.to_be_printed_opening_msg = True
+
+        # BEGIN: MESSAGE BOOK LOADING (try to load the message book)
         self.messages_book = None
         self.messages_book_file = None
-        self.to_be_printed_opening_msg = True
         if "lang" in ENV.arg.keys() and ENV["lang"] != "hardcoded":
             self.messages_book_file = join(ENV.META_DIR, "lang", ENV["lang"], ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
-            # BEGIN: try to load the message book
             if not yaml_is_installed:
                 if book_strictly_required:
                     for out in [stdout, stderr]:
@@ -111,7 +112,7 @@ class Lang:
                         TAc.print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.", "red", ["bold"], file=stderr)
                         print(ioe, file=stderr)
                         print(f"# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
-        #END:  try_to_load_the_message_book():
+        # END: MESSAGE BOOK LOADING        
         
     def print_opening_msg(self):
         self.to_be_printed_opening_msg = False
@@ -147,7 +148,6 @@ class Lang:
             fstring=self.messages_book[msg_code].format(obj)
             return eval(f"f'{fstring}'")
         msg_encoded = self.messages_book[msg_code]
-        #print(f"msg_encoded={msg_encoded}")
         return self.service_server_eval(msg_encoded)
     
     def suppress_opening_msg(self):

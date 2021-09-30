@@ -15,10 +15,10 @@ args_list = [
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), book_strictly_required=True)
-TAc.print(LANG.opening_msg, "green")
 
 # BEGIN: print the help page
 
+LANG.print_opening_msg()
 page = LANG.messages_book[ENV["page"]]
 for line in page:
     if type(line)==str:

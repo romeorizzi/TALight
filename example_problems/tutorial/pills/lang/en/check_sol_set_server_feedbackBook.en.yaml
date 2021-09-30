@@ -1,7 +1,8 @@
 %YAML 1.2
 ---
-open-channel: '# I will serve: problem={problem}, service={service}'
-feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 at-least-one-line: 'No. You are required to enter at least one feasible treatment (possibly even just the empty one) before closing.'
 first-line-not-feasible: 'No. Your very first treatment is not feasible.'
@@ -11,5 +12,7 @@ your-treatments-all-ok: 'All the treatments you have introduced are feasible.'
 one-treatment-is-missing-no-feedback: 'No. Your set is missing at least one feasible treatment.'
 give-missing-treatment: 'Consider for example:'
 one-missing-minimal-prefix: 'As a strong hint, here is the prefix of a feasible treatment and no treatment in your set has this prefix:'
-unfeasible: 'No. On position {i} there is no broken pill left to be eaten. This prescription is not consistent.'
-pointer: '^ no "H" is available at this point'
+not-well-formed-treatment: 'We have a problem. The following treatment is out of order:'
+unfeasible: 'Indeed, when you get to the \''H\'' in position {i} there is no broken pill left to be eaten. This prescription is not consistent.'
+pointer: '^ no half pill is available at this point in the flask'
+unfinished: 'Indeed there are {num_dangling_broken_pills} broken pills left over in the flask. This prescription is not consistent. It contains more \''I\'' than \''H\'' characters.'

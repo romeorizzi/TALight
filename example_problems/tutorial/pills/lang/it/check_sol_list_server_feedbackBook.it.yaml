@@ -1,7 +1,8 @@
 %YAML 1.2
 ---
-open-channel: '# Servirò: problema={problem}, servizio={service}'
-feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 at-least-one-line: 'No. Ti è richiesto di introdurre almeno un trattamento (eventualmente anche quello vuoto) prima di chiudere.'
 first-line-not-feasible: 'No. Il tuo primissimo trattamento NON è ammissibile.'
@@ -16,5 +17,7 @@ give-missing-treatment: 'Considera ad esempio:'
 not-consecutive: 'No. I due trattamenti ammissibili:\n {input_solution_list[pos-1]}\n {input_solution_list[pos]}\nche appaiono consecutivamente nella tua lista NON sono consecutivi secondo l\''ordinamento impostato. Ne manca uno che si colloca in mezzo ai due.'
 first-missing-prefix: 'Ti forniamo un prefisso di trattamento ammissibile tale che nessuno dei trattamenti nella tua lista ha questo prefisso:'
 list-ok: 'Hai prodotto e listato nell\''ordine corretto tutti i trattamenti ammissibili con {n_pills} pillole.'
-unfeasible: 'No. Giunti in posizione {i} il flaconcino non contiene alcuna mezza pillola che noi si possa mangiare. Questa prescrizione non è consistente.'
-pointer: '^ nessun "H" è disponibile a questo punto'
+not-well-formed-treatment: 'Abbiamo un problema. La seguente prescrizione fà acqua:'
+unfeasible: 'Infatti giunti alla \''H\'' in posizione {i} il flaconcino non contiene alcuna mezza pillola che noi si possa mangiare. Questa prescrizione non è consistente.'
+pointer: '^ nessun mezza pillola è disponibile a questo punto nel flaconcino'
+unfinished: 'Infatti a fine trattamento rimangono {num_dangling_broken_pills} mezze pillole nel flaconcino. Questa prescrizione non è consistente. Contiene più caratteri \''I\'' che non caratteri \''H\''.'
