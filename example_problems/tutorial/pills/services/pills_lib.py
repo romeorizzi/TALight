@@ -2,6 +2,8 @@
 import random
 
 def recognize(treatement, TAc, LANG, yield_feedback=True):
+    """If the input string offers a consistent treatment then return True.
+       Otherwise return false and, if yield_feedback=True, then explain in full where the problem is."""
     assert type(treatement)==str
     #print(f"treatement={treatement}")
     num_dangling_broken_pills = 0
@@ -11,18 +13,20 @@ def recognize(treatement, TAc, LANG, yield_feedback=True):
         else:
             if num_dangling_broken_pills == 0:
                 if yield_feedback:
+                    TAc.print(LANG.render_feedback("not-well-formed-treatment", "We have a problem. The following treatment is not consistent:"), "red", ["bold"])
                     TAc.print(treatement, "yellow", ["underline"])
                     TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no broken pill left to be eaten. This prescription is not consistent.", {'i': i}), "red", ["bold"])
                     TAc.print(treatement, "yellow", ["underline"])
                     print(" "*(i-1),end="")
-                    TAc.print(LANG.render_feedback("pointer", '^ no "H" is available at this point'), "yellow", ["underline"])
+                    TAc.print(LANG.render_feedback("pointer", '^ no "H" is available at this point in the flask'), "yellow", ["underline"])
                 return False
             num_dangling_broken_pills -= 1
 
     if num_dangling_broken_pills > 0:
         if yield_feedback:
+            TAc.print(LANG.render_feedback("not-well-formed-treatment", "We have a problem. The following treatment is out of order:"), "red", ["bold"])
             TAc.print(treatement, "yellow", ["underline"])
-            TAc.print(LANG.render_feedback("unfinished", f"No. There are {num_dangling_broken_pills} broken pills left over in the flask. This prescription is not consistent. It contains more 'I' than 'H' characters."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("unfinished", f"Indeed there are {num_dangling_broken_pills} broken pills left over in the flask. This prescription is not consistent. It contains more 'I' than 'H' characters.", {'num_dangling_broken_pills': num_dangling_broken_pills}), "red", ["bold"])
         return False
     return True
 

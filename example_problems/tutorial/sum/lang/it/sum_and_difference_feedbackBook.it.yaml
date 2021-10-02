@@ -1,7 +1,8 @@
 %YAML 1.2
 ---
-open-channel: '# Servirò: problema={problem}, servizio={service}'
-feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
 #THE PROBLEM SERVICE SPECIFIC SECTION:
 over-sum: 'infatti, {a}+{b}={a+b} > {x+y}.'
 under-sum: 'infatti, {a}+{b}={a+b} < {x+y}.'

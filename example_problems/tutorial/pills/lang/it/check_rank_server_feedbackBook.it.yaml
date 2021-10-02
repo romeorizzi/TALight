@@ -1,10 +1,13 @@
 %YAML 1.2
 ---
-open-channel: '# Servirò: problema={problem}, servizio={service}'
-feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 rank-ok: '♥  Corretto! E\''proprio questo il rank del tuo trattamento tra i trattamenti ammissibili di {n_pills} coppie di parentesi (quando ordinate secondo il sorting_criterion={ENV["sorting_criterion"]}).'
 ranked-too-low: 'No. Il rank del tuo trattamento tra i trattamenti ammissibili di {n_pills} coppie di parentesi è un numero maggiore di {ENV["rank"]} (quando ordinate secondo il sorting_criterion={ENV["sorting_criterion"]}).'
 ranked-too-high: 'No. Il rank del tuo trattamento tra i trattamenti ammissibili di {n_pills} coppie di parentesi è un numero minore di {ENV["rank"]} (quando ordinate secondo il sorting_criterion={ENV["sorting_criterion"]}).'
-unfeasible: 'No. Giunti in posizione {i} il flaconcino non contiene alcuna mezza pillola che noi si possa mangiare. Questa prescrizione non è consistente.'
-pointer: '^ nessun "H" è disponibile a questo punto'
+not-well-formed-treatment: 'Abbiamo un problema. La seguente prescrizione fà acqua:'
+unfeasible: 'Infatti giunti alla \''H\'' in posizione {i} il flaconcino non contiene alcuna mezza pillola che noi si possa mangiare. Questa prescrizione non è consistente.'
+pointer: '^ nessun mezza pillola è disponibile a questo punto nel flaconcino'
+unfinished: 'Infatti a fine trattamento rimangono {num_dangling_broken_pills} mezze pillole nel flaconcino. Questa prescrizione non è consistente. Contiene più caratteri \''I\'' che non caratteri \''H\''.'

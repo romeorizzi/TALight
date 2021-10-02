@@ -1,11 +1,14 @@
 %YAML 1.2
 ---
-open-channel: '# I will serve: problem={problem}, service={service}'
-feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 different-n: 'No. The two treatments you have provided have different lengths! As such, they do not belong to the same list.'
 next-ok: '♥  The next_sol wff is indeed the wff that comes just after the current_sol wff (according to sorting_criterion={ENV["sorting_criterion"]}).'
 next-wrong: 'No. The next_sol wff you have provided is NOT the wff coming just after the current_sol wff according to sorting_criterion={ENV["sorting_criterion"]}.'
 feedback: 'The maximal prefix of your next_sol wff that is actually correct is the following:'
-unfeasible: 'No. On position {i} there is no broken pill left to be eaten. This prescription is not consistent.'
-pointer: '^ no "H" is available at this point'
+not-well-formed-treatment: 'We have a problem. The following treatment is out of order:'
+unfeasible: 'Indeed, when you get to the \''H\'' in position {i} there is no broken pill left to be eaten. This prescription is not consistent.'
+pointer: '^ no half pill is available at this point in the flask'
+unfinished: 'Indeed there are {num_dangling_broken_pills} broken pills left over in the flask. This prescription is not consistent. It contains more \''I\'' than \''H\'' characters.'

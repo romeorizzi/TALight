@@ -1,9 +1,9 @@
 %YAML 1.2
 ---
-open-channel: '# I will serve: problem={problem}, service={service}'
-feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
-#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
 
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 at-least-one-line: 'No. You are required to enter at least one valid formula before closing.'
 first-line-not-well-formed: 'No. Your very first formula of parentheses is not well formed.'
 different_lengths: 'No. La formula di parentesi che hai appena introdotto (tua riga {len(input_solution_list)+1}) è di lunghezza diversa dalle precedenti.'
@@ -12,5 +12,7 @@ your-formulas-all-ok: 'All the formulas you have introduced are ok (well formed)
 one-formula-is-missing-no-feedback: 'No. Your set is missing at least one well-formed formula.'
 give-missing-formula: 'Consider for example:'
 one-missing-minimal-prefix: 'As a strong hint, here is the prefix of a well-formed formula and no formula in your set has this prefix:'
-unfeasible: 'No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed.'
+not-well-formed-formula: 'We have a problem. The following formula in not well formed:'
+unfeasible: 'Indeed on position {i} there is no open parenthesis left to be closed:'
 pointer: '^ unmatched ")"'
+unfinished: 'Indeed {num_dangling_open} open parenthesis are left unclosed. The formula contains more \''(\'' than \'')\'' characters.'

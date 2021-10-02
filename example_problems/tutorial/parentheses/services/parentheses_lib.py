@@ -2,6 +2,8 @@
 import random
 
 def recognize(formula_of_parentheses, TAc, LANG, yield_feedback=True):
+    """If the input formula is well formed then return True.
+       Otherwise return false and, if yield_feedback=True, then explain in full where the problem is."""
     assert type(formula_of_parentheses)==str
     #print(f"formula_of_parentheses={formula_of_parentheses}")
     num_dangling_open = 0
@@ -11,8 +13,9 @@ def recognize(formula_of_parentheses, TAc, LANG, yield_feedback=True):
         else:
             if num_dangling_open == 0:
                 if yield_feedback:
+                    TAc.print(LANG.render_feedback("not-well-formed-formula", "We have a problem. The following formula in not well formed:"), "red", ["bold"])
                     TAc.print(formula_of_parentheses, "yellow", ["underline"])
-                    TAc.print(LANG.render_feedback("unfeasible", f"No. On position {i} there is no open parenthesis left to be closed. This formula is not well formed.", {'i': i}), "red", ["bold"])
+                    TAc.print(LANG.render_feedback("unfeasible", f"Indeed on position {i} there is no open parenthesis left to be closed:", {'i': i}), "red", ["bold"])
                     TAc.print(formula_of_parentheses, "yellow", ["underline"])
                     print(" "*(i-1),end="")
                     TAc.print(LANG.render_feedback("pointer", '^ unmatched ")"'), "yellow", ["underline"])
@@ -21,8 +24,9 @@ def recognize(formula_of_parentheses, TAc, LANG, yield_feedback=True):
 
     if num_dangling_open > 0:
         if yield_feedback:
+            TAc.print(LANG.render_feedback("not-well-formed-formula", "We have a problem. The following formula in not well formed:"), "red", ["bold"])
             TAc.print(formula_of_parentheses, "yellow", ["underline"])
-            TAc.print(LANG.render_feedback("unfinished", f"No. You have left {num_dangling_open} open parenthesis unclosed. This formula is not well formed. It contains more '(' than ')' characters."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("unfinished", f"Indeed {num_dangling_open} open parenthesis are left unclosed. The formula contains more '(' than ')' characters.", {'num_dangling_open': num_dangling_open}), "red", ["bold"])
         return False
     return True
 

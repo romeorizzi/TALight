@@ -1,7 +1,8 @@
 %YAML 1.2
 ---
-open-channel: '# Servirò: problema={problem}, servizio={service}'
-feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 at-least-one-line: 'No. Devi introdurre almeno una formula valida (eventualmente anche solo quella vuota) prima di chiudere.'
 first-line-not-well-formed: 'No. Già la tua primissima formula di parentesi NON è ben formata.'
@@ -11,5 +12,8 @@ your-formulas-all-ok: 'Tutte le diverse formule che hai introdotto sono ok (ben 
 one-formula-is-missing-no-feedback: 'No. Ti è sfuggita almeno una formula ben formata.'
 give-missing-formula: 'Considera per esempio:'
 one-missing-minimal-prefix: 'Here is the prefix of a well-formed formula and no formula in your set has this prefix:'
+not-well-formed-formula: 'Abbiamo un problema! La seguente formula di parentesi non è ben formata:'
 unfeasible: 'No. Giunti in posizione {i} non abbiamo lasciato alcuna parentesi aperta da poter chiudered. Questa formula non è ben formata.'
 pointer: '^ questa ")" non ha compagna'
+unfinished: 'Infatti {num_dangling_open} parentesi sono rimaste aperte, senza compagna. La formula contiene più caratteri \''(\'' che non caratteri \'')\''.'
+

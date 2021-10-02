@@ -1,7 +1,8 @@
 %YAML 1.2
 ---
-open-channel: '# I will serve: problem={problem}, service={service}'
-feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 ok-congruent: '♥  We agree. The number of well-formed formulas with {ENV["n_pairs"]} pairs of open-closed parentheses is congruent to {ENV["risp"]} modulo {ENV["ok_if_congruent_modulus"]}.'
 ok-equal: '♥  We agree. There are precisely {ENV["risp"]} well-formed formulas with {ENV["n_pairs"]} pairs of open-closed parentheses.'

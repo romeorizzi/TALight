@@ -1,7 +1,8 @@
 %YAML 1.2
 ---
-open-channel: '# I will serve: problem={problem}, service={service}'
-feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file ({self.messages_book_file}) contained in the folder where service {self.ENV.service} is implemented.'
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 not-correct: '# No. Your solution is NOT correct. The correct rank is {risp_correct}. Not {risp}.'
 seems-correct-weak: '# Ok. ♥ Your solution correctly computes the rank of feasible treatments (checked with treatments up to {n_pills} pills).'

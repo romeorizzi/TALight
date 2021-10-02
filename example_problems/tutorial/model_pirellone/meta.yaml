@@ -1,0 +1,189 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  gimme_random_instance:
+    description: This service provides you with a random pirellone instance, i.e., a 0/1-matrix with the given number of rows (argument m) and columns (argument n). You can also specify (1) whether this pirellone should be solvable or not, or let it to the service to decide; and (2) whether you want to get only the random seed for the instance or also the instance file downloaded and/or its display on the screen. If you opt to insert the seed yourself, you can not decide about the solvability, but you can still ask for the file and/or its listing on the screen.
+    evaluator: [python,services/gimme_random_instance_server.py]
+    args:
+      m:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: Number of rows of the pirellone.
+      n:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: Number of columns of the pirellone.
+      instance_solvability:
+        regex: ^(solvable|unsolvable|surprise_me)$
+        default: surprise_me
+      display:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the instance file is listed by the service.
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then the instance file is downloaded in the \''download\'' sub-folder of the folder from which this TALight service call has been issued.'
+      seed:
+        explain: 'This argument is needed ony when you already hold a specific instance descriptor and are only interested in obtaining the instance file downloaded in local and/or just its listing on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services of the pirellone problem.'
+        regex: ^(000000|[1-9][0-9]{5,5})$
+        default: 000000
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  compact_solution:
+    description: We give you a 0,1-matrix and a sequence of switch row/column operations that leads to the all-0 matrix. You are required to shorten this sequence. You can also specify the random seed for a solvable  <m,n,seed> instance.
+    evaluator: [python,services/compact_solution_server.py]
+    args:
+      m:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: Number of rows of the pirellone.
+      n:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: Number of columns of the pirellone.
+      seed:
+        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      goal:
+        regex: ^(m_plus_n|m_plus_n_half|min)$
+        default: m_plus_n
+        explain: "Set an upper-bound on the length of your solution. The choiches are as follows:"
+        explain1: "[m_plus_n]  yield a solution with at most m+n moves."
+        explain2: "[m_plus_n_half]  yield a solution with at most (m+n)/2 moves."
+        explain3: "[min]  yield a solution with the minimum possible number of moves."
+      level:
+        regex: ^(easy|medium|difficult)$
+        default: medium
+        explain: Level of the exercise.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  get_our_sol:
+    description: "This service provides you with a solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed."
+# TODO: nell'implementazione del servizio, comunque da rivedere, è importante implementare anche la possibilità per l'utente di immettere il pirellone da terminale o da file. Parte dell'implemetazione di questa feature potrebbe convenire disporla in libreria pirellone_lib.py
+    evaluator: [python, services/check_sol_server.py]
+    args:
+      seed:
+        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      instance_solvability:
+        regex: ^(solvable|unsolvable|surprise_me)$
+        default: solvable
+      coding:
+        regex: ^(seq|subset)$
+        default: seq
+        explain: "choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively."
+        example: "[seq] r2 c4 r3 r1, [subset]: 1 0 1, 0 1 1 if the matrix is 3x3"
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_your_sol:
+# TODO: nell'implementazione del servizio, comunque da rivedere, è importante implementare anche la possibilità per l'utente di immettere il pirellone da terminale o da file. Parte dell'implemetazione di questa feature potrebbe convenire disporla in libreria pirellone_lib.py
+    description: "This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered random instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed."
+    evaluator: [python, services/check_sol_server.py]
+    args:
+      seed:
+        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      instance_solvability:
+        regex: ^(solvable|unsolvable|surprise_me)$
+        default: solvable
+      coding:
+        regex: ^(seq|subset)$
+        default: seq
+        explain: "choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively."
+        example: "[seq] r2 c4 r3 r1, [subset]: 1 0 1, 0 1 1 if the matrix is 3x3"
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  validate_GMPL_model:
+    evaluator: [python, services/eval_decision_server.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+        explain: Set your goal (efficient includes also correct).
+      with_check_of_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  validate_GSAT_model:
+    evaluator: [python, services/eval_decision_server.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+        explain: Set your goal (efficient includes also correct).
+      with_check_of_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  validate_MiniZinc_model:
+    evaluator: [python, services/eval_decision_server.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+        explain: Set your goal (efficient includes also correct).
+      with_check_of_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it	
+  eval_your_solver_bot:
+    description: "This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed."
+    evaluator: [python, services/eval_decision_server.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+        explain: Set your goal (efficient includes also correct).
+      with_check_of_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+...

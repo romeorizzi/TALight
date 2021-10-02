@@ -23,7 +23,7 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
-if ( not recognize(ENV['current_sol'], TAc, LANG) or not recognize(ENV['next_sol'], TAc, LANG) ):
+if not recognize(ENV['current_sol'], TAc, LANG) or not recognize(ENV['next_sol'], TAc, LANG) ):
     exit(0)
 if len(ENV['current_sol']) != len(ENV['next_sol']):
     TAc.print(LANG.render_feedback("different-n", f'No. The two formulas you have provided have different lengths! As such, they do not belong to the same list.'), "red", ["bold"])
