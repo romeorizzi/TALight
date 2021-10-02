@@ -18,43 +18,66 @@ args_list = [
 ]
 
 
-ENV = Env(problem, service, args_list)
-TAc = TALcolors(ENV)
-LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+#ENV = Env(problem, service, args_list)
+#TAc = TALcolors(ENV)
+#LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
 def read_logs():
-    pattern = re.compile("(#LOG_flush_tmp_buffer_on_pos [0-9]+)|"
-                         "(#LOG_load_next_input_element_in_tmp_buffer (OK|NO MORE))|"
-                         "(#LOG_clone_ele_in_pos [0-9]+ one_step_to_the_right)|"
-                         "(#LOG_compare_what_in_pos [0-9]+ with_what_in_tmp_buffer [<>=])|"
-                         "(#LOG_output_final_array ([0-9]+))")
+    pattern = re.compile("^(#LOG_flush_tmp_buffer_on_pos [0-9]+)$|"
+                         "^(#LOG_load_next_input_element_in_tmp_buffer (OK, got [0-9]+|NO MORE))$|"
+                         "^(#LOG_clone_ele_in_pos [0-9]+ one_step_to_the_right)$|"
+                         "^(#LOG_compare_what_in_pos [0-9]+ with_what_in_tmp_buffer [<>=])$|"
+                         "^(#LOG_output_final_array ([0-9]+))$")
     i = 1
     with open(argv[1], 'r') as f:
         for line in f.readlines():
             if re.match(pattern, line):
-                yield i, line[1:].replace("\n", "").rstrip().lstrip()
+                yield i, line[1:].strip()
             i += 1
 
+try:
+    input_array = list(map(int, argv[2:]))
+    insert_sort = insert_sort_lib.InsertSort(input_array)
+    for e1, e2 in zip_longest(insert_sort.generate_log_when_sorting(), read_logs()):
+        try:
+            # if feedback = default or stop at first error
+            #if e1 != e2[1]:
+            #    print(f"Error in line {e2[0]}: {e2[1]}.")
+            # elif feedback = tell what's right instead
+            if e1 != e2[1]:
+                if "flush" in e1 and "flush" in e2[1]:
+                    trail = f"Flush operation from buffer is right, but {e2[1][-1]} is not the right value. The value to be flushed should be:\n{e1}"
+                elif "load" in e1 and "load" in e2[1]:
+                    if "OK" in e1 and "NO MORE" in e2[1]:
+                        trail = f"Load of the next input element on buffer is right, but the array is still not empty. The right line should be:\n{e1}"
+                    elif "NO MORE" in e1 and "OK" in e2[1]:
+                        trail = f"Load of the next input element on buffer is right, but the array is empty. The right line should be:\n{e1}"
+                    else:
+                        trail = f"Load of the next input element in buffer is right, but the current buffer value is not right. The right line should be:\n{e1}"
+                elif "clone" in e1 and "clone" in e2[1]:
+                    trail = f"Cloning operation is right, but you are cloning the wrong element. The right line should be:\n{e1} "
+                elif "compare" in e1 and "compare" in e2[1]:
+                    if e1[-1] == e2[1][-1]:
+                        trail = f"You are comparing the wrong element to the buffer. The right line should be:\n{e1}"
+                    else:
+                        trail = f"The comparison is right, but the result or the array value is not. The right line should be:\n{e1}"
+                elif "output" in e1 and "output" in e2[1]:
+                    trail = f"Your final array is not well sorted. The right line should be:\n{e1}"
+                else:
+                    trail = f"This operation is not right. The right operation should be:\n{e1[1]}"
 
-if ENV['feedback'] == 'only_signal_first_error':
-    try:
-        input_array = list(map(int, argv[2:]))
-        insert_sort = insert_sort_lib.InsertSort(input_array)
-        for e1, e2 in zip_longest(insert_sort.generate_log_when_sorting(), read_logs()):
-            try:
-                if e1 != e2[1]:
-                    TAc.print(f"Error in line {e2[0]}: your log was {e2[1]}, should be {e1}.\n")
-                    exit(1)
-            except TypeError:
-                TAc.print(f"Error: EOF reached, next log was {e1}")
+                print(f"Error in line {e2[0]}: {e2[1]}. \n" + trail)
                 exit(1)
-    except ValueError:
-        TAc.print("Input not valid. Only integer numbers.")
-        exit(1)
+        except TypeError:
+            print(f"Error: EOF reached, which means your solution file is incomplete or empty.")
+            exit(1)
+except ValueError:
+    print("Input not valid. Only integer numbers.")
+    exit(1)
 
-
+print("Congrats, your solution is right.")
 
 
 """
@@ -67,27 +90,7 @@ NON SI BADI ALLE COSE SOTTO, POTREBBERO SERVIRE MA VERRANNO PROBABILMENTE ELIMIN
         if len(arraylista) != n:
             return print("#Error: " + str(n) + " is not the right length, should be " + str(len(arraylista)))
     
-        return print("Your array: " + str(arraylista))
-    
-    
-    def insert_sort(array_inp: list):
-        log_array.append("LOG_input_array " + str(array_inp))
-        for i in range(1, len(array_inp)):
-            j = i - 1
-            log_array.append("LOG_memory_load_from_pos " + str(j))
-            key = array_inp[i]
-            while j >= 0 and array_inp[j] > key:
-                cond = [True if j >= 0 and array_inp[j] > key else False]
-                log_array.append("LOG_compare_what_in_pos" + str(j) + " less_than_what_in_memory " + str(cond))
-                array_inp[j + 1] = array_inp[j]
-                log_array.append("LOG_copy_from_pos " + str(j) + " to_pos " + str(j+1))
-                j -= 1
-            array_inp[j + 1] = key
-            log_array.append("LOG_memory_write_on_pos " + str(j+1))
-    
-        log_array.append("LOG_output_array " + str(array_inp))
-        return array_inp
-    
+        return print("Your array: " + str(arraylista))   
     
     print(f"#Waiting for your n-dimensional array.\n#Format: [n,array]. Each value of the array must be separated by "
           f"spaces. "
