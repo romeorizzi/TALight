@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+insert-num-rows: 'Insert the number of rows:'
+insert-num-col: 'Insert the number of columns:'
+instance-seed: 'Instance (of seed {seed}): '
+sequence-r-c: 'Sequence of rows and columms: '
+rows-sol: 'Rows solution: '
+col-sol: 'Columns solution: '
+correct: 'This sequence turns off all lights.'
+not-correct: 'This sequence doesn't turn off all lights see what happens using your solution:'
+no-more-lights: 'You can not turn off more lights.'
+do-better: 'You can turn off more lights, check it: '
