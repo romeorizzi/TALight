@@ -25,7 +25,7 @@ services:
 
   remote_insertion_sort_api:
     description: |+
-     In a call to this service you plug in your insert_sort bot remotely running on an instance of us. Your bot will access the array to be sorted only through the following primities
+     In a call to this service you plug in your insert_sort bot remotely running on an instance of us. Your bot will access the array to be sorted only through the following primitives
         CMD_GET_DIM <n>
         CMD_MEMORY_LOAD_FROM_POS <i>
         CMD_MEMORY_WRITE_ON_POS <i>
