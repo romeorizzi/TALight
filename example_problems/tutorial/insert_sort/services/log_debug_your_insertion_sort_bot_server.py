@@ -80,37 +80,3 @@ except ValueError:
 
 print("Congrats, your solution is right.")
 
-
-"""
-NON SI BADI ALLE COSE SOTTO, POTREBBERO SERVIRE MA VERRANNO PROBABILMENTE ELIMINATE.
-    log_array = [""]
-    
-    
-    def input_array_format(n: int, array: str):
-        arraylista = array.lstrip(" ").split(" ")
-        if len(arraylista) != n:
-            return print("#Error: " + str(n) + " is not the right length, should be " + str(len(arraylista)))
-    
-        return print("Your array: " + str(arraylista))   
-    
-    print(f"#Waiting for your n-dimensional array.\n#Format: [n,array]. Each value of the array must be separated by "
-          f"spaces. "
-          " Only integer numbers.")
-    
-    array = input()
-    pattern = re.compile(r"^[0-9]+,[\s]*[0-9]+(\s+[0-9]+)*$")
-    if not pattern.match(str(array)):
-        print("#INVALID INPUT FORMAT.\n#Format: [n, array]. Each value of the array must be separated by spaces. Only "
-              "integer numbers.")
-        exit()
-    
-    arraylist = array.split(",")
-    input_array_format(int(arraylist[0]), arraylist[1])
-    print("Now, you can use ONLY those primitives: "
-          "LOG_input_array <n> <input_array_of_length_n>"
-          "LOG_memory_load_from_pos <i>"
-          "LOG_memory_write_on_pos <i>"
-          "LOG_copy_from_pos <i> to_pos <j>"
-          "LOG_compare_what_in_pos <i> less_than_what_in_memory <outcome>"
-          "LOG_output_array <n> <output_array_of_length_n>"
-"""
