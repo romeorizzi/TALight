@@ -2,9 +2,9 @@
 ---
 public_folder: public
 services:
-  gimme_random_instance:
+  gimme_instance:
     description: This service provides you with a random pirellone instance, i.e., a 0/1-matrix with the given number of rows (argument m) and columns (argument n). You can also specify (1) whether this pirellone should be solvable or not, or let it to the service to decide; and (2) whether you want to get only the random seed for the instance or also the instance file downloaded and/or its display on the screen. If you opt to insert the seed yourself, you can not decide about the solvability, but you can still ask for the file and/or its listing on the screen.
-    evaluator: [python,services/gimme_random_instance_server.py]
+    evaluator: [python,services/gimme_instance_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,1})$

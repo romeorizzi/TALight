@@ -8,30 +8,30 @@ from sys import exit
 ####DA SISTEMARE TUTTI I CHECK OFF LIGHTS 
 
 
-def random_pirellone(m, n, seed="random_seed", solvable=False, with_yes_certificate=False):
+def gen_pirellone(m, n, seed=0, solvable=None, with_yes_certificate=False):
     """we reserve those seed divisible by 3 to the NOT solvable instances"""
     assert m >= 0
     assert n >= 0
-    if seed=="random_seed":
+    # Generate suitable seed if necessary
+    if seed == 0:
         random.seed()
-        seed = random.randint(100007,999999)
+        seed = random.randint(100002,999999)
+        # adust seed if not suitable
         if solvable == (seed%3 == 0):
             if solvable:
                seed -= random.randrange(1,3)   
             else:
-               seed -= seed%3
-        else:
-            seed = random.randint(100000,999999)
+               seed -= seed%3     
     else:
-        seed = int(seed)
-        assert solvable == (seed%3 != 0) 
+        solvable = (seed%3 != 0)
+    # Generate pirellone
     random.seed(seed)
     switches_row = [random.randint(0, 1) for _ in range(m)]         
     switches_col = [random.randint(0, 1) for _ in range(n)]
     pirellone = [ [ (switches_col[j] + switches_row[i]) % 2 for j in range(n) ] for i in range(m)]
     if not solvable:
-        assert m >= 2
-        assert n >= 2
+        if m < 2 or n < 2:
+            raise RuntimeError()
         num_altered_rows = random.randrange(1, m)
         altered_rows= random.sample(range(m), num_altered_rows)
         for row in altered_rows:
@@ -41,6 +41,7 @@ def random_pirellone(m, n, seed="random_seed", solvable=False, with_yes_certific
         return pirellone, seed, switches_row, switches_col
     else:
         return pirellone, seed
+
 
 def extract_sol(line, m, n, LANG, TAc):
     matched = re.match("^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$", line)
@@ -64,15 +65,16 @@ def extract_sol(line, m, n, LANG, TAc):
             switch_cols[index] = 1-switch_cols[index]
     return switch_rows, switch_cols
 
-    
-    
+
 def switch_row(i,pirellone):
     for j in range(len(pirellone[0])):
         pirellone[i][j] = int(not pirellone[i][j])
 
+
 def switch_col(j,pirellone):
     for i in range(len(pirellone)):
         pirellone[i][j] = int(not pirellone[i][j])
+
 
 def is_solvable(pirellone):
     for i in range(len(pirellone)):
@@ -83,10 +85,12 @@ def is_solvable(pirellone):
                 return False
     return True 
 
+
 def print_pirellone(pirellone):
     for l in pirellone:
         print(*l) 
-        
+
+
 def check_off_lights(pirellone,solu, LANG, TAc):
     pirellone1=[line[:] for line in pirellone]
     m=len(pirellone)
@@ -117,6 +121,7 @@ def check_off_lights(pirellone,solu, LANG, TAc):
         else:
             return False,'n'
 
+
 def solution_min(switches_row,switches_col):
     m=len(switches_row)
     n=len(switches_col)
@@ -132,7 +137,8 @@ def solution_min(switches_row,switches_col):
         if switches_col[j]:
             lista.append(f"c{j+1}")
     return lista
-        
+
+
 def solution(pirellone):
     m=len(pirellone)
     n=len(pirellone[0]) 
@@ -192,6 +198,7 @@ def solution_irredundant(pirellone,switches_row,switches_col,smallest=True):
             lista.append(f"c{j+1}")
     return lista
 
+
 def solution_pad(sol,m,n,lb,seed="random_seed"):
     if type(seed)==str:
         assert seed=="random_seed"
@@ -208,7 +215,6 @@ def solution_pad(sol,m,n,lb,seed="random_seed"):
         longsol.append(num)      
     random.shuffle(longsol)
     return longsol
-
 
 
 def min_lights_on(pirellone):
@@ -234,5 +240,3 @@ def min_lights_on(pirellone):
         light+=sum(pirellone[i]) 
     return light
     
-     
-
