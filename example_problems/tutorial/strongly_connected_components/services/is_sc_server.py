@@ -8,13 +8,13 @@ import collections
 
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
-from bot_interface import service_server_requires_and_gets_file
+from bot_interface import service_server_requires_and_gets_the_only_file
 
 from scc_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
 problem="strongly_connected_components"
-service="check_is_gsc"
+service="check_is_sc"
 args_list = [
     ('sc_bool',bool),
     ('input_mode',str),
@@ -45,8 +45,8 @@ if ENV['input_mode'] == 'from_terminal':
             exit(0)
          g.addEdge(int(head),int(tail))
 else:
-    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input file (handler `graph.txt`)."), "yellow")
-    graph=service_server_requires_and_gets_file('graph.txt').decode()
+    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input file."), "yellow")
+    graph=service_server_requires_and_gets_the_only_file().decode()
     lines=graph.splitlines()
     n , m = map(int,lines[0].split())
     if n < 1:

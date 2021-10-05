@@ -6,9 +6,6 @@ from sys import exit
 
 
 
-####DA SISTEMARE TUTTI I CHECK OFF LIGHTS 
-
-
 def get_pirellone_from_str(str):
     l = list()
     rows = str.split('\n')
@@ -112,6 +109,7 @@ def switch_col(j, pirellone):
 
 
 def get_sol_from(switches_row, switches_col):
+    """Return the optimal solution of solvable pirellone"""
     m = len(switches_row)
     n = len(switches_col)
     num_one = sum(switches_col) + sum(switches_row)
@@ -129,62 +127,26 @@ def get_sol_from(switches_row, switches_col):
 
 
 def get_sol(pirellone):
+    """Return the optimal solution of solvable pirellone"""
+    switches_col = pirellone[0].copy()
     m = len(pirellone)
-    n = len(pirellone[0]) 
-    sr = list()
-    sc = list()
-    for j in range(n):
-        if pirellone[0][j]:
-            sc.append(j)
-            switch_col(j, pirellone)
-    for i in range(1, m):
-        if pirellone[i][0]:
-            sr.append(i)
-            switch_row(i, pirellone)
-    if (len(sr) + len(sc)) >= ((m+n) // 2):
-        switches_row = list()
-        switches_col = list()
-        for j in range(n):
-            if j not in sc:
-                switches_col.append(j)
-        for i in range(m):
-            if i not in sr:
-                switches_row.append(i)
+    n = len(switches_col)
+    if switches_col[0]:
+        switches_row = [ 1-pirellone[_][0] for _ in range(m)]
     else:
-        switches_row = sr
-        switches_col = sc
+        switches_row = [ pirellone[_][0] for _ in range(m)]
+    if sum(switches_row) + sum(switches_col) > ((m + n) // 2):
+        switches_row = [ 1-switches_row[_] for _ in range(m)]
+        switches_col = [ 1-switches_col[_] for _ in range(n)]
     sol = list()
-    for i in switches_row:
-        sol.append(f"r{i+1}")
-    for j in switches_col:
-        sol.append(f"c{j+1}")
+    for i in range(m):
+        if switches_row[i]:
+            sol.append(f"r{i+1}")
+    for j in range(n):
+        if switches_col[j]:
+            sol.append(f"c{j+1}")
     return sol
   
-
-def get_min_lights_on(pirellone):
-    test = copy.deepcopy(pirellone)
-    s = 0
-    h = 1
-    k = 1
-    while h != 0 or k != 0:
-        h = 0
-        k = 0
-        for i in range(len(test)):
-            if sum(test[i]) > (len(test) - sum(test[i])):
-                switch_row(i, test)
-                h += 1      
-        for j in range(len(test[0])):
-            for i in range(len(test)):
-                s += test[i][j]
-            if s > (len(test[0]) - s):
-                switch_col(j, test)
-                k += 1
-            s = 0   
-    light = 0
-    for i in range(len(test)):
-        light += sum(test[i]) 
-    return light
-
 
 def get_light_on_after(pirellone, sol):
     m = len(pirellone)
@@ -211,11 +173,11 @@ def get_light_on_after(pirellone, sol):
     return lights
 
 
-def check_off_lights(pirellone, sol_to_test):
+def check_off_lights(pirellone, sol_to_test, opt_sol):
     # Get light on after sol_to_test
     lights = get_light_on_after(pirellone, sol_to_test)
     # Get the min lights on with this pirellone
-    min_lights = get_min_lights_on(pirellone)
+    min_lights = get_light_on_after(pirellone, opt_sol)
     return lights == min_lights
 
 
@@ -242,11 +204,12 @@ def extract_sol(line, m, n, LANG, TAc):
             switch_cols[index] = 1-switch_cols[index]
     return switch_rows, switch_cols
   
-#forse non corretta la seguente funzione            
+
+#NOTE: forse non corretta la seguente funzione      
 def solution_irredundant(pirellone,switches_row,switches_col,smallest=True):
-    m=len(switches_row)
-    n=len(switches_col)
     assert is_solvable(pirellone)
+    m = len(switches_row)
+    n = len(switches_col)
     switches_row = pirellone[0]
     if pirellone[0][0] == 0:
         switches_col = pirellone[0]
@@ -268,6 +231,33 @@ def solution_irredundant(pirellone,switches_row,switches_col,smallest=True):
         if switches_col[j]:
             lista.append(f"c{j+1}")
     return lista
+
+
+#NOTE: not correct for identity matrix
+def get_min_lights_on(pirellone):
+    """Return the minimum number of lights that must be turn off manually"""
+    test = copy.deepcopy(pirellone)
+    s = 0
+    h = 1
+    k = 1
+    while h != 0 or k != 0:
+        h = 0
+        k = 0
+        for i in range(len(test)):
+            if sum(test[i]) > (len(test) - sum(test[i])):
+                switch_row(i, test)
+                h += 1      
+        for j in range(len(test[0])):
+            for i in range(len(test)):
+                s += test[i][j]
+            if s > (len(test[0]) - s):
+                switch_col(j, test)
+                k += 1
+            s = 0   
+    light = 0
+    for i in range(len(test)):
+        light += sum(test[i]) 
+    return light
 
 
 
@@ -294,41 +284,44 @@ if __name__ == "__main__":
     print('==> OK')
 
 
-    print('Test: get_min_lights_on()')
-    assert get_min_lights_on([[0, 0], [0, 0]]) == 0
-    assert get_min_lights_on([[0, 0], [0, 1]]) == 1
-    assert get_min_lights_on([[0, 0], [1, 0]]) == 1
-    assert get_min_lights_on([[0, 0], [1, 1]]) == 0
-    assert get_min_lights_on([[0, 1], [0, 0]]) == 1
-    assert get_min_lights_on([[0, 1], [0, 1]]) == 0
-    assert get_min_lights_on([[0, 1], [1, 0]]) == 0
-    assert get_min_lights_on([[0, 1], [1, 1]]) == 1
-    assert get_min_lights_on([[1, 0], [0, 0]]) == 1
-    assert get_min_lights_on([[1, 0], [0, 1]]) == 0
-    assert get_min_lights_on([[1, 0], [1, 0]]) == 0
-    assert get_min_lights_on([[1, 0], [1, 1]]) == 1
-    assert get_min_lights_on([[1, 1], [0, 0]]) == 0
-    assert get_min_lights_on([[1, 1], [0, 1]]) == 1
-    assert get_min_lights_on([[1, 1], [1, 0]]) == 1
-    assert get_min_lights_on([[1, 1], [1, 1]]) == 0
-    print('==> OK')
+    # print('Test: get_min_lights_on()')
+    # assert get_min_lights_on([[0, 0], [0, 0]]) == 0
+    # assert get_min_lights_on([[0, 0], [0, 1]]) == 1
+    # assert get_min_lights_on([[0, 0], [1, 0]]) == 1
+    # assert get_min_lights_on([[0, 0], [1, 1]]) == 0
+    # assert get_min_lights_on([[0, 1], [0, 0]]) == 1
+    # assert get_min_lights_on([[0, 1], [0, 1]]) == 0
+    # assert get_min_lights_on([[0, 1], [1, 0]]) == 0
+    # assert get_min_lights_on([[0, 1], [1, 1]]) == 1
+    # assert get_min_lights_on([[1, 0], [0, 0]]) == 1
+    # assert get_min_lights_on([[1, 0], [0, 1]]) == 0
+    # assert get_min_lights_on([[1, 0], [1, 0]]) == 0
+    # assert get_min_lights_on([[1, 0], [1, 1]]) == 1
+    # assert get_min_lights_on([[1, 1], [0, 0]]) == 0
+    # assert get_min_lights_on([[1, 1], [0, 1]]) == 1
+    # assert get_min_lights_on([[1, 1], [1, 0]]) == 1
+    # assert get_min_lights_on([[1, 1], [1, 1]]) == 0
+    # print('==> OK')
 
 
-    print('Test: len(get_sol())')
+    print('Test: len(get_sol()) for solvable Instance')
     assert len(get_sol([[0, 0], [0, 0]])) == 0
     assert len(get_sol([[0, 0], [0, 1]])) == 0
-    # assert len(get_sol([[0, 0], [1, 0]])) == 0
     assert len(get_sol([[0, 0], [1, 1]])) == 1
-    # assert len(get_sol([[0, 1], [0, 0]])) == 0
     assert len(get_sol([[0, 1], [0, 1]])) == 1
     assert len(get_sol([[0, 1], [1, 0]])) == 2
-    # assert len(get_sol([[0, 1], [1, 1]])) == 1
-    # assert len(get_sol([[1, 0], [0, 0]])) == 0
     assert len(get_sol([[1, 0], [0, 1]])) == 2
     assert len(get_sol([[1, 0], [1, 0]])) == 1
     assert len(get_sol([[1, 0], [1, 1]])) == 1
     assert len(get_sol([[1, 1], [0, 0]])) == 1
     assert len(get_sol([[1, 1], [0, 1]])) == 1
-    # assert len(get_sol([[1, 1], [1, 0]])) == 1
     assert len(get_sol([[1, 1], [1, 1]])) == 2
     print('==> OK')
+
+    # print('Test: len(get_sol()) for unsolvable Instance')
+    # assert len(get_sol([[1, 1], [1, 0]])) == 1
+    # assert len(get_sol([[0, 0], [1, 0]])) == 0
+    # assert len(get_sol([[0, 1], [0, 0]])) == 0
+    # assert len(get_sol([[0, 1], [1, 1]])) == 1
+    # assert len(get_sol([[1, 0], [0, 0]])) == 0
+    # print('==> OK')

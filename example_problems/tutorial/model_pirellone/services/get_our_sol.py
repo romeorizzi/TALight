@@ -10,7 +10,7 @@ from utils_lang import get_inputs
 
 # METADATA OF THIS TAL_SERVICE:
 problem="model_pirellone"
-service="compact_sol"
+service="get_our_sol"
 args_list = [
     ('input_mode',str),
     ('m',int), 
