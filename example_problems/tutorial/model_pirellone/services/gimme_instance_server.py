@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from sys import stderr, exit
 import random
 
@@ -10,15 +11,15 @@ from pirellone_lib import gen_pirellone
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="hanoi"
-service="gen_random_puzzle"
+problem="model_pirellone"
+service="gimme_instance"
 args_list = [
     ('m',int),
     ('n',int),
-    ('instance_solvability', str),
-    ('display', bool),
+    ('seed',str),
+    ('instance_solvability',str),
+    ('display',bool),
     ('download',bool),
-    ('seed',int),
     ('lang',str),
 ]
 
@@ -30,15 +31,15 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 # Adjust solvability param
 if ENV['instance_solvability'] == 'solvable':
-    must_be_solvable = True
+    solvable = True
 elif ENV['instance_solvability'] == 'unsolvable':
-    must_be_solvable = False
+    solvable = False
 else:
-    must_be_solvable = random.choice([False, True])
+    solvable = None
 
 # get pirellone
 try:
-    (instance, seed) = gen_pirellone(ENV['m'], ENV['n'], seed=ENV['seed'], solvable=must_be_solvable)
+    (instance, seed) = gen_pirellone(ENV['m'], ENV['n'], ENV['seed'], solvable)
 except RuntimeError:
     TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
     exit(0)
