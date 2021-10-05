@@ -30,6 +30,7 @@ if ENV["ok_if_congruent_modulus"] != 0:
 if ENV["risp"] == risp_correct:
     if not ENV["silent"]:
         TAc.OK()
+        #SERVE VERAMENTE QUESTO IF? SEMBRA CHE NON ENTRI MAI NEL PRIMO CASO
         if overflow:
             TAc.print(LANG.render_feedback("ok-congruent", f'♥  We agree. The number of feasible paths in a triangle with {ENV["n"]} rows is congruent to {ENV["risp"]} modulo {ENV["ok_if_congruent_modulus"]}.'), "green", ["bold"])
         else:
@@ -55,8 +56,8 @@ if ENV["more_or_less_hint_if_wrong"]:
     else:
         TAc.print(LANG.render_feedback("no_pertinent", f'First, be told that the number of feasible paths in a triangle with {ENV["n"]} rows overflows the value {ENV["ok_if_congruent_modulus"]} for the parameter "ok_if_congruent_modulus" as set for the current call to this service.'), "red")
         if ENV["risp"] < risp_correct:
-            TAc.print(LANG.render_feedback("bigger-risp", f'This said, the correct value for the parameter risp is bigger than {ENV["risp"]}, though it would be here not proper to make assertions regarding the true number of solutions.'), "red")
+            TAc.print(LANG.render_feedback("bigger-risp", f'This said, the correct value for the parameter risp is smaller than {ENV["risp"]}, though it would be here not proper to make assertions regarding the true number of solutions.'), "red")
         else:
-            TAc.print(LANG.render_feedback("smaller-risp", f'This said, the correct value for the parameter risp is smaller than {ENV["risp"]}, though it would be here not proper to make assertions regarding the true number of solutions.'), "red")
+            TAc.print(LANG.render_feedback("smaller-risp", f'This said, the correct value for the parameter risp is bigger than {ENV["risp"]}, though it would be here not proper to make assertions regarding the true number of solutions.'), "red")
 
 exit(0)
