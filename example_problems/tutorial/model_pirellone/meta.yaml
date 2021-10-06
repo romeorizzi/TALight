@@ -49,8 +49,9 @@ services:
     args:
       input_mode:
         regex: ^(random|seed|terminal)$
+        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
         # regex: ^(random|seed|terminal|TA_send_files_bot)$
-        default: seed
+        default: random
         explain: "choose the way to input your pirellone among:" 
         explain1: "[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>."
         explain2: "[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>."
@@ -75,10 +76,6 @@ services:
         explain1: "[m_plus_n]  yield a solution with at most m+n moves."
         explain2: "[m_plus_n_half]  yield a solution with at most (m+n)/2 moves."
         explain3: "[min]  yield a solution with the minimum possible number of moves."
-      level:
-        regex: ^(easy|medium|hard)$
-        default: medium
-        explain: Level of the exercise.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

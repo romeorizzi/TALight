@@ -54,7 +54,7 @@ def gen_pirellone(m, n, seed, with_yes_certificate=False):
     if not solvable:
         if m < 2 or n < 2:
             # In this case, the pirellone is always solvable
-            raise RuntimeError()
+            raise RuntimeError('invalid-unsolvable-dimensions')
         num_altered_rows = random.randrange(1, m)
         altered_rows= random.sample(range(m), num_altered_rows)
         for row in altered_rows:

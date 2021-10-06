@@ -4,7 +4,7 @@ from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
 
-from pirellone_lib import gen_pirellone, gen_pirellone_seed, get_str_from_pirellone
+import pirellone_lib as pl
 
 
 
@@ -29,7 +29,6 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
-# Get correct seed
 if ENV['input_mode'] == 'random':
     # adjust solvability param
     if ENV['instance_solvability'] == 'solvable':
@@ -39,16 +38,18 @@ if ENV['input_mode'] == 'random':
     else:
         solvable = None
     # get random seed
-    seed = gen_pirellone_seed(solvable)
+    seed = pl.gen_pirellone_seed(solvable)
+
 elif ENV['input_mode'] == 'seed':
     if ENV['seed'] == 0:
         TAc.print(LANG.render_feedback("no-mandatory-seed", f"If you select (input_mode='seed') then the (seed) argument must be differente from 000000"), "red", ["bold"])
         exit(0)
+    # get custom seed
     seed = ENV['seed']
 
 # Get pirellone
 try:
-    instance = gen_pirellone(ENV['m'], ENV['n'], seed)
+    instance = pl.gen_pirellone(ENV['m'], ENV['n'], seed)
 except RuntimeError:
     TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
     exit(0)
@@ -56,10 +57,10 @@ except RuntimeError:
 # Print Instance
 if ENV['silent']:
     print(f"{ENV['m']} {ENV['n']}")
-    print(get_str_from_pirellone(instance))
+    print(pl.get_str_from_pirellone(instance))
 else:
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("instance", f"{get_str_from_pirellone(instance)}"), "white", ["bold"])
+    TAc.print(LANG.render_feedback("instance", f"{pl.get_str_from_pirellone(instance)}"), "white", ["bold"])
     TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
 
 exit(0)
