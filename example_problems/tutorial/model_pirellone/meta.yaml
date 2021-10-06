@@ -8,7 +8,7 @@ services:
     args:
       input_mode:
         regex: ^(random|seed)$
-        default: seed
+        default: random
         explain: "choose the way to input your pirellone among:" 
         explain1: "[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>."
         explain2: "[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>."

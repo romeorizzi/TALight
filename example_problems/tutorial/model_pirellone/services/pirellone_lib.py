@@ -22,27 +22,30 @@ def get_str_from_sol(sol):
     return ' '.join(sol)
 
 
-def gen_pirellone(m, n, seed=0, solvable=None, with_yes_certificate=False):
+def is_solvable_seed(seed):
+    return (seed % 3) != 0
+
+
+def gen_pirellone_seed(solvable=None):
+    random.seed()
+    seed = random.randint(100002,999999)
+    # Check solvability
+    if solvable == None:
+        solvable = random.choice([False, True])
+    # adust seed if not suitable
+    if solvable != is_solvable_seed(seed):
+        if solvable:
+            seed -= random.randrange(1, 3)   
+        else:
+            seed -= (seed % 3)  
+    return seed
+
+
+def gen_pirellone(m, n, seed, with_yes_certificate=False):
     """we reserve those seed divisible by 3 to the NOT solvable instances"""
     assert m >= 0
     assert n >= 0
-    # Generate suitable seed if necessary
-    # CASE1: generate random seed
-    if seed == 0:
-        random.seed()
-        seed = random.randint(100002,999999)
-        # Check solvability
-        if solvable == None:
-            solvable = random.choice([False, True])
-        # adust seed if not suitable
-        if solvable != is_solvable_seed(seed):
-            if solvable:
-               seed -= random.randrange(1, 3)   
-            else:
-               seed -= (seed % 3)  
-    # CASE2: use a custom seed
-    else:
-        solvable = is_solvable_seed(seed)
+    solvable = is_solvable_seed(seed)
     # Generate pirellone
     random.seed(seed)
     switches_row = [random.randint(0, 1) for _ in range(m)]         
@@ -50,6 +53,7 @@ def gen_pirellone(m, n, seed=0, solvable=None, with_yes_certificate=False):
     pirellone = [ [ (switches_col[j] + switches_row[i]) % 2 for j in range(n) ] for i in range(m)]
     if not solvable:
         if m < 2 or n < 2:
+            # In this case, the pirellone is always solvable
             raise RuntimeError()
         num_altered_rows = random.randrange(1, m)
         altered_rows= random.sample(range(m), num_altered_rows)
@@ -57,13 +61,9 @@ def gen_pirellone(m, n, seed=0, solvable=None, with_yes_certificate=False):
             col = random.randrange(0, n)
             pirellone[row][col] = 1 - pirellone[row][col] 
     if with_yes_certificate:
-        return pirellone, seed, switches_row, switches_col
+        return pirellone, switches_row, switches_col
     else:
-        return pirellone, seed
-
-
-def is_solvable_seed(seed):
-    return (seed % 3) != 0
+        return pirellone
 
 
 def is_solvable(pirellone):
