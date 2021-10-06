@@ -55,7 +55,7 @@ services:
         explain1: "[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>."
         explain2: "[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>."
         explain3: "[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations."
-        # explain4: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt."
+        # explain4: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt."
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 2
@@ -139,13 +139,30 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
+  try_GMPL_model:
+    description: "Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service will apply your model to your instance and then use the glpsol engine to find out a solution following your instructions. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect try_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py mod=path_to_model_file_dir/your_pirellone.mod dat=path_to_instance_file_dir/your_pirellone.dat."
+    evaluator: [python, services/try_GMPL_model_server.py]
+    args:
+      glpsol_stdout_to:
+        regex: ^(terminal|.*)$
+        default: terminal
+      glpsol_stderr_to:
+        regex: ^(terminal|.*)$
+        default: terminal
+      glpsol_output.txt_to:
+        regex: ^(terminal|.*)$
+        default: terminal
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
   validate_GMPL_model:
-    evaluator: [python, services/eval_decision_server.py]
+    evaluator: [python, services/validate_GMPL_model_server.py]
     args:
       goal:
-        regex: ^(correct|efficient)$
-        default: correct
-        explain: Set your goal (efficient includes also correct).
+        regex: ^(public_examples|m_and_n_at_most_5_solvable|m_and_n_at_most_5_unsolvable|m_and_n_at_10|m_and_n_at_20|m_and_n_at_30|m_and_n_at_50|m_and_n_at_100|m_and_n_at_200|m_and_n_at_300)$
+        default: public_examples
+        explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
       with_check_of_sol:
         regex: ^(0|1)$
         default: 0
@@ -158,8 +175,8 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
-  validate_GSAT_model:
-    evaluator: [python, services/eval_decision_server.py]
+  validate_SAT_model:
+    evaluator: [python, services/validate_SAT_model_server.py]
     args:
       goal:
         regex: ^(correct|efficient)$
@@ -178,7 +195,7 @@ services:
         default: it
   
   validate_MiniZinc_model:
-    evaluator: [python, services/eval_decision_server.py]
+    evaluator: [python, services/validate_MiniZinc_model_server.py]
     args:
       goal:
         regex: ^(correct|efficient)$
