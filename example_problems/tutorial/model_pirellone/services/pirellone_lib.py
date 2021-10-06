@@ -7,6 +7,7 @@ from sys import exit
 
 
 def get_pirellone_from_str(str):
+    """From a string, this function returns a pirellone instance in list form."""
     l = list()
     rows = str.split('\n')
     for cols in rows:
@@ -15,23 +16,30 @@ def get_pirellone_from_str(str):
 
 
 def get_str_from_pirellone(pirellone):
+    """From a pirellone instance, this function returns its string rappresentation."""
     return '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
 
 
-def get_str_from_sol(sol, mode='seq'):
-    assert mode == 'seq' or mode == 'subset'
-    if mode == 'seq':
+def get_str_from_sol(sol):
+    """From a solution, this function returns its string rappresentaion."""
+    # CASE1: solution in style='seq' i.e.: [r1, c2, r10]
+    if all(not isinstance(e, list) for e in sol):
         return ' '.join(sol)
-    elif mode == 'subset':
-        return ' '.join(sol)
+    # CASE2: solution in style='subset' i.e.: [[1, 0], [1, 0]]
+    else:
+        return ' '.join([str(int) for int in sol[0]]) + \
+               ', ' + \
+               ' '.join([str(int) for int in sol[1]])
+
         
-
-
 def is_solvable_seed(seed):
+    """If this seed is associated to a solvable pirellone instance return True, False otherwise."""
+    # We reserve those seed divisible by 3 to the NOT solvable instances
     return (seed % 3) != 0
 
 
 def gen_pirellone_seed(solvable=None):
+    """This function returns a seed to generate a pirellone instance with the specificated solvability."""
     random.seed()
     seed = random.randint(100002,999999)
     # Check solvability
@@ -39,6 +47,7 @@ def gen_pirellone_seed(solvable=None):
         solvable = random.choice([False, True])
     # adust seed if not suitable
     if solvable != is_solvable_seed(seed):
+        # We reserve those seed divisible by 3 to the NOT solvable instances
         if solvable:
             seed -= random.randrange(1, 3)   
         else:
@@ -47,7 +56,7 @@ def gen_pirellone_seed(solvable=None):
 
 
 def gen_pirellone(m, n, seed, with_yes_certificate=False):
-    """we reserve those seed divisible by 3 to the NOT solvable instances"""
+    """From (m,n,seed), this functions returns a pirellone instance, with eventually the certificate."""
     assert m >= 0
     assert n >= 0
     solvable = is_solvable_seed(seed)
@@ -72,6 +81,7 @@ def gen_pirellone(m, n, seed, with_yes_certificate=False):
 
 
 def is_solvable(pirellone):
+    """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
     for i in range(len(pirellone)):
         inv = (pirellone[0][0] != pirellone[i][0])
         for j in range(len(pirellone[0])):
@@ -85,6 +95,7 @@ def is_solvable(pirellone):
 
 
 def get_padded_sol(m, n, sol, pad_size):
+    """From a solution and (m,n), this functions returns a solution longer than at least pad_size."""
     padded_sol = sol.copy()
     diff = pad_size
     turn = 0
@@ -104,35 +115,50 @@ def get_padded_sol(m, n, sol, pad_size):
 
 
 def switch_row(i, pirellone):
+    """It switch the lights of i-row of the given pirellone instance."""
     for j in range(len(pirellone[0])):
         pirellone[i][j] = int(not pirellone[i][j])
 
 
 def switch_col(j, pirellone):
+    """It switch the lights of i-col of the given pirellone instance."""
     for i in range(len(pirellone)):
         pirellone[i][j] = int(not pirellone[i][j])
 
 
-def get_sol_from(switches_row, switches_col):
-    """Return the optimal solution of solvable pirellone"""
+def get_list_sol(switches_row, switches_col, style='seq'):
+    """From the raw solution of get_sol() and get_sol_from(), this function returns the solution in list form."""
+    assert style == 'seq' or style == 'subset'
+    m = len(switches_row)
+    n = len(switches_col)
+    if style == 'seq':
+        sol = list()
+        for i in range(m):
+            if switches_row[i]:
+                sol.append(f"r{i+1}")
+        for j in range(n):
+            if switches_col[j]:
+                sol.append(f"c{j+1}")
+        return sol
+    else:
+        return [switches_row, switches_col]
+
+
+def get_sol_from(switches_row, switches_col, sol_style='seq'):
+    """Returns the optimal solution of solvable pirellone in the specificated style.
+    Note: for unsolvable instances is not guaranteed optimality."""
     m = len(switches_row)
     n = len(switches_col)
     num_one = sum(switches_col) + sum(switches_row)
     if num_one > (m + n - num_one):
         switches_row = [ 1-val for val in switches_row]
         switches_col = [ 1-val for val in switches_col]
-    sol = list()
-    for i in range(m):
-        if switches_row[i]:
-            sol.append(f"r{i+1}")
-    for j in range(n):
-        if switches_col[j]:
-            sol.append(f"c{j+1}")
-    return sol
+    return get_list_sol(switches_row, switches_col, sol_style)
 
 
-def get_sol(pirellone):
-    """Return the optimal solution of solvable pirellone"""
+def get_sol(pirellone, sol_style='seq'):
+    """Returns the optimal solution of solvable pirellone in the specificated style.
+    Note: for unsolvable instances is not guaranteed optimality."""
     switches_col = pirellone[0].copy()
     m = len(pirellone)
     n = len(switches_col)
@@ -143,17 +169,11 @@ def get_sol(pirellone):
     if sum(switches_row) + sum(switches_col) > ((m + n) // 2):
         switches_row = [ 1-switches_row[_] for _ in range(m)]
         switches_col = [ 1-switches_col[_] for _ in range(n)]
-    sol = list()
-    for i in range(m):
-        if switches_row[i]:
-            sol.append(f"r{i+1}")
-    for j in range(n):
-        if switches_col[j]:
-            sol.append(f"c{j+1}")
-    return sol
+    return get_list_sol(switches_row, switches_col, sol_style)
   
 
 def get_light_on_after(pirellone, sol):
+    """This function applies on pirellone instance the specified solution and then it counts lighs-on"""
     m = len(pirellone)
     n = len(pirellone[0])
     # Use solution for testing
@@ -179,6 +199,7 @@ def get_light_on_after(pirellone, sol):
 
 
 def check_off_lights(pirellone, sol_to_test, opt_sol):
+    """This function returns True if the solution to be tested turns off the maximum number of lights. Note: for solvable instance the lights-on will be 0."""
     # Get light on after sol_to_test
     lights = get_light_on_after(pirellone, sol_to_test)
     # Get the min lights on with this pirellone
@@ -186,7 +207,7 @@ def check_off_lights(pirellone, sol_to_test, opt_sol):
     return lights == min_lights
 
 
-
+#NOTE: ancora da controllare
 def extract_sol(line, m, n, LANG, TAc):
     matched = re.match("^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$", line)
     if not bool(matched):
@@ -238,7 +259,7 @@ def solution_irredundant(pirellone,switches_row,switches_col,smallest=True):
     return lista
 
 
-#NOTE: not correct for identity matrix
+#NOTE: da problemi quando il pirellone ha una diagonale di 1
 def get_min_lights_on(pirellone):
     """Return the minimum number of lights that must be turn off manually"""
     test = copy.deepcopy(pirellone)

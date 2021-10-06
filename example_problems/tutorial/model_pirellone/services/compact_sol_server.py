@@ -30,10 +30,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 (instance, opt_sol) = process_inputs(ENV, TAc, LANG)
 # TAc.print(LANG.render_feedback("spoiler", f"{pl.get_str_from_sol(opt_sol)}"), "green", ["bold"])
 
-# Print instance
-TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("instance", f"{pl.get_str_from_pirellone(instance)}"), "white", ["bold"])
-
 # Get long solution
 padded_sol = pl.get_padded_sol(ENV['m'], ENV['n'], opt_sol, pad_size=6)
 TAc.print(LANG.render_feedback("paddedsol-title", "Too long solution: (r=row, c=col)"), "yellow", ["reverse"])
