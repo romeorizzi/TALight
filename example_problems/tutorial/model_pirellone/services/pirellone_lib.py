@@ -18,8 +18,13 @@ def get_str_from_pirellone(pirellone):
     return '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
 
 
-def get_str_from_sol(sol):
-    return ' '.join(sol)
+def get_str_from_sol(sol, mode='seq'):
+    assert mode == 'seq' or mode == 'subset'
+    if mode == 'seq':
+        return ' '.join(sol)
+    elif mode == 'subset':
+        return ' '.join(sol)
+        
 
 
 def is_solvable_seed(seed):

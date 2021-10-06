@@ -29,18 +29,21 @@ def process_inputs(ENV, TAc, LANG):
         if ENV['seed'] == 0:
             TAc.print(LANG.render_feedback("no-mandatory-seed", f"If you select (input_mode='seed') then the (seed) argument must be differente from 000000"), "red", ["bold"])
             exit(0)
-        if not pl.is_solvable_seed(ENV['seed']):
-            TAc.print(LANG.render_feedback("unsolvable-seed", f"The selected seed is associated to a unsolvable instance. This service manage only solvable seed"), "red", ["bold"])
-            exit(0)
 
-        # get custom seed
-        seed = ENV['seed']
         # get instance
         try:
             (instance, switch_row, switch_col) \
-                 = pl.gen_pirellone(ENV['m'], ENV['n'], seed, with_yes_certificate=True)
+                 = pl.gen_pirellone(ENV['m'], ENV['n'], ENV['seed'], with_yes_certificate=True)
         except RuntimeError:
             TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
+            exit(0)
+
+        # Abort if this instance are unsolvable
+        if not pl.is_solvable_seed(ENV['seed']):
+            # Print instance
+            TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
+            TAc.print(LANG.render_feedback("instance", f"{pl.get_str_from_pirellone(instance)}"), "white", ["bold"])
+            TAc.print(LANG.render_feedback("unsolvable-instance", f"The submissive instance is unsolvable. This service manage only solvable seed"), "red", ["bold"])
             exit(0)
 
     elif ENV['input_mode'] == 'terminal':

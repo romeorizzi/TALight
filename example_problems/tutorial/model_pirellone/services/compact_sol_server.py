@@ -28,7 +28,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 # Get pirellone and solution
 (instance, opt_sol) = process_inputs(ENV, TAc, LANG)
-# TAc.print(LANG.render_feedback("spoiler", f"{opt_sol}"), "green", ["bold"])
+# TAc.print(LANG.render_feedback("spoiler", f"{pl.get_str_from_sol(opt_sol)}"), "green", ["bold"])
 
 # Print instance
 TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])

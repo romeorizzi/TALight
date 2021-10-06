@@ -21,7 +21,7 @@ services:
         default: 4
         explain: Number of columns of the pirellone.
       seed:
-        explain: 'This argument is needed ony when you already hold a specific instance descriptor and are only interested in obtaining the instance file downloaded in local and/or just its listing on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services of the pirellone problem.'
+        explain: 'This argument is needed only when you already hold a specific instance descriptor and are only interested in obtaining the instance file downloaded in local and/or just its listing on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services of the pirellone problem.'
         regex: ^(000000|[1-9][0-9]{5,5})$
         default: 000000
       instance_solvability:
@@ -59,11 +59,11 @@ services:
         # explain4: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt."
       m:
         regex: ^([1-9][0-9]{0,1})$
-        default: 2
+        default: 4
         explain: Number of rows of the pirellone.
       n:
         regex: ^([1-9][0-9]{0,1})$
-        default: 2
+        default: 4
         explain: Number of columns of the pirellone.
       seed:
         explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
@@ -82,30 +82,30 @@ services:
   
   get_our_sol:
     description: "This service provides you with a solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed."
-    evaluator: [python, services/check_sol_server.py]
+    evaluator: [python, services/get_our_sol_server.py]
     args:
       input_mode:
-        regex: ^(seed|terminal|file)$
-        default: seed
+        regex: ^(random|seed|terminal)$
+        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
+        # regex: ^(random|seed|terminal|TA_send_files_bot)$
+        default: random
         explain: "choose the way to input your pirellone among:" 
-        explain1: "[seed] the service generate a random seed or use the seed specificated to generate the pirellone."
-        explain2: "[terminal] you enter the pirellone directly by either typing it line after line or through cut and paste operations."
-        explain3: "[file] you enter the pirellone by a file in your machine. To send a file you have to use the TA_send_files_bot.py bot. Call the service in bots/ directory as follows: rtal connect model_pirellone service_that_you_want -ainput_mode=file -- ./TA_send_files_bot.py pirellone.txt=your_pirellone.txt."
+        explain1: "[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>."
+        explain2: "[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>."
+        explain3: "[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations."
+        # explain4: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt."
       m:
         regex: ^([1-9][0-9]{0,1})$
-        default: 2
+        default: 4
         explain: Number of rows of the pirellone.
       n:
         regex: ^([1-9][0-9]{0,1})$
-        default: 2
+        default: 4
         explain: Number of columns of the pirellone.
       seed:
-        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
-      instance_solvability:
-        regex: ^(solvable|unsolvable|surprise_me)$
-        default: surprise_me
+        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(000000|[1-9][0-9]{5,5})$
+        default: 000000
       coding:
         regex: ^(seq|subset)$
         default: seq
