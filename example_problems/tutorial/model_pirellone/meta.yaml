@@ -116,17 +116,31 @@ services:
         default: it
   
   check_your_sol:
-# TODO: nell'implementazione del servizio, comunque da rivedere, è importante implementare anche la possibilità per l'utente di immettere il pirellone da terminale o da file. Parte dell'implemetazione di questa feature potrebbe convenire disporla in libreria pirellone_lib.py
     description: "This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered random instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed."
-    evaluator: [python, services/check_sol_server.py]
+    evaluator: [python, services/check_your_sol_server.py]
     args:
+      input_mode:
+        regex: ^(random|seed|terminal)$
+        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
+        # regex: ^(random|seed|terminal|TA_send_files_bot)$
+        default: random
+        explain: "choose the way to input your pirellone among:" 
+        explain1: "[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>."
+        explain2: "[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>."
+        explain3: "[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations."
+        # explain4: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt."
+      m:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: Number of rows of the pirellone.
+      n:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: Number of columns of the pirellone.
       seed:
         explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-      instance_solvability:
-        regex: ^(solvable|unsolvable|surprise_me)$
-        default: solvable
       coding:
         regex: ^(seq|subset)$
         default: seq
