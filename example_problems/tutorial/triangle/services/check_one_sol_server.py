@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
-
+from triangle_lib import *
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
-
-from pills_lib import recognize
+import random
 
 # METADATA OF THIS TAL_SERVICE:
-problem="pills"
-service="check_one_sol_server"
+problem="triangle"
+service="check_one_sol"
 args_list = [
-    ('input_treatment',str),
-    ('n',str),
-    ('silent',bool),
+    ('n',int),
+    ('MIN VAL',int),
+    ('MAX VAL',int),
+    ('how_to_input_the_triangle',str),
+    ('sol_value',int),
+    ('silent',int),
     ('lang',str),
 ]
 
@@ -22,7 +24,29 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
 # START CODING YOUR SERVICE: 
 n=ENV['n']
-len_input = len(ENV["input_treatment"])//2
+min_val = ENV['MIN VAL']
+max_val = ENV['MAX VAL']
+input_type = ENV['how_to_input_the_triangle']
+sol_value = ENV['sol_value']
+silent = ENV['silent']
+
+# GENERAZIONE TRIANGOLO
+
+if input_type == "lazy":
+	undone = True
+	while undone:
+		values = input("Inserisci i valori del triangolo intervallati da uno spazio.")
+		if len(values.split()) == sum(range(n+1)):
+			triangle = values.split()
+			undone = False
+		else:
+			print("Hai immesso " + str(len(values.split())) + " valori, riprova.")
+else:
+	triangle = random_triangle(n,int(input_type))
+	
+		
+	
+'''
 def answer():
     if recognize(ENV["input_treatment"], TAc, LANG) and not ENV["silent"]:
         TAc.OK()
@@ -34,4 +58,5 @@ else:
         answer()
     elif recognize(ENV["input_treatment"], TAc, LANG):
         TAc.print(LANG.render_feedback("different_lengths", f"No! Your string represents a feasible treatment but not of {n} pills."), "red", ["bold"])
+'''
 exit(0)

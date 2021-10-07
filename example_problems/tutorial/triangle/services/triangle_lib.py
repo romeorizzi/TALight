@@ -1,6 +1,30 @@
 #!/usr/bin/env python3
 import random
 
+# PER MODALITA' LAZY, GENERIAMO UN TRIANGOLO CASUALE DI n RIGHE
+
+def random_triangle(n,s):
+	random.seed(s,version=2)
+	values = [random.randrange(1, 99) for _ in range(0, 2**n-1)]
+	return values
+
+# STAMPIAMO IL TRIANGOLO SUL TERMINALE
+
+def print_triangle(n,triangle_array):
+	for i in range(len(triangle_array)):
+		if len(str(triangle_array[i])) == 1:
+			triangle_array[i] = str(t[i]) + " "
+	z = 0
+	m = (2 * n) - 2
+	for i in range(0, n):
+		for j in range(0, m):
+		    print(end="  ")
+		m = m - 1
+		for j in range(0, i + 1):
+		    print(triangle_array[z], end='  ')
+		    z += 1
+		print("  ")
+'''		
 def recognize(treatement, TAc, LANG, yield_feedback=True):
     assert type(treatement)==str
     #print(f"treatement={treatement}")
@@ -124,3 +148,4 @@ if __name__ == "__main__":
         for _ in range(5):
             #print(p.rand_gen(n))
             assert p.rand_gen(n, _ + 5*n) == p.rand_gen(n, _ + 5*n)
+'''
