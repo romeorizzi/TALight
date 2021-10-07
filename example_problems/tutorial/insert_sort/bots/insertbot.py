@@ -13,4 +13,4 @@
 #LOG_clone_ele_in_pos 0 one_step_to_the_right
 #LOG_flush_tmp_buffer_on_pos 0
 #LOG_load_next_input_element_in_tmp_buffer NO MORE
-#LOG_output_final_array 3 0 1 1
+#LOG_output_final_array 3 0 3 7
