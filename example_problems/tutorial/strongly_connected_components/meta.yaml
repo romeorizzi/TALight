@@ -10,11 +10,11 @@ services:
         regex: ^1$
         default: 1
       input_mode:
-        regex: ^(from_terminal|through_TA_transfer_files_bot)$
-        default: from_terminal
-        explain: "choose the way to input your graph among:" 
-        explain1: "[from_terminal] you enter the graph directly by either typing it line after line or through cut and paste operations."
-        explain2: "[through_TA_transfer_files_bot] at the rtal connect subcommand plug in the TAL_utils bot TA_transfer_files_bot.py. With this bot you can avoid using the -e flag and, for this service, the handle of the unique input file you have to pass to the bot is `graph.txt`."
+        regex: ^(terminal|TA_send_files_bot)$
+        default: terminal
+        explain: "choose the way to input your graph among:"
+        explain1: "[terminal] you enter your instance (directed graph) directly by either typing it line after line or through cut and paste operations."
+        explain2: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_pirellone/bots/ directory. Call the service with: rtal connect strongly_connected_components check_is_sc -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
       goal:
         regex: ^(correct|with_certificate)$
         default: correct
@@ -32,11 +32,11 @@ services:
         regex: ^0$
         default: 0
       input_mode:
-        regex: ^(from_terminal|through_TA_transfer_files_bot)$
-        default: from_terminal
-        explain: "choose the way to input your graph among:" 
-        explain1: "[from_terminal] you enter the graph directly by either typing it line after line or through cut and paste operations."
-        explain2: "[through_TA_transfer_files_bot] at the rtal connect subcommand plug in the TAL_utils bot TA_transfer_files_bot.py. With this bot you can avoid using the -e flag and, for this service, the handle of the unique input file you have to pass to the bot is `graph.txt`."
+        regex: ^(terminal|TA_send_files_bot)$
+        default: terminal
+        explain: "choose the way to input your graph among:"
+        explain1: "[terminal] you enter your instance (directed graph) directly by either typing it line after line or through cut and paste operations."
+        explain2: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_pirellone/bots/ directory. Call the service with: rtal connect strongly_connected_components check_is_not_sc -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
       goal:
         regex: ^(correct|with_certificate)$
         default: correct

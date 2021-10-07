@@ -1,5 +1,11 @@
 import random, math
 
+#TO DO: - rimuovere funzioni superflue per la genereazione del vettore nel caso random: random_vector_worst_case(), fill_last_questions(questions_vector, vec, upper_bound)
+#       - modificare vector_optimal_questions_random_vec(vec), get_first_questions_for_magic_index
+#       - uniformare la funzione per sia generare il vettore di domande per il caso random e pessimo (gioco in modalità optimal) 
+#       - sia per controllare il numero di domande minimo da fare nel caso scelto check_n_questions_random_case = num_questions_worst_case. 
+#       - testare tutto che funzioni nel caso di giocata random --> optmal necessità di sistemare il discorso della generazione del vettore tramite range dei seed prestabiliti.
+
 def check_input_vector(vec, TAc, LANG):
     for i in range(1,len(vec)):
         if vec[i] == vec[i-1]:

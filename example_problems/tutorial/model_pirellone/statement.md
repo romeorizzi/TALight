@@ -68,8 +68,8 @@ allora si specifichi di non azionare alcun interruttore (interruttori tutti a ze
 
 Il file `.mod` da te sottomesso alla valutazione deve prescrivere che tale risposta venga scritta entro il file `output.txt` posto nella cartella corrente.
 
-
-Il file `output.txt` deve contenere due linee per indicare
+Nel caso in cui non sia possibile spegnere tutte le luci del Pirellone
+con gli interruttori speciali, il file `output.txt` offre la stringa "NO SOLUTIONS". Altrimenti, il file `output.txt` deve contenere due linee per indicare
 su quali interruttori deve agire il custode.
 
 La prima linea contiene una sequenza di $M$ valori ($0$ oppure
@@ -85,9 +85,6 @@ colonna.  Il $j$-esimo valore della sequenza indica se il
 custode deve agire sull'interruttore della $j$-esima colonna
 oppure no.
 
-Nel caso in cui non sia possibile spegnere tutte le luci del Pirellone
-con gli interruttori speciali, tutti i valori delle due linee in
-`output.txt` devono essere uguali a $0$.
 
 
 ## Assunzioni

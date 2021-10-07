@@ -17,13 +17,17 @@ from bot_interface import BotInterface
 
 
 if len(argv) == 1:
-    print(f"Usage: {argv[0]} [file_handle=filename_in_load_subfolder] *\n    In other words, the command {argv[0]} should be followed by a non-empty list of file specifications separated by spaces. The set of handles you should use is specific to the problem.", file=stderr)
+    print(f"Usage: {argv[0]} [file_handle1=]your_load_folder/filename1 ... [file_handleN=]your_load_folder/filenameN\n    In other words, the command {argv[0]} should be followed by a non-empty list of file specifications separated by spaces. A file specification can begin with a file_handle assignment meant to specify the role of the file for the service. When files_handle are needed then you should use those specific to the problem.", file=stderr)
     exit(1)
 
 map_handles_filenames = {}
     
-for i in range(1,len(argv)):
-    handle, filename = argv[i].split('=')
+for i in range(1, len(argv)):
+    if '=' in argv[i]:
+        handle, filename = argv[i].split('=')
+    else:
+        filename = argv[i]
+        handle = f'file_handle{i}'
     if not Path(filename).is_file():
         print (f"File {filename} does not exist on your local machine. The bot ({argv[0]}) requires full paths to files actually existing on your machine.", file=stderr)
         exit(1)

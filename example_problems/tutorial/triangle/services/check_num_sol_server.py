@@ -13,7 +13,7 @@ args_list = [
     ('ok_if_congruent_modulus',int),
     ('more_or_less_hint_if_wrong',bool),
     ('silent',bool),
-    ('lang',str),
+    ('lang',str)
 ]
 
 ENV =Env(problem, service, args_list)
