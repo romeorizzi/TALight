@@ -22,6 +22,8 @@ def get_str_from_pirellone(pirellone):
 
 def get_str_from_sol(sol):
     """From a solution, this function returns its string rappresentaion."""
+    if type(e) == str and "NO SOLUTION" in e:
+        return "NO SOLUTION"
     # CASE1: solution in style='seq' i.e.: [r1, c2, r10]
     if all(not isinstance(e, list) for e in sol):
         return ' '.join(sol)
