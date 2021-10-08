@@ -80,9 +80,9 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
-  get_our_sol:
+  gimme_sol:
     description: "This service provides you with a solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed."
-    evaluator: [python, services/get_our_sol_server.py]
+    evaluator: [python, services/gimme_sol_server.py]
     args:
       input_mode:
         regex: ^(random|seed|terminal)$
@@ -106,18 +106,18 @@ services:
         explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
         regex: ^(000000|[1-9][0-9]{5,5})$
         default: 000000
-      coding:
+      sol_style:
         regex: ^(seq|subset)$
         default: seq
         explain: "choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively."
-        example: "[seq] r2 c4 r3 r1, [subset]: 1 0 1, 0 1 1 if the matrix is 3x3"
+        example: "[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3"
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
-  check_your_sol:
+  check_sol:
     description: "This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered random instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed."
-    evaluator: [python, services/check_your_sol_server.py]
+    evaluator: [python, services/check_sol_server.py]
     args:
       input_mode:
         regex: ^(random|seed|terminal)$
@@ -139,13 +139,13 @@ services:
         explain: Number of columns of the pirellone.
       seed:
         explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
-      coding:
+        regex: ^(000000|[1-9][0-9]{5,5})$
+        default: 000000
+      sol_style:
         regex: ^(seq|subset)$
         default: seq
         explain: "choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively."
-        example: "[seq] r2 c4 r3 r1, [subset]: 1 0 1, 0 1 1 if the matrix is 3x3"
+        example: "[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3"
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

@@ -7,7 +7,7 @@ from bot_interface import service_server_requires_and_gets_the_only_file
 import pirellone_lib as pl
 
 
-def process_inputs(ENV, TAc, LANG):
+def process_instance(ENV, TAc, LANG):
     instance = list()
     sol = None
     switches_col = None
@@ -26,7 +26,7 @@ def process_inputs(ENV, TAc, LANG):
         TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
         # Print instance
         TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("instance", f"{pl.get_str_from_pirellone(instance)}"), "white", ["bold"])
+        TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
 
     elif ENV['input_mode'] == 'seed':
         if ENV['seed'] == 0:
@@ -41,10 +41,10 @@ def process_inputs(ENV, TAc, LANG):
             exit(0)
         # Print instance
         TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("instance", f"{pl.get_str_from_pirellone(instance)}"), "white", ["bold"])
+        TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
         # Abort if this instance is unsolvable
         if not pl.is_solvable_seed(ENV['seed']):
-            TAc.print(LANG.render_feedback("unsolvable-instance", f"The submissive instance is unsolvable. This service manage only solvable seed"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("unsolvable-instance", f"The submissive instance is unsolvable. This service manage only solvable seed."), "red", ["bold"])
             exit(0)
 
     elif ENV['input_mode'] == 'terminal':
@@ -55,7 +55,7 @@ def process_inputs(ENV, TAc, LANG):
             instance.append(TALinput(int, num_tokens=ENV['n'], sep=' ', TAc=TAc))
         # Abort if this instance is unsolvable
         if not pl.is_solvable(instance):
-            TAc.print(LANG.render_feedback("unsolvable-instance", f"The submissive instance is unsolvable. This service manage only solvable seed"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("unsolvable-instance", f"The submissive instance is unsolvable. This service manage only solvable seed."), "red", ["bold"])
             exit(0)
 
     # elif ENV['input_mode'] == 'TA_transfer_files_bot':
@@ -64,16 +64,29 @@ def process_inputs(ENV, TAc, LANG):
     #     instance_str = service_server_requires_and_gets_the_only_file().decode()
     #     instance = pl.get_pirellone_from_str(instance_str)
     #     # Get optimal solution
-    #     sol = pl.get_sol(instance)
-
-    if ENV['coding']:
-        sol_style = ENV['coding']
-    else:
-        sol_style = 'seq'
+    #     sol = pl.get_opt_sol(instance)
+    
     
     if switches_col != None and switches_row != None:
-        sol = pl.get_sol_from(switches_row, switches_col, sol_style)
+        sol = pl.get_opt_sol_from(switches_row, switches_col)
     else:
-        sol = pl.get_sol(instance, sol_style)
+        sol = pl.get_opt_sol(instance)
 
     return instance, sol
+
+
+def process_user_seq_sol(ENV, TAc, LANG, user_inputs):
+    # Adjust solution to mange the case 'zero moves'
+    if user_inputs == ['']:
+        user_inputs.clear()
+        return
+    # Check the m,n ranges
+    for command in user_inputs:
+        if command[0] == 'r':
+            if int(command[1:]) > ENV['m']:
+                TAc.print(LANG.render_feedback("row-index-exceeds-m", f"# Error! In your solution the move ({command}) is not applicable. Indeed: {command[1:]} > {ENV['m']}."), "red", ["bold"])
+                exit(0)
+        else:
+            if int(command[1:]) > ENV['n']:
+                TAc.print(LANG.render_feedback("col-index-exceeds-m", f"# Error! In your solution the move ({command}) is not applicable. Indeed: {command[1:]} > {ENV['m']}."), "red", ["bold"])
+                exit(0)

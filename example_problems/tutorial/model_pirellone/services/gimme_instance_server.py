@@ -56,11 +56,11 @@ except RuntimeError:
 
 # Print Instance
 if ENV['silent']:
-    print(f"{ENV['m']} {ENV['n']}")
-    print(pl.get_str_from_pirellone(instance))
+    # print(f"{ENV['m']} {ENV['n']}")
+    print(pl.pirellone_to_str(instance))
 else:
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("instance", f"{pl.get_str_from_pirellone(instance)}"), "white", ["bold"])
+    TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
     TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
 
 exit(0)

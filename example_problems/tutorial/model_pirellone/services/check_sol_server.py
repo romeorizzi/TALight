@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
-from sys import exit
+
+from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
 import pirellone_lib as pl
+from utils_lang import process_instance, process_user_seq_sol
 
 # METADATA OF THIS TAL_SERVICE:
 problem="model_pirellone"
 service="check_sol"
 args_list = [
-    ('coding',str),
+    ('input_mode',str),
+    ('m',int), 
+    ('n',int),
     ('seed',str),
+    ('sol_style',str),
     ('lang',str),
 ]
 
@@ -19,53 +24,38 @@ ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
-# START CODING YOUR SERVICE: 
-TAc.print(LANG.render_feedback("insert-num-rows", 'Insert the number of rows:'), "yellow", ["bold"])
-m=TALinput(int, 1, TAc=TAc)[0]
-TAc.print(LANG.render_feedback("insert-num-col", 'Insert the number of columns:'), "yellow", ["bold"])
-n=TALinput(int, 1, TAc=TAc)[0]
 
-if ENV['seed']=='random_seed':
-    pirellone, seed=pl.random_pirellone(m, n, seed="random_seed", solvable=True)
+# START CODING YOUR SERVICE:
+# Get pirellone and solution
+(instance, opt_sol) = process_instance(ENV, TAc, LANG)
+# TAc.print(LANG.render_feedback("solution-title", f"{pl.sol_to_str(instance, opt_sol)}"), "green", ["bold"])
+
+# Get user solution
+user_sol = list()
+TAc.print(LANG.render_feedback("usersol-title", "Your solution: "), "yellow", ["reverse"])
+if ENV['sol_style'] == 'seq':
+    TAc.print(LANG.render_feedback("legend-seq", f"(r=row, c=col)"), "white", ["reverse"])
+    user_sol = TALinput(str, regex="^(|(r|R|c|C)[1-9][0-9]*)$", sep=' ', TAc=TAc)
+    process_user_seq_sol(ENV, TAc, LANG, user_sol)
+    if len(user_sol) != len(pl.subset_to_seq(opt_sol)):
+        TAc.NO()
+        TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "red", ["bold"])
+        exit(0)
+    user_sol = pl.seq_to_subset(user_sol, ENV['m'], ENV['n'])
+elif ENV['sol_style'] == 'subset':
+    TAc.print(LANG.render_feedback("legend-subset", f"Insert rows and then columns:\n(FirstLine=rows_switch SecondLine=cols_switch)"), "white", ["reverse"])
+    rows_str = TALinput(str, num_tokens=ENV['m'], regex=f"^(0|1)$", sep=' ', TAc=TAc)
+    cols_str = TALinput(str, num_tokens=ENV['n'], regex=f"^(0|1)$", sep=' ', TAc=TAc)
+    user_sol.append([int(e) for e in list(rows_str)])
+    user_sol.append([int(e) for e in list(cols_str)])
+
+
+# Check the correctness of the user solution
+if pl.are_equiv(user_sol, opt_sol):
+    TAc.OK()
+    TAc.print(LANG.render_feedback('correct', "This sequence turns off all lights."), "green", ["bold"])
 else:
-    pirellone, seed=pl.random_pirellone(m, n, ENV['seed'], solvable=True)
-    
-TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
-pl.print_pirellone(pirellone)
-
-if ENV['coding']=='seq':
-    TAc.print(LANG.render_feedback("sequence-r-c","Sequence of rows and columms: "), "yellow", ["bold"])
-    solu=input()
-    solu=solu.split()
-elif ENV['coding']=='subset':
-    TAc.print(LANG.render_feedback("rows-sol","Rows solution: "), "yellow", ["bold"])
-    rs = TALinput(int, num_tokens=m)
-    TAc.print(LANG.render_feedback("col-sol","Columns solution: "), "yellow", ["bold"])
-    cs = TALinput(int, num_tokens=n)
-    solu=[]
-    for i in range(len(rs)):
-        if rs[i]:
-            solu.append(f'r{i+1}')
-    for j in range(len(cs)):
-        if cs[j]:
-            solu.append(f'c{j+1}')
-
-
-b,solvable=pl.check_off_lights(pirellone,solu,LANG, TAc)
-if b and solvable=='s':
-    TAc.OK()
-    TAc.print(LANG.render_feedback('correct',"This sequence turns off all lights."), "green", ["bold"])
-if b==False and solvable=='s':
     TAc.NO()
-    TAc.print(LANG.render_feedback('not-correct',"This sequence doesn't turn off all lights see what happens using your solution:"), "red", ["bold"])
-    pl.print_pirellone(pirellone)    
+    TAc.print(LANG.render_feedback('not-correct', "This sequence doesn't turn off all lights see what happens using your solution"), "red", ["bold"])
 
-if b and solvable=='n':
-    TAc.OK()
-    TAc.print(LANG.render_feedback('no-more-lights',"You can not turn off more lights."), "green", ["bold"])
-if b==False and solvable=='n':
-    TAc.NO()
-    TAc.print(LANG.render_feedback('do-better',"You can turn off more lights, check it: "), "red", ["bold"])
-    pl.print_pirellone(pirellone)   
-    
 exit(0)

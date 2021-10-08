@@ -30,12 +30,13 @@ def seq_to_subset(seq_sol, m, n):
     """Convert sequence solution (e.g.: ['r2']) into subset solution (e.g.: [[0,1],[0,0]])"""
     if seq_sol == NO_SOL:
         return NO_SOL
+    assert isinstance(seq_sol, list)
     subset_sol = [[0]*m,[0]*n]
     for e in seq_sol:
         if e[0] == 'r':
-            subset_sol[0][int(e[1:])-1] = 1
+            subset_sol[0][int(e[1:])-1] = (1-subset_sol[0][int(e[1:])-1])
         elif e[0] == 'c':
-            subset_sol[1][int(e[1:])-1] = 1
+            subset_sol[1][int(e[1:])-1] = (1-subset_sol[1][int(e[1:])-1])
         else:
             raise RuntimeError(f'This seq_sol is bad written: {seq_sol}')
     return subset_sol
@@ -49,7 +50,27 @@ def seq_to_str(seq_sol):
     return ' '.join(seq_sol)
 
 
-def subset_to_str(subset_sol):
+def sol_to_str(pirellone, subset_sol):
+    """Print the pirellone instance with the rows and cols to be switches"""
+    m = len(pirellone)
+    n = len(pirellone[0])
+    if subset_sol == NO_SOL:
+        sol_str =  f'    {"? " * n}'
+        sol_str = sol_str[:-1] + '\n'
+        sol_str += f'    {"-" * ((m*2)-1)}\n'
+        for i in range(m):
+            sol_str += f'? | '
+            sol_str += ' '.join(str(e) for e in pirellone[i]) + '\n'
+    else:
+        sol_str = '    ' + ' '.join(str(e) for e in subset_sol[1]) + '\n'
+        sol_str += f'    {"-" * (len(subset_sol[1]*2)-1)}\n'
+        for i in range(m):
+            sol_str += f'{subset_sol[0][i]} | '
+            sol_str += ' '.join(str(e) for e in pirellone[i]) + '\n'
+    return sol_str[:-1]
+
+
+def subset_to_str_list(subset_sol):
     """From a subset solution (e.g.: [[0,1],[0,0]]) returns a list with the rows string and the columns string (e.g.: ['0 1', '0 0']) or NO_SOL"""
     if subset_sol == NO_SOL:
         return NO_SOL
@@ -188,11 +209,12 @@ def is_solvable(pirellone):
     return True
 
 
-def get_padded_sol_seq(m, n, sol, pad_size):
-    """From a solution and (m,n), this functions returns a solution longer than at least pad_size."""
-    if sol == NO_SOL:
+def get_padded_sol(m, n, seq_sol, pad_size):
+    """From (m,n) and a sequence solution (e.g.: ['r2']), this functions returns a solution longer than at least pad_size."""
+    if seq_sol == NO_SOL:
         return NO_SOL
-    padded_sol = sol.copy()
+    assert isinstance(seq_sol, list) and all(isinstance(e, str) for e in seq_sol)
+    padded_sol = seq_sol.copy()
     diff = pad_size
     turn = 0
     while diff > 0:
@@ -207,22 +229,6 @@ def get_padded_sol_seq(m, n, sol, pad_size):
         turn = (turn + 1) % 2
         diff -= 2
     random.shuffle(padded_sol)
-    return padded_sol
-
-
-#TODO: to be tested
-def get_padded_sol_subset(m, n, sol, pad_size):
-    """From a solution and (m,n), this functions returns a solution longer than at least pad_size."""
-    if sol == NO_SOL:
-        return NO_SOL
-    padded_sol = sol.copy()
-    small_dim = m if m < n else n
-    diff = pad_size
-    while diff > 0:
-        index = random.randrange[0, small_dim]
-        padded_sol[0][index] = (1 - padded_sol[0][index]) #switch row
-        padded_sol[1][index] = (1 - padded_sol[0][index]) #switch col
-        diff -= 2
     return padded_sol
 
 
@@ -343,6 +349,8 @@ if __name__ == "__main__":
 
     print('Test: seq_to_subset()')
     assert seq_to_subset(['r3', 'c2'], 4, 4) == [[0, 0, 1, 0], [0, 1, 0, 0]]
+    print(seq_to_subset(['r1', 'c2', 'c2'], 3, 3))
+    assert seq_to_subset(['r1', 'c2', 'c2'], 3, 3) == [[1, 0, 0], [0, 0, 0]]
     assert seq_to_subset(NO_SOL, 4, 4) == NO_SOL
     print('==> OK\n')
 
@@ -353,9 +361,24 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
-    print('Test: subset_to_str()')
-    assert subset_to_str([[0, 0, 1], [0, 1, 0]]) == ['0 0 1', '0 1 0']
-    assert subset_to_str(NO_SOL) == NO_SOL
+    print('Test: sol_to_str()')
+    assert sol_to_str([[0, 0], [1, 1]], [[0, 1], [0, 0]]) == \
+        "    0 0\n" + \
+        "    ---\n" + \
+        "0 | 0 0\n" + \
+        "1 | 1 1"
+    print(sol_to_str([[0, 0], [0, 1]], NO_SOL))
+    assert sol_to_str([[0, 0], [0, 1]], NO_SOL) == \
+        "    ? ?\n" + \
+        "    ---\n" + \
+        "? | 0 0\n" + \
+        "? | 0 1"
+    print('==> OK\n')
+
+
+    print('Test: subset_to_str_list()')
+    assert subset_to_str_list([[0, 0, 1], [0, 1, 0]]) == ['0 0 1', '0 1 0']
+    assert subset_to_str_list(NO_SOL) == NO_SOL
     print('==> OK\n')
 
 
@@ -458,11 +481,6 @@ if __name__ == "__main__":
 
 
     print('Test: get_padded_sol_seq()')
-    print('FOR DEFINITION')
-    print('==> OK\n')
-
-
-    print('Test: get_padded_sol_subset()')
     print('FOR DEFINITION')
     print('==> OK\n')
 

@@ -6,7 +6,7 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
 import pirellone_lib as pl
-from utils_lang import process_inputs
+from utils_lang import process_instance, process_user_seq_sol
 
 # METADATA OF THIS TAL_SERVICE:
 problem="model_pirellone"
@@ -27,19 +27,18 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 # Get pirellone and solution
-(instance, opt_sol) = process_inputs(ENV, TAc, LANG)
-# TAc.print(LANG.render_feedback("spoiler", f"{pl.get_str_from_sol(opt_sol)}"), "green", ["bold"])
+(instance, opt_sol) = process_instance(ENV, TAc, LANG)
+# TAc.print(LANG.render_feedback("spoiler", f"{pl.subset_to_str(opt_sol)}"), "green", ["bold"])
 
 # Get long solution
-padded_sol = pl.get_padded_sol(ENV['m'], ENV['n'], opt_sol, pad_size=6)
+padded_sol = pl.get_padded_sol(ENV['m'], ENV['n'], pl.subset_to_seq(opt_sol), pad_size=6)
 TAc.print(LANG.render_feedback("paddedsol-title", "Too long solution: (r=row, c=col)"), "yellow", ["reverse"])
-TAc.print(LANG.render_feedback("paddedsol", f"{pl.get_str_from_sol(padded_sol)}"), "white", ["reverse"])
+TAc.print(LANG.render_feedback("paddedsol", f"{pl.seq_to_str(padded_sol)}"), "white", ["reverse"])
 
 # Get User solution
 TAc.print(LANG.render_feedback("usersol-title", "Your short solution: "), "yellow", ["reverse"])
-user_sol = TALinput(str, regex="^|[a-zA-Z][0-9]+$", sep=' ', TAc=TAc)
-if user_sol == ['']:    # To manage the case 'zero moves'
-    user_sol.clear()
+user_sol = TALinput(str, regex="^(|(r|R|c|C)[1-9][0-9]*)$", sep=' ', TAc=TAc)
+process_user_seq_sol(ENV, TAc, LANG, user_sol)
 
 # Get Goal
 if ENV['goal'] == "m_plus_n":
@@ -49,20 +48,10 @@ elif ENV['goal'] == "m_plus_n_half":
 elif ENV['goal'] == "min":
     len_goal = len(opt_sol)
 
+
 # Check user solution
-try:
-    is_correct = pl.check_off_lights(instance, user_sol, opt_sol)
-except RuntimeError as err:
-    name = err.args[0]
-    if name == 'invalid-cmd':
-        TAc.print(LANG.render_feedback("invalid-cmd", f'# Error! ({err.args[1]}) is a invalid command.\nThe only command available are:\n- (rI) with 1 < I < m.\n- (cJ) with 1 < J < n.'), "red", ["bold"])
-    elif name == 'row-index-exceeds-m':
-        TAc.print(LANG.render_feedback("row-index-exceeds-m", f'# Error! In your solution the move ({err.args[1]}) is not applicable. Indeed: {err.args[2]} > {err.args[3]}.'), "red", ["bold"])
-    elif name == 'row-index-exceeds-m':
-        TAc.print(LANG.render_feedback("col-index-exceeds-m", f'# Error! In your solution the move ({err.args[1]}) is not applicable. Indeed: {err.args[2]} > {err.args[3]}.'), "red", ["bold"])
-    else:
-        TAc.print(LANG.render_feedback("error", f'# Error! {err}'), "red", ["bold"])
-    exit(0)
+user_sol_subset = pl.seq_to_subset(user_sol, ENV['m'], ENV['n'])
+is_correct = (pl.get_light_on_after(instance, user_sol_subset) == 0)
 
 if not is_correct:
     TAc.NO()
