@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 import random
+import math
 
 # PER MODALITA' LAZY, GENERIAMO UN TRIANGOLO CASUALE DI n RIGHE
 
-def random_triangle(n,s):
+def random_triangle(n,m,M,s):
 	random.seed(s,version=2)
-	values = [random.randrange(1, 99) for _ in range(0, 2**n-1)]
+	values = [random.randrange(m, M) for _ in range(0, sum(range(n+1)))]
 	return values
 
-# STAMPIAMO IL TRIANGOLO SUL TERMINALE
+# STAMPIAMO IL TRIANGOLO SUL TERMINALE       0,1,2,3,4,5
 
 def print_triangle(n,triangle_array):
 	for i in range(len(triangle_array)):
 		if len(str(triangle_array[i])) == 1:
-			triangle_array[i] = str(t[i]) + " "
+			triangle_array[i] = str(triangle_array[i]) + " "
 	z = 0
 	m = (2 * n) - 2
 	for i in range(0, n):
@@ -24,6 +25,20 @@ def print_triangle(n,triangle_array):
 		    print(triangle_array[z], end='  ')
 		    z += 1
 		print("  ")
+		
+def calculate_path(n,triangle,path_values):
+	path = [triangle[0]]
+	s = int(triangle[0])
+	print(s)
+	for i in range(1,n):
+		if path_values[i] == "L":
+			path.append(triangle[i+1])
+			s += int(triangle[i+1])
+		else:
+			path.append(triangle[i+2])
+			s += int(triangle[i+2])
+	return path,s
+			
 '''		
 def recognize(treatement, TAc, LANG, yield_feedback=True):
     assert type(treatement)==str
