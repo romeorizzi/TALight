@@ -5,35 +5,73 @@ import re
 from sys import exit
 
 
+# CONSTANTS:
+NO_SOL = 'NO SOLUTION'
+
+
+# CONVERTERS FUNCTIONS:
+def subset_to_seq(subset_sol):
+    """Convert subset solution (e.g.: [[0,1],[0,0]]) into sequence solution (e.g.: ['r2'])"""
+    if subset_sol == NO_SOL:
+        return NO_SOL
+    m = len(subset_sol[0])
+    n = len(subset_sol[1])
+    seq_sol = list()
+    for i in range(m):
+        if subset_sol[0][i]:
+            seq_sol.append(f"r{i+1}")
+    for j in range(n):
+        if subset_sol[1][j]:
+            seq_sol.append(f"c{j+1}")
+    return seq_sol
+
+
+def seq_to_subset(seq_sol, m, n):
+    """Convert sequence solution (e.g.: ['r2']) into subset solution (e.g.: [[0,1],[0,0]])"""
+    if seq_sol == NO_SOL:
+        return NO_SOL
+    subset_sol = [[0]*m,[0]*n]
+    for e in seq_sol:
+        if e[0] == 'r':
+            subset_sol[0][int(e[1:])-1] = 1
+        elif e[0] == 'c':
+            subset_sol[1][int(e[1:])-1] = 1
+        else:
+            raise RuntimeError(f'This seq_sol is bad written: {seq_sol}')
+    return subset_sol
+
+
+# TO_STRING and FROM_STRING FUNCTIONS:
+def seq_to_str(seq_sol):
+    """From a sequence solution (e.g.: ['r2']) returns its string form (e.g.: 'r2')"""
+    if seq_sol == NO_SOL:
+        return NO_SOL
+    return ' '.join(seq_sol)
+
+
+def subset_to_str(subset_sol):
+    """From a subset solution (e.g.: [[0,1],[0,0]]) returns a list with the rows string and the columns string (e.g.: ['0 1', '0 0']) or NO_SOL"""
+    if subset_sol == NO_SOL:
+        return NO_SOL
+    return [' '.join([str(e) for e in subset_sol[0]]), \
+            ' '.join([str(e) for e in subset_sol[1]])]
+
 
 def get_pirellone_from_str(str):
     """From a string, this function returns a pirellone instance in list form."""
-    l = list()
+    pirellone = list()
     rows = str.split('\n')
     for cols in rows:
-        l.append(cols.split())
-    return l
+        pirellone.append([int(e) for e in cols.split()])
+    return pirellone
 
 
-def get_str_from_pirellone(pirellone):
+def pirellone_to_str(pirellone):
     """From a pirellone instance, this function returns its string rappresentation."""
     return '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
 
 
-def get_str_from_sol(sol):
-    """From a solution, this function returns its string rappresentaion."""
-    if type(e) == str and "NO SOLUTION" in e:
-        return "NO SOLUTION"
-    # CASE1: solution in style='seq' i.e.: [r1, c2, r10]
-    if all(not isinstance(e, list) for e in sol):
-        return ' '.join(sol)
-    # CASE2: solution in style='subset' i.e.: [[1, 0], [1, 0]]
-    else:
-        return ' '.join([str(int) for int in sol[0]]) + \
-               ', ' + \
-               ' '.join([str(int) for int in sol[1]])
-
-        
+# PIRELLLONE GENERATORS FUNCTIONS:
 def is_solvable_seed(seed):
     """If this seed is associated to a solvable pirellone instance return True, False otherwise."""
     # We reserve those seed divisible by 3 to the NOT solvable instances
@@ -82,6 +120,60 @@ def gen_pirellone(m, n, seed, with_yes_certificate=False):
         return pirellone
 
 
+# GET_SOL FUNCTIONS:
+# TODO: manage NO_SOL case
+def get_opt_sol_from(switches_row, switches_col):
+    """Returns the optimal solution of solvable pirellone in the specificated style.
+    Note: for unsolvable instances is not guaranteed optimality."""
+    m = len(switches_row)
+    n = len(switches_col)
+    num_one = sum(switches_col) + sum(switches_row)
+    if num_one > (m + n - num_one):
+        switches_row = [ 1-val for val in switches_row]
+        switches_col = [ 1-val for val in switches_col]
+    return [switches_row, switches_col]
+
+
+# TODO: manage NO_SOL case
+def get_opt_sol(pirellone):
+    """Returns the optimal solution of solvable pirellone.
+    Note: for unsolvable instances is not guaranteed optimality."""
+    switches_col = pirellone[0].copy()
+    m = len(pirellone)
+    n = len(switches_col)
+    if switches_col[0]:
+        switches_row = [1-pirellone[_][0] for _ in range(m)]
+    else:
+        switches_row = [pirellone[_][0] for _ in range(m)]
+    if sum(switches_row) + sum(switches_col) > ((m + n) // 2):
+        switches_row = [1-switches_row[_] for _ in range(m)]
+        switches_col = [1-switches_col[_] for _ in range(n)]
+    return [switches_row, switches_col]
+
+
+# UTILITIES FUNCTIONS:
+def switch_row(i, pirellone):
+    """It switch the lights of i-row of the given pirellone instance."""
+    for j in range(len(pirellone[0])):
+        pirellone[i][j] = int(not pirellone[i][j])
+
+
+def switch_col(j, pirellone):
+    """It switch the lights of i-col of the given pirellone instance."""
+    for i in range(len(pirellone)):
+        pirellone[i][j] = int(not pirellone[i][j])
+
+
+def are_equiv(sol1, sol2):
+    """Return True if two solutions are strictly equivalent."""
+    if sol1 == sol2:
+        return True
+    if sol1 == NO_SOL or sol2 == NO_SOL:
+        return False
+    # Check complement
+    return [[1-e for e in sol1[0]], [1-e for e in sol1[1]]] == sol2
+
+
 def is_solvable(pirellone):
     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
     for i in range(len(pirellone)):
@@ -96,8 +188,10 @@ def is_solvable(pirellone):
     return True
 
 
-def get_padded_sol(m, n, sol, pad_size):
+def get_padded_sol_seq(m, n, sol, pad_size):
     """From a solution and (m,n), this functions returns a solution longer than at least pad_size."""
+    if sol == NO_SOL:
+        return NO_SOL
     padded_sol = sol.copy()
     diff = pad_size
     turn = 0
@@ -116,99 +210,74 @@ def get_padded_sol(m, n, sol, pad_size):
     return padded_sol
 
 
-def switch_row(i, pirellone):
-    """It switch the lights of i-row of the given pirellone instance."""
-    for j in range(len(pirellone[0])):
-        pirellone[i][j] = int(not pirellone[i][j])
+#TODO: to be tested
+def get_padded_sol_subset(m, n, sol, pad_size):
+    """From a solution and (m,n), this functions returns a solution longer than at least pad_size."""
+    if sol == NO_SOL:
+        return NO_SOL
+    padded_sol = sol.copy()
+    small_dim = m if m < n else n
+    diff = pad_size
+    while diff > 0:
+        index = random.randrange[0, small_dim]
+        padded_sol[0][index] = (1 - padded_sol[0][index]) #switch row
+        padded_sol[1][index] = (1 - padded_sol[0][index]) #switch col
+        diff -= 2
+    return padded_sol
 
 
-def switch_col(j, pirellone):
-    """It switch the lights of i-col of the given pirellone instance."""
-    for i in range(len(pirellone)):
-        pirellone[i][j] = int(not pirellone[i][j])
-
-
-def get_list_sol(switches_row, switches_col, style='seq'):
-    """From the raw solution of get_sol() and get_sol_from(), this function returns the solution in list form."""
-    assert style == 'seq' or style == 'subset'
-    m = len(switches_row)
-    n = len(switches_col)
-    if style == 'seq':
-        sol = list()
-        for i in range(m):
-            if switches_row[i]:
-                sol.append(f"r{i+1}")
-        for j in range(n):
-            if switches_col[j]:
-                sol.append(f"c{j+1}")
-        return sol
-    else:
-        return [switches_row, switches_col]
-
-
-def get_sol_from(switches_row, switches_col, sol_style='seq'):
-    """Returns the optimal solution of solvable pirellone in the specificated style.
-    Note: for unsolvable instances is not guaranteed optimality."""
-    m = len(switches_row)
-    n = len(switches_col)
-    num_one = sum(switches_col) + sum(switches_row)
-    if num_one > (m + n - num_one):
-        switches_row = [ 1-val for val in switches_row]
-        switches_col = [ 1-val for val in switches_col]
-    return get_list_sol(switches_row, switches_col, sol_style)
-
-
-def get_sol(pirellone, sol_style='seq'):
-    """Returns the optimal solution of solvable pirellone in the specificated style.
-    Note: for unsolvable instances is not guaranteed optimality."""
-    switches_col = pirellone[0].copy()
-    m = len(pirellone)
-    n = len(switches_col)
-    if switches_col[0]:
-        switches_row = [ 1-pirellone[_][0] for _ in range(m)]
-    else:
-        switches_row = [ pirellone[_][0] for _ in range(m)]
-    if sum(switches_row) + sum(switches_col) > ((m + n) // 2):
-        switches_row = [ 1-switches_row[_] for _ in range(m)]
-        switches_col = [ 1-switches_col[_] for _ in range(n)]
-    return get_list_sol(switches_row, switches_col, sol_style)
-  
-
+# CHECK_LIGHTS FUNCTIONS:
 def get_light_on_after(pirellone, sol):
     """This function applies on pirellone instance the specified solution and then it counts lighs-on"""
+    if sol == NO_SOL:
+        return None
     m = len(pirellone)
     n = len(pirellone[0])
-    # Use solution for testing
+    assert len(sol[0]) == m
+    assert len(sol[1]) == n
+    # Perform solution
     pirellone_after = copy.deepcopy(pirellone)
-    for i in range(0, len(sol)):
-        if not sol[i][1:].isdigit():
-            raise RuntimeError('invalid-cmd', sol[i])
-        if sol[i][0]=='r':
-            if int(sol[i][1:]) > m:
-                raise RuntimeError('row-index-exceeds-m', sol[i], sol[i][1:], m)
-            switch_row(int(sol[i][1:])-1, pirellone_after)
-        elif sol[i][0]=='c':
-            if int(sol[i][1:]) > n:
-                raise RuntimeError('row-index-exceeds-m', sol[i], sol[i][1:], n)
-            switch_col(int(sol[i][1:])-1, pirellone_after)
-        else:
-            raise RuntimeError('invalid-cmd', sol[i])
+    for i in range(m):
+        if sol[0][i] == 1:
+            switch_row(i, pirellone_after)
+    for j in range(n):
+        if sol[1][j] == 1:
+            switch_col(j, pirellone_after)
     # Check the results obtained
     lights = 0
-    for i in range(len(pirellone_after)):
-        lights += sum(pirellone_after[i])
+    for cols in range(len(pirellone_after)):
+        lights += sum(pirellone_after[cols])
     return lights
 
 
-def check_off_lights(pirellone, sol_to_test, opt_sol):
-    """This function returns True if the solution to be tested turns off the maximum number of lights. Note: for solvable instance the lights-on will be 0."""
-    # Get light on after sol_to_test
-    lights = get_light_on_after(pirellone, sol_to_test)
-    # Get the min lights on with this pirellone
-    min_lights = get_light_on_after(pirellone, opt_sol)
-    return lights == min_lights
+#NOTE: da problemi quando il pirellone ha una diagonale di 1
+def get_min_lights_on(pirellone):
+    """Return the minimum number of lights that must be turn off manually"""
+    test = copy.deepcopy(pirellone)
+    s = 0
+    h = 1
+    k = 1
+    while h != 0 or k != 0:
+        h = 0
+        k = 0
+        for i in range(len(test)):
+            if sum(test[i]) > (len(test) - sum(test[i])):
+                switch_row(i, test)
+                h += 1      
+        for j in range(len(test[0])):
+            for i in range(len(test)):
+                s += test[i][j]
+            if s > (len(test[0]) - s):
+                switch_col(j, test)
+                k += 1
+            s = 0   
+    light = 0
+    for i in range(len(test)):
+        light += sum(test[i]) 
+    return light
 
 
+##################################################
 #NOTE: ancora da controllare
 def extract_sol(line, m, n, LANG, TAc):
     matched = re.match("^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$", line)
@@ -261,95 +330,179 @@ def solution_irredundant(pirellone,switches_row,switches_col,smallest=True):
     return lista
 
 
-#NOTE: da problemi quando il pirellone ha una diagonale di 1
-def get_min_lights_on(pirellone):
-    """Return the minimum number of lights that must be turn off manually"""
-    test = copy.deepcopy(pirellone)
-    s = 0
-    h = 1
-    k = 1
-    while h != 0 or k != 0:
-        h = 0
-        k = 0
-        for i in range(len(test)):
-            if sum(test[i]) > (len(test) - sum(test[i])):
-                switch_row(i, test)
-                h += 1      
-        for j in range(len(test[0])):
-            for i in range(len(test)):
-                s += test[i][j]
-            if s > (len(test[0]) - s):
-                switch_col(j, test)
-                k += 1
-            s = 0   
-    light = 0
-    for i in range(len(test)):
-        light += sum(test[i]) 
-    return light
-
 
 
 # TESTS
 if __name__ == "__main__":
 
-    print('Test: is_solvable()')
+    print('Test: subset_to_seq()')
+    assert subset_to_seq([[0, 0, 1], [0, 1, 0]]) == ['r3', 'c2']
+    assert subset_to_seq(NO_SOL) == NO_SOL
+    print('==> OK\n')
+
+
+    print('Test: seq_to_subset()')
+    assert seq_to_subset(['r3', 'c2'], 4, 4) == [[0, 0, 1, 0], [0, 1, 0, 0]]
+    assert seq_to_subset(NO_SOL, 4, 4) == NO_SOL
+    print('==> OK\n')
+
+
+    print('Test: seq_to_str()')
+    assert seq_to_str(['r3', 'c2']) == 'r3 c2'
+    assert seq_to_str(NO_SOL) == NO_SOL
+    print('==> OK\n')
+
+
+    print('Test: subset_to_str()')
+    assert subset_to_str([[0, 0, 1], [0, 1, 0]]) == ['0 0 1', '0 1 0']
+    assert subset_to_str(NO_SOL) == NO_SOL
+    print('==> OK\n')
+
+
+    print('Test: pirellone_to_str()')
+    assert pirellone_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
+    print('==> OK\n')
+
+
+    print('Test: get_pirellone_from_str()')
+    assert get_pirellone_from_str('0 0\n1 1') == [[0, 0], [1, 1]]
+    print('==> OK\n')
+
+
+    print('Test: is_solvable_seed()')
+    print('FOR DEFINITION')
+    print('==> OK\n')
+
+
+    print('Test: gen_pirellone_seed()')
+    print('FOR DEFINITION')
+    print('==> OK\n')
+
+
+    print('Test: gen_pirellone()')
+    print('MAYBE TODO?')
+    print('==> OK\n')
+
+
+    print('Test: get_opt_sol_from()')
+    print('MAYBE TODO?')
+    print('==> OK\n')
+
+
+    print('Test: get_opt_sol() in solvable instances')
+    assert get_opt_sol([[0, 0], [0, 0]]) == [[0, 0],[0, 0]]
+    assert get_opt_sol([[0, 0], [1, 1]]) == [[0, 1],[0, 0]]
+    assert get_opt_sol([[0, 1], [0, 1]]) == [[0, 0],[0, 1]]
+    assert get_opt_sol([[0, 1], [1, 0]]) in [[[1, 0],[1, 0]],
+                                             [[0, 1],[0, 1]]]
+    assert get_opt_sol([[1, 0], [0, 1]]) in [[[1, 0],[0, 1]],
+                                             [[0, 1],[1, 0]]]
+    assert get_opt_sol([[1, 0], [1, 0]]) == [[0, 0],[1, 0]]
+    assert get_opt_sol([[1, 1], [0, 0]]) == [[1, 0],[0, 0]]
+    assert get_opt_sol([[1, 1], [1, 1]]) in [[[1, 1],[0, 0]],
+                                             [[0, 0],[1, 1]]]
+    print('Test: get_opt_sol() in NOT solvable instances')
+    print('THIS BEHAVIOR HAS YET TO BE IMPLEMENTATED')
+    # assert get_opt_sol([[0, 0], [0, 1]]) == NO_SOL
+    # assert get_opt_sol([[0, 0], [1, 0]]) == NO_SOL
+    # assert get_opt_sol([[0, 1], [0, 0]]) == NO_SOL
+    # assert get_opt_sol([[0, 1], [1, 1]]) == NO_SOL
+    # assert get_opt_sol([[1, 0], [0, 0]]) == NO_SOL
+    # assert get_opt_sol([[1, 0], [1, 1]]) == NO_SOL
+    # assert get_opt_sol([[1, 1], [0, 1]]) == NO_SOL
+    # assert get_opt_sol([[1, 1], [1, 0]]) == NO_SOL
+    print('==> OK\n')
+
+
+    print('Test: switch_row()')
+    print('FOR DEFINITION')
+    print('==> OK\n')
+
+
+    print('Test: switch_col()')
+    print('FOR DEFINITION')
+    print('==> OK\n')
+
+
+    print('Test: are_equiv()')
+    assert are_equiv([[0, 0], [0, 1]], [[0, 0], [0, 1]])
+    assert are_equiv(NO_SOL, NO_SOL)
+    assert are_equiv([[0, 0], [0, 1]], [[1, 1], [1, 0]])
+    assert are_equiv([[1, 0], [0, 1]], [[0, 1], [1, 0]])
+    assert not are_equiv([[0, 0], [0, 1]], NO_SOL)
+    assert not are_equiv(NO_SOL, [[0, 0], [0, 1]])
+    assert not are_equiv([[0, 0], [0, 1]], [[0, 0], [1, 0]])
+    print('==> OK\n')
+
+
+    print('Test: is_solvable() in solvable instances')
     assert is_solvable([[0, 0], [0, 0]])
-    assert not is_solvable([[0, 0], [0, 1]])
-    assert not is_solvable([[0, 0], [1, 0]])
     assert is_solvable([[0, 0], [1, 1]])
-    assert not is_solvable([[0, 1], [0, 0]])
     assert is_solvable([[0, 1], [0, 1]])
     assert is_solvable([[0, 1], [1, 0]])
-    assert not is_solvable([[0, 1], [1, 1]])
-    assert not is_solvable([[1, 0], [0, 0]])
     assert is_solvable([[1, 0], [0, 1]])
     assert is_solvable([[1, 0], [1, 0]])
-    assert not is_solvable([[1, 0], [1, 1]])
     assert is_solvable([[1, 1], [0, 0]])
+    assert is_solvable([[1, 1], [1, 1]])
+    print('==> OK\n')
+    print('Test: is_solvable() in NOT solvable instances')
+    assert not is_solvable([[0, 0], [0, 1]])
+    assert not is_solvable([[0, 0], [1, 0]])
+    assert not is_solvable([[0, 1], [0, 0]])
+    assert not is_solvable([[0, 1], [1, 1]])
+    assert not is_solvable([[1, 0], [0, 0]])
+    assert not is_solvable([[1, 0], [1, 1]])
     assert not is_solvable([[1, 1], [0, 1]])
     assert not is_solvable([[1, 1], [1, 0]])
-    assert is_solvable([[1, 1], [1, 1]])
-    print('==> OK')
+    print('==> OK\n')
 
 
-    # print('Test: get_min_lights_on()')
+    print('Test: get_padded_sol_seq()')
+    print('FOR DEFINITION')
+    print('==> OK\n')
+
+
+    print('Test: get_padded_sol_subset()')
+    print('FOR DEFINITION')
+    print('==> OK\n')
+
+
+    print('Test: get_light_on_after() in solvable instances')
+    assert get_light_on_after([[0, 0], [0, 0]], get_opt_sol([[0, 0], [0, 0]])) == 0
+    assert get_light_on_after([[0, 0], [1, 1]], get_opt_sol([[0, 0], [1, 1]])) == 0
+    assert get_light_on_after([[0, 1], [0, 1]], get_opt_sol([[0, 1], [0, 1]])) == 0
+    assert get_light_on_after([[0, 1], [1, 0]], get_opt_sol([[0, 1], [1, 0]])) == 0
+    assert get_light_on_after([[1, 0], [0, 1]], get_opt_sol([[1, 0], [0, 1]])) == 0
+    assert get_light_on_after([[1, 0], [1, 0]], get_opt_sol([[1, 0], [1, 0]])) == 0
+    assert get_light_on_after([[1, 1], [0, 0]], get_opt_sol([[1, 1], [0, 0]])) == 0
+    assert get_light_on_after([[1, 1], [1, 1]], get_opt_sol([[1, 1], [1, 1]])) == 0
+    assert get_light_on_after([[1, 1], [1, 1]], [[0, 0], [0, 0]]) == 4
+    assert get_light_on_after([[1, 1], [1, 1]], [[1, 0], [0, 0]]) == 2
+    assert get_light_on_after([[1, 1], [1, 1]], [[1, 1], [0, 0]]) == 0
+    print('==> OK\n')
+    print('Test: check_off_lights() in NOT solvable instances')
+    assert not get_light_on_after([[0, 0], [0, 1]], get_opt_sol([[0, 0], [0, 1]])) == None
+    assert not get_light_on_after([[0, 0], [1, 0]], get_opt_sol([[0, 0], [1, 0]])) == None
+    assert not get_light_on_after([[0, 1], [0, 0]], get_opt_sol([[0, 1], [0, 0]])) == None
+    assert not get_light_on_after([[0, 1], [1, 1]], get_opt_sol([[0, 1], [1, 1]])) == None
+    assert not get_light_on_after([[1, 0], [0, 0]], get_opt_sol([[1, 0], [0, 0]])) == None
+    assert not get_light_on_after([[1, 0], [1, 1]], get_opt_sol([[1, 0], [1, 1]])) == None
+    assert not get_light_on_after([[1, 1], [0, 1]], get_opt_sol([[1, 1], [0, 1]])) == None
+    assert not get_light_on_after([[1, 1], [1, 0]], get_opt_sol([[1, 1], [1, 0]])) == None
+
+
+    print('Test: get_min_lights_on() in solvable instances')
     # assert get_min_lights_on([[0, 0], [0, 0]]) == 0
-    # assert get_min_lights_on([[0, 0], [0, 1]]) == 1
-    # assert get_min_lights_on([[0, 0], [1, 0]]) == 1
     # assert get_min_lights_on([[0, 0], [1, 1]]) == 0
-    # assert get_min_lights_on([[0, 1], [0, 0]]) == 1
     # assert get_min_lights_on([[0, 1], [0, 1]]) == 0
     # assert get_min_lights_on([[0, 1], [1, 0]]) == 0
-    # assert get_min_lights_on([[0, 1], [1, 1]]) == 1
-    # assert get_min_lights_on([[1, 0], [0, 0]]) == 1
     # assert get_min_lights_on([[1, 0], [0, 1]]) == 0
     # assert get_min_lights_on([[1, 0], [1, 0]]) == 0
-    # assert get_min_lights_on([[1, 0], [1, 1]]) == 1
     # assert get_min_lights_on([[1, 1], [0, 0]]) == 0
-    # assert get_min_lights_on([[1, 1], [0, 1]]) == 1
-    # assert get_min_lights_on([[1, 1], [1, 0]]) == 1
     # assert get_min_lights_on([[1, 1], [1, 1]]) == 0
-    # print('==> OK')
+    print('THIS BEHAVIOR HAS YET TO BE IMPLEMENTATED')
+    print('==> OK\n')
+    print('Test: get_min_lights_on() in NOT solvable instances')
+    print('THIS BEHAVIOR HAS YET TO BE IMPLEMENTATED')
+    print('==> OK\n')
 
-
-    print('Test: len(get_sol()) for solvable Instance')
-    assert len(get_sol([[0, 0], [0, 0]])) == 0
-    assert len(get_sol([[0, 0], [0, 1]])) == 0
-    assert len(get_sol([[0, 0], [1, 1]])) == 1
-    assert len(get_sol([[0, 1], [0, 1]])) == 1
-    assert len(get_sol([[0, 1], [1, 0]])) == 2
-    assert len(get_sol([[1, 0], [0, 1]])) == 2
-    assert len(get_sol([[1, 0], [1, 0]])) == 1
-    assert len(get_sol([[1, 0], [1, 1]])) == 1
-    assert len(get_sol([[1, 1], [0, 0]])) == 1
-    assert len(get_sol([[1, 1], [0, 1]])) == 1
-    assert len(get_sol([[1, 1], [1, 1]])) == 2
-    print('==> OK')
-
-    # print('Test: len(get_sol()) for unsolvable Instance')
-    # assert len(get_sol([[1, 1], [1, 0]])) == 1
-    # assert len(get_sol([[0, 0], [1, 0]])) == 0
-    # assert len(get_sol([[0, 1], [0, 0]])) == 0
-    # assert len(get_sol([[0, 1], [1, 1]])) == 1
-    # assert len(get_sol([[1, 0], [0, 0]])) == 0
-    # print('==> OK')
