@@ -3,7 +3,7 @@
 public_folder: public
 services:
   verify_tiling:
-    description: Provide this service with a pair (m, n) and a labeling of the m x n grid with symbols from the alphabet [N,E,S,W,0,1,2,3,4]. The service checks that your labeling correctly encodes a packing of L-shaped trominos in the mxn grid. A tromino is any 3 adjacent squares in the plane grid (see https://en.wikipedia.org/wiki/Tromino). The 5 possible labelings for m=n=2 are contained in the files `examples/2x2_*.txt`. In particular, `2x2_empty.txt` is the empty packing placing no tile on the `2,2-board`, while each `2x2_L*.txt` file packs precisely one L-shaped tromino and corresponds to one of the 4 possible orientations of this piece.
+    description: Provide this service with a pair (m, n) and a labeling of the m x n grid with symbols from the alphabet [N,E,S,W,0,1,2,3,4]. The service checks that your labeling correctly encodes a packing of L-shaped trominos in the mxn grid. A tromino is any 3 adjacent squares in the plane grid (see https://en.wikipedia.org/wiki/Tromino). The 5 possible labelings for m=n=2 are contained in the files `examples/2x2_*.txt`. In particular, `2x2_empty.txt` is the empty packing placing no tile on the `2x2-board`, while each `2x2_L*.txt` file packs precisely one L-shaped tromino and corresponds to one of the 4 possible orientations of this piece.
     evaluator: [python,services/verify_tiling_server.py]
     args:
       m:
@@ -17,9 +17,9 @@ services:
       loading:
         regex: ^(from_terminal|from_file|from_file_silent)$
         explain: the options are as follows
-        explain1: -from_terminal= manage the input with direct immission (possibly with copy and paste).
-        explain2: -from_file= use the bot TA_transfer_files_bot.py to load your file with the tiling. See the file yyy for an example of such a file (note that the number of rows and columns should be on the first line of the file).
-        explain3: -from_file_silent= like the above, but if nothing is wrong with your tiling then the service runs silently; otherwise it explains what is the problem in clear.
+        explain1: -from_terminal = manage the input with direct immission (possibly with copy and paste).
+        explain2: -from_file = use the bot TA_send_files_bot.py to load your file with the tiling. See the file `verify_tiling.txt` for an example of such a file (note that the number of rows and columns should be on the first line of the file).
+        explain3: -from_file_silent = like the above, but if nothing is wrong with your tiling then the service runs silently; otherwise it explains what is the problem in clear.
         default: from_terminal
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
