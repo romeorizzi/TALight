@@ -151,18 +151,17 @@ services:
         default: it
   
   try_GMPL_model:
-    description: "Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service will apply your model to your instance and then use the glpsol engine to find out a solution following your instructions. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect try_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py mod=path_to_model_file_dir/your_pirellone.mod dat=path_to_instance_file_dir/your_pirellone.dat."
+    description: "Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service will apply your model to your instance and then use the glpsol engine to find out a solution following your instructions. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect try_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py mod=path_to_model_file_dir/your_pirellone.mod dat=path_to_instance_file_dir/your_pirellone.dat input=path_to_input_file/inputs.txt"
     evaluator: [python, services/try_GMPL_model_server.py]
     args:
-      glpsol_stdout_to:
-        regex: ^(terminal|.*)$
-        default: terminal
-      glpsol_stderr_to:
-        regex: ^(terminal|.*)$
-        default: terminal
-      glpsol_output.txt_to:
-        regex: ^(terminal|.*)$
-        default: terminal
+      mode:
+        regex: ^(only_display|create_output)$
+        default: create_output
+      sol_style:
+        regex: ^(seq|subset)$
+        default: seq
+        explain: "choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively."
+        example: "[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3"
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

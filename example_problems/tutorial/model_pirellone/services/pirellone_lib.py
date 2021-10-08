@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+"""This file contains the useful functions to handle 'Pirellone' Problem."""
 import random, copy
 import re
 from sys import exit
@@ -92,7 +92,7 @@ def pirellone_to_str(pirellone):
     return '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
 
 
-# PIRELLLONE GENERATORS FUNCTIONS:
+# PIRELLONE GENERATOR FUNCTIONS:
 def is_solvable_seed(seed):
     """If this seed is associated to a solvable pirellone instance return True, False otherwise."""
     # We reserve those seed divisible by 3 to the NOT solvable instances

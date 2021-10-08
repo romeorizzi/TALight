@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+"""This file contains the useful functions used in more services of the 'Pirellone' problem."""
+import os, re
 
 from TALinputs import TALinput
 from bot_interface import service_server_requires_and_gets_the_only_file
-
 
 import pirellone_lib as pl
 
@@ -90,3 +91,55 @@ def process_user_seq_sol(ENV, TAc, LANG, user_inputs):
             if int(command[1:]) > ENV['n']:
                 TAc.print(LANG.render_feedback("col-index-exceeds-m", f"# Error! In your solution the move ({command}) is not applicable. Indeed: {command[1:]} > {ENV['m']}."), "red", ["bold"])
                 exit(0)
+
+
+def printCorrectSolFormat(TAc, LANG):
+    TAc.print(LANG.render_feedback('print-correct-sol-format', \
+        """If you want to get your model validated, then from your .mod file you should create a file named 'output.txt' containing the final solution for your instance. Namely, if the puzzle has no solution, then the file named 'output.txt' should contain the string "NO SOLUTION". Nel caso in cui non sia possibile spegnere tutte le luci del Pirellone
+        con gli interruttori speciali, il file `output.txt` offre la stringa "NO SOLUTIONS". Altrimenti, il file `output.txt` deve contenere due linee per indicare
+        su quali interruttori deve agire il custode.
+
+        La prima linea contiene una sequenza di $M$ valori ($0$ oppure
+        $1$) separati da uno spazio.
+        L'$i$-esimo valore della sequenza indica se il custode deve
+        agire sull'interruttore dell'$i$-esima riga (valore = $1$)
+        oppure no (valore = $0$).
+
+        Analogamente, la seconda linea contiene una sequenza di $N$
+        valori ($0$ oppure $1$) separati da uno spazio, per rappresentare le
+        operazioni che il custode deve effettuare sugli interruttori di
+        colonna.  Il $j$-esimo valore della sequenza indica se il
+        custode deve agire sull'interruttore della $j$-esima colonna
+        oppure no."""), "yellow", ["bold"])
+
+
+# TODO: improve it
+def parse_sol(sol_path, sol_style, m, n, ENV, TAc, LANG):
+    """Read file, parse it and returns the solution in sol_style."""
+    if not os.path.exists(sol_path):
+        raise RuntimeError('output-not-exist')
+    try:
+        with open(sol_path, 'r') as file:
+            lines = file.readlines()
+            if len(lines) > 2 or \
+               (len(lines) == 1 and lines[0] != pl.NO_SOL) or \
+               (len(lines) == 1 and sol_style == 'subset') or \
+               (len(lines) == 2 and sol_style == 'seq'):
+                raise RuntimeError('output-bad-format')
+            user_sol = list()
+            if sol_style=="subset":
+                if (any(not re.match(f"^(0|1){{{m}}}$", e) for e in lines[0]) or \
+                    any(not re.match(f"^(0|1){{{m}}}$", e) for e in lines[1])):
+                    raise RuntimeError('subset-bad-format')
+                user_sol.append([int(e) for e in lines[0].split()])
+                user_sol.append([int(e) for e in lines[1].split()])
+            else:
+                if not re.match("^(|(r|R|c|C)[1-9][0-9]*)$", lines[0]):
+                    raise RuntimeError('seq-bad-format')
+                user_sol = lines[0].split()
+                process_user_seq_sol(ENV, TAc, LANG, user_sol)
+    except os.error as e:
+        raise RuntimeError('read-error', e)
+    except (IndexError, ValueError) as e:
+        raise RuntimeError('output-bad-format')
+

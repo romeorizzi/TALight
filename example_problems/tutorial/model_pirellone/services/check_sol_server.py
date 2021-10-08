@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
@@ -28,7 +27,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 # Get pirellone and solution
 (instance, opt_sol) = process_instance(ENV, TAc, LANG)
-# TAc.print(LANG.render_feedback("solution-title", f"{pl.sol_to_str(instance, opt_sol)}"), "green", ["bold"])
+# TAc.print(LANG.render_feedback("spoiler", f"{pl.sol_to_str(instance, opt_sol)}"), "green", ["bold"])
 
 # Get user solution
 user_sol = list()
