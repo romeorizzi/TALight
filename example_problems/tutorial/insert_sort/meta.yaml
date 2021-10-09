@@ -5,10 +5,10 @@ services:
   log_debug_your_insertion_sort_bot:
     description: |+
      In a call to this service you plug in your insert_sort bot running on an instance of yours, in local, and we debug its behavior based on a log sent to our service and offering all of the following observable updates.
-        #LOG_load_next_input_element_in_tmp_buffer
+        #LOG_load_next_input_element_in_tmp_buffer <val>
         #LOG_flush_tmp_buffer_on_pos <i>
         #LOG_clone_to_its_right_ele_in_pos <i>
-        #LOG_compare_what_in_pos <i> with_what_in_tmp_buffer <outcome>
+        #LOG_compare_what_in_tmp_buffer_with_what_in_pos <i> <outcome>
         #LOG_output_final_array <final_array>
      the service either confirms the correct execution of the Insertion Sort algorithm or signal the very first anomaly in its behaviour based only on the log lines (those prefixed by "#LOG_", all other lines are ignored).
     evaluator: [python3, services/log_debug_your_insertion_sort_bot_server.py]
