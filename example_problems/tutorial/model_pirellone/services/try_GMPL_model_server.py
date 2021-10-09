@@ -7,14 +7,15 @@ from multilanguage import Env, Lang, TALcolors
 
 import pirellone_lib as pl
 import model_utils as mu
-from utils_lang import printCorrectSolFormat, parse_sol
+from utils_lang import print_correct_sol_format, print_separator
 
 
 # METADATA OF THIS TAL_SERVICE:
 problem="model_pirellone"
 service="try_GMPL_model"
 args_list = [
-    ('mode',str),
+    ('display_output',bool),
+    ('check_solution',bool),
     ('sol_style',str),
     ('lang',str),
 ]
@@ -25,18 +26,19 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
-# Get input and perform optimal solution with pirellone_lib
+# Get input
 try:
-    input_str = mu.receive_modelling_files(TAc, LANG)
+    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
+    input_str = mu.receive_modelling_files()
+    instance = pl.get_pirellone_from_str(input_str)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
-    if err_name == 'read-error':
+    if err_name == 'write-error':
         TAc.print(LANG.render_feedback('write-error', f"Fail to create {err.args[1]} file"), "red", ["bold"])
-instance = pl.get_pirellone_from_str(input_str)
-opt_sol = pl.get_opt_sol(instance)
-TAc.print(LANG.render_feedback("in-title", "Solution with PirelloneLib: "), "yellow", ["reverse"])
-TAc.print(LANG.render_feedback("in-sol", f"{pl.sol_to_str(instance, opt_sol)}"), "green", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+    exit(0)
 
 # Perform solution with GPLSOL
 try:
@@ -49,28 +51,98 @@ except RuntimeError as err:
     elif err_name == 'process-call':
         TAc.print(LANG.render_feedback('process-call', "The call to glpsol on your .dat file returned error."), "red", ["bold"])
     elif err_name == 'process-exception':
-        TAc.print(LANG.render_feedback('process-exception', "Processing returned with error."), "red", ["bold"])
-        
-# Read GPLSOL solution
-if ENV['mode'] == 'create_output':
+        TAc.print(LANG.render_feedback('process-exception', f"Processing returned with error:\n{err.args[1]}"), "red", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+    exit(0)
+
+# print GPLSOL output
+if ENV['display_output']:
     try:
-        out_sol = parse_sol(mu.get_path_of('out'), ENV['sol_style'], len(opt_sol[0]), len(opt_sol[1]), ENV, TAc, LANG)
-        TAc.print(LANG.render_feedback("out-title", "Solution with GPLSOL: "), "yellow", ["reverse"])  
-        TAc.print(LANG.render_feedback("out_sol", f"{pl.sol_to_str(instance, opt_sol)}"), "green", ["bold"])
+        gplsol_output = mu.get_output_str()
+        TAc.print(LANG.render_feedback("out-title", "The GPLSOL output is: "), "yellow", ["BOLD"])  
+        TAc.print(LANG.render_feedback("out_sol", f"{gplsol_output}"), "white", ["reverse"])
     except RuntimeError as err:
         err_name = err.args[0]
         # manage custom exceptions:
         if err_name == 'read-error':
-            TAc.print(LANG.render_feedback('read-error', "Fail to read the output file of GPLSOL"), "red", ["bold"])
-        elif err_name == 'output-not-exist':
-            TAc.print(LANG.render_feedback('output-not-exist', f"GLPSOL failed to create {mu.OUT_FILENAME} file"), "red", ["bold"])
-            printCorrectSolFormat(TAc, LANG)
-        elif err_name == 'output-bad-format':
-            TAc.print(LANG.render_feedback('output-bad-format', "The output file have a bad format."), "red", ["bold"])
-            printCorrectSolFormat(TAc, LANG)
-        elif err_name == 'subset-bad-format':
-            TAc.print(LANG.render_feedback('subset-bad-format', "The output file have a bad format for subset style."), "red", ["bold"])
-            printCorrectSolFormat(TAc, LANG)
-        elif err_name == 'seq-bad-format':
-            TAc.print(LANG.render_feedback('seq-bad-format', "The output file have a bad format for sequence style."), "red", ["bold"])
-            printCorrectSolFormat(TAc, LANG)
+            TAc.print(LANG.render_feedback('output-read-error', "Fail to read the output file of GPLSOL"), "red", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+        exit(0)
+
+# check GPLSOL solution
+if ENV['check_solution']:
+    # Perform optimal solution with pirellone_lib
+    opt_sol = pl.get_opt_sol(instance)
+    m = len(opt_sol[0])
+    n = len(opt_sol[1])
+
+    # Print instance
+    print_separator(TAc, LANG)
+    TAc.print(LANG.render_feedback("instance-title", f"The matrix {m}x{n} is:"), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
+    print_separator(TAc, LANG)
+
+    # Extract GPLSOL solution
+    try:
+        # Get raw solution
+        raw_solution = mu.get_raw_solution()
+        # Parse the raw solution
+        gplsol_sol = pl.parse_sol(raw_solution, ENV['sol_style'], m, n)
+    except RuntimeError as err:
+        err_name = err.args[0]
+        # manage custom exceptions:
+        if err_name == 'read-error':
+            TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
+        elif err_name == 'sol-bad-format':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {raw_solution}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'seq-regex':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'seq-row-m':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row switch {err.args[1]} exceeds {m}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'seq-col-n':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row switch {err.args[1]} exceeds {n}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'subset-regex':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'subset-row-m':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row switch {err.args[1]} exceeds {m}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'subset-col-n':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row switch {err.args[1]} exceeds {n}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        else:
+            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+        exit(0)
+
+    # Print GPLSOL solution
+    TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["BOLD"])
+    if ENV['sol_style'] == 'seq':
+        TAc.print(LANG.render_feedback("out_sol", f"{pl.seq_to_str(gplsol_sol)}"), "white", ["reverse"])
+        gplsol_sol = pl.seq_to_subset(gplsol_sol, m, n)
+    elif ENV['sol_style'] == 'subset':
+        TAc.print(LANG.render_feedback("out_sol", f"{pl.subset_to_str(gplsol_sol)}"), "white", ["reverse"])
+    print_separator(TAc, LANG)
+
+    # Print optimal solution
+    TAc.print(LANG.render_feedback("in-title", "The PirelloneLib solution is:"), "yellow", ["reverse"])
+    if ENV['sol_style'] == 'seq':
+        TAc.print(LANG.render_feedback("in-sol", f"{pl.seq_to_str(pl.subset_to_seq(opt_sol))}"), "green", ["bold"])
+    elif ENV['sol_style'] == 'subset':
+        TAc.print(LANG.render_feedback("in-sol", f"{pl.subset_to_str(opt_sol)}"), "green", ["bold"])
+    print_separator(TAc, LANG)
+
+    # Check the correctness of the user solution
+    if pl.are_equiv(gplsol_sol, opt_sol):
+        TAc.OK()
+        TAc.print(LANG.render_feedback('correct', "This sequence turns off all lights."), "green", ["bold"])
+    else:
+        TAc.NO()
+        TAc.print(LANG.render_feedback('not-correct', "This sequence doesn't turn off all lights see what happens using your solution"), "red", ["bold"])
+
+exit(0)

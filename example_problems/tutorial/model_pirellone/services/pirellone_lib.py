@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """This file contains the useful functions to handle 'Pirellone' Problem."""
-import random, copy
-import re
+import random, copy, re
 from sys import exit
 
 
@@ -42,6 +41,57 @@ def seq_to_subset(seq_sol, m, n):
     return subset_sol
 
 
+def parse_sol(raw_sol, sol_style, m, n):
+    """Parse this raw_sol with sol_style and return the solution in correct format."""
+    # Case0: general
+    if len(raw_sol) > 2:
+        raise RuntimeError('sol-bad-format')
+    if (len(raw_sol) == 1) and (raw_sol == [NO_SOL]):
+        return NO_SOL
+    
+    # Case1: sequence style
+    sol = list()
+    if sol_style == 'seq':
+        if len(raw_sol) != 1:
+            raise RuntimeError('sol-bad-format')
+        # Checks no moves
+        if raw_sol == ['']:
+            return sol
+        sol = raw_sol[0].split()
+        for e in sol: 
+            if any(not re.match("^((r|R|c|C)[1-9][0-9]*)$", e) for e in sol):
+                raise RuntimeError('seq-regex', e)
+            # Checks rows
+            if (e[0] in ['r', 'R']) and (int(e[1:]) > m):
+                raise RuntimeError('seq-row-m', e)
+            # Checks cols
+            if (e[0] in ['c', 'C']) and (int(e[1:]) > n):
+                raise RuntimeError('seq-col-n', e)
+        return sol
+    
+    # Case2: subset style
+    elif sol_style == 'subset':
+        # Check rows
+        rows_switch = raw_sol[0].split()
+        if len(rows_switch) != m:
+            raise RuntimeError('subset-row-m', len(rows_switch))
+        if any([not re.match(f"^(0|1)$", e) for e in rows_switch]):
+            raise RuntimeError('subset-regex', raw_sol[0])
+        sol.append([int(e) for e in rows_switch])
+        # Check cols
+        cols_switch = raw_sol[1].split()
+        if len(cols_switch) != n:
+            raise RuntimeError('subset-col-n', len(cols_switch))
+        if any([not re.match(f"^(0|1)$", e) for e in cols_switch]):
+            raise RuntimeError('subset-regex', raw_sol[1])
+        sol.append([int(e) for e in cols_switch])
+        return sol
+    
+    # Case3: invalid style
+    else:
+        raise RuntimeError('invalid-sol-style')
+
+
 # TO_STRING and FROM_STRING FUNCTIONS:
 def seq_to_str(seq_sol):
     """From a sequence solution (e.g.: ['r2']) returns its string form (e.g.: 'r2')"""
@@ -68,6 +118,13 @@ def sol_to_str(pirellone, subset_sol):
             sol_str += f'{subset_sol[0][i]} | '
             sol_str += ' '.join(str(e) for e in pirellone[i]) + '\n'
     return sol_str[:-1]
+
+
+def subset_to_str(subset_sol):
+    sol = subset_to_str_list(subset_sol)
+    if sol == NO_SOL:
+        return NO_SOL
+    return sol[0] + '\n' + sol[1]
 
 
 def subset_to_str_list(subset_sol):
@@ -159,6 +216,8 @@ def get_opt_sol_from(switches_row, switches_col):
 def get_opt_sol(pirellone):
     """Returns the optimal solution of solvable pirellone.
     Note: for unsolvable instances is not guaranteed optimality."""
+    if not is_solvable(pirellone):
+        return NO_SOL
     switches_col = pirellone[0].copy()
     m = len(pirellone)
     n = len(switches_col)
@@ -355,6 +414,19 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
+    print('Test: parse_sol()')
+    # import model_utils as mu
+    # raw_sol = mu.get_raw_solution()
+    # print(f'raw_sol: {raw_sol}')
+    assert parse_sol([NO_SOL], 'seq', 2, 2) == NO_SOL
+    assert parse_sol([NO_SOL], 'subset', 2, 2) == NO_SOL
+    assert parse_sol(['1 0 1 0 0 ', '0 1 0 0 1 '], 'subset', 5, 5) == \
+        [[1, 0, 1, 0, 0], [0, 1, 0, 0, 1]]
+    assert parse_sol([''], 'seq', 2, 2) == []
+    assert parse_sol(['r1 r2 c2'], 'seq', 2, 2) == ['r1', 'r2', 'c2']
+    print('==> OK\n')
+
+
     print('Test: seq_to_str()')
     assert seq_to_str(['r3', 'c2']) == 'r3 c2'
     assert seq_to_str(NO_SOL) == NO_SOL
@@ -373,6 +445,12 @@ if __name__ == "__main__":
         "    ---\n" + \
         "? | 0 0\n" + \
         "? | 0 1"
+    print('==> OK\n')
+
+
+    print('Test: subset_to_str()')
+    assert subset_to_str([[0, 0, 1], [0, 1, 0]]) == "0 0 1\n0 1 0"
+    assert subset_to_str(NO_SOL) == NO_SOL
     print('==> OK\n')
 
 

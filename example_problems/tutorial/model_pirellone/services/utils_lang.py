@@ -49,7 +49,7 @@ def process_instance(ENV, TAc, LANG):
             exit(0)
 
     elif ENV['input_mode'] == 'terminal':
-        TAc.print(LANG.render_feedback("waiting", f"#? waiting for the pirellone {ENV['m']}x{ENV['n']}.\nFormat: each line is a row of the matrix and each colomun must be separeted by space.\nAny line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself."), "yellow")
+        TAc.print(LANG.render_feedback("waiting", f"#? waiting for the pirellone {ENV['m']}x{ENV['n']}.\nFormat: each line is a row of the matrix and each colomun must be separeted by space.\nAny line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the raw_sol of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself."), "yellow")
         TAc.print(LANG.render_feedback("instance-title", f"Matrix {ENV['m']}x{ENV['n']}:"), "yellow", ["bold"])
         # Get pirellone instance
         for _ in range(ENV['m']):
@@ -93,11 +93,18 @@ def process_user_seq_sol(ENV, TAc, LANG, user_inputs):
                 exit(0)
 
 
-def printCorrectSolFormat(TAc, LANG):
+def print_correct_sol_format(TAc, LANG):
     TAc.print(LANG.render_feedback('print-correct-sol-format', \
-        """If you want to get your model validated, then from your .mod file you should create a file named 'output.txt' containing the final solution for your instance. Namely, if the puzzle has no solution, then the file named 'output.txt' should contain the string "NO SOLUTION". Nel caso in cui non sia possibile spegnere tutte le luci del Pirellone
-        con gli interruttori speciali, il file `output.txt` offre la stringa "NO SOLUTIONS". Altrimenti, il file `output.txt` deve contenere due linee per indicare
-        su quali interruttori deve agire il custode.
+        """
+        If you want to get your model validated, then from your .mod file
+        you should create a file named 'output.txt' containing the final
+        solution for your instance. Namely, if the puzzle has no solution,
+        then the file named 'output.txt' should contain the string 
+        "NO SOLUTION". Nel caso in cui non sia possibile spegnere tutte le
+        luci del Pirellone con gli interruttori speciali, il file `output.txt`
+        offre la stringa "NO SOLUTIONS". Altrimenti, il file `output.txt` 
+        deve contenere due linee per indicare su quali interruttori deve 
+        agire il custode.
 
         La prima linea contiene una sequenza di $M$ valori ($0$ oppure
         $1$) separati da uno spazio.
@@ -110,36 +117,9 @@ def printCorrectSolFormat(TAc, LANG):
         operazioni che il custode deve effettuare sugli interruttori di
         colonna.  Il $j$-esimo valore della sequenza indica se il
         custode deve agire sull'interruttore della $j$-esima colonna
-        oppure no."""), "yellow", ["bold"])
+        oppure no.""" \
+    ), "yellow", ["bold"])
 
 
-# TODO: improve it
-def parse_sol(sol_path, sol_style, m, n, ENV, TAc, LANG):
-    """Read file, parse it and returns the solution in sol_style."""
-    if not os.path.exists(sol_path):
-        raise RuntimeError('output-not-exist')
-    try:
-        with open(sol_path, 'r') as file:
-            lines = file.readlines()
-            if len(lines) > 2 or \
-               (len(lines) == 1 and lines[0] != pl.NO_SOL) or \
-               (len(lines) == 1 and sol_style == 'subset') or \
-               (len(lines) == 2 and sol_style == 'seq'):
-                raise RuntimeError('output-bad-format')
-            user_sol = list()
-            if sol_style=="subset":
-                if (any(not re.match(f"^(0|1){{{m}}}$", e) for e in lines[0]) or \
-                    any(not re.match(f"^(0|1){{{m}}}$", e) for e in lines[1])):
-                    raise RuntimeError('subset-bad-format')
-                user_sol.append([int(e) for e in lines[0].split()])
-                user_sol.append([int(e) for e in lines[1].split()])
-            else:
-                if not re.match("^(|(r|R|c|C)[1-9][0-9]*)$", lines[0]):
-                    raise RuntimeError('seq-bad-format')
-                user_sol = lines[0].split()
-                process_user_seq_sol(ENV, TAc, LANG, user_sol)
-    except os.error as e:
-        raise RuntimeError('read-error', e)
-    except (IndexError, ValueError) as e:
-        raise RuntimeError('output-bad-format')
-
+def print_separator(TAc, LANG):
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])

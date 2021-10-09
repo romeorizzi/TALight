@@ -41,13 +41,13 @@ solve;
 printf "Fixer = %d ", Fixer;
 
 # printing the solution:
-printf "" > "output.txt";
+printf "" > "solution.txt";
 for{i in Rows} {
-   printf "%d ", AzionareR[i] >> "output.txt";
+   printf "%d ", AzionareR[i] >> "solution.txt";
 }
-printf "\n" >> "output.txt";
+printf "\n" >> "solution.txt";
 for{j in Cols} {
-   printf "%d ", AzionareC[j] >> "output.txt";
+   printf "%d ", AzionareC[j] >> "solution.txt";
 }
-printf "\n" >> "output.txt";
+printf "\n" >> "solution.txt";
 

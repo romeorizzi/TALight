@@ -37,8 +37,8 @@ if ENV['sol_style'] == 'seq':
 elif ENV['sol_style'] == 'subset':
     TAc.print(LANG.render_feedback("legend-subset", f"(FirstLine=rows_switch SecondLine=cols_switch)"), "white", ["bold"])
     sol_str = pl.subset_to_str_list(opt_sol)
-    TAc.print(LANG.render_feedback("rows", f"{sol_str[0]}"), "white", ["reverse"])
-    TAc.print(LANG.render_feedback("cols", f"{sol_str[1]}"), "white", ["reverse"])
+    # TAc.print(LANG.render_feedback("rows", f"Rows: {sol_str[0]}"), "white", ["reverse"])
+    # TAc.print(LANG.render_feedback("cols", f"Cols: {sol_str[1]}"), "white", ["reverse"])
     TAc.print(LANG.render_feedback("solution", f"{pl.subset_to_str(opt_sol)}"), "white", ["reverse"])
 
 exit(0)
