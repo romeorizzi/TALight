@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 """This file contains the useful functions used in more services of the 'Pirellone' problem."""
-import os, re
-
 from TALinputs import TALinput
 from bot_interface import service_server_requires_and_gets_the_only_file
 
@@ -76,27 +74,42 @@ def process_instance(ENV, TAc, LANG):
     return instance, sol
 
 
-def process_user_seq_sol(ENV, TAc, LANG, user_inputs):
-    # Adjust solution to mange the case 'zero moves'
-    if user_inputs == ['']:
-        user_inputs.clear()
-        return
-    # Check the m,n ranges
-    for command in user_inputs:
-        if command[0] == 'r':
-            if int(command[1:]) > ENV['m']:
-                TAc.print(LANG.render_feedback("row-index-exceeds-m", f"# Error! In your solution the move ({command}) is not applicable. Indeed: {command[1:]} > {ENV['m']}."), "red", ["bold"])
-                exit(0)
+def process_user_sol(ENV, TAc, LANG, raw_sol, m, n):
+    try:
+        # Parse the raw solution
+        return pl.parse_sol(raw_sol, ENV['sol_style'], m, n)
+    except RuntimeError as err:
+        err_name = err.args[0]
+        # manage custom exceptions:
+        if err_name == 'sol-bad-format':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {raw_sol}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'seq-regex':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'seq-row-m':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row={err.args[1]} switch exceeds {m}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'seq-col-n':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the col={err.args[1]} switch exceeds {n}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'subset-regex':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'subset-row-m':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row={err.args[1]} switch exceeds {m}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
+        elif err_name == 'subset-col-n':
+            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the col={err.args[1]} switch exceeds {n}"), "red", ["bold"])
+            print_correct_sol_format(TAc, LANG)
         else:
-            if int(command[1:]) > ENV['n']:
-                TAc.print(LANG.render_feedback("col-index-exceeds-m", f"# Error! In your solution the move ({command}) is not applicable. Indeed: {command[1:]} > {ENV['m']}."), "red", ["bold"])
-                exit(0)
+            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+        exit(0)
 
 
 def print_correct_sol_format(TAc, LANG):
     TAc.print(LANG.render_feedback('print-correct-sol-format', \
-        """
-        If you want to get your model validated, then from your .mod file
+        """        If you want to get your model validated, then from your .mod file
         you should create a file named 'output.txt' containing the final
         solution for your instance. Namely, if the puzzle has no solution,
         then the file named 'output.txt' should contain the string 
@@ -123,3 +136,4 @@ def print_correct_sol_format(TAc, LANG):
 
 def print_separator(TAc, LANG):
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+

@@ -7,7 +7,7 @@ from multilanguage import Env, Lang, TALcolors
 
 import pirellone_lib as pl
 import model_utils as mu
-from utils_lang import print_correct_sol_format, print_separator
+from utils_services import process_user_sol, print_separator
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -87,35 +87,14 @@ if ENV['check_solution']:
     # Extract GPLSOL solution
     try:
         # Get raw solution
-        raw_solution = mu.get_raw_solution()
+        raw_sol = mu.get_raw_solution()
         # Parse the raw solution
-        gplsol_sol = pl.parse_sol(raw_solution, ENV['sol_style'], m, n)
+        gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol, m, n)
     except RuntimeError as err:
         err_name = err.args[0]
         # manage custom exceptions:
         if err_name == 'read-error':
             TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
-        elif err_name == 'sol-bad-format':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {raw_solution}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
-        elif err_name == 'seq-regex':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
-        elif err_name == 'seq-row-m':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row switch {err.args[1]} exceeds {m}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
-        elif err_name == 'seq-col-n':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row switch {err.args[1]} exceeds {n}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
-        elif err_name == 'subset-regex':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
-        elif err_name == 'subset-row-m':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row switch {err.args[1]} exceeds {m}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
-        elif err_name == 'subset-col-n':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row switch {err.args[1]} exceeds {n}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
         else:
             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
         exit(0)
@@ -145,4 +124,7 @@ if ENV['check_solution']:
         TAc.NO()
         TAc.print(LANG.render_feedback('not-correct', "This sequence doesn't turn off all lights see what happens using your solution"), "red", ["bold"])
 
+
+# delete TMP DIRECTORY
+mu.clean_TMP_DIRECTORY()
 exit(0)
