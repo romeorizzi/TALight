@@ -24,13 +24,15 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 
 if ENV['opponent'] == 'optimal':
+    # TO DO: change this function with random_vector() after the implementation with different seed
     size, vec = random_vector_worst_case()
-    vector_optmal_questions = generate_optimal_questions_order(vec) #stores the optimal question order
-    min_questions = num_questions_worst_case(len(vec))
 elif ENV['opponent'] == 'random':
     vec, _ , size = random_vector()
-    vector_optmal_questions = vector_optimal_questions_random_vec(vec)
-    min_questions = check_n_questions_random_case(vector_optmal_questions)
+
+vector_optmal_questions = []
+
+_ = generate_optimal_question_vector(vec, low, upper, vector_optmal_questions)
+min_questions = check_n_questions_random_case(vector_optmal_questions)
 
 
 wasted_dollars = 0
@@ -85,3 +87,4 @@ while True:
 
 
 #TODO: chiedere di controllare il discorso della chiusura del server(?) se non arriva input da linea di comando dopo un tot.
+# chiedere cosa deve fare eval_play1
