@@ -60,7 +60,7 @@ struct ConnectCommand {
     problem: String,
     #[clap(about = "Service wanted", default_value = "solve")]
     service: String,
-    #[clap(short('a'), long, multiple_occurrences = true, number_of_values = 1, about = "Service arguments, can be specified multiple times with -a arg=val")]
+    #[clap(short('a'), long, multiple = true, number_of_values = 1, about = "Service arguments, can be specified multiple times with -a arg=val")]
     service_args: Vec<String>,
     #[clap(about = "Local executable and executable arguments", raw = true)]
     program: Vec<String>,
