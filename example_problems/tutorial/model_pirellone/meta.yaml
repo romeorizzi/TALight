@@ -226,8 +226,7 @@ services:
         default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it	
-  
+        default: it
   eval_your_solver_bot:
     description: "This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed."
     evaluator: [python, services/eval_decision_server.py]
