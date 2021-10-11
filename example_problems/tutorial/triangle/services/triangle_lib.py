@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 import random
-import math
 
 # PER MODALITA' LAZY, GENERIAMO UN TRIANGOLO CASUALE DI n RIGHE
 
 def random_triangle(n,m,M,s):
 	random.seed(s,version=2)
-	values = [random.randrange(m, M) for _ in range(0, sum(range(n+1)))]
+	values = []
+	for _ in range(0, sum(range(n+1))):
+		values.append(random.randrange(m,M))
 	return values
 
-# STAMPIAMO IL TRIANGOLO SUL TERMINALE       0,1,2,3,4,5
+# STAMPIAMO IL TRIANGOLO SUL TERMINALE
 
 def print_triangle(n,triangle_array):
 	for i in range(len(triangle_array)):
@@ -28,17 +29,25 @@ def print_triangle(n,triangle_array):
 		
 def calculate_path(n,triangle,path_values):
 	path = [triangle[0]]
-	s = int(triangle[0])
-	print(s)
-	for i in range(1,n):
-		if path_values[i] == "L":
-			path.append(triangle[i+1])
-			s += int(triangle[i+1])
+	s = triangle[0]
+	i = 0
+	last_pos = 0
+	print(path_values)
+	for move in path_values:
+		if(move == "L"):
+		    path.append(triangle[i+1 + last_pos])
+		    s += triangle[i+1 + last_pos]
+		    last_pos = i + 1 + last_pos
 		else:
-			path.append(triangle[i+2])
-			s += int(triangle[i+2])
+		    path.append(triangle[i+2 + last_pos])
+		    s += triangle[i+2 + last_pos]
+		    last_pos = i + 2 + last_pos
+		i += 1
 	return path,s
-			
+
+#rtal connect -a how_to_input_the_triangle=100000 triangle check_one_sol
+
+
 '''		
 def recognize(treatement, TAc, LANG, yield_feedback=True):
     assert type(treatement)==str
