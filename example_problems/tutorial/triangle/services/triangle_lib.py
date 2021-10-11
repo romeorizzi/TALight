@@ -32,7 +32,6 @@ def calculate_path(n,triangle,path_values):
 	s = triangle[0]
 	i = 0
 	last_pos = 0
-	print(path_values)
 	for move in path_values:
 		if(move == "L"):
 		    path.append(triangle[i+1 + last_pos])

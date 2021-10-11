@@ -37,14 +37,13 @@ if input_type == "lazy":
 	undone = True
 	while undone:
 		values = input("Inserisci i valori del triangolo intervallati da uno spazio.\n")
-		if len(values.split(" ")) == sum(range(n+1)):
-			triangle = values.split(" ")
+		if len(values.split()) == sum(range(n+1)):
+			triangle = values.split()
 			undone = False
 		else:
-			print("Hai immesso " + str(len(values.split(" "))) + " valori su " + str(sum(range(n+1))) + ", riprova.\n")
+			print("Hai immesso " + str(len(values.split())) + " valori su " + str(sum(range(n+1))) + ", riprova.\n")
 else:
 	triangle = random_triangle(n,min_val,max_val,input_type)
-	print(type(triangle))
 
 
 # STAMPA TRIANGOLO
@@ -58,18 +57,15 @@ print("\n")
 
 undone = True
 while undone:
-	path_values = input("Inserisci la sequenza del percorso scelto utilizzando i valori L (left) o R (right) intervallati da uno spazio, escludendo il primo nodo.\n")
-	if len(path_values.split(" ")) == n-1:
-		path = path_values.split(" ")
-		for direction in path:
-			all_correct = True
-			if direction != "R" and direction != "L":
-				print("Hai inserito una direzione non valida, riprova.")
-				break
-			else:
-				undone = False
+	path_values = input("Inserisci la sequenza del percorso scelto utilizzando i valori L (left) o R (right) intervallati da uno spazio, escludendo il primo nodo.\n\n")
+	if len(path_values.split()) == n-1:
+		path = path_values.split()
+		if any((x != "R" and x != "L") for x in path):
+			print("\nHai inserito una direzione non valida, riprova.\n")
+		else:
+			undone = False
 	else:
-		print("Hai immesso " + str(len(path_values.split(" "))) + " valori sui " + str(n-1) + " richiesti, riprova.\n")
+		print("Hai immesso " + str(len(path_values.split())) + " valori sui " + str(n-1) + " richiesti, riprova.\n")
 
 for k in range(len(triangle)):
 		triangle[k] = int(triangle[k])
@@ -77,8 +73,8 @@ for k in range(len(triangle)):
 # CALCOLO PATH
 p,s = calculate_path(n,triangle,path)
 
-print("Il path da te scelto è quello che tocca, nell\'ordine, i seguenti nodi: " + str(p))
-print("Il costo totale del tuo path è :" + str(s))
+print("\nIl path da te scelto è quello che tocca, nell\'ordine, i seguenti nodi: " + str(p) + "\n")
+print("Il costo totale del tuo path è: " + str(s))
 
 			
 	
