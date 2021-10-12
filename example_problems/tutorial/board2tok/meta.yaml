@@ -49,7 +49,7 @@ services:
   trilly:
     evaluator: [python, services/trilly_server.py]
     description: "Trilly the fairy helps you in constructing a tiling of a 2^kx2^k board with L-shaped trominos (leaving out one single cell).
-    Every standard move lays down a tromino piece: assume that the cells (r,c),(r+1,c)(r,c+1),(r+1,c+1) are still empty, and let r0=r,r+1, c0=c,c+1. Writing a line in the format '2 <r> <c> <r0> <c0>' commands to place the unique tromino that would cover these 4 cells exept cell (r0,c0).  After being assigned the number k (the first board), and as many times as you want, you can call Trilly and assign her a 2^hx2^h sub-board, with h<k, and specify one single cell of such sub-board. Trilly checks that this sub-board is still empty and then details a list of standard moves for its filling (except for the specified cell that she leaves empty).
+    Every standard move lays down a tromino piece: assume that the cells (r,c),(r+1,c)(r,c+1),(r+1,c+1) are still empty, and let r0=r,r+1, c0=c,c+1. Writing a line in the format '1 <r> <c> <r0> <c0>' commands to place the unique tromino that would cover these 4 cells exept cell (r0,c0). After being assigned the number k (the first board), and as many times as you want, you can call Trilly and assign her a 2^hx2^h sub-board, with h<k, and specify one single cell of such sub-board. Trilly checks that this sub-board is still empty and then details a list of standard moves for its filling (except for the specified cell that she leaves empty).
     A call to Trilly is like a macro-move and you command it writing a line in the format '<h> <r> <c> <r0> <c0>'; this asks to cover all cells in the sub-grid [r,r+2^h)x[c,c+2^h), except cell (r0,c0).
     Playing with the arguments of this service you might also allow Trilly to use macro-moves, the agreement being that a macro-move of one player should be entireley fullfilled by moves of the other player; these might in turn be macro-moves but with strictly smaller value for the h parameter."
     args:
@@ -70,6 +70,10 @@ services:
         explain: number of allowed calls to trilly. Try to minimize it, but, at a certain point, this goal will conflict with the main one given above.
       trilly_requests:
         regex: ^(poses_only_the_starting_problem|might_pose_smaller_problems_in_reply|might_pose_non_bigger_problems_in_reply)$
+        explain: kind of requests trilly can pose in reply to you.
+        explain1: -poses_only_the_starting_problem = trilly reply with the complete ordered list of standard moves.
+        explain2: -might_pose_smaller_problems_in_reply = trilly might reply with one macro-move and a list of standard moves.
+        explain3: -might_pose_non_bigger_problems_in_reply = trilly might reply with an ordered list of macro-moves.
         default: poses_only_the_starting_problem
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$

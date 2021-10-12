@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from os import RTLD_NOW
+from os import POSIX_FADV_NOREUSE, RTLD_NOW
 from sys import stderr, exit
 
 import random
@@ -15,8 +15,9 @@ service="trilly_server"
 args_list = [
     ('k',int),
     ('left_out_cell_must_be_a_corner_cell',int),
-    ('goal_min_calls_to_place_tile',str),
+    ('goal_min_calls_to_standard_moves',str),
     ('goal_min_calls_to_trilly',str),
+    ('trilly_requests', str),
     ('lang',str),
 ]
 
@@ -27,191 +28,198 @@ LANG.print_opening_msg()
     
 # START CODING YOUR SERVICE: 
 
-your_board = [['0' for _ in range(1024)] for _ in range(1024)]
-k=ENV['k']
-exceptions={'end'}
+board = [['0' for _ in range(2**ENV['k'])] for _ in range(2**ENV['k'])]
 
-def set_empty_cell():    
-    if ENV['left_out_cell_must_be_a_corner_cell'] == 0:
-        r = random.randint(0, 2**k)
-        c = random.randint(0, 2**k)
-    else:
-        r = (2**k - 1) * random.randint(0, 1)
-        c = (2**k - 1) * random.randint(0, 1)
-    return r, c
+def check_corner_cell(line):
+    corner_cells = list()
+    corner_cells.append((f'{line[1]}', f'{line[2]}'))
+    corner_cells.append((f'{line[1]}', f'{2**line[0] + line[2] - 1}'))
+    corner_cells.append((f'{2**line[0] + line[1] - 1}', f'{line[2]}'))
+    corner_cells.append((f'{2**line[0] + line[1] - 1}', f'{2**line[0] + line[2] - 1}'))
 
-r, c = set_empty_cell()
-TAc.print(LANG.render_feedback("notice-hole-coordinates", f"The position of the empty cell is: {r}, {c}"), "yellow", ["bold"])
+    if (f'{line[3]}', f'{line[4]}') not in corner_cells:
+        TAc.print(LANG.render_feedback('error-corner-cell', 'The left-out-cell you have chosen is not a corner cell.'), 'red', ['bold'])
+        exit(0)
 
-reference_board = utilities.compute_tiling(0, 2**k, 0, 2**k, r, c)
+def check_values(line):
+    if line[0] < 0 or line[1] < 0 or line[2] < 0 or line[3] < 0 or line[4] < 0:
+        TAc.print(LANG.render_feedback('error-negative-number', 'One or more values that you have inserted are negative.'), 'red', ['bold'])
+        exit(0)
 
-def check_tile(r, c, border_cells):
-    if border_cells[0] == reference_board[r][c]:
-        pass
-    else:
-        return False
-    if border_cells[1] == 'N' and reference_board[r - 1][c] == 'N':
-        pass
-    elif border_cells[1] == 'S' and reference_board[r + 1][c] == 'S':
-        pass
-    else:
-        return False
-    if border_cells[2] == 'W' and reference_board[r][c - 1] == 'W':
-        pass
-    elif border_cells[2] == 'E' and reference_board[r][c + 1] == 'E':
-        pass
-    else:
-        return False
-    return True
+    if line[0] >= ENV['k']:
+        TAc.print(LANG.render_feedback('out-of-board', 'The sub-board dimension you have chosen is greater equal than the original board dimension.'), 'red', ['bold'])
+        exit(0)
+    if line[0] == 0:
+        TAc.print(LANG.render_feedback('board-to-small', 'The sub-board dimension you have chosen is to small.'), 'red', ['bold'])
+        exit(0)
 
-def out_of_borders(k, r, c, border_cells):
-    if r < 0:
-        return False
-    if c < 0:
-        return False
-    if r > 2**k:
-        return False
-    if c > 2**k:
-        return False
-    if border_cells[1] == 'N' and r - 1 < 0:
-        return False
-    if border_cells[1] == 'S' and r + 1 > 2**k:
-        return False
-    if border_cells[2] == 'W' and c - 1 < 0:
-        return False
-    if border_cells[2] == 'E' and c + 1 > 2**k:
-        return False
-    return True
+    if line[1] >= 2**ENV['k']:
+        TAc.print(LANG.render_feedback('row-coordinates-out-of-board', 'The row coordinates you have chosen are out of the original board dimension.'), 'red', ['bold'])
+        exit(0)
+    if line[1] >= 2**ENV['k'] - 1:
+        TAc.print(LANG.render_feedback('rpw-sub-board-out-of-original', 'The row coordinates you have chosen are out of the original board.'), 'red', ['bold'])
+        exit(0)
 
-def trilly_tile(hole_row, hole_col, length):
-    utilities.tiling(0, length - 1, 0, length - 1, hole_row, hole_col)
-    for i in range(length):
-        print(utilities.board[i][:length])
+    if line[2] >= 2**ENV['k']:
+        TAc.print(LANG.render_feedback('column-coordinates-out-of-board', 'The column coordinates you have chosen are out of the original board dimension.'), 'red', ['bold'])
+        exit(0)
+    if line[2] >= 2**ENV['k'] - 1:
+        TAc.print(LANG.render_feedback('column-sub-board-out-of-board', 'The column coordinates you have chosen are out of the original board.'), 'red', ['bold'])
+        exit(0)
 
-def fill_your_board(corner_row, corner_col, borders):
-    your_board[corner_row][corner_col] = borders[0]
-    if borders[1] == 'N':
-        your_board[corner_row - 1][corner_col] = 'N'
-    else:
-        your_board[corner_row + 1][corner_col] = 'S'
-    if borders[2] == 'E':
-        your_board[corner_row][corner_col + 1] = 'E'
-    else:
-        your_board[corner_row][corner_col - 1] = 'W'
+    if line[3] > line[1] + 2**line[0] - 1 or line[3] < line[1]:
+        TAc.print(LANG.render_feedback('row-hole-coordinates-exceeding-sub-board', 'The row hole coordinates you have chosen exceed the sub-board horizontally.'), 'red', ['bold'])
+        exit(0)
 
-def print_your_board():
-    for i in range(2**k):
-        print(your_board[i][:2**k])
+    if line[4] > line[2] + 2**line[0] - 1 or line[4] < line[2]:
+        TAc.print(LANG.render_feedback('column-hole-coordinates-exceeding-sub-board', 'The column hole coordinates you have chosen exceed the sub-board vertically.'), 'red', ['bold'])
+        exit(0)
 
-def place_tile():
-    for i in range(2**k):
-        for j in range(2**k):
-            if i != r or j != c:
-                if your_board[i][j] == '0':
-                    your_board[i][j] = reference_board[i][j]
-                    if your_board[i][j] == 'N':
-                        your_board[i + 1][j] = reference_board[i + 1][j]
-                        if your_board[i + 1][j] == '1':
-                            your_board[i + 1][j + 1] = reference_board[i + 1][j + 1]
-                        else:
-                            your_board[i + 1][j - 1] = reference_board[i + 1][j - 1]
-                    else:
-                        your_board[i][j + 1] = reference_board[i][j + 1]
-                        if your_board[i][j + 1] == '3':
-                            your_board[i + 1][j + 1] = reference_board[i + 1][j + 1]
-                        else:
-                            your_board[i + 1][j] = reference_board[i + 1][j]
-                    return
+def check_is_empty(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
+    for i in range(2**board_dimension):
+        for j in range(2**board_dimension):
+            if row_coordinates + i != hole_row or col_coordinates + j != hole_column:
+                if board[row_coordinates + i][col_coordinates + j] != '0':
+                    TAc.print(LANG.render_feedback('error-non-emty-sub-board', 'The sub-board you choose is not empty.'), 'red', ['bold'])
+                    exit(0)
 
-    
-if ENV['goal_min_calls_to_trilly'] == 'one_and_gain_three_calls_at_every_placed_tile':
-    allowed_trilly_calls = 1
-    incrementable = True
-elif ENV['goal_min_calls_to_trilly'] == 'gain_three_calls_at_every_placed_tile':
-    allowed_trilly_calls = 0
-    incrementable = True
-elif ENV['goal_min_calls_to_trilly'] == '4':
-    allowed_trilly_calls = 4
-    incrementable = False
-else: 
-    allowed_trilly_calls = 1
+def standard_move(row_coordinates, col_coordinates, hole_row, hole_column):
+    if hole_row - row_coordinates == 0 and hole_column - col_coordinates == 0:
+        board[row_coordinates][col_coordinates + 1] = 'N'
+        board[row_coordinates + 1][col_coordinates] = 'W'
+        board[row_coordinates + 1][col_coordinates + 1] = '4'
+    if hole_row - row_coordinates == 0 and hole_column - col_coordinates == 1:
+        board[row_coordinates][col_coordinates] = 'N'
+        board[row_coordinates + 1][col_coordinates] = '1'
+        board[row_coordinates + 1][col_coordinates + 1] = 'E'
+    if hole_row - row_coordinates == 1 and hole_column - col_coordinates == 0:
+        board[row_coordinates][col_coordinates] = 'W'
+        board[row_coordinates][col_coordinates + 1] = '3'
+        board[row_coordinates + 1][col_coordinates + 1] = 'S'
+    if hole_row - row_coordinates == 1 and hole_column - col_coordinates == 1:
+        board[row_coordinates][col_coordinates] = '2'
+        board[row_coordinates][col_coordinates + 1] = 'E'
+        board[row_coordinates + 1][col_coordinates] = 'S'
 
-if ENV['goal_min_calls_to_place_tile'] == 'k':
-    allowed_place_tile_calls = k
-elif ENV['goal_min_calls_to_place_tile'] == '1':
-    allowed_place_tile_calls = 1
-else:
-    allowed_place_tile_calls = 1
+def trilly_moves(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
+    k = 2**board_dimension
 
-print("You have four possibilities: ")
-print("\t 1. enter a line with 'trilly', the board dimension and the empty cell. This option calls the fairy (if you have the possibility).")
-print("\t 2. enter one or more lines with the tiles (one tile per line), you have to specify che corner cell of the tile followed by the characters of the border cells.")
-print("\t 3. enter a line with 'place_tile'. This option inserts a random tile for you (if you have the possibility).")
-print("\t 4. enter a line with 'print_your_board'. This option print your board with the inserted tiles.")
-print("Examples:")
-print("\t0,0;2SE")
-print("\ttrilly;1;0,0")
-print("\tplace_tile")
-print("\tprint_your_board")
-print("When you have finished, you have to insert a new line with 'end'\n")
+    if k <= 1:        
+        return
 
-line = [0]
-while line[0] not in(exceptions):
-    line = TALinput(
-        str,
-        num_tokens=1,
-        exceptions = exceptions,
-        regex="([0-9]+,[0-9]+);[0-4]([nN]|[sS])([eE]|[wW])|(trilly|TRILLY);[0-9]+;[0-9]+,[0-9]+|(place_tile|PLACE_TILE)|(print_your_board|PRINT_YOUR_BOARD)",
-        regex_explained="two numbers (row and col index) separated by a ',' followed by a ';' and the specific tile. Otherwise 'trilly' or another function. (it is not case sensitive)",
-        TAc=TAc
-    )
-    if line[0] not in(exceptions):
-        line = line[0].split(';')                   
-        if line[0].lower() == 'trilly' and allowed_trilly_calls > 0:
-            new_k = int(line[1])
-            if new_k >= k:
-                TAc.print(LANG.render_feedback("error-size-board-trilly", "You are not allowed to call trilly the fairy on a board of the same dimension of the given one."), "red", ["bold"])
+    half_k = int(k / 2)
 
-            if ENV['goal_min_calls_to_trilly'] != 'any':
-                allowed_trilly_calls -= 1   
+    row_holes = [['0' for i in range(2)] for j in range(2)]
+    col_holes = [['0' for i in range(2)] for j in range(2)]
+    row_holes[0][0] = row_coordinates + half_k - 1
+    col_holes[0][0] = col_coordinates + half_k - 1
+    row_holes[0][1] = row_coordinates + half_k - 1
+    col_holes[0][1] = col_coordinates + half_k
+    row_holes[1][0] = row_coordinates + half_k
+    col_holes[1][0] = col_coordinates + half_k - 1
+    row_holes[1][1] = row_coordinates + half_k
+    col_holes[1][1] = col_coordinates + half_k
 
-            new_r = int(line[2].split(',')[0])
-            new_c = int(line[2].split(',')[1])
-            trilly_tile(new_r, new_c, 2**(new_k))
+    if (hole_row < row_coordinates + half_k and hole_column < col_coordinates + half_k ):
+        row_holes[0][0] = hole_row
+        col_holes[0][0] = hole_column
+        standard_move(row_coordinates + half_k - 1, col_coordinates + half_k - 1, row_coordinates + half_k - 1, col_coordinates + half_k - 1)
+        move = f"1 {row_coordinates + half_k - 1} {col_coordinates + half_k - 1} {row_coordinates + half_k - 1} {col_coordinates + half_k - 1}"
 
-        elif line[0].lower() == 'trilly' and allowed_trilly_calls <= 0:
-            TAc.print(LANG.render_feedback("error-zero-trilly-calls", "You are not allowed to call trilly the fairy."), "red", ["bold"])
+    if (hole_row < row_coordinates + half_k and hole_column >= col_coordinates + half_k):
+        row_holes[0][1] = hole_row
+        col_holes[0][1] = hole_column        
+        standard_move(row_coordinates + half_k - 1, col_coordinates + half_k - 1, row_coordinates + half_k - 1, col_coordinates + half_k)
+        move = f"1 {row_coordinates + half_k - 1} {col_coordinates + half_k - 1} {row_coordinates + half_k - 1} {col_coordinates + half_k}"
 
-        elif line[0].lower() == 'place_tile' and allowed_place_tile_calls > 0:
-            if ENV['goal_min_calls_to_place_tile'] != 'any':
-                allowed_place_tile_calls -=1
+    if (hole_row >= row_coordinates + half_k and hole_column < col_coordinates + half_k ):
+        row_holes[1][0] = hole_row
+        col_holes[1][0] = hole_column    
+        standard_move(row_coordinates + half_k - 1, col_coordinates + half_k - 1, row_coordinates + half_k, col_coordinates + half_k -1)
+        move = f"1 {row_coordinates + half_k - 1} {col_coordinates + half_k - 1} {row_coordinates + half_k} {col_coordinates + half_k - 1}"
 
-            place_tile()
+    if (hole_row >= row_coordinates + half_k and hole_column >= col_coordinates + half_k):
+        row_holes[1][1] = hole_row
+        col_holes[1][1] = hole_column    
+        standard_move(row_coordinates + half_k - 1, col_coordinates + half_k - 1, row_coordinates + half_k, col_coordinates + half_k)
+        move = f"1 {row_coordinates + half_k - 1} {col_coordinates + half_k - 1} {row_coordinates + half_k} {col_coordinates + half_k}"
 
-        elif line[0].lower() == 'place_tile' and allowed_place_tile_calls <= 0:
-            TAc.print(LANG.render_feedback("error-zero-place_tile-calls", "You are not allowed to call place_tile."), "red", ["bold"])
+    TAc.print(LANG.render_feedback('suggested-standard-move', f'{move}'), 'green')
 
-        elif line[0].lower() == 'print_your_board':
-            print_your_board()
-
+    if board_dimension <= 2 or ENV['trilly_requests'] == 'poses_only_the_starting_problem':
+        trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
+        trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
+        trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
+        trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
+    if board_dimension > 2 and ENV['trilly_requests'] == 'might_pose_non_bigger_problems_in_reply':
+        TAc.print(LANG.render_feedback('suggested-macro-moves', f'#macro {board_dimension - 1} {row_coordinates} {col_coordinates} {row_holes[0][0]} {col_holes[0][0]}'), 'green')
+        TAc.print(LANG.render_feedback('suggested-macro-moves', f'#macro {board_dimension - 1} {row_coordinates} {col_coordinates + half_k} {row_holes[0][1]} {col_holes[0][1]}'), 'green')
+        TAc.print(LANG.render_feedback('suggested-macro-moves', f'#macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates} {row_holes[1][0]} {col_holes[1][0]}'), 'green')
+        TAc.print(LANG.render_feedback('suggested-macro-moves', f'#macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates + half_k} {row_holes[1][1]} {col_holes[1][1]}'), 'green')
+    if board_dimension > 2 and ENV['trilly_requests'] == 'might_pose_smaller_problems_in_reply':
+        # sceglie in modo casuale cosa fare
+        if random.randint(0, 1):
+            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
         else:
-            r_corner_cell = int(line[0].split(',')[0])
-            c_corner_cell = int(line[0].split(',')[1])
-            border_cells = line[1].upper()
-            
-            if r_corner_cell == r and c_corner_cell == c:
-                TAc.print(LANG.render_feedback("error-empty-cell-covered", "You have covered the cell that must remain empty."), "red", ["bold"])
-            elif not utilities.out_of_borders(k, r_corner_cell, c_corner_cell, border_cells):
-                TAc.print(LANG.render_feedback("error-out-of-borders", "You have place a tile out of the borders."), "red", ["bold"])
-            elif not utilities.check_tile(r_corner_cell, c_corner_cell, border_cells):
-                TAc.print(LANG.render_feedback("error-wrong-tile", "You have place a tile in the wrong place."), "red", ["bold"])
-            else:
-                fill_your_board(r_corner_cell,c_corner_cell, border_cells)
-                if incrementable:
-                    allowed_trilly_calls += 3
-                    TAc.print(LANG.render_feedback("correct-tile", f"Weel done! You have gained three trilly calls. Now you have {allowed_trilly_calls} trilly calls"), "green", ["bold"])
-                else:
-                    TAc.print(LANG.render_feedback("correct-tile", f"Weel done!"), "green", ["bold"])
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'#macro {board_dimension - 1} {row_coordinates} {col_coordinates} {row_holes[0][0]} {col_holes[0][0]}'), 'green')
+        if random.randint(0, 1):
+            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
+        else:
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'#macro {board_dimension - 1} {row_coordinates} {col_coordinates + half_k} {row_holes[0][1]} {col_holes[0][1]}'), 'green')
+        if random.randint(0, 1):
+            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
+        else:
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'#macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates} {row_holes[1][0]} {col_holes[1][0]}'), 'green')
+        if random.randint(0, 1):
+            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
+        else:
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'#macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates + half_k} {row_holes[1][1]} {col_holes[1][1]}'), 'green')        
 
+def trilly(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
+    check_is_empty(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column)
+    trilly_moves(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column)
+
+count_standard_moves = 0
+count_trilly_calls = 0
+
+stopping_command_set="#end"
+line = [0]
+TAc.print(LANG.render_feedback('gimme-action', f"#? waiting for the action.\nWhen you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete."), 'yellow', ['bold'])
+
+while line[0] != stopping_command_set:
+    line = TALinput(int, num_tokens = 5, exceptions = stopping_command_set, TAc = TAc)
+    if line[0] != stopping_command_set:
+        if ENV['left_out_cell_must_be_a_corner_cell']:
+            check_corner_cell(line)
+        check_values(line)
+
+        if line[0] == 1:
+            count_standard_moves += 1
+            TAc.print(LANG.render_feedback('standard-moves-call', 'You have chosen to call `standard_moves`.'), 'yellow', ['bold'])
+            standard_move(line[1], line[2], line[3], line[4])
+        if line[0] > 1:
+            count_trilly_calls += 1
+            TAc.print(LANG.render_feedback('trilly-call', 'You have chosen to call `trilly`.'), 'yellow', ['bold'])
+            trilly(line[0], line[1], line[2], line[3], line[4])
+
+if ENV['goal_min_calls_to_trilly'] == '4' and count_trilly_calls <= 4:
+    TAc.print(LANG.render_feedback('trilly-goal-reached', 'You have respected the trilly calls goal you set.'), 'green', ['bold'])
+elif ENV['goal_min_calls_to_trilly'] == 'one_and_gain_three_calls_at_every_standard_move' and count_trilly_calls <= (1 + count_standard_moves * 3):
+    TAc.print(LANG.render_feedback('trilly-goal-reached', 'You have respected the trilly calls goal you set.'), 'green', ['bold'])
+elif ENV['goal_min_calls_to_trilly'] == 'gain_three_calls_at_every_standard_move' and count_trilly_calls <= (count_standard_moves * 3):
+    TAc.print(LANG.render_feedback('trilly-goal-reached', 'You have respected the trilly calls goal you set.'), 'green', ['bold'])
+elif ENV['goal_min_calls_to_trilly'] == 'any':
+    TAc.print(LANG.render_feedback('trilly-goal-reached', 'You have respected the trilly calls goal you set.'), 'green', ['bold'])
+else:
+    TAc.print(LANG.render_feedback('trilly-goal-reached', 'You missed the trilly calls goal you set.'), 'red', ['bold'])
+
+if ENV['goal_min_calls_to_standard_moves'] == 'k' and count_standard_moves <= ENV['k']:
+    TAc.print(LANG.render_feedback('standard-goal-reached', 'You have respected the standard moves goal you set.'), 'green', ['bold'])
+elif ENV['goal_min_calls_to_standard_moves'] == '1' and count_standard_moves <= 1:
+    TAc.print(LANG.render_feedback('standard-goal-reached', 'You have respected the standard moves goal you set.'), 'green', ['bold'])
+elif ENV['goal_min_calls_to_standard_moves'] == 'any':
+    TAc.print(LANG.render_feedback('standard-goal-reached', 'You have respected the standard moves goal you set.'), 'green', ['bold'])
+else:
+    TAc.print(LANG.render_feedback('standard-goal-missed', 'You missed the standard moves goal you set.'), 'red', ['bold'])
 
 exit(0)
