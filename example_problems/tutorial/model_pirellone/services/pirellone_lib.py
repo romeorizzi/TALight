@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """This file contains the useful functions to handle 'Pirellone' Problem."""
-import random, copy, re
 from sys import exit
+import random, copy, re
 
 
 # CONSTANTS:
@@ -177,79 +177,91 @@ def gen_pirellone(m, n, seed, with_yes_certificate=False):
     """From (m,n,seed), this functions returns a pirellone instance, with eventually the certificate."""
     assert m >= 0
     assert n >= 0
-    solvable = is_solvable_seed(seed)
-    # Generate pirellone
+    must_be_solvable = is_solvable_seed(seed)
+    # Generate solution
     random.seed(seed)
     switches_row = [random.randint(0, 1) for _ in range(m)]         
     switches_col = [random.randint(0, 1) for _ in range(n)]
-    pirellone = [ [ (switches_col[j] + switches_row[i]) % 2 for j in range(n) ] for i in range(m)]
-    if not solvable:
+    # Generate instance
+    pirellone = [[(switches_col[j] + switches_row[i]) % 2 for j in range(n)] for i in range(m)]
+    if not must_be_solvable:
         if m < 2 or n < 2:
             # In this case, the pirellone is always solvable
             raise RuntimeError('invalid-unsolvable-dimensions')
         num_altered_rows = random.randrange(1, m)
-        altered_rows= random.sample(range(m), num_altered_rows)
+        altered_rows = random.sample(range(m), num_altered_rows)
         for row in altered_rows:
             col = random.randrange(0, n)
-            pirellone[row][col] = 1 - pirellone[row][col] 
+            pirellone[row][col] = 1-pirellone[row][col] 
     if with_yes_certificate:
         return pirellone, switches_row, switches_col
     else:
         return pirellone
 
 
-# GET_SOL FUNCTIONS:
-def get_opt_sol_from_solution(switches_row: List[int], switches_col: List[int]):
+# CORE FUNCTIONS:
+def is_optimal(sol):
+    """It assumes that sol contains a valid solution. Returns True if this solution is the minimum one"""
+    assert sol != NO_SOL
+    m = len(sol[0])
+    n = len(sol[1])
+    switches_row, switches_col = sol
+    return sum(switches_col) + sum(switches_row) <= ((m + n) // 2)
+
+
+def make_optimal(sol):
     """Returns the optimal solution of a solvable pirellone given a first solution."""
+    switches_row = sol[0]
+    switches_col = sol[1]
     m = len(switches_row)
     n = len(switches_col)
-    if sum(switches_col) + sum(switches_row) > (m+n)//2:
+    if sum(switches_col) + sum(switches_row) > ((m + n) // 2):
         switches_row = [ 1-val for val in switches_row]
         switches_col = [ 1-val for val in switches_col]
     return [switches_row, switches_col]
 
-def get_opt_sol_if_solvable(pirellone: List[List[int]]):
+
+def get_opt_sol_if_solvable(pirellone):
     """Returns the optimal solution of a solvable pirellone."""
     m = len(pirellone)
-    n = len(pirellone[0])
     switches_col = pirellone[0]
     if switches_col[0]:
-       switches_row = [ pirellone[_][0] for _ in range(m) ]
-    else:
        switches_row = [ 1-pirellone[_][0] for _ in range(m) ]
-    return get_opt_sol_from(switches_row,switches_col)
+    else:
+       switches_row = [ pirellone[_][0] for _ in range(m) ]
+    return make_optimal([switches_row, switches_col])
 
-def check_sol(pirellone: List[List[int]], sol, sol_style):
-    """returns True if sol turns off entirely the pirellone. Otherwise it returns False and an (i,j) such that pirellone[i,j] is set to one after the solution sol gets applied."""
+
+def check_sol(pirellone, sol):
+    """Returns True if sol turns off entirely the pirellone. Otherwise it returns False and an (i, j) such that pirellone[i, j] is set to one after the solution sol gets applied."""
     assert sol != NO_SOL
     m = len(pirellone)
     n = len(pirellone[0])
-    if sol_style == "seq":
-        sol = seq_to_subset(sol,m,n)
     switches_row, switches_col = sol
     for i in range(m):
         for j in range(n):
-            if pirellone[i][j] != (switches_row[i] + switches_col[j])%2:
-                return False, (i,j)
+            if pirellone[i][j] != ((switches_row[i] + switches_col[j]) % 2):
+                return False, (i, j)
     return True, None
 
 
-def sol_is_the_min(m, n, sol, sol_style):
-    """It assumes that sol contains a valid solution. Returns True if this solution is the minimum one"""
-    assert sol != NO_SOL
-    if sol_style == "seq":
-        sol = seq_to_subset(sol,m,n)
-    switches_row, switches_col = sol
-    return sum(switches_col)+sum(switches_row) <= (m+n)//2
+
+def is_solvable2(pirellone):
+     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
+     return check_sol(pirellone, get_opt_sol_if_solvable(pirellone))
 
 
-def is_solvable(pirellone: List[List[int]]) -> bool:
+def is_solvable(pirellone, with_yes_certificate=False):
     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
-    return check_sol(pirellone, get_opt_sol_if_solvable(pirellone))
+    opt_sol = get_opt_sol_if_solvable(pirellone)
+    solvable, _ = check_sol(pirellone, opt_sol)
+    if with_yes_certificate:
+        return solvable, opt_sol if solvable else None
+    return solvable
 
 
 
-def get_padded_sol(m:int, n:int, seq_sol:List[str], pad_size:int):
+def get_padded_sol(m, n, seq_sol, pad_size):
     """From (m,n) and a sequence solution (e.g.: ['r2']), this functions returns a solution longer than at least pad_size."""
     if seq_sol == NO_SOL:
         return NO_SOL
@@ -273,11 +285,9 @@ def get_padded_sol(m:int, n:int, seq_sol:List[str], pad_size:int):
 
 
 
-
-
 # TESTS
 if __name__ == "__main__":
-
+    # CONVERTERS FUNCTIONS:
     print('Test: subset_to_seq()')
     assert subset_to_seq([[0, 0, 1], [0, 1, 0]]) == ['r3', 'c2']
     assert subset_to_seq(NO_SOL) == NO_SOL
@@ -286,7 +296,6 @@ if __name__ == "__main__":
 
     print('Test: seq_to_subset()')
     assert seq_to_subset(['r3', 'c2'], 4, 4) == [[0, 0, 1, 0], [0, 1, 0, 0]]
-    print(seq_to_subset(['r1', 'c2', 'c2'], 3, 3))
     assert seq_to_subset(['r1', 'c2', 'c2'], 3, 3) == [[1, 0, 0], [0, 0, 0]]
     assert seq_to_subset(NO_SOL, 4, 4) == NO_SOL
     print('==> OK\n')
@@ -305,6 +314,7 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
+    # TO_STRING and FROM_STRING FUNCTIONS:
     print('Test: seq_to_str()')
     assert seq_to_str(['r3', 'c2']) == 'r3 c2'
     assert seq_to_str(NO_SOL) == NO_SOL
@@ -317,7 +327,6 @@ if __name__ == "__main__":
         "    ---\n" + \
         "0 | 0 0\n" + \
         "1 | 1 1"
-    print(sol_to_str([[0, 0], [0, 1]], NO_SOL))
     assert sol_to_str([[0, 0], [0, 1]], NO_SOL) == \
         "    ? ?\n" + \
         "    ---\n" + \
@@ -338,16 +347,17 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
-    print('Test: pirellone_to_str()')
-    assert pirellone_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
-    print('==> OK\n')
-
-
     print('Test: get_pirellone_from_str()')
     assert get_pirellone_from_str('0 0\n1 1') == [[0, 0], [1, 1]]
     print('==> OK\n')
 
 
+    print('Test: pirellone_to_str()')
+    assert pirellone_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
+    print('==> OK\n')
+
+
+    # PIRELLONE GENERATOR FUNCTIONS:
     print('Test: is_solvable_seed()')
     print('FOR DEFINITION')
     print('==> OK\n')
@@ -363,58 +373,103 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
-    print('Test: get_opt_sol_from()')
-    print('MAYBE TODO?')
+    # CORE FUNCTIONS:
+    print('Test: is_optimal()')
+    assert is_optimal([[0, 0],[0, 0]])
+    assert is_optimal([[0, 0],[0, 1]])
+    assert is_optimal([[0, 0],[1, 0]])
+    assert is_optimal([[0, 0],[1, 1]])
+    assert is_optimal([[0, 1],[0, 0]])
+    assert is_optimal([[0, 1],[0, 1]])
+    assert is_optimal([[0, 1],[1, 0]])
+    assert not is_optimal([[0, 1],[1, 1]])
+    assert is_optimal([[1, 0],[0, 0]])
+    assert is_optimal([[1, 0],[0, 1]])
+    assert is_optimal([[1, 0],[1, 0]])
+    assert not is_optimal([[1, 0],[1, 1]])
+    assert is_optimal([[1, 1],[0, 0]])
+    assert not is_optimal([[1, 1],[0, 1]])
+    assert not is_optimal([[1, 1],[1, 0]])
+    assert not is_optimal([[1, 1],[1, 1]])
     print('==> OK\n')
 
 
-    print('Test: get_opt_sol() in solvable instances')
-    assert get_opt_sol([[0, 0], [0, 0]]) == [[0, 0],[0, 0]]
-    assert get_opt_sol([[0, 0], [1, 1]]) == [[0, 1],[0, 0]]
-    assert get_opt_sol([[0, 1], [0, 1]]) == [[0, 0],[0, 1]]
-    assert get_opt_sol([[0, 1], [1, 0]]) in [[[1, 0],[1, 0]],
-                                             [[0, 1],[0, 1]]]
-    assert get_opt_sol([[1, 0], [0, 1]]) in [[[1, 0],[0, 1]],
-                                             [[0, 1],[1, 0]]]
-    assert get_opt_sol([[1, 0], [1, 0]]) == [[0, 0],[1, 0]]
-    assert get_opt_sol([[1, 1], [0, 0]]) == [[1, 0],[0, 0]]
-    assert get_opt_sol([[1, 1], [1, 1]]) in [[[1, 1],[0, 0]],
-                                             [[0, 0],[1, 1]]]
-    print('Test: get_opt_sol() in NOT solvable instances')
-    print('THIS BEHAVIOR HAS YET TO BE IMPLEMENTATED')
-    # assert get_opt_sol([[0, 0], [0, 1]]) == NO_SOL
-    # assert get_opt_sol([[0, 0], [1, 0]]) == NO_SOL
-    # assert get_opt_sol([[0, 1], [0, 0]]) == NO_SOL
-    # assert get_opt_sol([[0, 1], [1, 1]]) == NO_SOL
-    # assert get_opt_sol([[1, 0], [0, 0]]) == NO_SOL
-    # assert get_opt_sol([[1, 0], [1, 1]]) == NO_SOL
-    # assert get_opt_sol([[1, 1], [0, 1]]) == NO_SOL
-    # assert get_opt_sol([[1, 1], [1, 0]]) == NO_SOL
+    print('Test: make_optimal()')
+    assert make_optimal([[0, 0], [0, 0]]) == [[0, 0], [0, 0]]
+    assert make_optimal([[0, 0], [0, 1]]) == [[0, 0], [0, 1]]
+    assert make_optimal([[0, 0], [1, 0]]) == [[0, 0], [1, 0]]
+    assert make_optimal([[0, 0], [1, 1]]) == [[0, 0], [1, 1]]
+    assert make_optimal([[0, 1], [0, 0]]) == [[0, 1], [0, 0]]
+    assert make_optimal([[0, 1], [0, 1]]) == [[0, 1], [0, 1]]
+    assert make_optimal([[0, 1], [1, 0]]) == [[0, 1], [1, 0]]
+    assert make_optimal([[1, 0], [0, 0]]) == [[1, 0], [0, 0]]
+    assert make_optimal([[1, 0], [0, 1]]) == [[1, 0], [0, 1]]
+    assert make_optimal([[1, 0], [1, 0]]) == [[1, 0], [1, 0]]
+    assert make_optimal([[1, 1], [0, 0]]) == [[1, 1], [0, 0]]
+    assert make_optimal([[0, 1], [1, 1]]) == [[1, 0], [0, 0]]
+    assert make_optimal([[1, 0], [1, 1]]) == [[0, 1], [0, 0]]
+    assert make_optimal([[1, 1], [0, 1]]) == [[0, 0], [1, 0]]
+    assert make_optimal([[1, 1], [1, 0]]) == [[0, 0], [0, 1]]
+    assert make_optimal([[1, 1], [1, 1]]) == [[0, 0], [0, 0]]
     print('==> OK\n')
 
 
-    print('Test: switch_row()')
-    print('FOR DEFINITION')
+    print('Test: get_opt_sol_if_solvable() in solvable instances')
+    assert get_opt_sol_if_solvable([[0, 0], [0, 0]]) == [[0, 0],[0, 0]]
+    assert get_opt_sol_if_solvable([[0, 0], [1, 1]]) == [[0, 1],[0, 0]]
+    assert get_opt_sol_if_solvable([[0, 1], [0, 1]]) == [[0, 0],[0, 1]]
+    assert get_opt_sol_if_solvable([[0, 1], [1, 0]]) in [[[1, 0],[1, 0]],
+                                                        [[0, 1],[0, 1]]]
+    assert get_opt_sol_if_solvable([[1, 0], [0, 1]]) in [[[1, 0],[0, 1]],
+                                                        [[0, 1],[1, 0]]]
+    assert get_opt_sol_if_solvable([[1, 0], [1, 0]]) == [[0, 0],[1, 0]]
+    assert get_opt_sol_if_solvable([[1, 1], [0, 0]]) == [[1, 0],[0, 0]]
+    assert get_opt_sol_if_solvable([[1, 1], [1, 1]]) in [[[1, 1],[0, 0]],
+                                                        [[0, 0],[1, 1]]]
+    print('Test: get_opt_sol_if_solvable() in NOT solvable instances')
+    print('THIS BEHAVIOR MAKES NO SENSE ')
+    # print( get_opt_sol_if_solvable([[0, 0], [0, 1]]) )
+    # print( get_opt_sol_if_solvable([[0, 0], [1, 0]]) )
+    # print( get_opt_sol_if_solvable([[0, 1], [0, 0]]) )
+    # print( get_opt_sol_if_solvable([[0, 1], [1, 1]]) )
+    # print( get_opt_sol_if_solvable([[1, 0], [0, 0]]) )
+    # print( get_opt_sol_if_solvable([[1, 0], [1, 1]]) )
+    # print( get_opt_sol_if_solvable([[1, 1], [0, 1]]) )
+    # print( get_opt_sol_if_solvable([[1, 1], [1, 0]]) )
     print('==> OK\n')
 
 
-    print('Test: switch_col()')
-    print('FOR DEFINITION')
+    print('Test: check_sol() in solvable instances with CORRECT sol')
+    assert check_sol([[0, 0], [0, 0]],  [[0, 0], [0, 0]]) == (True, None)
+    assert check_sol([[0, 0], [1, 1]],  [[0, 1], [0, 0]]) == (True, None)
+    assert check_sol([[0, 1], [0, 1]],  [[0, 0], [0, 1]]) == (True, None)
+    assert check_sol([[0, 1], [1, 0]],  [[0, 1], [0, 1]]) == (True, None)
+    assert check_sol([[1, 0], [0, 1]],  [[0, 1], [1, 0]]) == (True, None)
+    assert check_sol([[1, 0], [1, 0]],  [[0, 0], [1, 0]]) == (True, None)
+    assert check_sol([[1, 1], [0, 0]],  [[1, 0], [0, 0]]) == (True, None)
+    assert check_sol([[1, 1], [1, 1]],  [[1, 1], [0, 0]]) == (True, None)
+    print('Test: check_sol() in solvable instances with WRONG sol')
+    assert check_sol([[0, 0], [0, 0]],  [[0, 1], [0, 0]]) == (False, (1, 0))
+    assert check_sol([[0, 0], [1, 1]],  [[0, 1], [1, 0]]) == (False, (0, 0))
+    assert check_sol([[0, 1], [0, 1]],  [[0, 1], [0, 0]]) == (False, (0, 1))
+    assert check_sol([[0, 1], [1, 0]],  [[0, 1], [0, 0]]) == (False, (0, 1))
+    assert check_sol([[1, 0], [0, 1]],  [[0, 0], [0, 1]]) == (False, (0, 0))
+    assert check_sol([[1, 0], [1, 0]],  [[0, 0], [1, 1]]) == (False, (0, 1))
+    assert check_sol([[1, 1], [0, 0]],  [[1, 1], [0, 0]]) == (False, (1, 0))
+    assert check_sol([[1, 1], [1, 1]],  [[0, 1], [0, 0]]) == (False, (0, 0))
+    print('Test: check_sol() in NOT solvable instances')
+    assert check_sol([[0, 0], [0, 1]],  [[0, 0], [0, 0]]) == (False, (1, 1))
+    assert check_sol([[0, 0], [1, 0]],  [[0, 0], [0, 0]]) == (False, (1, 0))
+    assert check_sol([[0, 1], [0, 0]],  [[0, 0], [0, 0]]) == (False, (0, 1))
+    assert check_sol([[0, 1], [1, 1]],  [[0, 0], [0, 0]]) == (False, (0, 1))
+    assert check_sol([[1, 0], [0, 0]],  [[0, 0], [0, 0]]) == (False, (0, 0))
+    assert check_sol([[1, 0], [1, 1]],  [[0, 0], [0, 0]]) == (False, (0, 0))
+    assert check_sol([[1, 1], [0, 1]],  [[0, 0], [0, 0]]) == (False, (0, 0))
+    assert check_sol([[1, 1], [1, 0]],  [[0, 0], [0, 0]]) == (False, (0, 0))
     print('==> OK\n')
 
 
-    print('Test: are_equiv()')
-    assert are_equiv([[0, 0], [0, 1]], [[0, 0], [0, 1]])
-    assert are_equiv(NO_SOL, NO_SOL)
-    assert are_equiv([[0, 0], [0, 1]], [[1, 1], [1, 0]])
-    assert are_equiv([[1, 0], [0, 1]], [[0, 1], [1, 0]])
-    assert not are_equiv([[0, 0], [0, 1]], NO_SOL)
-    assert not are_equiv(NO_SOL, [[0, 0], [0, 1]])
-    assert not are_equiv([[0, 0], [0, 1]], [[0, 0], [1, 0]])
-    print('==> OK\n')
-
-
-    print('Test: is_solvable() in solvable instances')
+    print('Test: is_solvable() in solvable instances WITHOUT certificate')
     assert is_solvable([[0, 0], [0, 0]])
     assert is_solvable([[0, 0], [1, 1]])
     assert is_solvable([[0, 1], [0, 1]])
@@ -423,8 +478,7 @@ if __name__ == "__main__":
     assert is_solvable([[1, 0], [1, 0]])
     assert is_solvable([[1, 1], [0, 0]])
     assert is_solvable([[1, 1], [1, 1]])
-    print('==> OK\n')
-    print('Test: is_solvable() in NOT solvable instances')
+    print('Test: is_solvable() in NOT solvable instances WITHOUT certificate')
     assert not is_solvable([[0, 0], [0, 1]])
     assert not is_solvable([[0, 0], [1, 0]])
     assert not is_solvable([[0, 1], [0, 0]])
@@ -433,6 +487,32 @@ if __name__ == "__main__":
     assert not is_solvable([[1, 0], [1, 1]])
     assert not is_solvable([[1, 1], [0, 1]])
     assert not is_solvable([[1, 1], [1, 0]])
+    print('Test: is_solvable() in solvable instances WITH certificate')
+    instance = [[0, 0], [0, 0]]
+    assert is_solvable(instance, True) == (True, get_opt_sol_if_solvable(instance))
+    instance = [[0, 0], [1, 1]]
+    assert is_solvable(instance, True) == (True, get_opt_sol_if_solvable(instance))
+    instance = [[0, 1], [0, 1]]
+    assert is_solvable(instance, True) == (True, get_opt_sol_if_solvable(instance))
+    instance = [[0, 1], [1, 0]]
+    assert is_solvable(instance, True) == (True, get_opt_sol_if_solvable(instance))
+    instance = [[1, 0], [0, 1]]
+    assert is_solvable(instance, True) == (True, get_opt_sol_if_solvable(instance))
+    instance = [[1, 0], [1, 0]]
+    assert is_solvable(instance, True) == (True, get_opt_sol_if_solvable(instance))
+    instance = [[1, 1], [0, 0]]
+    assert is_solvable(instance, True) == (True, get_opt_sol_if_solvable(instance))
+    instance = [[1, 1], [1, 1]]
+    assert is_solvable(instance, True) == (True, get_opt_sol_if_solvable(instance))
+    print('Test: is_solvable() in NOT solvable instances WITH certificate')
+    assert is_solvable([[0, 0], [0, 1]], True) == (False, None)
+    assert is_solvable([[0, 0], [1, 0]], True) == (False, None)
+    assert is_solvable([[0, 1], [0, 0]], True) == (False, None)
+    assert is_solvable([[0, 1], [1, 1]], True) == (False, None)
+    assert is_solvable([[1, 0], [0, 0]], True) == (False, None)
+    assert is_solvable([[1, 0], [1, 1]], True) == (False, None)
+    assert is_solvable([[1, 1], [0, 1]], True) == (False, None)
+    assert is_solvable([[1, 1], [1, 0]], True) == (False, None)
     print('==> OK\n')
 
 
@@ -440,43 +520,4 @@ if __name__ == "__main__":
     print('FOR DEFINITION')
     print('==> OK\n')
 
-
-    print('Test: get_light_on_after() in solvable instances')
-    assert get_light_on_after([[0, 0], [0, 0]], get_opt_sol([[0, 0], [0, 0]])) == 0
-    assert get_light_on_after([[0, 0], [1, 1]], get_opt_sol([[0, 0], [1, 1]])) == 0
-    assert get_light_on_after([[0, 1], [0, 1]], get_opt_sol([[0, 1], [0, 1]])) == 0
-    assert get_light_on_after([[0, 1], [1, 0]], get_opt_sol([[0, 1], [1, 0]])) == 0
-    assert get_light_on_after([[1, 0], [0, 1]], get_opt_sol([[1, 0], [0, 1]])) == 0
-    assert get_light_on_after([[1, 0], [1, 0]], get_opt_sol([[1, 0], [1, 0]])) == 0
-    assert get_light_on_after([[1, 1], [0, 0]], get_opt_sol([[1, 1], [0, 0]])) == 0
-    assert get_light_on_after([[1, 1], [1, 1]], get_opt_sol([[1, 1], [1, 1]])) == 0
-    assert get_light_on_after([[1, 1], [1, 1]], [[0, 0], [0, 0]]) == 4
-    assert get_light_on_after([[1, 1], [1, 1]], [[1, 0], [0, 0]]) == 2
-    assert get_light_on_after([[1, 1], [1, 1]], [[1, 1], [0, 0]]) == 0
-    print('==> OK\n')
-    print('Test: check_off_lights() in NOT solvable instances')
-    assert not get_light_on_after([[0, 0], [0, 1]], get_opt_sol([[0, 0], [0, 1]])) == None
-    assert not get_light_on_after([[0, 0], [1, 0]], get_opt_sol([[0, 0], [1, 0]])) == None
-    assert not get_light_on_after([[0, 1], [0, 0]], get_opt_sol([[0, 1], [0, 0]])) == None
-    assert not get_light_on_after([[0, 1], [1, 1]], get_opt_sol([[0, 1], [1, 1]])) == None
-    assert not get_light_on_after([[1, 0], [0, 0]], get_opt_sol([[1, 0], [0, 0]])) == None
-    assert not get_light_on_after([[1, 0], [1, 1]], get_opt_sol([[1, 0], [1, 1]])) == None
-    assert not get_light_on_after([[1, 1], [0, 1]], get_opt_sol([[1, 1], [0, 1]])) == None
-    assert not get_light_on_after([[1, 1], [1, 0]], get_opt_sol([[1, 1], [1, 0]])) == None
-
-
-    print('Test: get_min_lights_on() in solvable instances')
-    # assert get_min_lights_on([[0, 0], [0, 0]]) == 0
-    # assert get_min_lights_on([[0, 0], [1, 1]]) == 0
-    # assert get_min_lights_on([[0, 1], [0, 1]]) == 0
-    # assert get_min_lights_on([[0, 1], [1, 0]]) == 0
-    # assert get_min_lights_on([[1, 0], [0, 1]]) == 0
-    # assert get_min_lights_on([[1, 0], [1, 0]]) == 0
-    # assert get_min_lights_on([[1, 1], [0, 0]]) == 0
-    # assert get_min_lights_on([[1, 1], [1, 1]]) == 0
-    print('THIS BEHAVIOR HAS YET TO BE IMPLEMENTATED')
-    print('==> OK\n')
-    print('Test: get_min_lights_on() in NOT solvable instances')
-    print('THIS BEHAVIOR HAS YET TO BE IMPLEMENTATED')
-    print('==> OK\n')
-
+    print("FINISH")
