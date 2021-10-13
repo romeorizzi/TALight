@@ -20,6 +20,12 @@ class ModellingProblemHelper():
         self.__sol_filename  = sol_filename
         self.__out_filename  = out_filename
         self.__err_filename  = err_filename
+        self.__tmp_path = None
+        self.__mod_path = None
+        self.__dat_path = None
+        self.__sol_path = None
+        self.__out_path = None
+        self.__err_path = None
 
 
     def __get_tmp_path(self):
@@ -71,7 +77,7 @@ class ModellingProblemHelper():
             os.makedirs(self.__get_tmp_path())
 
 
-    def receive_modelling_files(self, get_input:bool):
+    def receive_modelling_files(self, read_input):
         """Enables the receipt of the files sent by the bot and return the input of the input_file"""
         # Initialize __tmp_dirname
         self.__init_tmp_dir()
@@ -95,23 +101,22 @@ class ModellingProblemHelper():
             raise RuntimeError('write-error', self.__dat_filename, err)
         
         # return input
-        if get_input:
+        if read_input:
             input = service_server_requires_and_gets_file_of_handle('input').decode()
             return input
 
 
-    def run_GPLSOL(self) -> None:
+    def run_GPLSOL(self):
         """launches glpsol on the .mod and .dat files contained in TMP_DIR. The stdout, stderr and solution of glpsol are saved in files."""
-        # Create in __tmp_dirname output file
         try:
-            with open(self.get_out_path, 'w') as out_file:
+            with open(self.get_out_path(), 'w') as out_file:
                 try:
-                    with open(self.get_err_path, 'w') as err_file:
+                    with open(self.get_err_path(), 'w') as err_file:
                         # RUN gplsol
                         subprocess.run([
                             "glpsol", 
                             "-m", self.get_mod_path(), 
-                            "-d", self.get_dat_path
+                            "-d", self.get_dat_path(),
                         ], cwd=self.__get_tmp_path(), timeout=30.0, stdout=out_file, stderr=err_file)
                 except os.error as err:
                     raise RuntimeError('write-error', self.__err_filename, err)
@@ -128,7 +133,7 @@ class ModellingProblemHelper():
     def get_out_str(self):
         """Return a string that contents the stdoutput of GPLSOL."""
         try:
-            with open(self.get_out_path, 'r') as file:
+            with open(self.get_out_path(), 'r') as file:
                 return file.read()
         except os.error as err:
             raise RuntimeError('stdoutput-read-error', err)
@@ -137,7 +142,7 @@ class ModellingProblemHelper():
     def get_err_str(self):
         """Return a string that contents the stderr of GPLSOL."""
         try:
-            with open(self.get_err_path, 'r') as file:
+            with open(self.get_err_path(), 'r') as file:
                 return file.read()
         except os.error as err:
             raise RuntimeError('stderr-read-error', err)
@@ -146,7 +151,7 @@ class ModellingProblemHelper():
     def get_raw_solution(self) -> list:
         """Return a list of string that contents the solution produced by GPLSOL. Remember to call a soluion_parsing function."""
         try:
-            with open(self.get_sol_path, 'r') as file:
+            with open(self.get_sol_path(), 'r') as file:
                 return file.read().splitlines()
         except os.error as err:
             raise RuntimeError('solution-read-error', err)
@@ -155,4 +160,4 @@ class ModellingProblemHelper():
     # TODO: fix PermissionError:
     def __del__(self):
         """Remove TMP_DIR"""
-        os.remove(self.__get_tmp_path())
+        # os.remove(self.__get_tmp_path())

@@ -4,7 +4,7 @@ from sys import exit
 from multilanguage import Env, Lang, TALcolors
 
 import pirellone_lib as pl
-import model_utils as mu
+from model_utils import ModellingProblemHelper
 from utils_services import process_user_sol, print_separator
 
 
@@ -13,6 +13,7 @@ problem="model_pirellone"
 service="try_GMPL_model"
 args_list = [
     ('display_output',bool),
+    ('display_error',bool),
     ('check_solution',bool),
     ('sol_style',str),
     ('lang',str),
@@ -24,11 +25,17 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
+# Initialize ModellingProblemHelper
+mph = ModellingProblemHelper()
 # Get input
 try:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
-    input_str = mu.receive_modelling_files(get_input=ENV['check_solution'])
-    instance = pl.get_pirellone_from_str(input_str)
+    if ENV['check_solution']:
+        input_str = mph.receive_modelling_files(read_input=True)
+        instance = pl.get_pirellone_from_str(input_str)
+    else:
+        mph.receive_modelling_files(read_input=False)
+        instance = None
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
@@ -40,7 +47,7 @@ except RuntimeError as err:
 
 # Perform solution with GPLSOL
 try:
-    mu.run_GPLSOL()
+    mph.run_GPLSOL()
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
@@ -56,28 +63,46 @@ except RuntimeError as err:
 
 # print GPLSOL output
 if ENV['display_output']:
+    print_separator(TAc, LANG)
     try:
-        gplsol_output = mu.get_output_str()
-        TAc.print(LANG.render_feedback("out-title", "The GPLSOL output is: "), "yellow", ["BOLD"])  
-        TAc.print(LANG.render_feedback("out_sol", f"{gplsol_output}"), "white", ["reverse"])
+        gplsol_output = mph.get_out_str()
+        TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdoutput is: "), "yellow", ["BOLD"])  
+        TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
     except RuntimeError as err:
         err_name = err.args[0]
         # manage custom exceptions:
         if err_name == 'read-error':
-            TAc.print(LANG.render_feedback('output-read-error', "Fail to read the output file of GPLSOL"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('stdoutput-read-error', "Fail to read the output file of GPLSOL"), "red", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+        exit(0)
+
+# print GPLSOL output
+if ENV['display_error']:
+    print_separator(TAc, LANG)
+    try:
+        gplsol_error = mph.get_err_str()
+        TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderror is: "), "yellow", ["BOLD"])  
+        TAc.print(LANG.render_feedback("stderr", f"{gplsol_error}"), "white", ["reverse"])
+    except RuntimeError as err:
+        err_name = err.args[0]
+        # manage custom exceptions:
+        if err_name == 'read-error':
+            TAc.print(LANG.render_feedback('stderr-read-error', "Fail to read the output file of GPLSOL"), "red", ["bold"])
         else:
             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
         exit(0)
 
 # check GPLSOL solution
 if ENV['check_solution']:
+    print_separator(TAc, LANG)
+
     # Perform optimal solution with pirellone_lib
     opt_sol = pl.get_opt_sol(instance)
     m = len(opt_sol[0])
     n = len(opt_sol[1])
 
     # Print instance
-    print_separator(TAc, LANG)
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {m}x{n} is:"), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
     print_separator(TAc, LANG)
@@ -85,9 +110,9 @@ if ENV['check_solution']:
     # Extract GPLSOL solution
     try:
         # Get raw solution
-        raw_sol = mu.get_raw_solution()
+        raw_sol = mph.get_raw_solution()
         # Parse the raw solution
-        gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol, m, n)
+        gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol)
     except RuntimeError as err:
         err_name = err.args[0]
         # manage custom exceptions:
@@ -122,7 +147,4 @@ if ENV['check_solution']:
         TAc.NO()
         TAc.print(LANG.render_feedback('not-correct', "This sequence doesn't turn off all lights see what happens using your solution"), "red", ["bold"])
 
-
-# delete TMP DIRECTORY
-mu.clean_TMP_DIRECTORY()
 exit(0)
