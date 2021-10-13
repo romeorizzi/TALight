@@ -186,7 +186,7 @@ services:
         regex: ^(no|yes|min)$
         default: no
         explain: "choose among the following options:" 
-        explain1: "[no] the `solution.txt` file written by your model is considered ok if it begins with the string "NO SOLUTION" if and only if the testcase pirellone instance has no solution."
+        explain1: "[no] the `solution.txt` file written by your model is considered ok if it begins with the string 'NO SOLUTION' if and only if the testcase pirellone instance has no solution."
         explain2: "[yes] beyond the above requirement, for all solvable instances, the `solution.txt` file should contain a valid solution which will be checked by the service."
         explain3: "[min] beyond the above requirement, for all solvable instances, the `solution.txt` should contain the minimum solution."
       sol_style:
@@ -243,6 +243,7 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+  
   eval_your_solver_bot:
     description: "This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed."
     evaluator: [python, services/eval_decision_server.py]
@@ -273,4 +274,3 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-...

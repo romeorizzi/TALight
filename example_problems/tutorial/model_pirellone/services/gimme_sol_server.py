@@ -26,8 +26,13 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 # Get pirellone and solution
-(instance, opt_sol) = process_instance(ENV, TAc, LANG)
-# TAc.print(LANG.render_feedback("solution-title", f"{pl.sol_to_str(instance, opt_sol)}"), "green", ["bold"])
+instance, opt_sol = process_instance(ENV, TAc, LANG)
+# TAc.print(LANG.render_feedback("solution-title", f"{pl.sol_to_str(instance, opt_sol)}"), "yellow", ["bold"])
+
+# Check if is unsolvable
+if opt_sol == pl.NO_SOL:
+    TAc.print(LANG.render_feedback("unsolvable", f"The instance selected is unsolvable"), "red", ["bold"])
+    exit(0)
 
 # Print solution
 TAc.print(LANG.render_feedback("solution-title", f"The optimal solution for this instance is:"), "green", ["bold"])

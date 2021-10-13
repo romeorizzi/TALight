@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-import subprocess, os, re, random
 from sys import exit
-from time import monotonic, sleep
 
 from multilanguage import Env, Lang, TALcolors
 
@@ -29,7 +27,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # Get input
 try:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
-    input_str = mu.receive_modelling_files()
+    input_str = mu.receive_modelling_files(get_input=ENV['check_solution'])
     instance = pl.get_pirellone_from_str(input_str)
 except RuntimeError as err:
     err_name = err.args[0]

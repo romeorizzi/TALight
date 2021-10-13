@@ -192,9 +192,9 @@ def gen_pirellone(m, n, seed, with_yes_certificate=False):
         altered_rows = random.sample(range(m), num_altered_rows)
         for row in altered_rows:
             col = random.randrange(0, n)
-            pirellone[row][col] = 1-pirellone[row][col] 
+            pirellone[row][col] = 1-pirellone[row][col]
     if with_yes_certificate:
-        return pirellone, switches_row, switches_col
+        return pirellone, [switches_row, switches_col] if must_be_solvable else NO_SOL
     else:
         return pirellone
 
@@ -245,12 +245,6 @@ def check_sol(pirellone, sol):
     return True, None
 
 
-
-def is_solvable2(pirellone):
-     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
-     return check_sol(pirellone, get_opt_sol_if_solvable(pirellone))
-
-
 def is_solvable(pirellone, with_yes_certificate=False):
     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
     opt_sol = get_opt_sol_if_solvable(pirellone)
@@ -259,6 +253,13 @@ def is_solvable(pirellone, with_yes_certificate=False):
         return solvable, opt_sol if solvable else None
     return solvable
 
+
+def get_opt_sol(pirellone):
+    """Returns NO_SOL if the instance is unsolvable, otherwise the optimal solution."""
+    is_solv, opt_sol = is_solvable(pirellone, with_yes_certificate=True)
+    if is_solv:
+        return opt_sol
+    return NO_SOL
 
 
 def get_padded_sol(m, n, seq_sol, pad_size):
@@ -406,11 +407,11 @@ if __name__ == "__main__":
     assert make_optimal([[1, 0], [0, 1]]) == [[1, 0], [0, 1]]
     assert make_optimal([[1, 0], [1, 0]]) == [[1, 0], [1, 0]]
     assert make_optimal([[1, 1], [0, 0]]) == [[1, 1], [0, 0]]
-    assert make_optimal([[0, 1], [1, 1]]) == [[1, 0], [0, 0]]
-    assert make_optimal([[1, 0], [1, 1]]) == [[0, 1], [0, 0]]
-    assert make_optimal([[1, 1], [0, 1]]) == [[0, 0], [1, 0]]
-    assert make_optimal([[1, 1], [1, 0]]) == [[0, 0], [0, 1]]
-    assert make_optimal([[1, 1], [1, 1]]) == [[0, 0], [0, 0]]
+    assert make_optimal([[0, 1], [1, 1]]) == [[1, 0], [0, 0]] #not_optimal
+    assert make_optimal([[1, 0], [1, 1]]) == [[0, 1], [0, 0]] #not_optimal
+    assert make_optimal([[1, 1], [0, 1]]) == [[0, 0], [1, 0]] #not_optimal
+    assert make_optimal([[1, 1], [1, 0]]) == [[0, 0], [0, 1]] #not_optimal
+    assert make_optimal([[1, 1], [1, 1]]) == [[0, 0], [0, 0]] #not_optimal
     print('==> OK\n')
 
 
@@ -516,8 +517,27 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
+    print('Test: get_opt_sol()')
+    print('FOR DEFINITION')
+    print('==> OK\n')
+
+
     print('Test: get_padded_sol_seq()')
     print('FOR DEFINITION')
     print('==> OK\n')
+
+
+    print('Test: others')
+    instance = [[0, 1], [0, 1]]
+    assert get_opt_sol_if_solvable(instance) == [[0, 0], [0, 1]]
+    subset_not_minimal = [[1, 1], [1, 0]]
+    assert check_sol(instance, subset_not_minimal) == (True, None)
+    assert not is_optimal(subset_not_minimal)
+    seq_not_minimal = ['r1', 'c2', 'r1']
+    assert check_sol(instance, seq_to_subset(seq_not_minimal, 2, 2)) == (True, None)
+    assert is_optimal(seq_to_subset(seq_not_minimal, 2, 2)) #Note this
+
+    print('==> OK\n')
+
 
     print("FINISH")

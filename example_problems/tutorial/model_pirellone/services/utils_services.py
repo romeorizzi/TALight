@@ -7,18 +7,12 @@ import pirellone_lib as pl
 
 
 def process_instance(ENV, TAc, LANG):
-    instance = list()
-    sol = None
-    switches_col = None
-    switches_row = None
-
     if ENV['input_mode'] == 'random':
         # Get random seed
-        seed = pl.gen_pirellone_seed(solvable=True)
+        seed = pl.gen_pirellone_seed()
         # Get instance
         try:
-            (instance, switches_row, switches_col) \
-                 = pl.gen_pirellone(ENV['m'], ENV['n'], seed, with_yes_certificate=True)
+            instance, certificate= pl.gen_pirellone(ENV['m'], ENV['n'], seed, with_yes_certificate=True)
         except RuntimeError:
             TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
             exit(0)
@@ -26,6 +20,8 @@ def process_instance(ENV, TAc, LANG):
         # Print instance
         TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
         TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
+        # Returns instance and optimal solution
+        return instance, pl.make_optimal(certificate) if pl.is_solvable_seed(seed) else pl.NO_SOL
 
     elif ENV['input_mode'] == 'seed':
         if ENV['seed'] == 0:
@@ -33,29 +29,26 @@ def process_instance(ENV, TAc, LANG):
             exit(0)
         # Get instance
         try:
-            (instance, switches_row, switches_col) \
-                 = pl.gen_pirellone(ENV['m'], ENV['n'], ENV['seed'], with_yes_certificate=True)
+            instance, certificate = pl.gen_pirellone(ENV['m'], ENV['n'], ENV['seed'], with_yes_certificate=True)
         except RuntimeError:
             TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
             exit(0)
         # Print instance
         TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
         TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
-        # Abort if this instance is unsolvable
-        if not pl.is_solvable_seed(ENV['seed']):
-            TAc.print(LANG.render_feedback("unsolvable-instance", f"The submissive instance is unsolvable. This service manage only solvable seed."), "red", ["bold"])
-            exit(0)
+        # Returns instance and optimal solution
+        return instance, pl.make_optimal(certificate) if pl.is_solvable_seed(ENV['seed']) else pl.NO_SOL
+
 
     elif ENV['input_mode'] == 'terminal':
         TAc.print(LANG.render_feedback("waiting", f"#? waiting for the pirellone {ENV['m']}x{ENV['n']}.\nFormat: each line is a row of the matrix and each colomun must be separeted by space.\nAny line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the raw_sol of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself."), "yellow")
         TAc.print(LANG.render_feedback("instance-title", f"Matrix {ENV['m']}x{ENV['n']}:"), "yellow", ["bold"])
         # Get pirellone instance
+        instance = list()
         for _ in range(ENV['m']):
             instance.append(TALinput(int, num_tokens=ENV['n'], sep=' ', TAc=TAc))
-        # Abort if this instance is unsolvable
-        if not pl.is_solvable(instance):
-            TAc.print(LANG.render_feedback("unsolvable-instance", f"The submissive instance is unsolvable. This service manage only solvable seed."), "red", ["bold"])
-            exit(0)
+        # Returns instance and optimal solution
+        return instance, pl.get_opt_sol(instance)
 
     # elif ENV['input_mode'] == 'TA_transfer_files_bot':
     #     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input file (handler `pirellone.txt`)."), "yellow")
@@ -65,19 +58,16 @@ def process_instance(ENV, TAc, LANG):
     #     # Get optimal solution
     #     sol = pl.get_opt_sol(instance)
     
-    
-    if switches_col != None and switches_row != None:
-        sol = pl.get_opt_sol_from(switches_row, switches_col)
-    else:
-        sol = pl.get_opt_sol(instance)
 
-    return instance, sol
-
-
-def process_user_sol(ENV, TAc, LANG, raw_sol, m, n):
+def process_user_sol(ENV, TAc, LANG, raw_sol, sol_style=None, m=None, n=None):
+    """From a solution string, parse it and return the solution"""
+    sol_style = ENV['sol_style'] if (sol_style == None) else sol_style
+    m = ENV['m'] if (m == None) else m
+    n = ENV['n'] if (n == None) else n
+    assert sol_style != None and m != None and n != None
     try:
         # Parse the raw solution
-        return pl.parse_sol(raw_sol, ENV['sol_style'], m, n)
+        return pl.parse_sol(raw_sol, sol_style, m, n)
     except RuntimeError as err:
         err_name = err.args[0]
         # manage custom exceptions:
@@ -108,6 +98,7 @@ def process_user_sol(ENV, TAc, LANG, raw_sol, m, n):
 
 
 def print_correct_sol_format(TAc, LANG):
+    """Print how to format the solution"""
     TAc.print(LANG.render_feedback('print-correct-sol-format', \
         """        If you want to get your model validated, then from your .mod file
         you should create a file named 'output.txt' containing the final
@@ -135,5 +126,6 @@ def print_correct_sol_format(TAc, LANG):
 
 
 def print_separator(TAc, LANG):
+    """Print a separator string"""
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
