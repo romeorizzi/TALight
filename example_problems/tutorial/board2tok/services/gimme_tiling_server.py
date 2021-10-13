@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
 
-from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 import board2tok_utilities as utilities
@@ -30,7 +29,7 @@ dispel_first_rows_of_a_tiling=ENV['dispel_first_rows_of_a_tiling']
 
 # a 2^kx2^k board always admits a tiling
 TAc.print(LANG.render_feedback("admits-tiling", "The board admits a tiling."), "green", ["bold"])
-if k==0:    
+if k==0:
     TAc.print(LANG.render_feedback("no-tile-to-insert", "There are no tiles to insert."), "red", ["bold"])
     exit(0)
 if r > 2**k - 1 or r < 0:

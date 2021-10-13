@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from os import POSIX_FADV_NOREUSE
-from re import L
 from sys import stderr, exit
 
 from TALinputs import TALinput
@@ -131,6 +129,6 @@ else:
                 exit(0)
 
     if ENV['loading'] == 'from_file':
-        TAc.print(LANG.render_feedback("correct-tiling", "Well done! You have inserted a correct tiling."), "green", ["bold"])        
+        TAc.print(LANG.render_feedback("correct-tiling", "Well done! You have inserted a correct tiling."), "green", ["bold"])
 
     exit(0)
