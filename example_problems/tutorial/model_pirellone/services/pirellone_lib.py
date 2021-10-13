@@ -199,76 +199,57 @@ def gen_pirellone(m, n, seed, with_yes_certificate=False):
 
 
 # GET_SOL FUNCTIONS:
-# TODO: manage NO_SOL case
-def get_opt_sol_from(switches_row, switches_col):
-    """Returns the optimal solution of solvable pirellone in the specificated style.
-    Note: for unsolvable instances is not guaranteed optimality."""
+def get_opt_sol_from_solution(switches_row: List[int], switches_col: List[int]):
+    """Returns the optimal solution of a solvable pirellone given a first solution."""
     m = len(switches_row)
     n = len(switches_col)
-    num_one = sum(switches_col) + sum(switches_row)
-    if num_one > (m + n - num_one):
+    if sum(switches_col) + sum(switches_row) > (m+n)//2:
         switches_row = [ 1-val for val in switches_row]
         switches_col = [ 1-val for val in switches_col]
     return [switches_row, switches_col]
 
-
-# TODO: manage NO_SOL case
-def get_opt_sol(pirellone):
-    """Returns the optimal solution of solvable pirellone.
-    Note: for unsolvable instances is not guaranteed optimality."""
-    if not is_solvable(pirellone):
-        return NO_SOL
-    switches_col = pirellone[0].copy()
+def get_opt_sol_if_solvable(pirellone: List[List[int]]):
+    """Returns the optimal solution of a solvable pirellone."""
     m = len(pirellone)
-    n = len(switches_col)
+    n = len(pirellone[0])
+    switches_col = pirellone[0]
     if switches_col[0]:
-        switches_row = [1-pirellone[_][0] for _ in range(m)]
+       switches_row = [ pirellone[_][0] for _ in range(m) ]
     else:
-        switches_row = [pirellone[_][0] for _ in range(m)]
-    if sum(switches_row) + sum(switches_col) > ((m + n) // 2):
-        switches_row = [1-switches_row[_] for _ in range(m)]
-        switches_col = [1-switches_col[_] for _ in range(n)]
-    return [switches_row, switches_col]
+       switches_row = [ 1-pirellone[_][0] for _ in range(m) ]
+    return get_opt_sol_from(switches_row,switches_col)
+
+def check_sol(pirellone: List[List[int]], sol, sol_style):
+    """returns True if sol turns off entirely the pirellone. Otherwise it returns False and an (i,j) such that pirellone[i,j] is set to one after the solution sol gets applied."""
+    assert sol != NO_SOL
+    m = len(pirellone)
+    n = len(pirellone[0])
+    if sol_style == "seq":
+        sol = seq_to_subset(sol,m,n)
+    switches_row, switches_col = sol
+    for i in range(m):
+        for j in range(n):
+            if pirellone[i][j] != (switches_row[i] + switches_col[j])%2:
+                return False, (i,j)
+    return True, None
 
 
-# UTILITIES FUNCTIONS:
-def switch_row(i, pirellone):
-    """It switch the lights of i-row of the given pirellone instance."""
-    for j in range(len(pirellone[0])):
-        pirellone[i][j] = int(not pirellone[i][j])
+def sol_is_the_min(m, n, sol, sol_style):
+    """It assumes that sol contains a valid solution. Returns True if this solution is the minimum one"""
+    assert sol != NO_SOL
+    if sol_style == "seq":
+        sol = seq_to_subset(sol,m,n)
+    switches_row, switches_col = sol
+    return sum(switches_col)+sum(switches_row) <= (m+n)//2
 
 
-def switch_col(j, pirellone):
-    """It switch the lights of i-col of the given pirellone instance."""
-    for i in range(len(pirellone)):
-        pirellone[i][j] = int(not pirellone[i][j])
-
-
-def are_equiv(sol1, sol2):
-    """Return True if two solutions are strictly equivalent."""
-    if sol1 == sol2:
-        return True
-    if sol1 == NO_SOL or sol2 == NO_SOL:
-        return False
-    # Check complement
-    return [[1-e for e in sol1[0]], [1-e for e in sol1[1]]] == sol2
-
-
-def is_solvable(pirellone):
+def is_solvable(pirellone: List[List[int]]) -> bool:
     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
-    for i in range(len(pirellone)):
-        inv = (pirellone[0][0] != pirellone[i][0])
-        for j in range(len(pirellone[0])):
-            if inv:
-                v = not pirellone[i][j]
-            else:
-                v = pirellone[i][j]
-            if v != pirellone[0][j]:
-                return False
-    return True
+    return check_sol(pirellone, get_opt_sol_if_solvable(pirellone))
 
 
-def get_padded_sol(m, n, seq_sol, pad_size):
+
+def get_padded_sol(m:int, n:int, seq_sol:List[str], pad_size:int):
     """From (m,n) and a sequence solution (e.g.: ['r2']), this functions returns a solution longer than at least pad_size."""
     if seq_sol == NO_SOL:
         return NO_SOL
@@ -290,109 +271,6 @@ def get_padded_sol(m, n, seq_sol, pad_size):
     random.shuffle(padded_sol)
     return padded_sol
 
-
-# CHECK_LIGHTS FUNCTIONS:
-def get_light_on_after(pirellone, sol):
-    """This function applies on pirellone instance the specified solution and then it counts lighs-on"""
-    if sol == NO_SOL:
-        return None
-    m = len(pirellone)
-    n = len(pirellone[0])
-    assert len(sol[0]) == m
-    assert len(sol[1]) == n
-    # Perform solution
-    pirellone_after = copy.deepcopy(pirellone)
-    for i in range(m):
-        if sol[0][i] == 1:
-            switch_row(i, pirellone_after)
-    for j in range(n):
-        if sol[1][j] == 1:
-            switch_col(j, pirellone_after)
-    # Check the results obtained
-    lights = 0
-    for cols in range(len(pirellone_after)):
-        lights += sum(pirellone_after[cols])
-    return lights
-
-
-#NOTE: da problemi quando il pirellone ha una diagonale di 1
-def get_min_lights_on(pirellone):
-    """Return the minimum number of lights that must be turn off manually"""
-    test = copy.deepcopy(pirellone)
-    s = 0
-    h = 1
-    k = 1
-    while h != 0 or k != 0:
-        h = 0
-        k = 0
-        for i in range(len(test)):
-            if sum(test[i]) > (len(test) - sum(test[i])):
-                switch_row(i, test)
-                h += 1      
-        for j in range(len(test[0])):
-            for i in range(len(test)):
-                s += test[i][j]
-            if s > (len(test[0]) - s):
-                switch_col(j, test)
-                k += 1
-            s = 0   
-    light = 0
-    for i in range(len(test)):
-        light += sum(test[i]) 
-    return light
-
-
-##################################################
-#NOTE: ancora da controllare
-def extract_sol(line, m, n, LANG, TAc):
-    matched = re.match("^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$", line)
-    if not bool(matched):
-        TAc.print(LANG.render_feedback("wrong-sol-line",f'# Error! The line with your solution ({line}) is not accordant (it does not match the regular expression "^((\n*(r|c)[1-9][0-9]{0,3})*\n*)$"'), "red", ["bold"])
-        exit(0)
-    switch_rows = [0]*m
-    switch_cols = [0]*n
-    moves = line.split()
-    for move,i in zip(moves,len(moves)):
-        index = int(move[1:])
-        if move[0] == "r":
-            if index > m:
-                TAc.print(LANG.render_feedback("row-index-exceeds-m",f'# Error! In your solution line ({line}) the {i}-th move ({move}) is not applicable. Indeed, {index}>{m}=m.'), "red", ["bold"])
-                exit(0)
-            switch_rows[index] = 1-switch_rows[index]
-        if move[0] == "c":
-            if index > n:
-                TAc.print(LANG.render_feedback("column-index-exceeds-n",f'# Error! In your solution line ({line}) the {i}-th move ({move}) is not applicable. Indeed, {index}>{n}=n.'), "red", ["bold"])
-                exit(0)
-            switch_cols[index] = 1-switch_cols[index]
-    return switch_rows, switch_cols
-  
-
-#NOTE: forse non corretta la seguente funzione      
-def solution_irredundant(pirellone,switches_row,switches_col,smallest=True):
-    assert is_solvable(pirellone)
-    m = len(switches_row)
-    n = len(switches_col)
-    switches_row = pirellone[0]
-    if pirellone[0][0] == 0:
-        switches_col = pirellone[0]
-    else:    
-        switches_row = [ 1-pirellone[i][0] for i in range(m) ]
-    if smallest != (sum(switches_col)+sum(switches_row) <= (m+n)//2):
-        switches_row = [ 1-val for val in switches_row]
-        switches_col = [ 1-val for val in switches_col]
-    
-    [random.randint(0, 1) for _ in range(m)]         
-    switches_col = [random.randint(0, 1) for _ in range(n)]
-    pirellone = [ [ (switches_col[j] + switches_row[i]) % 2 for j in range(n) ] for i in range(m)]
-
-    lista=[]
-    for i in range(m):
-        if switches_row[i]:
-            lista.append(f"r{i+1}")
-    for j in range(n):
-        if switches_col[j]:
-            lista.append(f"c{j+1}")
-    return lista
 
 
 
