@@ -64,7 +64,9 @@ def process_user_sol(ENV, TAc, LANG, raw_sol, sol_style=None, m=None, n=None):
     sol_style = ENV['sol_style'] if (sol_style == None) else sol_style
     m = ENV['m'] if (m == None) else m
     n = ENV['n'] if (n == None) else n
-    assert sol_style != None and m != None and n != None
+    assert sol_style != None
+    assert m != None
+    assert n != None
     try:
         # Parse the raw solution
         return pl.parse_sol(raw_sol, sol_style, m, n)
@@ -129,3 +131,52 @@ def print_separator(TAc, LANG):
     """Print a separator string"""
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
+
+def check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol):
+    # Init
+    if ENV['sol_style'] == 'seq':
+        opt_sol_seq = pl.subset_to_seq(opt_sol_subset)
+
+
+    # Case1: instance unsolvable
+    if opt_sol_subset == pl.NO_SOL:
+        if user_sol == pl.NO_SOL:
+            TAc.OK()
+            TAc.print(LANG.render_feedback('correct-unsolvable', "This instance is not solvable."), "green", ["bold"])
+        else:
+            TAc.NO()
+            TAc.print(LANG.render_feedback('wrong-unsolvable', "This instance is not solvable!"), "red", ["bold"])
+        exit(0)
+
+    # Case2: user said that a solvable instance is unsolvable
+    if user_sol == pl.NO_SOL:
+        TAc.NO()
+        TAc.print(LANG.render_feedback('wrong-solvable', "This instance is solvable!"), "red", ["bold"])
+        exit(0)
+
+    # Case3: equals solutions
+    if user_sol == (opt_sol_seq if ENV['sol_style'] == 'seq' else opt_sol_subset):
+        TAc.OK()
+        TAc.print(LANG.render_feedback('correct-optimal', "The solution is correct and optimal."), "green", ["bold"])
+        exit(0)
+
+    # Case4: check if is minimal
+    if ENV['sol_style'] == 'seq':
+        if len(user_sol) != len(opt_sol_seq):
+            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
+        # Ok now is better use subset style for check the solution
+        user_sol = pl.seq_to_subset(user_sol, ENV['m'], ENV['n'])
+    else:
+        if not pl.is_optimal(user_sol):
+            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
+
+    # Case5: check if is correct
+    is_correct, certificate_of_no = pl.check_sol(instance, user_sol)
+    if is_correct:
+        TAc.OK()
+        TAc.print(LANG.render_feedback('correct', "The solution is correct."), "green", ["bold"])
+        exit(0)
+    else:
+        TAc.NO()
+        TAc.print(LANG.render_feedback('error', f"The solution is not correct. The pirellone cell in row={certificate_of_no[0]} and col={certificate_of_no[1]} stays on."), "red", ["bold"])
+        exit(0)

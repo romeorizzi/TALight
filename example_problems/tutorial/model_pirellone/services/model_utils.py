@@ -77,31 +77,31 @@ class ModellingProblemHelper():
             os.makedirs(self.__get_tmp_path())
 
 
-    def receive_modelling_files(self, read_input):
-        """Enables the receipt of the files sent by the bot and return the input of the input_file"""
-        # Initialize __tmp_dirname
+    def receive_files(self, mod=False, dat=False, input=False):
+        """Enable the service to recive the files selected. If input=True then return the input."""
+        # Initialize TMP_DIR
         self.__init_tmp_dir()
 
-        # Get files
-        mod = service_server_requires_and_gets_file_of_handle('mod').decode()
-        dat = service_server_requires_and_gets_file_of_handle('dat').decode()
+        # Manage mod file
+        if mod:
+            mod = service_server_requires_and_gets_file_of_handle('mod').decode()
+            try:
+                with open(self.get_mod_path(), 'w') as mod_file:
+                    mod_file.write(mod)
+            except os.error as err:
+                raise RuntimeError('write-error', self.__mod_filename, err)
 
-        # Create in __tmp_dirname mod file
-        try:
-            with open(self.get_mod_path(), 'w') as mod_file:
-                mod_file.write(mod)
-        except os.error as err:
-            raise RuntimeError('write-error', self.__mod_filename, err)
-
-        # Create in __tmp_dirname dat file
+        # Manage dat file
+        if dat:
+            dat = service_server_requires_and_gets_file_of_handle('dat').decode()
         try:
             with open(self.get_dat_path(), 'w') as dat_file:
                 dat_file.write(dat)
         except os.error as err:
             raise RuntimeError('write-error', self.__dat_filename, err)
         
-        # return input
-        if read_input:
+        # Manage input file
+        if input:
             input = service_server_requires_and_gets_file_of_handle('input').decode()
             return input
 

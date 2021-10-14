@@ -5,7 +5,7 @@ from multilanguage import Env, Lang, TALcolors
 
 import pirellone_lib as pl
 from model_utils import ModellingProblemHelper
-from utils_services import process_user_sol, print_separator
+from utils_services import process_user_sol, print_separator, check_sol_with_feedback
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -27,14 +27,15 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 # Initialize ModellingProblemHelper
 mph = ModellingProblemHelper()
+
 # Get input
 try:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
     if ENV['check_solution']:
-        input_str = mph.receive_modelling_files(read_input=True)
+        input_str = mph.receive_files(mod=True, dat=True, input=True)
         instance = pl.get_pirellone_from_str(input_str)
     else:
-        mph.receive_modelling_files(read_input=False)
+        mph.receive_files(mod=True, dat=True, input=False)
         instance = None
 except RuntimeError as err:
     err_name = err.args[0]
@@ -98,9 +99,9 @@ if ENV['check_solution']:
     print_separator(TAc, LANG)
 
     # Perform optimal solution with pirellone_lib
-    opt_sol = pl.get_opt_sol(instance)
-    m = len(opt_sol[0])
-    n = len(opt_sol[1])
+    opt_sol_subset = pl.get_opt_sol(instance)
+    m = len(opt_sol_subset[0])
+    n = len(opt_sol_subset[1])
 
     # Print instance
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {m}x{n} is:"), "yellow", ["bold"])
@@ -112,7 +113,7 @@ if ENV['check_solution']:
         # Get raw solution
         raw_sol = mph.get_raw_solution()
         # Parse the raw solution
-        gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol)
+        gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
     except RuntimeError as err:
         err_name = err.args[0]
         # manage custom exceptions:
@@ -134,17 +135,12 @@ if ENV['check_solution']:
     # Print optimal solution
     TAc.print(LANG.render_feedback("in-title", "The PirelloneLib solution is:"), "yellow", ["reverse"])
     if ENV['sol_style'] == 'seq':
-        TAc.print(LANG.render_feedback("in-sol", f"{pl.seq_to_str(pl.subset_to_seq(opt_sol))}"), "green", ["bold"])
+        TAc.print(LANG.render_feedback("in-sol", f"{pl.seq_to_str(pl.subset_to_seq(opt_sol_subset))}"), "green", ["bold"])
     elif ENV['sol_style'] == 'subset':
-        TAc.print(LANG.render_feedback("in-sol", f"{pl.subset_to_str(opt_sol)}"), "green", ["bold"])
+        TAc.print(LANG.render_feedback("in-sol", f"{pl.subset_to_str(opt_sol_subset)}"), "green", ["bold"])
     print_separator(TAc, LANG)
 
     # Check the correctness of the user solution
-    if pl.are_equiv(gplsol_sol, opt_sol):
-        TAc.OK()
-        TAc.print(LANG.render_feedback('correct', "This sequence turns off all lights."), "green", ["bold"])
-    else:
-        TAc.NO()
-        TAc.print(LANG.render_feedback('not-correct', "This sequence doesn't turn off all lights see what happens using your solution"), "red", ["bold"])
+    check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, gplsol_sol)
 
 exit(0)
