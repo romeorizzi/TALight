@@ -137,7 +137,6 @@ def check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol):
     if ENV['sol_style'] == 'seq':
         opt_sol_seq = pl.subset_to_seq(opt_sol_subset)
 
-
     # Case1: instance unsolvable
     if opt_sol_subset == pl.NO_SOL:
         if user_sol == pl.NO_SOL:
@@ -146,19 +145,19 @@ def check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol):
         else:
             TAc.NO()
             TAc.print(LANG.render_feedback('wrong-unsolvable', "This instance is not solvable!"), "red", ["bold"])
-        exit(0)
+        return
 
     # Case2: user said that a solvable instance is unsolvable
     if user_sol == pl.NO_SOL:
         TAc.NO()
         TAc.print(LANG.render_feedback('wrong-solvable', "This instance is solvable!"), "red", ["bold"])
-        exit(0)
+        return
 
     # Case3: equals solutions
     if user_sol == (opt_sol_seq if ENV['sol_style'] == 'seq' else opt_sol_subset):
         TAc.OK()
         TAc.print(LANG.render_feedback('correct-optimal', "The solution is correct and optimal."), "green", ["bold"])
-        exit(0)
+        return
 
     # Case4: check if is minimal
     if ENV['sol_style'] == 'seq':
@@ -175,8 +174,8 @@ def check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol):
     if is_correct:
         TAc.OK()
         TAc.print(LANG.render_feedback('correct', "The solution is correct."), "green", ["bold"])
-        exit(0)
+        return
     else:
         TAc.NO()
         TAc.print(LANG.render_feedback('error', f"The solution is not correct. The pirellone cell in row={certificate_of_no[0]} and col={certificate_of_no[1]} stays on."), "red", ["bold"])
-        exit(0)
+        return

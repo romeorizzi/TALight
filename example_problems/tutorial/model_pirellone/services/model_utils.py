@@ -6,14 +6,22 @@ import subprocess, os
 from bot_interface import service_server_requires_and_gets_file_of_handle
 
 
+def get_archive_path_from(you_service_file_path):
+    """Call this with: get_archive_path_from(__file__)"""
+    service_dir_path = os.path.abspath(os.path.dirname(you_service_file_path))
+    return os.path.join(service_dir_path, '../archive')
+
+
 class ModellingProblemHelper():
-    def __init__(self, 
+    def __init__(self,
+                archive_path  = None,           \
                 tmp_dirname   = '../tmp97815',  \
                 mod_filename  = 'model.mod',    \
                 dat_filename  = 'instance.dat', \
                 sol_filename  = 'solution.txt', \
                 out_filename  = 'output.txt',   \
                 err_filename  = 'error.txt'     ):
+        self.__archive_path = archive_path
         self.__tmp_dirname = tmp_dirname
         self.__mod_filename  = mod_filename
         self.__dat_filename  = dat_filename
@@ -26,6 +34,12 @@ class ModellingProblemHelper():
         self.__sol_path = None
         self.__out_path = None
         self.__err_path = None
+
+
+    # TODO: fix PermissionError:
+    def __del__(self):
+        """Remove TMP_DIR"""
+        # os.remove(self.__get_tmp_path())
 
 
     def __get_tmp_path(self):
@@ -78,7 +92,7 @@ class ModellingProblemHelper():
 
 
     def receive_files(self, mod=False, dat=False, input=False):
-        """Enable the service to recive the files selected. If input=True then return the input."""
+        """Enable the service to recive the files selected. If input=True then return the input in a string form."""
         # Initialize TMP_DIR
         self.__init_tmp_dir()
 
@@ -94,11 +108,11 @@ class ModellingProblemHelper():
         # Manage dat file
         if dat:
             dat = service_server_requires_and_gets_file_of_handle('dat').decode()
-        try:
-            with open(self.get_dat_path(), 'w') as dat_file:
-                dat_file.write(dat)
-        except os.error as err:
-            raise RuntimeError('write-error', self.__dat_filename, err)
+            try:
+                with open(self.get_dat_path(), 'w') as dat_file:
+                    dat_file.write(dat)
+            except os.error as err:
+                raise RuntimeError('write-error', self.__dat_filename, err)
         
         # Manage input file
         if input:
@@ -106,8 +120,12 @@ class ModellingProblemHelper():
             return input
 
 
-    def run_GPLSOL(self):
+    def run_GPLSOL(self, file_dat_path='tmp_path'):
         """launches glpsol on the .mod and .dat files contained in TMP_DIR. The stdout, stderr and solution of glpsol are saved in files."""
+        # Get file dat path
+        if file_dat_path == 'tmp_path':
+            file_dat_path = self.get_dat_path()
+        # Get files for stdoutRun GPLSOL
         try:
             with open(self.get_out_path(), 'w') as out_file:
                 try:
@@ -116,7 +134,7 @@ class ModellingProblemHelper():
                         subprocess.run([
                             "glpsol", 
                             "-m", self.get_mod_path(), 
-                            "-d", self.get_dat_path(),
+                            "-d", file_dat_path,
                         ], cwd=self.__get_tmp_path(), timeout=30.0, stdout=out_file, stderr=err_file)
                 except os.error as err:
                     raise RuntimeError('write-error', self.__err_filename, err)
@@ -131,12 +149,12 @@ class ModellingProblemHelper():
 
 
     def get_out_str(self):
-        """Return a string that contents the stdoutput of GPLSOL."""
+        """Return a string that contents the stdout of GPLSOL."""
         try:
             with open(self.get_out_path(), 'r') as file:
                 return file.read()
         except os.error as err:
-            raise RuntimeError('stdoutput-read-error', err)
+            raise RuntimeError('stdout-read-error', err)
 
 
     def get_err_str(self):
@@ -148,7 +166,7 @@ class ModellingProblemHelper():
             raise RuntimeError('stderr-read-error', err)
 
 
-    def get_raw_solution(self) -> list:
+    def get_raw_solution(self):
         """Return a list of string that contents the solution produced by GPLSOL. Remember to call a soluion_parsing function."""
         try:
             with open(self.get_sol_path(), 'r') as file:
@@ -157,7 +175,38 @@ class ModellingProblemHelper():
             raise RuntimeError('solution-read-error', err)
 
 
-    # TODO: fix PermissionError:
-    def __del__(self):
-        """Remove TMP_DIR"""
-        # os.remove(self.__get_tmp_path())
+    def get_input_from_archive(self, dir_name):
+        """Returns a string that contents the input of the dir_selected."""
+        assert isinstance(dir_name, str)
+        assert self.__archive_path, '"archive_path" must be initialized when create the ModellingProblemHelper object'
+        try:
+            dir_path = os.path.join(self.__archive_path, dir_name)
+            input_path = os.path.join(dir_path, 'input.txt')
+            with open(input_path, 'r') as file:
+                return file.read()
+        except os.error as err:
+            raise RuntimeError('input-read-error', input_path)
+        except Exception as err:
+            raise RuntimeError('dir-not-exist', dir_name)
+
+
+    def get_dat_paths_from_archive(self, dir_name):
+        """Returns the list of all dat_files_path in this directory in archive"""
+        assert isinstance(dir_name, str)
+        assert self.__archive_path, '"archive_path" must be initialized when create the ModellingProblemHelper object'
+        try:
+            dir_path = os.path.join(self.__archive_path, dir_name)
+            paths_list = list()
+            for filename in os.listdir(dir_path):
+                # Filter only .dat file
+                if filename[-4:] == '.dat':
+                    # Get full path and add it if is a file
+                    file_path = os.path.join(dir_path, filename)
+                    if os.path.isfile(file_path):
+                        paths_list.append(file_path)
+            return paths_list
+
+        except Exception as err:
+            raise RuntimeError('dir-not-exist', dir_name)
+
+

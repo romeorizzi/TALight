@@ -1,23 +1,21 @@
 #!/usr/bin/env python3
-import subprocess
-import os
-#import turingarena as ta
-
 from sys import exit
-import re
-import random
-from time import monotonic
 
 from multilanguage import Env, Lang, TALcolors
 
 import pirellone_lib as pl
+from model_utils import ModellingProblemHelper, get_archive_path_from
+from utils_services import process_user_sol, print_separator, check_sol_with_feedback
+
 
 # METADATA OF THIS TAL_SERVICE:
-problem="pirellone"
-service="validate_GMPL_model"
+problem="model_pirellone"
+service="eval_GMPL_model"
 args_list = [
     ('goal',str),
-    ('seed',str),
+    ('type_of_check',str),
+    ('sol_style',str),
+    ('only_solvable_instances',bool),
     ('lang',str),
 ]
 
@@ -25,142 +23,99 @@ ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
-# START CODING YOUR SERVICE: 
 
-
-
-# evaluator for TuringArena
-# to launch this evaluator, use this command:
-#     turingarena-dev evaluate --store-files sol/soluzione_triangolo_gmpl.mod
-
-
-def evaluate_solution(mod, dat):
-    
-    # here I start a subprocess to evaluate the submission
-    # glpsol writes the result in output.txt
-
-    try:
-        subprocess.run([
-            "glpsol", 
-            "-m", mod, 
-            "-d", dat
-        ], cwd=ta.get_temp_dir(), timeout=5.0)
-    except subprocess.TimeoutExpired:
-        print("Too much computing time! Deadline exceeded.")
-        return None
-    except subprocess.CalledProcessError as e: 
-        print ("The call to glpsol on your .dat file returned error")
-        return None
-    except Exception as e:
-        print ("Processing returned with error")
-        print(f" error: {e}")
-        return None
-
-    # here I read the result file and return it
-    try:
-        with open(os.path.join(ta.get_temp_dir(), "output.txt")) as output:
-            actual_output_file = output.readlines()
-            actual_row_vals = tuple(map(int,actual_output_file[0].split()))
-            actual_col_vals = tuple(map(int,actual_output_file[1].split()))
-    except os.error as e:
-        print(f" error: {e}")
-        print("... sembra che glpsol non sia riuscito a creare il file output.txt")
-        return None
-    return (actual_row_vals, actual_col_vals)
-
-# get the number of test cases
-try:
-    N = len(os.listdir("inputs-suite.dat/"))
-    print(f"We are going to validate your model on {N} different testcases.")
-except os.error as e:
-    print(f" error: {e}")
-    print("... sembra che non si trovi la cartella con gli input.\nHai lanciato -/makeInputs.py per allestire il problema?")
-    exit(1)
-
-testcases = {}
-goals = [
-    "example_of_statement",
-    "m_n_at_most_5_solvable",
-    "m_n_at_most_5_unsolvable",
-    "m=n=10",
-    "m=n=20",
-    "m=n=30",
-    "m=n=50",
-    "m=n=100",
-    "m=n=200",
-    "m=n=300",
-]
-
-n_instances = [1,3,3,2,2,2,2,2,2,2]
-ps_n_instances = [0]
-for num in n_instances:
-    ps_n_instances.append(num+ps_n_instances[-1])
-#print(f"ps_n_instances = {ps_n_instances}")
-n_goal = 0
-for i in range(1,N+1):
-    input = os.path.join(os.getcwd(), f"inputs-suite.dat/input_{i}.dat")
-    try:
-        output = os.path.join(os.getcwd(), f"outputs-suite.txt/output_{i}.txt")
-    except os.error as e:
-        print(f" error: {e}")
-        print("... sembra che non si trovi un file di output.\nHai lanciato -/makeOutputs.sh per allestire il problema?")
-        exit(1)
-
-    # read the expected result
-    with open(output) as out:
-        expected_output_file = out.readlines()
-        expected_row_vals = tuple(map(int,expected_output_file[0].split()))
-        expected_col_vals = tuple(map(int,expected_output_file[1].split()))
-        expected_result = (expected_row_vals, expected_col_vals)
-        
-    # evaluate the test case
-    print(f"\nEvaluting your model on Testcase_{i} (for goal {goals[n_goal]}):")
-    result = evaluate_solution(os.path.join(os.getcwd(), ta.submission.source), input)
-    def are_equiv(result,expected_result):
-        if result == expected_result:
-            return True
-        if (tuple(1-v for v in result[0]),tuple(1-v for v in result[1])) == expected_result:
-            return True
-        print(((1-v for v in result[0]),(1-v for v in result[1])))
-        return False
-    if result is not None and are_equiv(result,expected_result):
-        print(f"Testcase_{i}: Correct!")
-        testcases[f"case_{i}"] = "correct"
-        if ps_n_instances[n_goal+1] == i:
-            ta.goals.setdefault(goals[n_goal], True)
-            n_goal += 1
-    else:
-        print(((1-v for v in result[0]),(1-v for v in result[1])))
-        for g in goals[n_goal:]:
-            ta.goals[g] = False
-        ta.send_file(input, filename=f"input_where_your_sol_goes_bad.dat")
-        print(f"Testcase_{i}: Wrong!")
-        testcases[f"case_{i}"] = "wrong"
-        print(f"Ti ho messo il file .dat con l'input su cui il tuo modello perde colpi nel file  generated-files/input_where_your_sol_goes_bad.dat")
-        print(f"{((1-v for v in result[0]),(1-v for v in result[1]))}")
-        if result is None:
-            print("\nThe .dat file that glpsol has received in input together with your model is the file  generated-files/input_where_your_sol_goes_bad.dat")
-        else:
-            print(f"According to your model the optimum maximum value is {result}, but we think it is {expected_result}. The instance on which we disagree is in the file  generated-files/input_where_your_sol_goes_bad.dat")
-        if n_goal <= 4:
-            print("\nSince it is actually small, we can display here below the .dat file on which your model goes bad:\n")
-            with open(os.path.join(ta.get_temp_dir(), input)) as testcase_input:
-                print(testcase_input.read())
+# START CODING YOUR SERVICE:
+# Create list of test directory names to be test from the goal
+tests_dirname_list = [  "public_examples",               \
+                    "m_and_n_at_most_5_solvable",   \
+                    "m_and_n_at_most_5_unsolvable", \
+                    "m_and_n_at_10",                \
+                    "m_and_n_at_20",                \
+                    "m_and_n_at_30",                \
+                    "m_and_n_at_50",                \
+                    "m_and_n_at_100",               \
+                    "m_and_n_at_200",               \
+                    "m_and_n_at_300"                ]
+for test in reversed(tests_dirname_list):
+    if test == ENV['goal']:
         break
+    tests_dirname_list.remove(test)
 
-for i,val in testcases.items():
-    print(i,": ",val)
+# Initialize ModellingProblemHelper
+mph = ModellingProblemHelper(get_archive_path_from(__file__))
 
-print(ta.goals)
+# Get only model file
+try:
+    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod)."), "yellow")
+    mph.receive_files(mod=True)
+except RuntimeError as err:
+    err_name = err.args[0]
+    # manage custom exceptions:
+    if err_name == 'write-error':
+        TAc.print(LANG.render_feedback('write-error', f"Fail to create {err.args[1]} file"), "red", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+    exit(0)
 
-if ta.goals["m=n=100"] == True:
-    ta.send_file(os.path.join(os.getcwd(), "models/gallery_of_models/pirellone_LP-model-gmpl.mod"), filename="pirellone_LP-model-gmpl.mod")
-    ta.send_file(os.path.join(os.getcwd(), "models/gallery_of_models/discussion2.md"), filename="discussion2.md")
-    print(f"In base ai goals che hai raggiunto, ti ho messo dei file con delle considerazioni e soluzioni di riferimento nella cartella generated-files.")
+# Test all instance until the goal selected.
+for test_dir in tests_dirname_list:
+    # Get input
+    try:
+        input_str = mph.get_input_from_archive(test_dir)
+        instance = pl.get_pirellone_from_str(input_str)
+    except RuntimeError as err:
+        err_name = err.args[0]
+        # manage custom exceptions:
+        if err_name == 'input-read-error':
+            TAc.print(LANG.render_feedback('input-read-error', f"Fail to read {err.args[1]} file"), "red", ["bold"])
+        elif err_name == 'dir-not-exist':
+            TAc.print(LANG.render_feedback('dir-not-exist', f"This directory not exist: {err.args[1]}"), "red", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+        exit(0)
 
-if ta.goals["m=n=20"] and not ta.goals["m=n=100"] :
-    ta.send_file(os.path.join(os.getcwd(), "models/gallery_of_models/pirellone_ILP-model-gmpl.mod"), filename="pirellone_ILP-model-gmpl.mod")
-    ta.send_file(os.path.join(os.getcwd(), "pirellone_ILP-model-ampl.mod"), filename="model_PLIpirellone_ampl.mod")
-    ta.send_file(os.path.join(os.getcwd(), "models/gallery_of_models/discussion1.md"), filename="discussion1.md")
-    print("In base ai goals che hai raggiunto, ti ho messo dei file con delle considerazioni e soluzioni di riferimento nella cartella generated-files. Sono inoltre presenti suggerimenti su come raggiungere i goal superiori.")
+    # Perform optimal solution with pirellone_lib
+    opt_sol_subset = pl.get_opt_sol(instance)
+    m = len(opt_sol_subset[0])
+    n = len(opt_sol_subset[1])
+    
+    # Get all dat_path in this test directory
+    for dat_path in mph.get_dat_paths_from_archive(test):
+        instance_name = dat_path.split("/")[-1][:-4]
+        TAc.print(LANG.render_feedback('instance_title', f"CHECK: {instance_name}"), "red", ["bold"])
+
+        # Perform solution with GPLSOL
+        try:
+            mph.run_GPLSOL(file_dat_path=dat_path)
+        except RuntimeError as err:
+            err_name = err.args[0]
+            # manage custom exceptions:
+            if err_name == 'process-timeout':
+                TAc.print(LANG.render_feedback('process-timeout', "Too much computing time! Deadline exceeded."), "red", ["bold"])
+            elif err_name == 'process-call':
+                TAc.print(LANG.render_feedback('process-call', "The call to glpsol on your .dat file returned error."), "red", ["bold"])
+            elif err_name == 'process-exception':
+                TAc.print(LANG.render_feedback('process-exception', f"Processing returned with error:\n{err.args[1]}"), "red", ["bold"])
+            else:
+                TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+            exit(0)
+
+        # Extract GPLSOL solution
+        try:
+            # Get raw solution
+            raw_sol = mph.get_raw_solution()
+            # Parse the raw solution
+            gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
+        except RuntimeError as err:
+            err_name = err.args[0]
+            # manage custom exceptions:
+            if err_name == 'read-error':
+                TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
+            else:
+                TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+            exit(0)
         
+        # Check the correctness of the user solution
+        check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, gplsol_sol)
+
+exit(0)

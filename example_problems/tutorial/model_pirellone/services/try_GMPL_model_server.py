@@ -28,7 +28,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # Initialize ModellingProblemHelper
 mph = ModellingProblemHelper()
 
-# Get input
+# Get files
 try:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
     if ENV['check_solution']:
@@ -62,34 +62,34 @@ except RuntimeError as err:
         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
     exit(0)
 
-# print GPLSOL output
+# print GPLSOL stdout
 if ENV['display_output']:
     print_separator(TAc, LANG)
     try:
         gplsol_output = mph.get_out_str()
-        TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdoutput is: "), "yellow", ["BOLD"])  
+        TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["BOLD"])  
         TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
     except RuntimeError as err:
         err_name = err.args[0]
         # manage custom exceptions:
         if err_name == 'read-error':
-            TAc.print(LANG.render_feedback('stdoutput-read-error', "Fail to read the output file of GPLSOL"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('stdout-read-error', "Fail to read the stdout file of GPLSOL"), "red", ["bold"])
         else:
             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
         exit(0)
 
-# print GPLSOL output
+# print GPLSOL stderr
 if ENV['display_error']:
     print_separator(TAc, LANG)
     try:
         gplsol_error = mph.get_err_str()
-        TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderror is: "), "yellow", ["BOLD"])  
+        TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderr is: "), "yellow", ["BOLD"])  
         TAc.print(LANG.render_feedback("stderr", f"{gplsol_error}"), "white", ["reverse"])
     except RuntimeError as err:
         err_name = err.args[0]
         # manage custom exceptions:
         if err_name == 'read-error':
-            TAc.print(LANG.render_feedback('stderr-read-error', "Fail to read the output file of GPLSOL"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('stderr-read-error', "Fail to read the stderr file of GPLSOL"), "red", ["bold"])
         else:
             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
         exit(0)

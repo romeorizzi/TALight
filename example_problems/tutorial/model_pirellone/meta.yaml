@@ -182,22 +182,22 @@ services:
         regex: ^(public_examples|m_and_n_at_most_5_solvable|m_and_n_at_most_5_unsolvable|m_and_n_at_10|m_and_n_at_20|m_and_n_at_30|m_and_n_at_50|m_and_n_at_100|m_and_n_at_200|m_and_n_at_300)$
         default: public_examples
         explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
-      check_sol:
+      type_of_check:
         regex: ^(no|yes|min)$
         default: no
         explain: "choose among the following options:" 
         explain1: "[no] the `solution.txt` file written by your model is considered ok if it begins with the string 'NO SOLUTION' if and only if the testcase pirellone instance has no solution."
         explain2: "[yes] beyond the above requirement, for all solvable instances, the `solution.txt` file should contain a valid solution which will be checked by the service."
         explain3: "[min] beyond the above requirement, for all solvable instances, the `solution.txt` should contain the minimum solution."
+      only_solvable_instances:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1, then your model will be tested only on instances that are guaranteed to possess a solution.
       sol_style:
         regex: ^(seq|subset)$
         default: subset
         explain: "choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively."
         example: "[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3"
-      only_solvable_instances:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1, then your model will be tested only on instances that are guaranteed to possess a solution.
       seed:
         explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
         regex: ^(random_seed|[1-9][0-9]{5,5})$
