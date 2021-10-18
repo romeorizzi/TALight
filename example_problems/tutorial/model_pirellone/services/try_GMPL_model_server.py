@@ -3,7 +3,7 @@ from sys import exit
 
 from multilanguage import Env, Lang, TALcolors
 
-import pirellone_lib as pl
+import model_pirellone_lib as pl
 from model_utils import ModellingProblemHelper
 from utils_services import process_user_sol, print_separator, check_sol_with_feedback
 
@@ -98,7 +98,7 @@ if ENV['display_error']:
 if ENV['check_solution']:
     print_separator(TAc, LANG)
 
-    # Perform optimal solution with pirellone_lib
+    # Perform optimal solution with model_pirellone_lib
     opt_sol_subset = pl.get_opt_sol(instance)
     m = len(opt_sol_subset[0])
     n = len(opt_sol_subset[1])

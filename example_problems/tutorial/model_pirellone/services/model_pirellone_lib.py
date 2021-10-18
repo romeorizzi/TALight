@@ -144,9 +144,25 @@ def get_pirellone_from_str(str):
     return pirellone
 
 
-def pirellone_to_str(pirellone):
-    """From a pirellone instance, this function returns its string rappresentation."""
-    return '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
+def pirellone_to_str(pirellone, format="only_matrix"):
+    """This function returns the string representation of the given pirellone instance according to the indicated format"""
+    output = ""
+    if format == "with_m_and_n":
+        output = f"{len(pirellone)} {len(pirellone[0])}\n"
+    return output + '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
+
+def pirellone_to_dat(pirellone, format="for_now_we_have_only_one"):
+    """This function returns the dat representation of the given pirellone instance according to the indicated format"""
+    M = len(pirellone)
+    N = len(pirellone[0])
+    output = f"param M := {M};  # Number of rows\n"
+    output += f"param N := {N};  # Number of columns\n"
+    output += "param PIRELLONE :  " + " ".join([str(i) for i in range(1,N+1)]) + " :=\n"
+    for i in range(M):
+        output += f"           {i+1}   "
+        output += ' '.join(str(col) for col in pirellone[i])+"\n"
+    output += "end;"
+    return output
 
 
 # PIRELLONE GENERATOR FUNCTIONS:

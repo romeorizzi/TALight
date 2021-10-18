@@ -3,7 +3,7 @@
 from TALinputs import TALinput
 from bot_interface import service_server_requires_and_gets_the_only_file
 
-import pirellone_lib as pl
+import model_pirellone_lib as pl
 
 
 def process_instance(ENV, TAc, LANG):

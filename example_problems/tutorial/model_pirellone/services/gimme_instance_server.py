@@ -3,7 +3,7 @@ from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
 
-import pirellone_lib as pl
+import model_pirellone_lib as pl
 
 
 
