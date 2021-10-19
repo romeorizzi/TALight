@@ -55,8 +55,9 @@ except RuntimeError:
 
 # Print Instance
 if ENV['silent']:
-    # print(f"{ENV['m']} {ENV['n']}")
-    print(pl.pirellone_to_str(instance))
+    format = 'only_matrix'
+    # format = 'with_m_and_n'
+    print(pl.pirellone_to_str(instance, format))
 else:
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])

@@ -7,19 +7,21 @@ import shutil
 ### Conventions #############################
 GEN_FILE = "GEN"
 INPUTS_DIR = "../inputs/"
-GENERATOR_NAME = "instance_generator.py"
+GENERATOR_FILE = "instance_generator.py"
+GENDICT_FILE = "gen_dictionary.txt"
 #############################################
 
 
 # Get gen directory and generate utils path
 GEN_DIR = argv[1]
+GENDICT_FILE_PATH = path.join(GEN_DIR, GENDICT_FILE)
 GEN_FILE_PATH = path.join(GEN_DIR, GEN_FILE)
 INPUTS_DIR_PATH = path.join(GEN_DIR, INPUTS_DIR)
-GENERATOR_PATH = path.join(GEN_DIR, GENERATOR_NAME)
+GENERATOR_PATH = path.join(GEN_DIR, GENERATOR_FILE)
 if not path.exists(INPUTS_DIR_PATH):
     makedirs(INPUTS_DIR_PATH)
 
-# Get list of lines of GEN file to be parsed.
+# Create GEN_DICT
 with open(GEN_FILE_PATH, "r") as GEN_file:
     gen_lines = GEN_file.readlines()
 
@@ -27,6 +29,8 @@ with open(GEN_FILE_PATH, "r") as GEN_file:
 formats_availables = list()
 cur_suite_path = None
 instance_n_for_suit = dict()
+gendict = dict()
+cur_id = 0
 
 # Parsing gen lines
 for line in gen_lines:
@@ -69,7 +73,10 @@ for line in gen_lines:
             exit(1)
         target_file_path = path.join(cur_suite_path, hardcode_file)
         shutil.copy(source_file_path, target_file_path)
-        
+        # Save in gen-dictionary
+        gendict[cur_id] = target_file_path
+        cur_id += 1
+
     # CASE4:
     keyword = "GEN:"
     if line[:len(keyword)] == keyword:
@@ -80,6 +87,14 @@ for line in gen_lines:
             target_file_path = path.join(cur_suite_path, \
                 f"input{instance_n_for_suit[cur_suite]}.{format}")
             system(f"{GENERATOR_PATH} {args} {format} > {target_file_path}")
+            # Save in gen-dictionary
+            gendict[cur_id] = target_file_path
+            cur_id += 1
         instance_n_for_suit[cur_suite] += 1
+
+# save gen-dictionary:
+with open(GENDICT_FILE_PATH, "w") as gendict_file:
+    for k, v in gendict.items():
+        gendict_file.write(f'{k}:{v}\n')
 
 exit(0)

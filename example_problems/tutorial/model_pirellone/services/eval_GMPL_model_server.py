@@ -4,8 +4,8 @@ from sys import exit
 from multilanguage import Env, Lang, TALcolors
 
 import model_pirellone_lib as pl
-from model_utils import ModellingProblemHelper, get_archive_path_from
-from utils_services import process_user_sol, print_separator, check_sol_with_feedback
+from model_utils import ModellingProblemHelper, get_problem_path_from
+from services_utils import process_user_sol, print_separator, check_sol_with_feedback
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -26,28 +26,28 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 # Create list of test directory names to be test from the goal
-tests_dirname_list = [  "public_examples",               \
-                    "m_and_n_at_most_5_solvable",   \
-                    "m_and_n_at_most_5_unsolvable", \
-                    "m_and_n_at_10",                \
-                    "m_and_n_at_20",                \
-                    "m_and_n_at_30",                \
-                    "m_and_n_at_50",                \
-                    "m_and_n_at_100",               \
-                    "m_and_n_at_200",               \
-                    "m_and_n_at_300"                ]
+tests_dirname_list = [  "public_examples",    \
+                        "m_and_n_at_most_5",  \
+                        "m_and_n_at_10",      \
+                        "m_and_n_at_20",      \
+                        "m_and_n_at_30",      \
+                        "m_and_n_at_50",      \
+                        "m_and_n_at_100",     \
+                        "m_and_n_at_200",     \
+                        "m_and_n_at_300"      ]
 for test in reversed(tests_dirname_list):
     if test == ENV['goal']:
         break
     tests_dirname_list.remove(test)
 
 # Initialize ModellingProblemHelper
-mph = ModellingProblemHelper(get_archive_path_from(__file__))
+mph = ModellingProblemHelper(get_problem_path_from(__file__))
 
 # Get only model file
 try:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod)."), "yellow")
-    mph.receive_files(mod=True)
+    # Get mod
+    mph.receive_mod_file()
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
@@ -116,6 +116,10 @@ for test_dir in tests_dirname_list:
             exit(0)
         
         # Check the correctness of the user solution
-        check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, gplsol_sol)
+        opt_sol = pl.subset_to_seq(opt_sol_subset) if ENV['sol_style'] == 'seq' else opt_sol_subset
+        if opt_sol_subset == gplsol_sol:
+            pass
+        # ALTERNATIVE:
+        # check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, gplsol_sol)
 
 exit(0)

@@ -4,8 +4,8 @@ from sys import exit
 from multilanguage import Env, Lang, TALcolors
 
 import model_pirellone_lib as pl
-from model_utils import ModellingProblemHelper
-from utils_services import process_user_sol, print_separator, check_sol_with_feedback
+from model_utils import ModellingProblemHelper, get_problem_path_from
+from services_utils import process_user_sol, print_separator, check_sol_with_feedback
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -16,6 +16,8 @@ args_list = [
     ('display_error',bool),
     ('check_solution',bool),
     ('sol_style',str),
+    ('dat_id',int),
+    ('input_id',int),
     ('lang',str),
 ]
 
@@ -26,29 +28,39 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 # Initialize ModellingProblemHelper
-mph = ModellingProblemHelper()
+mph = ModellingProblemHelper(get_problem_path_from(__file__))
 
 # Get files
 try:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
-    if ENV['check_solution']:
-        input_str = mph.receive_files(mod=True, dat=True, input=True)
-        instance = pl.get_pirellone_from_str(input_str)
+    # Get mod
+    mph.receive_mod_file()
+    # Get dat
+    dat_file_path = None
+    if ENV['dat_id'] == -1:
+        mph.receive_dat_file()
     else:
-        mph.receive_files(mod=True, dat=True, input=False)
-        instance = None
+        dat_file_path = mph.get_dat_paths_from_id(ENV['dat_id'])
+    # Get input
+    instance = None
+    if ENV['check_solution']:
+        if ENV['input_id'] == -1:
+            input_str = mph.receive_input_file()
+        else:
+            input_str = mph.get_input_from_id(ENV['input_id'])
+        instance = pl.get_pirellone_from_str(input_str)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
     if err_name == 'write-error':
         TAc.print(LANG.render_feedback('write-error', f"Fail to create {err.args[1]} file"), "red", ["bold"])
     else:
-        TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
     exit(0)
 
 # Perform solution with GPLSOL
 try:
-    mph.run_GPLSOL()
+    mph.run_GPLSOL(dat_file_path)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
@@ -59,7 +71,7 @@ except RuntimeError as err:
     elif err_name == 'process-exception':
         TAc.print(LANG.render_feedback('process-exception', f"Processing returned with error:\n{err.args[1]}"), "red", ["bold"])
     else:
-        TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
     exit(0)
 
 # print GPLSOL stdout
@@ -75,7 +87,7 @@ if ENV['display_output']:
         if err_name == 'read-error':
             TAc.print(LANG.render_feedback('stdout-read-error', "Fail to read the stdout file of GPLSOL"), "red", ["bold"])
         else:
-            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
         exit(0)
 
 # print GPLSOL stderr
@@ -91,7 +103,7 @@ if ENV['display_error']:
         if err_name == 'read-error':
             TAc.print(LANG.render_feedback('stderr-read-error', "Fail to read the stderr file of GPLSOL"), "red", ["bold"])
         else:
-            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
         exit(0)
 
 # check GPLSOL solution
@@ -120,7 +132,7 @@ if ENV['check_solution']:
         if err_name == 'read-error':
             TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
         else:
-            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
         exit(0)
 
     # Print GPLSOL solution

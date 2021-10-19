@@ -5,7 +5,7 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
 import model_pirellone_lib as pl
-from utils_services import process_instance
+from services_utils import process_instance
 
 # METADATA OF THIS TAL_SERVICE:
 problem="model_pirellone"
