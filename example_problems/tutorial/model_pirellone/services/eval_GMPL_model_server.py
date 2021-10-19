@@ -59,6 +59,13 @@ except RuntimeError as err:
 
 # Test all instance until the goal selected.
 for test_dir in tests_dirname_list:
+    mph.get_paths_in(test_dir)
+    exit(0)
+
+
+    for instances_files in mph.get_paths_in(test_dir):
+        pass
+
     # Get input
     try:
         input_str = mph.get_input_from_archive(test_dir)

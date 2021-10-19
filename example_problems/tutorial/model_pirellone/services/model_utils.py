@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """This file contains the useful functions to handle modelling problem. 
 NOTE: it needs to be placed in the services directory to work properly."""
-import subprocess, os
+import subprocess, os, json
 
 from bot_interface import service_server_requires_and_gets_file_of_handle
 
@@ -14,15 +14,15 @@ def get_problem_path_from(you_service_file_path):
 
 class ModellingProblemHelper():
     def __init__(self,
-                problem_path,                           \
-                tmp_dirname       = 'tmp97815',         \
-                mod_filename      = 'model.mod',        \
-                dat_filename      = 'instance.dat',     \
-                sol_filename      = 'solution.txt',     \
-                out_filename      = 'output.txt',       \
-                err_filename      = 'error.txt',        \
-                inputs_dirname    = 'inputs',           \
-                gendict_filename  = 'gen_dictionary.txt'):
+                problem_path,                            \
+                tmp_dirname       = 'tmp97815',          \
+                mod_filename      = 'model.mod',         \
+                dat_filename      = 'instance.dat',      \
+                sol_filename      = 'solution.txt',      \
+                out_filename      = 'output.txt',        \
+                err_filename      = 'error.txt',         \
+                inputs_dirname    = 'inputs',            \
+                gendict_filename  = 'gen_dictionary.json'):
         self.__problem_path = problem_path
         self.__tmp_path     = os.path.join(problem_path, tmp_dirname)
         self.__mod_path     = os.path.join(problem_path, tmp_dirname, mod_filename)
@@ -137,34 +137,53 @@ class ModellingProblemHelper():
             raise RuntimeError('solution-read-error', err)
 
 
-    # MANAGE INPUTS/GEN-DICT FILES -------------------
-    def get_path_from_id(self, id):
+    # MANAGE INPUTS/GENDICT FILES -------------------
+    def get_path_from_id(self, id, format):
         """Returns the path to the file selected with id."""
-        assert id > 0, "Id not valid."
-        assert self.__gendict_path, "'gendict_path' must be initialized when create the ModellingProblemHelper object"
+        assert id >= 0, "Id not valid."
         try:
             with open(self.__gendict_path, 'r') as file:
-                while True:
-                    line = file.readline()
-                    if not line:
-                        return None
-                    l = line.split(':')
-                    if l[0] == id:
-                        return l[1]
+                gendict = json.load(file)
+                info = gendict[str(id)]
+                return os.path.join(self.__inputs_path, info['suite'], info[format])
         except os.error as err:
             raise RuntimeError('read-error', self.__gendict_path)
+        except KeyError as err:
+            raise RuntimeError('invalid-id', id)
 
 
-    def get_input_from_id(self, id):
+    def get_input_from_id(self, id, format):
         """Returns the instance from the input file with the selected id."""
-        assert id > 0, "Id not valid."
         try:
             # Get path
-            input_path = self.__get_path_from_id(id)
+            input_path = self.get_path_from_id(id, format)
             with open(input_path, 'r') as file:
-                return file.read()
+                return file.read().strip()
         except os.error as err:
             raise RuntimeError('read-error', self.__gendict_path)
+
+
+    def get_paths_in(self, dir_name):
+        """Returns the list of all file_path in the inputs directory grouped by instance"""
+        assert isinstance(dir_name, str)
+        try:
+            dir_path = os.path.join(self.__inputs_path, dir_name)
+            instances_files = dict()
+            last_name = None
+            for filename in os.listdir(dir_path):
+                name = filename.split('.')[0]
+                if name != last_name:
+                    instances_files.append()
+                print(filename)
+                # Get full path and add it if is a file
+                # file_path = os.path.join(dir_path, filename)
+                # if os.path.isfile(file_path):
+                #     paths_list.append(file_path)
+
+            # return paths_list
+
+        except Exception as err:
+            raise RuntimeError('dir-not-exist', dir_name)
 
 
 
@@ -179,26 +198,6 @@ class ModellingProblemHelper():
                 return file.read()
         except os.error as err:
             raise RuntimeError('input-read-error', input_path)
-        except Exception as err:
-            raise RuntimeError('dir-not-exist', dir_name)
-
-
-    def get_dat_paths_from_archive(self, dir_name):
-        """Returns the list of all dat_files_path in this directory in archive"""
-        assert isinstance(dir_name, str)
-        assert self.__archive_path, '"archive_path" must be initialized when create the ModellingProblemHelper object'
-        try:
-            dir_path = os.path.join(self.__archive_path, dir_name)
-            paths_list = list()
-            for filename in os.listdir(dir_path):
-                # Filter only .dat file
-                if filename[-4:] == '.dat':
-                    # Get full path and add it if is a file
-                    file_path = os.path.join(dir_path, filename)
-                    if os.path.isfile(file_path):
-                        paths_list.append(file_path)
-            return paths_list
-
         except Exception as err:
             raise RuntimeError('dir-not-exist', dir_name)
 

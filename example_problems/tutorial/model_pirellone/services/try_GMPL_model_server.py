@@ -16,8 +16,7 @@ args_list = [
     ('display_error',bool),
     ('check_solution',bool),
     ('sol_style',str),
-    ('dat_id',int),
-    ('input_id',int),
+    ('instance_id',int),
     ('lang',str),
 ]
 
@@ -35,27 +34,30 @@ try:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
     # Get mod
     mph.receive_mod_file()
-    # Get dat
-    dat_file_path = None
-    if ENV['dat_id'] == -1:
+    # Get dat and input
+    if ENV['instance_id'] == -1:
+        # Get dat file
         mph.receive_dat_file()
-    else:
-        dat_file_path = mph.get_dat_paths_from_id(ENV['dat_id'])
-    # Get input
-    instance = None
-    if ENV['check_solution']:
-        if ENV['input_id'] == -1:
+        dat_file_path = None
+        # Get input file
+        if ENV['check_solution']:
             input_str = mph.receive_input_file()
-        else:
-            input_str = mph.get_input_from_id(ENV['input_id'])
-        instance = pl.get_pirellone_from_str(input_str)
+    else:
+        # Get dat file
+        dat_file_path = mph.get_path_from_id(ENV['instance_id'], 'dat')
+        # Get input file
+        if ENV['check_solution']:
+            input_str = mph.get_input_from_id(ENV['instance_id'], 'only_matrix.txt')
+    instance = pl.get_pirellone_from_str(input_str)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
     if err_name == 'write-error':
         TAc.print(LANG.render_feedback('write-error', f"Fail to create {err.args[1]} file"), "red", ["bold"])
+    if err_name == 'invalid-id':
+        TAc.print(LANG.render_feedback('invalid-id', f"id={err.args[1]} is invalid."), "red", ["bold"])
     else:
-         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
+         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
     exit(0)
 
 # Perform solution with GPLSOL
@@ -71,7 +73,7 @@ except RuntimeError as err:
     elif err_name == 'process-exception':
         TAc.print(LANG.render_feedback('process-exception', f"Processing returned with error:\n{err.args[1]}"), "red", ["bold"])
     else:
-         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
+         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
     exit(0)
 
 # print GPLSOL stdout
@@ -87,7 +89,7 @@ if ENV['display_output']:
         if err_name == 'read-error':
             TAc.print(LANG.render_feedback('stdout-read-error', "Fail to read the stdout file of GPLSOL"), "red", ["bold"])
         else:
-             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
+             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
         exit(0)
 
 # print GPLSOL stderr
@@ -103,7 +105,7 @@ if ENV['display_error']:
         if err_name == 'read-error':
             TAc.print(LANG.render_feedback('stderr-read-error', "Fail to read the stderr file of GPLSOL"), "red", ["bold"])
         else:
-             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
+             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
         exit(0)
 
 # check GPLSOL solution
@@ -132,7 +134,7 @@ if ENV['check_solution']:
         if err_name == 'read-error':
             TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
         else:
-            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}\n{err.args[1]}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
         exit(0)
 
     # Print GPLSOL solution
