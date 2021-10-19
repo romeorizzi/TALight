@@ -81,7 +81,7 @@ class ModellingProblemHelper():
         return service_server_requires_and_gets_file_of_handle('input').decode()
 
 
-    def run_GPLSOL(self, dat_file_path=None):
+    def run_GLPSOL(self, dat_file_path=None):
         """launches glpsol on the .mod and .dat files contained in TMP_DIR. The stdout, stderr and solution of glpsol are saved in files."""
         # Get file dat path
         if not dat_file_path:
@@ -152,53 +152,34 @@ class ModellingProblemHelper():
             raise RuntimeError('invalid-id', id)
 
 
-    def get_input_from_id(self, id, format):
-        """Returns the instance from the input file with the selected id."""
+    def get_input_from_path(self, path):
+        """Returns the instance from the input from the selected path."""
         try:
-            # Get path
-            input_path = self.get_path_from_id(id, format)
-            with open(input_path, 'r') as file:
+            with open(path, 'r') as file:
                 return file.read().strip()
         except os.error as err:
             raise RuntimeError('read-error', self.__gendict_path)
 
 
-    def get_paths_in(self, dir_name):
+    def get_input_from_id(self, id, format):
+        """Returns the instance from the input file with the selected id."""
+        return self.get_input_from_path(self.get_path_from_id(id, format))
+
+
+    def get_instances_paths_in(self, dir_name):
         """Returns the list of all file_path in the inputs directory grouped by instance"""
         assert isinstance(dir_name, str)
         try:
             dir_path = os.path.join(self.__inputs_path, dir_name)
-            instances_files = dict()
-            last_name = None
+            instances_paths = dict()
             for filename in os.listdir(dir_path):
-                name = filename.split('.')[0]
-                if name != last_name:
-                    instances_files.append()
-                print(filename)
-                # Get full path and add it if is a file
-                # file_path = os.path.join(dir_path, filename)
-                # if os.path.isfile(file_path):
-                #     paths_list.append(file_path)
-
-            # return paths_list
-
-        except Exception as err:
-            raise RuntimeError('dir-not-exist', dir_name)
-
-
-
-    def get_input_from_archive(self, dir_name):
-        """Returns a string that contents the input of the dir_selected."""
-        assert isinstance(dir_name, str)
-        assert self.__archive_path, '"archive_path" must be initialized when create the ModellingProblemHelper object'
-        try:
-            dir_path = os.path.join(self.__archive_path, dir_name)
-            input_path = os.path.join(dir_path, 'input.txt')
-            with open(input_path, 'r') as file:
-                return file.read()
+                tmp_parse = filename.split('.')
+                id = tmp_parse[0][len('instance'):]
+                format = ".".join(tmp_parse[1:])
+                if id not in instances_paths:
+                    instances_paths[id] = {format : os.path.join(dir_path, filename)}
+                else:
+                    instances_paths[id][format] = os.path.join(dir_path, filename)
+            return instances_paths
         except os.error as err:
-            raise RuntimeError('input-read-error', input_path)
-        except Exception as err:
-            raise RuntimeError('dir-not-exist', dir_name)
-
-
+            raise RuntimeError('read-error', self.__inputs_path)

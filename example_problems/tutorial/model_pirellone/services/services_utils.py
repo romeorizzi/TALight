@@ -74,25 +74,25 @@ def process_user_sol(ENV, TAc, LANG, raw_sol, sol_style=None, m=None, n=None):
         err_name = err.args[0]
         # manage custom exceptions:
         if err_name == 'sol-bad-format':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {raw_sol}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('sol-bad-format', f"[sol-bad-format]: The solution file have a bad format: {raw_sol}"), "red", ["bold"])
             print_correct_sol_format(TAc, LANG)
         elif err_name == 'seq-regex':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
+            TAc.print(LANG.render_feedback('seq-regex', f"[seq-regex]: The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
             print_correct_sol_format(TAc, LANG)
         elif err_name == 'seq-row-m':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row={err.args[1]} switch exceeds {m}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('seq-row-m', f"[seq-row-m]: The solution file have a bad format: the row={err.args[1]} switch exceeds {m}"), "red", ["bold"])
             print_correct_sol_format(TAc, LANG)
         elif err_name == 'seq-col-n':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the col={err.args[1]} switch exceeds {n}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('seq-col-n', f"[seq-col-n]: The solution file have a bad format: the col={err.args[1]} switch exceeds {n}"), "red", ["bold"])
             print_correct_sol_format(TAc, LANG)
         elif err_name == 'subset-regex':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
+            TAc.print(LANG.render_feedback('subset-regex', f"[subset-regex]: The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
             print_correct_sol_format(TAc, LANG)
         elif err_name == 'subset-row-m':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the row={err.args[1]} switch exceeds {m}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('subset-row-m', f"[subset-row-m]: The solution file have a bad format: the row={err.args[1]} switch exceeds {m}"), "red", ["bold"])
             print_correct_sol_format(TAc, LANG)
         elif err_name == 'subset-col-n':
-            TAc.print(LANG.render_feedback('sol-bad-format', f"The solution file have a bad format: the col={err.args[1]} switch exceeds {n}"), "red", ["bold"])
+            TAc.print(LANG.render_feedback('subset-col-n', f"[subset-col-n]: The solution file have a bad format: the col={err.args[1]} switch exceeds {n}"), "red", ["bold"])
             print_correct_sol_format(TAc, LANG)
         else:
             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])

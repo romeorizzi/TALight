@@ -13,6 +13,9 @@ suite: public_examples
 COPY: hardcoded/instance1.only_matrix.txt
 COPY: hardcoded/instance1.with_m_and_n.txt
 COPY: hardcoded/instance1.dat
+COPY: hardcoded/instance2.only_matrix.txt
+COPY: hardcoded/instance2.with_m_and_n.txt
+COPY: hardcoded/instance2.dat
 
 suite: m_and_n_at_most_5_solvable
 #     m,  n, solvable, seed

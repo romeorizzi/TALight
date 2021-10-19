@@ -54,15 +54,15 @@ except RuntimeError as err:
     # manage custom exceptions:
     if err_name == 'write-error':
         TAc.print(LANG.render_feedback('write-error', f"Fail to create {err.args[1]} file"), "red", ["bold"])
-    if err_name == 'invalid-id':
+    elif err_name == 'invalid-id':
         TAc.print(LANG.render_feedback('invalid-id', f"id={err.args[1]} is invalid."), "red", ["bold"])
     else:
          TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-    exit(0)
+    exit(1)
 
 # Perform solution with GPLSOL
 try:
-    mph.run_GPLSOL(dat_file_path)
+    mph.run_GLPSOL(dat_file_path)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
@@ -74,7 +74,7 @@ except RuntimeError as err:
         TAc.print(LANG.render_feedback('process-exception', f"Processing returned with error:\n{err.args[1]}"), "red", ["bold"])
     else:
          TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-    exit(0)
+    exit(1)
 
 # print GPLSOL stdout
 if ENV['display_output']:
@@ -90,7 +90,7 @@ if ENV['display_output']:
             TAc.print(LANG.render_feedback('stdout-read-error', "Fail to read the stdout file of GPLSOL"), "red", ["bold"])
         else:
              TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-        exit(0)
+        exit(1)
 
 # print GPLSOL stderr
 if ENV['display_error']:
@@ -106,7 +106,7 @@ if ENV['display_error']:
             TAc.print(LANG.render_feedback('stderr-read-error', "Fail to read the stderr file of GPLSOL"), "red", ["bold"])
         else:
              TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-        exit(0)
+        exit(1)
 
 # check GPLSOL solution
 if ENV['check_solution']:
@@ -114,8 +114,8 @@ if ENV['check_solution']:
 
     # Perform optimal solution with model_pirellone_lib
     opt_sol_subset = pl.get_opt_sol(instance)
-    m = len(opt_sol_subset[0])
-    n = len(opt_sol_subset[1])
+    m = len(instance)
+    n = len(instance[0])
 
     # Print instance
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {m}x{n} is:"), "yellow", ["bold"])
@@ -135,7 +135,7 @@ if ENV['check_solution']:
             TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
         else:
             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-        exit(0)
+        exit(1)
 
     # Print GPLSOL solution
     TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["BOLD"])
