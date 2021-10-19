@@ -1,4 +1,5 @@
 tmp97815/
 inputs/
-gen/gen_dictionary.txt
+inputs/public_examples/
+gen/gen_dictionary*
 note.txt

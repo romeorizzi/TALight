@@ -161,7 +161,8 @@ def pirellone_to_dat(pirellone, format="for_now_we_have_only_one"):
     output += "param PIRELLONE :  " + " ".join([str(i) for i in range(1,N+1)]) + " :=\n"
     for i in range(M):
         output += f"           {i+1}   "
-        output += ' '.join(str(col) for col in pirellone[i])+"\n"
+        output += ' '.join(str(col) for col in pirellone[i])
+        output += ";\n" if i == (M - 1) else "\n"
     output += "end;"
     return output
 
