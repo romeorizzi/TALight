@@ -18,7 +18,7 @@ services:
         regex: ^(from_terminal|from_file|from_file_silent)$
         explain: the options are as follows
         explain1: -from_terminal = manage the input with direct immission (possibly with copy and paste).
-        explain2: -from_file = use the bot TA_send_files_bot.py to load your file with the tiling. See the file `verify_tiling.txt` for an example of such a file (note that the number of rows and columns should be on the first line of the file).
+        explain2: -from_file = use the bot TA_send_files_bot.py to load your file with the tiling. See the file `examples/4x4_except0-0_tiling.txt` for an example of such a file (note that the number of rows and columns should be on the first line of the file).
         explain3: -from_file_silent = like the above, but if nothing is wrong with your tiling then the service runs silently; otherwise it explains what is the problem in clear.
         default: from_terminal
       lang:
@@ -48,10 +48,10 @@ services:
         explain: the service will dispel the first <dispel_first_rows_of_a_tiling> rows of a possible tiling.
   trilly:
     evaluator: [python, services/trilly_server.py]
-    description: "Trilly the fairy helps you in constructing a tiling of a 2^kx2^k board with L-shaped trominos (leaving out one single cell).
-    Every standard move lays down a tromino piece: assume that the cells (r,c),(r+1,c)(r,c+1),(r+1,c+1) are still empty, and let r0=r,r+1, c0=c,c+1. Writing a line in the format '1 <r> <c> <r0> <c0>' commands to place the unique tromino that would cover these 4 cells exept cell (r0,c0). After being assigned the number k (the first board), and as many times as you want, you can call Trilly and assign her a 2^hx2^h sub-board, with h<k, and specify one single cell of such sub-board. Trilly checks that this sub-board is still empty and then details a list of standard moves for its filling (except for the specified cell that she leaves empty).
-    A call to Trilly is like a macro-move and you command it writing a line in the format '<h> <r> <c> <r0> <c0>'; this asks to cover all cells in the sub-grid [r,r+2^h)x[c,c+2^h), except cell (r0,c0).
-    Playing with the arguments of this service you might also allow Trilly to use macro-moves, the agreement being that a macro-move of one player should be entireley fullfilled by moves of the other player; these might in turn be macro-moves but with strictly smaller value for the h parameter."
+    description: 'Trilly the fairy helps you in constructing a tiling of a 2^kx2^k board with L-shaped trominos (leaving out one single cell).
+    Every standard move lays down a tromino piece: assume that the cells (r,c),(r+1,c)(r,c+1),(r+1,c+1) are still empty, and let r0=r,r+1, c0=c,c+1. Writing a line in the format "1 <r> <c> <r0> <c0>" commands to place the unique tromino that would cover these 4 cells exept cell (r0,c0). After being assigned the number k (the first board), and as many times as you want, you can call Trilly and assign her a 2^hx2^h sub-board, with h<k, and specify one single cell of such sub-board. Trilly checks that this sub-board is still empty and then details a list of standard moves for its filling (except for the specified cell that she leaves empty).
+    A call to Trilly is like a macro-move and you command it writing a line in the format "<h> <r> <c> <r0> <c0>"; this asks to cover all cells in the sub-grid [r,r+2^h)x[c,c+2^h), except cell (r0,c0).
+    Playing with the arguments of this service you might also allow Trilly to use macro-moves, the agreement being that a macro-move of one player should be entireley fullfilled by moves of the other player; these might in turn be macro-moves but with strictly smaller value for the h parameter.'
     args:
       k:
         regex: ^([0-9]|10)$
@@ -60,20 +60,29 @@ services:
         explain: both in the first request of the server and in the later requests of the problem solver, the cell (r,c) should always be a corner cell.
         regex: ^(0|1)$
         default: 1
+      goal_coverage:
+        regex: ^(at_least_3|at_least_one_quarter|at_least_half||at_least_three_quarters|all_exept_one)$
+        default: all_exept_one
+        explain: "with this parameter you declare how many cells of the board you aim to cover with the resulting tiling. The options are as follows:"
+        explain1: -at_least_3_cells = the tiles placed by either player should cover at least 3 cells of the board (at least one tile should be placed either by you or by Trilly).
+        explain2: -at_least_one_quarter = the tiles ultimately placed should cover at least one quarter of the cells of the board.
+        explain3: -at_least_half = the tiles ultimately placed should cover at least half of the cells of the board.
+        explain4: -at_least_three_quarters = the tiles ultimately placed should cover at least three quarters of the cells of the board.
+        explain5: -all_exept_one = the tiles ultimately placed should cover all the cells of the board except at most one. Notice that at least one cell should be left uncivered since 2^n is congruent to 1 modulo 3.
       goal_min_calls_to_standard_moves:
         regex: ^(any|k|1)$
         default: 1
-        explain: try to minimize the number of calls to standard moves in reply to the original request.
+        explain: try to minimize the number of calls to standard moves in reply to the original request. Try to pursue this goal while covering all cells but one.
       goal_min_calls_to_trilly:
         regex: ^(any|4|one_and_gain_three_calls_at_every_standard_move|gain_three_calls_at_every_standard_move)$
         default: 4
-        explain: number of allowed calls to trilly. Try to minimize it, but, at a certain point, this goal will conflict with the main one given above.
-      trilly_requests:
+        explain: number of allowed calls to trilly. Try to minimize it. Be told however that, beyond a certain point, this goal will conflict with the goal \'goal_min_calls_to_standard_moves\' which we suggest you to consider first.
+      trilly_assertivity:
         regex: ^(poses_only_the_starting_problem|might_pose_smaller_problems_in_reply|might_pose_non_bigger_problems_in_reply)$
-        explain: kind of requests trilly can pose in reply to you.
-        explain1: -poses_only_the_starting_problem = trilly reply with the complete ordered list of standard moves.
-        explain2: -might_pose_smaller_problems_in_reply = trilly might reply with one macro-move and a list of standard moves.
-        explain3: -might_pose_non_bigger_problems_in_reply = trilly might reply with an ordered list of macro-moves.
+        explain: "this parameter regulates the ways in which Trilly responds to your commands. The options are as follows:"
+        explain1: -plain_executor = Trilly explicitely places all tiles needed to cover the 2^hx2^h-sub-board you assigned her. Her reply takes the form of an ordered list of standard moves.
+        explain2: -might_pose_smaller_macromoves_in_reply = trilly might reply with one macro-move and a list of standard moves.
+        explain3: -might_bounch_your_macromoves_back_to_you = trilly might reply with a macromove as big as the one you commissioned her (your commission is bounched back to you).
         default: poses_only_the_starting_problem
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$

@@ -92,10 +92,16 @@ else:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input file."), "yellow")
     tiling=service_server_requires_and_gets_the_only_file().decode()
     lines=tiling.splitlines()
-    m , n = map(int,lines[0].split())
-    line = ['0'] * n
-    for r in range(1,m+1):
+    r = 0
+    while lines[r][0] == '#':
+        r += 1
+    m, n = map(int,lines[r].split())
+    line = ['#'] * n
+    for row_num in range(1,m+1):
         prev_line = line
+        r += 1
+        while lines[r][0] == '#':
+            r += 1
         line = lines[r]
         if line[0] in {'3','4','E'}: 
             TAc.print(LANG.render_feedback("left-margin", f"The first character of a line can not be a '{line[0]}' for otherwise its tromino exits the left border of your grid."), "red", ["bold"])
@@ -110,12 +116,12 @@ else:
             (j<n-1 and line[j+1] in {'3','4'} and line[j] != 'W'):
                 TAc.print(LANG.render_feedback("inconsistent-tromino-row", f"You can not have a `{line[j+1]}` character at the immidiate right of a `{line[j]}` character (see the characters in position {j} and {j+1} of your line)."), "red", ["bold"])
                 exit(0)
-        if r==1:
+        if row_num==1:
             for char in line:
                 if char in {'1','4','S'}: 
                     TAc.print(LANG.render_feedback("top-margin", f"No character of the first (topmost) line can be a '{char}' for otherwise its tromino exits the top border of your grid."), "red", ["bold"])
                     exit(0)
-        if r==m:
+        if row_num==m:
             for char in line:
                 if char in {'2','3','N'}: 
                     TAc.print(LANG.render_feedback("bottom-margin", f"No character of the last (bottom) line can be a '{char}' for otherwise its tromino exits the bottom border of your grid."), "red", ["bold"])
@@ -125,7 +131,7 @@ else:
             (prev_line[j] == 'N' and line[j] not in {'1','4'}) or \
             (line[j] == 'S' and prev_line[j] not in {'2','3'}) or \
             (prev_line[j] in {'2','3'} and line[j] != 'S'):
-                TAc.print(LANG.render_feedback("inconsistent-tromino-col", f"You can not have a `{prev_line[j]}` character just above a `{line[j]}` character (check the characters in column {j}, indexes starting from 0)."), "red", ["bold"])
+                TAc.print(LANG.render_feedback("inconsistent-tromino-col", f"You can not have a `{prev_line[j]}` character just above a `{line[j]}` character (check the characters in row {r} and column {j} of your tiling, indexes starting from 0)."), "red", ["bold"])
                 exit(0)
 
     if ENV['loading'] == 'from_file':
