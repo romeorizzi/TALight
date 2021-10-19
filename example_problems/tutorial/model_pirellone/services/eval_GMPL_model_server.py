@@ -89,6 +89,7 @@ for test_dir in tests_dirname_list:
         # Get input
         try:
             input_str = mph.get_input_from_path(input_file_path)
+            print(input_str)
             instance = pl.get_pirellone_from_str(input_str)
         except RuntimeError as err:
             err_name = err.args[0]
@@ -150,13 +151,13 @@ for test_dir in tests_dirname_list:
             
         # Check the correctness of the user solution
         opt_sol = pl.subset_to_seq(opt_sol_subset) if ENV['sol_style'] == 'seq' else opt_sol_subset
-        print(f'opt_sol: {opt_sol}')
-        print(f'gplsol_sol: {gplsol_sol}')
         if opt_sol == gplsol_sol:
             TAc.print(LANG.render_feedback('correct', f">> Correct"), "green", ["bold"])
         else:
             TAc.print(LANG.render_feedback('wrong', f">> Wrong!!!"), "green", ["bold"])
-            # exit(1)
+            print(f'opt_sol:    {opt_sol}')
+            print(f'gplsol_sol: {gplsol_sol}')
+            exit(1)
         # ALTERNATIVE:
         # check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, gplsol_sol)
 

@@ -4,11 +4,15 @@ from sys import argv, stderr, exit
 import model_pirellone_lib as pl
 
 
+def str2bool(v):
+  return v.lower() in ("yes", "true", "t", "1")
+
+
 def main(n, m, solvable, gen_seed, format):
     # Automatic cast:
     n = int(n)
     m = int(m)
-    solvable = bool(solvable)
+    solvable = str2bool(solvable)
     gen_seed = int(gen_seed)
     format_list = format.split('.')
     if len(format_list) == 1:

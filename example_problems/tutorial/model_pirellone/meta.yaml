@@ -184,7 +184,7 @@ services:
     args:
       goal:
         regex: ^(public_examples|m_and_n_at_most_5|m_and_n_at_most10|m_and_n_at_most20|m_and_n_at_most30|m_and_n_at_most50|m_and_n_at_most100|m_and_n_at_most200|m_and_n_at_most300)$
-        default: m_and_n_at_most_5
+        default: public_examples
         explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
       type_of_check:
         regex: ^(no|yes|min)$
