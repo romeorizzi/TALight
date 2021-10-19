@@ -7,12 +7,12 @@
 
 add_format: dat
 add_format: only_matrix.txt
-add_format: with_m_and_n.txt 
+add_format: with_m_and_n.txt
 
 suite: public_examples
-COPY: hardcoded/instance1.only_matrix.txt   
-COPY: hardcoded/instance1.with_m_and_n.txt   
-COPY: hardcoded/instance1.dat   
+COPY: instance1.only_matrix.txt   
+COPY: instance1.with_m_and_n.txt   
+COPY: instance1.dat   
 
 suite: m_and_n_at_most_5_solvable
 #     m,  n, solvable, seed

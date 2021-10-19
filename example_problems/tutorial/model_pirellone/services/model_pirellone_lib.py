@@ -151,6 +151,7 @@ def pirellone_to_str(pirellone, format="only_matrix"):
         output = f"{len(pirellone)} {len(pirellone[0])}\n"
     return output + '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
 
+
 def pirellone_to_dat(pirellone, format="for_now_we_have_only_one"):
     """This function returns the dat representation of the given pirellone instance according to the indicated format"""
     M = len(pirellone)
@@ -172,9 +173,9 @@ def is_solvable_seed(seed):
     return (seed % 3) != 0
 
 
-def gen_pirellone_seed(solvable=None):
+def gen_pirellone_seed(solvable=None, gen_seed=None):
     """This function returns a seed to generate a pirellone instance with the specificated solvability."""
-    random.seed()
+    random.seed(gen_seed) # if gen_seed=None is init random
     seed = random.randint(100002,999999)
     # Check solvability
     if solvable == None:
@@ -189,7 +190,7 @@ def gen_pirellone_seed(solvable=None):
     return seed
 
 
-def gen_pirellone(m, n, seed, with_yes_certificate=False):
+def gen_pirellone(m, n, seed:int, with_yes_certificate=False):
     """From (m,n,seed), this functions returns a pirellone instance, with eventually the certificate."""
     assert m >= 0
     assert n >= 0

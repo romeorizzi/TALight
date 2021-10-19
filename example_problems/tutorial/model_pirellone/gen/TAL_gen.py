@@ -1,48 +1,85 @@
 #!/usr/bin/env python3
-import os
+from os import path, makedirs, system
 from sys import argv, stderr, exit
 import shutil
 
-GEN_filename = argv[1]
-with open(GEN_filename, "r") as GEN_file:
-    lines = GEN_file.readlines()
 
-CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-INPUTS_DIR = os.path.join(CUR_DIR, "inputs")
-cur_suite = None
-cur_suite_dir = None
-num_instances_in_the_suit = {}
-formats = []
-for line in lines:
-    if line[:len("add_format:")] == "add_format:":
-        new_format = line[len("add_format:"):].strip())
-        if new_format in formats:
+### Conventions #############################
+GEN_FILE = "GEN"
+INPUTS_DIR = "../inputs/"
+GENERATOR_NAME = "instance_generator.py"
+#############################################
+
+
+# Get gen directory and generate utils path
+GEN_DIR = argv[1]
+GEN_FILE_PATH = path.join(GEN_DIR, GEN_FILE)
+INPUTS_DIR_PATH = path.join(GEN_DIR, INPUTS_DIR)
+GENERATOR_PATH = path.join(GEN_DIR, GENERATOR_NAME)
+if not path.exists(INPUTS_DIR_PATH):
+    makedirs(INPUTS_DIR_PATH)
+
+# Get list of lines of GEN file to be parsed.
+with open(GEN_FILE_PATH, "r") as GEN_file:
+    gen_lines = GEN_file.readlines()
+
+# Init vars
+formats_availables = list()
+cur_suite_path = None
+instance_n_for_suit = dict()
+
+# Parsing gen lines
+for line in gen_lines:
+    #CASE1:
+    keyword = "add_format:"
+    if line[:len(keyword)] == keyword:
+        new_format = line[len(keyword):].strip()
+        if new_format in formats_availables:
             print(f"Error in your GEN file: the format {new_format} has been added more than once")
             exit(1)
-        formats.append(new_format)
+        formats_availables.append(new_format)
             
-    if line[:6] == "suite:":
-        cur_suite = line[6:].strip())
-        cur_suite_dir = os.path.join(INPUTS_DIR, cur_suite)
-        if cur_suite_dir in num_instances_in_the_suit:
-            print(f"Error in your GEN file: the suite {cur_suite_dir} is declared more than once")
+    # CASE2:
+    keyword = "suite:"
+    if line[:len(keyword)] == keyword:
+        cur_suite = line[len(keyword):].strip()
+        cur_suite_path = path.join(INPUTS_DIR_PATH, cur_suite)
+        # Check if suite has already been seen
+        if cur_suite in instance_n_for_suit:
+            print(f"Error in your GEN file: the suite {cur_suite} is declared more than once")
             exit(1)
-        num_instances_in_the_suit[cur_suite_dir] = 0
-        if not os.path.exists(cur_suite_dir):
-            os.makedirs(cur_suite_dir)
+        else:
+            instance_n_for_suit[cur_suite] = 1
+        # Check if this suite folder already exists
+        if path.exists(cur_suite_path):
+            print(f"Error {cur_suite_path} already exists")
+            exit(1)
+        else:
+            makedirs(cur_suite_path)
+
+    # CASE3:
+    keyword = "COPY:"
+    if line[:len(keyword)] == keyword:
+        assert cur_suite_path != None, "COPY command before suit command"
+        hardcode_file = line[len(keyword):].strip()
+        source_file_path = path.join(GEN_DIR, "hardcoded", hardcode_file)
+        # Check if this file path exists
+        if not path.exists(source_file_path):
+            print(f"{source_file_path} Not exists!")
+            exit(1)
+        target_file_path = path.join(cur_suite_path, hardcode_file)
+        shutil.copy(source_file_path, target_file_path)
         
-    if line[:5] == "COPY:":
-        source_file = os.path.join(CUR_DIR,line[5:].strip())
-        assert cur_suite_dir != None and os.path.exists(cur_suite_dir)
-        extended_extension = ".".join(source_file.split(".")[1:])
-        target_file = os.path.join(cur_suite_dir,f"input{num_instances_in_the_suit[cur_suite]}.{extended_extension}"))
-        shutil.copyfile(source_file, target_file)
-        
-    if line[:4] == "GEN:":
-        line_of_args = line[4:]
-        assert cur_suite_dir != None and os.path.exists(cur_suite_dir)
-        for extended_extension in formats:
-            target_file = os.path.join(cur_suite_dir,f"input{num_instances_in_the_suit[cur_suite]}.{extended_extension}"))
-            sys.exec(f"./instance_generator.py {line_of_args} {extended_extension} > {target_file}")
+    # CASE4:
+    keyword = "GEN:"
+    if line[:len(keyword)] == keyword:
+        assert cur_suite_path != None, "GEN command before suit command"
+        args = line[len(keyword):][:-1] # removed \n
+        # Create file for each format
+        for format in formats_availables:
+            target_file_path = path.join(cur_suite_path, \
+                f"input{instance_n_for_suit[cur_suite]}.{format}")
+            system(f"{GENERATOR_PATH} {args} {format} > {target_file_path}")
+        instance_n_for_suit[cur_suite] += 1
 
 exit(0)
