@@ -13,8 +13,7 @@ args_list = [
     ('MIN_VAL',int),
     ('MAX_VAL',int),
     ('how_to_input_the_triangle',str),
-    ('sol_value',int),
-    ('silent',int),
+    ('sol_value',str),
     ('lang',str),
 ]
 
@@ -24,32 +23,26 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
 # START CODING YOUR SERVICE: 
-n=ENV['n']
-min_val = ENV['MIN_VAL']
-max_val = ENV['MAX_VAL']
-input_type = ENV['how_to_input_the_triangle']
-sol_value = ENV['sol_value']
-silent = ENV['silent']
 
 # GENERAZIONE TRIANGOLO
 
-if input_type == "lazy":
+if ENV['how_to_input_the_triangle'] == "lazy":
 	undone = True
 	while undone:
 		values = input("Inserisci i valori del triangolo intervallati da uno spazio.\n")
-		if len(values.split()) == sum(range(n+1)):
+		if len(values.split()) == sum(range(ENV['n']+1)):
 			triangle = values.split()
 			undone = False
 		else:
-			print("Hai immesso " + str(len(values.split())) + " valori su " + str(sum(range(n+1))) + ", riprova.\n")
+			print("Hai immesso {str(len(values.split()))} valori su {str(sum(range(ENV['n']+1)))} riprova.\n")
 else:
-	triangle = random_triangle(n,min_val,max_val,input_type)
+	triangle = random_triangle(ENV['n'],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
 
 
 # STAMPA TRIANGOLO
 
 print("\nIl triangolo scelto è il seguente.\n")
-print_triangle(n,triangle)
+print_triangle(triangle)
 print("\n")
 
 # INSERIMENTO PATH
@@ -65,13 +58,13 @@ while undone:
 		else:
 			undone = False
 	else:
-		print("Hai immesso " + str(len(path_values.split())) + " valori sui " + str(n-1) + " richiesti, riprova.\n")
+		print("Hai immesso " + str(len(path_values.split())) + " valori sui " + str(ENV['n']-1) + " richiesti, riprova.\n")
 
 for k in range(len(triangle)):
 		triangle[k] = int(triangle[k])
 		
 # CALCOLO PATH
-p,s = calculate_path(n,triangle,path)
+p,s = calculate_path(ENV['n'],triangle,path)
 
 print("\nIl path da te scelto è quello che tocca, nell\'ordine, i seguenti nodi: " + str(p) + "\n")
 print("Il costo totale del tuo path è: " + str(s))
@@ -86,7 +79,7 @@ def answer():
 if n=='free':
     answer()
 else:
-    if len_input==int(n):
+    if len_input==int(ENV['n']):
         answer()
     elif recognize(ENV["input_treatment"], TAc, LANG):
         TAc.print(LANG.render_feedback("different_lengths", f"No! Your string represents a feasible treatment but not of {n} pills."), "red", ["bold"])
