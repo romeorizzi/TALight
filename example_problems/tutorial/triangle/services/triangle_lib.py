@@ -6,15 +6,19 @@ import math
 
 def random_triangle(n:int, minVal:int, maxVal:int, s:int):
     random.seed(s,version=2)
-    values = []
-    for _ in range(0, sum(range(n+1))):
-        values.append(random.randrange(minVal,1+maxVal))
-    return values
+    triangle = []
+    values = [i for i in range(0,100)]
+    for i in range(0,n):
+        triangle.append(random.sample(values,i+1))
+    return triangle
 
 # STAMPIAMO IL TRIANGOLO SUL TERMINALE
 
-def print_triangle(triangle_array):
-    n = int(math.sqrt(2*len(triangle_array)))
+def print_triangle(triangle):
+    triangle_array = []
+    for l in triangle:
+        triangle_array += l
+    n = len(triangle)
     for i in range(len(triangle_array)):
         if len(str(triangle_array[i])) == 1:
             triangle_array[i] = str(triangle_array[i]) + " "
@@ -29,23 +33,45 @@ def print_triangle(triangle_array):
             z += 1
         print("  ")
         
-def calculate_path(n,triangle,path_values):
-    path = [triangle[0]]
-    s = triangle[0]
+def calculate_path(triangle,path_values):
+    triangle_array = []
+    for l in triangle:
+        triangle_array += l
+    n = len(triangle)
+    path = [triangle_array[0]]
+    s = triangle_array[0]
     i = 0
     last_pos = 0
     for move in path_values:
         if(move == "L"):
-            path.append(triangle[i+1 + last_pos])
-            s += triangle[i+1 + last_pos]
-            last_pos = i + 1 + last_pos
+            path.append(triangle_array[i+1 + last_pos])
+            s += triangle_array[i+1 + last_pos]
+            last_pos += i + 1 
         else:
-            path.append(triangle[i+2 + last_pos])
-            s += triangle[i+2 + last_pos]
-            last_pos = i + 2 + last_pos
+            path.append(triangle_array[i+2 + last_pos])
+            s += triangle_array[i+2 + last_pos]
+            last_pos += i + 2 
         i += 1
     return path,s
 
+def best_path_cost(triangle):
+    dist = len(triangle)
+    triangle_array = []
+    for l in triangle:
+        triangle_array += l
+    triangle_array = triangle_array[::-1]
+    i  = 0
+    count = 1
+    while dist > 1:
+        triangle_array[i + dist] = max(triangle_array[i] + triangle_array[i + dist], triangle_array[i + 1] + triangle_array[i + dist])
+        count += 1
+        i += 1
+        if count == dist:
+            count = 1
+            dist -= 1
+            i += 1
+    return triangle_array[i]
+    
 #rtal connect -a how_to_input_the_triangle=100000 triangle check_one_sol
 
 

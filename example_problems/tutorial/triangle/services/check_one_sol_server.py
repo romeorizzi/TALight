@@ -14,6 +14,8 @@ args_list = [
     ('MAX_VAL',int),
     ('how_to_input_the_triangle',str),
     ('sol_value',str),
+    ('path',str),
+    ('silent',bool),
     ('lang',str),
 ]
 
@@ -27,61 +29,48 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # GENERAZIONE TRIANGOLO
 
 if ENV['how_to_input_the_triangle'] == "lazy":
-	undone = True
-	while undone:
-		values = input("Inserisci i valori del triangolo intervallati da uno spazio.\n")
-		if len(values.split()) == sum(range(ENV['n']+1)):
-			triangle = values.split()
-			undone = False
+	triangle = []
+	for i in range(1,ENV['n']+1):
+		line = input(f"Inserisci i valori della riga {i} del tuo triangolo.\n")
+		line = line.split()
+		line = [int(x) for x in line]
+		if len(line) == i:
+			triangle.append(line)
 		else:
-			print("Hai immesso {str(len(values.split()))} valori su {str(sum(range(ENV['n']+1)))} riprova.\n")
+			TAc.print(LANG.render_feedback("wrong_elements_number", f"Nella riga {i} hai inserito {len(line)} elementi anziché {i}."), "red", ["bold"])
+			exit(0)
+	if not ENV['silent']:
+		TAc.print(LANG.render_feedback("right_triangle_insertion", f"Inserimento del triangolo riuscito"), "yellow", ["bold"])
 else:
 	triangle = random_triangle(ENV['n'],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
 
 
 # STAMPA TRIANGOLO
 
-print("\nIl triangolo scelto è il seguente.\n")
 print_triangle(triangle)
-print("\n")
+
 
 # INSERIMENTO PATH
 
+if len(ENV['path']) != ENV['n']-1:
+	TAc.print(LANG.render_feedback("wrong_directions_number", f"Hai inserito {len(ENV['path'])} direzioni rispetto alle {ENV['n']-1} richieste."), "red", ["bold"])
+	exit(0)
+elif not ENV['silent']:
+		TAc.print(LANG.render_feedback("right_directions_number", f"Esatto. Hai inserito {len(ENV['path'])} direzioni sulle {ENV['n']-1} richieste."), "yellow", ["bold"])
 
-undone = True
-while undone:
-	path_values = input("Inserisci la sequenza del percorso scelto utilizzando i valori L (left) o R (right) intervallati da uno spazio, escludendo il primo nodo.\n\n")
-	if len(path_values.split()) == n-1:
-		path = path_values.split()
-		if any((x != "R" and x != "L") for x in path):
-			print("\nHai inserito una direzione non valida, riprova.\n")
-		else:
-			undone = False
-	else:
-		print("Hai immesso " + str(len(path_values.split())) + " valori sui " + str(ENV['n']-1) + " richiesti, riprova.\n")
 
-for k in range(len(triangle)):
-		triangle[k] = int(triangle[k])
 		
 # CALCOLO PATH
-p,s = calculate_path(ENV['n'],triangle,path)
+p,s = calculate_path(triangle,ENV['path'])
 
-print("\nIl path da te scelto è quello che tocca, nell\'ordine, i seguenti nodi: " + str(p) + "\n")
-print("Il costo totale del tuo path è: " + str(s))
+if not ENV['silent']:
+	TAc.print(LANG.render_feedback("show_path",f"Il path da te scelto è quello che tocca, nell\'ordine, i seguenti nodi: {p}"),"yellow", ["bold"])
 
-			
-	
-'''
-def answer():
-    if recognize(ENV["input_treatment"], TAc, LANG) and not ENV["silent"]:
-        TAc.OK()
-        TAc.print(LANG.render_feedback("ok", f'Your string is a feasible treatment with {len_input} pills.'), "yellow", ["bold"])
-if n=='free':
-    answer()
-else:
-    if len_input==int(ENV['n']):
-        answer()
-    elif recognize(ENV["input_treatment"], TAc, LANG):
-        TAc.print(LANG.render_feedback("different_lengths", f"No! Your string represents a feasible treatment but not of {n} pills."), "red", ["bold"])
-'''
+if ENV['sol_value'] !=	"not_relevant":
+	if int(ENV['sol_value']) == s:	
+		TAc.print(LANG.render_feedback("right_sol_value",f"Ti confermiamo che il path da te scelto ha costo {s}."),"green", ["bold"])			
+	else:
+		TAc.print(LANG.render_feedback("wrong_sol_value",f"Attenzione, il path da te scelto non ha costo {ENV['sol_value']}."),"red", ["bold"])
+		if not ENV['silent']:
+			TAc.print(LANG.render_feedback("correct_path_value",f"Il path da te scelto in realtà ha costo {s}."),"yellow", ["bold"])
 exit(0)
