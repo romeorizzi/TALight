@@ -78,12 +78,12 @@ services:
         default: 4
         explain: number of allowed calls to trilly. Try to minimize it. Be told however that, beyond a certain point, this goal will conflict with the goal \'goal_min_calls_to_standard_moves\' which we suggest you to consider first.
       trilly_assertivity:
-        regex: ^(poses_only_the_starting_problem|might_pose_smaller_problems_in_reply|might_pose_non_bigger_problems_in_reply)$
+        regex: ^(plain_executor|might_pose_smaller_macromoves_in_reply|might_bounch_your_macromoves_back_to_you)$
         explain: "this parameter regulates the ways in which Trilly responds to your commands. The options are as follows:"
         explain1: -plain_executor = Trilly explicitely places all tiles needed to cover the 2^hx2^h-sub-board you assigned her. Her reply takes the form of an ordered list of standard moves.
-        explain2: -might_pose_smaller_macromoves_in_reply = trilly might reply with one macro-move and a list of standard moves.
+        explain2: -might_pose_smaller_macromoves_in_reply = trilly might reply with one macromove for each sub-board and a list of standard moves.
         explain3: -might_bounch_your_macromoves_back_to_you = trilly might reply with a macromove as big as the one you commissioned her (your commission is bounched back to you).
-        default: poses_only_the_starting_problem
+        default: plain_executor
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

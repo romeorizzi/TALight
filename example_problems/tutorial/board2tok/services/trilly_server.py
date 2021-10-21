@@ -13,9 +13,10 @@ service="trilly_server"
 args_list = [
     ('k',int),
     ('left_out_cell_must_be_a_corner_cell',int),
+    ('goal_coverage', str),
     ('goal_min_calls_to_standard_moves',str),
     ('goal_min_calls_to_trilly',str),
-    ('trilly_requests', str),
+    ('trilly_assertivity', str),
     ('lang',str),
 ]
 
@@ -27,6 +28,7 @@ LANG.print_opening_msg()
 # START CODING YOUR SERVICE: 
 
 board = [['0' for _ in range(2**ENV['k'])] for _ in range(2**ENV['k'])]
+count_empty_cells = 0
 
 def check_corner_cell(line):
     corner_cells = list()
@@ -144,44 +146,83 @@ def trilly_moves(board_dimension, row_coordinates, col_coordinates, hole_row, ho
 
     TAc.print(LANG.render_feedback('suggested-standard-move', f'{move}'), 'green')
 
-    if board_dimension <= 2 or ENV['trilly_requests'] == 'poses_only_the_starting_problem':
+    if board_dimension <= 2 or ENV['trilly_assertivity'] == 'plain_executor':
         trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
         trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
         trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
         trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
-    if board_dimension > 2 and ENV['trilly_requests'] == 'might_pose_non_bigger_problems_in_reply':
-        TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates} {col_coordinates} {row_holes[0][0]} {col_holes[0][0]}'), 'green')
-        TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates} {col_coordinates + half_k} {row_holes[0][1]} {col_holes[0][1]}'), 'green')
-        TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates} {row_holes[1][0]} {col_holes[1][0]}'), 'green')
-        TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates + half_k} {row_holes[1][1]} {col_holes[1][1]}'), 'green')
-    if board_dimension > 2 and ENV['trilly_requests'] == 'might_pose_smaller_problems_in_reply':
-        if random.randint(0, 1):
-            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
-        else:
+    if board_dimension > 2 and ENV['trilly_assertivity'] == 'might_pose_smaller_problems_in_reply':
+        rnd = random.randint(0, 3)
+        if rnd == 0:
             TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates} {col_coordinates} {row_holes[0][0]} {col_holes[0][0]}'), 'green')
-        if random.randint(0, 1):
             trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
-        else:
-            TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates} {col_coordinates + half_k} {row_holes[0][1]} {col_holes[0][1]}'), 'green')
-        if random.randint(0, 1):
             trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
-        else:
+            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
+        elif rnd == 1:
+            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates} {col_coordinates + half_k} {row_holes[0][1]} {col_holes[0][1]}'), 'green')
+            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
+            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
+        elif rnd == 2:
+            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
+            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
             TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates} {row_holes[1][0]} {col_holes[1][0]}'), 'green')
-        if random.randint(0, 1):
             trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
         else:
+            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
+            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
+            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
             TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates + half_k} {row_holes[1][1]} {col_holes[1][1]}'), 'green')
 
 def trilly(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
     check_is_empty(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column)
     trilly_moves(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column)
 
+def check_coverage():
+    global count_empty_cells
+    line = ['0'] * 2**ENV['k']
+    for r in range(2**ENV['k']):
+        prev_line = line
+        line = board[r]
+        if line[0] in {'3','4','E'}: 
+            TAc.print(LANG.render_feedback("left-margin", f"The first character of a line can not be a '{line[0]}' for otherwise its tromino exits the left border of your grid."), "red", ["bold"])
+            exit(0)
+        if line[2**ENV['k'] - 1] in {'1','2','W'}: 
+            TAc.print(LANG.render_feedback("right-margin", f"The last character of a line can not be a '{line[2**ENV['k'] - 1]}' for otherwise its tromino exits the right border of your grid."), "red", ["bold"])
+            exit(0)
+        for j in range(2**ENV['k']):
+            if line[j] == '0':
+                count_empty_cells += 1
+            if (line[j] in {'1','2'} and line[j + 1] != 'E') or \
+            (j < 2**ENV['k'] - 1 and line[j + 1] == 'E' and line[j] not in {'1','2'}) or \
+            (line[j] == 'W' and line[j + 1] not in {'3','4'}) or \
+            (j < 2**ENV['k'] - 1 and line[j + 1] in {'3','4'} and line[j] != 'W'):
+                TAc.print(LANG.render_feedback("inconsistent-tromino-row", f"You can not have a `{line[j + 1]}` character at the immidiate right of a `{line[j]}` character (see the characters in position {j} and {j + 1} of your line)."), "red", ["bold"])
+                exit(0)
+        if r == 0:
+            for char in line:
+                if char in {'1','4','S'}: 
+                    TAc.print(LANG.render_feedback("top-margin", f"No character of the first (topmost) line can be a '{char}' for otherwise its tromino exits the top border of your grid."), "red", ["bold"])
+                    exit(0)
+        if r == 2**ENV['k'] - 1:
+            for char in line:
+                if char in {'2','3','N'}: 
+                    TAc.print(LANG.render_feedback("bottom-margin", f"No character of the last (bottom) line can be a '{char}' for otherwise its tromino exits the bottom border of your grid."), "red", ["bold"])
+                    exit(0)
+        for j in range(2**ENV['k']):
+            if (line[j] in {'1','4'} and prev_line[j] != 'N') or \
+            (prev_line[j] == 'N' and line[j] not in {'1','4'}) or \
+            (line[j] == 'S' and prev_line[j] not in {'2','3'}) or \
+            (prev_line[j] in {'2','3'} and line[j] != 'S'):
+                TAc.print(LANG.render_feedback("inconsistent-tromino-col", f"You can not have a `{prev_line[j]}` character just above a `{line[j]}` character (check the characters in column {j}, indexes starting from 0)."), "red", ["bold"])
+                exit(0)
+
 count_standard_moves = 0
 count_trilly_calls = 0
 
 stopping_command_set="#end"
 line = [0]
-TAc.print(LANG.render_feedback('gimme-action', f"# Waiting for the action.\nWhen you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete."), 'yellow', ['bold'])
+TAc.print(LANG.render_feedback('gimme-action', f"# Waiting for the action.\n When you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete."), 'yellow', ['bold'])
 
 while line[0] != stopping_command_set:
     line = TALinput(int, num_tokens = 5, exceptions = stopping_command_set, TAc = TAc)
@@ -196,11 +237,31 @@ while line[0] != stopping_command_set:
             TAc.print(LANG.render_feedback('standard-moves-call', '# You have called `standard_moves`.'), 'yellow', ['bold'])
         if line[0] > 1:
             count_trilly_calls += 1
-            trilly(line[0], line[1], line[2], line[3], line[4])
+            if random.randint(0, 1) and ENV['trilly_assertivity'] == 'might_bounch_your_macromoves_back_to_you':
+                TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {line[0]} {line[1]} {line[2]} {line[3]} {line[4]}'), 'green')
+            else:
+                trilly(line[0], line[1], line[2], line[3], line[4])
             TAc.print(LANG.render_feedback('trilly-call', '# You have called `trilly`.'), 'yellow', ['bold'])
 
+# TODO: il tiling viene restituito su un file
+# ora viene stampato altrimenti gli errori non hanno senso
 for i in range(2**ENV['k']):
     print(board[i][:2**ENV['k']])
+
+check_coverage()
+tot_cells = 2**ENV['k']*2**ENV['k']
+coverage = tot_cells - count_empty_cells
+
+if ENV['goal_coverage'] == 'at_least_3' and coverage >= 3:
+    TAc.print(LANG.render_feedback('coverage-goal-reached', '# You have respected the coverage goal you set.'), 'green', ['bold'])
+elif ENV['goal_coverage'] == 'at_least_one_quarter' and coverage >= int(tot_cells/4):
+    TAc.print(LANG.render_feedback('coverage-goal-reached', '# You have respected the coverage goal you set.'), 'green', ['bold'])
+elif ENV['goal_coverage'] == 'at_least_half' and coverage >= int(tot_cells/2):
+    TAc.print(LANG.render_feedback('coverage-goal-reached', '# You have respected the coverage goal you set.'), 'green', ['bold'])
+elif ENV['goal_coverage'] == 'at_least_three_quarters' and coverage >= int(3*tot_cells/4):
+    TAc.print(LANG.render_feedback('coverage-goal-reached', '# You have respected the coverage goal you set.'), 'green', ['bold'])
+else:
+    TAc.print(LANG.render_feedback('coverage-goal-reached', '# You missed the coverage goal you set.'), 'red', ['bold'])
 
 if ENV['goal_min_calls_to_trilly'] == '4' and count_trilly_calls <= 4:
     TAc.print(LANG.render_feedback('trilly-goal-reached', '# You have respected the trilly calls goal you set.'), 'green', ['bold'])

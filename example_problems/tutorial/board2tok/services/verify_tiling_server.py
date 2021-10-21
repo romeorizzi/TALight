@@ -57,7 +57,7 @@ if ENV['loading'] == 'from_terminal':
             TAc.print(LANG.render_feedback("left-margin", f"The first character of a line can not be a '{line[0]}' for otherwise its tromino exits the left border of your grid."), "red", ["bold"])
             exit(0)
         if line[n-1] in {'1','2','W'}: 
-            TAc.print(LANG.render_feedback("right-margin", f"The last character of a line can not be a '{n-1}' for otherwise its tromino exits the right border of your grid."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("right-margin", f"The last character of a line can not be a '{line[n-1]}' for otherwise its tromino exits the right border of your grid."), "red", ["bold"])
             exit(0)
         for j in range(n):
             if (line[j] in {'1','2'} and line[j+1] != 'E') or \
@@ -107,7 +107,7 @@ else:
             TAc.print(LANG.render_feedback("left-margin", f"The first character of a line can not be a '{line[0]}' for otherwise its tromino exits the left border of your grid."), "red", ["bold"])
             exit(0)
         if line[n-1] in {'1','2','W'}: 
-            TAc.print(LANG.render_feedback("right-margin", f"The last character of a line can not be a '{n-1}' for otherwise its tromino exits the right border of your grid."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("right-margin", f"The last character of a line can not be a '{line[n-1]}' for otherwise its tromino exits the right border of your grid."), "red", ["bold"])
             exit(0)
         for j in range(n):
             if (line[j] in {'1','2'} and line[j+1] != 'E') or \
