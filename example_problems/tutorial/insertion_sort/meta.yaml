@@ -4,13 +4,24 @@ public_folder: public
 services:
   log_debug_your_insertion_sort_bot:
     description: |+
-     In a call to this service you plug in your insert_sort bot running on an instance of yours, in local, and we debug its behavior based on a log sent to our service and offering all of the following observable updates.
+     This service is meant to supervision a code implementing the Insertion Sort algorithm. For this purpose, the running code is expected to send to stdout a log of the actions taking place on the elements to be sorted. It is assumed that these elements are integer numbers.
+     It is reasonable to expect that your bot reads them from a file like the file `example_array_of_ints.encoded.txt` that you find in the public `input_examples` folder. This file contains, one per line (starting from the second line), the integers to be sorted. Its first line contains the number of such integers. You might prefer another format, this is not our businness since your bot will run on your local machine. 
+     What is mandatory, if you want to make use of this service, is that your bot, meanwhile getting the elements one by one and accomodating them to their currently proper place inside the array of collected elements, also sends to `stdout`  the correct log whenever one of the following actions takes place.
         #LOG_load_next_input_element_in_tmp_buffer <val>
         #LOG_flush_tmp_buffer_on_pos <i>
         #LOG_clone_to_its_right_ele_in_pos <i>
         #LOG_compare_what_in_tmp_buffer_with_what_in_pos <i> <outcome>
         #LOG_output_final_array <final_array>
      the service either confirms the correct execution of the Insertion Sort algorithm or signal the very first anomaly in its behaviour based only on the log lines (those prefixed by "#LOG_", all other lines are ignored).
+
+     Call this service and plug in your Inserton Sort bot as follows:
+        rtal connect insertion_sort log_debug_your_insertion_sort_bot -- fullname_of_your_executable_Insertion_Sort_bot < example_array_of_ints.encoded.txt  
+     Here, 
+     If you write your bot in python, then you can conveniently use the class InsertSortingMachine implemented in the `template_lib.py` library.
+     The idea is to express the Insertion Sort algorithm as a receipt for the InsertSortingMachine. In this way, all logs will be produced for free as a byproduct meanwhile your bot operates the machine.
+     Your bot will run on your local machine, operating on the instance contained in the `example_array_of_ints.encoded.txt` file (or any other file you might prefere), and a log about its working will be sent to `stdout`.
+     You can launch and test your bot in separete, but when you plug in your bot to the service using the `rtal` command as shown above, the stdout of your bot will be sent to the service. In this way the service receives the log and can validate the correctness of your implementation of the Insertion Sort algorithm.
+     The use of the InsertSortingMachine is not mandatory (thus you can write you bot also in languages for which this class has not been offered) but then you must
     evaluator: [python3, services/log_debug_your_insertion_sort_bot_server.py]
     args:
       feedback:
