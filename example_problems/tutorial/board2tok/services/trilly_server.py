@@ -260,6 +260,8 @@ elif ENV['goal_coverage'] == 'at_least_half' and coverage >= int(tot_cells/2):
     TAc.print(LANG.render_feedback('coverage-goal-reached', '# You have respected the coverage goal you set.'), 'green', ['bold'])
 elif ENV['goal_coverage'] == 'at_least_three_quarters' and coverage >= int(3*tot_cells/4):
     TAc.print(LANG.render_feedback('coverage-goal-reached', '# You have respected the coverage goal you set.'), 'green', ['bold'])
+elif ENV['goal_coverage'] == 'all_exept_one' and coverage == tot_cells - 1:
+    TAc.print(LANG.render_feedback('coverage-goal-reached', '# You have respected the coverage goal you set.'), 'green', ['bold'])
 else:
     TAc.print(LANG.render_feedback('coverage-goal-reached', '# You missed the coverage goal you set.'), 'red', ['bold'])
 
