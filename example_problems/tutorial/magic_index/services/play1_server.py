@@ -25,20 +25,19 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 if ENV['opponent'] == 'optimal':
     # TO DO: change this function with random_vector() after the implementation with different seed
-    size, vec = random_vector_worst_case()
+    vec,_, size = random_vector()
 elif ENV['opponent'] == 'random':
     vec, _ , size = random_vector()
 
-vector_optmal_questions = []
-
-_ = generate_optimal_question_vector(vec, low, upper, vector_optmal_questions)
-min_questions = check_n_questions_random_case(vector_optmal_questions)
+vector_optmal_questions = [None] * len(vec)
+# generate_optimal_question_vector fills the vector with the optimal questions and returns the list of magic indexes
+magic_indexes = generate_optimal_question_vector(vec, 0, len(vec)-1, vector_optmal_questions)
+min_questions = len([i for i in vector_optmal_questions if i != None])
 
 
 wasted_dollars = 0
-magic_indexes = spot_magic_index(vec)
-
-print(vec, vector_optmal_questions)
+#magic_indexes = spot_magic_index(vec)
+print(vec, vector_optmal_questions, min_questions, num_questions_worst_case(len(vec)))
 
 discovered_vec = ['?' for _ in range(1, size+1)] # print vector
 vector_questions = [None for i in range(1,len(vec)+1)] # support vector: it stores the queried values in the asked order

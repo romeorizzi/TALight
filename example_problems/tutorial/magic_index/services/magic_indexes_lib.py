@@ -1,8 +1,8 @@
 import random, math
 
-#TO DO: - creare funzione con ricorsione per vettore domande ottimali 
+#TO DO: 
 #       - uniformare la funzione per sia generare il vettore di domande per il caso random e pessimo (gioco in modalità optimal) 
-#       - sia per controllare il numero di domande minimo da fare nel caso scelto check_n_questions_random_case = num_questions_worst_case. 
+#       sia per controllare il numero di domande minimo da fare nel caso scelto check_n_questions_random_case = num_questions_worst_case. 
 #       - testare tutto che funzioni nel caso di giocata random --> optmal necessità di sistemare il discorso della generazione del vettore tramite range dei seed prestabiliti.
 
 def check_input_vector(vec, TAc, LANG):
@@ -74,9 +74,25 @@ def num_questions_worst_case_support(n):
     else:
         return 1 + num_questions_worst_case_support((n-1)//2 + ((n-1)%2))
 
+questions = 0
+def generate_optimal_question_vector(vec, lower, upper, vector_optmal_questions):
+    global questions
 
-def generate_optimal_question_vector(vec, low, upper, vector_optmal_questions):
-    return []
+    if lower > upper:
+        return []
+
+    mid = (lower + upper) // 2
+    vector_optmal_questions[mid] = questions
+    questions += 1
+
+    if vec[mid] > mid:      
+        return generate_optimal_question_vector(vec, lower, mid - 1,vector_optmal_questions)
+
+    if vec[mid] < mid:
+        return generate_optimal_question_vector(vec, mid + 1, upper, vector_optmal_questions)
+
+    if vec[mid] == mid: 
+        return generate_optimal_question_vector(vec, lower, mid - 1, vector_optmal_questions) + [mid] + generate_optimal_question_vector(vec, mid + 1, upper, vector_optmal_questions)
 
 
 def print_vector(vec, TAc, LANG):
