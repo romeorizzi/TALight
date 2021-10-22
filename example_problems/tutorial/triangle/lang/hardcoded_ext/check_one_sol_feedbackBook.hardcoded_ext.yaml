@@ -1,9 +1,0 @@
-%YAML 1.2
----
-open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
-feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
-
-#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
-
-ok: 'Your string represents a valid tiling of a corridor 1x{len_input}.'
-different_lengths: 'No! Your string represents a valid tiling but not of a corridor of dimension 1x{n}.'
