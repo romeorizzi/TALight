@@ -4,14 +4,16 @@ from triangle_lib import *
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
+
 # METADATA OF THIS TAL_SERVICE:
 problem="triangle"
-service="check_one_sol"
+service="check_path_value"
 args_list = [
     ('n',int),
     ('MIN_VAL',int),
     ('MAX_VAL',int),
     ('how_to_input_the_triangle',str),
+    ('path_value',int),
     ('path',str),
     ('silent',bool),
     ('lang',str),
@@ -42,10 +44,7 @@ if ENV['how_to_input_the_triangle'] == "lazy":
 else:
 	triangle = random_triangle(ENV['n'],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
 
-
-
 # PRINT TRIANGLE
-
 if not ENV['silent']:
 	print_triangle(triangle)
 
@@ -65,12 +64,17 @@ if len(path) != ENV['n']-1:
 elif any(x != "L" and x !="R" for x in path):
 	TAc.print(LANG.render_feedback("wrong_direction",f"The path you inserted contains other directions than L or R."),"red", ["bold"])
 	exit(0)
-elif not ENV['silent']:
-		if ENV['how_to_input_the_triangle'] == "lazy":
-			TAc.print(LANG.render_feedback("right_triangle_and_directions_number", f"This solution is a feasible one for this problem.\nThe triangle you inserted is well formed and the path you chose consists of {ENV['n']-1} directions."), "green", ["bold"])
-		else:
-			TAc.print(LANG.render_feedback("right_directions_number", f"This solution is a feasible one for this problem.\nThe path you chose consists of {ENV['n']-1} directions."), "green", ["bold"])
+	
+# CALCOLO PATH
+p,s = calculate_path(triangle,path)
 
-
+if not ENV['silent']:
+	TAc.print(LANG.render_feedback("show_path_and_cost",f"The path you chose moves through the following nodes: {p}."),"yellow", ["bold"])
+	if int(ENV['path_value']) == s:	
+		TAc.print(LANG.render_feedback("right_path_value",f"We agree. The path you chose has cost {s}."),"green", ["bold"])	
+if int(ENV['path_value']) != s:	
+	TAc.print(LANG.render_feedback("wrong_path_value",f"We don't agree, the path you chose has not cost {ENV['path_value']}."),"red", ["bold"])
+	if not ENV['silent']:
+		TAc.print(LANG.render_feedback("correct_path_value",f"The path you chose has cost {s} instead."),"yellow", ["bold"])
 
 exit(0)
