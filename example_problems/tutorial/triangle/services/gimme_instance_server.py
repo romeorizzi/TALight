@@ -37,7 +37,7 @@ instance = tl.random_triangle(ENV['n'], ENV['MIN_VAL'], ENV['MAX_VAL'], seed)
 if ENV['silent']:
     tl.print_triangle(instance)
 else:
-    TAc.print(LANG.render_feedback("instance-title", f"The triangle you asked for is:"), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("show_instance", f"The triangle you asked for is:"), "yellow", ["bold"])
     tl.print_triangle(instance)
     TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
 

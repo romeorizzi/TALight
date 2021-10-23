@@ -1,0 +1,32 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  gimme_instance:
+    description: This service provides you with a random triangle of integer numbers. The argument n specifyies the number of rows of the triangle. For i=1,...,n the i-th row of the triangle comprises i integers in the interval [MIN_VAL,MAX_VAL]. You can opt to insert the seed yourself, or ask the service to choose the seed (and hence the actual triangle <n,MIN_VAL,MAX_VAL,seed>).
+    evaluator: [python,services/gimme_instance_server.py]
+    args:
+      n:
+        regex: ^([1-9][0-9]{0,1}|100)$
+        explain: the number of rows of the triangle
+        default: 5
+      MIN_VAL:
+        regex: ^(0|[1-9][0-9]{0,1})$
+        explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
+        default: 0
+      MAX_VAL:
+        regex: ^(0|[1-9][0-9]{0,1})$
+        explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
+        default: 99
+      seed:
+        explain: The argument `seed` of this service is a six digit number. When the first digit is not 0, then the service yields the pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. Otherwise, when the first digit is 0, then all digits should be 0. The \'000000\' code is the default argument for this parameter and is used to ask the service to choose the seed at random and communicate it together with the pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. 
+        regex: ^(000000|[1-9][0-9]{5,5})$
+        default: 000000
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output to file ('>') you will get a valid instance file for the other services.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+...

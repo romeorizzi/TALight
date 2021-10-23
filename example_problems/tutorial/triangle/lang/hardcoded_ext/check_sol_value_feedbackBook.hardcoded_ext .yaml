@@ -9,5 +9,8 @@ wrong_elements_number: 'You inserted {len(line)} elements for line {i} instead o
 right_triangle_insertion: 'Insertion completed.'
 wrong_directions_number: 'You inserted {len(path)} directions instead of the {ENV['n']-1} required. Remember not to insert spaces between the letters.'
 wrong_direction: 'The path you inserted contains other directions than L or R.'
-right_triangle_and_directions_number: 'This solution is a feasible one for this problem.\nThe triangle you inserted is well formed and the path you chose consists of {ENV['n']-1} directions.'
-right_directions_number: 'This solution is a feasible one for this problem.\nThe path you chose consists of {ENV['n']-1} directions.'
+right_best_sol_value: 'We agree. The value you entered is the best solution for your triangle.'
+wrong_best_sol_value: 'We don't agree, the value you entered is not the best solution for your triangle.'
+right_best_path: 'We agree. The path you chose has the best cost for your triangle.'
+wrong_best_path: 'We don't agree, the path you chose has not the best cost for your triangle.'
+
