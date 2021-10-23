@@ -1,1 +1,0 @@
-./extract_feedbackBook_hardcoded.py /home/romeo/TALight/example_problems/tutorial/strongly_connected_components/services/is_sc_server.py fstring_count -preamble_file=preamble.hardcoded_ext.yaml
