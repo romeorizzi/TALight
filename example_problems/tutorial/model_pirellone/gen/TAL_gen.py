@@ -35,9 +35,13 @@ copy_name_id = dict()
 # Parsing gen lines
 formats_availables = list()
 for line in gen_lines:
+    if line[0] == "#" or line.strip()=="":
+        continue
+    line_recognized = False
     #CASE1:
     keyword = "add_format:"
     if line[:len(keyword)] == keyword:
+        line_recognized = True
         new_format = line[len(keyword):].strip()
         if new_format in formats_availables:
             print(f"Error in your GEN file: the format {new_format} has been added more than once")
@@ -47,6 +51,7 @@ for line in gen_lines:
     # CASE2:
     keyword = "suite:"
     if line[:len(keyword)] == keyword:
+        line_recognized = True
         cur_suite = line[len(keyword):].strip()
         cur_suite_path = path.join(INPUTS_DIR_PATH, cur_suite)
         # Check if this suite folder already exists
@@ -60,6 +65,7 @@ for line in gen_lines:
     keyword = "COPY:"
     if line[:len(keyword)] == keyword:
         assert cur_suite_path != None, "COPY command before suit command"
+        line_recognized = True
         source_rel_path = line[len(keyword):].strip()
         source_file_path = path.join(GEN_DIR, source_rel_path)
         format = ".".join(source_rel_path.split(".")[1:])
@@ -74,27 +80,35 @@ for line in gen_lines:
             instance_id += 1
         cur_id = copy_name_id[source_name]
         # Get target path
-        target_rel_path = f"instance{cur_id}.{format}"
-        target_file_path = path.join(cur_suite_path, target_rel_path)
-        shutil.copy(source_file_path, target_file_path)
-        gendict[cur_id][format] = target_rel_path
+        target_filename = f"instance{cur_id}.{format}"
+        target_abs_fullpath = path.join(cur_suite_path, target_filename)
+        shutil.copy(source_file_path, target_abs_fullpath)
+        gendict[cur_id][format] = target_filename
 
 
     # CASE4:
     keyword = "GEN:"
     if line[:len(keyword)] == keyword:
         assert cur_suite_path != None, "GEN command before suit command"
+        line_recognized = True
         args = line[len(keyword):][:-1] # removed \n
         # Prepere gen-dictionary
         gendict[instance_id] = {'suite' : cur_suite}
         # Create file for each format
         for format in formats_availables:
-            target_rel_path = f"instance{instance_id}.{format}"
-            target_abs_path = path.join(cur_suite_path, target_rel_path)
-            system(f"{GENERATOR_PATH} {args} {format} > {target_abs_path}")
-            gendict[instance_id][format] = target_rel_path
+            target_filename = f"instance{instance_id}.{format}"
+            target_abs_fullpath = path.join(cur_suite_path, target_filename)
+            system(f"{GENERATOR_PATH} {args} {format} > {target_abs_fullpath}")
+            gendict[instance_id][format] = target_filename
         instance_id += 1
 
+    if not line_recognized:
+        print(f"Error: an uncommented line of your GEN file has not been recognized\n   line={line}")
+        exit(1)
+        
+        
+
+        
 # save gen-dictionary:
 with open(GENDICT_FILE_PATH, "w") as file:
     json.dump(gendict, file)

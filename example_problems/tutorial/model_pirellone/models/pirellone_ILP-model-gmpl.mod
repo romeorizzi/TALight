@@ -18,7 +18,7 @@ var Fixer binary; # usata per garantire la feasibility. 0 = feasible, 1 = non fe
 
 # Definizione della funzione obiettivo:
 minimize numAzioni:
-         1000*Fixer + sum{i in Rows} AzionareR[i] + sum{j in Cols} AzionareC[j];
+         (M+N)*Fixer + sum{i in Rows} AzionareR[i] + sum{j in Cols} AzionareC[j];
 
 subject to turn_off{(i,j) in {Rows, Cols} : PIRELLONE[i,j] = 1}: 
         AzionareR[i] + AzionareC[j] + Fixer = 1;
@@ -40,14 +40,18 @@ solve;
 
 printf "Fixer = %d ", Fixer;
 
-# printing the output:
-printf "" > "output.txt";
-for{i in Rows} {
-   printf "%d ", AzionareR[i] >> "output.txt";
-}
-printf "\n" >> "output.txt";
-for{j in Cols} {
-   printf "%d ", AzionareC[j] >> "output.txt";
-}
-printf "\n" >> "output.txt";
+# printing the solution:
+printf "" > "solution.txt";
+for {{0}: Fixer == 1}{         # IF condition THEN
+   printf "NO SOLUTION" > "solution.txt";
+} for {{0}: Fixer != 1} {  # ELSE
+   for{i in Rows} {
+      printf "%d ", AzionareR[i] >> "solution.txt";
+   }
+   printf "\n" >> "solution.txt";
+   for{j in Cols} {
+      printf "%d ", AzionareC[j] >> "solution.txt";
+   }
+}                             # ENDIF
+printf "\n" >> "solution.txt";
 
