@@ -111,7 +111,7 @@ class ModellingProblemHelper():
 
 
     def get_out_str(self):
-        """Return a string that contents the stdout of GPLSOL."""
+        """Return a string that contains the stdout of GPLSOL."""
         try:
             with open(self.__out_path, 'r') as file:
                 return file.read()
@@ -120,7 +120,7 @@ class ModellingProblemHelper():
 
 
     def get_err_str(self):
-        """Return a string that contents the stderr of GPLSOL."""
+        """Return a string that contains the stderr of GPLSOL."""
         try:
             with open(self.__err_path, 'r') as file:
                 return file.read()
@@ -129,7 +129,7 @@ class ModellingProblemHelper():
 
 
     def get_raw_solution(self):
-        """Return a list of string that contents the solution produced by GPLSOL. Remember to call a soluion_parsing function."""
+        """Return a list of string that contains the solution produced by GPLSOL. Remember to call a soluion_parsing function."""
         try:
             with open(self.__sol_path, 'r') as file:
                 return file.read().splitlines()

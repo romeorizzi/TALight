@@ -321,7 +321,7 @@ if __name__ == "__main__":
 
 
     print('Test: parse_sol()')
-    # import model_utils as mu
+    # import math_modeling as mu
     # raw_sol = mu.get_raw_solution()
     # print(f'raw_sol: {raw_sol}')
     assert parse_sol([NO_SOL], 'seq', 2, 2) == NO_SOL

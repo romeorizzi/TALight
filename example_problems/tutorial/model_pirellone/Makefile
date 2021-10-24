@@ -3,7 +3,7 @@ GEN_DIR = $(shell pwd)/gen/
 
 gen-inputs:
 	echo "Generating inputs directory..."
-	./gen/TAL_gen.py $(GEN_DIR)
+	./gen/TAL_gen_instances.py $(GEN_DIR)
 
 clean-all:
 	echo "Removing gen_dictionary file..."

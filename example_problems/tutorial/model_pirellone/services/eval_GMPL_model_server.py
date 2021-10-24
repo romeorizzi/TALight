@@ -3,7 +3,7 @@ from sys import exit, path
 from multilanguage import Env, Lang, TALcolors
 
 import model_pirellone_lib as pl
-from model_utils import ModellingProblemHelper, get_problem_path_from
+from math_modeling import ModellingProblemHelper, get_problem_path_from
 from services_utils import process_user_sol, print_separator, check_sol_with_feedback
 
 
