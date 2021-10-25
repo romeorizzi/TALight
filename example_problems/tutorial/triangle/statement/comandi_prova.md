@@ -33,5 +33,5 @@ rtal connect -ahow_to_input_the_triangle=123456 -asol_value=300 triangle check_s
 **check_path_value** 
 Inserimento del triangolo tramite seed e del path come argomento.
 ```
-rtal connect -ahow_to_input_the_triangle=123456 -apathvalue=300 -apath=LRRL triangle check_path_value
+rtal connect -ahow_to_input_the_triangle=123456 -apath_value=300 -apath=LRRL triangle check_path_value
 ```
