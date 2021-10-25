@@ -11,8 +11,8 @@ The figure below shows a triangle. Write a program that calculates the biggest s
 
 
 1) At each step you can proceed towards bottom-left or bottom-right.
-2) The number of rows of the triangle shall be comprised between 1 and 100 (1 <= n <= 100).
-3) The values of the triangle shall be comprised between 0 and 99 (0 <= v <= 99).
+2) The number of rows of the triangle shall be comprised between 1 and 100 (1 ≤ n <= 100).
+3) The values of the triangle shall be comprised between 0 and 99 (0 ≤ v <= 99).
 
 # INPUT DATA
 
