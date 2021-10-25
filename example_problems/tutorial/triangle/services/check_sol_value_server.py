@@ -45,6 +45,7 @@ else:
 
 # PRINT TRIANGLE
 if not ENV['silent']:
+	TAc.print(LANG.render_feedback("triangle_print", f"The triangle you chose is displayed here.\n\n"), "yellow", ["bold"])
 	print_triangle(triangle)
 
 # GET PATH
@@ -71,7 +72,9 @@ if type_sol_value == 0:
 	elif any(x != "L" and x !="R" for x in path):
 		TAc.print(LANG.render_feedback("wrong_direction",f"The path you inserted contains other directions than L or R."),"red", ["bold"])
 		exit(0)
-	
+	if not ENV['silent']:
+		TAc.print(LANG.render_feedback("path_print",f"The path you inserted is displayed here.\n\n"),"yellow", ["bold"])
+		print_path(triangle,path)
 	# CALCOLO PATH
 	
 	_,s = calculate_path(triangle,path)
@@ -81,14 +84,14 @@ best = best_path_cost(triangle)
 if type_sol_value == 1:
 	if not ENV['silent']:
 		if int(ENV['sol_value']) == best:	
-			TAc.print(LANG.render_feedback("right_best_sol_value",f"We agree. The value you entered is the best solution for your triangle."),"green", ["bold"])			
+			TAc.print(LANG.render_feedback("right_best_sol_value",f"\nWe agree. The value you entered is the best solution for your triangle."),"green", ["bold"])			
 	if int(ENV['sol_value']) != best:	
-		TAc.print(LANG.render_feedback("wrong_best_sol_value",f"We don't agree, the value you entered is not the best solution for your triangle."),"red", ["bold"])
+		TAc.print(LANG.render_feedback("wrong_best_sol_value",f"\nWe don't agree, the value you entered is not the best solution for your triangle."),"red", ["bold"])
 else:
 	if not ENV['silent']:
 		if s == best:	
-			TAc.print(LANG.render_feedback("right_best_path",f"We agree. The path you chose has the best cost for your triangle."),"green", ["bold"])			
+			TAc.print(LANG.render_feedback("right_best_path",f"\nWe agree. The path you chose has the best cost for your triangle."),"green", ["bold"])			
 	if s != best:	
-		TAc.print(LANG.render_feedback("wrong_best_path",f"We don't agree, the path you chose has not the best cost for your triangle."),"red", ["bold"])
+		TAc.print(LANG.render_feedback("wrong_best_path",f"\nWe don't agree, the path you chose has not the best cost for your triangle."),"red", ["bold"])
 
 exit(0)

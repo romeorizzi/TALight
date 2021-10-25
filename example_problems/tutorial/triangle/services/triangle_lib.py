@@ -2,6 +2,8 @@
 import random
 import math
 
+from termcolor import colored
+
 # PER MODALITA' LAZY, GENERIAMO UN TRIANGOLO CASUALE DI n RIGHE
 
 def random_triangle(n:int, minVal:int, maxVal:int, s:int):
@@ -32,6 +34,40 @@ def print_triangle(triangle):
             print(str(triangle_array[z]), end='  ')
             z += 1
         print("  ")
+
+def print_path(triangle,path_values):
+    triangle_array = []
+    for l in triangle:
+        triangle_array += l
+    n = len(triangle)
+    path = [triangle_array[0]]
+    i = 0
+    last_pos = 0
+    for move in path_values:
+        if(move == "L"):
+            path.append(triangle_array[i+1 + last_pos])
+            last_pos += i + 1 
+        else:
+            path.append(triangle_array[i+2 + last_pos])
+            last_pos += i + 2 
+        i += 1
+    for i in range(len(triangle_array)):
+        if len(str(triangle_array[i])) == 1:
+            triangle_array[i] = str(triangle_array[i]) + " "
+    z = 0
+    m = (2 * n) - 2
+    for i in range(0, n):
+        for j in range(0, m):
+            print(end="  ")
+        m = m - 1
+        for j in range(0, i + 1):
+            if int(triangle_array[z])==int(path[i]):
+                print(colored(str(triangle_array[z]),'cyan',attrs=['bold']), end='  ')
+            else:
+                print(str(triangle_array[z]), end='  ')
+            z += 1
+        print("  ")
+    return 
         
 def calculate_path(triangle,path_values):
     triangle_array = []

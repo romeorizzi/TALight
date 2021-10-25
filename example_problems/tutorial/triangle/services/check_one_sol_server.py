@@ -47,6 +47,7 @@ else:
 # PRINT TRIANGLE
 
 if not ENV['silent']:
+	TAc.print(LANG.render_feedback("triangle_print", f"The triangle you chose is displayed here.\n\n"), "yellow", ["bold"])
 	print_triangle(triangle)
 
 # GET PATH
