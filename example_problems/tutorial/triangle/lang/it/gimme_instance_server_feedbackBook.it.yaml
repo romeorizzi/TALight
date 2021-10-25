@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+wrong_elements_number: 'You inserted {len(line)} elements for line {i} instead of the {i} required.'
+right_triangle_insertion: 'Insertion completed.'
+wrong_directions_number: 'You inserted {len(path)} directions instead of the {ENV['n']-1} required. Remember not to insert spaces between the letters.'
+wrong_direction: 'The path you inserted contains other directions than L or R.'
+right_triangle_and_directions_number: 'This solution is a feasible one for this problem.\nThe triangle you inserted is well formed and the path you chose consists of {ENV['n']-1} directions.'
+right_directions_number: 'This solution is a feasible one for this problem.\nThe path you chose consists of {ENV['n']-1} directions.'
