@@ -5,6 +5,8 @@ feedback_source: '# The phrases used in this call of service {service} come from
 
 # NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 
+triangle_print: 'The triangle you chose is displayed here.\n\n'
+path_print: 'The path you inserted is displayed here.\n\n'
 wrong_elements_number: 'You inserted {len(line)} elements for line {i} instead of the {i} required.'
 right_triangle_insertion: 'Insertion completed.'
 wrong_directions_number: 'You inserted {len(path)} directions instead of the {ENV['n']-1} required. Remember not to insert spaces between the letters.'
