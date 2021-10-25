@@ -11,7 +11,7 @@ La figura qui sotto mostra un triangolo. Scrivete un programma che calcoli la pi
 
 
 1) Ad ogni passo si può procedere diagonalmente in basso o a destra o a sinistra.
-2) Il triangolo ha un numero di righe >1 ma <=100.
+2) Il triangolo ha un numero di righe ≥ 1 ma ≤ 100.
 3) I numeri del triangolo sono interi compresi fra 0 e 99.
 
 # DATI DI INPUT
@@ -28,7 +28,7 @@ Sulla prima riga compare il numero di righe del triangolo e, sulle righe success
 ```
 # DATI DI OUTPUT
 
-La massima somma è un intero >= 0. Nel nostro esempio: 
+La massima somma è un intero ≥ 0. Nel nostro esempio: 
 
 ```
 30
