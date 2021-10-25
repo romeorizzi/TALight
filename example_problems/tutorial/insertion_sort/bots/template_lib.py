@@ -15,7 +15,7 @@ class InsertSortingMachine:
                 "Ahi, my problem-solver bot is overwriting a yet unflushed value stored in the tmp_buffer. This is going to erase information which will be definitely lost it in the Insertion Sort algorithm approach.")
         self.tmp_buffer = val
         self.n += 1
-        print(f"#LOG_load_next_input_element_in_tmp_buffer {val}")
+        print(f"#LOG_load_next_input_element_in_tmp_buffer OK, got {val}")
 
     def flush_tmp_buffer_on_pos(self, i: int):
         if self.tmp_buffer is None:
@@ -36,21 +36,23 @@ class InsertSortingMachine:
         if self.tmp_buffer is None:
             print(
                 "Ahi, my problem-solver bot is comparing an element with an empty tmp_buffer. I expect complaints from the checking server.")
-
-        if self.tmp_buffer > self.int_array_of_int[i]:
-            print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} >")
             return False
 
-        elif self.tmp_buffer < self.int_array_of_int[i]:
-            print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} <")
-            return True
+        try:
+            if self.tmp_buffer > self.int_array_of_int[i]:
+                print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} <")
 
-        else:
-            print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} =")
-            return True
+            elif self.tmp_buffer < self.int_array_of_int[i]:
+                print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} >")
+                return True
+
+            else:
+                print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} =")
+        except TypeError:
+            return False
 
     def output_final_array(self):
-        print(f"#LOG_output_final_array {self.int_array_of_int}")
+        print(f"#LOG_output_final_array {len(self.int_array_of_int)} {' '.join(map(str,self.int_array_of_int))}")
 
 
 if __name__ == "__main__":

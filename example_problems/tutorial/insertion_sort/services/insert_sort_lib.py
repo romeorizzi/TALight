@@ -13,35 +13,34 @@ class InsertSort:
 
     def load_next_element_in_tmp_buffer(self):
         if len(self.input_stream) == 0:
-            self.log.append(f"LOG_load_next_input_element_in_tmp_buffer NO MORE")
             return False
         else:
             self.tmp_buffer = self.input_stream[0]
             self.input_stream = self.input_stream[1:]
-            self.log.append(f"LOG_load_next_input_element_in_tmp_buffer OK, got {self.tmp_buffer}")
+            self.log.append(f"#LOG_load_next_input_element_in_tmp_buffer OK, got {self.tmp_buffer}")
             self.n += 1
             self.working_array.append(None)
-            return True            
+            return True
 
     def flush_tmp_buffer_ele_in_pos(self, pos):
         self.working_array[pos] = self.tmp_buffer
-        self.log.append(f"LOG_flush_tmp_buffer_on_pos {pos}")
+        self.log.append(f"#LOG_flush_tmp_buffer_on_pos {pos}")
 
     def overwrite_on_the_right_what_in_pos(self, pos):
         self.working_array[pos+1] = self.working_array[pos]
-        self.log.append(f"LOG_clone_ele_in_pos {pos} one_step_to_the_right")
+        self.log.append(f"#LOG_clone_to_its_right_ele_in_pos {pos}")
 
     def what_in_tmp_buffer_goes_before_than_what_in_pos(self, pos):
         if self.working_array[pos] < self.tmp_buffer:
-            self.log.append(f"LOG_compare_what_in_pos {pos} with_what_in_tmp_buffer <")
+            self.log.append(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {pos} <")
 
         elif self.working_array[pos] > self.tmp_buffer:
-            self.log.append(f"LOG_compare_what_in_pos {pos} with_what_in_tmp_buffer >")
+            self.log.append(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {pos} >")
             self.working_array[pos + 1] = self.working_array[pos]
             return True
 
         else:
-            self.log.append(f"LOG_compare_what_in_pos {pos} with_what_in_tmp_buffer =")
+            self.log.append(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {pos} =")
 
         self.working_array[pos+1] = self.working_array[pos]
         return False
@@ -53,7 +52,7 @@ class InsertSort:
                 self.overwrite_on_the_right_what_in_pos(curr_pos-1)
                 curr_pos -= 1
             self.flush_tmp_buffer_ele_in_pos(curr_pos)
-        self.log.append(f"LOG_output_final_array {len(self.working_array)} {' '.join(map(str,self.working_array))}")
+        self.log.append(f"#LOG_output_final_array {len(self.working_array)} {' '.join(map(str,self.working_array))}")
         return self.log
 
     
