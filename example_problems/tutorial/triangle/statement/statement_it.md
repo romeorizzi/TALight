@@ -16,7 +16,7 @@ La figura qui sotto mostra un triangolo. Scrivete un programma che calcoli la pi
 
 # DATI DI INPUT
 
-Sulla prima riga compare il numero di righe del triangolo, e sulle righe successive, compaiono le varie righe del triangolo stesso. Nel nostro esempio:
+Sulla prima riga compare il numero di righe del triangolo e, sulle righe successive, compaiono le varie righe del triangolo stesso. Nel nostro esempio:
 
 ```
 5
