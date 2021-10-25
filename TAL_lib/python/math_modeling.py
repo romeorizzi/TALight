@@ -9,7 +9,7 @@ from bot_interface import service_server_requires_and_gets_file_of_handle,servic
 def get_problem_path_from(you_service_file_path):
     """Call this with: get_problem_path_from(__file__)"""
     service_dir_path = os.path.abspath(os.path.dirname(you_service_file_path))
-    return os.path.join(service_dir_path, '../')
+    return os.path.join(service_dir_path, '..')
 
 
 class ModellingProblemHelper():
@@ -21,17 +21,17 @@ class ModellingProblemHelper():
                 sol_filename      = 'solution.txt',      \
                 out_filename      = 'output.txt',        \
                 err_filename      = 'error.txt',         \
-                inputs_dirname    = 'inputs',            \
+                instances_dirname = 'instances',      \
                 gendict_filename  = 'gen_dictionary.json'):
-        self.__problem_path = problem_path
-        self.__tmp_path     = os.path.join(problem_path, tmp_dirname)
-        self.__mod_path     = os.path.join(problem_path, tmp_dirname, mod_filename)
-        self.__dat_path     = os.path.join(problem_path, tmp_dirname, dat_filename)
-        self.__sol_path     = os.path.join(problem_path, tmp_dirname, sol_filename)
-        self.__out_path     = os.path.join(problem_path, tmp_dirname, out_filename)
-        self.__err_path     = os.path.join(problem_path, tmp_dirname, err_filename)
-        self.__inputs_path  = os.path.join(problem_path, inputs_dirname)
-        self.__gendict_path = os.path.join(problem_path, 'gen', gendict_filename)
+        self.__problem_path    = problem_path
+        self.__tmp_path        = os.path.join(problem_path, tmp_dirname)
+        self.__mod_path        = os.path.join(problem_path, tmp_dirname, mod_filename)
+        self.__dat_path        = os.path.join(problem_path, tmp_dirname, dat_filename)
+        self.__sol_path        = os.path.join(problem_path, tmp_dirname, sol_filename)
+        self.__out_path        = os.path.join(problem_path, tmp_dirname, out_filename)
+        self.__err_path        = os.path.join(problem_path, tmp_dirname, err_filename)
+        self.__instances_path  = os.path.join(problem_path, instances_dirname)
+        self.__gendict_path    = os.path.join(self.__instances_path, gendict_filename)
 
 
     # TODO: fix PermissionError:
@@ -152,7 +152,7 @@ class ModellingProblemHelper():
         except KeyError as err:
             raise RuntimeError('invalid-id', id)
         try:
-            return os.path.join(self.__inputs_path, info['suite'], info[format])
+            return os.path.join(self.__instances_path, info['suite'], info[format])
         except KeyError as err:
             raise RuntimeError('invalid-format', format)
 
@@ -175,7 +175,7 @@ class ModellingProblemHelper():
         """Returns the list of all file_path in the inputs directory grouped by instance"""
         assert isinstance(dir_name, str)
         try:
-            dir_path = os.path.join(self.__inputs_path, dir_name)
+            dir_path = os.path.join(self.__instances_path, dir_name)
             instances_paths = dict()
             for filename in os.listdir(dir_path):
                 tmp_parse = filename.split('.')
@@ -187,4 +187,4 @@ class ModellingProblemHelper():
                     instances_paths[id][format] = os.path.join(dir_path, filename)
             return instances_paths
         except os.error as err:
-            raise RuntimeError('read-error', self.__inputs_path)
+            raise RuntimeError('read-error', self.__instances_path)

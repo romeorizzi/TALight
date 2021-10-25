@@ -54,7 +54,7 @@ try:
         # Get input file
         if ENV['check_solution']:
             input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
-    instance = pl.get_pirellone_from_str(input_str, format=txt_style)
+    instance = pl.get_pirellone_from_txt(input_str, style=txt_style)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:

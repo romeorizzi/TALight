@@ -5,25 +5,25 @@ import shutil, json
 
 
 ### Conventions #############################
-GEN_FILE = "GEN"
-INPUTS_DIR = "../inputs/"
-GENERATOR_FILE = "instance_generator.py"
-GENDICT_FILE = "gen_dictionary.json"
+COMMANDS_FILENAME = "GEN"
+INSTANCES_DIRNAME = "instances"
+GENERATOR_FILENAME = "instance_generator.py"
+GENDICT_FILENAME = "gen_dictionary.json"
 #############################################
 
 
 # Get gen directory and generate utils path
-GEN_DIR = argv[1]
-GENDICT_FILE_PATH = path.join(GEN_DIR, GENDICT_FILE)
-GEN_FILE_PATH = path.join(GEN_DIR, GEN_FILE)
-INPUTS_DIR_PATH = path.join(GEN_DIR, INPUTS_DIR)
-GENERATOR_PATH = path.join(GEN_DIR, GENERATOR_FILE)
-if not path.exists(INPUTS_DIR_PATH):
-    makedirs(INPUTS_DIR_PATH)
+GEN_FULLPATH = argv[1]
+COMMANDS_FULLPATH = path.join(GEN_FULLPATH, COMMANDS_FILENAME)
+INSTANCES_DIRNAME_PATH = path.join(GEN_FULLPATH, "..", INSTANCES_DIRNAME)
+GENDICT_FULLPATH = path.join(INSTANCES_DIRNAME_PATH, GENDICT_FILENAME)
+GENERATOR_PATH = path.join(GEN_FULLPATH, GENERATOR_FILENAME)
+if not path.exists(INSTANCES_DIRNAME_PATH):
+    makedirs(INSTANCES_DIRNAME_PATH)
 
 # Create GEN_DICT
-with open(GEN_FILE_PATH, "r") as GEN_file:
-    gen_lines = GEN_file.readlines()
+with open(COMMANDS_FULLPATH, "r") as file:
+    gen_lines = file.readlines()
 
 # Init gendict:
 gendict = dict()
@@ -53,7 +53,7 @@ for line in gen_lines:
     if line[:len(keyword)] == keyword:
         line_recognized = True
         cur_suite = line[len(keyword):].strip()
-        cur_suite_path = path.join(INPUTS_DIR_PATH, cur_suite)
+        cur_suite_path = path.join(INSTANCES_DIRNAME_PATH, cur_suite)
         # Check if this suite folder already exists
         if path.exists(cur_suite_path):
             print(f"Error {cur_suite_path} already exists")
@@ -67,7 +67,7 @@ for line in gen_lines:
         assert cur_suite_path != None, "COPY command before suit command"
         line_recognized = True
         source_rel_path = line[len(keyword):].strip()
-        source_file_path = path.join(GEN_DIR, source_rel_path)
+        source_file_path = path.join(GEN_FULLPATH, source_rel_path)
         format = ".".join(source_rel_path.split(".")[1:])
         if not path.exists(source_file_path):
             print(f"{source_file_path} Not exists!")
@@ -84,7 +84,6 @@ for line in gen_lines:
         target_abs_fullpath = path.join(cur_suite_path, target_filename)
         shutil.copy(source_file_path, target_abs_fullpath)
         gendict[cur_id][format] = target_filename
-
 
     # CASE4:
     keyword = "GEN:"
@@ -105,12 +104,10 @@ for line in gen_lines:
     if not line_recognized:
         print(f"Error: an uncommented line of your GEN file has not been recognized\n   line={line}")
         exit(1)
-        
-        
 
-        
+
 # save gen-dictionary:
-with open(GENDICT_FILE_PATH, "w") as file:
+with open(GENDICT_FULLPATH, "w") as file:
     json.dump(gendict, file)
 
 exit(0)
