@@ -18,6 +18,7 @@ COPY: hardcoded/instance2.with_m_and_n.txt
 COPY: hardcoded/instance2.dat
 GEN:  4   4  1         777771
 GEN:  4   4  0         777771
+GEN:  10  10 0         777771
 
 suite: m_and_n_at_most_5_solvable
 #     m,  n, solvable, seed

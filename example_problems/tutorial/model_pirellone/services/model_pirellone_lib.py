@@ -4,8 +4,13 @@ from sys import exit
 import random, copy, re
 
 
-# CONSTANTS:
+### CONSTANTS #########################################
 NO_SOL = 'NO SOLUTION'
+FORMAT_AVAILABLES = ['dat', 'txt']
+DAT_STYLES_AVAILABLES = ['']
+TXT_STYLES_AVAILABLES = ['only_matrix', 'with_m_and_n']
+DEFAULT_FORMAT='only_matrix.txt'
+#######################################################
 
 
 # CONVERTERS FUNCTIONS:
@@ -92,7 +97,7 @@ def parse_sol(raw_sol, sol_style, m, n):
         raise RuntimeError('invalid-sol-style')
 
 
-# TO_STRING and FROM_STRING FUNCTIONS:
+# TO STRING
 def seq_to_str(seq_sol):
     """From a sequence solution (e.g.: ['r2']) returns its string form (e.g.: 'r2')"""
     if seq_sol == NO_SOL:
@@ -135,36 +140,100 @@ def subset_to_str_list(subset_sol):
             ' '.join([str(e) for e in subset_sol[1]])]
 
 
-def get_pirellone_from_str(str):
-    """From a string, this function returns a pirellone instance in list form."""
-    pirellone = list()
-    rows = str.split('\n')
-    for cols in rows:
-        pirellone.append([int(e) for e in cols.split()])
-    return pirellone
-
-
-def pirellone_to_str(pirellone, format="only_matrix"):
+def pirellone_to_str(pirellone, format='default'):
     """This function returns the string representation of the given pirellone instance according to the indicated format"""
+    # Get default
+    format = DEFAULT_FORMAT if format=='default' else format
+    # Parsing format
+    format_list = format.split('.')
+    if len(format_list) == 1:
+        format_primary = format_list[0]
+        format_secondary = ''
+    else:
+        format_primary = format_list[1]
+        format_secondary = format_list[0]
+    # Get pirellone in str format
+    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
+    if format_primary == 'dat':
+        return pirellone_to_dat(pirellone, format_secondary)
+    if format_primary == 'txt':
+        return pirellone_to_txt(pirellone, format_secondary)
+    
+
+def pirellone_to_txt(pirellone, style='only_matrix'):
+    """This function returns the string representation of the given pirellone instance according to the indicated style"""
+    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     output = ""
-    if format == "with_m_and_n":
+    if style == "with_m_and_n":
         output = f"{len(pirellone)} {len(pirellone[0])}\n"
     return output + '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
 
 
-def pirellone_to_dat(pirellone, format="for_now_we_have_only_one"):
-    """This function returns the dat representation of the given pirellone instance according to the indicated format"""
+def pirellone_to_dat(pirellone, style=''):
+    """This function returns the dat representation of the given pirellone instance according to the indicated style"""
+    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     M = len(pirellone)
     N = len(pirellone[0])
     output = f"param M := {M};  # Number of rows\n"
     output += f"param N := {N};  # Number of columns\n"
     output += "param PIRELLONE :  " + " ".join([str(i) for i in range(1,N+1)]) + " :=\n"
     for i in range(M):
-        output += f"           {i+1}   "
+        output += f"               {i+1}   "
         output += ' '.join(str(col) for col in pirellone[i])
         output += ";\n" if i == (M - 1) else "\n"
     output += "end;"
     return output
+
+
+# FROM STRING
+def get_pirellone_from_str(pirellone, format):
+    """This function returns the string representation of the given pirellone instance according to the indicated format."""
+    # Parsing format
+    format_list = format.split('.')
+    if len(format_list) == 1:
+        format_primary = format_list[0]
+        format_secondary = ''
+    else:
+        format_primary = format_list[1]
+        format_secondary = format_list[0]
+    # Get pirellone in str format
+    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
+    if format_primary == 'dat':
+        return get_pirellone_from_dat(pirellone, format_secondary)
+    if format_primary == 'txt':
+        return get_pirellone_from_txt(pirellone, format_secondary)
+
+
+def get_pirellone_from_txt(pirellone, style='only_matrix'):
+    """This function returns the string representation of the given pirellone instance according to the indicated format."""
+    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    instance = list()
+    lines = pirellone.split('\n')
+    if format == "with_m_and_n":
+        lines = lines[2:]
+    for l in lines:
+        instance.append([int(e) for e in l.split()])
+    return instance
+
+
+def get_pirellone_from_dat(pirellone, style=''):
+    """This function returns the string representation of the given pirellone instance according to the indicated format."""
+    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    instance = list()
+    # Get lines
+    lines = pirellone.split('\n')
+    # Parse lines
+    for l in lines:
+        l = l.strip() # remove whitespace before and after
+        # Filter the matrix lines
+        if l != '' and l[:5] != 'param' and l[:3] != 'end':
+            l = l.replace(';', '') #ignore ;
+            row = list()
+            for e in l.split()[1:]:
+                row.append(int(e))
+            instance.append(row)
+    return instance
+
 
 
 # PIRELLONE GENERATOR FUNCTIONS:
@@ -366,13 +435,53 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
-    print('Test: get_pirellone_from_str()')
-    assert get_pirellone_from_str('0 0\n1 1') == [[0, 0], [1, 1]]
+    print('Test: pirellone_to_str()')
+    assert pirellone_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
     print('==> OK\n')
 
 
-    print('Test: pirellone_to_str()')
-    assert pirellone_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
+    print('Test: pirellone_to_txt()')
+    print('MAYBE TODO?')
+    print('==> OK\n')
+
+
+    print('Test: pirellone_to_dat()')
+    print('MAYBE TODO?')
+    print('==> OK\n')
+
+
+    print('Test: get_pirellone_from_str()')
+    print('==> OK\n')
+
+
+    print('Test: get_pirellone_from_txt()')
+    assert get_pirellone_from_txt('0 0\n1 1', 'only_matrix') == [[0, 0], [1, 1]]
+    print('==> OK\n')
+
+
+    print('Test: get_pirellone_from_dat()')
+    dat_instance = \
+        "param M := 10;  # Number of rows\n" + \
+        "param N := 2;  # Number of columns\n" + \
+        "param PIRELLONE :  1 2 3 4 5 6 7 8 9 10:=\n" + \
+        "                           \n" + \
+        "              1    1 0 1 1 0 1 0 0 0 1   \n" + \
+        "                                            \n" + \
+        "\n" + \
+        "              2    0 1 0 0 1 0 0 1 1 1 ;\n" + \
+        "end;\n"
+    assert get_pirellone_from_dat(dat_instance)  == [[1, 0, 1, 1, 0, 1, 0, 0, 0, 1], [0, 1, 0, 0, 1, 0, 0, 1, 1, 1]]
+    dat_instance = \
+        "param M := 2;  # Number of rows\n" + \
+        "param N := 2;  # Number of columns\n" + \
+        "param PIRELLONE :  1 2:=\n" + \
+        "                           \n" + \
+        "              1    1 0   \n" + \
+        "                                            \n" + \
+        "\n" + \
+        "              2    0 1;\n" + \
+        "end;\n"
+    assert get_pirellone_from_dat(dat_instance)  == [[1, 0], [0, 1]]
     print('==> OK\n')
 
 

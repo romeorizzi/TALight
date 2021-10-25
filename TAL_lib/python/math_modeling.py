@@ -3,7 +3,7 @@
 NOTE: it needs to be placed in the services directory to work properly."""
 import subprocess, os, json
 
-from bot_interface import service_server_requires_and_gets_file_of_handle
+from bot_interface import service_server_requires_and_gets_file_of_handle,service_server_requires_and_gets_the_only_file
 
 
 def get_problem_path_from(you_service_file_path):
@@ -47,12 +47,15 @@ class ModellingProblemHelper():
             os.makedirs(self.__tmp_path)
 
 
-    def receive_mod_file(self):
-        """Enable the service to recive the mod file."""
+    def receive_mod_file(self, single_file_passed_to_the_bot=False):
+        """Enable the service to recive the mod file. Use single_file_passed_to_the_bot=True if you call the bot with just this file, so as to avoid writing mod=path_to_bot/file.mod"""
         # Initialize TMP_DIR
         self.__init_tmp_dir()
         # Manage mod file
-        mod = service_server_requires_and_gets_file_of_handle('mod').decode()
+        if single_file_passed_to_the_bot:
+            mod = service_server_requires_and_gets_the_only_file().decode()
+        else:
+            mod = service_server_requires_and_gets_file_of_handle('mod').decode()
         try:
             with open(self.__mod_path, 'w') as mod_file:
                 mod_file.write(mod)
@@ -140,20 +143,22 @@ class ModellingProblemHelper():
     # MANAGE INPUTS/GENDICT FILES -------------------
     def get_path_from_id(self, id, format):
         """Returns the path to the file selected with id."""
-        assert id >= 0, "Id not valid."
         try:
             with open(self.__gendict_path, 'r') as file:
                 gendict = json.load(file)
                 info = gendict[str(id)]
-                return os.path.join(self.__inputs_path, info['suite'], info[format])
         except os.error as err:
             raise RuntimeError('read-error', self.__gendict_path)
         except KeyError as err:
             raise RuntimeError('invalid-id', id)
+        try:
+            return os.path.join(self.__inputs_path, info['suite'], info[format])
+        except KeyError as err:
+            raise RuntimeError('invalid-format', format)
 
 
-    def get_input_from_path(self, path):
-        """Returns the instance from the input from the selected path."""
+    def get_file_str_from_path(self, path):
+        """Returns the contents of the file as a string from the selected path."""
         try:
             with open(path, 'r') as file:
                 return file.read().strip()
@@ -161,9 +166,9 @@ class ModellingProblemHelper():
             raise RuntimeError('read-error', self.__gendict_path)
 
 
-    def get_input_from_id(self, id, format):
-        """Returns the instance from the input file with the selected id."""
-        return self.get_input_from_path(self.get_path_from_id(id, format))
+    def get_file_str_from_id(self, id, format):
+        """Returns the contents of the file as a string with the selected id."""
+        return self.get_file_str_from_path(self.get_path_from_id(id, format))
 
 
     def get_instances_paths_in(self, dir_name):

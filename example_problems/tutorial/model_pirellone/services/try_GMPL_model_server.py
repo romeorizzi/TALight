@@ -15,6 +15,7 @@ args_list = [
     ('display_output',bool),
     ('display_error',bool),
     ('check_solution',bool),
+    ('txt_style',str),
     ('sol_style',str),
     ('instance_id',int),
     ('lang',str),
@@ -26,6 +27,11 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
+# Get formats
+dat_style = ''  # default
+txt_style = ENV['txt_style']
+
+
 # Initialize ModellingProblemHelper
 mph = ModellingProblemHelper(get_problem_path_from(__file__))
 
@@ -44,11 +50,11 @@ try:
             input_str = mph.receive_input_file()
     else:
         # Get dat file
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], 'dat')
+        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
         # Get input file
         if ENV['check_solution']:
-            input_str = mph.get_input_from_id(ENV['instance_id'], 'only_matrix.txt')
-    instance = pl.get_pirellone_from_str(input_str)
+            input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
+    instance = pl.get_pirellone_from_str(input_str, format=txt_style)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
