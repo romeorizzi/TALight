@@ -16,7 +16,7 @@ The figure below shows a triangle. Write a program that calculates the biggest s
 
 # INPUT DATA
 
-The data is contained in the ***INPUT.TXT*** file. The value on the first line represents the triangle's number of rows, while the remaining lines represent its rows. In our example, ***INPUT.TXT*** is as follows: 
+The value on the first line represents the triangle's number of rows, while the remaining lines represent its rows. In our example, we have this input: 
 
 ```
 5
@@ -28,7 +28,7 @@ The data is contained in the ***INPUT.TXT*** file. The value on the first line r
 ```
 # OUTPUT DATA
 
-The maximum sum is an integer written in the ***OUTPUT.TXT*** file. In our example the result is: 
+The maximum sum is an integer >= 0. In our example the result is: 
 
 ```
 30
