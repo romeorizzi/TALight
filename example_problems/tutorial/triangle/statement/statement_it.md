@@ -16,7 +16,7 @@ La figura qui sotto mostra un triangolo. Scrivete un programma che calcoli la pi
 
 # DATI DI INPUT
 
-I dati sono contenuti nel file ***INPUT.TXT***. Sulla prima riga compare il numero di righe del triangolo, e sulle righe successive, compaiono le varie righe del triangolo stesso. Nel nostro esempio, ***INPUT.TXT*** è come segue: 
+Sulla prima riga compare il numero di righe del triangolo, e sulle righe successive, compaiono le varie righe del triangolo stesso. Nel nostro esempio:
 
 ```
 5
@@ -28,7 +28,7 @@ I dati sono contenuti nel file ***INPUT.TXT***. Sulla prima riga compare il nume
 ```
 # DATI DI OUTPUT
 
-La massima somma è un intero scritto sul file ***OUTPUT.TXT***. Nel nostro esempio: 
+La massima somma è un intero >= 0. Nel nostro esempio: 
 
 ```
 30
