@@ -73,13 +73,13 @@ def verifica(raggi,quadro_istanza_originale,TAc,LANG):
         
         if tipo_sparo=='r':
             if pos_sparo < 0 or pos_sparo >= len(quadro_istanza_originale):
-                TAc.print(LANG.render_feedback("wrong-row", f"You shoot on the row {pos_sparo} but the right indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
+                TAc.print(LANG.render_feedback("wrong-row", f"You shoot on the row {pos_sparo} but the row indexes go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
 
     
             num_met_destroyed+=spara_r(quadro_scratch,pos_sparo)
         if tipo_sparo=='c':
             if pos_sparo < 0 or pos_sparo >= len(quadro_istanza_originale[0]):
-                TAc.print(LANG.render_feedback("wrong-col", f"You shoot on the column {pos_sparo} but the right indeces go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
+                TAc.print(LANG.render_feedback("wrong-col", f"You shoot on the column {pos_sparo} but the column indexes go from 0 to {len(quadro_istanza_originale)}."), "red", ["bold"])
             num_met_destroyed+=spara_c(quadro_scratch,pos_sparo)
     if conta_num_met_in(quadro_scratch)==0 and len(raggi)==num_co:
         TAc.OK()
@@ -89,7 +89,7 @@ def verifica(raggi,quadro_istanza_originale,TAc,LANG):
         TAc.print(LANG.render_feedback("semi-correct", "You destroyed all asteroids but you didn't use the minimum number of laser beams."), "red", ["bold"])
     else:
         TAc.NO()
-        TAc.print(LANG.render_feedback("wrong", "You didn't destroyed all asteroids, see what happens:."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("wrong", "You didn't destroyed all asteroids, see what happens:"), "red", ["bold"])
         visualizza(quadro_scratch)
 
             

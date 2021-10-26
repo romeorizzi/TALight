@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+from sys import exit
+
+from multilanguage import Env, Lang, TALcolors
+from TALinputs import TALinput
+
+import asteroid_lib as al
+
 
 # METADATA OF THIS TAL_SERVICE:
 problem="asteroid"
@@ -9,11 +16,6 @@ args_list = [
     ('lang',str),
 ]
 
-from sys import exit
-import asteroid_lib as al
-
-
-from multilanguage import Env, Lang, TALcolors
 ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
@@ -30,12 +32,11 @@ quad,seed=al.random_quad(q,ENV['seed'])
 TAc.print(LANG.render_feedback("instance", f'Instance (of seed: {seed}):'), "yellow", ["bold"])
 al.visualizza(quad)  
 TAc.print(LANG.render_feedback("solu", 'Insert your solution: '), "yellow", ["bold"]) 
-solu0=input().split(' ')
+solu0=TALinput(str,regex="^(r|c)(0|[1-9][0-9]{0,2})$", regex_explained="a single row or column (with indexes starting from 0). Example 1: r0 to specify the first row. Example 2: c2 to specify the third column.", line_explained="a subset of rows and columns where indexes start from 0. Example: r0 c5 r2 r7", TAc=TAc, LANG=LANG)
 solu=[]
-for i in range(len(solu0)):
-    solu.append((solu0[i][0],int(solu0[i][1])))
+for row_or_col,index in solu0:
+    solu.append((row_or_col,int(index)))
 
 al.verifica(solu,quad,TAc,LANG)
-    
     
 exit(0)

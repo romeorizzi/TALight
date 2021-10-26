@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
 
-from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 from piastrelle_lib import recognize
