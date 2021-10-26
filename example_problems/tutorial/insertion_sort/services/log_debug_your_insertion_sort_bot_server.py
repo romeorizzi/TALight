@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 from sys import exit
-import re
-import os
-import random
 from itertools import zip_longest
 import subprocess
 import insert_sort_lib
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
-from sys import stdout, stderr, exit, argv
+from sys import exit
 
 # METADATA OF THIS TAL_SERVICE:
 problem = "insert_sort"
@@ -67,7 +64,7 @@ def check_if_insert_sort(our_log, student_log, feedback):
                     "Ops! So far so good, but server's solution ends here. Yours not. \u2718")
                 exit(1)
 
-    print("Congrats, your bot is right. \u2714")
+    print("CONGRATS! Your bot is right. \u2714")
 
 
 feedback = "tell_whats_right_instead"
