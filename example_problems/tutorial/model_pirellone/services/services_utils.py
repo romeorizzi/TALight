@@ -9,17 +9,17 @@ import model_pirellone_lib as pl
 def process_instance(ENV, TAc, LANG):
     if ENV['input_mode'] == 'random':
         # Get random seed
-        seed = pl.gen_pirellone_seed()
+        seed = pl.gen_instance_seed()
         # Get instance
         try:
-            instance, certificate= pl.gen_pirellone(ENV['m'], ENV['n'], seed, with_yes_certificate=True)
+            instance, certificate= pl.gen_instance(ENV['m'], ENV['n'], seed, with_yes_certificate=True)
         except RuntimeError:
             TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
             exit(0)
         TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
         # Print instance
         TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
+        TAc.print(LANG.render_feedback("instance", f"{pl.instance_to_str(instance)}"), "white", ["bold"])
         # Returns instance and optimal solution
         return instance, pl.make_optimal(certificate) if pl.is_solvable_seed(seed) else pl.NO_SOL
 
@@ -29,13 +29,13 @@ def process_instance(ENV, TAc, LANG):
             exit(0)
         # Get instance
         try:
-            instance, certificate = pl.gen_pirellone(ENV['m'], ENV['n'], ENV['seed'], with_yes_certificate=True)
+            instance, certificate = pl.gen_instance(ENV['m'], ENV['n'], ENV['seed'], with_yes_certificate=True)
         except RuntimeError:
             TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
             exit(0)
         # Print instance
         TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
+        TAc.print(LANG.render_feedback("instance", f"{pl.instance_to_str(instance)}"), "white", ["bold"])
         # Returns instance and optimal solution
         return instance, pl.make_optimal(certificate) if pl.is_solvable_seed(ENV['seed']) else pl.NO_SOL
 
@@ -54,7 +54,7 @@ def process_instance(ENV, TAc, LANG):
     #     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input file (handler `pirellone.txt`)."), "yellow")
     #     # get pirellone instance
     #     instance_str = service_server_requires_and_gets_the_only_file().decode()
-    #     instance = pl.get_pirellone_from_str(instance_str)
+    #     instance = pl.get_instance_from_str(instance_str)
     #     # Get optimal solution
     #     sol = pl.get_opt_sol(instance)
     

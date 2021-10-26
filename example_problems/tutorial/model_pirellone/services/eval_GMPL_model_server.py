@@ -95,7 +95,7 @@ for test_dir in tests_dirname_list:
         # Get input
         try:
             input_str = mph.get_file_str_from_path(input_file_path)
-            instance = pl.get_pirellone_from_txt(input_str, style=txt_style)
+            instance = pl.get_instance_from_txt(input_str, style=txt_style)
         except RuntimeError as err:
             err_name = err.args[0]
             # manage custom exceptions:

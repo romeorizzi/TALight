@@ -26,7 +26,7 @@ if ENV['level']=='medium':
     q=8
 if ENV['level']=='difficult':  
     q=11
-quad,seed=al.random_quad(q,ENV['seed'])
+quad,seed=al.gen_instance(q,ENV['seed'])
 TAc.print(LANG.render_feedback("instance", f'Instance (of seed: {seed}):'), "yellow", ["bold"])
 al.visualizza(quad)  
 TAc.print(LANG.render_feedback("solu", 'Insert your solution: '), "yellow", ["bold"]) 

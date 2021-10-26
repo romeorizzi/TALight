@@ -13,30 +13,127 @@ import copy
 import random
 import networkx as nx
 
-def random_quad(q,seed):
-    if seed=="random_seed":
-        random.seed()
-        seed = random.randrange(0,1000000)
+### CONSTANTS #########################################
+FORMAT_AVAILABLES = ['dat', 'txt']
+DAT_STYLES_AVAILABLES = ['']
+TXT_STYLES_AVAILABLES = ['only_matrix', 'with_m_and_n']
+DEFAULT_FORMAT='only_matrix.txt'
+#######################################################
+
+
+# CONVERTERS FUNCTIONS:
+def instance_to_str(matrix, format='default'):
+    """This function returns the string representation of the given matrix instance according to the indicated format"""
+    # Get default
+    format = DEFAULT_FORMAT if format=='default' else format
+    # Parsing format
+    format_list = format.split('.')
+    if len(format_list) == 1:
+        format_primary = format_list[0]
+        format_secondary = ''
     else:
-        seed = int(seed)
+        format_primary = format_list[1]
+        format_secondary = format_list[0]
+    # Get matrix in str format
+    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
+    if format_primary == 'dat':
+        return instance_to_dat(matrix, format_secondary)
+    if format_primary == 'txt':
+        return instance_to_txt(matrix, format_secondary)
+
+def instance_to_txt(matrix, style='only_matrix'):
+    """This function returns the string representation of the given matrix instance according to the indicated style"""
+    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    output = ""
+    if style == "with_m_and_n":
+        output = f"{len(matrix)} {len(matrix[0])}\n"
+    output += '\n'.join((''.join(str(col) for col in row) for row in matrix))
+    return output
+
+
+def instance_to_dat(matrix, style=''):
+    """This function returns the dat representation of the given matrix instance according to the indicated style"""
+    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    M = len(matrix)
+    N = len(matrix[0])
+    output = f"param M := {M};  # Number of rows\n"
+    output += f"param N := {N};  # Number of columns\n"
+    output += "param MATRIX :  " + " ".join([str(i) for i in range(1,N+1)]) + " :=\n"
+    for i in range(M):
+        output += f"            {i+1}   "
+        output += ' '.join(str(col) for col in matrix[i])
+        output += ";\n" if i == (M - 1) else "\n"
+    output += "end;"
+    return output
+
+
+# FROM STRING
+def get_instance_from_str(matrix, format):
+    """This function returns the string representation of the given matrix instance according to the indicated format."""
+    # Parsing format
+    format_list = format.split('.')
+    if len(format_list) == 1:
+        format_primary = format_list[0]
+        format_secondary = ''
+    else:
+        format_primary = format_list[1]
+        format_secondary = format_list[0]
+    # Get matrix in str format
+    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
+    if format_primary == 'dat':
+        return get_instance_from_dat(matrix, format_secondary)
+    if format_primary == 'txt':
+        return get_instance_from_txt(matrix, format_secondary)
+
+
+def get_instance_from_txt(matrix, style='only_matrix'):
+    """This function returns the string representation of the given matrix instance according to the indicated format."""
+    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    instance = list()
+    lines = matrix.split('\n')
+    if format == "with_m_and_n":
+        lines = lines[2:]
+    for l in lines:
+        instance.append([int(e) for e in l.split()])
+    return instance
+
+
+def get_instance_from_dat(matrix, style=''):
+    """This function returns the string representation of the given matrix instance according to the indicated format."""
+    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    instance = list()
+    # Get lines
+    lines = matrix.split('\n')
+    # Parse lines
+    for l in lines:
+        l = l.strip() # remove whitespace before and after
+        # Filter the matrix lines
+        if l != '' and l[:5] != 'param' and l[:3] != 'end':
+            l = l.replace(';', '') #ignore ;
+            row = list()
+            for e in l.split()[1:]:
+                row.append(int(e))
+            instance.append(row)
+    return instance
+
+
+# INSTANCE GENERATOR FUNCTIONS:
+def gen_instance(m,n,seed:int):
+    assert m >= 0
+    assert n >= 0
+    if seed==0:
+        random.seed()
+        seed = random.randint(100000,999999)
     random.seed(seed)
-    m=random.randrange(3,q)
-    n=random.randrange(3,q)
-    quad=[['' for j in range(n) ] for i in range(m)]
-    a=n=random.randrange(1,m*n-n)
-    for _ in range(a):
-        j=random.randrange(0,len(quad[0])-1)
-        i=random.randrange(0,len(quad)-1)
-        quad[i][j]='*'
+    quad=[[random.randint(0,1) for j in range(n) ] for i in range(m)]
     return quad,seed
 
 
-
-def visualizza(quadrante_spaziale):
-    index=pd.Index([str(i) for i in range(len(quadrante_spaziale))])
-    df=pd.DataFrame(quadrante_spaziale,index=index)
+def visualizza(matrix):
+    index=pd.Index([str(i) for i in range(len(matrix))])
+    df=pd.DataFrame(matrix,index=index)
     df = df.iloc[0:,0:]
-    columns=["-"]+[str(i) for i in range(len(quadrante_spaziale[0])+10)]
+    columns=["-"]+[str(i) for i in range(len(matrix[0])+10)]
     print(tabulate(df, headers=columns, tablefmt='fancy_grid'))
     
         

@@ -54,7 +54,7 @@ try:
         # Get input file
         if ENV['check_solution']:
             input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
-    instance = pl.get_pirellone_from_txt(input_str, style=txt_style)
+    instance = pl.get_instance_from_txt(input_str, style=txt_style)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
@@ -125,7 +125,7 @@ if ENV['check_solution']:
 
     # Print instance
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {m}x{n} is:"), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
+    TAc.print(LANG.render_feedback("instance", f"{pl.instance_to_str(instance)}"), "white", ["bold"])
     print_separator(TAc, LANG)
 
     # Extract GPLSOL solution

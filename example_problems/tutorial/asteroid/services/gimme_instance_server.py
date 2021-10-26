@@ -3,13 +3,12 @@ from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
 
-import model_pirellone_lib as pl
-from math_modeling import ModellingProblemHelper, get_problem_path_from
-
+import asteroid_lib as pl
+#from math_modeling import ModellingProblemHelper, get_problem_path_from
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="model_pirellone"
+problem="asteroid"
 service="gimme_instance"
 args_list = [
     ('input_mode',str),
@@ -17,7 +16,6 @@ args_list = [
     ('n',int),
     ('seed',int),
     ('instance_id',int),
-    ('instance_solvability',str),
     ('format',str),
     ('silent',bool),
     # ('display',bool),
@@ -42,27 +40,13 @@ if ENV['input_mode'] == 'instance_id':
     instance = pl.get_instance_from_str(instance_str, format=ENV['format'])
 
 else:
+    # Get instance
     if ENV['input_mode'] == 'random':
-        # adjust solvability param
-        if ENV['instance_solvability'] == 'solvable':
-            solvable = True
-        elif ENV['instance_solvability'] == 'unsolvable':
-            solvable = False
-        else:
-            solvable = None
-        # get random seed
-        seed = pl.gen_instance_seed(solvable)
-
-    elif ENV['input_mode'] == 'seed':
-        if ENV['seed'] == 0:
-            TAc.print(LANG.render_feedback("no-mandatory-seed", f"If you select (input_mode='seed') then the (seed) argument must be differente from 000000"), "red", ["bold"])
-            exit(0)
-        # get custom seed
+        seed = 0
+    if ENV['input_mode'] == 'seed':
         seed = ENV['seed']
-
-    # Get pirellone
     try:
-        instance = pl.gen_instance(ENV['m'], ENV['n'], seed)
+        instance, seed = pl.gen_instance(ENV['m'], ENV['n'], seed)
         instance_str = pl.instance_to_str(instance, format=ENV['format'])
     except RuntimeError:
         TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])

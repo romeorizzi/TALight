@@ -22,7 +22,7 @@ services:
         default: 4
         explain: Number of columns of the pirellone.
       seed:
-        explain: 'This argument is needed only when you already hold a specific instance descriptor and are only interested in obtaining the instance file downloaded in local and/or just its listing on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services of the pirellone problem.'
+        explain: 'This argument is needed only when you already hold a specific instance descriptor and are only interested in obtaining the instance file downloaded in local and/or just its listing on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services of the Pirellone problem.'
         regex: ^(000000|[1-9][0-9]{5,5})$
         default: 000000
       instance_id:

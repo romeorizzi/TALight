@@ -140,7 +140,7 @@ def subset_to_str_list(subset_sol):
             ' '.join([str(e) for e in subset_sol[1]])]
 
 
-def pirellone_to_str(pirellone, format='default'):
+def instance_to_str(pirellone, format='default'):
     """This function returns the string representation of the given pirellone instance according to the indicated format"""
     # Get default
     format = DEFAULT_FORMAT if format=='default' else format
@@ -155,12 +155,12 @@ def pirellone_to_str(pirellone, format='default'):
     # Get pirellone in str format
     assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
     if format_primary == 'dat':
-        return pirellone_to_dat(pirellone, format_secondary)
+        return instance_to_dat(pirellone, format_secondary)
     if format_primary == 'txt':
-        return pirellone_to_txt(pirellone, format_secondary)
+        return instance_to_txt(pirellone, format_secondary)
     
 
-def pirellone_to_txt(pirellone, style='only_matrix'):
+def instance_to_txt(pirellone, style='only_matrix'):
     """This function returns the string representation of the given pirellone instance according to the indicated style"""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     output = ""
@@ -169,7 +169,7 @@ def pirellone_to_txt(pirellone, style='only_matrix'):
     return output + '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
 
 
-def pirellone_to_dat(pirellone, style=''):
+def instance_to_dat(pirellone, style=''):
     """This function returns the dat representation of the given pirellone instance according to the indicated style"""
     assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     M = len(pirellone)
@@ -186,7 +186,7 @@ def pirellone_to_dat(pirellone, style=''):
 
 
 # FROM STRING
-def get_pirellone_from_str(pirellone, format):
+def get_instance_from_str(pirellone, format):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
     # Parsing format
     format_list = format.split('.')
@@ -199,12 +199,12 @@ def get_pirellone_from_str(pirellone, format):
     # Get pirellone in str format
     assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
     if format_primary == 'dat':
-        return get_pirellone_from_dat(pirellone, format_secondary)
+        return get_instance_from_dat(pirellone, format_secondary)
     if format_primary == 'txt':
-        return get_pirellone_from_txt(pirellone, format_secondary)
+        return get_instance_from_txt(pirellone, format_secondary)
 
 
-def get_pirellone_from_txt(pirellone, style='only_matrix'):
+def get_instance_from_txt(pirellone, style='only_matrix'):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     instance = list()
@@ -216,7 +216,7 @@ def get_pirellone_from_txt(pirellone, style='only_matrix'):
     return instance
 
 
-def get_pirellone_from_dat(pirellone, style=''):
+def get_instance_from_dat(pirellone, style=''):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
     assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     instance = list()
@@ -243,7 +243,7 @@ def is_solvable_seed(seed):
     return (seed % 3) != 0
 
 
-def gen_pirellone_seed(solvable=None, gen_seed=None):
+def gen_instance_seed(solvable=None, gen_seed=None):
     """This function returns a seed to generate a pirellone instance with the specificated solvability."""
     random.seed(gen_seed) # if gen_seed=None is init random
     seed = random.randint(100002,999999)
@@ -260,7 +260,7 @@ def gen_pirellone_seed(solvable=None, gen_seed=None):
     return seed
 
 
-def gen_pirellone(m, n, seed:int, with_yes_certificate=False):
+def gen_instance(m, n, seed:int, with_yes_certificate=False):
     """From (m,n,seed), this functions returns a pirellone instance, with eventually the certificate."""
     assert m >= 0
     assert n >= 0
@@ -435,31 +435,31 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
-    print('Test: pirellone_to_str()')
-    assert pirellone_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
+    print('Test: instance_to_str()')
+    assert instance_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
     print('==> OK\n')
 
 
-    print('Test: pirellone_to_txt()')
+    print('Test: instance_to_txt()')
     print('MAYBE TODO?')
     print('==> OK\n')
 
 
-    print('Test: pirellone_to_dat()')
+    print('Test: instance_to_dat()')
     print('MAYBE TODO?')
     print('==> OK\n')
 
 
-    print('Test: get_pirellone_from_str()')
+    print('Test: get_instance_from_str()')
     print('==> OK\n')
 
 
-    print('Test: get_pirellone_from_txt()')
-    assert get_pirellone_from_txt('0 0\n1 1', 'only_matrix') == [[0, 0], [1, 1]]
+    print('Test: get_instance_from_txt()')
+    assert get_instance_from_txt('0 0\n1 1', 'only_matrix') == [[0, 0], [1, 1]]
     print('==> OK\n')
 
 
-    print('Test: get_pirellone_from_dat()')
+    print('Test: get_instance_from_dat()')
     dat_instance = \
         "param M := 10;  # Number of rows\n" + \
         "param N := 2;  # Number of columns\n" + \
@@ -470,7 +470,7 @@ if __name__ == "__main__":
         "\n" + \
         "              2    0 1 0 0 1 0 0 1 1 1 ;\n" + \
         "end;\n"
-    assert get_pirellone_from_dat(dat_instance)  == [[1, 0, 1, 1, 0, 1, 0, 0, 0, 1], [0, 1, 0, 0, 1, 0, 0, 1, 1, 1]]
+    assert get_instance_from_dat(dat_instance)  == [[1, 0, 1, 1, 0, 1, 0, 0, 0, 1], [0, 1, 0, 0, 1, 0, 0, 1, 1, 1]]
     dat_instance = \
         "param M := 2;  # Number of rows\n" + \
         "param N := 2;  # Number of columns\n" + \
@@ -481,7 +481,7 @@ if __name__ == "__main__":
         "\n" + \
         "              2    0 1;\n" + \
         "end;\n"
-    assert get_pirellone_from_dat(dat_instance)  == [[1, 0], [0, 1]]
+    assert get_instance_from_dat(dat_instance)  == [[1, 0], [0, 1]]
     print('==> OK\n')
 
 
@@ -491,12 +491,12 @@ if __name__ == "__main__":
     print('==> OK\n')
 
 
-    print('Test: gen_pirellone_seed()')
+    print('Test: gen_instance_seed()')
     print('FOR DEFINITION')
     print('==> OK\n')
 
 
-    print('Test: gen_pirellone()')
+    print('Test: gen_instance()')
     print('MAYBE TODO?')
     print('==> OK\n')
 
