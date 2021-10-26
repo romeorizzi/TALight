@@ -33,7 +33,17 @@ struct CliArgs {
     timeout: f64,
 }
 
-fn handle_connection(ws: &mut WebSocket<TcpStream>, meta_dir: PathBuf, evaluator: &str, evaluator_args: &[String], args: HashMap<String, String>, timeout_ms: u64, tty: bool) {
+fn handle_connection(
+    ws: &mut WebSocket<TcpStream>,
+    meta_dir: PathBuf,
+    evaluator: &str,
+    evaluator_args: &[String],
+    args: HashMap<String, String>,
+    timeout_ms: u64,
+    tty: bool,
+    codename: String,
+    service: String,
+) {
     let mut eval = process::Command::new(&evaluator);
     for arg in evaluator_args {
         eval.arg(arg);
@@ -44,6 +54,8 @@ fn handle_connection(ws: &mut WebSocket<TcpStream>, meta_dir: PathBuf, evaluator
         eval.env("TAL_".to_string() + &argname, argvalue);
     }
     eval.env("TAL_ISATTY", if tty { "1" } else { "0" });
+    eval.env("TAL_META_CODENAME", codename);
+    eval.env("TAL_META_SERVICE", service);
     eval.stdin(Stdio::piped());
     eval.stdout(Stdio::piped());
     match eval.spawn() {
@@ -197,7 +209,17 @@ fn main() {
                                                         Err(x) => fail!("[{}] Error flushing response: {}", address, x),
                                                     };
                                                     info!("[{}] Connection began with problem \"{}\", service \"{}\"", address, req.codename, req.service);
-                                                    handle_connection(&mut client, meta_dir, &evaluator[0], &service.evaluator[1..], args, timeout_ms, req.isatty);
+                                                    handle_connection(
+                                                        &mut client,
+                                                        meta_dir,
+                                                        &evaluator[0],
+                                                        &service.evaluator[1..],
+                                                        args,
+                                                        timeout_ms,
+                                                        req.isatty,
+                                                        req.codename,
+                                                        req.service,
+                                                    );
                                                     break;
                                                 }
                                             } else {
