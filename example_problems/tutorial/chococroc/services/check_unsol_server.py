@@ -7,14 +7,11 @@ from TALinputs import TALinput
 import pirellone_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="model_pirellone"
-service="check_unsol"
 args_list = [
     ('assertion',str),
     ('with_certificate',int),
-    ('lang',str),
 ]
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

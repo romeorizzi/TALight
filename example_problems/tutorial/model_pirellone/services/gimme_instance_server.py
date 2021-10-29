@@ -9,20 +9,16 @@ from math_modeling import ModellingProblemHelper, get_problem_path_from
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="model_pirellone"
-service="gimme_instance"
 args_list = [
     ('input_mode',str),
     ('m',int),
     ('n',int),
-    ('seed',int),
     ('instance_id',int),
     ('instance_solvability',str),
     ('format',str),
     ('silent',bool),
     # ('display',bool),
     # ('download',bool),
-    ('lang',str),
 ]
 
 ENV = Env(problem, service, args_list)

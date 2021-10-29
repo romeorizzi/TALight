@@ -6,15 +6,13 @@ from multilanguage import Env, TALcolors
 from parentheses_lib import recognize, Par
 
 # METADATA OF THIS TAL_SERVICE:
-problem="parentheses"
-service="check_unrank"
 args_list = [
     ('n_pairs',int),
     ('rank',int),
     ('sorting_criterion',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 
 # START CODING YOUR SERVICE:

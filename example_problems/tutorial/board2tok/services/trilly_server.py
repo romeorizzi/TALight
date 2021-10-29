@@ -8,8 +8,6 @@ from multilanguage import Env, Lang, TALcolors
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="board2tok"
-service="trilly_server"
 args_list = [
     ('k',int),
     ('left_out_cell_must_be_a_corner_cell',int),
@@ -17,10 +15,9 @@ args_list = [
     ('goal_min_calls_to_standard_moves',str),
     ('goal_min_calls_to_trilly',str),
     ('trilly_assertivity', str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 LANG.print_opening_msg()

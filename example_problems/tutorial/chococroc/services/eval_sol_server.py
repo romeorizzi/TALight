@@ -9,15 +9,11 @@ from multilanguage import Env, Lang, TALcolors
 import pirellone_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="model_pirellone"
-service="eval_sol"
 args_list = [
     ('goal',str),
-    ('seed',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

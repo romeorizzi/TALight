@@ -10,18 +10,14 @@ import mastermind_utilities as Utilities
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="mastermind"
-service="play_server"
 args_list = [
     ('max_num_attempts',int),
     ('num_pegs',int),
     ('num_colors',int),
-    ('seed',str),
     ('adversary',str),
-    ('lang',str),    
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

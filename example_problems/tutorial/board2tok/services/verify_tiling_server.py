@@ -7,16 +7,13 @@ from multilanguage import Env, Lang, TALcolors
 from bot_interface import service_server_requires_and_gets_the_only_file
 
 # METADATA OF THIS TAL_SERVICE:
-problem="board2tok"
-service="verify_tiling_server"
 args_list = [
     ('m',str),
     ('n',str),
     ('loading', str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 LANG.print_opening_msg()

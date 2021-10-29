@@ -10,15 +10,11 @@ import graph_coloring_utilities as Utilities
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="graph_coloring"
-service="recognize_proper_colorings"
 args_list = [
     ('num_nodes',int),
     ('num_arcs',int),
-    ('seed',str),
     ('coloring',str),
     ('goal',str),
-    ('lang',str),    
 ]
 
 ENV = Env(problem, service, args_list)

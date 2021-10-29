@@ -9,8 +9,6 @@ from utils_lang import get_formatted_move
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="hanoi"
-service="check_opt_num_moves"
 args_list = [
     ('v',str),
     ('start',str),
@@ -21,10 +19,9 @@ args_list = [
     ('silent',bool),
     ('feedback',str),
     ('with_certificate',bool),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

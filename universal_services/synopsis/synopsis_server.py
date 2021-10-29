@@ -6,13 +6,11 @@ import os.path
 from multilanguage import Env, Lang, TALcolors
 
 problem=os.path.split(environ["TAL_META_DIR"])[-1]
-service="synopsis"
 args_list = [
     ('service',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

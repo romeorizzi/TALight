@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 from sys import stdout, stderr, exit, argv
-from os import environ
-from os.path import join, split
+from os import environ, path
 import random
 
 termcolor_is_installed = True
@@ -24,25 +23,36 @@ except Exception as e:
 
             
 class Env:
-    def __init__(self, problem, service, args_list):
-        args_list.append(('ISATTY',bool))
-        self.exe_path = split(argv[0])[0]
-        self.META_DIR = environ["TAL_META_DIR"]
-        self.problem = problem
-        self.service = service
-        self.args_list = args_list
+    def __getitem__(self, key):
+        return self.arg.get(key)
+    def __init__(self, args_list):
         self.arg = {}
-        self.seed_created = False
+        args_list.append(("ISATTY",bool))
+        if "TAL_lang" in environ:
+            args_list.append(("lang",str))
         if "TAL_seed" in environ:
-            if environ["TAL_seed"] == "random_seed":
-                self.arg["seed"] = random.randint(100000,999999)
-                self.seed_created = True 
+            args_list.append(("seed",int))
+            self.seed_generated = False
+            if environ["TAL_seed"] in {"random_seed", "000000"}:
+                self.arg["seed"] = random.randint(100100,999999)
+                self.seed_generated = True 
             else:
                 self.arg["seed"] = int(environ["TAL_seed"])
+        self.args_list = args_list
+        
+        self.exe_path_from_META_DIR = path.split(argv[0])[0]
+        self.exe_name = path.split(argv[0])[-1]
+        self.TAL_DIR = environ["TAL_HOME"]
+        self.META_DIR = environ["TAL_META_DIR"]
+        self.CODENAME = environ["TAL_META_CODENAME"]
+        self.service = environ["TAL_META_SERVICE"]
+        self.problem = path.split(environ["TAL_META_DIR"])[-1]
+        assert(self.problem == self.CODENAME)
+        
         for name, val_type in args_list:
             if not f"TAL_{name}" in environ:
                 for out in [stdout, stderr]:
-                    print(f"# Unrecoverable Error: the environment variable TAL_{name} for the argument {name} has not been set. Check out if this argument is indeed present in the meta.yaml file of the problem for this service {service}. If not, consider adding it to the meta.yaml file or removing it from the service server code.", file=out)
+                    print(f"# Unrecoverable Error: the environment variable TAL_{name} for the argument {name} has not been set. Check out if this argument is indeed present in the meta.yaml file of the problem for this service {self.service}. If not, consider adding it to the meta.yaml file or removing it from the service server code.", file=out)
                 exit(1)
             if name == "seed":
                 continue
@@ -58,9 +68,7 @@ class Env:
                 for out in [stdout, stderr]:
                     print(f"# Unrecoverable Error: type {val_type} not yet supported in args list (the set of supported types can be extended by communities of problem makers adding further elif clauses here above). Used to interpret arg {name}.", file=out)
                 exit(1)
-    def __getitem__(self, key):
-        return self.arg.get(key)
-
+                
 
 class Lang:
     def __init__(self, ENV, TAc, service_server_eval, book_strictly_required=False):
@@ -73,7 +81,7 @@ class Lang:
         self.messages_book = None
         self.messages_book_file = None
         if "lang" in ENV.arg.keys() and ENV["lang"] != "hardcoded":
-            self.messages_book_file = join(ENV.META_DIR, "lang", ENV["lang"], ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
+            self.messages_book_file = path.join(ENV.META_DIR, "lang", ENV["lang"], ENV.service + "_feedbackBook." + ENV["lang"] + ".yaml")
             if not yaml_is_installed:
                 if book_strictly_required:
                     for out in [stdout, stderr]:
@@ -123,7 +131,7 @@ class Lang:
             arg_val = self.ENV[arg_name]
             if arg_type == bool:
                 self.opening_msg += f"{arg_name}={'1 (True)' if arg_val else '0 (False)'} (i.e., {arg_val}), "
-            elif arg_name=="seed" and self.ENV.seed_created:
+            elif arg_name=="seed" and self.ENV.seed_generated:
                 self.opening_msg += f"{arg_name}={arg_val} (randomly generated, as 'random_seed' was passed), "
             else:
                 self.opening_msg += f"{arg_name}={arg_val}, "

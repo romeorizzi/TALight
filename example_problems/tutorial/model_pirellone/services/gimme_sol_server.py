@@ -8,18 +8,14 @@ import model_pirellone_lib as pl
 from services_utils import process_instance
 
 # METADATA OF THIS TAL_SERVICE:
-problem="model_pirellone"
-service="gimme_sol"
 args_list = [
     ('input_mode',str),
     ('m',int), 
     ('n',int),
-    ('seed',str),
     ('sol_style',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

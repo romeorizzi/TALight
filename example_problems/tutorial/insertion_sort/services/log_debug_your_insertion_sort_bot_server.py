@@ -12,7 +12,6 @@ problem = "insert_sort"
 service = "log_debug_your_insertion_sort_bot_server"
 args_list = [
     ('feedback', str),
-    ('lang', str),
 ]
 
 # ENV = Env(problem, service, args_list)

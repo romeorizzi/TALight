@@ -6,14 +6,11 @@ from multilanguage import Env, Lang, TALcolors
 from get_tables import get_one_numeric_table
 
 # METADATA OF THIS TAL_SERVICE:
-problem="eggs"
-service="eval_strategy_table"
 args_list = [
     ('separator',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

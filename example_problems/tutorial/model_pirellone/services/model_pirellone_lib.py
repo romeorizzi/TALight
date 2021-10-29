@@ -15,7 +15,7 @@ DEFAULT_FORMAT='only_matrix.txt'
 
 # CONVERTERS FUNCTIONS:
 def subset_to_seq(subset_sol):
-    """Convert subset solution (e.g.: [[0,1],[0,0]]) into sequence solution (e.g.: ['r2'])"""
+    """Convert subset solution (e.g.: [[0,1],[0,0,1]]) into sequence solution (e.g.: ['r2','c3'])"""
     if subset_sol == NO_SOL:
         return NO_SOL
     m = len(subset_sol[0])
@@ -31,7 +31,7 @@ def subset_to_seq(subset_sol):
 
 
 def seq_to_subset(seq_sol, m, n):
-    """Convert sequence solution (e.g.: ['r2']) into subset solution (e.g.: [[0,1],[0,0]])"""
+    """Convert sequence solution (e.g.: ['r2','c3']) into subset solution (e.g.: [[0,1],[0,0,1]])"""
     if seq_sol == NO_SOL:
         return NO_SOL
     assert isinstance(seq_sol, list)

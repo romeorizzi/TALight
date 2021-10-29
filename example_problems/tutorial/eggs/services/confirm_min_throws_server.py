@@ -6,16 +6,13 @@ from math import inf as IMPOSSIBLE
 from multilanguage import Env, Lang, TALcolors
 
 # METADATA OF THIS TAL_SERVICE:
-problem="eggs"
-service="confirm_min_throws"
 args_list = [
     ('min',int),
     ('n_eggs',int),
     ('n_floors',int),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

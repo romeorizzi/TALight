@@ -3,26 +3,26 @@
 public_folder: public
 services:
   gimme_instance:
-    description: This service provides you with a random instance, i.e., a 0/1-matrix with the given number of rows (argument m) and columns (argument n). You can also specify (1) whether this instance should be solvable or not, or let it to the service to decide; and (2) whether you want to get only the random seed for the instance or also the instance file downloaded and/or its display on the screen. If you opt to insert the seed yourself, you can not decide about the solvability, but you can still ask for the file and/or its listing on the screen.
+    description: This service provides you with an instance of the Asteroid problem, i.e., a 0/1-matrix with the given number of rows (argument m) and columns (argument n). These instances either come from a restricted catalog and posses an instance_id, or are pseudo-random instances that can be reconstructed from the triple <m,n,seed>, which we call the instance descriptor. Either way, you can specify whether you want the instance file downloaded in local and/or its display on your screen. The seed is any natural number in the interval [100000,999999].
     evaluator: [python,services/gimme_instance_server.py]
     args:
       input_mode:
         regex: ^(random|seed|instance_id)$
         default: random
         explain: 'choose the way to input your instance among:' 
-        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
+        explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
         explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
-        explain2: '[instance_id] the service get the instance selected generated with make'
+        explain3: '[instance_id] the service get the instance selected generated with make'
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
-        explain: 'Number of rows of the matrix.'
+        explain: 'Number of rows of the 0,1-matrix reporting the asteroids\''s positions.'
       n:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
-        explain: Number of columns of the matrix.
+        explain: 'Number of columns of the 0,1-matrix reporting the asteroids\''s positions.'
       seed:
-        explain: 'This argument is needed only when you already hold a specific instance descriptor and are only interested in obtaining the instance file downloaded in local and/or just its listing on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services of the Asteroid problem.'
+        explain: 'This argument is used when you hold the instance descriptor of a specific instance and want to get that instance either downloaded in local as a file and/or displayed on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services of the Asteroid problem.'
         regex: ^([1-9][0-9]{5,5})$
         default: 123456
       instance_id:
@@ -49,57 +49,151 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
-  feasible_solution:
-    description: We give you a matrix with asteroids and you have to return the minimum number of laser beams to destroy all of them.
+  check_feasibiliy_of_your_laser_beams:
+    description: We give you a matrix with asteroids and you have to shoot out sufficient laser beams in order to destroy all of the asteroids. In other words, your task is to identify a set of rows and columns of the matrix that cover all the asteroids. This service is meant to verify this property.
     evaluator: [python,services/check_solution_server.py]
     args:
-      level:
-        regex: ^(easy|medium|difficult)$
-        default: medium
-        explain: Level of difficulty of the problem.
+      input_mode:
+        regex: ^(random|seed|terminal)$
+        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
+        # regex: ^(random|seed|terminal|TA_send_files_bot)$
+        default: random
+        explain: 'choose the way to input your instance (a binary matrix) among the following:' 
+        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
+        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+        explain3: '[terminal] you enter your instance directly by either typing it line after line or through cut and paste operations.'
+        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the asteroid/bots/ directory. Call the service with: rtal connect asteroid compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
+      m:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: 'Number of rows of the 0,1-matrix reporting the asteroids\''s positions.'
+      n:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: 'Number of columns of the 0,1-matrix reporting the asteroids\''s positions.'
+      seed:
+        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(000000|[1-9][0-9]{5,5})$
+        default: 000000
+      sol_style:
+        regex: ^(seq|subset)$
+        default: seq
+        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
+        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
       goal:
         regex: ^check_feasibiliy$
         default: check_feasibiliy
-      seed:
-        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run.
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  optimal_solution:
-    description: We give you a matrix with asteroids and you have to return the minimum number of laser beams to destroy all of them.
+  check_optimality_of_your_laser_beams:
+    description: We give you a matrix with asteroids and you have to return the minimum number of laser beams capable of destroying them all. You can use a laser beam to destroy all asteroids laying on a same row or column of the matix. This service checks that no solution exists using less beams.
     evaluator: [python,services/check_solution_server.py]
     args:
-      level:
-        regex: ^(easy|medium|difficult)$
-        default: medium
-        explain: Level of difficulty of the problem.
+      input_mode:
+        regex: ^(random|seed|terminal)$
+        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
+        # regex: ^(random|seed|terminal|TA_send_files_bot)$
+        default: random
+        explain: 'choose the way to input your instance (a binary matrix) among the following:' 
+        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
+        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+        explain3: '[terminal] you enter your instance directly by either typing it line after line or through cut and paste operations.'
+        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the asteroid/bots/ directory. Call the service with: rtal connect asteroid compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
+      m:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: 'Number of rows of the 0,1-matrix reporting the asteroids\''s positions.'
+      n:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: 'Number of columns of the 0,1-matrix reporting the asteroids\''s positions.'
+      seed:
+        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(000000|[1-9][0-9]{5,5})$
+        default: 000000
+      sol_style:
+        regex: ^(seq|subset)$
+        default: seq
+        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
+        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
       goal:
         regex: ^check_optimality$
         default: check_optimality
-      seed:
-        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run.
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  indipendent_asteroids:
+
+  check_feasibility_independent_asteroids_subset:
     description: You have to give us the set of indipendent asteroids.
-    evaluator: [python, services/indipendent_asteroids_server.py]
+    evaluator: [python, services/check_dual_solution_server.py]
     args:
-      level:
-        regex: ^(easy|medium|difficult)$
-        default: medium
-        explain: Level of difficulty of the problem.
+      input_mode:
+        regex: ^(random|seed|terminal)$
+        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
+        # regex: ^(random|seed|terminal|TA_send_files_bot)$
+        default: random
+        explain: 'choose the way to input your instance (a binary matrix) among the following:' 
+        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
+        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+        explain3: '[terminal] you enter your instance directly by either typing it line after line or through cut and paste operations.'
+        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the asteroid/bots/ directory. Call the service with: rtal connect asteroid compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
+      m:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: 'Number of rows of the 0,1-matrix reporting the asteroids\''s positions.'
+      n:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: 'Number of columns of the 0,1-matrix reporting the asteroids\''s positions.'
       seed:
-        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run.
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(000000|[1-9][0-9]{5,5})$
+        default: 000000
+      goal:
+        regex: ^check_feasibiliy$
+        default: check_feasibiliy
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+
+  check_optimality_independent_asteroids_subset:
+    description: You have to give us the set of indipendent asteroids.
+    evaluator: [python, services/check_dual_solution_server.py]
+    args:
+      input_mode:
+        regex: ^(random|seed|terminal)$
+        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
+        # regex: ^(random|seed|terminal|TA_send_files_bot)$
+        default: random
+        explain: 'choose the way to input your instance (a binary matrix) among the following:' 
+        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
+        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+        explain3: '[terminal] you enter your instance directly by either typing it line after line or through cut and paste operations.'
+        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the asteroid/bots/ directory. Call the service with: rtal connect asteroid compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
+      m:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: 'Number of rows of the 0,1-matrix reporting the asteroids\''s positions.'
+      n:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: 'Number of columns of the 0,1-matrix reporting the asteroids\''s positions.'
+      seed:
+        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(000000|[1-9][0-9]{5,5})$
+        default: 000000
+      feedback:
+        regex: ^(only_check|give_a_better_solution_if_any)$
+        default: only_check
+        explain: using this argument you can ask to be given a feasible solution using less laser beams (if one exists). Use only when convenient to you (slightly spoilering).
+      goal:
+        regex: ^check_optimality$
+        default: check_optimality
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   eval_sol:
     evaluator: [python, services/eval_sol_server.py]
     args:

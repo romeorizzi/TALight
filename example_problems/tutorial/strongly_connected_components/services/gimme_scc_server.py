@@ -14,15 +14,12 @@ from scc_lib import *
 # aggiorna meta.yaml
 
 # METADATA OF THIS TAL_SERVICE:
-problem="strongly_connected_components"
-service="gimme_scc"
 args_list = [
     ('n',str), 
     ('m',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 
 # METADATA OF THIS TAL_SERVICE:
-problem="piastrelle"
-service="check_num_sol"
 args_list = [
     ('n',int),
     ('risp',int),
     ('ok_if_congruent_modulus',int),
     ('more_or_less_hint_if_wrong',bool),
     ('silent',bool),
-    ('lang',str),
 ]
 
 from sys import stderr, exit
@@ -17,7 +14,7 @@ from sys import stderr, exit
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 from piastrelle_lib import Par
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

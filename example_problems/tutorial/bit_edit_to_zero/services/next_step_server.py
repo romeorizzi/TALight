@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 
 # METADATA OF THIS TAL_SERVICE:
-problem="bit_edit_to_zero"
-service="next_step"
 args_list = [
-    ('lang',str),
 ]
 
 from sys import exit
@@ -13,7 +10,7 @@ import bit_edit_to_zero_lib as el
 
 
 from multilanguage import Env, Lang, TALcolors
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

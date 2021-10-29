@@ -5,14 +5,11 @@ from random import randrange
 from multilanguage import Env, Lang, TALcolors
 
 # METADATA OF THIS TAL_SERVICE:
-problem="games"
-service="game2stack"
 args_list = [
     ('num_questions',int),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

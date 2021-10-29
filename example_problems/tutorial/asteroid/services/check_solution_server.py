@@ -1,42 +1,46 @@
 #!/usr/bin/env python3
 from sys import exit
+import random
 
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
 import asteroid_lib as al
 
-
 # METADATA OF THIS TAL_SERVICE:
-problem="asteroid"
-service="minimum_laser_server"
 args_list = [
-    ('level',str),
-    ('seed',str),
-    ('lang',str),
+    ('input_mode',str),
+    ('m',int),
+    ('n',int),
+    ('sol_style',str),
+    ('goal',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE: 
-if ENV['level']=='easy':
-    q=5
-if ENV['level']=='medium':
-    q=8
-if ENV['level']=='difficult':  
-    q=11
-
-quad,seed=al.gen_instance(q,ENV['seed'])
+matrix,seed=al.gen_instance(ENV['m'],ENV['n'],ENV['seed'])
 TAc.print(LANG.render_feedback("instance", f'Instance (of seed: {seed}):'), "yellow", ["bold"])
-al.visualizza(quad)  
-TAc.print(LANG.render_feedback("solu", 'Insert your solution: '), "yellow", ["bold"]) 
-solu0=TALinput(str,regex="^(r|c)(0|[1-9][0-9]{0,2})$", regex_explained="a single row or column (with indexes starting from 0). Example 1: r0 to specify the first row. Example 2: c2 to specify the third column.", line_explained="a subset of rows and columns where indexes start from 0. Example: r0 c5 r2 r7", TAc=TAc, LANG=LANG)
-solu=[]
-for row_or_col,index in solu0:
-    solu.append((row_or_col,int(index)))
+al.visualizza(matrix)  
+TAc.print(LANG.render_feedback("user_sol", 'Insert your solution: '), "yellow", ["bold"]) 
+user_sol=[]
+if ENV['sol_style'] == 'seq':
+    raw_sol = TALinput(str,regex="^(r|c)(0|[1-9][0-9]{0,2})$", regex_explained="a single row or column (with indexes starting from 0). Example 1: r0 to specify the first row. Example 2: c2 to specify the third column.", line_explained="a subset of rows and columns where indexes start from 0. Example: r0 c5 r2 r7", TAc=TAc, LANG=LANG)
+    for token in raw_sol:
+        user_sol.append((token[0],int(token[1:])))
+if ENV['sol_style'] == 'subset':
+    raw_sol_rows = TALinput(bool, num_tokens=ENV['m'], line_explained=f"enter {ENV['m']} 0,1-digits separated by spaces, one for each row. Example: {' '.join(str(random.randint(0,1)) for _ in range(ENV['m']))}", TAc=TAc, LANG=LANG)
+    for val,index in zip(raw_sol_rows,range(ENV['m'])):
+        if val == 1:
+            user_sol.append(('r',index))
+    raw_sol_cols = TALinput(bool, num_tokens=ENV['n'], line_explained=f"enter {ENV['n']} 0,1-digits separated by spaces, one for each row. Example: {' '.join(str(random.randint(0,1)) for _ in range(ENV['n']))}", TAc=TAc, LANG=LANG)
+    for val,index in zip(raw_sol_cols,range(ENV['n'])):
+        if val == 1:
+            user_sol.append(('c',index))
 
-al.verifica(solu,quad,TAc,LANG)
+if al.is_feasible_shooting(ENV['m'],ENV['n'],matrix,user_sol,silent=False,TAc=TAc,LANG=LANG) and ENV.service=="check_optimality_of_your_laser_beams":
+    al.is_optimal_shooting(ENV['m'],ENV['n'],matrix,user_sol,silent=False,TAc=TAc,LANG=LANG)
     
 exit(0)

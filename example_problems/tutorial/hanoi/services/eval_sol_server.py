@@ -10,20 +10,16 @@ from utils_lang import get_regex, get_std_move
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="hanoi"
-service="eval_sol"
 args_list = [
     ('v',str),
     ('start', str),
     ('final', str),
     ('format', str),
-    ('seed',str),
     ('num_tests',int),
     ('n_max',int),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

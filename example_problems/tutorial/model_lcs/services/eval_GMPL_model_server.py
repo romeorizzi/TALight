@@ -9,17 +9,14 @@ from services_utils import process_user_sol, print_separator, check_sol_with_fee
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="model_pirellone"
-service="eval_GMPL_model"
 args_list = [
     ('goal',str),
     ('type_of_check',str),
     ('sol_style',str),
     ('only_solvable_instances',bool),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

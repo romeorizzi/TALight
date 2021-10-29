@@ -6,18 +6,14 @@ from multilanguage import Env, Lang, TALcolors
 import pirellone_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="pirellone"
-service="compact_solution"
 args_list = [
     ('m',int), 
     ('n',int),
     ('goal',str),
-    ('seed',str),
     ('level',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

@@ -8,17 +8,13 @@ from TALinputs import TALinput
 from euler_dir_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
-problem="euler_dir"
-service="trilly_construction"
 args_list = [
     ('num_calls',str),
-    ('lang',str),
-    ('seed',str),
     ('n',int),
     ('m',int),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

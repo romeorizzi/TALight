@@ -12,7 +12,7 @@ services:
         explain: 'choose the way to input your pirellone among:' 
         explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
         explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
-        explain2: '[instance_id] the service get the instance selected generated with make'
+        explain3: '[instance_id] the service get the instance selected generated with make'
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -147,7 +147,7 @@ services:
         default: 4
         explain: Number of columns of the pirellone.
       seed:
-        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
         regex: ^(000000|[1-9][0-9]{5,5})$
         default: 000000
       sol_style:

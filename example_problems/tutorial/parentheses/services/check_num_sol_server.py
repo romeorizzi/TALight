@@ -6,18 +6,15 @@ from multilanguage import Env, Lang, TALcolors
 from parentheses_lib import Par
 
 # METADATA OF THIS TAL_SERVICE:
-problem="parentheses"
-service="check_num_sol"
 args_list = [
     ('n_pairs',int),
     ('risp',int),
     ('ok_if_congruent_modulus',int),
     ('more_or_less_hint_if_wrong',bool),
     ('silent',bool),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

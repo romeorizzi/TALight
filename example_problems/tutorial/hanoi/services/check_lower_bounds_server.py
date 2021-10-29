@@ -8,8 +8,6 @@ from hanoi_lib import ConfigGenerator, HanoiTowerProblem
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="hanoi"
-service="check_lower_bound"
 args_list = [
     ('v',str),
     ('start', str),
@@ -19,10 +17,9 @@ args_list = [
     ('answ',int),
     ('silent',bool),
     ('feedback',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

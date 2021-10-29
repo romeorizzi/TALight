@@ -7,14 +7,11 @@ from multilanguage import Env, Lang, TALcolors
 import bit_edit_to_zero_lib as el
 
 # METADATA OF THIS TAL_SERVICE:
-problem="bit_edit_to_zero"
-service="trilly"
 args_list = [
     ('binary_starting_number',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

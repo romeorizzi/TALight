@@ -10,16 +10,12 @@ from hanoi_lib import ConfigGenerator
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="hanoi"
-service="gen_random_puzzle"
 args_list = [
     ('n_instances',int),
-    ('seed',str),
     ('start', str),
     ('final', str),
     ('n',int),
     ('verbose',int),
-    ('lang',str),
 ]
 
 ENV = Env(problem, service, args_list)

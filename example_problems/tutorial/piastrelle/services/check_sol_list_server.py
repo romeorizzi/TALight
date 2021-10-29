@@ -7,15 +7,12 @@ from TALinputs import TALinput
 from piastrelle_lib import Par,recognize
 
 # METADATA OF THIS TAL_SERVICE:
-problem="piastrelle"
-service="check_sol_list"
 args_list = [
     ('sorting_criterion',str),
     ('feedback',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

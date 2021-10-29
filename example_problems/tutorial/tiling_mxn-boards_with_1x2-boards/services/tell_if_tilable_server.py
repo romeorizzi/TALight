@@ -12,7 +12,6 @@ args_list = [('m',int), # Grid dimension
     ('n',int),
     ('h',int), # Tile dimension
     ('k',int),
-    ('lang',str),
 
 ENV = Env(problem, service, args_list)
 TAc = TALcolors(ENV)

@@ -8,19 +8,15 @@ import asteroid_lib as pl
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="asteroid"
-service="gimme_instance"
 args_list = [
     ('input_mode',str),
     ('m',int),
     ('n',int),
-    ('seed',int),
     ('instance_id',int),
     ('format',str),
     ('silent',bool),
     # ('display',bool),
     # ('download',bool),
-    ('lang',str),
 ]
 
 ENV = Env(problem, service, args_list)

@@ -10,8 +10,6 @@ from utils_lang import print_move_error, parse_move, get_formatted_move, get_reg
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="hanoi"
-service="play_like"
 args_list = [
     ('role',str),
     ('start', str),
@@ -19,10 +17,9 @@ args_list = [
     ('n',int),
     ('format',str),
     ('gimme_moves_available', bool),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

@@ -7,14 +7,11 @@ from multilanguage import Env, Lang, TALcolors
 
 from increasing_subsequence_lib import *
 # METADATA OF THIS TAL_SERVICE:
-problem="increasing_subseq"
-service="is_subseq_server"
 args_list = [
     ('T',str),
     ('sorting_criterion',str),
-    ('lang',str),
 ]
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

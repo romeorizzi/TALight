@@ -7,17 +7,14 @@ from multilanguage import Env, Lang, TALcolors
 from magic_indexes_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
-problem="magic_indexes"
-service="check_worst_case_num_questions"
 args_list = [
     ('n',str),
     ('risp',str),
     ('more_or_less_hint_if_wrong',bool),
     ('silent',bool),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

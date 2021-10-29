@@ -13,17 +13,14 @@ from bot_interface import service_server_requires_and_gets_the_only_file
 from scc_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
-problem="strongly_connected_components"
-service="check_is_sc"
 args_list = [
     ('sc_bool',bool),
     ('input_mode',str),
     ('goal',str),
     ('feedback',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

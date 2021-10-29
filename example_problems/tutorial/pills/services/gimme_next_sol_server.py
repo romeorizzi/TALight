@@ -6,15 +6,12 @@ from multilanguage import Env, Lang, TALcolors
 from pills_lib import recognize, Flask
 
 # METADATA OF THIS TAL_SERVICE:
-problem="pills"
-service="gimme_next_sol"
 args_list = [
     ('current_sol',str),
     ('sorting_criterion',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

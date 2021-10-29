@@ -10,20 +10,16 @@ from hanoi_lib import ConfigGenerator, HanoiTowerProblem, generate_n_list
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="hanoi"
-service="eval_opt_num_moves"
 args_list = [
     ('v',str),
     ('start', str),
     ('final', str),
     ('ok_if_congruent_modulus',int),
     ('goal',str),
-    ('seed',str),
     ('code_lang',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
