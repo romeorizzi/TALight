@@ -39,9 +39,10 @@ class Env:
             else:
                 self.arg["seed"] = int(environ["TAL_seed"])
         self.args_list = args_list
-        
-        self.exe_path_from_META_DIR = path.split(argv[0])[0]
-        self.exe_name = path.split(argv[0])[-1]
+
+        self.exe_fullname = argv[0]
+        self.exe_path_from_META_DIR = path.split(self.exe_fullname)[0]
+        self.exe_name = path.split(self.exe_fullname)[-1]
         self.TAL_DIR = environ["TAL_HOME"]
         self.META_DIR = environ["TAL_META_DIR"]
         self.CODENAME = environ["TAL_META_CODENAME"]
@@ -126,7 +127,7 @@ class Lang:
         self.to_be_printed_opening_msg = False
         problem=self.ENV.problem
         service=self.ENV.service
-        self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={problem}, service={service}\n#  with arguments: ", {"problem":self.ENV.problem, "service":self.ENV.service})
+        self.opening_msg = self.render_feedback("open-channel",f"# I will serve: problem={problem}, service={service}\n#  with arguments: ", {"problem":problem, "service":service})
         for arg_name, arg_type in self.ENV.args_list:
             arg_val = self.ENV[arg_name]
             if arg_type == bool:
@@ -136,11 +137,13 @@ class Lang:
             else:
                 self.opening_msg += f"{arg_name}={arg_val}, "
         self.opening_msg = self.opening_msg[:-2] + ".\n"
-        self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {argv[0]}).')
+        self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {self.ENV.exe_fullname}).', {"problem":problem, "service":service, "lang":self.ENV["lang"]})
         self.TAc.print(self.opening_msg, "green")
 
     def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionary=None, obj=None):
         """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the harcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
+        #print("render_feedback has received msg_code="+msg_code+"\nrendition_of_the_hardcoded_msg="+rendition_of_the_hardcoded_msg+"\ntrans_dictionary=",end="")
+        #print(trans_dictionary)
         if self.to_be_printed_opening_msg:
             self.print_opening_msg()
         if self.messages_book != None and msg_code not in self.messages_book:

@@ -7,6 +7,14 @@ import copy
 import random
 import networkx as nx
 
+### CONSTANTS #########################################
+FORMAT_AVAILABLES = ['dat', 'txt']
+DAT_STYLES_AVAILABLES = ['']
+TXT_STYLES_AVAILABLES = ['only_matrix', 'with_m_and_n']
+DEFAULT_FORMAT='only_matrix.txt'
+#######################################################
+
+
 # CONVERTERS FUNCTIONS:
 def subset_to_seq(subset_sol):
     """Convert subset solution (e.g.: [[0,1],[0,0,1]]) into sequence solution (e.g.: ['r2','c3'])"""

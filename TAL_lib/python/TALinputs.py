@@ -94,13 +94,20 @@ def TALinput(token_type, num_tokens=None, sep=None, exceptions = set({}), commen
             exit(0)
         if token_recognizer != None and not token_recognizer(vals[-1], TAc, LANG):
             for out in [stdout, stderr]:
-                TAc.print("Input error from the problem-solver on the inut line:", "red", file=out)
+                TAc.print("Input error from the problem-solver on the input line:", "red", file=out)
                 TAc.print(input_line, "red", ["bold"], file=out)
                 TAc.print(f"The problem is with the {i}-th token of your line:", "red", file=out)
                 TAc.print(token, "red", ["bold"], file=out)
                 TAc.print(f"We hope that the token_recognizer function has made clear what is the problem with your token. If not ask the instructor or go into the code on the problem-maker side if available to you.\n", "red", file=out)
                 TAc.print("I am dropping the communication because of violation of the intended protocol between problem solver and problem maker.", "yellow", file=out)
             exit(0)
+    if line_recognizer != None and not line_recognizer(input_line, TAc, LANG):
+        for out in [stdout, stderr]:
+            TAc.print("Input error from the problem-solver on the input line:", "red", file=out)
+            TAc.print(input_line, "red", ["bold"], file=out)
+            TAc.print(f"We hope that the line_recognizer function has made clear what is the problem with your line. If not ask the instructor or go into the code on the problem-maker side if available to you.\n", "red", file=out)
+            TAc.print("I am dropping the communication because of violation of the intended protocol between problem solver and problem maker.", "yellow", file=out)
+        exit(0)
     return [val for val in vals]
 
 # For the future, we plan to offer more than one possible extensions to the TALinput function above that inputs one single token.
