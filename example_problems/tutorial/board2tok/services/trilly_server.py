@@ -28,11 +28,14 @@ board = [['0' for _ in range(2**ENV['k'])] for _ in range(2**ENV['k'])]
 count_empty_cells = 0
 
 def check_corner_cell(line):
+    h = line[0]
+    if h == 0:
+        h = 1
     corner_cells = list()
     corner_cells.append((f'{line[1]}', f'{line[2]}'))
-    corner_cells.append((f'{line[1]}', f'{2**line[0] + line[2] - 1}'))
-    corner_cells.append((f'{2**line[0] + line[1] - 1}', f'{line[2]}'))
-    corner_cells.append((f'{2**line[0] + line[1] - 1}', f'{2**line[0] + line[2] - 1}'))
+    corner_cells.append((f'{line[1]}', f'{2**h + line[2] - 1}'))
+    corner_cells.append((f'{2**h + line[1] - 1}', f'{line[2]}'))
+    corner_cells.append((f'{2**h + line[1] - 1}', f'{2**h + line[2] - 1}'))
 
     if (f'{line[3]}', f'{line[4]}') not in corner_cells:
         TAc.print(LANG.render_feedback('error-corner-cell', '#ERROR: The left-out-cell you have chosen is not a corner cell.'), 'red', ['bold'])
@@ -43,33 +46,33 @@ def check_values(line):
         TAc.print(LANG.render_feedback('error-negative-number', '#ERROR: One or more values that you have inserted are negative.'), 'red', ['bold'])
         exit(0)
 
-    if line[0] >= ENV['k']:
-        TAc.print(LANG.render_feedback('out-of-board', '#ERROR: The sub-board dimension you have chosen is greater equal than the original board dimension.'), 'red', ['bold'])
-        exit(0)
-    if line[0] == 0:
-        TAc.print(LANG.render_feedback('board-to-small', '#ERROR: The sub-board dimension you have chosen is to small.'), 'red', ['bold'])
+    h = line[0]
+    if h == 0:
+        h = 1
+    if h >= ENV['k'] > 1:
+        TAc.print(LANG.render_feedback('too-big-sub-board', '#ERROR: The sub-board dimension you have chosen is greater or equal than the original board dimension.'), 'red', ['bold'])
         exit(0)
 
     if line[1] >= 2**ENV['k']:
-        TAc.print(LANG.render_feedback('row-coordinates-out-of-board', '#ERROR: The row coordinates you have chosen are out of the original board dimension.'), 'red', ['bold'])
+        TAc.print(LANG.render_feedback('row-coordinates-out-of-board', f'#ERROR: The row coordinate you have entered ({line[1]}) falls out of the original board.'), 'red', ['bold'])
         exit(0)
-    if line[1] >= 2**ENV['k'] - 1:
-        TAc.print(LANG.render_feedback('rpw-sub-board-out-of-original', '#ERROR: The row coordinates you have chosen are out of the original board.'), 'red', ['bold'])
+    if line[1] + 2**h > 2**ENV['k']:
+        TAc.print(LANG.render_feedback('row-sub-board-out-of-original', '#ERROR: The row coordinates you have chosen are out of the original board.'), 'red', ['bold'])
         exit(0)
 
     if line[2] >= 2**ENV['k']:
-        TAc.print(LANG.render_feedback('column-coordinates-out-of-board', '#ERROR: The column coordinates you have chosen are out of the original board dimension.'), 'red', ['bold'])
+        TAc.print(LANG.render_feedback('column-coordinates-out-of-board', f'#ERROR: The column coordinate you have entered ({line[2]}) falls out of the original board.'), 'red', ['bold'])
         exit(0)
-    if line[2] >= 2**ENV['k'] - 1:
+    if line[2] + 2**h > 2**ENV['k']:
         TAc.print(LANG.render_feedback('column-sub-board-out-of-board', '#ERROR: The column coordinates you have chosen are out of the original board.'), 'red', ['bold'])
         exit(0)
 
-    if line[3] > line[1] + 2**line[0] - 1 or line[3] < line[1]:
-        TAc.print(LANG.render_feedback('row-hole-coordinates-exceeding-sub-board', '#ERROR: The row hole coordinates you have chosen exceed the sub-board horizontally.'), 'red', ['bold'])
+    if line[3] > line[1] + 2**h - 1 or line[3] < line[1]:
+        TAc.print(LANG.render_feedback('row-hole-coordinates-exceeding-sub-board', '#ERROR: Your row hole coordinate falls outside the sub-board.'), 'red', ['bold'])
         exit(0)
 
-    if line[4] > line[2] + 2**line[0] - 1 or line[4] < line[2]:
-        TAc.print(LANG.render_feedback('column-hole-coordinates-exceeding-sub-board', '#ERROR: The column hole coordinates you have chosen exceed the sub-board vertically.'), 'red', ['bold'])
+    if line[4] > line[2] + 2**h - 1 or line[4] < line[2]:
+        TAc.print(LANG.render_feedback('column-hole-coordinates-exceeding-sub-board', '#ERROR: Your column hole coordinate falls outside the sub-board.'), 'red', ['bold'])
         exit(0)
 
 def check_is_empty(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
@@ -77,7 +80,7 @@ def check_is_empty(board_dimension, row_coordinates, col_coordinates, hole_row, 
         for j in range(2**board_dimension):
             if row_coordinates + i != hole_row or col_coordinates + j != hole_column:
                 if board[row_coordinates + i][col_coordinates + j] != '0':
-                    TAc.print(LANG.render_feedback('error-non-emty-sub-board', '#ERROR: The sub-board you choose is not empty.'), 'red', ['bold'])
+                    TAc.print(LANG.render_feedback('error-non-emty-sub-board', '#ERROR: The sub-board you asked Trilly to fill up is not empty.'), 'red', ['bold'])
                     exit(0)
 
 def standard_move(row_coordinates, col_coordinates, hole_row, hole_column):
@@ -148,7 +151,7 @@ def trilly_moves(board_dimension, row_coordinates, col_coordinates, hole_row, ho
         trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
         trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
         trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
-    if board_dimension > 2 and ENV['trilly_assertivity'] == 'might_pose_smaller_problems_in_reply':
+    if board_dimension > 2 and ENV['trilly_assertivity'] == 'might_pose_smaller_macromoves_in_reply':
         rnd = random.randint(0, 3)
         if rnd == 0:
             TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates} {col_coordinates} {row_holes[0][0]} {col_holes[0][0]}'), 'green')
@@ -228,17 +231,17 @@ while line[0] != stopping_command_set:
             check_corner_cell(line)
         check_values(line)
 
-        if line[0] == 1:
+        if line[0] == 0:
             count_standard_moves += 1
             standard_move(line[1], line[2], line[3], line[4])
-            TAc.print(LANG.render_feedback('standard-moves-call', '# You have called `standard_moves`.'), 'yellow', ['bold'])
-        if line[0] > 1:
+            TAc.print(LANG.render_feedback('standard-moves-call', f'# You have acted a `standard move` ({line}).'), 'yellow', ['bold'])
+        if line[0] >= 1:
             count_trilly_calls += 1
             if random.randint(0, 1) and ENV['trilly_assertivity'] == 'might_bounch_your_macromoves_back_to_you':
                 TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {line[0]} {line[1]} {line[2]} {line[3]} {line[4]}'), 'green')
             else:
                 trilly(line[0], line[1], line[2], line[3], line[4])
-            TAc.print(LANG.render_feedback('trilly-call', '# You have called `trilly`.'), 'yellow', ['bold'])
+            TAc.print(LANG.render_feedback('trilly-call', f'# You have called `trilly` ({line}).'), 'yellow', ['bold'])
 
 # TODO: il tiling viene restituito su un file
 # ora viene stampato altrimenti gli errori non hanno senso

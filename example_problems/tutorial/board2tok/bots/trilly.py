@@ -48,6 +48,8 @@ def set_move():
     else:
         hole_row = random.randint(0, 2**sub_board_dimension - 1) + row_coordinates
         hole_column = random.randint(0, 2**sub_board_dimension - 1) + column_coordinates
+    if sub_board_dimension == 1:
+        sub_board_dimension = random.randint(0,1)
     return sub_board_dimension, row_coordinates, column_coordinates, hole_row, hole_column
 
 def start_algo():
