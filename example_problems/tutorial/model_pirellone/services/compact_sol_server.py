@@ -5,7 +5,7 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
 import model_pirellone_lib as pl
-from services_utils import process_instance, process_user_sol
+from services_utils import process_instance, get_user_sol
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -37,9 +37,8 @@ padded_sol = pl.get_padded_sol(ENV['m'], ENV['n'], opt_sol_seq, pad_size=6)
 TAc.print(LANG.render_feedback("paddedsol-title", "Too long solution: (r=row, c=col)"), "yellow", ["reverse"])
 TAc.print(LANG.render_feedback("paddedsol", f"{pl.seq_to_str(padded_sol)}"), "white", ["reverse"])
 
-# Get User solution
-TAc.print(LANG.render_feedback("usersol-title", "Your short solution: "), "yellow", ["reverse"])
-user_sol = process_user_sol(ENV, TAc, LANG, raw_sol=[input()], sol_style='seq')
+# Get user sol
+user_sol = get_user_sol(ENV, TAc, LANG, style='seq')
 
 # Get Goal
 if ENV['goal'] == "m_plus_n":
