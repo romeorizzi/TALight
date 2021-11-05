@@ -15,7 +15,7 @@ DEFAULT_FORMAT='only_matrix.txt'
 
 # CONVERTERS FUNCTIONS:
 def subset_to_seq(subset_sol):
-    """Convert subset solution (e.g.: [[0,1],[0,0,1]]) into sequence solution (e.g.: ['r2','c3'])"""
+    """Convert subset solution (e.g.: [[0,1],[0,0,1]]) into sequence solution (e.g.: ['r0','c3'])"""
     if subset_sol == NO_SOL:
         return NO_SOL
     m = len(subset_sol[0])
@@ -23,27 +23,50 @@ def subset_to_seq(subset_sol):
     seq_sol = list()
     for i in range(m):
         if subset_sol[0][i]:
-            seq_sol.append(f"r{i+1}")
+            seq_sol.append(f"r{i}")
     for j in range(n):
         if subset_sol[1][j]:
-            seq_sol.append(f"c{j+1}")
+            seq_sol.append(f"c{j}")
     return seq_sol
 
 
 def seq_to_subset(seq_sol, m, n):
-    """Convert sequence solution (e.g.: ['r2','c3']) into subset solution (e.g.: [[0,1],[0,0,1]])"""
+    """Convert sequence solution (e.g.: ['r0','c3']) into subset solution (e.g.: [[0,1],[0,0,1]])"""
     if seq_sol == NO_SOL:
         return NO_SOL
     assert isinstance(seq_sol, list)
     subset_sol = [[0]*m,[0]*n]
     for e in seq_sol:
         if e[0] == 'r':
-            subset_sol[0][int(e[1:])-1] = (1-subset_sol[0][int(e[1:])-1])
+            subset_sol[0][int(e[1:])] = (1-subset_sol[0][int(e[1:])])
         elif e[0] == 'c':
-            subset_sol[1][int(e[1:])-1] = (1-subset_sol[1][int(e[1:])-1])
+            subset_sol[1][int(e[1:])] = (1-subset_sol[1][int(e[1:])])
         else:
             raise RuntimeError(f'This seq_sol is bad written: {seq_sol}')
     return subset_sol
+
+
+def check_one_move_seq(move:str, m:int, n:int, TAc, LANG):
+    if move.strip()=="":
+        return True
+    if move[0].upper()=="R":
+        return check_row_index(int(move[1:]), m, TAc, LANG)
+    else:
+        return check_col_index(int(move[1:]), n, TAc, LANG)
+
+
+def check_row_index(index:int, m:int, TAc, LANG):
+    if index < 0 or index >= m:
+        TAc.print(LANG.render_feedback("row-index-out-of-range", f"Row index {index} falls outside the valid range [0,{m-1}].", {"m":m}), "red", ["bold"])
+        return False
+    return True
+
+
+def check_col_index(index:int, n:int, TAc, LANG):
+    if index < 0 or index >= n:
+        TAc.print(LANG.render_feedback("col-index-out-of-range", f"Column index {index} falls outside the valid range [0,{n-1}].", {"n":n}), "red", ["bold"])
+        return False
+    return True
 
 
 def parse_sol(raw_sol, sol_style, m, n):
@@ -377,28 +400,15 @@ def get_padded_sol(m, n, seq_sol, pad_size):
 if __name__ == "__main__":
     # CONVERTERS FUNCTIONS:
     print('Test: subset_to_seq()')
-    assert subset_to_seq([[0, 0, 1], [0, 1, 0]]) == ['r3', 'c2']
+    assert subset_to_seq([[0, 0, 1], [0, 1, 0]]) == ['r2', 'c1']
     assert subset_to_seq(NO_SOL) == NO_SOL
     print('==> OK\n')
 
 
     print('Test: seq_to_subset()')
-    assert seq_to_subset(['r3', 'c2'], 4, 4) == [[0, 0, 1, 0], [0, 1, 0, 0]]
-    assert seq_to_subset(['r1', 'c2', 'c2'], 3, 3) == [[1, 0, 0], [0, 0, 0]]
+    assert seq_to_subset(['r2', 'c1'], 4, 4) == [[0, 0, 1, 0], [0, 1, 0, 0]]
+    assert seq_to_subset(['r0', 'c1', 'c1'], 3, 3) == [[1, 0, 0], [0, 0, 0]]
     assert seq_to_subset(NO_SOL, 4, 4) == NO_SOL
-    print('==> OK\n')
-
-
-    print('Test: parse_sol()')
-    # import math_modeling as mu
-    # raw_sol = mu.get_raw_solution()
-    # print(f'raw_sol: {raw_sol}')
-    assert parse_sol([NO_SOL], 'seq', 2, 2) == NO_SOL
-    assert parse_sol([NO_SOL], 'subset', 2, 2) == NO_SOL
-    assert parse_sol(['1 0 1 0 0 ', '0 1 0 0 1 '], 'subset', 5, 5) == \
-        [[1, 0, 1, 0, 0], [0, 1, 0, 0, 1]]
-    assert parse_sol([''], 'seq', 2, 2) == []
-    assert parse_sol(['r1 r2 c2'], 'seq', 2, 2) == ['r1', 'r2', 'c2']
     print('==> OK\n')
 
 
@@ -660,7 +670,7 @@ if __name__ == "__main__":
     subset_not_minimal = [[1, 1], [1, 0]]
     assert check_sol(instance, subset_not_minimal) == (True, None)
     assert not is_optimal(subset_not_minimal)
-    seq_not_minimal = ['r1', 'c2', 'r1']
+    seq_not_minimal = ['r0', 'c1', 'r0']
     assert check_sol(instance, seq_to_subset(seq_not_minimal, 2, 2)) == (True, None)
     assert is_optimal(seq_to_subset(seq_not_minimal, 2, 2)) #Note this
 
