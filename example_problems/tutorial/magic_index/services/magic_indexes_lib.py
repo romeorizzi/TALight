@@ -283,54 +283,76 @@ def cleanWorst_g():
 
 
 def generate_value_for_vector(server_vector, discovered_vec, chosen_index):
-    print(chosen_index)
+    #print('chosen index= ', chosen_index)
+
     if server_vector[chosen_index] == '0':
         return chosen_index
-    elif server_vector[chosen_index] == '-1':
 
+    elif server_vector[chosen_index] == '-1':
         # we search the last '-1' index in the server_vec if exists.
         if '-1' in server_vector[:chosen_index]:
             index_small_value = (len(server_vector[:chosen_index])-1) - server_vector[chosen_index-1::-1].index('-1')
-            lower_bound = discovered_vec[index_small_value]
+            lower_bound = discovered_vec[index_small_value] + 1
 
         else:
             lower_bound = chosen_index - 1 - 100
 
         # we check if in the previous iteration we discovered another smaller value ('-1') in the right side of the chosen index in order to take that value as possible upper bound.
         possible_upper_bound = None
-        if '-1' in server_vector[chosen_index+1:]:
-            first_bigger_small = server_vector[chosen_index+1:].index('-1') + 1
-            print(first_bigger_small)
-            possible_upper_bound = discovered_vec[first_bigger_small]
 
-        upper_bound = chosen_index-1 
+        if '-1' in server_vector[chosen_index+1:]:
+            first_bigger_small = server_vector[chosen_index+1:].index('-1')
+            possible_upper_bound = chosen_index + discovered_vec[first_bigger_small] + 1
+            #print('possible upper bound', possible_upper_bound)
+
+        upper_bound = chosen_index - 1  
+
         if possible_upper_bound != None and upper_bound > possible_upper_bound-1:
             upper_bound = possible_upper_bound-1
-        
 
     elif server_vector[chosen_index] == '1':
-
         # we search the last '-1' index in the server_vec if exists.
         if '1' in server_vector[chosen_index+1:]:
-            index_greater_value = (len(server_vector)-1) - server_vector[chosen_index+1:].index('1') - 1
-            print(f'index_greater_value = {index_greater_value}')
-            upper_bound = discovered_vec[index_greater_value]
+            index_greater_value = server_vector[chosen_index+1:].index('1') + 1 + chosen_index
+            #print(f'index_greater_value = {index_greater_value}')
+
+            upper_bound = discovered_vec[index_greater_value] - 1
 
         else:
             upper_bound = chosen_index + 1 + 100
 
         possible_lower_bound = None
+
         if '1' in server_vector[:chosen_index]:
             first_previous_greater = (len(server_vector[:chosen_index])-1) - server_vector[chosen_index-1::-1].index('1')
             possible_lower_bound = discovered_vec[first_previous_greater]
 
         lower_bound = chosen_index+1
+
         if possible_lower_bound != None and lower_bound < possible_lower_bound+1:
             lower_bound = possible_lower_bound+1
 
-
     new_value = random.randint(lower_bound, upper_bound)
     return new_value
+
+server_vector = ['-1', None, '-1', '-1', None,'0',None,None,None, None, None]
+discovered_vec = [-85,None,None, -10, None,5,None,None,None, None, None]
+chosen_index = 2
+
+
+for i in range(100000):
+    newValue = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
+    if newValue <= -85 or newValue >= -10: 
+        print('**************problema! il valore è ', newValue)
+        break
+
+print(newValue)
+
+print(server_vector)
+print(discovered_vec)
+print(chosen_index)
+#newValue = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
+#print(newValue)
 
 
 def check_goal(opponent, goal, feedback, magic_indexes, user_solution, wasted_dollars, min_questions_worst_case, TAc, LANG):
