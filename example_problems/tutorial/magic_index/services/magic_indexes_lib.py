@@ -123,7 +123,6 @@ table_f[1], table_g[1] = 1, 1
 
 def g(u, case):
     global table_g, worst_g
-    print(case)
     # arrotondiamo per eccesso per non avere il problema della numerazione degli indici da 0 o 1
     pos = math.ceil(u/2)
     if u == 0:
@@ -131,20 +130,30 @@ def g(u, case):
     if u == 1:
         return table_g[u]
     else:
-        if table_g[pos-1] == None:
-            table_g[pos-1] = g(pos-1, case) #-1 or 1
-        case1 = table_g[pos-1]
+        if case == 'left':
+            if table_g[u-pos] == None:
+                table_g[u-pos] = g(u-pos, case) #-1 
+            case1 = table_g[u-pos]
+        else:
+            if table_g[pos-1] == None:
+                table_g[pos-1] = g(pos-1, case) #1
+            case1 = table_g[pos-1]
 
         if table_g[u-pos] == None:
-            table_g[u-pos] = g(u-pos,case)
+            table_g[u-pos] = g(u-pos, case)
         case0 = table_g[u-pos] #0
 
-        #if the worst case is the same choose a random value between 0 and 1 (-1)
+        print(f'u={u}, pos={pos}, case1 = {case1}, case0 = {case0}, case={case}')
+        #if the worst case is the same, choose a random value between 0 and 1 (-1)
         if case0 == case1:
-            w = random.randint(0,1)
+            if case == 'left':
+                w = random.randint(-1,0)
+            else:
+                w = random.randint(0,1)
         else:
             w = np.argmax([case1, case0])
 
+        #if w==0 means that the worst case is obtained placing a 1 or -1 in the index 
         if w == 0:
             if case == 'left':
                 worst_g[pos-1] = '-1'
@@ -274,6 +283,7 @@ def cleanWorst_g():
 
 
 def generate_value_for_vector(server_vector, discovered_vec, chosen_index):
+    print(chosen_index)
     if server_vector[chosen_index] == '0':
         return chosen_index
     elif server_vector[chosen_index] == '-1':
@@ -302,7 +312,8 @@ def generate_value_for_vector(server_vector, discovered_vec, chosen_index):
 
         # we search the last '-1' index in the server_vec if exists.
         if '1' in server_vector[chosen_index+1:]:
-            index_greater_value = server_vector[chosen_index+1:].index('1')
+            index_greater_value = (len(server_vector)-1) - server_vector[chosen_index+1:].index('1') - 1
+            print(f'index_greater_value = {index_greater_value}')
             upper_bound = discovered_vec[index_greater_value]
 
         else:
@@ -322,7 +333,7 @@ def generate_value_for_vector(server_vector, discovered_vec, chosen_index):
     return new_value
 
 
-def check_goal(opponent, goal, feedback, magic_indexes, user_solution, vector_optmal_questions, vector_questions, wasted_dollars, min_questions_worst_case, TAc, LANG):
+def check_goal(opponent, goal, feedback, magic_indexes, user_solution, wasted_dollars, min_questions_worst_case, TAc, LANG):
     # we give feedback based on the chosen optimality level
     if user_solution == ['e'] and magic_indexes==[]:
         isCorrect = True
@@ -371,8 +382,8 @@ def check_goal(opponent, goal, feedback, magic_indexes, user_solution, vector_op
                     exit(0)
 
         elif goal == 'optimal':
-            isOptimal = vector_questions == vector_optmal_questions  #true if the sequence of questions in the provided vector is the same of the vector_optmal_questions
-
+            isOptimal = wasted_dollars == min_questions_worst_case 
+            
             if isOptimal:
                 TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You reached your goal'), "green", ["bold"])
                 exit(0)

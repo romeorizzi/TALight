@@ -51,45 +51,81 @@ while True:
                     # we want to know which is the value to insert in server_vector[optimal_pos]
                     # we take the value computed in the function f, taking the greatest key of the dictionary and the corresponding value
                     _ = f(unknown)
-                    server_vector[optimal_pos] = worst_f[max(worst_f)]
+
+                    worst_f = getWorst_f()
+                    server_vector[chosen_index] = worst_f[max(worst_f)]
                     #and we clean the support dictionary
                     cleanWorst_f()
                     
                     # we generate the value for the discovered_vec based on the just computed value in f()
-                    discovered_vec[chosen_index] = generate_value_for_vector(server_vector, discovered_vec, chosen_index) 
+                    discovered_vec[chosen_index] = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
 
-
-       
-            print_vector(discovered_vec, TAc, LANG)
+                else:
+                    if ENV['feedback'] == 'spot_first_gift' and firstGift:
+                        TAc.print(LANG.render_feedback("first error", f'# Here you made your first mistake!'), "yellow", ["bold"])
+                        firstGift = False
+                    elif ENV['feedback'] == 'spot_every_gift':
+                        TAc.print(LANG.render_feedback("error", f'# Here you made a mistake!'), "yellow", ["bold"])
             
-            # check if the user is playing (optimally) according to the chosen level
-            if ENV['feedback'] == 'spot_first_gift' and firstGift:
-                if vector_optmal_questions[n] != vector_questions[n]:
-                    TAc.print(LANG.render_feedback("first error", f'# Here you made your first mistake!'), "yellow", ["bold"])
-                    firstGift = False
-            elif ENV['feedback'] == 'spot_every_gift':
-                if vector_optmal_questions[n] != vector_questions[n]:
-                    TAc.print(LANG.render_feedback("error", f'# Here you made a mistake!'), "yellow", ["bold"])
+            else:
+                unknown, optimal_pos = get_positions_g(server_vector)
+                if chosen_index in optimal_pos:
+                    if chosen_index == optimal_pos[0]:
+                        _ = g(unknown[0], 'left')
+                    else:
+                        _ = g(unknown[1], 'right')
+                    
+                    worst_g = getWorst_g()
+                    print(worst_g)
+                    # if worst_g is empty, i.e., we reach a base case in g, we create a random value based on the vec situation 
+                    if not worst_g:
+                        if chosen_index < vector_len//2:
+                            possible_values = ['-1', '0']
+                        else:
+                            possible_values = ['0', '1']
+
+                        value = random.choice(possible_values)
+                        server_vector[chosen_index] = value
+                    else:
+                        server_vector[chosen_index] = worst_g[max(worst_g)]
+
+                    cleanWorst_g()
+
+                    # we generate the value for the discovered_vec based on the just computed value in f()
+                    discovered_vec[chosen_index] = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
+
+                else:
+                    if ENV['feedback'] == 'spot_first_gift' and firstGift:
+                        TAc.print(LANG.render_feedback("first error", f'# Here you made your first mistake!'), "yellow", ["bold"])
+                        firstGift = False
+                    elif ENV['feedback'] == 'spot_every_gift':
+                        TAc.print(LANG.render_feedback("error", f'# Here you made a mistake!'), "yellow", ["bold"])
+
 
             wasted_dollars += 1
+            print_vector(discovered_vec, TAc, LANG)
 
             # we ask if the user wants to try to give the solution
             TAc.print(LANG.render_feedback("solution proposed", f'Do you want to give the solution? (y for yes, otherwise any other character)'), "yellow", ["bold"])
             ans = TALinput(str, num_tokens=1, regex_explained="enter y if you want submit your solution, otherwise any other character", TAc=TAc, LANG=None)
             
             if ans[0].lower() == 'y':
-                TAc.print(LANG.render_feedback("solution proposed", f'Enter your vector of magic indexes here: (example: 1,2,3)'), "yellow", ["bold"])
+                TAc.print(LANG.render_feedback("solution proposed", f'Enter your vector of magic indexes here: (example: 1,2,3) or e (if the vector has not MI)'), "yellow", ["bold"])
                 user_solution = TALinput(str, num_tokens=1, regex="^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})|e$", regex_explained="regex for magic indexes provided by the user", TAc=TAc, LANG=None)
                 user_solution = user_solution[0].split(',')
 
                 if user_solution != ['e']:
                     user_solution = list(map(int, user_solution))
                     check_input_vector(user_solution, TAc, LANG)
+                
+                # the magic indexes are those one from the first '0' to the last '0' in the server_vector
+                magic_indexes = [i for i in range(server_vector.index('0'), (len(server_vector)-1) - server_vector[::-1].index('0')+1)]
+                min_questions = f(vector_len)
 
-                check_goal(ENV['opponent'], ENV['goal'], ENV['feedback'], magic_indexes, user_solution, vector_optmal_questions, vector_questions, wasted_dollars, min_questions, TAc, LANG)
+                check_goal(ENV['opponent'], ENV['goal'], ENV['feedback'], magic_indexes, user_solution, wasted_dollars, min_questions, TAc, LANG)
             else:
-               TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])
-        
+                TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])
+    
         elif ENV['opponent'] == 'random':
             print()
 
