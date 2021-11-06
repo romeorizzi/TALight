@@ -1,4 +1,27 @@
+#!/usr/bin/env python3
 import string
+
+def grundy_mex(multiset_of_values):
+    mex = 0
+    while mex in multiset_of_values:
+        mex += 1
+    return mex
+
+def grundy_sum(val1:int, val2:int):
+    return val1 ^ val2
+
+def grundy_val(m:int, n:int = 1):
+    assert m > 0 and n > 0
+    if m > 1 and n > 1:
+        return grundy_sum(grundy_val(m), grundy_val(n))
+    if m == 1:
+        m,n = n,m
+    if m == 1:
+        return 0
+    if m % 2 == 0:
+        return m//2
+    return grundy_val(m//2)
+ 
 
 def ex_column(matrix, i): #funzione per estrarre una colonna dato un indice
     return [row[i] for row in matrix]
@@ -226,3 +249,19 @@ def winning_move(m,n):
         return (m,n-sz)
     else:
         return (m-sz,n)
+
+
+# TESTS
+if __name__ == "__main__":
+    # GRUNDY-SPRAGUE THEORY FUNCTIONS:
+    print('Test: grundy_val(n, 1)')
+    ref_values = [0, 1, 0, 2, 1, 3, 0, 4, 2, 5, 1, 6, 3, 7, 0, 8, 4]
+    for n in range(1,1+len(ref_values)):
+        assert grundy_val(n) == ref_values[n-1]
+    print('==> OK\n')
+
+    print('Test: grundy_val(m, n)')
+    print('TO BE DONE')
+
+
+
