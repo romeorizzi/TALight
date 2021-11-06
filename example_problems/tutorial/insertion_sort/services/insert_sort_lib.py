@@ -56,8 +56,13 @@ class InsertionSort:
         yield self.log[-1]
     
 if __name__ == "__main__":
-    input_array = list(map(int, argv[1:]))
-    insertion_sort = InsertionSort(input_array)
+    input_filename = argv[1]
+    fin = open(input_filename, "r")
+    N = int(fin.readline())
+    input_array_of_ints = list(map(int, fin.readline().strip().split()))
+    fin.close()
+    assert N == len(input_array_of_ints)
+    insertion_sort = InsertionSort(input_array_of_ints)
     for st in insertion_sort.generate_log_while_sorting():
         print(st)
     print("\nNOW, AFTER WHOLE EXECUTION, LET'S PRINT AGAIN THE WHOLE LOG:")
