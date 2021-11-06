@@ -4,7 +4,7 @@ public_folder: public
 services:
   check_is_winning:
     description: use this service to check out your belief about a certain configuration to be a winning one.
-    evaluator: [python, services/check_val_server.py]
+    evaluator: [python, services/check_is_winning.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -18,19 +18,20 @@ services:
         regex: ^0$
         default: 0
         explain: Your bet is that the (m,n) configuration is a winning one.
-      info_requested:
-        regex: ^just_check_my_conjecture$
-        default: just_check_my_conjecture
       silent:
         regex: ^(0|1)$
         default: 0
         explain: If this flag is set to 1 then nothing is printed unless your conjecture is a false one.
+      info_requested:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the winning configuration is printed (only in the case in which the first player win the bet and the game)
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  check_is_lost:
+  check_is_losing:
     description: use this service to check out your belief about a certain configuration to be a lost one.
-    evaluator: [python, services/check_val_server.py]
+    evaluator: [python, services/check_is_losing.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -44,9 +45,6 @@ services:
         regex: ^-1$
         default: -1
         explain: Your bet is that the (m,n) configuration is a lost one.
-      info_requested:
-        regex: ^just_check_my_conjecture$
-        default: just_check_my_conjecture
       silent:
         regex: ^(0|1)$
         default: 0
@@ -55,7 +53,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_grundy_value:
-    evaluator: [python, services/check_val_server.py]
+    evaluator: [python, services/check_grundy_value.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -65,9 +63,6 @@ services:
         regex: ^([1-9][0-9]{0,50})$
         default: 1
         explain: Number of columns of the chocolate bar.
-      info_requested:
-        regex: ^just_check_my_conjecture$
-        default: just_check_my_conjecture
       value:
         regex: ^(0|[1-9][0-9]{0,50})$
         default: 0
@@ -80,7 +75,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   tell_me_about_config:
-    evaluator: [python, services/check_val_server.py]
+    evaluator: [python, services/tell_me_about_config.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
