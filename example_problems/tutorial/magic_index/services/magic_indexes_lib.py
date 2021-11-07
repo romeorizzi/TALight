@@ -123,8 +123,9 @@ table_f[1], table_g[1] = 1, 1
 
 def g(u, case):
     global table_g, worst_g
-    # arrotondiamo per eccesso per non avere il problema della numerazione degli indici da 0 o 1
+
     pos = math.ceil(u/2)
+
     if u == 0:
         return table_g[u]
     if u == 1:
@@ -134,16 +135,20 @@ def g(u, case):
             if table_g[u-pos] == None:
                 table_g[u-pos] = g(u-pos, case) #-1 
             case1 = table_g[u-pos]
+
+            if table_g[pos-1] == None:
+                table_g[pos-1] = g(pos-1, case) #0
+            case0 = table_g[pos-1] 
+
         else:
             if table_g[pos-1] == None:
                 table_g[pos-1] = g(pos-1, case) #1
             case1 = table_g[pos-1]
 
-        if table_g[u-pos] == None:
-            table_g[u-pos] = g(u-pos, case)
-        case0 = table_g[u-pos] #0
+            if table_g[u-pos] == None:
+                table_g[u-pos] = g(u-pos, case) #0
+            case0 = table_g[u-pos]
 
-        print(f'u={u}, pos={pos}, case1 = {case1}, case0 = {case0}, case={case}')
         #if the worst case is the same, choose a random value between 0 and 1 (-1)
         if case0 == case1:
             if case == 'left':
@@ -161,8 +166,10 @@ def g(u, case):
                 worst_g[pos-1] = '1'
         else:
             worst_g[pos-1] = '0'
-        
+            
         return 1 + max(case1, case0)
+
+
   
 # la funzione f dato l'indice ottimale (quello spezzando al centro) torna quante domande bisogna fare nel caso pessimo per ogni possibile valore -1 (valore più piccolo dell'indice), 
 # 0 valore identico all'indice (MI), e infine 1 (valore più grande dell'indice) 
@@ -273,12 +280,14 @@ def getWorst_g():
     return worst_g
 
 def cleanWorst_f():
+    global worst_f
     worst_f = {}
-    return
+    return worst_f
 
 def cleanWorst_g():
+    global worst_g
     worst_g = {}
-    return
+    return worst_g
 
 
 def get_first_previous(discovered_vec, chosen_index):
