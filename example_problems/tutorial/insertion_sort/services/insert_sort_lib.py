@@ -10,11 +10,11 @@ class InsertionSort:
         self.working_array = []
         self.log = []
 
-    def append_to_input_stream(self, new_ele:int):
+    def append_to_input_stream(self, new_ele: int):
         self.input_stream.append(new_ele)        
         
     def input_stream_is_empty(self):
-        return len(self.input_stream)==0        
+        return len(self.input_stream) == 0
         
     def load_next_input_element_in_tmp_buffer(self):
         assert not self.input_stream_is_empty()
@@ -37,7 +37,7 @@ class InsertionSort:
             return True
         self.log.append(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {pos} (>=)")
         return False
-        
+
     def generate_log_while_sorting(self):
         while not self.input_stream_is_empty():
             self.load_next_input_element_in_tmp_buffer()
@@ -54,7 +54,8 @@ class InsertionSort:
             yield self.log[-1]
         self.log.append(f"#LOG_output_final_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})")
         yield self.log[-1]
-    
+
+
 if __name__ == "__main__":
     input_filename = argv[1]
     fin = open(input_filename, "r")

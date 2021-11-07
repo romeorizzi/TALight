@@ -2,13 +2,14 @@
 from sys import argv
 from time import sleep
 
+
 class InsertionSortMachine:
     def __init__(self):
         self.tmp_buffer = None
         self.working_array = []
 
     def console(self, log_msg, wait_for_recipt: bool, expected_log: str = None):
-        assert expected_log == None or log_msg == expected_log
+        assert expected_log is None or log_msg == expected_log
         print(log_msg)
         if wait_for_recipt:
             print("Insert a feedback line (or just press RETURN) to continue ...")
