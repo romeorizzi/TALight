@@ -10,13 +10,9 @@ import graph_coloring_utilities as Utilities
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="graph_coloring"
-service="eval_yield_proper_2colorings"
 args_list = [
-    ('seed',str),
     ('commitment',str),
     ('goal',str),
-    ('lang',str),    
 ]
 
 ENV = Env(problem, service, args_list)

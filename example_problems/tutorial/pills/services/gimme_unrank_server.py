@@ -6,15 +6,13 @@ from multilanguage import Env, TALcolors
 from pills_lib import recognize, Flask
 
 # METADATA OF THIS TAL_SERVICE:
-problem="pills"
-service="check_unrank"
 args_list = [
     ('n_pills',int),
     ('rank',int),
     ('sorting_criterion',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 
 # START CODING YOUR SERVICE:

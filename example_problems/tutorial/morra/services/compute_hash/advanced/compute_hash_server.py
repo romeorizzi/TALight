@@ -8,16 +8,13 @@ from multilanguage import Env, Lang, TALcolors
 from hash_and_cipher import hash_value
 
 # METADATA OF THIS TAL_SERVICE:
-problem="morra"
-service="compute_hash"
 args_list = [
     ('hash_type',str),
     ('white_string',str),
-    ('lang',str),
     ('ISATTY',bool),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

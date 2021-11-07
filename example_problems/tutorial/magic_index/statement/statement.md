@@ -151,7 +151,7 @@ Sulle equivalenze già dimostrate gioca che:
     e possiamo anche dare un servizio che da questa rappresentazione ne fornisca una strutturale semplice o potenziata:
 
     0 1 2 3 4 5 6 7 8 9 10 11 12 13 14
-    ? ? < ? ? ? ? = ? ?  =  ?  >  ?  ?   (strutturale semplice)
+    ? ? < ? ? ? ? = ? ?  =  ?  >  ?  ?   (strutturale semplice) per 13 metto [14,max(di quello che ho a dx)-1]
 
     0 1 2 3 4 5 6 7 8 9 10 11 12 13 14
     < < < ? ? ? ? = = = = ? > > >   (strutturale potenziata)

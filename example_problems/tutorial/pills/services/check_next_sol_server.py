@@ -7,18 +7,15 @@ from TALinputs import TALinput
 from pills_lib import recognize, Flask
 
 # METADATA OF THIS TAL_SERVICE:
-problem="pills"
-service="check_next_sol"
 args_list = [
     ('current_sol',str),
     ('next_sol',str),
     ('sorting_criterion',str),
     ('tell_maximal_correct_feedback',bool),
     ('silent',bool),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

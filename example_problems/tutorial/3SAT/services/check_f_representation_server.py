@@ -13,7 +13,6 @@ service = "check_f_representation"
 args_list = [
     ('f', str),
     ('f_3', str),
-    ('lang', str),
 ]
 
 ENV = Env(problem, service, args_list)

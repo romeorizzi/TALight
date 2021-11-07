@@ -8,16 +8,13 @@ from multilanguage import Env, Lang, TALcolors
 from piastrelle_lib import Par
 
 # METADATA OF THIS TAL_SERVICE:
-problem="piastrelle"
-service="eval_num_sol_server"
 args_list = [
     ('answ_modulus',int),
     ('goal',str),
     ('code_lang',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

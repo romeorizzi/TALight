@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 
 # METADATA OF THIS TAL_SERVICE:
-problem="eggs"
-service="gimme_table"
 args_list = [
     ('n_eggs',int),
     ('n_floors',int),
     ('eggs_from_zero',bool),
     ('floors_from_zero',bool),
-    ('lang',str),
 ]
 
 from sys import stderr, exit
@@ -16,7 +13,7 @@ from random import randrange
 from math import inf as IMPOSSIBLE
 
 from multilanguage import Env, Lang, TALcolors
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

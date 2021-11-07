@@ -9,17 +9,13 @@ from TALinputs import TALinput
 import pirellone_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="pirellone"
-service="sub_closure"
 args_list = [
     ('m',int), 
     ('n',int),
-    ('seed',str),
     ('submatrix_type',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

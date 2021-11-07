@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
 # METADATA OF THIS TAL_SERVICE:
-problem="piastrelle"
-service="check_unrank"
 args_list = [
     ('n',int),
     ('sorting_criterion',str),
-    ('lang',str),
 ]
  
 from sys import stderr, exit
@@ -16,7 +13,7 @@ from multilanguage import Env, Lang, TALcolors
 from piastrelle_lib import Par, recognize
 import random
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

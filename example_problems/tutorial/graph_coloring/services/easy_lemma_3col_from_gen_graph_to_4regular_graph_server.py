@@ -11,13 +11,9 @@ import graph_coloring_utilities as Utilities
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="graph_coloring"
-service="easy_lemma_3col_from_gen_graph_to_4regular_graph"
 args_list = [
     ('num_nodes',int),
-    ('seed',str),
     ('format',str),
-    ('lang',str),    
     ('ISATTY',bool),
 ]
 

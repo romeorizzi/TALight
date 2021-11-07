@@ -7,15 +7,11 @@ from multilanguage import Env, Lang, TALcolors
 
 from increasing_subsequence_lib import *
 # METADATA OF THIS TAL_SERVICE:
-problem="increasing_subseq"
-service="check_num_occurrences_of_s_in_T"
 args_list = [
     ('T',str),
     ('s',str),
-    ('lang',str),
-    ('seed', str)
 ]
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 seed = ENV['seed']

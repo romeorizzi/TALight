@@ -5,8 +5,6 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 # METADATA OF THIS TAL_SERVICE:
-problem="triangle"
-service="check_one_sol"
 args_list = [
     ('n',int),
     ('MIN_VAL',int),
@@ -14,11 +12,10 @@ args_list = [
     ('how_to_input_the_triangle',str),
     ('path',str),
     ('silent',bool),
-    ('lang',str),
 ]
 
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     

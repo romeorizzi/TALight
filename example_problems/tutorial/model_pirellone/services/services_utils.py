@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """This file contains the useful functions used in more services of the 'Pirellone' problem."""
+import random
+
 from TALinputs import TALinput
 from bot_interface import service_server_requires_and_gets_the_only_file
 
@@ -59,6 +61,22 @@ def process_instance(ENV, TAc, LANG):
     #     sol = pl.get_opt_sol(instance)
     
 
+def get_user_sol(ENV, TAc, LANG, style):
+    TAc.print(LANG.render_feedback("usersol-title", "Your solution: "), "yellow", ["reverse"])
+    # Get the user solution
+    user_sol = list()
+    if style == 'seq':
+        user_sol = TALinput(str,regex="^(r|c)(0|[1-9][0-9]{0,2})$", regex_explained="a single row or column (with indexes starting from 0). Example 1: r0 to specify the first row. Example 2: c2 to specify the third column.", token_recognizer=lambda move,TAc,LANG: pl.check_one_move_seq(move,ENV['m'],ENV['n'],TAc,LANG), line_explained="a subset of rows and columns where indexes start from 0. Example: r0 c5 r2 r7", TAc=TAc, LANG=LANG)
+    if style == 'subset':
+        # Get rows
+        user_sol_rows = TALinput(bool, num_tokens=ENV['m'], line_explained=f"a line consisting of {ENV['m']} binary digits (0/1) separated by spaces, one for each row. A row gets switched iff the corresponding digit is a 1. Example: {' '.join(str(random.randint(0,1)) for _ in range(ENV['m']))}", TAc=TAc, LANG=LANG)
+        user_sol.append(user_sol_rows)
+        # Get cols
+        user_sol_cols = TALinput(bool, num_tokens=ENV['n'], line_explained=f"a line consisting of {ENV['n']} binary digits (0/1) separated by spaces, one for each column. A column gets switched iff the corresponding digit is a 1. Example: {' '.join(str(random.randint(0,1)) for _ in range(ENV['n']))}", TAc=TAc, LANG=LANG)
+        user_sol.append(user_sol_cols)
+    return user_sol
+
+
 def process_user_sol(ENV, TAc, LANG, raw_sol, sol_style=None, m=None, n=None):
     """From a solution string, parse it and return the solution"""
     sol_style = ENV['sol_style'] if (sol_style == None) else sol_style
@@ -75,60 +93,24 @@ def process_user_sol(ENV, TAc, LANG, raw_sol, sol_style=None, m=None, n=None):
         # manage custom exceptions:
         if err_name == 'sol-bad-format':
             TAc.print(LANG.render_feedback('sol-bad-format', f"[sol-bad-format]: The solution file have a bad format: {raw_sol}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
         elif err_name == 'seq-regex':
             TAc.print(LANG.render_feedback('seq-regex', f"[seq-regex]: The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
         elif err_name == 'seq-row-m':
             TAc.print(LANG.render_feedback('seq-row-m', f"[seq-row-m]: The solution file have a bad format: the row={err.args[1]} switch exceeds {m}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
         elif err_name == 'seq-col-n':
             TAc.print(LANG.render_feedback('seq-col-n', f"[seq-col-n]: The solution file have a bad format: the col={err.args[1]} switch exceeds {n}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
         elif err_name == 'subset-regex':
             TAc.print(LANG.render_feedback('subset-regex', f"[subset-regex]: The solution file have a bad format: {err.args[1]} not match the regex."), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
         elif err_name == 'subset-row-m':
             TAc.print(LANG.render_feedback('subset-row-m', f"[subset-row-m]: The solution file have a bad format: the row={err.args[1]} switch exceeds {m}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
         elif err_name == 'subset-col-n':
             TAc.print(LANG.render_feedback('subset-col-n', f"[subset-col-n]: The solution file have a bad format: the col={err.args[1]} switch exceeds {n}"), "red", ["bold"])
-            print_correct_sol_format(TAc, LANG)
         else:
             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
         exit(0)
 
 
-def print_correct_sol_format(TAc, LANG):
-    """Print how to format the solution"""
-    TAc.print(LANG.render_feedback('print-correct-sol-format', \
-        """        If you want to get your model validated, then from your .mod file
-        you should create a file named 'output.txt' containing the final
-        solution for your instance. Namely, if the puzzle has no solution,
-        then the file named 'output.txt' should contain the string 
-        "NO SOLUTION". Nel caso in cui non sia possibile spegnere tutte le
-        luci del Pirellone con gli interruttori speciali, il file `output.txt`
-        offre la stringa "NO SOLUTIONS". Altrimenti, il file `output.txt` 
-        deve contenere due linee per indicare su quali interruttori deve 
-        agire il custode.
-
-        La prima linea contiene una sequenza di $M$ valori ($0$ oppure
-        $1$) separati da uno spazio.
-        L'$i$-esimo valore della sequenza indica se il custode deve
-        agire sull'interruttore dell'$i$-esima riga (valore = $1$)
-        oppure no (valore = $0$).
-
-        Analogamente, la seconda linea contiene una sequenza di $N$
-        valori ($0$ oppure $1$) separati da uno spazio, per rappresentare le
-        operazioni che il custode deve effettuare sugli interruttori di
-        colonna.  Il $j$-esimo valore della sequenza indica se il
-        custode deve agire sull'interruttore della $j$-esima colonna
-        oppure no.""" \
-    ), "yellow", ["bold"])
-
-
 def print_separator(TAc, LANG):
-    """Print a separator string"""
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
 

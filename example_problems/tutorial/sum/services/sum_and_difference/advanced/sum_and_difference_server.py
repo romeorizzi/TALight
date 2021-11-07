@@ -6,16 +6,13 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 # METADATA OF THIS TAL_SERVICE:
-problem="sum"
-service="sum_and_difference"
 args_list = [
     ('num_questions',int),
     ('numbers',str),
-    ('lang',str),
     ('ISATTY',bool),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

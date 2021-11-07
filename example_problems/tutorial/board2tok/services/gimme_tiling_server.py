@@ -6,17 +6,14 @@ from multilanguage import Env, Lang, TALcolors
 import board2tok_utilities as utilities
 
 # METADATA OF THIS TAL_SERVICE:
-problem="board2tok"
-service="gimme_tiling_server"
 args_list = [
     ('k',int),
     ('r',int),
     ('c',int),
     ('dispel_first_rows_of_a_tiling',int),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 LANG.print_opening_msg()

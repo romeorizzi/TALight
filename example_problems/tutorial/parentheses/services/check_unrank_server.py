@@ -7,18 +7,15 @@ from TALinputs import TALinput
 from parentheses_lib import recognize, Par
 
 # METADATA OF THIS TAL_SERVICE:
-problem="parentheses"
-service="check_unrank"
 args_list = [
     ('input_rank',int),
     ('formula',str),
     ('sorting_criterion',str),
     ('more_or_less_hint_if_wrong',bool),
     ('silent',bool),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

@@ -8,14 +8,10 @@ from multilanguage import Env, Lang, TALcolors
 from magic_indexes_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
-problem="magic_indexes"
-service="gimme_input_vector_server"
 args_list = [
     ('n', str),
-    ('seed', str),
-    ('lang', str),
 ]
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 n=ENV['n']

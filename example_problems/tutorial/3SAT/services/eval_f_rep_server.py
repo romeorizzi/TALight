@@ -15,7 +15,6 @@ service = "eval_f_rep"
 args_list = [
     ('k', int),
     ('size', str),
-    ('lang', str),
 ]
 
 ENV = Env(problem, service, args_list)

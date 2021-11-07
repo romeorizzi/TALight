@@ -7,15 +7,11 @@ from multilanguage import Env, Lang, TALcolors
 import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="triangle"
-service="gimme_instance"
 args_list = [
     ('n',int),
     ('MIN_VAL',int),
     ('MAX_VAL',int),
-    ('seed',int),
     ('silent',bool),
-    ('lang',str),
 ]
 
 ENV = Env(problem, service, args_list)

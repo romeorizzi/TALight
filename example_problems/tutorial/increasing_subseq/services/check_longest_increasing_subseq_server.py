@@ -7,8 +7,6 @@ from multilanguage import Env, Lang, TALcolors
 
 from increasing_subsequence_lib import *
 # METADATA OF THIS TAL_SERVICE:
-problem="increasing_subseq"
-service="check_longest_increasing_subseq"
 args_list = [
     ('T',str),
     ('max_len_min_k',str),
@@ -17,10 +15,8 @@ args_list = [
     ('coloring',str),
     ('more_or_less_hint_if_wrong_max_len_min_k',bool),
     ('silent',bool),
-    ('lang',str),
-    ('seed', str)
 ]
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

@@ -9,17 +9,13 @@ from TALinputs import TALinput
 from zaino_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
-problem="knapsack"
-service="con2dec"
 args_list = [
     ('size',str),
-    ('seed',str),
     ('goal',str),
     ('ask_for_one_opt_oracle_call', int),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

@@ -14,16 +14,12 @@ from TALinputs import TALinput
 from scc_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
-problem="strongly_connected_components"
-service="eval_gsc"
 args_list = [
     ('code_lang',str),
     ('goal',str),
-    ('lang',str),
-    ('seed',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

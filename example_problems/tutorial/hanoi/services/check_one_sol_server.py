@@ -9,8 +9,6 @@ from utils_lang import print_move_error, get_regex, get_std_move, get_formatted_
 
 
 # METADATA OF THIS TAL_SERVICE:
-problem="hanoi"
-service="check_one_sol"
 args_list = [
     ('v',str),
     ('start',str),
@@ -21,7 +19,6 @@ args_list = [
     ('ignore_peg_from',bool),
     ('ignore_peg_to',bool),
     ('feedback',str),
-    ('lang',str),
 ]
 
 ENV = Env(problem, service, args_list)

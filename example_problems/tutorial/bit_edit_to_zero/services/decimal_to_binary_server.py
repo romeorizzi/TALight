@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
 # METADATA OF THIS TAL_SERVICE:
-problem="bit_edit_to_zero"
-service="decimal_to_binary"
 args_list = [
     ('please_do_it_for_me',int),
     ('number',str),
-    ('lang',str),
 ]
 
 from sys import exit
@@ -15,7 +12,7 @@ import random
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

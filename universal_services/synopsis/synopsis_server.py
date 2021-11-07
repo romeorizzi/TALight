@@ -6,13 +6,11 @@ import os.path
 from multilanguage import Env, Lang, TALcolors
 
 problem=os.path.split(environ["TAL_META_DIR"])[-1]
-service="synopsis"
 args_list = [
     ('service',str),
-    ('lang',str),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
@@ -42,11 +40,11 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
             meta_yaml_book = ruamel.yaml.safe_load(stream)
         except:
             for out in [stdout, stderr]:
-                TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The file \'{meta_yaml_file}\' could not be loaded as a .yaml file.', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
+                TAc.print(LANG.render_feedback("metafile-unparsable", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The file \'{meta_yaml_file}\' could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
             return die_or_overcome(succeed_or_die)
     except IOError as ioe:
         for out in [stdout, stderr]:
-            TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file of problem "{problem}" could not be accessed for the required information. File not found: \'{meta_yaml_file}\'', {'problem':problem,'meta_yaml_file':meta_yaml_file}), "red", ["bold"], file=out)
+            TAc.print(LANG.render_feedback("metafile-missing", f'Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, signal it to the problem maker unless you have altered the file yourself): The required yaml file of problem "{ENV.problem}" could not be accessed for the required information. File not found: \'{meta_yaml_file}\''), "red", ["bold"], file=out)
             print(ioe, file=out)
         return die_or_overcome(succeed_or_die)
     return meta_yaml_book

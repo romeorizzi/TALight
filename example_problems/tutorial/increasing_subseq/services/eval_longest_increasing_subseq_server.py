@@ -10,18 +10,14 @@ from multilanguage import Env, Lang, TALcolors
 from increasing_subsequence_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
-problem="increasing_subseq"
-service="eval_longest_increasing_subseq"
 args_list = [
-    ('seed', str),
     ('yield', str),
     ('feedback_level', int),
     ('goal', str),
     ('code_lang',str),
-    ('lang', str),
     ('max_val', int),
 ]
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

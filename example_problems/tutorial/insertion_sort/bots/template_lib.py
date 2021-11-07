@@ -1,74 +1,105 @@
 #!/usr/bin/env python3
 from sys import argv
+from time import sleep
 
-
-class InsertSortingMachine:
-    def __init__(self, N):
-        self.N = N
+class InsertionSortMachine:
+    def __init__(self):
         self.tmp_buffer = None
-        self.n = 0
-        self.int_array_of_int = [None] * N
+        self.working_array = []
 
-    def load_next_input_element_in_tmp_buffer(self, val: int):
+    def console(self, log_msg, wait_for_recipt: bool, expected_log: str = None):
+        assert expected_log == None or log_msg == expected_log
+        print(log_msg)
+        if wait_for_recipt:
+            print("Insert a feedback line (or just press RETURN) to continue ...")
+            input()
+            
+    def load_next_input_element_in_tmp_buffer(self, val: int, wait_for_recipt: bool = True, expected_log: str = None):
         if self.tmp_buffer is not None:
             print(
                 "Ahi, my problem-solver bot is overwriting a yet unflushed value stored in the tmp_buffer. This is going to erase information which will be definitely lost it in the Insertion Sort algorithm approach.")
         self.tmp_buffer = val
-        self.n += 1
-        print(f"#LOG_load_next_input_element_in_tmp_buffer OK, got {val}")
+        self.console(f"#LOG_load_next_input_element_in_tmp_buffer (got {val})", wait_for_recipt, expected_log)
 
-    def flush_tmp_buffer_on_pos(self, i: int):
+    def flush_tmp_buffer_on_pos(self, i: int, wait_for_recipt: bool = True, expected_log: str = None):
         if self.tmp_buffer is None:
             print(
                 "Ahi, my problem-solver bot is flushing an empty tmp_buffer. I expect complaints from the checking server.")
-        self.int_array_of_int[i] = self.tmp_buffer
+        while len(self.working_array) <= i:
+            self.working_array.append(None)
+        self.working_array[i] = self.tmp_buffer
         self.tmp_buffer = None
-        print(f"#LOG_flush_tmp_buffer_on_pos {i}")
+        self.console(f"#LOG_flush_tmp_buffer_on_pos {i}", wait_for_recipt, expected_log)
 
-    def clone_to_its_right_ele_in_pos(self, i: int):
-        if not 0 <= i < self.n:
+    def clone_to_its_right_ele_in_pos(self, i: int, wait_for_recipt: bool = True, expected_log: str = None):
+        if not 0 <= i < len(self.working_array):
             print(
-                f"Ahi, my problem-solver bot is asking to clone the element in pos {i} which does not exists since {i} is not in the interval [0,{self.n}).")
-        self.int_array_of_int[i + 1] = self.int_array_of_int[i]
-        print(f"#LOG_clone_to_its_right_ele_in_pos {i}")
+                f"Ahi, my problem-solver bot is asking to clone the element in pos {i} which does not exists since {i} is not in the interval [0,{len(self.working_array)}).")
+        if len(self.working_array) == i+1:
+            self.working_array.append(self.working_array[i])
+        else:
+            self.working_array[i + 1] = self.working_array[i]
+        self.console(f"#LOG_clone_to_its_right_ele_in_pos {i}", wait_for_recipt, expected_log)
 
-    def compare_what_in_tmp_buffer_with_what_in_pos(self, i: int):
+    def what_in_tmp_buffer_goes_before_than_what_in_pos(self, i: int, wait_for_recipt: bool = True, expected_log: str = None):
         if self.tmp_buffer is None:
             print(
-                "Ahi, my problem-solver bot is comparing an element with an empty tmp_buffer. I expect complaints from the checking server.")
+                "Ahi, my problem-solver bot asks to compare with others the element contained in the tmp_buffer, but this buffer is empty. I expect complaints from the checking server.")
             return False
-
-        try:
-            if self.tmp_buffer > self.int_array_of_int[i]:
-                print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} <")
-
-            elif self.tmp_buffer < self.int_array_of_int[i]:
-                print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} >")
-                return True
-
-            else:
-                print(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} =")
-        except TypeError:
+        if i >= len(self.working_array) or self.working_array[i] is None:
+            print(
+                f"Ahi, my problem-solver bot asks to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array. I expect complaints from the checking server.")
             return False
+        if self.tmp_buffer < self.working_array[i]:
+            self.console(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (<)", wait_for_recipt, expected_log)
+            return True
+        self.console(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (>=)", wait_for_recipt, expected_log)
+        return False
 
-    def output_final_array(self):
-        print(f"#LOG_output_final_array {len(self.int_array_of_int)} {' '.join(map(str,self.int_array_of_int))}")
+    def output_final_array(self, wait_for_recipt: bool = True, expected_log: str = None):
+        self.console(f"#LOG_output_final_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})", wait_for_recipt, expected_log)
 
 
 if __name__ == "__main__":
-    input_filename = argv[1]
-    fin = open(input_filename, "r")
-    ext_array_of_int = list(map(int, fin.readline().strip().split()))
-    fin.close()
-    N = len(ext_array_of_int)
-    SM = InsertSortingMachine(N)
-    n_ordered = 0
-    while n_ordered < N:
-        SM.load_next_input_element_in_tmp_buffer(ext_array_of_int[n_ordered])
-        pos_cmp = n_ordered - 1
-        while pos_cmp >= 0 and SM.compare_what_in_tmp_buffer_with_what_in_pos(pos_cmp):
-            SM.clone_to_its_right_ele_in_pos(pos_cmp)
-            pos_cmp -= 1
-        SM.flush_tmp_buffer_on_pos(pos_cmp + 1)
-        n_ordered += 1
-    SM.output_final_array()
+    print("UNIT TEST")
+
+    print("\nTEST 1: operating the InsertionSortMachine to sort <4: 12 11 15 13>")
+    expected_logs = [
+        "#LOG_load_next_input_element_in_tmp_buffer (got 12)",
+        "#LOG_flush_tmp_buffer_on_pos 0",
+        "#LOG_load_next_input_element_in_tmp_buffer (got 11)",
+        "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (<)",
+        "#LOG_clone_to_its_right_ele_in_pos 0",
+        "#LOG_flush_tmp_buffer_on_pos 0",
+        "#LOG_load_next_input_element_in_tmp_buffer (got 15)",
+        "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (>=)",
+        "#LOG_flush_tmp_buffer_on_pos 2",
+        "#LOG_load_next_input_element_in_tmp_buffer (got 13)",
+        "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 2 (<)",
+        "#LOG_clone_to_its_right_ele_in_pos 2",
+        "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (>=)",
+        "#LOG_flush_tmp_buffer_on_pos 2",
+        "#LOG_output_final_array (4: 11 12 13 15)"
+    ]
+
+    SM = InsertionSortMachine()
+    SM.load_next_input_element_in_tmp_buffer(12, wait_for_recipt=False, expected_log=expected_logs[0])
+    SM.flush_tmp_buffer_on_pos(0, wait_for_recipt=False, expected_log=expected_logs[1])
+    SM.load_next_input_element_in_tmp_buffer(11, wait_for_recipt=False, expected_log=expected_logs[2])
+    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(0, wait_for_recipt=False, expected_log=expected_logs[3])
+    SM.clone_to_its_right_ele_in_pos(0, wait_for_recipt=False, expected_log=expected_logs[4])
+    SM.flush_tmp_buffer_on_pos(0, wait_for_recipt=False, expected_log=expected_logs[5])
+    SM.load_next_input_element_in_tmp_buffer(15, wait_for_recipt=False, expected_log=expected_logs[6])
+    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1, wait_for_recipt=False, expected_log=expected_logs[7])
+    SM.flush_tmp_buffer_on_pos(2, wait_for_recipt=False, expected_log=expected_logs[8])
+    SM.load_next_input_element_in_tmp_buffer(13, wait_for_recipt=False, expected_log=expected_logs[9])
+    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(2, wait_for_recipt=False, expected_log=expected_logs[10])
+    SM.clone_to_its_right_ele_in_pos(2, wait_for_recipt=False, expected_log=expected_logs[11])
+    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1, wait_for_recipt=False, expected_log=expected_logs[12])
+    SM.flush_tmp_buffer_on_pos(2, wait_for_recipt=False, expected_log=expected_logs[13])
+    SM.output_final_array(wait_for_recipt=False, expected_log=expected_logs[14])
+
+
+    print("\nfurther tests ...\n")
+
+    print("OK. All tests have been successfully passed!")
