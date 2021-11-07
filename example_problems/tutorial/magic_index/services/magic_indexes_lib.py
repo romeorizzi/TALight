@@ -281,6 +281,20 @@ def cleanWorst_g():
     return
 
 
+def get_first_previous(discovered_vec, chosen_index):
+    free_space_left = 0
+    for i in discovered_vec[chosen_index-1::-1]:
+        if i != None:
+            return i, free_space_left
+        free_space_left += 1
+
+def get_first_following(discovered_vec, chosen_index):
+    free_space_right = 0
+    for i in discovered_vec[chosen_index+1:]:
+        if i != None:
+            return i, free_space_right
+        free_space_right += 1
+
 
 def generate_value_for_vector(server_vector, discovered_vec, chosen_index):
     #print('chosen index= ', chosen_index)
@@ -289,70 +303,64 @@ def generate_value_for_vector(server_vector, discovered_vec, chosen_index):
         return chosen_index
 
     elif server_vector[chosen_index] == '-1':
-        # we search the last '-1' index in the server_vec if exists.
-        if '-1' in server_vector[:chosen_index]:
-            index_small_value = (len(server_vector[:chosen_index])-1) - server_vector[chosen_index-1::-1].index('-1')
-            lower_bound = discovered_vec[index_small_value] + 1
+        if '-1' in server_vector[:chosen_index] and '-1' in server_vector[chosen_index+1:]:
+            first_previous_smaller, free_space_left = get_first_previous(discovered_vec, chosen_index)
+            first_following_smaller, free_space_rigth  = get_first_following(discovered_vec, chosen_index)
+            upper_bound = (first_following_smaller - 1) - free_space_rigth
+            lower_bound = (first_previous_smaller + 1) + free_space_left
+            
+            return random.randint(lower_bound, upper_bound)
+
+        elif '-1' in server_vector[:chosen_index]:
+            first_previous_smaller, free_space_left = get_first_previous(discovered_vec, chosen_index)
+            upper_bound = chosen_index - 1
+            lower_bound = (first_previous_smaller + 1) + free_space_left
+            
+            return random.randint(lower_bound, upper_bound)
+
+        elif '-1' in server_vector[chosen_index+1:]:
+            first_following_smaller, free_space_rigth  = get_first_following(discovered_vec, chosen_index)
+            upper_bound = (first_following_smaller - 1) - free_space_rigth
+            lower_bound = chosen_index - random.randint(10,100)
+
+            return random.randint(lower_bound, upper_bound)
 
         else:
-            lower_bound = chosen_index - 1 - 100
+            upper_bound = chosen_index - 1
+            lower_bound = chosen_index - random.randint(10,100)
+            
+            return random.randint(lower_bound, upper_bound)
 
-        # we check if in the previous iteration we discovered another smaller value ('-1') in the right side of the chosen index in order to take that value as possible upper bound.
-        possible_upper_bound = None
 
-        if '-1' in server_vector[chosen_index+1:]:
-            first_bigger_small = server_vector[chosen_index+1:].index('-1')
-            possible_upper_bound = chosen_index + discovered_vec[first_bigger_small] + 1
-            #print('possible upper bound', possible_upper_bound)
-
-        upper_bound = chosen_index - 1  
-
-        if possible_upper_bound != None and upper_bound > possible_upper_bound-1:
-            upper_bound = possible_upper_bound-1
 
     elif server_vector[chosen_index] == '1':
-        # we search the last '-1' index in the server_vec if exists.
-        if '1' in server_vector[chosen_index+1:]:
-            index_greater_value = server_vector[chosen_index+1:].index('1') + 1 + chosen_index
-            #print(f'index_greater_value = {index_greater_value}')
+        if '1' in server_vector[:chosen_index] and '1' in server_vector[chosen_index+1:]:
+            first_previous_greater, free_space_left = get_first_previous(discovered_vec, chosen_index)
+            first_following_greater, free_space_rigth  = get_first_following(discovered_vec, chosen_index)
+            upper_bound = (first_previous_greater + 1) + free_space_left
+            lower_bound = (first_following_greater - 1) - free_space_rigth
+            
+            return random.randint(lower_bound, upper_bound)
 
-            upper_bound = discovered_vec[index_greater_value] - 1
+        elif '1' in server_vector[:chosen_index]:
+            first_previous_greater, free_space_left = get_first_previous(discovered_vec, chosen_index)
+            upper_bound = chosen_index + random.randint(10,100)
+            lower_bound = (first_previous_greater + 1) + free_space_left
+            
+            return random.randint(lower_bound, upper_bound)
+
+        elif '1' in server_vector[chosen_index+1:]:
+            first_following_greater, free_space_rigth  = get_first_following(discovered_vec, chosen_index)
+            upper_bound = (first_following_greater - 1) - free_space_rigth
+            lower_bound = chosen_index + 1
+
+            return random.randint(lower_bound, upper_bound)
 
         else:
-            upper_bound = chosen_index + 1 + 100
-
-        possible_lower_bound = None
-
-        if '1' in server_vector[:chosen_index]:
-            first_previous_greater = (len(server_vector[:chosen_index])-1) - server_vector[chosen_index-1::-1].index('1')
-            possible_lower_bound = discovered_vec[first_previous_greater]
-
-        lower_bound = chosen_index+1
-
-        if possible_lower_bound != None and lower_bound < possible_lower_bound+1:
-            lower_bound = possible_lower_bound+1
-
-    new_value = random.randint(lower_bound, upper_bound)
-    return new_value
-
-server_vector = ['-1', None, '-1', '-1', None,'0',None,None,None, None, None]
-discovered_vec = [-85,None,None, -10, None,5,None,None,None, None, None]
-chosen_index = 2
-
-
-for i in range(100000):
-    newValue = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
-    if newValue <= -85 or newValue >= -10: 
-        print('**************problema! il valore è ', newValue)
-        break
-
-print(newValue)
-
-print(server_vector)
-print(discovered_vec)
-print(chosen_index)
-#newValue = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
-#print(newValue)
+            lower_bound = chosen_index + 1
+            upper_bound = chosen_index + random.randint(10,100)
+            
+            return random.randint(lower_bound, upper_bound)
 
 
 def check_goal(opponent, goal, feedback, magic_indexes, user_solution, wasted_dollars, min_questions_worst_case, TAc, LANG):
