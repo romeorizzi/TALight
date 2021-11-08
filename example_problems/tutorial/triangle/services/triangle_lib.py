@@ -4,7 +4,12 @@ import math
 
 from termcolor import colored
 
-# PER MODALITA' LAZY, GENERIAMO UN TRIANGOLO CASUALE DI n RIGHE
+def check_val_range(val:int, MIN_VAL:int, MAX_VAL:int, TAc, LANG):
+    if val < MIN_VAL or val > MAX_VAL:
+        TAc.print(LANG.render_feedback("val-out-of-range", f"The value {val} falls outside the valid range [{MIN_VAL},{MAX_VAL}].", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
+        return False
+    return True
+
 
 def random_triangle(n:int, minVal:int, maxVal:int, s:int):
     random.seed(s,version=2)
