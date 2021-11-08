@@ -6,6 +6,8 @@ from multilanguage import Env, Lang, TALcolors
 
 
 # METADATA OF THIS TAL_SERVICE:
+problem="triangle"
+service="check_sol_value"
 args_list = [
     ('n',int),
     ('MIN_VAL',int),
@@ -13,10 +15,11 @@ args_list = [
     ('how_to_input_the_triangle',str),
     ('sol_value',str),
     ('silent',bool),
+    ('lang',str),
 ]
 
 
-ENV =Env(args_list)
+ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
@@ -72,7 +75,7 @@ if type_sol_value == 0:
 	if not ENV['silent']:
 		TAc.print(LANG.render_feedback("path_print",f"The path you inserted is displayed here.\n\n"),"yellow", ["bold"])
 		print_path(triangle,path)
-	# CALCOLO PATH
+	# CALCULATE PATH
 	
 	_,s = calculate_path(triangle,path)
 

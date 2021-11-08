@@ -6,6 +6,8 @@ from multilanguage import Env, Lang, TALcolors
 
 
 # METADATA OF THIS TAL_SERVICE:
+problem="triangle"
+service="check_path_value"
 args_list = [
     ('n',int),
     ('MIN_VAL',int),
@@ -14,10 +16,11 @@ args_list = [
     ('path_value',int),
     ('path',str),
     ('silent',bool),
+    ('lang',str),
 ]
 
 
-ENV =Env(args_list)
+ENV =Env(problem, service, args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
