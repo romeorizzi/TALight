@@ -378,7 +378,6 @@ def check_goal(opponent, goal, feedback, magic_indexes, user_solution, wasted_do
         exit(0)
 
 
-
 def simple_strucural_rep(initial_representation):
     representation = initial_representation.split(',')
     i = 0
