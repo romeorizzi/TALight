@@ -29,9 +29,9 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  check_one_sol:
+  check_and_reward_one_sol:
     description: this service checks whether a path is a fasible solution for a given triangle.
-    evaluator: [python, services/check_one_sol_server.py]
+    evaluator: [python, services/check_and_reward_one_sol_server.py]
     args:
       n:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -46,21 +46,30 @@ services:
         explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
         default: 99
       how_to_input_the_triangle:
-        regex: ^(lazy|([1-9][0-9]{5,5}))$
-        explain: you can either enter the code (random seed) of one of our instances <n,MIN_VAL,MAX_VAL,seed> defining a triangle you may have already encountered in other services for this problem or ask to enter your triangle once the service has started up (lazy)
+        regex: ^(my_own_triangle|([1-9][0-9]{5,5}))$
+        explain: if you enter a seed (an integer in the range [100000,999999]) then the service acts on the pseudo-random triangle <n,MIN_VAL,MAX_VAL,seed>, which you might have previously encountered in previous calls to this or other services for this problem. Otherwise, if how_to_input_the_triangle=my_own_triangle, the service allows you to enter your own triangle.
+        default: my_own_triangle
       path:
-        regex: ^(lazy|(L|R){0,99})$
-        explain: you can either enter the path from the top vertex of the triangle (a sequence in {{L,R}}^(n-1)) or ask to enter your path once the service has started up (lazy)
+        regex: ^((L|R){0,99})$
+        explain: "a solution for a given triangle instance is a path from the top vertex of the triangle to an element of its last (bottom) row. The path always has two options when moving from one row to the next: either go left (L) or right (R). Hence feasible paths are encoded as sequence in {{L,R}}^(n-1))."
       silent:
-        explain: if nothing is wrong with your solution for the triangle you have specified us (through seed) then the service runs silently; otherwise it explain what is the problem in clear.
+        explain: if silent=1 and nothing is wrong with your solution for the given triangle, then the service runs silently; otherwise either it confirms the validity of your path or explains what the problem is.
         regex: ^(0|1)$
         default: 0
+      display_triangle:
+        explain: when this flag is set to 1 then the triangle is displayed before providing any feedback on the path.
+        regex: ^(0|1)$
+        default: 1
+      reward_the_path:
+        explain: if this argument is set to 1 then your path in the triangle is rewarded with the sum of the integers contained in the visited positions of the triangle.
+        regex: ^(0|1)$
+        default: 1
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  check_sol_value:
-    description: call this service to check whether the value of a path in a triangle of <n> rows is the optimal one (<risp>).
-    evaluator: [python, services/check_sol_value_server.py]
+  check_sol_optimality:
+    description: for a given triangle of integer numbers, the problem triangle asks you to find a path descending from its top vertex while maximizing the sum of the numbers on the visited positions. This service allows you to check the optimality of a path or the optimal solution value.
+    evaluator: [python, services/check_sol_value_optimality.py]
     args:
       n:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -75,44 +84,20 @@ services:
         explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
         default: 99
       how_to_input_the_triangle:
-        regex: ^(lazy|([1-9][0-9]{5,5}))$
-        explain: you can either enter the code (random seed) of one of our instances <n,MIN_VAL,MAX_VAL,seed> defining a triangle you may have already encountered in other services for this problem or ask to enter your triangle once the service has started up (lazy)
-      sol_value:
-        regex: ^(lazy|(L|R){0,99}|[0-9]{1,4})$
-        explain: this is the solution you consider as the best one for the triangle you chose. You can either insert the path you think leads to the best solution or you can insert the value of the solution you consider the best. You can also ask to enter your path once the service has started up (lazy).
+        regex: ^(my_own_triangle|([1-9][0-9]{5,5}))$
+        explain: if you enter a seed (an integer in the range [100000,999999]) then the service acts on the pseudo-random triangle <n,MIN_VAL,MAX_VAL,seed>, which you might have previously encountered in previous calls to this or other services for this problem. Otherwise, if how_to_input_the_triangle=my_own_triangle, the service allows you to enter your own triangle.
+        default: my_own_triangle
+      opt_sol_val:
+        regex: ^0|(|-)[1-9][0-9]{0,5}$
+        explain: A solution for a given triangle instance is a path from the top vertex of the triangle to an element of its last (bottom) row. Such a path is rewarded with the sum of the integers contained in the visited positions of the triangle. We are interested in maximizing this reward. Use the argument `opt_sol_val` to input to the service what you conjecture the maximum reward over all possible feasible paths.
+      feedback:
+        regex: ^(yes_no|bigger_or_smaller|true_opt_val)$
+        default: yes_no
+        explain: "the options are as follows:"
+        explain1: -yes_no= just tell me whether <opt_sol_val> is or is not the optimal solution value.
+        explain2: -bigger_or_smaller= tell me whether the optimal solution value is bigger or smaller than <opt_sol_val>, in case they differ.
+        explain3: -true_opt_val= please, tell me the true optimal solution value.
       silent:  
-        explain: if nothing is wrong with your solution for the triangle you have specified us (through seed) then the service runs silently; otherwise it explain what is the problem in clear.
-        regex: ^(0|1)$
-        default: 0
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-  check_path_value:
-    description: call this service to check that the value of a path in a triangle of <n> rows is what you think (<risp>). 
-    evaluator: [python, services/check_path_value_server.py]
-    args:
-      n:
-        regex: ^([1-9][0-9]{0,1}|100)$
-        explain: the number of rows of the triangle
-        default: 5
-      MIN_VAL:
-        regex: ^(0|[1-9][0-9]{0,1})$
-        explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
-        default: 0
-      MAX_VAL:
-        regex: ^(0|[1-9][0-9]{0,1})$
-        explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
-        default: 99
-      how_to_input_the_triangle:
-        regex: ^(lazy|([1-9][0-9]{5,5}))$
-        explain: you can either enter the code (random seed) of one of our instances <n,MIN_VAL,MAX_VAL,seed> defining a triangle you may have already encountered in other services for this problem or ask to enter your triangle once the service has started up (lazy)
-      path_value:
-        explain: the service checks that this number equals or not the value of the path, that is, the sum of the values comprising the triangle which are traversed by your path.
-        regex: ^([0-9]{1,4})$
-      path:
-        regex: ^(lazy|(L|R){0,99})$
-        explain: you can either enter the path from the top vertex of the triangle (a sequence in {{L,R}}^(n-1)) or ask to enter your path once the service has started up (lazy)
-      silent:
         explain: if nothing is wrong with your solution for the triangle you have specified us (through seed) then the service runs silently; otherwise it explain what is the problem in clear.
         regex: ^(0|1)$
         default: 0
