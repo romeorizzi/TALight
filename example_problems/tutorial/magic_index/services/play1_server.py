@@ -43,6 +43,8 @@ while True:
 
     if chosen_index >= vector_len:
         TAc.print(LANG.render_feedback("error", f'The input value for the index is not between 0 and {vector_len-1}. Insert another index to play:'), "red", ["bold"])
+    elif server_vector[chosen_index] != None:
+        TAc.print(LANG.render_feedback("error", f'Index already chosen! Insert another one.'), "red", ["bold"])
     else:
         if ENV['opponent'] == 'optimal':
             if '0' not in server_vector:
@@ -54,7 +56,7 @@ while True:
 
                     worst_f = getWorst_f()
                     server_vector[chosen_index] = worst_f[max(worst_f)]
-                    #and we clean the support dictionary
+                    #and we clean the support dictionaries for the next iteration
                     worst_f = cleanWorst_f()
                     worst_g = cleanWorst_g()
                     
@@ -62,7 +64,10 @@ while True:
                     discovered_vec[chosen_index] = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
 
                 else:
-                    TAc.print(LANG.render_feedback("error", f'# You have chosen to play optimal, but you have inserted the wrong index. Check your move again...'), "yellow", ["bold"])
+                    server_vector[chosen_index] = generate_random_optimal_value_f(optimal_pos, chosen_index, vector_len)
+                    discovered_vec[chosen_index] = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
+                    TAc.print(LANG.render_feedback("error", f'# wrong index.'), "yellow", ["bold"])
+
                     if ENV['feedback'] == 'spot_first_gift' and firstGift:
                         TAc.print(LANG.render_feedback("first error", f'# Here you made your first mistake!'), "yellow", ["bold"])
                         firstGift = False
@@ -98,6 +103,7 @@ while True:
                     discovered_vec[chosen_index] = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
 
                 else:
+                    
                     TAc.print(LANG.render_feedback("error", f'# You have chosen to play optimal, but you have inserted the wrong index. Check your move again...'), "yellow", ["bold"])
                     if ENV['feedback'] == 'spot_first_gift' and firstGift:
                         TAc.print(LANG.render_feedback("first error", f'# Here you made your first mistake!'), "yellow", ["bold"])
@@ -108,6 +114,7 @@ while True:
 
             wasted_dollars += 1
             print_vector(discovered_vec, TAc, LANG)
+            print_game_representation(discovered_vec, TAc, LANG)
 
             # we ask if the user wants to try to give the solution
             TAc.print(LANG.render_feedback("solution proposed", f'Do you want to give the solution? (y for yes, otherwise any other character)'), "yellow", ["bold"])
@@ -123,7 +130,11 @@ while True:
                     check_input_vector(user_solution, TAc, LANG)
                 
                 # the magic indexes are those one from the first '0' to the last '0' in the server_vector
-                magic_indexes = [i for i in range(server_vector.index('0'), (len(server_vector)-1) - server_vector[::-1].index('0')+1)]
+                if '0' in server_vector:
+                    magic_indexes = [i for i in range(server_vector.index('0'), (len(server_vector)-1) - server_vector[::-1].index('0')+1)]
+                else:
+                    magic_indexes = []
+
                 min_questions = f(vector_len)
 
                 check_goal(ENV['opponent'], ENV['goal'], ENV['feedback'], magic_indexes, user_solution, wasted_dollars, min_questions, TAc, LANG)
