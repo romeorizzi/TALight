@@ -125,9 +125,9 @@ Sulle equivalenze già dimostrate gioca che:
     f  0 1 2 3 4 5 5
 
     0 1 2 3 4 5 ?? da vedere se possiamo partire con gli indici da 0
-    1 2 3 4 5 6 <-- indici di posizione
-    ? ? ? ? ? ? <-- configurazione/situazione  (quando n=6)
-        ^
+    1 2 3 4 5 6 7<-- indici di posizione
+    ? ? ? 0 ? ? ?<-- configurazione/situazione  (quando n=6)
+          ^ 
     for ^ over all possibilities (or maybe we can take in consideration just the middle one)
     min_{over ^} ( max( CASE1 for the answer, CASE2 for the answer) ), dove
 

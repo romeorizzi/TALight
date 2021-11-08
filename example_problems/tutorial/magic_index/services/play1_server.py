@@ -55,12 +55,14 @@ while True:
                     worst_f = getWorst_f()
                     server_vector[chosen_index] = worst_f[max(worst_f)]
                     #and we clean the support dictionary
-                    cleanWorst_f()
+                    worst_f = cleanWorst_f()
+                    worst_g = cleanWorst_g()
                     
                     # we generate the value for the discovered_vec based on the just computed value in f()
                     discovered_vec[chosen_index] = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
 
                 else:
+                    TAc.print(LANG.render_feedback("error", f'# You have chosen to play optimal, but you have inserted the wrong index. Check your move again...'), "yellow", ["bold"])
                     if ENV['feedback'] == 'spot_first_gift' and firstGift:
                         TAc.print(LANG.render_feedback("first error", f'# Here you made your first mistake!'), "yellow", ["bold"])
                         firstGift = False
@@ -69,6 +71,7 @@ while True:
             
             else:
                 unknown, optimal_pos = get_positions_g(server_vector)
+               
                 if chosen_index in optimal_pos:
                     if chosen_index == optimal_pos[0]:
                         _ = g(unknown[0], 'left')
@@ -76,7 +79,7 @@ while True:
                         _ = g(unknown[1], 'right')
                     
                     worst_g = getWorst_g()
-                    print(worst_g)
+
                     # if worst_g is empty, i.e., we reach a base case in g, we create a random value based on the vec situation 
                     if not worst_g:
                         if chosen_index < vector_len//2:
@@ -89,12 +92,13 @@ while True:
                     else:
                         server_vector[chosen_index] = worst_g[max(worst_g)]
 
-                    cleanWorst_g()
+                    worst_g = cleanWorst_g()
 
                     # we generate the value for the discovered_vec based on the just computed value in f()
                     discovered_vec[chosen_index] = generate_value_for_vector(server_vector, discovered_vec, chosen_index)
 
                 else:
+                    TAc.print(LANG.render_feedback("error", f'# You have chosen to play optimal, but you have inserted the wrong index. Check your move again...'), "yellow", ["bold"])
                     if ENV['feedback'] == 'spot_first_gift' and firstGift:
                         TAc.print(LANG.render_feedback("first error", f'# Here you made your first mistake!'), "yellow", ["bold"])
                         firstGift = False
@@ -124,7 +128,7 @@ while True:
 
                 check_goal(ENV['opponent'], ENV['goal'], ENV['feedback'], magic_indexes, user_solution, wasted_dollars, min_questions, TAc, LANG)
             else:
-                TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} questions so far...'), "yellow", ["bold"])
+                TAc.print(LANG.render_feedback("the game continues", f'Perfect! Let us keep playing, you have done {wasted_dollars} question/s so far...\n'), "yellow", ["bold"])
     
         elif ENV['opponent'] == 'random':
             print()

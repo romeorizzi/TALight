@@ -2,6 +2,7 @@
 from sys import argv
 from time import sleep
 
+
 class InsertionSortMachine:
     def __init__(self):
         self.tmp_buffer = None
