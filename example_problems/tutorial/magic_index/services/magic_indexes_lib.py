@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import random, math
-import numpy as np
+from collections import Counter
 
  
 def check_input_vector(vec, TAc, LANG):
@@ -72,28 +72,6 @@ def num_questions_worst_case_support(n):
     else:
         return 1 + num_questions_worst_case_support((n-1)//2 + ((n-1)%2))
 
-'''
-questions = 0
-def generate_optimal_question_vector(vec, lower, upper, vector_optmal_questions):
-    global questions
-
-    if lower > upper:
-        return []
-
-    mid = (lower + upper) // 2
-    vector_optmal_questions[mid] = questions
-    questions += 1
-
-    if vec[mid] > mid:      
-        return generate_optimal_question_vector(vec, lower, mid - 1,vector_optmal_questions)
-
-    if vec[mid] < mid:
-        return generate_optimal_question_vector(vec, mid + 1, upper, vector_optmal_questions)
-
-    if vec[mid] == mid: 
-        return generate_optimal_question_vector(vec, lower, mid - 1, vector_optmal_questions) + [mid] + generate_optimal_question_vector(vec, mid + 1, upper, vector_optmal_questions)
-'''
-
 
 def print_vector(vec, TAc, LANG):
     w = len(vec)*2
@@ -112,6 +90,11 @@ def print_vector(vec, TAc, LANG):
                 TAc.print(LANG.render_feedback("draw box", f' {i} |'), "white", ["bold"], end="")
             print()
     print()
+
+
+def print_game_representation(discovered_vec, TAc, LANG):
+    representation = ','.join([str(x) for x in discovered_vec])
+    TAc.print(LANG.render_feedback("game representation", f'The current game representation is: {representation}\n'), "white", ["bold"], end="")
 
 
 table_g = [None] * 1000
@@ -372,6 +355,15 @@ def generate_value_for_vector(server_vector, discovered_vec, chosen_index):
             return random.randint(lower_bound, upper_bound)
 
 
+def generate_random_optimal_value_f(optimal_pos, chosen_index, vector_len):
+    if chosen_index <= vector_len//4:
+        return '-1'
+    elif chosen_index >= vector_len - vector_len//4:
+        return '1'
+    else:
+        return '0'
+
+
 def check_goal(opponent, goal, feedback, magic_indexes, user_solution, wasted_dollars, min_questions_worst_case, TAc, LANG):
     # we give feedback based on the chosen optimality level
     if user_solution == ['e'] and magic_indexes==[]:
@@ -439,3 +431,67 @@ def check_goal(opponent, goal, feedback, magic_indexes, user_solution, wasted_do
     else:
         TAc.print(LANG.render_feedback("wrong solution!", f'Wrong answer! You didn\'t reach your goal'), "red", ["bold"])
         exit(0)
+
+
+
+def simple_strucural_rep(initial_representation):
+    representation = initial_representation.split(',')
+    i = 0
+    for x in representation:
+        if x != '?':
+            if int(x) == i:
+                representation[i] = '='
+            elif int(x) < i:
+                representation[i] = '<'
+            else:
+                representation[i] = '>'
+        i += 1
+    
+    new_representation = ','.join([str(x) for x in representation])
+    return new_representation
+    
+def reinforced_strucural_rep(initial_representation, compact, TAc, LANG):
+    simple_rep = simple_strucural_rep(initial_representation)
+    simple_rep = simple_rep.split(',')
+
+    if '<' in simple_rep:
+        first_occ_less = simple_rep.index('<')
+        last_occ_less = len(simple_rep) - 1 - simple_rep[::-1].index('<')
+
+        if last_occ_less != 0:
+            first_occ_less = 0
+
+        for i in range(first_occ_less,last_occ_less):
+            simple_rep[i] = '<'
+
+    if '=' in simple_rep:
+        first_occ_eq = simple_rep.index('=')
+        last_occ_eq = len(simple_rep) - 1 - simple_rep[::-1].index('=')
+
+        for i in range(first_occ_eq,last_occ_eq):
+            simple_rep[i] = '='
+
+    if '>' in simple_rep:
+        first_occ_great = simple_rep.index('>')
+        last_occ_great = len(simple_rep) - 1 - simple_rep[::-1].index('>')
+
+        if last_occ_great != len(simple_rep) - 1:
+            last_occ_great = len(simple_rep) - 1
+
+        for i in range(first_occ_great,last_occ_great+1):
+            simple_rep[i] = '>'     
+
+
+    if compact == True:
+        counter_less = 0
+        count_unknown = 0
+        count_equal = 0
+        count_unknown2 = 0
+        count_great = 0
+        
+        
+        simple_rep = [f'{counter_less}<' , f'{count_unknown}?',f'{count_equal}=',f'{count_unknown2}?',f'{count_great}>']
+        
+        
+    reinforced_strucural_rep = ','.join([str(x) for x in simple_rep])
+    return reinforced_strucural_rep

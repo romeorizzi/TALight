@@ -67,6 +67,22 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+  gimme_structural_representation:
+    description: You provide us a representation of a configuration of a play, and we provide you with a structural representation (simple or reiforced) that you can use in other services.
+    evaluator: [python, services/gimme_structural_representation_server.py]
+    args:
+      r:
+        regex: ^([?|,|(-{0,1}[1-9][0-9]{0,3})]*+)$ 
+      representation: 
+        regex: ^(simple_structural|reiforced_structural|compact_reiforced_structural)$
+        default: simple_structural
+        explain: "We transform the values you provided into an instance made of <,=,>. < indicates that the value is smaller than the index, = that it is an MI, and > that it is greater than the index."
+        explain1: "[simple_structural] We just transform the values you provided."
+        explain2: "[reiforced_structural] We transform the values you provided and fill in the missing values (where we are able)."
+        explain3: "[compact_reiforced_structural] we give you a representation where are indicated in order the numbers of <,=,>,? present in the vector, for example: < < < ? ? ? ? = = = = ? > > > becomes  3< 4? 4= 1? 3>"
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
   play1:
     evaluator: [python, services/play1_server.py]
     description: You give us a natural n to start a play, that corresponds to the selected index for which you want to know the value. The server holds the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense.
