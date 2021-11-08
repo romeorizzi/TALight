@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import random, math
 from collections import Counter
+import numpy as np
 
  
 def check_input_vector(vec, TAc, LANG):
@@ -425,9 +426,7 @@ def check_goal(opponent, goal, feedback, magic_indexes, user_solution, wasted_do
                 elif feedback == 'how_far':    
                     TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You inserted the right magic indexes, but you wasted {wasted_dollars-(min_questions_worst_case)} more dollars than the optimal solution: you didn\'t reach your goal'), "yellow", ["bold"])             
                     exit(0)
-        
-        
-                    
+           
     else:
         TAc.print(LANG.render_feedback("wrong solution!", f'Wrong answer! You didn\'t reach your goal'), "red", ["bold"])
         exit(0)
@@ -483,14 +482,26 @@ def reinforced_strucural_rep(initial_representation, compact, TAc, LANG):
 
 
     if compact == True:
-        counter_less = 0
+        
+        counter = Counter(simple_rep)
+
+        count_less = counter['<']
         count_unknown = 0
-        count_equal = 0
+        count_equal = counter['=']
         count_unknown2 = 0
-        count_great = 0
-        
-        
-        simple_rep = [f'{counter_less}<' , f'{count_unknown}?',f'{count_equal}=',f'{count_unknown2}?',f'{count_great}>']
+        count_great = counter['>'] 
+
+        eq = False
+    
+        for c in simple_rep:
+            if c == '?' and eq == False:
+                count_unknown += 1
+            elif c == '?' and eq == True:
+                count_unknown2 += 1
+            elif c == '=':
+                eq = True
+
+        simple_rep = [f'{count_less}<' , f'{count_unknown}?',f'{count_equal}=',f'{count_unknown2}?',f'{count_great}>']
         
         
     reinforced_strucural_rep = ','.join([str(x) for x in simple_rep])

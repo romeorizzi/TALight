@@ -74,12 +74,12 @@ services:
       r:
         regex: ^([?|,|(-{0,1}[1-9][0-9]{0,3})]*+)$ 
       representation: 
-        regex: ^(simple_structural|reiforced_structural|compact_reiforced_structural)$
+        regex: ^(simple_structural|reinforced_structural|compact_reinforced_structural)$
         default: simple_structural
-        explain: "We transform the values you provided into an instance made of <,=,>. < indicates that the value is smaller than the index, = that it is an MI, and > that it is greater than the index."
+        explain: "We transform the values you provided into an instance made of <,=,>,?. '<' indicates that the value is smaller than the index, '=' that it is an MI, and '>' that it is greater than the index."
         explain1: "[simple_structural] We just transform the values you provided."
-        explain2: "[reiforced_structural] We transform the values you provided and fill in the missing values (where we are able)."
-        explain3: "[compact_reiforced_structural] we give you a representation where are indicated in order the numbers of <,=,>,? present in the vector, for example: < < < ? ? ? ? = = = = ? > > > becomes  3< 4? 4= 1? 3>"
+        explain2: "[reinforced_structural] We transform the values you provided and fill in the missing values (where we are able)."
+        explain3: "[compact_reinforced_structural] we give you a representation where are indicated in order the numbers of <,=,>,? present in the vector, for example: < < < ? ? ? ? = = = = ? > > > becomes  3< 4? 4= 1? 3>"
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
