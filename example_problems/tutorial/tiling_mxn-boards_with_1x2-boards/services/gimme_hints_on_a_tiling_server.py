@@ -18,7 +18,7 @@ args_list = [('m',int), # Grid dimension
     ('num_piece',int),
     ('seed_of_the_tiling',int),
 
-ENV = Env(problem, service, args_list)
+ENV = Env(args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 

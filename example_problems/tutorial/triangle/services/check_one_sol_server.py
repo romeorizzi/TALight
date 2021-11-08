@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
-from triangle_lib import *
+
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
+
+import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
 problem="triangle"
@@ -14,11 +16,10 @@ args_list = [
     ('how_to_input_the_triangle',str),
     ('path',str),
     ('silent',bool),
-    ('lang',str),
 ]
 
 
-ENV =Env(problem, service, args_list)
+ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
@@ -40,7 +41,7 @@ if ENV['how_to_input_the_triangle'] == "lazy":
 	if not ENV['silent']:
 		TAc.print(LANG.render_feedback("right_triangle_insertion", f"Insertion completed."), "yellow", ["bold"])
 else:
-	triangle = random_triangle(ENV['n'],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
+	triangle = tl.random_triangle(ENV['n'],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
 
 
 
@@ -48,7 +49,7 @@ else:
 
 if not ENV['silent']:
 	TAc.print(LANG.render_feedback("triangle_print", f"The triangle you chose is displayed here.\n\n"), "yellow", ["bold"])
-	print_triangle(triangle)
+	tl.print_triangle(triangle)
 
 # GET PATH
 

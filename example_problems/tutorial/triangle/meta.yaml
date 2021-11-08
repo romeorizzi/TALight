@@ -19,9 +19,9 @@ services:
         explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
         default: 99
       seed:
-        explain: The argument `seed` of this service is a six digit number. When the first digit is not 0, then the service yields the pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. Otherwise, when the first digit is 0, then all digits should be 0. The \'000000\' code is the default argument for this parameter and is used to ask the service to choose the seed at random and communicate it together with the pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. 
-        regex: ^(000000|[1-9][0-9]{5,5})$
-        default: 000000
+        explain: The argument `seed` of this service is either a six digit number or the string `random_seed`. In the first case, then the service yields and returns the pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. In the second case, the service first generate a valid numeric seed and then returns the corresponding pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. In either case, the service displays both the instance and the the seed used for its generation.  
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       silent:
         regex: ^(0|1)$
         default: 0
