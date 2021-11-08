@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
-from triangle_lib import *
+
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
+import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
+problem="triangle"
+service="check_sol_value"
 args_list = [
     ('n',int),
     ('MIN_VAL',int),
@@ -38,12 +41,12 @@ if ENV['how_to_input_the_triangle'] == "lazy":
 	if not ENV['silent']:
 		TAc.print(LANG.render_feedback("right_triangle_insertion", f"Insertion completed."), "yellow", ["bold"])
 else:
-	triangle = random_triangle(ENV['n'],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
+	triangle = tl.random_triangle(ENV['n'],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
 
 # PRINT TRIANGLE
 if not ENV['silent']:
 	TAc.print(LANG.render_feedback("triangle_print", f"The triangle you chose is displayed here.\n\n"), "yellow", ["bold"])
-	print_triangle(triangle)
+	tl.print_triangle(triangle)
 
 # GET PATH
 
@@ -72,7 +75,7 @@ if type_sol_value == 0:
 	if not ENV['silent']:
 		TAc.print(LANG.render_feedback("path_print",f"The path you inserted is displayed here.\n\n"),"yellow", ["bold"])
 		print_path(triangle,path)
-	# CALCOLO PATH
+	# CALCULATE PATH
 	
 	_,s = calculate_path(triangle,path)
 
