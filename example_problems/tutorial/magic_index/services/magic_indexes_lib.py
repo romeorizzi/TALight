@@ -505,3 +505,26 @@ def get_server_vec_representation(vector_configuration):
         i += 1
 
     return server_vec
+
+
+def update_server_vec(optimal_pos, ans, server_vec):
+   
+    if optimal_pos == ans:
+        server_vec[optimal_pos] = '0'
+    elif ans < optimal_pos:
+        server_vec[optimal_pos] = '-1'
+    elif ans > optimal_pos:
+        server_vec[optimal_pos] = '1'
+
+    return server_vec
+
+
+def check_ans(server_vector, optimal_pos):
+    correct = True
+
+    if server_vector[optimal_pos] == '1' and ('-1' in server_vector[optimal_pos+1:] or '0' in server_vector[optimal_pos+1:]):
+        correct = False
+    elif server_vector[optimal_pos] == '-1' and ('1' in server_vector[:optimal_pos] or '0' in server_vector[:optimal_pos]):
+        correct = False
+        
+    return correct

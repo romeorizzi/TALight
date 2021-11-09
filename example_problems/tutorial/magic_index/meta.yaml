@@ -85,7 +85,7 @@ services:
         default: it
   play1:
     evaluator: [python, services/play1_server.py]
-    description: You give us a natural n to start a play, that corresponds to the selected index for which you want to know the value. The server holds the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense.
+    description: You give us a natural n to start a play, that corresponds to the length of the vector to start a play. The server holds the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense.
     args:
       n:
         regex: ^(0|[1-9][0-9]{0,5}|1000000)$
@@ -127,24 +127,19 @@ services:
         default: it
   play2:
     evaluator: [python, services/play2_server.py]
-    description: You give us a natural n to start a play where you hold the secret array and you must find out precisely which of its indexes are magic. By spending one dollar, you can ask the server to display the value of an entry of your choice. You have an infinite number of dollars but you want to spend the least possible number of them. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions) and the goals above correct make full sense.
+    description: You give us a natural n to start a play where you hold the secret array and the server must find out precisely which of its indexes are magic. By spending one dollar, the server can ask to you to display the value of an entry of its choice. If you ask your opponent to play optimally, you can get proven a lower bound on the minimum number of queries in the worst case (which relates to the question with service check_worst_case_num_questions).
     args:
       n:
         regex: ^(0|[1-9][0-9]{0,5}|1000000)$
       opponent:
         regex: ^(optimal|random)$
         default: optimal
-      goal:
-        regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
-        default: correct
       feedback:
-        regex: ^(yes_no_goal|how_far|spot_first_gift|spot_every_gift)$
-        default: yes_no_goal
+        regex: ^(only_index|show_me_how)$
+        default: only_index
         explain: "the levels of feedback are as follows:"
-        explain1: "[yes_no_goal]  tells whether your play reaches the goal set when launching the service."
-        explain2: "[how_far]  tells how far you are from the goal you have set."
-        explain3: "[spot_first_gift]  during the game signals out (in a commented line, not to disturb the bot that could possibly play in your place) your first move where your goal is compromised."
-        explain4: "[spot_every_gift]  during the game signals out (in a commented line) every move where you waste one dollar."
+        explain1: "[only_index]  the server will provide you only the index where it will want to play."
+        explain2: "[show_me_how]  the server will explain how has calculated the indexes to play."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

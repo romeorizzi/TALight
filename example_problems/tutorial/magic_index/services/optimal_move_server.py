@@ -23,8 +23,6 @@ r = ENV['r']
 
 # START CODING YOUR SERVICE:
 vector_configuration = get_server_vec_representation(r)
-
-print(vector_configuration)
 know_nothing = True
 
 if '0' not in vector_configuration:
@@ -33,8 +31,8 @@ else:
     unknown, optimal_pos = get_positions_g(vector_configuration)
     know_nothing = False
 
-if optimal_pos == None:
-    TAc.print(LANG.render_feedback("no optimal pos", f'There is/are not optimal moves for this configuration! You already know everything...'), "white", ["bold"])
+if optimal_pos == None or (not know_nothing and all(v is None for v in optimal_pos)):
+    TAc.print(LANG.render_feedback("no optimal pos", f'There is/are not optimal move/s for this configuration! You already know everything...'), "white", ["bold"])
 else:
     single_pos = 'is'
     if not know_nothing:
@@ -43,6 +41,5 @@ else:
             optimal_pos.remove(None)
         except:
             pass
-    
     
     TAc.print(LANG.render_feedback("optimal pos", f'The optimal pos to play given this configuration {single_pos} : {optimal_pos}'), "white", ["bold"])
