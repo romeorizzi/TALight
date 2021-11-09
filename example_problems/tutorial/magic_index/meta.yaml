@@ -148,14 +148,12 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  optimal_move1:
+  optimal_move:
+    description: You provide us a configuration of a play and we tell you which is/are the optimal move/s.
     evaluator: [python, services/optimal_move_server.py]
     args:
-      n:
-        regex: ^(0|[1-9][0-9]{0,1}|100)$
-      situation:
-        regex: ^(know_nothing|first_is_magic|last_is_magic)$
-        explain: three possible categories for what we might know at the beginning of the game.
+      r:
+        regex: ^([?|,|(-{0,1}[1-9][0-9]{0,3})]*+)$
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

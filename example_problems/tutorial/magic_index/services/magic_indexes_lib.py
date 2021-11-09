@@ -20,6 +20,22 @@ def spot_magic_index(vec):
             magic_indexes.append(i)
     return magic_indexes
 
+
+# The optimal strategy shoots always in the middle. The worst case is as follows: at the first shoot nature answers "yes, it is a magic index" (otherwise half of the positions are lost from the very beginning). The problem splits into two, left and right, which howevere have a different nature (since I now know that the magic positions will form a prefix or a suffix).
+# On this residual problem nature decides each time I can not split in precisely half, leaving me the biggest half.
+
+def num_questions_worst_case(n):
+    if n==0:
+        return 0
+    else:
+	    return 1 + num_questions_worst_case_support((n-1)//2) + num_questions_worst_case_support((n-1)//2 + ((n-1)%2))
+
+def num_questions_worst_case_support(n):
+    if n==0:
+        return 0
+    else:
+        return 1 + num_questions_worst_case_support((n-1)//2 + ((n-1)%2))
+
 def print_vector(vec, TAc, LANG):
     w = len(vec)*2
     h = 3
@@ -394,7 +410,7 @@ def simple_strucural_rep(initial_representation):
     new_representation = ','.join([str(x) for x in representation])
     return new_representation
     
-def reinforced_strucural_rep(initial_representation, compact, TAc, LANG):
+def reinforced_strucural_rep(initial_representation, compact):
     simple_rep = simple_strucural_rep(initial_representation)
     simple_rep = simple_rep.split(',')
 
@@ -451,3 +467,41 @@ def reinforced_strucural_rep(initial_representation, compact, TAc, LANG):
         
     reinforced_strucural_rep = ','.join([str(x) for x in simple_rep])
     return reinforced_strucural_rep
+
+def get_simple_conf(vector_configuration):
+    vector_configuration = ''.join(vector_configuration).split() # compress the configuration into a single word and then
+    vector_configuration = list(vector_configuration) # create a list of single char
+
+    simple_conf = []
+    simple_conf.extend(['<'] * int(vector_configuration[0]))
+    simple_conf.extend(['?'] * int(vector_configuration[2]))
+    simple_conf.extend(['='] * int(vector_configuration[4]))
+    simple_conf.extend(['?'] * int(vector_configuration[6]))
+    simple_conf.extend(['>'] * int(vector_configuration[8]))
+
+    return simple_conf
+
+
+
+def get_server_vec_representation(vector_configuration):
+    
+    vector_configuration = list(reinforced_strucural_rep(vector_configuration, False))
+    try:
+        for _ in range(len(vector_configuration)):
+            vector_configuration.remove(',')
+    except:
+        pass
+
+    server_vec = [None] * len(vector_configuration)
+    i = 0
+    for x in vector_configuration:
+        if x == '<':
+            server_vec[i] = '-1'
+        elif x == '=':
+            server_vec[i] = '0'
+        elif x == '>':
+            server_vec[i] = '1'
+
+        i += 1
+
+    return server_vec

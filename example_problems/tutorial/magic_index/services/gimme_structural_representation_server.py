@@ -25,9 +25,9 @@ if ENV['representation']=='simple_structural':
     TAc.print(LANG.render_feedback("game representation", f'The simple structural representation is: {new_representation}\n'), "white", ["bold"], end="")
 
 elif ENV['representation']=='reinforced_structural':
-    new_representation =  reinforced_strucural_rep(initial_representation, False, TAc, LANG)
+    new_representation =  reinforced_strucural_rep(initial_representation, False)
     TAc.print(LANG.render_feedback("game representation", f'The simple structural representation is: {new_representation}\n'), "white", ["bold"], end="")
     
 else:
-    new_representation = reinforced_strucural_rep(initial_representation, True, TAc, LANG)
+    new_representation = reinforced_strucural_rep(initial_representation, True)
     TAc.print(LANG.render_feedback("game representation", f'The simple structural representation is: {new_representation}\n'), "white", ["bold"], end="")
