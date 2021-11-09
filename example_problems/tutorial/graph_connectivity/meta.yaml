@@ -14,6 +14,12 @@ services:
         explain: when the input graph is NOT connected, please, send me a certificate in the form of a non-trivial partition of the nodes such that no arc has endpoints on different sides of the bipartition.
         regex: ^(0|1)$
         default: 0
+      input_mode:
+        regex: ^(terminal|TA_send_files_bot)$
+        default: terminal
+        explain: "choose the way to input your graph among:"
+        explain1: "[terminal] you enter your instance (directed graph) directly by either typing it line after line or through cut and paste operations."
+        explain2: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_pirellone/bots/ directory. Call the service with: rtal connect strongly_connected_components check_is_sc -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -21,6 +27,12 @@ services:
     description: this service checks whether a routing table towards some root node is valid. If so it encodes a spanning tree and proves the connectivity of the graph
     evaluator: [python, services/check_certificate_of_connectivity_server.py]
     args:
+      input_mode:
+        regex: ^(terminal|TA_send_files_bot)$
+        default: terminal
+        explain: "choose the way to input your graph among:"
+        explain1: "[terminal] you enter your instance (directed graph) directly by either typing it line after line or through cut and paste operations."
+        explain2: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_pirellone/bots/ directory. Call the service with: rtal connect strongly_connected_components check_is_sc -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
       n:
         regex: ^([1-9][0-9]{0,4}|1000)$
         explain: the number of nodes of the graph

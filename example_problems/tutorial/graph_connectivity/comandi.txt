@@ -1,0 +1,32 @@
+APRIRE LA CARTELLA
+CD ~/TALight/example_problems/tutorial/graph_connectivity/bots
+
+AVVIARE IL SERVER
+rtald -d ~/TALight/example_problems/tutorial
+
+
+#1
+rtal connect -a input_mode=TA_send_files_bot graph_connectivity tell_if_graph_connected -- ./TA_transfer_files_bot.py grafo_connesso.txt
+
+
+#2
+rtal connect -a how_to_input_the_graph=lazy -a n=10 -a input_mode=TA_send_files_bot graph_connectivity check_certificate_of_connectivity -- ./certificate_of_connectivity_bot.py
+
+#2 - per vedere out
+
+rtal connect -a how_to_input_the_graph=lazy -a n=10 graph_connectivity check_certificate_of_connectivity
+
+# 3
+
+rtal connect -a how_to_input_the_graph=lazy -a n=10 -a the_bipartition=1 2 3 versus 4 5 6 graph_connectivity check_certificate_of_nonconnectivity
+
+
+
+
+PER PRINTARE
+
+TAc.print("testo, "yellow")
+
+
+stderr.write(
+
