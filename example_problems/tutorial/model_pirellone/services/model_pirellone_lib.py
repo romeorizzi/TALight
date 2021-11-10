@@ -36,13 +36,14 @@ def seq_to_subset(seq_sol, m, n):
         return NO_SOL
     assert isinstance(seq_sol, list)
     subset_sol = [[0]*m,[0]*n]
-    for e in seq_sol:
-        if e[0] == 'r':
-            subset_sol[0][int(e[1:])] = (1-subset_sol[0][int(e[1:])])
-        elif e[0] == 'c':
-            subset_sol[1][int(e[1:])] = (1-subset_sol[1][int(e[1:])])
-        else:
-            raise RuntimeError(f'This seq_sol is bad written: {seq_sol}')
+    if not seq_sol == ['']:
+        for e in seq_sol:
+            if e[0] == 'r':
+                subset_sol[0][int(e[1:])] = (1-subset_sol[0][int(e[1:])])
+            elif e[0] == 'c':
+                subset_sol[1][int(e[1:])] = (1-subset_sol[1][int(e[1:])])
+            else:
+                raise RuntimeError(f'This seq_sol is bad written: {seq_sol}')
     return subset_sol
 
 

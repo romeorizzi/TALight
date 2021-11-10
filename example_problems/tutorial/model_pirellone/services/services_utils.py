@@ -66,7 +66,7 @@ def get_user_sol(ENV, TAc, LANG, style):
     # Get the user solution
     user_sol = list()
     if style == 'seq':
-        user_sol = TALinput(str,regex="^(r|c)(0|[1-9][0-9]{0,2})$", regex_explained="a single row or column (with indexes starting from 0). Example 1: r0 to specify the first row. Example 2: c2 to specify the third column.", token_recognizer=lambda move,TAc,LANG: pl.check_one_move_seq(move,ENV['m'],ENV['n'],TAc,LANG), line_explained="a subset of rows and columns where indexes start from 0. Example: r0 c5 r2 r7", TAc=TAc, LANG=LANG)
+        user_sol = TALinput(str,regex="^\s*|(r|c)(0|[1-9][0-9]{0,2})$", regex_explained="a single row or column (with indexes starting from 0). Example 1: r0 to specify the first row. Example 2: c2 to specify the third column.", token_recognizer=lambda move,TAc,LANG: pl.check_one_move_seq(move,ENV['m'],ENV['n'],TAc,LANG), line_explained="a subset of rows and columns where indexes start from 0. Example: r0 c5 r2 r7", TAc=TAc, LANG=LANG)
     if style == 'subset':
         # Get rows
         user_sol_rows = TALinput(bool, num_tokens=ENV['m'], line_explained=f"a line consisting of {ENV['m']} binary digits (0/1) separated by spaces, one for each row. A row gets switched iff the corresponding digit is a 1. Example: {' '.join(str(random.randint(0,1)) for _ in range(ENV['m']))}", TAc=TAc, LANG=LANG)
@@ -116,8 +116,13 @@ def print_separator(TAc, LANG):
 
 def check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol):
     # Init
+    opt_sol_seq = pl.subset_to_seq(opt_sol_subset)
     if ENV['sol_style'] == 'seq':
-        opt_sol_seq = pl.subset_to_seq(opt_sol_subset)
+        user_sol_subset = pl.seq_to_subset(user_sol, ENV['m'], ENV['n'])
+        user_sol_seq = user_sol
+    else:
+        user_sol_seq = pl.subset_to_seq(user_sol)
+        user_sol_subset = user_sol
 
     # Case1: instance unsolvable
     if opt_sol_subset == pl.NO_SOL:
@@ -135,29 +140,23 @@ def check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol):
         TAc.print(LANG.render_feedback('wrong-solvable', "This instance is solvable!"), "red", ["bold"])
         return
 
-    # Case3: equals solutions
-    if user_sol == (opt_sol_seq if ENV['sol_style'] == 'seq' else opt_sol_subset):
-        TAc.OK()
-        TAc.print(LANG.render_feedback('correct-optimal', "The solution is correct and optimal."), "green", ["bold"])
-        return
-
-    # Case4: check if is minimal
-    if ENV['sol_style'] == 'seq':
-        if len(user_sol) != len(opt_sol_seq):
-            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
-        # Ok now is better use subset style for check the solution
-        user_sol = pl.seq_to_subset(user_sol, ENV['m'], ENV['n'])
-    else:
-        if not pl.is_optimal(user_sol):
-            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
-
-    # Case5: check if is correct
-    is_correct, certificate_of_no = pl.check_sol(instance, user_sol)
+    # Case3: check if is correct
+    is_correct, certificate_of_no = pl.check_sol(instance, user_sol_subset)
     if is_correct:
         TAc.OK()
         TAc.print(LANG.render_feedback('correct', "The solution is correct."), "green", ["bold"])
-        return
     else:
         TAc.NO()
         TAc.print(LANG.render_feedback('error', f"The solution is not correct. The pirellone cell in row={certificate_of_no[0]} and col={certificate_of_no[1]} stays on."), "red", ["bold"])
         return
+
+    # Case4: check if is minimal
+    if ENV['sol_style'] == 'seq':
+        if len(opt_sol_seq) != len(user_sol_seq):
+            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
+            return
+    elif ENV['sol_style'] == 'subset':
+        if not pl.is_optimal(user_sol_subset):
+            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
+            return
+    TAc.print(LANG.render_feedback('minimal', "The solution is minimal!"), "green", ["bold"])
