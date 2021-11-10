@@ -2,6 +2,8 @@
 from sys import argv
 from time import sleep
 
+import unittest
+
 
 class InsertionSortMachine:
     def __init__(self):
@@ -11,6 +13,7 @@ class InsertionSortMachine:
 
     def console(self, log_msg, wait_for_receipt: bool, expected_log: str = None):
         assert expected_log is None or log_msg == expected_log
+        sleep(1)
         print(log_msg)
         self.test_logs.append(log_msg)
         if wait_for_receipt:
@@ -65,8 +68,6 @@ class InsertionSortMachine:
 
 if __name__ == "__main__":
     print("UNIT TEST")
-
-    import unittest
 
     tc = unittest.TestCase()
 
