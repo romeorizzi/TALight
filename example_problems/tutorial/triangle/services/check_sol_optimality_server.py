@@ -59,7 +59,6 @@ else:
         TAc.NO()
         TAc.print(LANG.render_feedback("bigger-than-best", f'We don\'t agree, the solution value you provided is bigger than the best one for your triangle.'), "red", ["bold"])
         exit(0)
-
 if ENV['feedback'] == "true_opt_val":
     TAc.print(LANG.render_feedback("best-value", f'The best reward for your triangle is {best_reward}.'), "yellow", ["bold"])
     exit(0)
