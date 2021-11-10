@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from sys import exit
+from time import sleep
 
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
