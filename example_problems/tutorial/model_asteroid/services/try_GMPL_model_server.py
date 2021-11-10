@@ -11,6 +11,7 @@ from math_modeling import ModellingProblemHelper, get_problem_path_from
 args_list = [
     ('display_output',bool),
     ('display_error',bool),
+    ('display_solution',bool),
     ('check_solution',bool),
     ('txt_style',str),
     ('sol_style',str),
@@ -47,9 +48,9 @@ try:
         # Get dat file
         dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
         # Get input file
-        if ENV['check_solution']:
-            input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
-    instance = al.get_instance_from_txt(input_str, style=txt_style)
+        input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
+    if ENV['check_solution']:
+        instance = al.get_instance_from_txt(input_str, style=txt_style)
 except RuntimeError as err:
     err_name = err.args[0]
     # manage custom exceptions:
@@ -108,44 +109,50 @@ if ENV['display_error']:
         else:
              TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
         exit(1)
+ 
+# Extract GPLSOL solution
+try:
+    # Get raw solution
+    raw_sol = [line for line in mph.get_raw_solution() if len(line.strip()) > 0 ]
+except RuntimeError as err:
+    err_name = err.args[0]
+    # manage custom exceptions:
+    if err_name == 'read-error':
+        TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
+    exit(1)
+
+# print GPLSOL solution.txt
+if ENV['display_solution']:
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    for line in raw_sol:
+        print(line)
 
 # check GPLSOL solution
 if ENV['check_solution']:
-    # START CODING YOUR SERVICE:
-    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-
-    # Get optimal solution
-    opt_sol_subset = "TODO1"# = al.get_opt_sol(instance)
     m = len(instance)
     n = len(instance[0])
-
-    # Print instance
-    TAc.print(LANG.render_feedback("instance-title", f"The matrix {m}x{n} is:"), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("instance", f"{al.instance_to_str(instance)}"), "white", ["bold"])
-    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-
-    # Extract GPLSOL solution
-    try:
-        # Get raw solution
-        raw_sol = mph.get_raw_solution()
-        # Parse the raw solution
-        gplsol_sol = "TODO2" #= process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
-    except RuntimeError as err:
-        err_name = err.args[0]
-        # manage custom exceptions:
-        if err_name == 'read-error':
-            TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
-        else:
-            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-        exit(1)
-
-    # Print GPLSOL solution
+    # Parse the raw solution
+    gplsol_sol = al.process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
     TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["BOLD"])
     if ENV['sol_style'] == 'seq':
         TAc.print(LANG.render_feedback("out_sol", f"{al.seq_to_str(gplsol_sol)}"), "white", ["reverse"])
         gplsol_sol = al.seq_to_subset(gplsol_sol, m, n)
     elif ENV['sol_style'] == 'subset':
         TAc.print(LANG.render_feedback("out_sol", f"{al.subset_to_str(gplsol_sol)}"), "white", ["reverse"])
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    
+    # START CODING YOUR SERVICE:
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+
+    # Get optimal solution
+    opt_sol_subset = al.min_cover(m,n,instance)
+    print(f"opt_sol_subset={opt_sol_subset}")
+
+    # Print instance
+    TAc.print(LANG.render_feedback("instance-title", f"The matrix {m}x{n} is:"), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance", f"{al.instance_to_str(instance)}"), "white", ["bold"])
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
     # Print optimal solution
