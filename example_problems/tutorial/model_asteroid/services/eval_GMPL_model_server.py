@@ -2,16 +2,14 @@
 from sys import exit, path
 from multilanguage import Env, Lang, TALcolors
 
-import model_asteroid_lib as al
+import asteroid_lib as al
 from math_modeling import ModellingProblemHelper, get_problem_path_from
-from services_utils import process_user_sol, print_separator
 
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('goal',str),
     ('type_of_check',str),
-    ('only_solvable_instances',bool),
     ('sol_style',str),
     ('dat_style',str),
 ]
@@ -21,7 +19,7 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
-# START CODING YOUR SERVICE:
+# START MATH_MODELING:
 # Create list of test directory names to be test from the goal
 tests_dirname_list = ["public_examples"]
 tmp_tests_list = [  "m_and_n_at_most_5",   \
@@ -37,11 +35,6 @@ for test in reversed(tmp_tests_list):
     if test == ENV['goal']:
         break
     tmp_tests_list.remove(test)
-# Add real folders name
-for test in tmp_tests_list:
-    tests_dirname_list.append(test + '_solvable')
-    if not ENV['only_solvable_instances']:
-        tests_dirname_list.append(test + '_unsolvable')
 
 # Get formats
 dat_style = ''                # default
@@ -82,7 +75,7 @@ for test_dir in tests_dirname_list:
     # For each instance
     for instance_id, paths in instances_paths.items():
         # Print instance_id:
-        print_separator(TAc, LANG)
+        TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
         TAc.print(LANG.render_feedback('instance-id', f"Check instance id={instance_id}"), "green", ["bold"])
 
         # Extract paths
@@ -106,18 +99,6 @@ for test_dir in tests_dirname_list:
                 TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name}"), "red", ["bold"])
             exit(1)
 
-        # Perform optimal solution with model_asteroid_lib
-        opt_sol_subset = al.get_opt_sol(instance)
-        m = len(instance)
-        n = len(instance[0])
-
-        # Check if skip
-        if ENV['only_solvable_instances'] and \
-           test_dir == 'public_examples' and \
-           opt_sol_subset == al.NO_SOL:
-           print("skipped")
-           continue
-        
         # Perform solution with GPLSOL
         try:
             mph.run_GLPSOL(dat_file_path)
@@ -136,12 +117,17 @@ for test_dir in tests_dirname_list:
                 TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
             exit(1)
 
+        # Perform optimal solution with serviceLib
+        opt_sol_subset = "TODO1"# = al.get_opt_sol(instance)
+        m = len(instance)
+        n = len(instance[0])
+
         # Extract GPLSOL solution
         try:
             # Get raw solution
             raw_sol = mph.get_raw_solution()
             # Parse the raw solution
-            gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
+            gplsol_sol = "TODO2" #= process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
         except RuntimeError as err:
             err_name = err.args[0]
             # manage custom exceptions:
@@ -157,29 +143,27 @@ for test_dir in tests_dirname_list:
         # print(f'gplsol_sol:     {gplsol_sol}')
             
         # Check the correctness of the user solution
-        if ENV['type_of_check'] == 'no':
-            if opt_sol_subset == al.NO_SOL and gplsol_sol != al.NO_SOL:
-                TAc.print(LANG.render_feedback('wrong', f">> Wrong!!!"), "green", ["bold"])
-                exit(1)
-            else:
-                TAc.print(LANG.render_feedback('correct', f">> Correct"), "green", ["bold"])
+        # if ENV['type_of_check'] == 'no':
+        #     if opt_sol_subset == al.NO_SOL and gplsol_sol != al.NO_SOL:
+        #         TAc.print(LANG.render_feedback('wrong', f">> Wrong!!!"), "green", ["bold"])
+        #         exit(1)
+        #     else:
+        #         TAc.print(LANG.render_feedback('correct', f">> Correct"), "green", ["bold"])
             
-        elif ENV['type_of_check'] == 'yes':
-            if (opt_sol_subset == al.NO_SOL and gplsol_sol != al.NO_SOL) or \
-                not al.check_sol(instance, gplsol_sol):
-                TAc.print(LANG.render_feedback('wrong', f">> Wrong!!!"), "green", ["bold"])
-                exit(1)
-            else:
-                TAc.print(LANG.render_feedback('correct', f">> Correct"), "green", ["bold"])
+        # elif ENV['type_of_check'] == 'yes':
+        #     if (opt_sol_subset == al.NO_SOL and gplsol_sol != al.NO_SOL) or \
+        #         not al.check_sol(instance, gplsol_sol):
+        #         TAc.print(LANG.render_feedback('wrong', f">> Wrong!!!"), "green", ["bold"])
+        #         exit(1)
+        #     else:
+        #         TAc.print(LANG.render_feedback('correct', f">> Correct"), "green", ["bold"])
             
-        elif ENV['type_of_check'] == 'min':
-            opt_sol = al.subset_to_seq(opt_sol_subset) if ENV['sol_style'] == 'seq' else opt_sol_subset
-            if opt_sol != gplsol_sol:
-                TAc.print(LANG.render_feedback('wrong', f">> Wrong!!!"), "green", ["bold"])
-                exit(1)
-            else:
-                TAc.print(LANG.render_feedback('correct', f">> Correct"), "green", ["bold"])
-        # ALTERNATIVE:
-        # check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, gplsol_sol)
+        # elif ENV['type_of_check'] == 'min':
+        #     opt_sol = al.subset_to_seq(opt_sol_subset) if ENV['sol_style'] == 'seq' else opt_sol_subset
+        #     if opt_sol != gplsol_sol:
+        #         TAc.print(LANG.render_feedback('wrong', f">> Wrong!!!"), "green", ["bold"])
+        #         exit(1)
+        #     else:
+        #         TAc.print(LANG.render_feedback('correct', f">> Correct"), "green", ["bold"])
 
 exit(0)
