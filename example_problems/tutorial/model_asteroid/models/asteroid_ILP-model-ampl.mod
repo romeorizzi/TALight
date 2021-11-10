@@ -4,8 +4,8 @@ rivisto come problema di modellazione matematica.
 Questo modello AMPL e' stato creato da Romeo Rizzi (romeo.rizzi@univr.it) a scopi didattici.
 */
 
-param M integer, >= 1;  # Numero di righe del pirellone
-param N integer, >= 1;  # Numero di colonne del pirellone
+param M integer, >= 1;  # Numero di righe del asteroid
+param N integer, >= 1;  # Numero di colonne del asteroid
 
 set Rows := 1..M;  # Insieme degli indici di riga
 set Cols := 1..N;  # Insieme degli indici di colonna

@@ -5,8 +5,8 @@
 /  2. as a testing/checking/debugging tool for the problem-maker when crafting the problem. A further piece of advice to the problem-maker il placed at the bottom of this file. 
 */
 
-param M integer, >= 1;  # Numero di righe del pirellone
-param N integer, >= 1;  # Numero di colonne del pirellone
+param M integer, >= 1;  # Numero di righe del asteroid
+param N integer, >= 1;  # Numero di colonne del asteroid
 
 set Rows := 1..M;  # Insieme degli indici di riga
 set Cols := 1..N;  # Insieme degli indici di colonna
