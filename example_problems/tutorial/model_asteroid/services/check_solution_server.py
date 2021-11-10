@@ -24,7 +24,8 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE: 
 matrix,seed=al.gen_instance(ENV['m'],ENV['n'],ENV['seed'])
 TAc.print(LANG.render_feedback("instance", f'Instance (of seed: {seed}):'), "yellow", ["bold"])
-al.visualizza(matrix)  
+# al.visualizza(matrix)
+print(al.instance_to_str(matrix))
 TAc.print(LANG.render_feedback("user_sol", 'Insert your solution: '), "yellow", ["bold"]) 
 user_sol=[]
 if ENV['sol_style'] == 'seq':

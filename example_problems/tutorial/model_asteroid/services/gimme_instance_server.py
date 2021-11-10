@@ -4,7 +4,7 @@ from sys import stderr, exit
 from multilanguage import Env, Lang, TALcolors
 
 import asteroid_lib as pl
-#from math_modeling import ModellingProblemHelper, get_problem_path_from
+from math_modeling import ModellingProblemHelper, get_problem_path_from
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -55,6 +55,7 @@ if ENV['silent']:
 else:
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("instance", f"{pl.instance_to_str(instance, format=ENV['format'])}"), "white", ["bold"])
-    TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
+    if not ENV['input_mode'] == 'instance_id':
+        TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
 
 exit(0)

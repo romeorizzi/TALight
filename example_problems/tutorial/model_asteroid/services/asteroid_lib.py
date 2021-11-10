@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from tabulate import tabulate
-import pandas as pd
+# from tabulate import tabulate
+# import pandas as pd
 import copy
 import random
-import networkx as nx
+# import networkx as nx
 
 ### CONSTANTS #########################################
 FORMAT_AVAILABLES = ['dat', 'txt']
@@ -141,13 +141,14 @@ def instance_to_str(matrix, format='default'):
     if format_primary == 'txt':
         return instance_to_txt(matrix, format_secondary)
 
+
 def instance_to_txt(matrix, style='only_matrix'):
     """This function returns the string representation of the given matrix instance according to the indicated style"""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     output = ""
     if style == "with_m_and_n":
         output = f"{len(matrix)} {len(matrix[0])}\n"
-    output += '\n'.join((''.join(str(col) for col in row) for row in matrix))
+    output += '\n'.join((' '.join(str(col) for col in row) for row in matrix))
     return output
 
 

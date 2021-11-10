@@ -16,6 +16,7 @@ COPY: hardcoded/instance1.dat
 COPY: hardcoded/instance2.only_matrix.txt
 COPY: hardcoded/instance2.with_m_and_n.txt
 COPY: hardcoded/instance2.dat
+#     m,  n, solvable, seed
 GEN:  4   4  1         777771
 GEN:  4   4  0         777771
 GEN:  10  10 0         777771
