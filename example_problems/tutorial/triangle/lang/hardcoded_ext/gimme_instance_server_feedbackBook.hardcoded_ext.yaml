@@ -5,5 +5,4 @@ feedback_source: '# The phrases used in this call of service {service} come from
 
 # NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 
-show_instance: 'The triangle you asked for is'
-seed: The seed is: {seed}
+show_instance: 'Here is your pseudo-random triangle (<n={ENV["n"]},MIN_VAL={ENV["MIN_VAL"]},MAX_VAL={ENV["MAX_VAL"]},seed={ENV["seed"]}>):'

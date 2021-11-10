@@ -4,6 +4,7 @@ open-channel: '# Servirò: problem={problem}, service={service}\n#  con argoment
 feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
 
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
-show_instance: 'Questo è il tuo triangolo pseudo-random (<n={ENV["n"]},MIN_VAL={ENV["MIN_VAL"]},MAX_VAL={ENV["MAX_VAL"]},seed={ENV["seed"]}>):'
+
+show_instance: 'Here is your pseudo-random triangle (<n={ENV["n"]},MIN_VAL={ENV["MIN_VAL"]},MAX_VAL={ENV["MAX_VAL"]},seed={ENV["seed"]}>):'
 
 

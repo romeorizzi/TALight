@@ -1,0 +1,16 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# These information in english come from the following files\n#   the phrases externally structuring the help sheets of the synopsis service come from the file \''.../TALight/universal_services/synopsis/synopsis_feedbackBook.hardcoded_ext.yaml\''\n#   the problem specific information for the service this help sheet is about (service {self.ENV.service} of the problem {self.ENV.problem})  come from a dictionary of the feedback phrases of the service (more precisley, the .yaml file ({self.messages_book_file})\''.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+insert-triangle: 'Please, insert your triangle, line by line. For every i in [1,{ENV["n"]}], line i comprises i integers separated by spaces.'
+insert-line: 'Insert line i={i}, that is, {i} integers separated by spaces:'
+triangle-insertion-completed: 'Insertion complete. Your triangle has been successfully inserted.'
+right-best-sol: 'We agree, the solution value you provided is the best one for your triangle.'
+wrong-best-sol: 'We don\'t agree, the solution value you provided is not the best one for your triangle.'
+smaller-than-best: 'We don\'t agree, the solution value you provided is smaller than the best one for your triangle.'
+bigger-than-best: 'We don\'t agree, the solution value you provided is bigger than the best one for your triangle.'
+best-value: 'The best reward for your triangle is {best_reward}.'
+

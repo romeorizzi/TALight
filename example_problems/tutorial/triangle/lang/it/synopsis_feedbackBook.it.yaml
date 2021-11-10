@@ -1,1 +1,23 @@
-../../../../../universal_services/synopsis/synopsis_feedbackBook.it.yaml
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{lang}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+
+ruamel-missing: 'Internal error (se stai invocando un servizio TALight dal cloud puoi segnalare il problema a chi responsabile del servizio; altrimenti installa il pacchetto python \''ruamel\'' sulla tua  macchina).'
+ruamel-required: ' il servizio \''synopsis\'' deve leggere dei file .yaml del problema per fornirti le informazioni richieste. Se \''ruamel\'' non è installato nell\''ambiente dove lavora il daemon \''rtald\'' allora synopsis non può operare.'
+operation-necessary: ' Questa operazione è necessaria al funzionamento di synopsis. Il servizio synopsis abortisce e chiude il canale.'
+metafile-unparsable: 'Internal error (se stai invocando un servizio TALight dal cloud puoi segnalare il problema a chi responsabile del servizio; altrimenti segnalalo al problem maker se non hai tu stesso alterato il file): Impossibile interpretare come .yaml file il file \''{meta_yaml_file}\''.'
+operation-not-necessary: ' Risolviamo questo problema avvalendoci delle informazioni hardcoded nel meta.yaml file del problema. Speriamo che l\''ottenere queste informazioni problema-specifiche in lingua Inglese possa quì bastarti (solitamente i messaggi hardcoded sono non meno aggiornati delle loro traduzioni in altre lingue).'
+metafile-missing: 'Internal error (se stai invocando un servizio TALight dal cloud puoi segnalare il problema a chi responsabile del servizio; altrimenti segnalalo al problem maker): Non è stato possibile accedere al file meta.yaml del problema "{ENV.problem}" per estrarne le informazioni richieste. File non trovato: \''{meta_yaml_file}\'''
+wrong-service-name: '\nAhi, hai chiesto informazioni su {ENV["service"]} ma esso non appare nella lista dei servizi attualmente supportati dal problema "{ENV.problem}".'
+service-of: '   (servizio del problema "{ENV.problem}")'
+info-source: ' [le informazioni problema-specifiche per questo quadro SYNOPSIS provengono dal file \''{meta_yaml_file}\'']'
+the-num-arguments: '\nIl servizio {ENV["service"]} ha {len(meta_yaml_book["services"][ENV["service"]]["args"])} argomenti:'
+description: Descrizione generale del servizio
+example: Esempio
+explanation: Spiegazione
+regex-cloud-resource: '\nGli argomenti di tutti i servizi TALight sono semplici stringhe trasmesse dal client \''rtal\'' al daemon \''rtald\'' (e infine pervenute come variabili di ambiente). La famiglia di strighe ammesse come possibili valori di un argomento è descritta da una regular expression (regex) specificata nel file \''meta.yaml\'' del problema. Se la regex ti mette in difficoltà ti consigliamo di avvalerti del supporto online \''https://extendsclass.com/regex-tester.html\''.\n'
+index-help-pages: 'Indice delle Help Pages:'
+list-services: 'Lista dei servizi del problema "{ENV.problem}":'

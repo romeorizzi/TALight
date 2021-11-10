@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+insert-triangle: 'Inserisci il tuo triangolo linea per linea. Per ogni i nell'intervallo [1,{ENV["n"]}], la riga i è costituita da i interi separati da uno spazio.'
+insert-line: 'Inserisci la riga i={i}, composta da {i} interi separati da uno spazio:'
+triangle-insertion-completed: 'Inserimento completato. Il tuo triangolo è stato inserito correttamente.'
+right-best-sol: 'Siamo d'accordo, il valore della tua soluzione è il migliore per questo triangolo.'
+wrong-best-sol: 'Non siamo d'accordo, il valore della tua soluzione non è il migliore per questo triangolo.'
+smaller-than-best: 'Non siamo d'accordo, il valore della tua soluzione è più piccolo del migliore per questo triangolo.'
+bigger-than-best: 'Non siamo d'accordo, il valore della tua soluzione è più grande del migliore per questo triangolo.'
+best-value: 'Il miglior reward per questo triangolo è {best_reward}.'
+
