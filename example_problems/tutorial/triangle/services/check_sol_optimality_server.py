@@ -14,7 +14,8 @@ args_list = [
     ('MIN_VAL',int),
     ('MAX_VAL',int),
     ('how_to_input_the_triangle',str),
-    ('sol_value',str),
+    ('opt_sol_val',int),
+    ('feedback',str),
     ('silent',bool),
 ]
 
@@ -27,71 +28,40 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # TRIANGLE GENERATION
 
-if ENV['how_to_input_the_triangle'] == "lazy":
-	triangle = []
-	for i in range(1,ENV['n']+1):
-		line = input(f"Insert the values of your triangle's line {i}.\n")
-		line = line.split()
-		line = [int(x) for x in line]
-		if len(line) == i:
-			triangle.append(line)
-		else:
-			TAc.print(LANG.render_feedback("wrong_elements_number", f"You inserted {len(line)} elements for line {i} instead of the {i} required."), "red", ["bold"])
-			exit(0)
-	if not ENV['silent']:
-		TAc.print(LANG.render_feedback("right_triangle_insertion", f"Insertion completed."), "yellow", ["bold"])
+if ENV['how_to_input_the_triangle'] == "my_own_triangle":
+    triangle = []
+    TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
+    for i in range(1,ENV["n"]+1):
+        TAc.print(LANG.render_feedback("insert-line", f'Insert line i={i}, that is, {i} integers separated by spaces:'), "yellow")
+        line = TALinput(int, i, token_recognizer=lambda val,TAc,LANG: tl.check_val_range(val,ENV['MIN_VAL'],ENV['MAX_VAL'],TAc,LANG), TAc=TAc, LANG=LANG)
+        triangle.append(line)
+    TAc.OK()
+    TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
 else:
-	triangle = tl.random_triangle(ENV['n'],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
+    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
 
-# PRINT TRIANGLE
-if not ENV['silent']:
-	TAc.print(LANG.render_feedback("triangle_print", f"The triangle you chose is displayed here.\n\n"), "yellow", ["bold"])
-	tl.print_triangle(triangle)
+best_reward = tl.best_path_cost(triangle)
 
-# GET PATH
-
-if ENV['sol_value'] == 'lazy':
-	print(f"Insert the path as a sequence of L and R with no spaces in between.")
-	path = input()
-	type_sol_value = 0	#--> sol_value is a path
-elif ("R" in ENV['sol_value']) or ("L" in ENV['sol_value']):
-	path = ENV['sol_value']	
-	type_sol_value = 0	#--> sol_value is a path
+if ENV['opt_sol_val'] == best_reward:
+    if ENV['feedback'] == "yes_no" or not ENV['silent']:
+        TAc.OK()
+        TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution value you provided is the best one for your triangle.'), "green", ["bold"])
+    exit(0)
 else:
-	s = int(ENV['sol_value'])
-	type_sol_value = 1 #--> sol_value is a number
+    if ENV['feedback'] == "yes_no":
+        TAc.NO()
+        TAc.print(LANG.render_feedback("wrong-best-sol", f'We don\'t agree, the solution value you provided is not the best one for your triangle.'), "red", ["bold"])
+    if ENV['feedback'] == "bigger_or_smaller":    
+        if ENV['opt_sol_val'] < best_reward:
+            TAc.NO()
+            TAc.print(LANG.render_feedback("smaller-than-best", f'We don\'t agree, the solution value you provided is smaller than the best one for your triangle.'), "red", ["bold"])
+            exit(0)
+        TAc.NO()
+        TAc.print(LANG.render_feedback("bigger-than-best", f'We don\'t agree, the solution value you provided is bigger than the best one for your triangle.'), "red", ["bold"])
+        exit(0)
 
-
-
-if type_sol_value == 0:
-	# CHECK WHETHER THE PATH CONTAINS ENOUGH DIRECTIONS
-	
-	if len(path) != ENV['n']-1:
-		TAc.print(LANG.render_feedback("wrong_directions_number", f"You inserted {len(path)} directions instead of the {ENV['n']-1} required. Remember not to insert spaces between the letters."), "red", ["bold"])
-		exit(0)
-	elif any(x != "L" and x !="R" for x in path):
-		TAc.print(LANG.render_feedback("wrong_direction",f"The path you inserted contains other directions than L or R."),"red", ["bold"])
-		exit(0)
-	if not ENV['silent']:
-		TAc.print(LANG.render_feedback("path_print",f"The path you inserted is displayed here.\n\n"),"yellow", ["bold"])
-		print_path(triangle,path)
-	# CALCULATE PATH
-	
-	_,s = calculate_path(triangle,path)
-
-best = best_path_cost(triangle)
-
-if type_sol_value == 1:
-	if not ENV['silent']:
-		if int(ENV['sol_value']) == best:	
-			TAc.print(LANG.render_feedback("right_best_sol_value",f"\nWe agree. The value you entered is the best solution for your triangle."),"green", ["bold"])			
-	if int(ENV['sol_value']) != best:	
-		TAc.print(LANG.render_feedback("wrong_best_sol_value",f"\nWe don't agree, the value you entered is not the best solution for your triangle."),"red", ["bold"])
-else:
-	if not ENV['silent']:
-		if s == best:	
-			TAc.print(LANG.render_feedback("right_best_path",f"\nWe agree. The path you chose has the best cost for your triangle."),"green", ["bold"])			
-	if s != best:	
-		TAc.print(LANG.render_feedback("wrong_best_path",f"\nWe don't agree, the path you chose has not the best cost for your triangle."),"red", ["bold"])
-
+if ENV['feedback'] == "true_opt_val":
+    TAc.print(LANG.render_feedback("best-value", f'The best reward for your triangle is {best_reward}.'), "yellow", ["bold"])
+    exit(0)
+           
 exit(0)
