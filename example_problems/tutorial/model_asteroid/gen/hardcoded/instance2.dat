@@ -2,7 +2,7 @@ param M := 5;  # Number of rows
 
 param N := 5;  # Number of columns
 
-param PIRELLONE :  1 2 3 4 5 :=
+param ASTEROID :  1 2 3 4 5 :=
 
               1    1 0 1 1 1
 
