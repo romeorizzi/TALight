@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+path-too-short: 'La stringa composta dalle scelte L/R che codifica il tuo percorso è troppo corta per un triangolo di n={ENV["n"]} righe.'
+path-too-long: 'La stringa composta dalle scelte L/R che codifica il tuo percorso è troppo lunga per un triangolo di n={ENV["n"]} righe.'
+wrong-path-length: 'Il numero di scelte richieste è n-1={ENV["n"]-1} anziché {len(ENV["path"].replace(" ", ""))}.'
+insert-triangle: 'Inserisci il tuo triangolo linea per linea. Per ogni i nell'intervallo [1,{ENV["n"]}], la riga i è costituita da i interi separati da uno spazio.'
+insert-line: 'Inserisci la riga i={i}, composta da {i} interi separati da uno spazio:'
+triangle-insertion-completed: 'Inserimento completato. Il tuo triangolo è stato inserito correttamente.'
+feasible-path: 'Il tuo percorso ({ENV["path"]}) è una soluzione ammissibile per questo problema, poiché è composto da {ENV["n"]-1} scelte di direzione consecutive (ovvero il corretto numero di direzioni).'
+display-triangle: 'Il triangolo a cui si fa riferimento è il seguente:'
+path-reward-values: 'Il tuo percorso raccoglie i seguenti reward scendendo il triangolo:'
+path-reward: 'Il reward totale raccolto dal tuo path è {tl.calculate_path(triangle,ENV["path"].replace(" ", ""))[1]}.'
+
