@@ -32,7 +32,7 @@ if ENV['input_mode'] == 'instance_id':
         TAc.print(LANG.render_feedback("no-mandatory-instanceid", f"If you select (input_mode='instance_id') then the (instance_id) argument must be differente from -1"), "red", ["bold"])
         exit(0)
     # Initialize ModellingProblemHelper
-    mph = ModellingProblemHelper(get_problem_path_from(__file__))
+    mph = ModellingProblemHelper(TAc,get_problem_path_from(__file__))
     # Get dat file
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format=ENV['format'])
     instance = pl.get_instance_from_str(instance_str, format=ENV['format'])

@@ -62,6 +62,7 @@ else:
     m = len(instance)
     n = len(instance[0])
 
+
 # Perform solution with GPLSOL and get raw solution
 mph.run_GLPSOL(dat_file_path)
 raw_sol = mph.get_raw_sol()
@@ -104,7 +105,7 @@ if ENV['check_solution']:
     # Parse the raw solution
     gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
 
-    # Print GPLSOL solution
+    # Print processed GPLSOL solution
     TAc.print(LANG.render_feedback("sol-title", "The processed GPLSOL solution is:"), "yellow", ["BOLD"])
     if ENV['sol_style'] == 'seq':
         TAc.print(LANG.render_feedback("out_sol", f"{pl.seq_to_str(gplsol_sol)}"), "white", ["reverse"])

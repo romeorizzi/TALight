@@ -99,11 +99,9 @@ for test_dir in tests_dirname_list:
         raw_sol = mph.get_raw_sol()
         gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
 
-
         # DEBUG:
-        print(f'opt_sol_subset: {opt_sol_subset}')
-        print(f'gplsol_sol:     {gplsol_sol}')
-
+        # print(f'opt_sol_subset: {opt_sol_subset}')
+        # print(f'gplsol_sol:     {gplsol_sol}')
 
         # Check the correctness of the user solution
         if (opt_sol_subset == pl.NO_SOL and gplsol_sol != pl.NO_SOL) or \

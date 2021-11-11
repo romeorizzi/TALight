@@ -6,7 +6,7 @@ from functools import partial
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-import asteroid_lib as al
+import model_asteroid_lib as al
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
