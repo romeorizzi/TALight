@@ -171,6 +171,10 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: If this flag is set to 1 then, display the log that `glpsol` running on the server sends to stderr.
+      display_solution:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, display the content of the solution.txt file created by your model. This display is a raw listing of the file as it is (might help your debugging from remote).
       check_solution:
         regex: ^(0|1)$
         default: 0

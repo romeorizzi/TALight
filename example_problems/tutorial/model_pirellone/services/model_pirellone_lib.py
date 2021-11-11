@@ -236,7 +236,8 @@ def get_instance_from_txt(pirellone, style='only_matrix'):
     if format == "with_m_and_n":
         lines = lines[2:]
     for l in lines:
-        instance.append([int(e) for e in l.split()])
+        if len(l) != 0:
+            instance.append([int(e) for e in l.split()])
     return instance
 
 

@@ -14,19 +14,22 @@ def get_problem_path_from(you_service_file_path):
 
 class ModellingProblemHelper():
     def __init__(self,
+                TAc,
                 problem_path,                            \
                 tmp_dirname       = 'tmp97815',          \
                 mod_filename      = 'model.mod',         \
                 dat_filename      = 'instance.dat',      \
+                in_filename       = 'input.txt',      \
                 sol_filename      = 'solution.txt',      \
                 out_filename      = 'output.txt',        \
                 err_filename      = 'error.txt',         \
                 instances_dirname = 'instances',      \
                 gendict_filename  = 'gen_dictionary.json'):
-        self.__problem_path    = problem_path
+        self.__TAc = TAc
         self.__tmp_path        = os.path.join(problem_path, tmp_dirname)
         self.__mod_path        = os.path.join(problem_path, tmp_dirname, mod_filename)
         self.__dat_path        = os.path.join(problem_path, tmp_dirname, dat_filename)
+        self.__in_path         = os.path.join(problem_path, tmp_dirname, in_filename)
         self.__sol_path        = os.path.join(problem_path, tmp_dirname, sol_filename)
         self.__out_path        = os.path.join(problem_path, tmp_dirname, out_filename)
         self.__err_path        = os.path.join(problem_path, tmp_dirname, err_filename)
@@ -60,7 +63,8 @@ class ModellingProblemHelper():
             with open(self.__mod_path, 'w') as mod_file:
                 mod_file.write(mod)
         except os.error as err:
-            raise RuntimeError('write-error', self.__mod_filename, err)
+            self.__TAc.print(f"Fail to create the mod file in: {self.__mod_path}", "red", ["bold"])
+            exit(0)
 
 
     def receive_dat_file(self):
@@ -73,15 +77,22 @@ class ModellingProblemHelper():
             with open(self.__dat_path, 'w') as dat_file:
                 dat_file.write(dat)
         except os.error as err:
-            raise RuntimeError('write-error', self.__dat_filename, err)
+            self.__TAc.print(f"Fail to create the dat file in: {self.__dat_path}", "red", ["bold"])
+            exit(0)
 
 
     def receive_input_file(self):
-        """Enable the service to recive the input file then return the input in a string form."""
+        """Enable the service to recive the input file."""
         # Initialize TMP_DIR
         self.__init_tmp_dir()
         # Manage input file
-        return service_server_requires_and_gets_file_of_handle('input').decode()
+        input = service_server_requires_and_gets_file_of_handle('input').decode()
+        try:
+            with open(self.__in_path, 'w') as dat_file:
+                dat_file.write(input)
+        except os.error as err:
+            self.__TAc.print(f"Fail to create the input file in: {self.__in_path}", "red", ["bold"])
+            exit(0)
 
 
     def run_GLPSOL(self, dat_file_path=None):
@@ -102,15 +113,30 @@ class ModellingProblemHelper():
                             "-d", dat_file_path,
                         ], cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
                 except os.error as err:
-                    raise RuntimeError('write-error', self.__err_filename, err)
+                    self.__TAc.print(f"Fail to create stderr file in: {self.__err_path}", "red", ["bold"])
+                    exit(0)
                 except Exception as err:
-                    raise RuntimeError('process-exception', err)
+                    self.__TAc.print(f"Processing returned with error:\n{err}", "red", ["bold"])
+                    exit(0)
                 except subprocess.TimeoutExpired as err:
-                    raise RuntimeError('process-timeout', err)
+                    self.__TAc.print(f"Too much computing time! Deadline exceeded.", "red", ["bold"])
+                    exit(0)
                 except subprocess.CalledProcessError as err: 
-                    raise RuntimeError('process-call', err)
+                    self.__TAc.print(f"The call to glpsol on your .dat file returned error:\n{err}", "red", ["bold"])
+                    exit(0)
         except os.error as err:
-            raise RuntimeError('write-error', self.__out_filename, err)
+            self.__TAc.print(f"Fail to create stdout file in: {self.__out_path}", "red", ["bold"])
+            exit(0)
+
+
+    def get_input_str(self):
+        """Return a string that contains the input passed with bot"""
+        try:
+            with open(self.__in_path, 'r') as file:
+                return file.read()
+        except os.error as err:
+            self.__TAc.print(f"Fail to read the input file in {self.__in_path}", "red", ["bold"])
+            exit(0)
 
 
     def get_out_str(self):
@@ -119,7 +145,8 @@ class ModellingProblemHelper():
             with open(self.__out_path, 'r') as file:
                 return file.read()
         except os.error as err:
-            raise RuntimeError('stdout-read-error', err)
+            self.__TAc.print(f"Fail to read the stdout file of GPLSOL in {self.__out_path}", "red", ["bold"])
+            exit(0)
 
 
     def get_err_str(self):
@@ -128,42 +155,50 @@ class ModellingProblemHelper():
             with open(self.__err_path, 'r') as file:
                 return file.read()
         except os.error as err:
-            raise RuntimeError('stderr-read-error', err)
+            self.__TAc.print(f"Fail to read the stderr file of GPLSOL in {self.__err_path}", "red", ["bold"])
+            exit(0)
 
 
-    def get_raw_solution(self):
+    def get_raw_sol(self):
         """Return a list of string that contains the solution produced by GPLSOL. Remember to call a soluion_parsing function."""
         try:
             with open(self.__sol_path, 'r') as file:
                 return file.read().splitlines()
         except os.error as err:
-            raise RuntimeError('solution-read-error', err)
+            self.__TAc.print(f"Fail to read the solution file of GPLSOL in {self.__sol_path}", "red", ["bold"])
+            exit(0)
 
 
     # MANAGE INPUTS/GENDICT FILES -------------------
     def get_path_from_id(self, id, format):
         """Returns the path to the file selected with id."""
+        # Read gen-dictionary
         try:
             with open(self.__gendict_path, 'r') as file:
                 gendict = json.load(file)
                 info = gendict[str(id)]
         except os.error as err:
-            raise RuntimeError('read-error', self.__gendict_path)
+            self.__TAc.print(f"Fail to read the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
+            exit(0)
         except KeyError as err:
-            raise RuntimeError('invalid-id', id)
+            self.__TAc.print(f"The id={id} is invalid.", "red", ["bold"])
+            exit(0)
+        # get path from gen-dictionary
         try:
             return os.path.join(self.__instances_path, info['suite'], info[format])
         except KeyError as err:
-            raise RuntimeError('invalid-format', format)
+            self.__TAc.print(f"The format={format} is invalid.", "red", ["bold"])
+            exit(0)
 
 
     def get_file_str_from_path(self, path):
         """Returns the contents of the file as a string from the selected path."""
         try:
             with open(path, 'r') as file:
-                return file.read().strip()
+                return file.read()
         except os.error as err:
-            raise RuntimeError('read-error', self.__gendict_path)
+            self.__TAc.print(f"Fail to read the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
+            exit(0)
 
 
     def get_file_str_from_id(self, id, format):
@@ -187,4 +222,5 @@ class ModellingProblemHelper():
                     instances_paths[id][format] = os.path.join(dir_path, filename)
             return instances_paths
         except os.error as err:
-            raise RuntimeError('read-error', self.__instances_path)
+            self.__TAc.print(f"Fail to read the instance file in: {self.__instances_path}", "red", ["bold"])
+            exit(0)

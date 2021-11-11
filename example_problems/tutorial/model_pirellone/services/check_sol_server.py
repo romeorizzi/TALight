@@ -29,6 +29,6 @@ instance, opt_sol_subset = process_instance(ENV, TAc, LANG)
 user_sol = get_user_sol(ENV, TAc, LANG, style=ENV['sol_style'])
 
 # Check the correctness of the user solution
-check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol)
+check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol, m=ENV['m'], n=ENV['n'])
 
 exit(0)

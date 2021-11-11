@@ -114,11 +114,11 @@ def print_separator(TAc, LANG):
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
 
-def check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol):
+def check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, user_sol, m, n):
     # Init
     opt_sol_seq = pl.subset_to_seq(opt_sol_subset)
     if ENV['sol_style'] == 'seq':
-        user_sol_subset = pl.seq_to_subset(user_sol, ENV['m'], ENV['n'])
+        user_sol_subset = pl.seq_to_subset(user_sol, m, n)
         user_sol_seq = user_sol
     else:
         user_sol_seq = pl.subset_to_seq(user_sol)
