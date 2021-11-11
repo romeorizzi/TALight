@@ -345,15 +345,17 @@ def max_match_bip(m:int,n:int,matrix):
     return nx.bipartite.maximum_matching(G)
 
 def min_cover(m:int,n:int,matrix):
-    print(f"m={m}, n={n}")
     G = nx.Graph()
-    G.add_nodes_from([f'r{i}' for i in range(m)], bipartite=0)
-    G.add_nodes_from([f'c{j}' for j in range(n)], bipartite=1)
-    G.add_edges_from([(f'r{i}','c{j}') for i in range(m) for j in range(n) if matrix[i][j]==1])
+    row_nodes = {f'r{i}' for i in range(m)}
+    col_nodes = {f'c{j}' for j in range(n)}
+    G.add_nodes_from(row_nodes, bipartite=0)
+    G.add_nodes_from(col_nodes, bipartite=1)
+    G.add_edges_from([(f'r{i}',f'c{j}') for i in range(m) for j in range(n) if matrix[i][j]==1])
+    #print(G.nodes)
+    #print(G.edges)
     matching = nx.bipartite.maximum_matching(G)
-    print(f"matching={matching}")
-    print(nx.bipartite.to_vertex_cover(G, matching))
-    return nx.bipartite.to_vertex_cover(G, matching)
+    #print(nx.bipartite.to_vertex_cover(G, matching, col_nodes))
+    return nx.bipartite.to_vertex_cover(G, matching, col_nodes)
 
 def max_independent_set(m:int,n:int,matrix):
     max_ind_set = []
