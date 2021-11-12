@@ -51,13 +51,13 @@ Intuitively if we look the network is simple to see that the property (not the n
 
 ## Services for this problem
 Lo scopo dell'utente è riuscire a scrivere il modello (.mod) per questo problema, che data una rappresentazione (equazioni, matrici, grafi,....) trovi una risposta che sia sempre corretta. Quindi l'utente tramite il servizio try_gmpl testa il suo modello su una istanza fornita e il servizio internamente chiama gmpl sol sulla coppia di argomenti e stampa il risultato.
-Se l'utente chiede al servizio try_gmpl di valutare la soluzione ottenuta dal modello sull'istanza c'è la necessità da parte dell'utente di passare come input una rappresentazione dell'istanzache può essere grafo, matrice, ecc in formato .dat o .txt che però deve essere coerente con il sistema di verifica (deve essere accettato dal modello scritto dal problem maker o dalla sua lib)
+Se l'utente chiede al servizio try_gmpl di valutare la soluzione ottenuta dal modello sull'istanza c'è la necessità da parte dell'utente di passare come input una rappresentazione dell'istanza che può essere grafo, matrice, ecc, in formato .dat o .txt che però deve essere coerente con il sistema di verifica (deve essere accettato dal modello scritto dal problem maker o dalla sua lib)
 
 eval_gmpl --> prende il modello dell'utente e lo testa su un insieme di istanze generate in formato .dat (che possono essere però matrici, grafi, equazioni, ecc...) e lo confronta con il modello del problem maker.
 
 Step da fare:
 1) creo un mio modello di rete che passerò a GMPL sol 
-2) metedo per genere le istanze --> basta modificare il file instance_generator.py e il GEN dove all'inizio si specificano tutti i vari formati, e poi su suite si creano le varie cartelle da mettere in instances (è obbligatorio per ogni goal dell'eval avere una cartella specifica con lo stesso nome, basta copiare il template dell'eval)
+2) metodo per genere le istanze --> basta modificare il file instance_generator.py e il GEN dove all'inizio si specificano tutti i vari formati, e poi su suite si creano le varie cartelle da mettere in instances (è obbligatorio per ogni goal dell'eval avere una cartella specifica con lo stesso nome, basta copiare il template dell'eval)
 3) fare try ed eval
 
 
@@ -66,9 +66,4 @@ Step da fare:
 - [x] Service 3
 
 
-
-
-
-## Author
-* **Luca Marzari** - [LM095](https://github.com/LM095)
 
