@@ -528,3 +528,55 @@ def check_ans(server_vector, optimal_pos):
         correct = False
         
     return correct
+
+
+def check_goal_eval(goal, feedback, wasted_dollars, min_questions_worst_case, TAc, LANG):
+   
+    if wasted_dollars < min_questions_worst_case and goal=='optimal':
+        TAc.print(LANG.render_feedback("correct solution!", f'Correct! But it is impossible to solve the problem asking {wasted_dollars} questions (in the worst case)! You are cheating...'), "yellow", ["bold"])
+        exit(0)
+    
+    #at_most_twice_the_opt - al massimo 2 volte la sol ottima
+    if goal == 'at_most_twice_the_opt':
+        isAtMostTwice = wasted_dollars <= 2*min_questions_worst_case #compreso il doppio, true if is it at most twice the opt
+
+        if isAtMostTwice:
+            TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You reached your goal'), "green", ["bold"])
+            exit(0)
+        else:
+            if feedback == 'yes_no_goal':
+                TAc.print(LANG.render_feedback(" wasted dollars", f'You wasted too many dollars: you didn\'t reach your goal'), "yellow", ["bold"])
+                exit(0)
+            elif feedback == 'how_far':    
+                TAc.print(LANG.render_feedback(" difference", f'You wasted {wasted_dollars-2*min_questions_worst_case} more dollars than the optimal solution: you didn\'t reach your goal'), "yellow", ["bold"])             
+                exit(0)
+
+    #opt_plus_one - esattamente la sol ottima + 1
+    elif goal == 'opt_plus_one':
+        isOptPlusOne = wasted_dollars == min_questions_worst_case + 1 #true if it is exactly opt_plus_one
+
+        if isOptPlusOne:
+            TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You reached your goal'), "green", ["bold"])
+            exit(0)
+        else:
+            if feedback == 'yes_no_goal':
+                TAc.print(LANG.render_feedback(" wasted dollars", f'You wasted too many dollars: you didn\'t reach your goal'), "yellow", ["bold"])
+                exit(0)
+            elif feedback == 'how_far':    
+                TAc.print(LANG.render_feedback(" difference", f'You wasted {wasted_dollars-(min_questions_worst_case + 1)} more dollars than the optimal solution: you didn\'t reach your goal'), "yellow", ["bold"])             
+                exit(0)
+
+    elif goal == 'optimal':
+        isOptimal = wasted_dollars == min_questions_worst_case 
+        
+        if isOptimal:
+            TAc.print(LANG.render_feedback(" correct solution!", f'Correct! You reached your goal'), "green", ["bold"])
+            exit(0)
+        else:
+            if feedback == 'yes_no_goal':
+                TAc.print(LANG.render_feedback(" wasted dollars", f'You wasted too many dollars: you didn\'t reach your goal'), "yellow", ["bold"])
+                exit(0)
+            elif feedback == 'how_far':    
+                TAc.print(LANG.render_feedback(" difference", f'You wasted {wasted_dollars-(min_questions_worst_case)} more dollars than the optimal solution: you didn\'t reach your goal'), "yellow", ["bold"])             
+                exit(0)
+           

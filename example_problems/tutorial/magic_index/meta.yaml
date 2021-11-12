@@ -114,9 +114,9 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_play1:
-  explain: You give us a final configuration of a game you played and a list of positions you asked for during the game, and we evaluate your moves based on the level and feedback chosen. 
+    explain: You give us a final configuration of a game you played and a list of positions you asked for during the game, and we evaluate your moves based on the level and feedback chosen. 
     evaluator: [python, services/eval_play1_server.py]
-    args:
+    args: #forse bisogna inserire anche l'opponent per scegliere se si è giocato contro un server optimal o random
       config:
         regex: ^([?|,|(-{0,1}[1-9][0-9]{0,3})]*+)$ 
         explain: the final configuration of the game played.
@@ -170,4 +170,3 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-...
