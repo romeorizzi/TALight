@@ -114,8 +114,16 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_play1:
+  explain: You give us a final configuration of a game you played and a list of positions you asked for during the game, and we evaluate your moves based on the level and feedback chosen. 
     evaluator: [python, services/eval_play1_server.py]
     args:
+      config:
+        regex: ^([?|,|(-{0,1}[1-9][0-9]{0,3})]*+)$ 
+        explain: the final configuration of the game played.
+      moves:
+        regex:  ^((0|-{0,1}[1-9][0-9]{0,3})(,(0|-{0,1}[1-9][0-9]{0,3})){0,1000})|$
+        explain: the sequence of moves performed during the game separated by commas and no spaces).
+        example: 4,7,1,5
       goal:
         regex: ^(correct|at_most_twice_the_opt|opt_plus_one|optimal)$
         default: at_most_twice_the_opt
@@ -152,7 +160,6 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
     args:
