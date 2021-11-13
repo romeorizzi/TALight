@@ -3,7 +3,7 @@
 public_folder: public
 services:
   check_is_sc:
-    description: This service will check your statement that a directed graph you provide us is strongly connected.
+    description: This service checks that a user provided directed graph is strongly connected.
     evaluator: [python,services/is_sc_server.py]
     args:     
       sc_bool:
@@ -25,7 +25,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_is_not_sc:
-    description: This service will check your statement that a directed graph you provide us is not strongly connected
+    description: This service checks that a user provided directed graph is not strongly connected.
     evaluator: [python,services/is_sc_server.py]
     args:
       sc_bool:

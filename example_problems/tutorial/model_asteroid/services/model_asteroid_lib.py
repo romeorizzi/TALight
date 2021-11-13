@@ -254,30 +254,31 @@ def conta_num_met_in(matrix):
 def spara_r(matrix,r):
     num_met_destroyed=0
     for j in range(len(matrix[0])):
-        if matrix[r][j]==1:
+        if matrix[r-1][j]==1:
             num_met_destroyed+=1
-            matrix[r][j]=0
+            matrix[r-1][j]=0
     return num_met_destroyed
 
 def spara_c(matrix,c):
     num_met_destroyed=0
     for i in range(len(matrix)):    
-        if matrix[i][c]==1:
+        if matrix[i][c-1]==1:
             num_met_destroyed+=1
-            matrix[i][c]=0
+            matrix[i][c-1]=0
     return num_met_destroyed
         
 def is_feasible_shooting(m:int,n:int,matrix_original,beams,silent:bool,TAc,LANG):
     """verifyies whether a set of laser beams is enough to destroy all the asteroids. Returns either True or False. When the arg silent=False then it also prints out about its findings."""
     matrix_after_moves=copy.deepcopy(matrix_original)
     num_met_destroyed=0
-    for tipo_sparo, pos_sparo in beams: 
+    for tipo_sparo, pos_sparo in beams:
+        pos_sparo = int(pos_sparo)
         if tipo_sparo=='r':
-            if pos_sparo < 0 or pos_sparo >= len(matrix_original):
+            if pos_sparo < 1 or pos_sparo > m:
                 TAc.print(LANG.render_feedback("wrong-row", f"You shoot on the row {pos_sparo} but the row indexes go from 0 to {len(matrix_original)-1}."), "red", ["bold"])    
             num_met_destroyed+=spara_r(matrix_after_moves,pos_sparo)
         if tipo_sparo=='c':
-            if pos_sparo < 0 or pos_sparo >= len(matrix_original[0]):
+            if pos_sparo < 1 or pos_sparo > n:
                 TAc.print(LANG.render_feedback("wrong-col", f"You shoot on the column {pos_sparo} but the column indexes go from 0 to {len(matrix_original[0])-1}."), "red", ["bold"])
             num_met_destroyed+=spara_c(matrix_after_moves,pos_sparo)
     if conta_num_met_in(matrix_after_moves)==0:
@@ -327,30 +328,30 @@ def presenza_in_col(asteroids):
 def max_match(m:int,n:int,matrix):
     G = nx.Graph()
     for i in range(m):
-        G.add_node(f'r{i}',label=f'r{i}')
+        G.add_node(f'r{i+1}',label=f'r{i+1}')
     for j in range(n):
-        G.add_node(f'c{j}',label=f'c{j}')
+        G.add_node(f'c{j+1}',label=f'c{j+1}')
     
     for i in range(m):
         for j in range(n):
             if matrix[i][j]==1:
-                G.add_edge(f'r{i}',f'c{j}')
+                G.add_edge(f'r{i+1}',f'c{j+1}')
     return nx.maximum_matching(G)   #return nx.max_weight_matching(G)
 
 def max_match_bip(m:int,n:int,matrix):
     G = nx.Graph()
-    G.add_nodes_from([f'r{i}' for i in range(m)], bipartite=0)
-    G.add_nodes_from([f'c{j}' for j in range(n)], bipartite=1)
-    G.add_edges_from([(f'r{i}',f'c{j}') for i in range(m) for j in range(n) if matrix[i][j]==1])
+    G.add_nodes_from([f'r{i+1}' for i in range(m)], bipartite=0)
+    G.add_nodes_from([f'c{j+1}' for j in range(n)], bipartite=1)
+    G.add_edges_from([(f'r{i+1}',f'c{j+1}') for i in range(m) for j in range(n) if matrix[i][j]==1])
     return nx.bipartite.maximum_matching(G)
 
 def min_cover(m:int,n:int,matrix):
     G = nx.Graph()
-    row_nodes = {f'r{i}' for i in range(m)}
-    col_nodes = {f'c{j}' for j in range(n)}
+    row_nodes = {f'r{i+1}' for i in range(m)}
+    col_nodes = {f'c{j+1}' for j in range(n)}
     G.add_nodes_from(row_nodes, bipartite=0)
     G.add_nodes_from(col_nodes, bipartite=1)
-    G.add_edges_from([(f'r{i}',f'c{j}') for i in range(m) for j in range(n) if matrix[i][j]==1])
+    G.add_edges_from([(f'r{i+1}',f'c{j+1}') for i in range(m) for j in range(n) if matrix[i][j]==1])
     #print(G.nodes)
     #print(G.edges)
     matching = nx.bipartite.maximum_matching(G)
@@ -368,13 +369,13 @@ def opt_val(m:int,n:int,matrix):
     return len(max_match_bip(m,n,matrix))//2
 
 def check_row_index(index:int,m:int,TAc,LANG):
-    if index < 0 or index >= m:
+    if index < 1 or index > m:
         TAc.print(LANG.render_feedback("row-index-out-of-range", f"Row index {index} falls outside the valid range [0,{m-1}].", {"m":m}), "red", ["bold"])
         return False
     return True
                 
 def check_col_index(index:int,n:int,TAc,LANG):
-    if index < 0 or index >= n:
+    if index < 1 or index > n:
         TAc.print(LANG.render_feedback("col-index-out-of-range", f"Column index {index} falls outside the valid range [0,{n-1}].", {"n":n}), "red", ["bold"])
         return False
     return True
@@ -384,8 +385,8 @@ def check_is_cell_containing_asteroid(row_index:int,col_index:int,matrix,TAc,LAN
         return False
     if not check_col_index(row_index,len(matrix[0]),TAc,LANG):
         return False
-    if matrix[row_index][col_index] != 1:
-        TAc.print(LANG.render_feedback("no-asteroid-cell", f"You wrote the cell ({row_index},{col_index}) but this cell contains no asteroid."), "red", ["bold"])
+    if matrix[row_index-1][col_index-1] != 1:
+        TAc.print(LANG.render_feedback("no-asteroid-cell", f"The cell ({row_index},{col_index}) contains no asteroid."), "red", ["bold"])
         return False 
     return True
                 
@@ -403,13 +404,13 @@ def is_feasible_asteroid_set(m:int,n:int,matrix,asteroids,silent:bool,TAc,LANG):
     occupied_row = [False] * m
     occupied_col = [False] * n
     for i,j in asteroids:
-        if i < 0 or i >= m:
-            TAc.print(LANG.render_feedback("row-index-out-of-range", f"You pointed to the cell ({i},{j}) but the row indexes go from 0 to {m-1}."), "red", ["bold"])
+        if i < 1 or i > m:
+            TAc.print(LANG.render_feedback("row-index-out-of-range", f"You pointed to the cell ({i},{j}) but the row indexes go from 1 to {m}."), "red", ["bold"])
             return False     
         if j < 0 or j >= n:
-            TAc.print(LANG.render_feedback("col-index-out-of-range", f"You pointed to the cell ({i},{j}) but the column indexes go from 0 to {n-1}."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("col-index-out-of-range", f"You pointed to the cell ({i},{j}) but the column indexes go from 1 to {n}."), "red", ["bold"])
             return False 
-        if matrix[i][j] != 1:
+        if matrix[i-1][j-1] != 1:
             TAc.print(LANG.render_feedback("no-asteroid-cell", f"You wrote the cell ({i},{j}) but this cell contains no asteroid."), "red", ["bold"])
             return False 
         if occupied_row[i]:

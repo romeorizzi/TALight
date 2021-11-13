@@ -112,48 +112,37 @@ if ENV['check_solution']:
         TAc.print(LANG.render_feedback("out_sol", f"{al.subset_to_str(gplsol_sol)}"), "white", ["reverse"])
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     
-    # Perform optimal solution
-    # TODO 1: get the optimal solution
+    # Get an optimal solution
     opt_sol_subset = al.min_cover(m,n,instance)
-
-    # Print optimal solution
-    TAc.print(LANG.render_feedback("in-title", "The ServiceLib solution is:"), "yellow", ["reverse"])
-    if ENV['sol_style'] == 'seq':
-        TAc.print(LANG.render_feedback("in-sol", f"{al.seq_to_str(al.subset_to_seq(opt_sol_subset))}"), "green", ["bold"])
-    elif ENV['sol_style'] == 'subset':
-        TAc.print(LANG.render_feedback("in-sol", f"{al.subset_to_str(opt_sol_subset)}"), "green", ["bold"])
-    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-
+    opt_val = len(opt_sol_subset)
+    print(f"opt_sol_subset={opt_sol_subset}, opt_val={opt_val}")
 
     # Check the correctness of the user solution
-    # TODO 2: do the check of the solution
-    # Init
-    opt_sol_seq = al.subset_to_seq(opt_sol_subset)
     if ENV['sol_style'] == 'seq':
         user_sol_subset = al.seq_to_subset(gplsol_sol, ENV['m'], ENV['n'])
         user_sol_seq = gplsol_sol
     else:
         user_sol_seq = al.subset_to_seq(gplsol_sol)
         user_sol_subset = gplsol_sol
-    # check if is correct
-    # is_correct, certificate_of_no = al.check_sol(instance, user_sol_subset)
-    # if is_correct:
-    #     TAc.OK()
-    #     TAc.print(LANG.render_feedback('correct', "The solution is correct."), "green", ["bold"])
-    # else:
-    #     TAc.NO()
-    #     TAc.print(LANG.render_feedback('error', f"The solution is not correct. The pirellone cell in row={certificate_of_no[0]} and col={certificate_of_no[1]} stays on."), "red", ["bold"])
-    #     exit(0)
-    # # check if is minimal
-    # if ENV['sol_style'] == 'seq':
-    #     if len(opt_sol_seq) != len(user_sol_seq):
-    #         TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
-    #         exit(0)
-    # elif ENV['sol_style'] == 'subset':
-    #     if not al.is_optimal(user_sol_subset):
-    #         TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
-    #         exit(0)
-    # TAc.print(LANG.render_feedback('minimal', "The solution is minimal!"), "green", ["bold"])
+    # check feasibility of the user solution
+    print(f"user_sol_seq={user_sol_seq}, user_sol_subset={user_sol_subset}")
+    if al.is_feasible_shooting(m,n,instance,beams=user_sol_seq,silent=False,TAc=TAc,LANG=LANG):
+        TAc.OK()
+        TAc.print(LANG.render_feedback('feasible', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
+    else:
+        TAc.NO()
+        TAc.print(LANG.render_feedback('error', f"The solution is not correct. The pirellone cell in row={certificate_of_no[0]} and col={certificate_of_no[1]} stays on."), "red", ["bold"])
+        exit(0)
+    # check optimlity of the user solution
+    if ENV['sol_style'] == 'seq':
+        if len(opt_sol_seq) != len(user_sol_seq):
+            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
+            exit(0)
+    elif ENV['sol_style'] == 'subset':
+        if not al.is_optimal(user_sol_subset):
+            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
+            exit(0)
+    TAc.print(LANG.render_feedback('minimal', "The solution is minimal!"), "green", ["bold"])
 
 
 exit(0)
