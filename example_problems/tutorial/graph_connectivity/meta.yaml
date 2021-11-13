@@ -2,12 +2,51 @@
 ---
 public_folder: public
 services:
-  tell_if_graph_connected:
-    description: this service tells whether a user provided graph is connected or not.
-    evaluator: [python, services/tell_if_graph_connected_server.py]
+# prendere spunto da model pirellone per la generazione dell'istanza
+# prendere spunto da pirellone o da euler_dir per i servizio eval
+  gimme_a_graph:
+    description: 'This service provides you with a random graph with n nodes and m arcs. You have two main options when calling this service:\n    (1) either inserting the seed yourself (you may be interested in reconsidering a graph you have already met with this or other services)\n    (2) or asking for a random seed, and possibly specify whether you are interested in getting a connected or a non-connected graph.\n   When given n, m, and also a seed value, the service returns the pseudo-random graph <n,m,seed> in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing graphs is the following: the first line contains the two integers n and m; then follow m lines, one for each arc. Each of these lines comprises two integers (the two endonodes of the arc). It is assumed that the labels of the nodes are the integers in [0,n).'
+    evaluator: [python,services/gimme_graph_server.py]
+    args:
+      input_mode:
+        regex: ^(random|seed)$
+        default: random
+        explain: 'choose whether you want to specify the seed (and hence the graph) or you need the service to randomly choose the seed and the graph within the space of our pseudo-random instances:' 
+        explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
+        explain2: '[seed] the service uses the seed you give it in order to generate and return the pseudo-random instance <m,n,seed>.'
+      n:
+        regex: ^([1-9][0-9]{0,3}|1000)$
+        default: 6
+        explain: Number of nodes of the graph.
+      m:
+        regex: ^(0|[1-9][0-9]{0,4}|10000)$
+        default: 10
+        explain: 'Number of edges of the graph.'
+      seed:
+        explain: 'This argument is used when you hold the instance descriptor of a specific instance and want to get that instance either downloaded in local as a file and/or displayed on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services for this problem.'
+        regex: ^[1-9][0-9]{5,5}$
+        default: 123456
+      graph_connectivity:
+        regex: ^(connected|disconnected|surprise_me)$
+        default: surprise_me
+      display:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the instance file is listed by the service.
+      # download:
+      #   regex: ^(0|1)$
+      #   default: 0
+      #   explain: 'If this flag is set to 1 then the instance file is downloaded in the \''download\'' sub-folder of the folder from which this TALight service call has been issued.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  tell_if_graph_is_connected:
+    description: This service recognizes the connectivity property for graphs. Besides telling whether the given graph is connected or not, the service can also be asked to provide a certificate of connectivity (or a certificate of non-connectivity).
+    evaluator: [python, services/tell_if_graph_is_connected_server.py]
     args:
       with_yes_certificate:
-        explain: when the input graph is connected, please, send me a certificate in the form of a spanning tree (encoded as routing table towards its root).
+        explain: when the input graph is connected, please, send me a certificate in the form of a spanning tree. This tree is encoded as a routing table towards its root (node 0 of the graph).
         regex: ^(0|1)$
         default: 0
       with_no_certificate:
@@ -19,7 +58,7 @@ services:
         default: terminal
         explain: "choose the way to input your graph among:"
         explain1: "[terminal] you enter your instance (directed graph) directly by either typing it line after line or through cut and paste operations."
-        explain2: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_pirellone/bots/ directory. Call the service with: rtal connect strongly_connected_components check_is_sc -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
+        explain2: "[TA_send_files_bot] send to the service a graph contained in a file on your local machine. To send the file you must use the TA_transfer_files_bot.py bot placed in the graph_connectivity/bots/ directory. Call the service with: rtal graph_connectivity tell_if_graph_is_connected -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -32,7 +71,7 @@ services:
         default: terminal
         explain: "choose the way to input your graph among:"
         explain1: "[terminal] you enter your instance (directed graph) directly by either typing it line after line or through cut and paste operations."
-        explain2: "[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_pirellone/bots/ directory. Call the service with: rtal connect strongly_connected_components check_is_sc -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
+        explain2: "[TA_send_files_bot] with this, you can send to the service an instance (graph) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_graph/bots/ directory. Call the service with: rtal connect strongly_connected_components check_is_sc -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
       n:
         regex: ^([1-9][0-9]{0,4}|1000)$
         explain: the number of nodes of the graph

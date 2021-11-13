@@ -26,6 +26,7 @@ class Graph():
         if u in self.graph[v]:
             return True
         return False
+    
     '''
         DFS dato nodo v di partenza
     '''
@@ -34,31 +35,6 @@ class Graph():
         for node in self.graph[v]: 
             if visited[node] == False: 
                 self.DFSUtil(node, visited) 
-    '''
-        Ritorna se il grafo è connesso o no, utilizzando la DFS
-    '''
-    def isConnected(self, return_not_connected=False):
-        v = 0
-        visited = [False] * (self.V)
-
-        self.DFSUtil(v, visited)
-        for i in range(self.V): 
-            #print(visited[i])
-            if visited[i] == False:
-                return False, []
-        
-        if(return_not_connected):
-            # listo i non connessi
-            not_conn = []
-            for i in range(len(visited)):
-                if(not visited[i]):
-                    not_conn.append(i)
-
-            for elem in not_conn:
-                print(elem)
-
-            return True, not_conn
-        return True, []
 
     '''
         DFS che tiene traccia dei nodi visitati
@@ -91,6 +67,11 @@ class Graph():
         
         return spanning_tree, not_visited
 
+    def isConnected(self):
+        """Ritorna True se il grafo è connesso, altrimenti False"""
+        sp_tree, not_visited = self.spanning_tree()
+        return len(not_visited) == 0
+    
 '''
 Genera un grafo dato seed, n, m 
 indicando tramite parametro 'is_connected' se deve essere connesso o no
