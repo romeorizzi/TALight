@@ -45,10 +45,13 @@ while no_more_opt_pos == False:
 
             if '0' in server_vector:
                 magic_indexes = [i for i in range(server_vector.index('0'), (len(server_vector)-1) - server_vector[::-1].index('0')+1)]
+                TAc.print(LANG.render_feedback("move", f'Perfect I don\'t need any more questions. The magic indexes are: {magic_indexes}.'), "green", ["bold"])
             else:
                 magic_indexes = []
+                TAc.print(LANG.render_feedback("move", f'Perfect I don\'t need any more questions. There are no magic indexes.'), "green", ["bold"])
 
-            TAc.print(LANG.render_feedback("move", f'Perfect I don\'t need any more questions. The magic indexes are: {magic_indexes}.'), "green", ["bold"])
+            
+            TAc.print(LANG.render_feedback("moves done", f'I have done {wasted_dollars} questions.'), "green", ["bold"])
             exit(0)
 
         elif optimal_pos[0] == None:

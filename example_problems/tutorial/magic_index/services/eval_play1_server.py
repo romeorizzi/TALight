@@ -60,12 +60,7 @@ for n_move in range(0,len(final_configuration)):
             elif ENV['feedback'] == 'spot_every_gift':
                 TAc.print(LANG.render_feedback("error", f'# Here you made a mistake!'), "yellow", ["bold"])
 
-    if final_configuration[chosen_index] == chosen_index:
-        server_vector[optimal_pos] = '0' 
-    elif final_configuration[chosen_index] > chosen_index:
-        server_vector[optimal_pos] = '1'
-    elif final_configuration[chosen_index] < chosen_index:
-        server_vector[optimal_pos] = '-1'
+    update_server_vec(chosen_index, final_configuration[chosen_index],server_vector)
 
     wasted_dollars += 1
 
