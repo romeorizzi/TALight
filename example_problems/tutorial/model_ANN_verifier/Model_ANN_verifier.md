@@ -18,7 +18,7 @@ A node combines input from the data with a set of coefficients, or *weights*, th
 These input-weight products are summed and then the sum is passed through a node’s so-called ***activation function***, to determine whether and to what extent that signal should progress further through the network to affect the outcome. If we want to make a parallel with the functioning of the human brain, these connections represent the synapses.
 
 ## How is it possible to learn a task using ANN?
-The input layer is nothing more than a set of values representing a particular initial state/feature. Each arc connecting one node to the next has a label representing the weight <img src="https://latex.codecogs.com/gif.latex?w_i"/>. So each node <img src="https://latex.codecogs.com/gif.latex?h_i"/> of the hidden layers will be: <img src="https://latex.codecogs.com/gif.latex?h_i = \sum_{i = 0}^m x_i \; w_i" /> 
+The input layer is nothing more than a set of values representing a particular initial state/feature. Each arc connecting one node to the next has a label representing the weight <img src="https://latex.codecogs.com/gif.latex?w_i"/>. So each node <img src="https://latex.codecogs.com/gif.latex?h_i"/> of the hidden layers will be: <img src="https://render.githubusercontent.com/render/math?math=h_i = \sum_{i = 0}^m x_i w_i">
 
 ![](https://i.imgur.com/uAyuxZX.png)
 
@@ -33,15 +33,16 @@ But how does the learning process take place? It's all about correctly finding/a
 ## Neural Network verification
 The verification of neural networks proves that a given input corresponds to a given output or that the output is in a given range.
 
-<img src="https://latex.codecogs.com/gif.latex?\mathcal{X}_0 \in [\underline{x_0} \;\; \Bar{x_0}] \land ... \land \mathcal{X}_n \in [\underline{x_n}\;\; \Bar{x_n}]  \implies \mathcal{Y} \in [\underline{y_n}\;\; \Bar{y_n}]"/>
+<img src="https://latex.codecogs.com/gif.latex?\mathcal{X}_0&space;\in&space;[\underline{x_0}&space;\;\;&space;\Bar{x_0}]&space;\land&space;...&space;\land&space;\mathcal{X}_n&space;\in&space;[\underline{x_n}\;\;&space;\Bar{x_n}]&space;\implies&space;\mathcal{Y}&space;\in&space;[\underline{y_n}\;\;&space;\Bar{y_n}]" title="\mathcal{X}_0 \in [\underline{x_0} \;\; \Bar{x_0}] \land ... \land \mathcal{X}_n \in [\underline{x_n}\;\; \Bar{x_n}] \implies \mathcal{Y} \in [\underline{y_n}\;\; \Bar{y_n}]" />
 
 Since a network can have many input nodes that describe a particular initial configuration, and each has its own domain, to verify that the network respects certain constraints, we should test all possible combinations that obviously could be infinite, which makes the problem NP-hard. However, it is possible to use modeling and Linear Programming (LP) methods to be able to determine whether particular properties are satisfied or not given a given neural network (already trained) and constraints for the output. Let's see an example:
 ![](https://i.imgur.com/UUYV6Pv.png)
+
 This is a very simple example, we have this NN already trained, where there is a single input node <img src="https://latex.codecogs.com/gif.latex?x_1"/> and a single hidden layer composed by two nodes <img src="https://latex.codecogs.com/gif.latex?x_2,x_3"/> and a single output node <img src="https://latex.codecogs.com/gif.latex?x_4"/>.
-We want to check if this property could be satisfied: <img src="https://latex.codecogs.com/gif.latex?for\; x_1 \in [0\;\;1], \;\; always\; x_4 \notin [0.5\;\;1]"/>.
+We want to check if this property could be satisfied: <img src="https://latex.codecogs.com/gif.latex?for\;&space;x_1&space;\in&space;[0\;\;1],&space;\;\;&space;always\;&space;x_4&space;\notin&space;[0.5\;\;1]" title="for\; x_1 \in [0\;\;1], \;\; always\; x_4 \notin [0.5\;\;1]" />
 
 In other words if we can find an assignment for the variables <img src="https://latex.codecogs.com/gif.latex?x_1,x_2,x_3"/> that make <img src="https://latex.codecogs.com/gif.latex?x_4"/> be in that range, then the property is not satisfied, i.e. it violates that particular constraint.
-To do this (find a counterexample) it is better to overturn the property, that is just to find an assignment for <img src="https://latex.codecogs.com/gif.latex?x_1,x_2,x_3"/> that allows <img src="https://latex.codecogs.com/gif.latex?x_4 \in [0.5\;\;1]"/>.
+To do this (find a counterexample) it is better to overturn the property, that is just to find an assignment for <img src="https://latex.codecogs.com/gif.latex?x_1,x_2,x_3"/> that allows <img src="https://latex.codecogs.com/gif.latex?x_4&space;\in&space;[0.5\;\;1]" title="x_4 \in [0.5\;\;1]" /> .
 
 Intuitively if we look the network is simple to see that the property (not the negated one) always holds, can you say why? **Can you figure out how to model this problem? One suggestion might be to start by rewriting each node with the above formula....**
 
