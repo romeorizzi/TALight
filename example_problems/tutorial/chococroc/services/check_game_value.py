@@ -8,12 +8,13 @@ import chococroc_lib as cl
 
 # METADATA OF THIS TAL_SERVICE:
 problem="chococroc"
-service="check_is_winning"
+service="check_game_value"
+
 args_list = [
     ('m',int),
     ('n',int),
     ('value',int),
-    ('silent',bool),
+    ('silent',bool)
 ]
 
 ENV =Env(args_list)
@@ -22,7 +23,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 grundy_val = cl.grundy_val(ENV['m'], ENV['n'])
-print(f"grundy_val={grundy_val}")
+#print(f"grundy_val={grundy_val}")
 if ENV['value'] == -2:
     if grundy_val == 0:
         TAc.NO()
@@ -44,7 +45,7 @@ if ENV['value'] == -1:
 if ENV['value'] >= 0:
     if grundy_val != ENV['value']:
         TAc.NO()
-        TAc.print(LANG.render_feedback("wrong-grundy-val", f'Contrary to your conjecture, the grundy value of configuration {ENV["m"]} x {ENV["n"]} is NOT {grundy_val}.'), "red")
+        TAc.print(LANG.render_feedback("wrong-grundy-val", f'Contrary to your conjecture, the grundy value of configuration {ENV["m"]} x {ENV["n"]} is NOT {ENV["value"]}.'), "red")
         TAc.print(LANG.render_feedback("wrong-grundy-val-play", f'You can check this out playing a game against our service \'play_val_measuring_game\', starting second on configuration (chocolate_bar={ENV["m"]} x {ENV["n"]}, single_NIM_tower={grundy_val}). If you succeed winning then you disprove our claim or the optimality of our player (either way, let us know).'), "yellow", ["bold"])
     elif not ENV['silent']:
         TAc.OK()
