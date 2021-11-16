@@ -94,6 +94,52 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+  play:
+    description: use this service if you want to play a game with our player, you can start first or second on every configuration you want.
+    evaluator: [python, services/play.py]
+    args:
+      m:
+        regex: ^([1-9][0-9]{0,50})$
+        default: 1
+        explain: Number of rows of the chocolate bar.
+      n:
+        regex: ^([1-9][0-9]{0,50})$
+        default: 1
+        explain: Number of columns of the chocolate bar.
+      player:
+        regex: ^(0|1)$
+        default: 0
+        explain: The value that indicates if you want start first, with 0, or second, with 1.
+      value:
+        regex: ^0$
+        default: 0
+        explain: You play the game against our computer.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  play_val_measuring_game:
+    description: use this service if you want to play a game with our player, you can start first or second on every configuration you want.
+    evaluator: [python, services/play.py]
+    args:
+      m:
+        regex: ^([1-9][0-9]{0,50})$
+        default: 1
+        explain: Number of rows of the chocolate bar.
+      n:
+        regex: ^([1-9][0-9]{0,50})$
+        default: 1
+        explain: Number of columns of the chocolate bar.
+      player:
+        regex: ^(0|1)$
+        default: 0
+        explain: The value that indicates if you want start first, with 0, or second, with 1.
+      value:
+        regex: ^1$
+        default: 1
+        explain: You play the game against our computer correlating the match with a NIM tower.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_server.py]
