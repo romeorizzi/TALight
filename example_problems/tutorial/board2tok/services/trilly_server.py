@@ -15,6 +15,7 @@ args_list = [
     ('goal_min_calls_to_standard_moves',str),
     ('goal_min_calls_to_trilly',str),
     ('trilly_assertivity', str),
+    ('silent', int),
 ]
 
 ENV =Env(args_list)
@@ -260,7 +261,7 @@ def sub_board_moves(tab, sub_board_dimension, row_coordintate, col_coordinate, h
     global count_standard_moves
     global count_trilly_calls
     global macromoves_challenge
-    global macromove_line    
+    global macromove_line
 
     while line[0] != stopping_command_set:
         
@@ -278,7 +279,7 @@ def sub_board_moves(tab, sub_board_dimension, row_coordintate, col_coordinate, h
                 standard_move(line[1], line[2], line[3], line[4])
                 TAc.print(LANG.render_feedback('standard-moves-call', f'{tab}# You have acted a `standard move` ({line}).'), 'white')
             if line[0] >= 1:
-                count_trilly_calls += 1                
+                count_trilly_calls += 1
                 if random.randint(0, 1) and ENV['trilly_assertivity'] == 'might_bounch_your_macromoves_back_to_you':
                     TAc.print(LANG.render_feedback('suggested-macro-moves', f'{tab}macro {line[0]} {line[1]} {line[2]} {line[3]} {line[4]}'), 'green', ['bold'])
                     macromoves_challenge = False
@@ -286,8 +287,8 @@ def sub_board_moves(tab, sub_board_dimension, row_coordintate, col_coordinate, h
                 else:
                     trilly_moves(tab, line[0], line[1], line[2], line[3], line[4])
                 TAc.print(LANG.render_feedback('trilly-call', f'{tab}# You have called `trilly` ({line}).'), 'white')
-            if not macromoves_challenge:            
-                macromoves_challenge = True           
+            if not macromoves_challenge:
+                macromoves_challenge = True
                 sub_board_moves(f"{tab}\t", macromove_line[0], macromove_line[1], macromove_line[2], macromove_line[3], macromove_line[4])
         else:
             if len(tab) > 0:
@@ -299,8 +300,9 @@ row_empty_cell_coordinate, col_empty_cell_coordinate = choose_empty_cell()
 
 sub_board_moves("", ENV['k'], 0, 0, row_empty_cell_coordinate, col_empty_cell_coordinate)
 
-for i in range(2**ENV['k']):
-    TAc.print(LANG.render_feedback('printing-sub-board', board[i][:2**ENV['k']]), 'white')
+if not ENV['silent']:
+    for i in range(2**ENV['k']):
+        TAc.print(LANG.render_feedback('printing-sub-board', board[i][:2**ENV['k']]), 'white')
 
 count_empty_cells = check_coverage(0, 0, ENV['k'])
 tot_cells = 2**ENV['k']*2**ENV['k']
