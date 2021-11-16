@@ -21,7 +21,7 @@ services:
       silent:
         regex: ^(0|1)$
         default: 0
-        explain: If this flag is set to 1 then nothing is printed unless your conjecture is a false one.
+        explain: If this flag is set to 1 nothing is printed unless your conjecture is a false one.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -44,7 +44,7 @@ services:
       silent:
         regex: ^(0|1)$
         default: 0
-        explain: If this flag is set to 1 then nothing is printed unless your conjecture is a false one.
+        explain: If this flag is set to 1 nothing is printed unless your conjecture is a false one.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -87,10 +87,10 @@ services:
         regex: ^(won_or_lost|grundy_val|gimme_a_winning_move|gimme_all_winning_moves)$
         default: won_or_lost
         explain: "the options are as follows:"
-        explain1: -won_or_lost= just tell me whether the given configuration mxn is a winning or lost one.
-        explain2: -grundy_val= please, tell me the grundy value of the given configuration mxn.
-        explain3: -gimme_a_winning_move= if the given configuration mxn is winning, please, suggest me a winning move.
-        explain4: -gimme_all_winning_moves= give me the whole set of winning moves for the given mxn configuration.
+        explain1: -won_or_lost= just tell me whether the given configuration m x n is a winning or lost one.
+        explain2: -grundy_val= please, tell me the grundy value of the given configuration m x n.
+        explain3: -gimme_a_winning_move= if the given configuration m x n is winning, please, suggest me a winning move.
+        explain4: -gimme_all_winning_moves= give me the whole set of winning moves for the given m x n configuration.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -109,7 +109,7 @@ services:
       player:
         regex: ^(0|1)$
         default: 0
-        explain: The value that indicates if you want start first, with 0, or second, with 1.
+        explain: If you to start as first player use 0, if you want to start as second player use 1.
       value:
         regex: ^0$
         default: 0
@@ -132,7 +132,7 @@ services:
       player:
         regex: ^(0|1)$
         default: 0
-        explain: The value that indicates if you want start first, with 0, or second, with 1.
+        explain: If you to start as first player use 0, if you want to start as second player use 1.
       value:
         regex: ^1$
         default: 1
@@ -147,7 +147,7 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
-        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+        explain: any string without space characters meaning one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
