@@ -84,6 +84,10 @@ services:
         explain2: -might_pose_smaller_macromoves_in_reply = trilly might reply with one macromove for each sub-board and a list of standard moves.
         explain3: -might_bounch_your_macromoves_back_to_you = trilly might reply with a macromove as big as the one you commissioned her (your commission is bounched back to you).
         default: plain_executor
+      silent:
+        regex: ^(0|1)$
+        explains: "The service doesn't display the tiling board when you have finished."
+        default: 0
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

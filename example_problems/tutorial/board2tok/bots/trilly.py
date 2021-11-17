@@ -1,97 +1,98 @@
 #!/usr/bin/env python3
 
-import random
-
-k = 4
-left_out_cell_must_be_a_corner_cell = 1
-number_of_total_moves_before_end = 100
 macro_moves = []
-board = [['0' for _ in range(2**k)] for _ in range(2**k)]
+moves = []
 
-def check_is_empty(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
-    for i in range(2**board_dimension):
-        for j in range(2**board_dimension):
-            if row_coordinates + i != hole_row or col_coordinates + j != hole_column:
-                if board[row_coordinates + i][col_coordinates + j] != '0':
-                    return True
-    return False
+def chose_move(board_dimension, first_row, first_col, hole_row, hole_col):
+    k = 2**board_dimension
+    new_moves = []
 
-def make_move(row_coordinates, col_coordinates, hole_row, hole_column):
-    if hole_row - row_coordinates == 0 and hole_column - col_coordinates == 0:
-        board[row_coordinates][col_coordinates + 1] = 'N'
-        board[row_coordinates + 1][col_coordinates] = 'W'
-        board[row_coordinates + 1][col_coordinates + 1] = '4'
-    if hole_row - row_coordinates == 0 and hole_column - col_coordinates == 1:
-        board[row_coordinates][col_coordinates] = 'N'
-        board[row_coordinates + 1][col_coordinates] = '1'
-        board[row_coordinates + 1][col_coordinates + 1] = 'E'
-    if hole_row - row_coordinates == 1 and hole_column - col_coordinates == 0:
-        board[row_coordinates][col_coordinates] = 'W'
-        board[row_coordinates][col_coordinates + 1] = '3'
-        board[row_coordinates + 1][col_coordinates + 1] = 'S'
-    if hole_row - row_coordinates == 1 and hole_column - col_coordinates == 1:
-        board[row_coordinates][col_coordinates] = '2'
-        board[row_coordinates][col_coordinates + 1] = 'E'
-        board[row_coordinates + 1][col_coordinates] = 'S'
+    if k <= 1:
+        return
 
-def set_move():
-    sub_board_dimension = random.randint(1, k - 1)
-    row_coordinates = random.randrange(0, 2**k - 1)
-    if row_coordinates + 2**sub_board_dimension > 2**k - 1:
-        row_coordinates -= row_coordinates % 2**sub_board_dimension
-    column_coordinates = random.randrange(0, 2**k - 1)
-    if column_coordinates + 2**sub_board_dimension > 2**k - 1:
-        column_coordinates -= column_coordinates % 2**sub_board_dimension
-    if left_out_cell_must_be_a_corner_cell:
-        hole_row = (2**sub_board_dimension - 1) * random.randint(0, 1) + row_coordinates
-        hole_column = (2**sub_board_dimension - 1) * random.randint(0, 1) + column_coordinates
-    else:
-        hole_row = random.randint(0, 2**sub_board_dimension - 1) + row_coordinates
-        hole_column = random.randint(0, 2**sub_board_dimension - 1) + column_coordinates
-    if sub_board_dimension == 1:
-        sub_board_dimension = random.randint(0,1)
-    return sub_board_dimension, row_coordinates, column_coordinates, hole_row, hole_column
+    half_k = int(k / 2)
+
+    row_holes = [['0' for i in range(2)] for j in range(2)]
+    col_holes = [['0' for i in range(2)] for j in range(2)]
+    row_holes[0][0] = first_row + half_k - 1
+    col_holes[0][0] = first_col + half_k - 1
+    row_holes[0][1] = first_row + half_k - 1
+    col_holes[0][1] = first_col + half_k
+    row_holes[1][0] = first_row + half_k
+    col_holes[1][0] = first_col + half_k - 1
+    row_holes[1][1] = first_row + half_k
+    col_holes[1][1] = first_col + half_k
+
+    if (hole_row < first_row + half_k and hole_col < first_col + half_k ):
+        row_holes[0][0] = hole_row
+        col_holes[0][0] = hole_col
+        new_moves.insert(0,(1, first_row + half_k - 1, first_col + half_k - 1, first_row + half_k - 1, first_col + half_k - 1))
+
+    if (hole_row < first_row + half_k and hole_col >= first_col + half_k):
+        row_holes[0][1] = hole_row
+        col_holes[0][1] = hole_col
+        new_moves.insert(0,(1, first_row + half_k - 1, first_col + half_k - 1, first_row + half_k - 1, first_col + half_k))
+
+    if (hole_row >= first_row + half_k and hole_col < first_col + half_k ):
+        row_holes[1][0] = hole_row
+        col_holes[1][0] = hole_col
+        new_moves.insert(0,(1, first_row + half_k - 1, first_col + half_k - 1, first_row + half_k, first_col + half_k -1))
+
+    if (hole_row >= first_row + half_k and hole_col >= first_col + half_k):
+        row_holes[1][1] = hole_row
+        col_holes[1][1] = hole_col
+        new_moves.insert(0,(1, first_row + half_k - 1, first_col + half_k - 1, first_row + half_k, first_col + half_k))
+
+    new_moves.insert(0,(board_dimension - 1, first_row, first_col, row_holes[0][0], col_holes[0][0]))
+    new_moves.insert(0,(board_dimension - 1, first_row, first_col + half_k, row_holes[0][1], col_holes[0][1]))
+    new_moves.insert(0,(board_dimension - 1, first_row + half_k, first_col, row_holes[1][0], col_holes[1][0]))
+    new_moves.insert(0,(board_dimension - 1, first_row + half_k, first_col + half_k, row_holes[1][1], col_holes[1][1]))
+    moves.insert(0, new_moves)
 
 def start_algo():
-    global number_of_total_moves_before_end
-    while number_of_total_moves_before_end > 0:
-        empty = True
-        check_empty = (2**k - 1) * (2**k - 1)
-        if len(macro_moves) == 0:
-            while empty == True:
-                sub_board_dimension, row_coordinates, column_coordinates, hole_row, hole_column = set_move()
-                empty = check_is_empty(sub_board_dimension, row_coordinates, column_coordinates, hole_row, hole_column)
-                check_empty -= 1
-                if check_empty <= 0:
-                    print('#end')
-                    spoon = input().strip()
-                    while spoon[:len("# ")] == "# ":
-                        spoon = input().strip()
-                    exit(0)
-            move = f'{sub_board_dimension} {row_coordinates} {column_coordinates} {hole_row} {hole_column}'
-            make_move(row_coordinates, column_coordinates, hole_row, hole_column)
-        else:
-            move_id = random.randint(0, len(macro_moves) - 1)
-            move = macro_moves[move_id]
-            macro_moves.pop(move_id)
-        print(move)
-        if sub_board_dimension > 1:
+    do_end = False
+    chose_move(int(arguments.get('k')), 0, 0, int(arguments.get('row_hole')), int(arguments.get('col_hole')))
+    while len(moves) > 0:
+        move = moves[0][0]
+        print(f'{move[0]} {move[1]} {move[2]} {move[3]} {move[4]}')
+        moves[0].pop(0)
+        if len(moves[0]) == 0:
+            moves.pop(0)
+            do_end = True
+        spoon = input().strip()
+        while not spoon.startswith("# "):
+            if spoon.startswith("macro"):
+                macro_moves.insert(0,spoon[len("macro"):].split())
             spoon = input().strip()
-            while spoon[:len("# ")] != "# ":
-                make_move(int(spoon.split()[1]), int(spoon.split()[2]), int(spoon.split()[3]), int(spoon.split()[4]))
-                if spoon[:len('macro')] == 'macro':
-                    macro_moves.append(spoon[len('macro '):])
+        while spoon.startswith("# "):
+            spoon = input().strip()
+        if len(macro_moves) > 0:
+            if int(macro_moves[0][0]) - 1 == 0:
+                moves.insert(0,[(0, int(macro_moves[0][1]), int(macro_moves[0][2]), int(macro_moves[0][3]), int(macro_moves[0][4]))])
+            else:
+                chose_move(int(macro_moves[0][0]), int(macro_moves[0][1]), int(macro_moves[0][2]), int(macro_moves[0][3]), int(macro_moves[0][4]))
+            macro_moves.pop(0)
+        if do_end:
+            print('#end')
+            spoon = input().strip()
+            while spoon.startswith("# "):
                 spoon = input().strip()
-        else:
-            spoon = input().strip()
-        number_of_total_moves_before_end -= 1
+            do_end = False
 
-    print('#end')
+    print("#end")
     spoon = input().strip()
-    while spoon[:len("# ")] == "# ":
+    while spoon.startswith("# "):
         spoon = input().strip()
 
 spoon = input().strip()
-while spoon[:len("# ")] == "# ":
+while spoon.startswith("# "):
+    if spoon.startswith("#  with arguments:"):
+        variables = spoon[len("#  with arguments: "):spoon.find(", ISATTY")].split(", ")
+        arguments = { var.split("=")[0] : var.split("=")[1] for var in variables }
+    if spoon.endswith(") empty."):
+        hole_coordinates = spoon.split("(")[-1].split(")")[0].split(", ")
+        arguments['row_hole'] = hole_coordinates[0]
+        arguments['col_hole'] = hole_coordinates[1]
     spoon = input().strip()
+print(f'#{arguments}')
 start_algo()

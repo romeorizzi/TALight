@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr, exit
+from sys import exit
 
 import random
 
@@ -15,6 +15,7 @@ args_list = [
     ('goal_min_calls_to_standard_moves',str),
     ('goal_min_calls_to_trilly',str),
     ('trilly_assertivity', str),
+    ('silent', int),
 ]
 
 ENV =Env(args_list)
@@ -25,23 +26,23 @@ LANG.print_opening_msg()
 # START CODING YOUR SERVICE: 
 
 board = [['0' for _ in range(2**ENV['k'])] for _ in range(2**ENV['k'])]
-count_empty_cells = 0
+macromoves_challenge = True
+macromove_line = [0]
+stopping_command_set="#end"
+count_standard_moves = 0
+count_trilly_calls = 0
 
-def check_corner_cell(line):
-    h = line[0]
-    if h == 0:
-        h = 1
-    corner_cells = list()
-    corner_cells.append((f'{line[1]}', f'{line[2]}'))
-    corner_cells.append((f'{line[1]}', f'{2**h + line[2] - 1}'))
-    corner_cells.append((f'{2**h + line[1] - 1}', f'{line[2]}'))
-    corner_cells.append((f'{2**h + line[1] - 1}', f'{2**h + line[2] - 1}'))
+def choose_empty_cell():
+    if ENV['left_out_cell_must_be_a_corner_cell'] == 0:
+        row_empty_cell_coordinate = random.randint(0, 2**ENV['k'] - 1)
+        col_empty_cell_coordinate = random.randint(0, 2**ENV['k'] - 1)
+    else:
+        row_empty_cell_coordinate = (2**ENV['k'] - 1) * random.randint(0, 1)
+        col_empty_cell_coordinate = (2**ENV['k'] - 1) * random.randint(0, 1)
+    return row_empty_cell_coordinate, col_empty_cell_coordinate
 
-    if (f'{line[3]}', f'{line[4]}') not in corner_cells:
-        TAc.print(LANG.render_feedback('error-corner-cell', '#ERROR: The left-out-cell you have chosen is not a corner cell.'), 'red', ['bold'])
-        exit(0)
+def check_values(line, sub_board_dimension, row_coordinate, col_coordinate, hole_row, hole_col):
 
-def check_values(line):
     if line[0] < 0 or line[1] < 0 or line[2] < 0 or line[3] < 0 or line[4] < 0:
         TAc.print(LANG.render_feedback('error-negative-number', '#ERROR: One or more values that you have inserted are negative.'), 'red', ['bold'])
         exit(0)
@@ -75,13 +76,47 @@ def check_values(line):
         TAc.print(LANG.render_feedback('column-hole-coordinates-exceeding-sub-board', '#ERROR: Your column hole coordinate falls outside the sub-board.'), 'red', ['bold'])
         exit(0)
 
-def check_is_empty(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
-    for i in range(2**board_dimension):
-        for j in range(2**board_dimension):
-            if row_coordinates + i != hole_row or col_coordinates + j != hole_column:
-                if board[row_coordinates + i][col_coordinates + j] != '0':
-                    TAc.print(LANG.render_feedback('error-non-emty-sub-board', '#ERROR: The sub-board you asked Trilly to fill up is not empty.'), 'red', ['bold'])
+    if line[0] >= sub_board_dimension:
+        TAc.print(LANG.render_feedback('challenge-sub-board-dimension', '#ERROR: The sub-board dimension you have chosen is greater equal than the one of the challenge.'), 'red', ['bold'])
+        exit(0)
+
+    if line[1] >= 2**sub_board_dimension + row_coordinate:
+        TAc.print(LANG.render_feedback('sub-board-out-of-challenge-row-dimension', '#ERROR: The row coordinates you have chosen are out of the challenge board dimension.'), 'red', ['bold'])
+        exit(0)
+
+    if line[2] >= 2**sub_board_dimension + col_coordinate:
+        TAc.print(LANG.render_feedback('sub-board-out-of-challenge-col-dimension', '#ERROR: The column coordinates you have chosen are out of the challenge board dimension.'), 'red', ['bold'])
+        exit(0)
+
+    if line[1] <= hole_row < (line[1] + 2**h - 1) and line[2] <= hole_col < (line[2] + 2**h - 1):
+        if hole_row != line[3]:
+            TAc.print(LANG.render_feedback('row-empty-cell-covering', '#ERROR: Your row hole coordinate covers the orignal cell coordinate that you must leave empty.'), 'red', ['bold'])
+            exit(0)
+        if hole_col != line[4]:
+            TAc.print(LANG.render_feedback('column-empty-cell-covering', '#ERROR: Your column hole coordinate covers the orignal cell coordinate that you must leave empty.'), 'red', ['bold'])
+            exit(0)
+
+def check_is_empty(line):
+    for i in range(2**line[0]):
+        for j in range(2**line[0]):
+            if line[1] + i != line[3] or line[2] + j != line[4]:
+                if board[line[1] + i][line[2] + j] != '0':
+                    TAc.print(LANG.render_feedback('error-non-empty-sub-board', '#ERROR: The sub-board you asked to fill up is not empty.'), 'red', ['bold'])
                     exit(0)
+
+def check_corner_cell(line):
+    h = line[0]
+    if h == 0:
+        h = 1
+    corner_cells = list()
+    corner_cells.append((f'{line[1]}', f'{line[2]}'))
+    corner_cells.append((f'{line[1]}', f'{2**h + line[2] - 1}'))
+    corner_cells.append((f'{2**h + line[1] - 1}', f'{line[2]}'))
+    corner_cells.append((f'{2**h + line[1] - 1}', f'{2**h + line[2] - 1}'))
+
+    if (f'{line[3]}', f'{line[4]}') not in corner_cells:
+        TAc.print(LANG.render_feedback('error-corner-cell', '#ERROR: The left-out-cell you have chosen is not a corner cell.'), 'red', ['bold'])
+        exit(0)
 
 def standard_move(row_coordinates, col_coordinates, hole_row, hole_column):
     if hole_row - row_coordinates == 0 and hole_column - col_coordinates == 0:
@@ -101,7 +136,10 @@ def standard_move(row_coordinates, col_coordinates, hole_row, hole_column):
         board[row_coordinates][col_coordinates + 1] = 'E'
         board[row_coordinates + 1][col_coordinates] = 'S'
 
-def trilly_moves(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
+def trilly_moves(tab, board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
+    
+    global macromoves_challenge
+    global macromove_line
     k = 2**board_dimension
 
     if k <= 1:
@@ -144,44 +182,45 @@ def trilly_moves(board_dimension, row_coordinates, col_coordinates, hole_row, ho
         standard_move(row_coordinates + half_k - 1, col_coordinates + half_k - 1, row_coordinates + half_k, col_coordinates + half_k)
         move = f"1 {row_coordinates + half_k - 1} {col_coordinates + half_k - 1} {row_coordinates + half_k} {col_coordinates + half_k}"
 
-    TAc.print(LANG.render_feedback('suggested-standard-move', f'{move}'), 'green')
+    TAc.print(LANG.render_feedback('suggested-standard-move', f'{tab}{move}'), 'green')
 
-    if board_dimension <= 2 or ENV['trilly_assertivity'] == 'plain_executor':
-        trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
-        trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
-        trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
-        trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
-    if board_dimension > 2 and ENV['trilly_assertivity'] == 'might_pose_smaller_macromoves_in_reply':
+    if macromoves_challenge and board_dimension > 1 and ENV['trilly_assertivity'] == 'might_pose_smaller_macromoves_in_reply':
+        macromoves_challenge = False
         rnd = random.randint(0, 3)
         if rnd == 0:
-            TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates} {col_coordinates} {row_holes[0][0]} {col_holes[0][0]}'), 'green')
-            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
-            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
-            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
+            macromove_line = [(board_dimension - 1), row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0]]
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'{tab}macro {board_dimension - 1} {row_coordinates} {col_coordinates} {row_holes[0][0]} {col_holes[0][0]}'), 'green', ['bold'])
+            trilly_moves(tab, board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
+            trilly_moves(tab, board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
+            trilly_moves(tab, board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
         elif rnd == 1:
-            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
-            TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates} {col_coordinates + half_k} {row_holes[0][1]} {col_holes[0][1]}'), 'green')
-            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
-            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
+            macromove_line = [(board_dimension - 1), row_coordinates, (col_coordinates + half_k), row_holes[0][1], col_holes[0][1]]
+            trilly_moves(tab, board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'{tab}macro {board_dimension - 1} {row_coordinates} {col_coordinates + half_k} {row_holes[0][1]} {col_holes[0][1]}'), 'green', ['bold'])
+            trilly_moves(tab, board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
+            trilly_moves(tab, board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
         elif rnd == 2:
-            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
-            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
-            TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates} {row_holes[1][0]} {col_holes[1][0]}'), 'green')
-            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
+            macromove_line = [(board_dimension - 1), (row_coordinates + half_k), col_coordinates, row_holes[1][0], col_holes[1][0]]
+            trilly_moves(tab, board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
+            trilly_moves(tab, board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'{tab}macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates} {row_holes[1][0]} {col_holes[1][0]}'), 'green', ['bold'])
+            trilly_moves(tab, board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
         else:
-            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
-            trilly_moves(board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
-            trilly_moves(board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
-            TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates + half_k} {row_holes[1][1]} {col_holes[1][1]}'), 'green')
+            macromove_line = [(board_dimension - 1), (row_coordinates + half_k), (col_coordinates + half_k), row_holes[1][1], col_holes[1][1]]
+            trilly_moves(tab, board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
+            trilly_moves(tab, board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
+            trilly_moves(tab, board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
+            TAc.print(LANG.render_feedback('suggested-macro-moves', f'{tab}macro {board_dimension - 1} {row_coordinates + half_k} {col_coordinates + half_k} {row_holes[1][1]} {col_holes[1][1]}'), 'green', ['bold'])
+    else:
+        trilly_moves(tab, board_dimension - 1, row_coordinates, col_coordinates, row_holes[0][0], col_holes[0][0])
+        trilly_moves(tab, board_dimension - 1, row_coordinates, col_coordinates + half_k, row_holes[0][1], col_holes[0][1])
+        trilly_moves(tab, board_dimension - 1, row_coordinates + half_k, col_coordinates, row_holes[1][0], col_holes[1][0])
+        trilly_moves(tab, board_dimension - 1, row_coordinates + half_k, col_coordinates + half_k, row_holes[1][1], col_holes[1][1])
 
-def trilly(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column):
-    check_is_empty(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column)
-    trilly_moves(board_dimension, row_coordinates, col_coordinates, hole_row, hole_column)
-
-def check_coverage():
-    global count_empty_cells
+def check_coverage(row_starting_point, col_starting_point, board_dimension):
+    count_empty_cells = 0
     line = ['0'] * 2**ENV['k']
-    for r in range(2**ENV['k']):
+    for r in range(row_starting_point, 2**board_dimension + row_starting_point):
         prev_line = line
         line = board[r]
         if line[0] in {'3','4','E'}: 
@@ -190,13 +229,13 @@ def check_coverage():
         if line[2**ENV['k'] - 1] in {'1','2','W'}: 
             TAc.print(LANG.render_feedback("right-margin", f"The last character of a line can not be a '{line[2**ENV['k'] - 1]}' for otherwise its tromino exits the right border of your grid."), "red", ["bold"])
             exit(0)
-        for j in range(2**ENV['k']):
+        for j in range(col_starting_point, 2**board_dimension + col_starting_point):
             if line[j] == '0':
                 count_empty_cells += 1
             if (line[j] in {'1','2'} and line[j + 1] != 'E') or \
-            (j < 2**ENV['k'] - 1 and line[j + 1] == 'E' and line[j] not in {'1','2'}) or \
+            (j < 2**board_dimension - 1 and line[j + 1] == 'E' and line[j] not in {'1','2'}) or \
             (line[j] == 'W' and line[j + 1] not in {'3','4'}) or \
-            (j < 2**ENV['k'] - 1 and line[j + 1] in {'3','4'} and line[j] != 'W'):
+            (j < 2**board_dimension - 1 and line[j + 1] in {'3','4'} and line[j] != 'W'):
                 TAc.print(LANG.render_feedback("inconsistent-tromino-row", f"You can not have a `{line[j + 1]}` character at the immidiate right of a `{line[j]}` character (see the characters in position {j} and {j + 1} of your line)."), "red", ["bold"])
                 exit(0)
         if r == 0:
@@ -209,46 +248,63 @@ def check_coverage():
                 if char in {'2','3','N'}: 
                     TAc.print(LANG.render_feedback("bottom-margin", f"No character of the last (bottom) line can be a '{char}' for otherwise its tromino exits the bottom border of your grid."), "red", ["bold"])
                     exit(0)
-        for j in range(2**ENV['k']):
-            if (line[j] in {'1','4'} and prev_line[j] != 'N') or \
+        for j in range(col_starting_point, 2**board_dimension + col_starting_point):
+            if (line[j] in {'1','4'} and prev_line[j] not in {'0','N'}) or \
             (prev_line[j] == 'N' and line[j] not in {'1','4'}) or \
-            (line[j] == 'S' and prev_line[j] not in {'2','3'}) or \
+            (line[j] == 'S' and prev_line[j] not in {'0','2','3'}) or \
             (prev_line[j] in {'2','3'} and line[j] != 'S'):
                 TAc.print(LANG.render_feedback("inconsistent-tromino-col", f"You can not have a `{prev_line[j]}` character just above a `{line[j]}` character (check the characters in column {j}, indexes starting from 0)."), "red", ["bold"])
                 exit(0)
+    return count_empty_cells
 
-count_standard_moves = 0
-count_trilly_calls = 0
+def sub_board_moves(tab, sub_board_dimension, row_coordintate, col_coordinate, hole_row, hole_col, line=[0]):
+    global count_standard_moves
+    global count_trilly_calls
+    global macromoves_challenge
+    global macromove_line
 
-stopping_command_set="#end"
-line = [0]
-TAc.print(LANG.render_feedback('gimme-action', f"# Waiting for the action.\n When you have finished, insert a closing line '#end' as last line; this will signal us that your input is complete."), 'yellow', ['bold'])
+    while line[0] != stopping_command_set:
+        
+        TAc.print(LANG.render_feedback('sub-board-information', f"{tab}# You are working on the sub-board of dimension: {sub_board_dimension}, you must leave the cell ({hole_row}, {hole_col}) empty.\n{tab}When you have completed the sub-board, write the stopping command '#end'."), 'yellow')
 
-while line[0] != stopping_command_set:
-    line = TALinput(int, num_tokens = 5, exceptions = stopping_command_set, TAc = TAc)
-    if line[0] != stopping_command_set:
-        if ENV['left_out_cell_must_be_a_corner_cell']:
-            check_corner_cell(line)
-        check_values(line)
+        line = TALinput(int, num_tokens = 5, exceptions = stopping_command_set, TAc = TAc)
+        if line[0] != stopping_command_set:
+            check_values(line, sub_board_dimension, row_coordintate, col_coordinate, hole_row, hole_col)
+            check_is_empty(line)
+            if ENV['left_out_cell_must_be_a_corner_cell']:
+                check_corner_cell(line)
 
-        if line[0] == 0:
-            count_standard_moves += 1
-            standard_move(line[1], line[2], line[3], line[4])
-            TAc.print(LANG.render_feedback('standard-moves-call', f'# You have acted a `standard move` ({line}).'), 'yellow', ['bold'])
-        if line[0] >= 1:
-            count_trilly_calls += 1
-            if random.randint(0, 1) and ENV['trilly_assertivity'] == 'might_bounch_your_macromoves_back_to_you':
-                TAc.print(LANG.render_feedback('suggested-macro-moves', f'macro {line[0]} {line[1]} {line[2]} {line[3]} {line[4]}'), 'green')
-            else:
-                trilly(line[0], line[1], line[2], line[3], line[4])
-            TAc.print(LANG.render_feedback('trilly-call', f'# You have called `trilly` ({line}).'), 'yellow', ['bold'])
+            if line[0] == 0:
+                count_standard_moves += 1
+                standard_move(line[1], line[2], line[3], line[4])
+                TAc.print(LANG.render_feedback('standard-moves-call', f'{tab}# You have acted a `standard move` ({line}).'), 'white')
+            if line[0] >= 1:
+                count_trilly_calls += 1
+                if random.randint(0, 1) and ENV['trilly_assertivity'] == 'might_bounch_your_macromoves_back_to_you':
+                    TAc.print(LANG.render_feedback('suggested-macro-moves', f'{tab}macro {line[0]} {line[1]} {line[2]} {line[3]} {line[4]}'), 'green', ['bold'])
+                    macromoves_challenge = False
+                    macromove_line = line
+                else:
+                    trilly_moves(tab, line[0], line[1], line[2], line[3], line[4])
+                TAc.print(LANG.render_feedback('trilly-call', f'{tab}# You have called `trilly` ({line}).'), 'white')
+            if not macromoves_challenge:
+                macromoves_challenge = True
+                sub_board_moves(f"{tab}\t", macromove_line[0], macromove_line[1], macromove_line[2], macromove_line[3], macromove_line[4])
+        else:
+            if len(tab) > 0:
+                TAc.print(LANG.render_feedback('sub-board-exiting', f"{tab}# You are exiting the current sub-board of dimension: {sub_board_dimension}."), 'blue')
+                count_empty_cells = check_coverage(row_coordintate, col_coordinate, sub_board_dimension)
+                TAc.print(LANG.render_feedback('sub-boar-left-out-cells', f"{tab}# You have left out uncovered {count_empty_cells} of the current sub-board cells (This is an intermediate value)."), 'blue')
 
-# TODO: il tiling viene restituito su un file
-# ora viene stampato altrimenti gli errori non hanno senso
-for i in range(2**ENV['k']):
-    print(board[i][:2**ENV['k']])
+row_empty_cell_coordinate, col_empty_cell_coordinate = choose_empty_cell()
 
-check_coverage()
+sub_board_moves("", ENV['k'], 0, 0, row_empty_cell_coordinate, col_empty_cell_coordinate)
+
+if not ENV['silent']:
+    for i in range(2**ENV['k']):
+        TAc.print(LANG.render_feedback('printing-sub-board', board[i][:2**ENV['k']]), 'white')
+
+count_empty_cells = check_coverage(0, 0, ENV['k'])
 tot_cells = 2**ENV['k']*2**ENV['k']
 coverage = tot_cells - count_empty_cells
 
