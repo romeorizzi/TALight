@@ -1,30 +1,32 @@
 # Model_ANN_verifier
 
-The purpose of this TALight problem is to offer a playground where to experiment a linear programming based approach to the task of neural network verification.
+The purpose of this TALight problem is to offer a playground where to experiment a linear programming based approach to the task of training and verifying a neural network.
 
 ## Artificial Neural Networks (ANNs)
 
 Artificial Neural Networks (ANNs), usually simply called Neural Networks (NNs), are computing systems inspired by the biological neural networks that constitute animal brains. They are mainly used in the field of Deep Learning (DL) for classification tasks, or in the general field of learning, particularly in Reinforcement Learning (RL).
 Any complex system can be abstracted in a simple way, or at least dissected to its basic abstract components. The basic units of an ANN are its *neurons*, which are organized into one or more layers.
-The first and the last layers contain no neuron. These are called the input layer and the output layer, and their nodes represent the input and the output lines of the ANN. Every node carries a real number expressing its output value. 
+The first and the last layers contain no neurons. These are called the input layer and the output layer, and their nodes represent the input and the output lines of the ANN. Every node carries a real number expressing its output value. 
 The neurons of each layer, also represented by nodes, are fed with the output values of nodes in the previous layer and compute their own output values in deteterministic dependence from these.
 
-The general topology of the network is illustrated in figure.
+The general topology of the network is illustrated in figure:
+
 ![](https://i.imgur.com/ELBOcWp.png)
 
-A fundamental property is that the input/output function of an ANN is fully determined by the input/output function for each one of its neurons. The behaviour of each single neuron is described by its activation function and by a set of real parameters also called weights. A neuron has one weight for every node of the previous layer to which the neuron is connected.
-The input/output function of a neuron is computed as follows:
+A fundamental property is that the input/output function of an ANN is fully determined by the input/output function for each one of its neurons. The behavior of every single neuron is described by its activation function and by a set of real parameters, also called *weights*. A neuron has one weight for every node of the previous layer to which the neuron is connected.
 
+The input/output function of a neuron is computed as follows:
+   ```
    let wv be the weighted sum of its input values.
    Set the output value to f(wv), where f() is the activation function of the neuron.
+   ```
+Training a network amounts to choosing a complete set of weights for each one of its neurons. If we want to make a parallel with the functioning of the human brain, the weights represent the intensity of possible synapses. Each neuron combines its input value through its weights and an activation function, thus either amplifying or dampening the original stimulus coming from the data offered by the input layer, thereby assigning significance to these data with regard to the task that the network training algorithm is trying to learn.
 
-Training a network amounts to choosing a complete set of weights for each one of ist neurons.
+A neuron is called linear when `f` is the identity function, activated otherwise.
+A special kind of activated neurons are the **Rectified Linear Unit (ReLU)**, which are those neurons for which: 
 
-If we want to make a parallel with the functioning of the human brain, the weights represent the intensity of a possible synapses. Each neuron combines its input value through its weights and activation function, thus either amplifing or dampeing the original stimulus coming from the data offered by the input layer, thereby assigning significance to these data with regard to the task that the network training algorithm is trying to learn.
-
-A neuron is called linear when f is the identity function, activated otherwise.
-A special kind of activated neurons are the Rectified Linear Unit (ReLU), which are those neurons for which f(x) = \max{0,x}.
-
+<img src="https://latex.codecogs.com/gif.latex?f(x)&space;=&space;\max(0,x)" title="f(x) = \max(0,x)" />
+   
 In general, once trained, the neural network offers (and computes) a function approximating the desired input/output behaviour for a certain device (the value of a position in chess, or the probability of cancer for a certain biopsi, the action a robot should make in a certain state, ...). When all neurons are linear then all the representable approximation functions are also linear.
 
 
@@ -34,15 +36,16 @@ The input layer is nothing more than a set of values representing a particular i
 ![](https://i.imgur.com/uAyuxZX.png)
 
 Activation functions are mathematical equations that determine the output of a neural network. The function is attached to each neuron (generally in the hidden layers) in the network and determines whether it should be activated “fired” or not, based on whether each neuron’s input is relevant for the model’s prediction. Activation functions also help normalize the output of each neuron to a range between 1 and 0 or between -1 and 1.
-For the purpose of this problem we will not use activation functions and will only work with linear approximation functions.
 
 ### Learning process
 
-The learning process is where one computes a set of weights so that the actual behaviour function of the network best approximates its intended behaviour. There are several classical network training algorithms through which this process is generally managed using them as black-box, mainly finding/adjusting the weights of the neural network through various steps of forward propagation and back propagation. These issues are not explored here as they are not of interest to the proposed problem.
+The learning process is where one computes a set of weights so that the actual behavior function of the network best approximates its intended behavior. There are several classical network training algorithms through which this process is generally managed using them as black-box, mainly finding/adjusting the neural network's weights through various steps of forward propagation and backpropagation. These issues are not explored here as they are not of interest to the proposed problem. We limit ourself to proposing a most classical algorithm (nome, referenza, nome dei servizi che lo implementano o che verificano la nostra implementazione).
+
+ - Learning lineare.
 
 minimizzare lo scarto massimo (si modella come programmazione lineare)
 
-Learning lineare.
+
 https://open.bu.edu/handle/2144/35386
 https://watermark.silverchair.com/10-2-172.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAsswggLHBgkqhkiG9w0BBwagggK4MIICtAIBADCCAq0GCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMWSHgwCGExc3qdkffAgEQgIICfhzBgzkX_6uB_7PlXDH47djTOk52LbVvxXppJDK1KBShD41dDUL6w7NT9DzgUiJK_h7DxBUjX6tI-1jOTwTypLhCMiDk5_yMljnWX0gqSUaVNxrmoOO0-qjvEhLECTW_z6mFCUeh9nkqi9DzOGF64f4MOEC6oBJ4joc2kqj1_VjBAvE27bNYRAB-cGDJ1pmKC0LyW1JoBt5HvdluE4tSYdz16hWjtJsLXB5Iqj1b445sav-N8Jx4cPcaOA-iedlgSo47f6qso3g4cN8FrqF_e29YYKJR58v2CGEReVfsf8Wy9cyGGFI6yOXNROvIeNGoCS7ufjea8AmNw9c_Hlck2q9hyEIgISOfOQhNCVRW-uvxN65PSEVD9SyNbv63hLbKSTrGZ-2_ZvoV-luVEieNV1GcqDI8FV3DKxqAGCi3Ep37muHC4QkuFSPcA5jOum7br1MWR-K-K1dYsCcOLD7qwqw4RDKokcL_a5CFB2dSJkY0b_uhDYCRxqyehlSVTmsDuuBmpNM0fC8e-k8IMW7pkyfwW0iWsKEHBKz6wLVAwONF8v3cAf6rS7NBmnq5b7mLlkDQl-7Nqcz4dfa32k888MuzOJr5OlFVM7jwmbbPKIQawGHJ2p8s1luAsptsgIk0FAhReb1XUL937LJ_PUQiOSrwOojn5tYri1WjEIbdXEmmKAAdtjWZUvSleCaSgEQ4axv6Eoux2ep3HJsa9UAQEXjScRJ0uYsntbwEg7xMIgrtGP9Zdn1V4LOfxwB8jrb-avAtHMXw9OEd6rTVISI6DecDj4HgZVTY6-XvI2PmprTTuk6Gk94hzahiAQ1G2lwjMb24pzkFTgQIz8T9oYdC
 
@@ -89,9 +92,9 @@ https://blog.bookstellyouwhy.com/carl-friedrich-gauss-and-the-method-of-least-sq
 https://thatsmaths.com/2021/06/24/gauss-predicts-the-orbit-of-ceres/
 
 
-Learning non-lineare.
+ - Learning non-lineare.
 
-We limit ourself to proposing a most classical algorithm (nome, referenza, nome dei servizi che lo implementano o che verificano la nostra implementazione).
+
 
 
 ## Neural Network verification
