@@ -3,15 +3,15 @@
 public_folder: public
 services:
   gimme_instance:
-    description: This service provides you with a pseudo-random ANN instance, i.e., a direct oriented graph with (1,...,n) input nodes, (1,...m) hidden layer/s and a final output layer each composed by (1,...,k) node/s. You can also specify whether you want to get only the random seed for the instance or also the instance file downloaded and/or its display on the screen.
+    description: This service provides you with a pseudo-random ANN instance, i.e., an oriented graph with (1,...,n) input nodes, (1,...m) hidden layer/s, and a final output layer, each composed by (1,...,k) node/s. You can also specify whether you want to get only the random seed for the instance or also the instance file downloaded and/or its display on the screen.
     evaluator: [python,services/gimme_instance_server.py]
     args:
       input_mode:
         regex: ^(random|seed|instance_id)$
         default: random
         explain: 'choose the way to input your ANN among:' 
-        explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
-        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+        explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <nodes_il,nodes_hl,nodes_out,seed>.'
+        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <nodes_il,nodes_hl,nodes_out,seed>.'
         explain3: '[instance_id] the service get the instance selected generated with make'
       nodes_il:
         regex: ^([1-9][0-9]{0,1})$
@@ -34,10 +34,6 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
         explain: 'This argument is taken into account when input_mode=instance_id. It is used to identify a particular instance within the catalogue of hardcoded instances.'
-      format:
-        regex: ^(only_matrix.txt|with_m_and_n.txt|dat)$
-        default: only_matrix.txt
-        explain: 'choose how to encode the txt input file.'
       silent:
         regex: ^(0|1)$
         default: 0
@@ -54,7 +50,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_sol_forward_prop:
-    description: 'This service provides you with a solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed.'
+    description: 'This service provides you with a solution of a forward propagation for an instance of ANN (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from nodes_il, nodes_hl, nodes_out and its random seed.'
     evaluator: [python, services/gimme_sol_server.py]
     args:
       input_mode:
@@ -82,24 +78,19 @@ services:
         explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
         regex: ^(000000|[1-9][0-9]{5,5})$
         default: 000000
-      sol_style:
-        regex: ^(seq|subset)$
-        default: seq
-        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
-        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_sol_forward_prop:
-    description: 'This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered random instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed.'
+    description: 'This service checks your solution for a single forward propagation on an instance of ANN (either provided by you or generated at random).You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from nodes_il, nodes_hl, nodes_out and its random seed.'
     evaluator: [python, services/check_sol_server.py]
     args:
       input_mode:
         regex: ^(random|seed|instance_id)$
         default: random
         explain: 'choose the way to input your ANN among:' 
-        explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
-        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+         explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <nodes_il,nodes_hl,nodes_out,seed>.'
+        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <nodes_il,nodes_hl,nodes_out,seed>.'
         explain3: '[instance_id] the service get the instance selected generated with make'
       nodes_il:
         regex: ^([1-9][0-9]{0,1})$
@@ -118,78 +109,6 @@ services:
         explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
         regex: ^(000000|[1-9][0-9]{5,5})$
         default: 000000
-      sol_style:
-        regex: ^(seq|subset)$
-        default: seq
-        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
-        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-  try_GMPL_model:
-    description: 'Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service runs a `gplsol` engine on your model and instance to find out a solution following the instructions contained in your .mod file. To send your files you must use the TA_send_files_bot.py bot placed in the model_asteroid/bots/ directory. Call the service with:\n    rtal connect model_asteroid try_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py mod=path_to_model_file_dir/your_asteroid.mod dat=path_to_instance_file_dir/your_asteroid.dat input=path_to_input_file/input.txt\nHere, the `input.txt` file is required only if you want to get a validation of the solution contained in the file `solution.txt` generated by your model on the server. Examples for the format for the `input.txt` file can be found in the `examples` directory (see in the archive downloaded with `rtal get model_asteroid`).'
-    evaluator: [python, services/try_GMPL_model_server.py]
-    args:
-      display_output:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 then the service displays the output of the `gplsol` engine when running your model and instance.
-      display_error:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 then the service displays the log of the `gplsol` engine when running your model and instance.
-      display_solution:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 then the service displays the content of the solution.txt file created by your model. This display is a raw listing of the file as it is (might help your debugging from remote).
-      check_solution:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 then, the solution obtained from GPLSOL will be checked. In order to perform this check, it is mandatory that also the input.txt file is sent to the sever via the TA_send_files_bot.py
-      txt_style:
-        regex: ^(only_matrix|with_m_and_n)$
-        default: only_matrix
-        explain: 'choose how to encode the txt input file.'
-      sol_style:
-        regex: ^(seq|subset)$
-        default: subset
-        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
-        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
-      instance_id:
-        regex: ^(-1|[0-9]*)$
-        default: -1
-        explain: 'If different from -1 then the dat file and the input.txt files are those for the instance with id <instance_id> contained in a small archive of reference instances'
-      lang: 
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-  eval_GMPL_model:
-    description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_style`. Examples of the supported dat styles are given in the folder `examples` where each example instance is encoded in every supported dat style (filename and extensions in the form `instance_name`.`dat_style`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance (the service stops at the first failure). You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_pirellone eval_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py path_to_model_file_dir/your_pirellone.mod'
-    evaluator: [python, services/eval_GMPL_model_server.py]
-    args:
-      goal:
-        regex: ^(public_examples|m_and_n_at_most_5|m_and_n_at_most10|m_and_n_at_most20|m_and_n_at_most30|m_and_n_at_most50|m_and_n_at_most100|m_and_n_at_most200|m_and_n_at_most300)$
-        default: m_and_n_at_most_5
-        explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
-      type_of_check:
-        regex: ^(no|yes|min)$
-        default: no
-        explain: 'choose among the following options:' 
-        explain1: '[no] the `solution.txt` file written by your model is considered ok if it begins with the string \''NO SOLUTION\'' if and only if the testcase pirellone instance has no solution.'
-        explain2: '[yes] beyond the above requirement, for all solvable instances, the `solution.txt` file should contain a valid solution which will be checked by the service.'
-        explain3: '[min] beyond the above requirement, for all solvable instances, the `solution.txt` should contain the minimum solution.'
-      only_solvable_instances:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1, then your model will be tested only on instances that are guaranteed to possess a solution.
-      dat_style:
-        regex: ^(default)$
-        default: default
-        explain: 'choose how to encode the dat file. For now there is only one format'
-      sol_style:
-        regex: ^(seq|subset)$
-        default: subset
-        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
-        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
