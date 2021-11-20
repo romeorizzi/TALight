@@ -314,6 +314,12 @@ sub_board_moves("", ENV['k'], 0, 0, row_empty_cell_coordinate, col_empty_cell_co
 if ENV['display_tiling']:
     for i in range(2**ENV['k']):
         TAc.print(LANG.render_feedback('printing-sub-board', board[i][:2**ENV['k']]), 'white')
+# uncomment if TA_receive_files_bot.py works with TAlinput
+# else:
+#     from bot_interface import service_server_to_send_files
+
+#     dict_of_files = { f"tiling.txt": '\n'.join(' '.join(map(str, board[i][:2**ENV['k']])) for i in range(2**ENV['k'])).encode('ascii') }
+#     service_server_to_send_files(dict_of_files)          
 
 count_empty_cells = check_coverage(0, 0, ENV['k'])
 tot_cells = 2**ENV['k']*2**ENV['k']
