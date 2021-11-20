@@ -10,12 +10,14 @@ from multilanguage import Env, Lang, TALcolors
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('k',int),
-    ('left_out_cell_must_be_a_corner_cell',int),
+    ('left_out_cell_must_be_a_corner_cell',bool),
+    ('left_out_cell_row',str),
+    ('left_out_cell_col',str),
     ('goal_coverage', str),
     ('goal_min_calls_to_standard_moves',str),
     ('goal_min_calls_to_trilly',str),
     ('trilly_assertivity', str),
-    ('silent', int),
+    ('display_tiling', bool),
 ]
 
 ENV =Env(args_list)
@@ -33,12 +35,12 @@ count_standard_moves = 0
 count_trilly_calls = 0
 
 def choose_empty_cell():
-    if ENV['left_out_cell_must_be_a_corner_cell'] == 0:
-        row_empty_cell_coordinate = random.randint(0, 2**ENV['k'] - 1)
-        col_empty_cell_coordinate = random.randint(0, 2**ENV['k'] - 1)
-    else:
+    if ENV['left_out_cell_must_be_a_corner_cell']:
         row_empty_cell_coordinate = (2**ENV['k'] - 1) * random.randint(0, 1)
         col_empty_cell_coordinate = (2**ENV['k'] - 1) * random.randint(0, 1)
+    else:
+        row_empty_cell_coordinate = random.randint(0, 2**ENV['k'] - 1)
+        col_empty_cell_coordinate = random.randint(0, 2**ENV['k'] - 1)
     return row_empty_cell_coordinate, col_empty_cell_coordinate
 
 def check_values(line, sub_board_dimension, row_coordinate, col_coordinate, hole_row, hole_col):
@@ -296,11 +298,20 @@ def sub_board_moves(tab, sub_board_dimension, row_coordintate, col_coordinate, h
                 count_empty_cells = check_coverage(row_coordintate, col_coordinate, sub_board_dimension)
                 TAc.print(LANG.render_feedback('sub-boar-left-out-cells', f"{tab}# You have left out uncovered {count_empty_cells} of the current sub-board cells (This is an intermediate value)."), 'blue')
 
-row_empty_cell_coordinate, col_empty_cell_coordinate = choose_empty_cell()
+if ENV['left_out_cell_row'] == "service_to_choose" and ENV['left_out_cell_col'] == "service_to_choose":
+    row_empty_cell_coordinate, col_empty_cell_coordinate = choose_empty_cell()
+elif ENV['left_out_cell_row'] == "service_to_choose" or ENV['left_out_cell_col'] == "service_to_choose":
+    TAc.print(LANG.render_feedback('error-partial-spec-empty-cell', f'#ERROR: The argument values \'left_out_cell_row\'= {ENV["left_out_cell_row"]}  and  \'left_out_cell_col\'= {ENV["left_out_cell_col"]}  are NOT compatible! Eithere both or none should be left to the default value "service_to_choose".'), 'red', ['bold'])
+    exit(0)
+else:
+    row_empty_cell_coordinate = int(ENV['left_out_cell_row'])
+    col_empty_cell_coordinate = int(ENV['left_out_cell_col'])
+    check_corner_cell([ENV['k'], 0, 0, row_empty_cell_coordinate, col_empty_cell_coordinate])
+
 
 sub_board_moves("", ENV['k'], 0, 0, row_empty_cell_coordinate, col_empty_cell_coordinate)
 
-if not ENV['silent']:
+if ENV['display_tiling']:
     for i in range(2**ENV['k']):
         TAc.print(LANG.render_feedback('printing-sub-board', board[i][:2**ENV['k']]), 'white')
 

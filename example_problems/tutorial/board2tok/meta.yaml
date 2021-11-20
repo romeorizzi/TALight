@@ -60,6 +60,14 @@ services:
         explain: both in the first request of the server and in the later requests of the problem solver, we embrace the commitment that the cell (r,c) should always be a corner cell.
         regex: ^(0|1)$
         default: 1
+      left_out_cell_row:
+        explain: setting up this argument and the argument \'left_out_cell_col\' you can specify the cell that should be left empty. Specify the row of the empty cell with an integer in the interval [0,2^k).
+        regex: ^(service_to_choose|[0-9]|[1-9][0-9]|[1-9][0-9][0-9]|10[01][09]|102[0-3])$
+        default: service_to_choose
+      left_out_cell_col:
+        explain: setting up this argument and the argument \'left_out_cell_row\' you can specify the cell that should be left empty. Specify the row of the empty cell with an integer in the interval [0,2^k).
+        regex: ^(service_to_choose|[0-9]|[1-9][0-9]|[1-9][0-9][0-9]|10[01][09]|102[0-3])$
+        default: service_to_choose
       goal_coverage:
         regex: ^(at_least_3|at_least_one_quarter|at_least_half|at_least_three_quarters|all_exept_one)$
         default: all_exept_one
