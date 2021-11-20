@@ -49,19 +49,19 @@ services:
   trilly:
     evaluator: [python, services/trilly_server.py]
     description: 'Trilly the fairy helps you in constructing a packing of L-shaped trominos within a square 2^kx2^k board. Packing means that all the trominos placed fall entirely within the board and no two of them occupy the same cell. Since the number of cells of the board is a power of 4, hence non-divisible by 3 (more precisely, congruous to 1 modulo 3), at least one cell must be left uncovered by the packing. Does there exists a packing leaving out one single cell? How to go about obtaining large packings? This service offers you an opportunity to move on the board and play out your way at addressing these questions.
-    Every standard move lays down a tromino piece: assume that the cells (r,c),(r+1,c)(r,c+1),(r+1,c+1) are still empty, and let r0=r,r+1, c0=c,c+1. Writing a line in the format "1 <r> <c> <r0> <c0>" commands to place the unique tromino that would cover these 4 cells exept cell (r0,c0). After being assigned the number k (the first board), and as many times as you want, you can call Trilly and assign her a 2^hx2^h sub-board, with h<k, and specify one single cell of such sub-board. Trilly checks that this sub-board is still empty and then details a list of standard moves for its filling (except for the specified cell that she leaves empty).
+    Every standard move lays down a tromino piece: assume that the cells (r,c),(r+1,c)(r,c+1),(r+1,c+1) are still empty, and let r0 in {{r,r+1}}, c0 in {{c,c+1}}. Writing a line in the format "0 <r> <c> <r0> <c0>" commands to place the unique tromino that would cover these 4 cells exept cell (r0,c0). After being assigned the number k (the first board), and as many times as you want, you can also call Trilly and assign her a 2^hx2^h sub-board, with h<k, and specify one single cell of such sub-board. Trilly checks that this sub-board is still empty and then details a list of standard moves for its filling (except for the specified cell that she leaves empty).
     A call to Trilly is like a macro-move and you command it writing a line in the format "<h> <r> <c> <r0> <c0>"; this asks to cover all cells in the sub-grid [r,r+2^h)x[c,c+2^h), except cell (r0,c0).
-    Playing with the arguments of this service you might also allow Trilly to use macro-moves, the agreement being that a macro-move of one player should be entireley fullfilled by moves of the other player; these might in turn be macro-moves but with strictly smaller value for the h parameter.'
+    When playing with the arguments of this service you might also allow Trilly to use macro-moves, the agreement being that a macro-move of one player should be entirely fullfilled by moves of the other player; these might in turn be macro-moves but with strictly smaller value for the h parameter.'
     args:
       k:
         regex: ^([0-9]|10)$
         default: 1
       left_out_cell_must_be_a_corner_cell:
-        explain: both in the first request of the server and in the later requests of the problem solver, the cell (r,c) should always be a corner cell.
+        explain: both in the first request of the server and in the later requests of the problem solver, we embrace the commitment that the cell (r,c) should always be a corner cell.
         regex: ^(0|1)$
         default: 1
       goal_coverage:
-        regex: ^(at_least_3|at_least_one_quarter|at_least_half||at_least_three_quarters|all_exept_one)$
+        regex: ^(at_least_3|at_least_one_quarter|at_least_half|at_least_three_quarters|all_exept_one)$
         default: all_exept_one
         explain: "with this parameter you declare how many cells of the board you aim to cover with the resulting tiling. The options are as follows:"
         explain1: -at_least_3_cells = the tiles placed by either player should cover at least 3 cells of the board (at least one tile should be placed either by you or by Trilly).
@@ -74,19 +74,20 @@ services:
         default: 1
         explain: try to minimize the number of calls to standard moves in reply to the original request. Try to pursue this goal while covering all cells but one.
       goal_min_calls_to_trilly:
-        regex: ^(any|4|one_and_gain_three_calls_at_every_standard_move|gain_three_calls_at_every_standard_move)$
+        regex: ^(any|4|gain_three_calls_at_every_standard_move|one_and_gain_three_calls_at_every_standard_move)$
         default: 4
-        explain: number of allowed calls to trilly. Try to minimize it. Be told however that, beyond a certain point, this goal will conflict with the goal \'goal_min_calls_to_standard_moves\' which we suggest you to consider first.
+        explain: number of allowed calls to trilly. Try to minimize it while meeting tha goal to cover all cells but one. Be told however that, beyond a certain point, this goal will conflict with the goal \'goal_min_calls_to_standard_moves\' which we suggest you to consider first.
       trilly_assertivity:
         regex: ^(plain_executor|might_pose_smaller_macromoves_in_reply|might_bounch_your_macromoves_back_to_you)$
         explain: "this parameter regulates the ways in which Trilly responds to your commands. The options are as follows:"
         explain1: -plain_executor = Trilly explicitely places all tiles needed to cover the 2^hx2^h-sub-board you assigned her. Her reply takes the form of an ordered list of standard moves.
         explain2: -might_pose_smaller_macromoves_in_reply = trilly might reply with one macromove for each sub-board and a list of standard moves.
         explain3: -might_bounch_your_macromoves_back_to_you = trilly might reply with a macromove as big as the one you commissioned her (your commission is bounched back to you).
+        note: the options for the goal arguments proposed by this service have been designed assuming that Trilly is not allowed to pose sub-problems. We did non enter into this terrain but if you can pose yourself interesting goals in the very wide space where both players can commission sub-problems, please, let us know and/or fork this problem and improve it.
         default: plain_executor
-      silent:
+      display_tiling:
         regex: ^(0|1)$
-        explains: "The service doesn't display the tiling board when you have finished."
+        explain: "An the end, the service displays the tiling produced by the standard moves (of both players, collectively)."
         default: 0
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$

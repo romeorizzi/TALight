@@ -34,14 +34,9 @@ services:
         default: it
   order_of_rows_columns:
     description: You are asked to prove that the solvability of a 0/1-matrix is invariant under permutation of its rows (or columns). We give you a good 0/1-matrix and a sequence of switch row/column operations turnig it off (a certificate of goodness). We also give you a permutation of the rows and a permutation of the columns of the matrix. You are required to give us a certificate of goodness for the permuted matrix.
-#    example: "rtal connect pirellone -am=2 -an=3\\n1 0 1\\n0 1 0\\nr1 c2\\n2 1\\n3 2 1\\n>r2 c2"
-    example: "rtal connect pirellone -am=2 -an=3"
-    example1: "> 1 0 1"
-    example2: "> 0 1 0"
-    example3: "> r1 c2"
-    example4: "> 2 1"
-    example5: "> 3 2 1"
-    example6: "< r2 c2"
+#    example: "rtal connect pirellone order_of_rows_columns -am=2 -an=3\\n>1 0 1\\n>0 1 0\\n<r1 c2\\n>2 1\\n> 3 2 1\\n< r2 c2"
+    example1: 'rtal connect pirellone order_of_rows_columns -am=2 -an=3{chr(10)}{chr(13)}      > 1 0 1{chr(10)}{chr(13)}      > 0 1 0{chr(10)}{chr(13)}      < r1 c2'
+    example2: 'rtal connect pirellone order_of_rows_columns -am=2 -an=3{chr(10)}{chr(13)}      > 2 1{chr(10)}{chr(13)}      > 3 2 1{chr(10)}{chr(13)}      < r2 c2'
     evaluator: [python, services/order_of_rows_columns_server.py]
     args:
       m:
