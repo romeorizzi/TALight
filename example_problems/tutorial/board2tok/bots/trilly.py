@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+from sys import argv
+
+
 macro_moves = []
 moves = []
 
@@ -84,15 +87,17 @@ def start_algo():
     while spoon.startswith("# "):
         spoon = input().strip()
 
+if len(argv) > 0:
+    arguments = { var.split("=")[0] : var.split("=")[1] for var in argv[1:] }
 spoon = input().strip()
 while spoon.startswith("# "):
-    if spoon.startswith("#  with arguments:"):
-        variables = spoon[len("#  with arguments: "):spoon.find(", ISATTY")].split(", ")
-        arguments = { var.split("=")[0] : var.split("=")[1] for var in variables }
+    if len(argv) == 1:
+        if spoon.startswith("#  with arguments:"):
+            variables = spoon[len("#  with arguments: "):spoon.find(", ISATTY")].replace("(i.e., False)", "").replace("(i.e., True)", "").split(", ")
+            arguments = { var.split("=")[0] : var.split("=")[1] for var in variables }
     if spoon.endswith(") empty."):
         hole_coordinates = spoon.split("(")[-1].split(")")[0].split(", ")
         arguments['row_hole'] = hole_coordinates[0]
         arguments['col_hole'] = hole_coordinates[1]
     spoon = input().strip()
-print(f'#{arguments}')
 start_algo()
