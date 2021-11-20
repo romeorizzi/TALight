@@ -91,16 +91,23 @@ class BotInterface:
         num_files = int(next_string[20:])
         res = {}
         for i in range(num_files):
-            filename, data = self.input_line().split()
-            res[filename] = b64decode(data)
+            filename = self.input_line()
+            data = ""
+            while True:
+                line = self.input_line()
+                if line.startswith('#!end'):
+                    break
+                data += line + "\n"
+            res[filename] = data.encode()
         return res
 
 
-    def bot_write_files(filenames_to_files_map : Dict[str, bytes], basedir=os.path.join('.','downloads')):
+    def bot_write_files(self, filenames_to_files_map : Dict[str, bytes], basedir=os.path.join('.','downloads')):
         os.makedirs(basedir,exist_ok=True)
         for filename in filenames_to_files_map:
-            with open(filename, 'wb') as file_down:
-                file_down.write(filenames_to_files_map[filename])
+            with open(f'{basedir}/{filename}', 'wb') as file_down:
+                file_down.write(filenames_to_files_map[filename])      
+        print(f"#!ok. File has been sent.")          
 
 
 
@@ -123,7 +130,9 @@ def service_server_to_send_files(filenames_to_files_map : Dict[str, BinaryIO]):
     """The server calls this function when the protocol enters a point where the server could send some files. In case there are no files to be sent, then use an empty dictionary as argument."""
     print(f"#!now_sending_files {len(filenames_to_files_map)}")
     for filename in filenames_to_files_map:
-        print(filename + " " + b64encode(filenames_to_files_map[filename].read()))
+        print(f"Filename: {filename}")
+        print(filenames_to_files_map[filename].decode())
+        print(f"#!end {filename} file.")
                         
                 
 """
