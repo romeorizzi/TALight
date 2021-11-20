@@ -1,0 +1,82 @@
+Passi fondamentali per la realizzazione di un problema P di modelling:
+
+
+
+
+Passo 1: primitive per il problema.
+creare modelling_P_lib contenente:
+    1. gen_instance(descrittori, seed)
+        -> necessaria per generare le istanze.
+    2. get_opt_sol()
+        -> necessaria per controllare la glpsol solution.
+    3. instance_to_str(instance, format)
+        -> converte l'istanza in una stringa nel formato selezionato.
+    4. get_instance_from_str(instance_str, format)
+        -> data una stringa nel formato specificato, ritorna l'istanza.
+    5. realizzare i convertitori per passare ai vari formati
+
+
+
+
+Passo 2: generazione automatica istanze.
+creare la cartella gen contenente:
+    1. file GEN che contiene i comandi per la generazione automatica delle istanze.
+    2. instance_generator.py
+        -> questo file deve leggere come argomenti i descrittori di istanza (come: m, n, seed, ...) e il format, per poi stampare l'istanza a video.
+        -> TAL_GEN_instances (che dovrà essere linkato all'interno di P/gen/) chiamerà instance_generator.py, passandogli gli argomenti letti dal file GEN, effettuando la generazione di tutte le istanze descritte in quel file.
+
+creare un makefile che:
+    1. elimini le cartelle temporanee, quindi instances/ e TMP_DIR/ (cioè tmp97815/)
+    2. chiami TAL_GEN_instances.py path_problem_P/gen/
+
+
+
+
+Passo 3: creazione di servizi.
+- inizializzare ModellingProblemHelper
+    from math_modeling import ModellingProblemHelper, get_problem_path_from
+    mph = ModellingProblemHelper(get_problem_path_from(__file__))
+
+
+Passo 4: servizio di try
+- usare i seguenti metodi per trasferire i file tramite il bot TA_send_files_bot.py dalla macchina locale dell'utente a TMP_DIR/ (cioè tmp97815/)
+    mph.receive_mod_file() -> il file viene salvato in TMP_DIR
+    mph.receive_dat_file() -> il file viene salvato in TMP_DIR
+    mph.receive_input_file() -> viene ritornata la stringa contenente gli inputs
+
+- usare i seguenti metodi per ottenere path o la stringa del contenuto dei file generati precedentemente col makefile (make gen-instances) e presenti in instances/
+    dat_file_path = mph.get_path_from_id(ENV['instance_id'], format='matrix.dat')
+    input_str = mph.get_file_str_from_id(ENV['instance_id'], format='matrix.txt')
+
+- usare il seguente comando per eseguire GLPSOL con il modello passato col bot (e quindi presente in TMP_DIR), e l'istanza, che può essere presa dalle istanze generate (in instances/) oppure essere passata col bot (e quindi presente in TMP_DIR)
+    mph.run_GLPSOL(dat_file_path)
+    -> se dat_file_path == None allora il file dat è preso in TMP_DIR
+    -> se dat_file_path != None allora il file dat è preso nel path specificato (che dovrà puntare al fullpath di un dat file all'interno di instances/. Ciò sarà garantito usando mph.get_path_from_id())
+
+- per leggere lo stdout e stderr dell'esecuzione di GLPSOL usare:
+    gplsol_output = mph.get_out_str()
+    gplsol_error = mph.get_err_str()
+
+- per leggere la soluzione generata da GLPSOL usare:
+    raw_sol = mph.get_raw_solution()
+    -> raw_sol sarà una stringa che ha bisogno di essere analizzata per poi procedere all'estrazione dell'istanza vera e propria da controllare con il get_opt_sol() in modelling_P_lib
+    -> per fare il parsing usare get_instance_from_str(instance_str, format) in modelling_P_lib
+
+
+Passo 5: servizio di eval
+- Per evitare di dover specificare l'handler al bot è possibile usare il seguente comando:
+    mph.receive_mod_file(single_file_passed_to_the_bot=True)
+    -> se single_file_passed_to_the_bot=False allora bisogna fare:
+    rtal connect model_P eval_GMPL_model -- bots/TA_send_files_bot.py mod=models/test_model.mod
+    -> se single_file_passed_to_the_bot=True allora bisogna fare: 
+    rtal connect model_P eval_GMPL_model -- bots/TA_send_files_bot.py models/test_model.mod
+
+- Piccolo protipo di loop per eval:
+    tests_dirname_list = ['public', 'goal1', 'goal2']
+    for test_dir in tests_dirname_list:
+        instances_paths = mph.get_instances_paths_in(test_dir)    
+        for instance_id, paths in instances_paths.items():
+            input_str = mph.get_file_str_from_path(input_file_path)
+            ...
+    -> tests_dirname_list è l'insieme di goal. In instances/ è presente una cartella per ogni goal, al cui interno sono state generate tutte le loro istanze nei relativi formati.
+    -> mph.get_instances_paths_in(test_dir) ritorna un dictionary che associa ad ogni istance_id i fullpath dei file associati a instance_id nei vari formati

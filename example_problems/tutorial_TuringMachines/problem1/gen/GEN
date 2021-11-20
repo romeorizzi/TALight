@@ -1,0 +1,41 @@
+# generator parameters: 
+# m, n, solvable, seed
+#   m (int)  number of rows   of the pirellone 0/1-matrix
+#   n (int)  number of columns  of the pirellone 0/1-matrix
+#   solvable (0/1) if the pirellone gotta be solvable then 1, if the pirellone gotta be unsolvable then 0
+#   seed (int)
+
+add_format: dat
+add_format: only_matrix.txt
+add_format: with_m_and_n.txt
+
+suite: public_examples
+COPY: hardcoded/instance1.only_matrix.txt
+COPY: hardcoded/instance1.with_m_and_n.txt
+COPY: hardcoded/instance1.dat
+COPY: hardcoded/instance2.only_matrix.txt
+COPY: hardcoded/instance2.with_m_and_n.txt
+COPY: hardcoded/instance2.dat
+#     m,  n, solvable, seed
+GEN:  4   4  1         777771
+GEN:  4   4  0         777771
+GEN:  10  10 0         777771
+
+suite: m_and_n_at_most_5_solvable
+#     m,  n, solvable, seed
+GEN:  4   4  1         777777
+GEN:  4   4  1         777666
+GEN:  5   4  1         777123
+GEN:  4   5  1         777456
+GEN:  5   5  1         132777
+GEN:  5   5  1         456777
+
+suite: m_and_n_at_most_5_unsolvable
+#     m,  n, solvable, seed
+GEN:  4   4  0         777777
+GEN:  4   4  0         777666
+GEN:  5   4  0         777123
+GEN:  4   5  0         777456
+GEN:  5   5  0         132777
+GEN:  5   5  0         456777
+

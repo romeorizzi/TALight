@@ -56,7 +56,7 @@ if ENV['display_triangle']:
     TAc.print(LANG.render_feedback("display-triangle", f'The triangle of reference is the following:'), "green", ["bold"])
     tl.print_triangle(triangle)
 if ENV['reward_the_path']:
-    TAc.print(LANG.render_feedback("path-reward", 'Your path collects the following reward values when desending the triangle:'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("path-reward", 'Your path collects the following reward values when descending the triangle:'), "green", ["bold"])
     print(tl.calculate_path(triangle,ENV["path"].replace(" ", ""))[0])
     TAc.print(LANG.render_feedback("path-reward", f'The total reward collected by your path is {tl.calculate_path(triangle,ENV["path"].replace(" ", ""))[1]}.'), "green", ["bold"])        
 

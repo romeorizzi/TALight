@@ -27,7 +27,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE: 
 
 # TRIANGLE GENERATION
-
 if ENV['how_to_input_the_triangle'] == "my_own_triangle":
     triangle = []
     TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
@@ -38,8 +37,8 @@ if ENV['how_to_input_the_triangle'] == "my_own_triangle":
     TAc.OK()
     TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
 else:
-    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
-
+    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_triangle']))
+print(triangle)
 best_reward = tl.best_path_cost(triangle)
 
 if ENV['opt_sol_val'] == best_reward:
@@ -59,8 +58,9 @@ else:
         TAc.NO()
         TAc.print(LANG.render_feedback("bigger-than-best", f'We don\'t agree, the solution value you provided is bigger than the best one for your triangle.'), "red", ["bold"])
         exit(0)
-if ENV['feedback'] == "true_opt_val":
-    TAc.print(LANG.render_feedback("best-value", f'The best reward for your triangle is {best_reward}.'), "yellow", ["bold"])
-    exit(0)
+    if ENV['feedback'] == "true_opt_val":
+        TAc.NO()
+        TAc.print(LANG.render_feedback("best-value", f'The best reward for your triangle is {best_reward}.'), "yellow", ["bold"])
+        exit(0)
            
 exit(0)

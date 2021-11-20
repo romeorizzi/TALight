@@ -1,0 +1,205 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  simulate_DTM_excution:
+    description: This service receives the description of a deterministic Turing Machine (DTM) and its input string (initial configuration of the tape). The service tells whether the DTM halts within <n> steps and, if so, displays the final configuration of the DTM and the tape.
+    evaluator: [python,services/simulate_DTM_excution_server.py]
+    args:
+      input_mode_DTM:
+        regex: ^(user_defined|DTM_id)$
+        default: user_defined
+        explain: 'choose the way to input your DTM among:' 
+        explain1: '[instance_id] you are actually asking the service to run a machine contained in our gallery of example DTMs. Use then the argument instance_id to specify which one of these DTMs.'
+        explain2: '[user_defined] after launching the service, you introduce the description of the DTM that will then be simulated. The description should be in the format (per ora come per le gare PIsa, senza extension 2006, con alfabeto = solo le cifre e i caratteri maiuscoli alfabeto inglese).'
+      instance_id:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: 'This argument is taken into account when input_mode=instance_id. It is used to identify a particular instance within the catalogue of hardcoded instances.'
+      n:
+        regex: ^([1-9][0-9]{0,3}|10000)$
+        default: 100
+        explain: Maximum number of steps in the simulation.
+      input_tape:
+        regex: ^((A-Z)|(0-9))*$
+      feedback:
+        regex: ^(halts_or_not|final_config|all_configs)$ 
+        default: final_config
+        explain: 'the options are:' 
+        explain1: '[halts_or_not] the service just tells whether the given DTM halts within n steps or not.'
+        explain2: '[final_config] the service tells whether the given DTM halts within n steps or not. In case it does, then the service also outputs the final configuration.'
+        explain3: '[all_configs] the service prints out every configuration in the order they are encounterd, up to step n or until the DTM stops.'
+      config_visualization_format:
+        regex: ^(state_head_pos_tape|state_tape_with_head_marker|tape_with_head_marker|only_tape)$
+        default: state_tape_with_head_marker
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  verify_my_DTM_excution:
+    description: Use this service as one possible option to debug a DTM. To start with, this service receives the description of a deterministic Turing Machine (DTM) and its input string (initial configuration of the tape). After this, the service receives your log on the execution of the given DTM on that input. The service verifies this log. It stops at the very first error, or when step n is reached.
+    evaluator: [python,services/verify_DTM_excution_server.py]
+    args:
+      input_mode_DTM:
+        regex: ^(user_defined|DTM_id)$
+        default: user_defined
+        explain: 'choose the way to input your DTM among:' 
+        explain1: '[instance_id] you are actually asking the service to run a machine contained in our gallery of example DTMs. Use then the argument instance_id to specify which one of these DTMs.'
+        explain2: '[user_defined] after launching the service, you introduce the description of the DTM that will then be simulated. The description should be in the format (per ora come per le gare PIsa, senza extension 2006, con alfabeto = solo le cifre e i caratteri maiuscoli di alfabeto inglese).'
+      instance_id:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: 'This argument is taken into account when input_mode=instance_id. It is used to identify a particular instance within the catalogue of hardcoded instances.'
+      n:
+        regex: ^([1-9][0-9]{0,3}|10000)$
+        default: 100
+        explain: Maximum number of steps in the simulation.
+      input_tape:
+        regex: ^((A-Z)|(0-9))*$
+      config_representation_format:
+        regex: ^(state_head_pos_tape|state_tape_with_head_marker|tape_with_head_marker|only_tape)$
+        default: state_tape_with_head_marker
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it  
+  
+  try_GMPL_model:
+    description: 'Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service runs a `gplsol` engine on your model and instance to find out a solution following the instructions contained in your .mod file. To send your files you must use the TA_send_files_bot.py bot placed in the model_asteroid/bots/ directory. Call the service with:\n    rtal connect model_asteroid try_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py mod=path_to_model_file_dir/your_asteroid.mod dat=path_to_instance_file_dir/your_asteroid.dat input=path_to_input_file/input.txt\nHere, the `input.txt` file is required only if you want to get a validation of the solution contained in the file `solution.txt` generated by your model on the server. Examples for the format for the `input.txt` file can be found in the `examples` directory (see in the archive downloaded with `rtal get model_asteroid`).'
+    evaluator: [python, services/try_GMPL_model_server.py]
+    args:
+      display_output:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the output of the `gplsol` engine when running your model and instance.
+      display_error:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the log of the `gplsol` engine when running your model and instance.
+      display_solution:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the content of the solution.txt file created by your model. This display is a raw listing of the file as it is (might help your debugging from remote).
+      check_solution:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, the solution obtained from GPLSOL will be checked. In order to perform this check, it is mandatory that also the input.txt file is sent to the sever via the TA_send_files_bot.py
+      txt_style:
+        regex: ^(only_matrix|with_m_and_n)$
+        default: only_matrix
+        explain: 'choose how to encode the txt input file.'
+      sol_style:
+        regex: ^(seq|subset)$
+        default: subset
+        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
+        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
+      instance_id:
+        regex: ^(-1|[0-9]*)$
+        default: -1
+        explain: 'If different from -1 then the dat file and the input.txt files are those for the instance with id <instance_id> contained in a small archive of reference instances'
+      lang: 
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  eval_GMPL_model:
+    description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_style`. Examples of the supported dat styles are given in the folder `examples` where each example instance is encoded in every supported dat style (filename and extensions in the form `instance_name`.`dat_style`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance (the service stops at the first failure). You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_pirellone eval_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py path_to_model_file_dir/your_pirellone.mod'
+    evaluator: [python, services/eval_GMPL_model_server.py]
+    args:
+      goal:
+        regex: ^(public_examples|m_and_n_at_most_5|m_and_n_at_most10|m_and_n_at_most20|m_and_n_at_most30|m_and_n_at_most50|m_and_n_at_most100|m_and_n_at_most200|m_and_n_at_most300)$
+        default: m_and_n_at_most_5
+        explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
+      type_of_check:
+        regex: ^(no|yes|min)$
+        default: no
+        explain: 'choose among the following options:' 
+        explain1: '[no] the `solution.txt` file written by your model is considered ok if it begins with the string \''NO SOLUTION\'' if and only if the testcase pirellone instance has no solution.'
+        explain2: '[yes] beyond the above requirement, for all solvable instances, the `solution.txt` file should contain a valid solution which will be checked by the service.'
+        explain3: '[min] beyond the above requirement, for all solvable instances, the `solution.txt` should contain the minimum solution.'
+      only_solvable_instances:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1, then your model will be tested only on instances that are guaranteed to possess a solution.
+      dat_style:
+        regex: ^(default)$
+        default: default
+        explain: 'choose how to encode the dat file. For now there is only one format'
+      sol_style:
+        regex: ^(seq|subset)$
+        default: subset
+        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
+        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  # TODO
+  eval_SAT_model:
+    evaluator: [python, services/eval_SAT_model_server.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+        explain: Set your goal (efficient includes also correct).
+      with_check_of_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  # TODO
+  eval_MiniZinc_model:
+    evaluator: [python, services/eval_MiniZinc_model_server.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+        explain: Set your goal (efficient includes also correct).
+      with_check_of_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  # TODO
+  eval_your_solver_bot:
+    description: 'This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed.'
+    evaluator: [python, services/eval_decision_server.py]
+    args:
+      goal:
+        regex: ^(correct|efficient)$
+        default: correct
+        explain: Set your goal (efficient includes also correct).
+      with_check_of_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_server.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
