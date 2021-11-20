@@ -130,7 +130,7 @@ def service_server_to_send_files(filenames_to_files_map : Dict[str, BinaryIO]):
     """The server calls this function when the protocol enters a point where the server could send some files. In case there are no files to be sent, then use an empty dictionary as argument."""
     print(f"#!now_sending_files {len(filenames_to_files_map)}")
     for filename in filenames_to_files_map:
-        print(f"Filename: {filename}")
+        print(filename)
         print(filenames_to_files_map[filename].decode())
         print(f"#!end {filename} file.")
                         
