@@ -268,14 +268,14 @@ def is_solvable_seed(seed):
     return (seed % 3) != 0
 
 
-def gen_instance_seed(solvable=None, gen_seed=None):
-    """This function returns a seed to generate a pirellone instance with the specificated solvability."""
-    random.seed(gen_seed) # if gen_seed=None is init random
+def gen_instance_seed(solvable=None):
+    """This function returns a random seed to generate a pirellone instance with the specificated solvability."""
+    random.seed(None)
     seed = random.randint(100002,999999)
     # Check solvability
     if solvable == None:
-        solvable = random.choice([False, True])
-    # adust seed if not suitable
+        return seed
+    # ajust seed if not suitable:
     if solvable != is_solvable_seed(seed):
         # We reserve those seed divisible by 3 to the NOT solvable instances
         if solvable:

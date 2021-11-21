@@ -3,32 +3,31 @@
 public_folder: public
 services:
   gimme_instance:
-    description: 'This service provides you with instances of the Asteroid problem, i.e., a 0/1-matrix with the given number of rows (argument m) and columns (argument n). You have three main options when calling this service:\n    [input_mode=instance_id] to get the instance with a specific id out from a restricted catalogue of hardcoded instances\n    [input_mode=seed] to get the pseudo-random instance for a given seed (when for example you want to reconsider the very same graph you have already met with this or other services, and you know its instance descriptor <m,n,seed>).\n    [input_mode=random] to ask for a random seed (use this option when you want to specify whether the returned instance should be solvable or not).\n   When given m, n, and also a seed value, the service returns the pseudo-random graph <m,n,seed> in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing 0/1-matrixes is the following: the first line contains the two integers m and n; then follow m lines, one for each row. The i-th of these lines displays the n binary digits of the i-th row of the matrix, the j-th bit being the element in the j-th column. It is assumed that the row and column indexes start from 1.'
+    description: 'This service provides you with instances of the Asteroid problem, i.e., 0/1-matrices with the given number of rows (argument m) and columns (argument n). You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall a 0/1-matrix you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random Asteroid instance we mean the triple <m,n,seed>.\n   The 0/1-matrix comprising the instance is returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing 0/1-matrices is the following: the first line contains the two integers m and n; then follow m lines, one for each row. The i-th of these lines displays the n binary digits of the i-th row of the matrix, the j-th bit being the element in the j-th column. It is assumed that the row and column indexes start from 1.'
     evaluator: [python,services/gimme_instance_server.py]
     args:
-      input_mode:
-        regex: ^(random|seed|instance_id)$
+      instance_spec:
+        regex: ^(random|catalogue1)$
         default: random
-        explain: 'choose the way to input your instance among:' 
-        explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
-        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
-        explain3: '[instance_id] the service get the instance selected generated with make'
+        explain: 'choose an option among:' 
+        explain1: '[random] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+        explain2: '[catalogue1] the service will return an instance taken from a catalogue of hardcoded instances (the catalogue named \''catalogue1\''). More precisely, the instance returned is the one with the given instance_id.'
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
-        explain: 'Number of rows of the 0,1-matrix reporting the asteroids\''s positions.'
+        explain: Number of rows of the 0,1-matrix which reports the positions of the asteroids.
       n:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
-        explain: 'Number of columns of the 0,1-matrix reporting the asteroids\''s positions.'
+        explain: Number of columns of the 0,1-matrix which reports the positions of the asteroids.
       seed:
-        explain: 'The seed is any natural number in the interval [100000,999999]. This argument is used when you hold the instance descriptor of a specific instance and want to get that instance either downloaded in local as a file and/or displayed on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services of the Asteroid problem.'
-        regex: ^([1-9][0-9]{5,5})$
-        default: 123456
+        explain: 'Set up this argument when you hold the seed and instance descriptor of the specific instance that you want to be produced by the service (whether downloaded in local as a file or displayed on your terminal screen). By an \''instance descriptor\'' we mean a triple <m,n,seed> that you may have got from previous calls to this or other services for this problem. When this argument is left to its default value (random_seed) then the service first chooses a seed at random (and communicates it to the user) and then produces the pseudo-random instance <m,n,seed>.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       instance_id:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
-        explain: 'This argument is taken into account when input_mode=instance_id. It is used to identify a particular instance within the catalogue of hardcoded instances.'
+        regex: ^([1-9][0-9]*)$
+        default: 1
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
       format:
         regex: ^(only_matrix.txt|with_m_and_n.txt|dat)$
         default: only_matrix.txt
@@ -53,28 +52,32 @@ services:
     description: We give you a matrix with asteroids and you have to shoot out sufficient laser beams in order to destroy all of the asteroids. In other words, your task is to identify a set of rows and columns of the matrix that cover all the asteroids. This service is meant to verify this property.
     evaluator: [python,services/check_solution_server.py]
     args:
-      input_mode:
-        regex: ^(random|seed|terminal)$
+      instance_spec:
+        regex: ^(random|catalogue1|terminal)$
         # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
-        # regex: ^(random|seed|terminal|TA_send_files_bot)$
+        # regex: ^(random|catalogue1|terminal|TA_send_files_bot)$
         default: random
         explain: 'choose the way to input your instance (a binary matrix) among the following:' 
-        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
-        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+        explain1: '[random] the service uses the pseudo-random instance <m,n,seed>.'
+        explain2: '[catalogue1] the service uses the hardcoded instance of the given instance_id as taken from the catalogue of hardcoded instances named catalogue1.'
         explain3: '[terminal] you enter your instance directly by either typing it line after line or through cut and paste operations.'
-        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the asteroid/bots/ directory. Call the service with: rtal connect asteroid compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
+        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the asteroid/bots/ directory. Call the service with: rtal connect asteroid compact_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
-        explain: 'Number of rows of the 0,1-matrix reporting the asteroids\''s positions.'
+        explain: Number of rows of the 0,1-matrix which reports the positions of the asteroids.
       n:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
-        explain: 'Number of columns of the 0,1-matrix reporting the asteroids\''s positions.'
+        explain: Number of columns of the 0,1-matrix which reports the positions of the asteroids.
       seed:
-        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(000000|[1-9][0-9]{5,5})$
-        default: 000000
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to reproduce an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        default: 1
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
       sol_style:
         regex: ^(seq|subset)$
         default: seq

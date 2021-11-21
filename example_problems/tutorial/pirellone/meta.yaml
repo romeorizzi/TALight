@@ -7,9 +7,7 @@ services:
     evaluator: [python,services/compact_solution_server.py]
     args:
       seed:
-        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -48,9 +46,7 @@ services:
         default: 10
         explain: Number of columns of the big matrix.
       seed:
-        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -73,9 +69,7 @@ services:
         explain1: "[consecutive]  the submatrix comprises the first m_small rows and the first n_small columns of the big matrix. See also the service order_of_rows_columns to see why this is actually a general consecutive submatrix."
         explain2: "[any]  the service server provides two random 0/1-vectors of length m and n, respectively. These characteristic vectors specify the rows and columns of the submatrix."
       seed:
-        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -99,9 +93,7 @@ services:
     evaluator: [python, services/check_sol_server.py]
     args:
       seed:
-        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       coding:
         regex: ^(seq|subset)$
         default: seq
@@ -122,9 +114,7 @@ services:
         default: 0
         explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
       seed:
-        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -138,9 +128,7 @@ services:
         explain: Set your goal from the following total order
         explain1: "[correct]  bla bla"
       seed:
-        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -177,9 +165,7 @@ services:
         default: any
         explain: Number of your moves (those made by Trilly do not count).
       seed:
-        explain: specify the numeric code to reproduce the very same psudo-random instance as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

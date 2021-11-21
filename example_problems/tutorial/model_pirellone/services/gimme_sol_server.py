@@ -9,7 +9,7 @@ from services_utils import process_instance
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('input_mode',str),
+    ('instance_spec',str),
     ('m',int), 
     ('n',int),
     ('sol_style',str),

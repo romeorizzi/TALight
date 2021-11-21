@@ -9,7 +9,7 @@ import model_pirellone_lib as pl
 
 
 def process_instance(ENV, TAc, LANG):
-    if ENV['input_mode'] == 'random':
+    if ENV['instance_spec'] == 'random':
         # Get random seed
         seed = pl.gen_instance_seed()
         # Get instance
@@ -25,9 +25,9 @@ def process_instance(ENV, TAc, LANG):
         # Returns instance and optimal solution
         return instance, pl.make_optimal(certificate) if pl.is_solvable_seed(seed) else pl.NO_SOL
 
-    elif ENV['input_mode'] == 'seed':
+    elif ENV['instance_spec'] == 'seed':
         if ENV['seed'] == 0:
-            TAc.print(LANG.render_feedback("no-mandatory-seed", f"If you select (input_mode='seed') then the (seed) argument must be differente from 000000"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("no-mandatory-seed", f"If you select (instance_spec='seed') then the (seed) argument must be differente from 000000"), "red", ["bold"])
             exit(0)
         # Get instance
         try:
@@ -42,7 +42,7 @@ def process_instance(ENV, TAc, LANG):
         return instance, pl.make_optimal(certificate) if pl.is_solvable_seed(ENV['seed']) else pl.NO_SOL
 
 
-    elif ENV['input_mode'] == 'terminal':
+    elif ENV['instance_spec'] == 'terminal':
         TAc.print(LANG.render_feedback("waiting", f"#? waiting for the pirellone {ENV['m']}x{ENV['n']}.\nFormat: each line is a row of the matrix and each colomun must be separeted by space.\nAny line beggining with the '#' character is ignored.\nIf you prefer, you can use the 'TA_send_txt_file.py' util here to send us the raw_sol of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself."), "yellow")
         TAc.print(LANG.render_feedback("instance-title", f"Matrix {ENV['m']}x{ENV['n']}:"), "yellow", ["bold"])
         # Get pirellone instance
@@ -52,7 +52,7 @@ def process_instance(ENV, TAc, LANG):
         # Returns instance and optimal solution
         return instance, pl.get_opt_sol(instance)
 
-    # elif ENV['input_mode'] == 'TA_transfer_files_bot':
+    # elif ENV['instance_spec'] == 'TA_transfer_files_bot':
     #     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input file (handler `pirellone.txt`)."), "yellow")
     #     # get pirellone instance
     #     instance_str = service_server_requires_and_gets_the_only_file().decode()
