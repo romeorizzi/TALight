@@ -37,7 +37,7 @@ while not finished:
         time_for_next_load_or_end = False
     if "#LOG_flush_tmp_buffer_on_pos" in line:
         time_for_next_load_or_end = True
-    if "#LOG_output_final_array" in line:
+    if "#LOG_output_final_sorted_array" in line:
         if not time_for_next_load_or_end:
             TAc.print(LANG.render_feedback("wrong-place-for-final-output", f'No! Right now I was not expecting the output of the final array since an element introduced in the tmp_buffer (the integer {new_ele}) is still there!'), "yellow", ["bold"])
             exit(0)

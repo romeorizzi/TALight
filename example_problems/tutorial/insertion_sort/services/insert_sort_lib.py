@@ -52,7 +52,7 @@ class InsertionSort:
                 yield self.log[-1]
             self.flush_tmp_buffer_ele_in_pos(curr_pos)
             yield self.log[-1]
-        self.log.append(f"#LOG_output_final_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})")
+        self.log.append(f"#LOG_output_final_sorted_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})")
         yield self.log[-1]
 
 

@@ -62,8 +62,8 @@ class InsertionSortMachine:
         self.console(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (>=)", wait_for_receipt, expected_log)
         return False
 
-    def output_final_array(self, wait_for_receipt: bool = True, expected_log: str = None):
-        self.console(f"#LOG_output_final_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})", wait_for_receipt, expected_log)
+    def output_final_sorted_array(self, wait_for_receipt: bool = True, expected_log: str = None):
+        self.console(f"#LOG_output_final_sorted_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})", wait_for_receipt, expected_log)
 
 
 if __name__ == "__main__":
@@ -88,7 +88,7 @@ if __name__ == "__main__":
         "#LOG_clone_to_its_right_ele_in_pos 2",
         "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (>=)",
         "#LOG_flush_tmp_buffer_on_pos 2",
-        "#LOG_output_final_array (4: 11 12 13 15)"
+        "#LOG_output_final_sorted_array (4: 11 12 13 15)"
     ]
 
     SM = InsertionSortMachine()
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     SM.clone_to_its_right_ele_in_pos(2, wait_for_receipt=False, expected_log=expected_logs[11])
     SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1, wait_for_receipt=False, expected_log=expected_logs[12])
     SM.flush_tmp_buffer_on_pos(2, wait_for_receipt=False, expected_log=expected_logs[13])
-    SM.output_final_array(wait_for_receipt=False, expected_log=expected_logs[14])
+    SM.output_final_sorted_array(wait_for_receipt=False, expected_log=expected_logs[14])
 
     for e1, e2 in zip(expected_logs, SM.test_logs):
         tc.assertEqual(e1, e2)

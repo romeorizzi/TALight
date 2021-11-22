@@ -40,7 +40,7 @@ assert N == len(input_array_of_ints)
 SM = InsertionSortMachine()
 n_ordered = 0
 while n_ordered < N:
-    SM.load_next_input_element_in_tmp_buffer(int(input_array_of_ints[n_ordered]), wait_for_receipt=require_receipt)
+    SM.load_next_input_element_in_tmp_buffer(input_array_of_ints[n_ordered], wait_for_receipt=require_receipt)
     pos_cmp = n_ordered - 1
     while pos_cmp >= 0 and SM.what_in_tmp_buffer_goes_before_than_what_in_pos(pos_cmp, wait_for_receipt=require_receipt):
         SM.clone_to_its_right_ele_in_pos(pos_cmp, wait_for_receipt=require_receipt)
