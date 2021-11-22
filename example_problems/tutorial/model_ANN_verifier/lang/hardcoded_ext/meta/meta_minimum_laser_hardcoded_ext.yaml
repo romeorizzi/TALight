@@ -1,0 +1,23 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  minimum_laser:
+    description: We give you a matrix with asteroids and you have to return the minimum number of laser beams to destroy all of them.
+    evaluator: [python,services/minimum_laser_server.py]
+    args:
+      level:
+        regex: ^(easy|medium|difficult)$
+        default: medium
+        explain: Level of difficulty of the problem.
+      seed:
+        explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to replicate the very same experiment as in a previous run.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  indipendent_asteroids:
+  eval_sol:
+  synopsis:
+...
