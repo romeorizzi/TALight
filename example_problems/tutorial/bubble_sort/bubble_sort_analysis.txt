@@ -1,0 +1,27 @@
+CONTESTO:
+L'algoritmo bubble sort opera in loco su un vettore contenente n numeri interi, con lo scopo di ordinarlo in ordine non-decrescente.
+
+PRIMITIVA FONDAMENTALE:
+L'operazione base consentita all'algoritmo bubble sort è quella di osservare una finestra di due elementi in posizione adiacenti e, se essi sono disposti in ordine sbagliato, swapparli per ordinare quantomeno tale finestra. La primitiva restituisce un booleano che dice se lo scambio è avvenuto.
+
+STRUTTURA FONDAMENTALE DELL'ALGORITMO:
+L'algoritmo bubble sort avviene in fasi tutte eguali (con ciascuna fase che esamina delle 2-finestre), secondo la seguente regola:
+   repet
+      esegui_fase
+   until almeno una osservazione di fase precedente ha comportato uno scambio.
+
+REGOLE CUI DEVE SOTTOSTARE UNA FASE:
+   una fase può contenere più osservazioni (i,i+1), ma, se
+   le osservazioni (i,i+1) e (j,j+1) avvengono in questo ordine, allora j > i.
+
+PRIME OSSERVAZIONI SUGLI EFFETTI DELLA SINGOLA FASE:
+   Le cose che cambiano da prima a dopo la fase sono:
+   1. gli elementi che migrano verso sinistra lo fanno di al più un singolo passo
+   2. gli intervalli percorsi da elementi che migrano verso destra oppure restano fermi sono disgiunti
+
+CARATTERIZZAZIONE DEGLI EFFETTI DELLA SINGOLA FASE:
+  1. Una fase comporta lo spostamento verso sinistra di un elemento e=A[i] se e solo se a sinistra di e è presente un elemento A[j], j<i, tale che A[j]>e.
+  2. Un'elemento e=A[i] che invece resta fermo o migra verso destra lo fà fino alla posizione k= (\argmin_{j>i} {A[j] >= A[i]}) -1.
+
+
+
