@@ -11,35 +11,36 @@ def check_val_range(val:int, MIN_VAL:int, MAX_VAL:int, TAc, LANG):
     return True
 
 
-def random_triangle(n:int, minVal:int, maxVal:int, s:int):
-    random.seed(s,version=2)
+def random_triangle(n:int, MIN_VAL:int, MAX_VAL:int, seed:int, TAc, LANG):
+    if MAX_VAL < MIN_VAL:
+        TAc.print(LANG.render_feedback("range-is-empty", f"Error: I can not choose the integers for the triangle from the range [{MIN_VAL},{MAX_VAL}] since this range is empty.", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
+        exit(0)
+    random.seed(seed,version=2)
     triangle = []
-    values = [i for i in range(0,100)]
     for i in range(0,n):
-        triangle.append(random.sample(values,i+1))
+        triangle.append([])
+        for j in range(0,i+1):
+            triangle[-1].append(random.randint(MIN_VAL, MAX_VAL))
     return triangle
 
 # STAMPIAMO IL TRIANGOLO SUL TERMINALE
 
-def print_triangle(triangle):
-    triangle_array = []
-    for l in triangle:
-        triangle_array += l
+def print_triangle(triangle, file_format:bool =False):
     n = len(triangle)
-    for i in range(len(triangle_array)):
-        if len(str(triangle_array[i])) == 1:
-            triangle_array[i] = str(triangle_array[i]) + " "
-    z = 0
-    m = (2 * n) - 2
-    for i in range(0, n):
-        for j in range(0, m):
-            print(end="  ")
-        m = m - 1
-        for j in range(0, i + 1):
-            print(str(triangle_array[z]), end='  ')
-            z += 1
-        print("  ")
+    if file_format:
+        print(n)
+        for row in triangle:
+            print(' '.join([str(ele).rjust(2) for ele in row]))
+    else:
+        left_margin = (2 * n) - 2
+        for row in triangle:
+            print(end="  "*left_margin)
+            left_margin -= 1
+            for ele in row:
+                print(str(ele).ljust(2), end='  ')
+            print()
 
+            
 def print_path(triangle,path_values):
     triangle_array = []
     for l in triangle:

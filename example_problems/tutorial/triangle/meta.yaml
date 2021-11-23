@@ -22,7 +22,7 @@ services:
         explain: The argument `seed` of this service is either a six digit number or the string `random_seed`. In the first case, then the service yields and returns the pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. In the second case, the service first generate a valid numeric seed and then returns the corresponding pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. In either case, the service displays both the instance and the the seed used for its generation.  
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-      silent:
+      file_format:
         regex: ^(0|1)$
         default: 0
         explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output to file ('>') you will get a valid instance file for the other services.
@@ -99,6 +99,40 @@ services:
         explain3: -true_opt_val= please, tell me the true optimal solution value.
       silent:  
         explain: if nothing is wrong with your solution for the triangle you have specified us (through seed) then the service runs silently; otherwise it explain what is the problem in clear.
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_longest_increasing_subseq:
+    evaluator: [python, services/check_longest_increasing_subseq_server.py]
+    args:
+      T:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input)$
+        default: lazy_input
+      max_len_min_k:
+        regex: ^(0|[1-9][0-9]{0,50}|lazy_input)$
+        default: lazy_input
+      feas_subseq:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
+        default: lazy_input
+      coloring:
+        regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input|none)$
+        default: none
+      feedback_level:
+        regex: ^(complete_subseq|subseq_prefix|no_feedback)$
+        default: complete_subseq
+      more_or_less_hint_if_wrong_max_len_min_k:
+        regex: ^(0|1)$
+        default: 0
+      YES_cert:
+        regex: ^(0|1)$
+        default: 1
+      seed:
+        explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      silent:
         regex: ^(0|1)$
         default: 0
       lang:

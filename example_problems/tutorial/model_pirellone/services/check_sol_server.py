@@ -9,7 +9,7 @@ from services_utils import process_instance, get_user_sol, check_sol_with_feedba
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('input_mode',str),
+    ('instance_spec',str),
     ('m',int), 
     ('n',int),
     ('sol_style',str),

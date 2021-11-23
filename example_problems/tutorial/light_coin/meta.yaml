@@ -5,12 +5,8 @@ services:
   check_static_strategy:
 #    explain: What is the smallest number of two-pan scale weighings required to distinguish a single heavier coin from a set of n otherwise identical coins?
     description: choose an n and specify a set of two-pan scale weighings that always allow to identify the false coin among n otherwise identical coins.
-    example: "with n=3, a correct (and optimal) static strategy would be:"
-    example1: 1, 2
-    example2: "with n=4, a correct (and not optimal) static strategy would be:"
-    example3: 1 2, 3 4
-    example4: 1, 2
-    example5: 3, 4
+    example1: "with n=3, a correct (and optimal) static strategy would be:{chr(10)}{chr(13)}        1, 2"
+    example2: "with n=4, a correct (and not optimal) static strategy would be:{chr(10)}{chr(13)}        1 2, 3 4{chr(10)}{chr(13)}        1, 2{chr(10)}{chr(13)}        3, 4"
     evaluator: [python3, services/check_static_strategy/check_static_strategy_server.py]
     args:
       n:

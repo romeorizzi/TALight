@@ -38,24 +38,24 @@ if not ENV['check_solution']:
     # Receive mod file from bot
     mph.receive_mod_file()
     # Receive dat file from bot or from the archive folder
-    if ENV['instance_id'] == -1: #case: use instance_id
+    if ENV['instance_id'] != -1: #case: use instance_id
+        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
+    else:
         mph.receive_dat_file()
         dat_file_path = None
-    else:
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
 else:
     TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
     # Receive mod file from bot
     mph.receive_mod_file()
     # Receive dat and input files from bot or from the archive folder
-    if ENV['instance_id'] == -1: #case: use instance_id
+    if ENV['instance_id'] != -1: #case: use instance_id
+        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
+        input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
+    else:
         mph.receive_dat_file()
         dat_file_path = None
         mph.receive_input_file()
         input_str = mph.get_input_str()
-    else:
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
-        input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
     instance = al.get_instance_from_txt(input_str, style=txt_style)
     m = len(instance)
     n = len(instance[0])

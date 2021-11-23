@@ -64,7 +64,17 @@ def computer_move(m,n, direction):
     else:
         return winning_move(m,n)
 
+def not_a_number(move):
+    try:
+        int(move)
+        return False
+    except ValueError:
+        return True
+
 def move_control(move, m):
+    if not_a_number(move):
+        return True
+    move=int(move)
     if m%2==0:
         if move>=m or move<m//2:
             return True
@@ -80,8 +90,8 @@ def player_move(m,n,TAc,LANG):
     direction=input('Insert your move (rows/columns):\n')
     while direction != 'rows' and direction != 'columns':
         direction=input('Wrong direction. Try again:\n')
-            
-    while True:
+
+    while True:        
         if direction=='rows':
             if m==1:
                 TAc.print(LANG.render_feedback("invalid-move", f'You can\'t move in this direction because there is only 1 row.'), "red", ["bold"])
@@ -89,10 +99,9 @@ def player_move(m,n,TAc,LANG):
                     direction=input('Change direction. Try again:\n')
             else:
                 move=input('Insert number of rows remaining:\n')
-                move=int(move)
                 while move_control(move,m):
                     move=input('Your move is not correct, try again:\n')
-                    move=int(move)
+                move=int(move)
                 TAc.print(LANG.render_feedback("user-move", f'Your move: {move} x {n}.'), "yellow", ["bold"])
                 return (move, n)
 
@@ -103,10 +112,9 @@ def player_move(m,n,TAc,LANG):
                     direction=input('Change direction. Try again:\n')
             else:
                 move=input('Insert number of columns remaining:\n')
-                move=int(move)
                 while move_control(move,n):
                     move=input('Your move is not correct, try again:\n')
-                    move=int(move)
+                move=int(move)
                 TAc.print(LANG.render_feedback("user-move", f'Your move: {m} x {move}.'), "yellow", ["bold"])
                 return (m, move)
 

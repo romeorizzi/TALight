@@ -3,16 +3,17 @@ from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
 
-import model_pirellone_lib as pl
-
+import model_asteroid_lib as pl
+from math_modeling import ModellingProblemHelper, get_problem_path_from
 
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('input_mode',str),
+    ('instance_spec',str),
     ('m',int),
     ('n',int),
-    ('instance_solvability',str),
+    ('instance_id',int),
+    ('format',str),
     ('silent',bool),
     # ('display',bool),
     # ('download',bool),
@@ -24,39 +25,27 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
-if ENV['input_mode'] == 'random':
-    # adjust solvability param
-    if ENV['instance_solvability'] == 'solvable':
-        solvable = True
-    elif ENV['instance_solvability'] == 'unsolvable':
-        solvable = False
-    else:
-        solvable = None
-    # get random seed
-    seed = pl.gen_pirellone_seed(solvable)
+if ENV['instance_spec'] == 'catalogue1':
+    # Initialize ModellingProblemHelper
+    mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
+    # Get dat file
+    instance_str = mph.get_file_str_from_id(ENV['instance_id'], format=ENV['format'])
+    instance = pl.get_instance_from_str(instance_str, format=ENV['format'])
 
-elif ENV['input_mode'] == 'seed':
-    if ENV['seed'] == 0:
-        TAc.print(LANG.render_feedback("no-mandatory-seed", f"If you select (input_mode='seed') then the (seed) argument must be differente from 000000"), "red", ["bold"])
-        exit(0)
-    # get custom seed
-    seed = ENV['seed']
+else:
+    # Get instance
+    assert ENV['instance_spec'] == 'random'
+    instance = pl.gen_instance(ENV['m'], ENV['n'], ENV['seed'])
+    instance_str = pl.instance_to_str(instance, format=ENV['format'])
 
-# Get pirellone
-try:
-    instance = pl.gen_pirellone(ENV['m'], ENV['n'], seed)
-except RuntimeError:
-    TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
-    exit(0)
 
 # Print Instance
 if ENV['silent']:
-    format = 'only_matrix'
-    # format = 'with_m_and_n'
-    print(pl.pirellone_to_str(instance, format))
+    print(instance_str)
 else:
-    TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
-    TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance-title", f'The {ENV["m"]}x{ENV["n"]} 0,1-matrix is:'), "yellow", ["bold"])
+    TAc.print(pl.instance_to_str(instance, format=ENV["format"]), "white", ["bold"])
+    if not ENV['instance_spec'] == 'instance_id':
+        TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
 
 exit(0)

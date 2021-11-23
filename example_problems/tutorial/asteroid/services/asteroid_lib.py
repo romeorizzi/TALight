@@ -213,12 +213,9 @@ def get_instance_from_dat(matrix, style=''):
 def gen_instance(m:int,n:int,seed:int):
     assert m >= 0
     assert n >= 0
-    if seed==0:
-        random.seed()
-        seed = random.randint(100000,999999)
     random.seed(seed)
     matrix=[[random.randint(0,1) for j in range(n) ] for i in range(m)]
-    return matrix,seed
+    return matrix
 
 
 def visualizza(matrix):

@@ -3,16 +3,17 @@ from sys import exit
 
 from multilanguage import Env, Lang, TALcolors
 
-import model_pirellone_lib as pl
-from model_utils import ModellingProblemHelper, get_problem_path_from
-from services_utils import process_user_sol, print_separator, check_sol_with_feedback
+import model_asteroid_lib as al
+from math_modeling import ModellingProblemHelper, get_problem_path_from
 
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('display_output',bool),
     ('display_error',bool),
+    ('display_solution',bool),
     ('check_solution',bool),
+    ('txt_style',str),
     ('sol_style',str),
     ('instance_id',int),
 ]
@@ -23,135 +24,125 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
-# Initialize ModellingProblemHelper
-mph = ModellingProblemHelper(get_problem_path_from(__file__))
+# Get formats
+dat_style = ''  # default
+txt_style = ENV['txt_style']
 
-# Get files
-try:
-    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
-    # Get mod
+# Initialize ModellingProblemHelper
+mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
+
+
+# Receive files and get instance
+if not ENV['check_solution']:
+    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat)."), "yellow")
+    # Receive mod file from bot
     mph.receive_mod_file()
-    # Get dat and input
-    if ENV['instance_id'] == -1:
-        # Get dat file
+    # Receive dat file from bot or from the archive folder
+    if ENV['instance_id'] != -1: #case: use instance_id
+        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
+    else:
         mph.receive_dat_file()
         dat_file_path = None
-        # Get input file
-        if ENV['check_solution']:
-            input_str = mph.receive_input_file()
+else:
+    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
+    # Receive mod file from bot
+    mph.receive_mod_file()
+    # Receive dat and input files from bot or from the archive folder
+    if ENV['instance_id'] != -1: #case: use instance_id
+        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
+        input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
     else:
-        # Get dat file
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], 'dat')
-        # Get input file
-        if ENV['check_solution']:
-            input_str = mph.get_input_from_id(ENV['instance_id'], 'only_matrix.txt')
-    instance = pl.get_pirellone_from_str(input_str)
-except RuntimeError as err:
-    err_name = err.args[0]
-    # manage custom exceptions:
-    if err_name == 'write-error':
-        TAc.print(LANG.render_feedback('write-error', f"Fail to create {err.args[1]} file"), "red", ["bold"])
-    if err_name == 'invalid-id':
-        TAc.print(LANG.render_feedback('invalid-id', f"id={err.args[1]} is invalid."), "red", ["bold"])
-    else:
-         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-    exit(0)
+        mph.receive_dat_file()
+        dat_file_path = None
+        mph.receive_input_file()
+        input_str = mph.get_input_str()
+    instance = al.get_instance_from_txt(input_str, style=txt_style)
+    m = len(instance)
+    n = len(instance[0])
 
-# Perform solution with GPLSOL
-try:
-    mph.run_GPLSOL(dat_file_path)
-except RuntimeError as err:
-    err_name = err.args[0]
-    # manage custom exceptions:
-    if err_name == 'process-timeout':
-        TAc.print(LANG.render_feedback('process-timeout', "Too much computing time! Deadline exceeded."), "red", ["bold"])
-    elif err_name == 'process-call':
-        TAc.print(LANG.render_feedback('process-call', "The call to glpsol on your .dat file returned error."), "red", ["bold"])
-    elif err_name == 'process-exception':
-        TAc.print(LANG.render_feedback('process-exception', f"Processing returned with error:\n{err.args[1]}"), "red", ["bold"])
-    else:
-         TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-    exit(0)
+
+# Perform solution with GPLSOL and get raw solution
+mph.run_GLPSOL(dat_file_path)
+raw_sol = mph.get_raw_sol()
+
 
 # print GPLSOL stdout
 if ENV['display_output']:
-    print_separator(TAc, LANG)
-    try:
-        gplsol_output = mph.get_out_str()
-        TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["BOLD"])  
-        TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
-    except RuntimeError as err:
-        err_name = err.args[0]
-        # manage custom exceptions:
-        if err_name == 'read-error':
-            TAc.print(LANG.render_feedback('stdout-read-error', "Fail to read the stdout file of GPLSOL"), "red", ["bold"])
-        else:
-             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-        exit(0)
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    gplsol_output = mph.get_out_str()
+    TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["BOLD"])  
+    TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
+
 
 # print GPLSOL stderr
 if ENV['display_error']:
-    print_separator(TAc, LANG)
-    try:
-        gplsol_error = mph.get_err_str()
-        TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderr is: "), "yellow", ["BOLD"])  
-        TAc.print(LANG.render_feedback("stderr", f"{gplsol_error}"), "white", ["reverse"])
-    except RuntimeError as err:
-        err_name = err.args[0]
-        # manage custom exceptions:
-        if err_name == 'read-error':
-            TAc.print(LANG.render_feedback('stderr-read-error', "Fail to read the stderr file of GPLSOL"), "red", ["bold"])
-        else:
-             TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-        exit(0)
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    gplsol_error = mph.get_err_str()
+    TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderr is: "), "yellow", ["BOLD"])  
+    TAc.print(LANG.render_feedback("stderr", f"{gplsol_error}"), "white", ["reverse"])
+
+
+# print GPLSOL solution.txt
+if ENV['display_solution']:
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    TAc.print(LANG.render_feedback("sol-title", "The raw GPLSOL solution is: "), "yellow", ["BOLD"])  
+    for line in raw_sol:
+        print(line)
+
 
 # check GPLSOL solution
 if ENV['check_solution']:
-    print_separator(TAc, LANG)
-
-    # Perform optimal solution with model_pirellone_lib
-    opt_sol_subset = pl.get_opt_sol(instance)
-    m = len(opt_sol_subset[0])
-    n = len(opt_sol_subset[1])
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    TAc.print(LANG.render_feedback("start-check", f"Now start the check of the GPLSOL solution..."), "yellow", ["bold"])
 
     # Print instance
     TAc.print(LANG.render_feedback("instance-title", f"The matrix {m}x{n} is:"), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("instance", f"{pl.pirellone_to_str(instance)}"), "white", ["bold"])
-    print_separator(TAc, LANG)
+    TAc.print(LANG.render_feedback("instance", f"{al.instance_to_str(instance)}"), "white", ["bold"])
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
-    # Extract GPLSOL solution
-    try:
-        # Get raw solution
-        raw_sol = mph.get_raw_solution()
-        # Parse the raw solution
-        gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
-    except RuntimeError as err:
-        err_name = err.args[0]
-        # manage custom exceptions:
-        if err_name == 'read-error':
-            TAc.print(LANG.render_feedback('solution-read-error', "Fail to read the solution file of GPLSOL"), "red", ["bold"])
-        else:
-            TAc.print(LANG.render_feedback('unknown-error', f"Unknown error: {err_name} in:\n{err.args[1]}"), "red", ["bold"])
-        exit(0)
+    # Parse the raw solution
+    gplsol_sol = al.process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
 
-    # Print GPLSOL solution
+    # Print processed GPLSOL solution
     TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["BOLD"])
     if ENV['sol_style'] == 'seq':
-        TAc.print(LANG.render_feedback("out_sol", f"{pl.seq_to_str(gplsol_sol)}"), "white", ["reverse"])
-        gplsol_sol = pl.seq_to_subset(gplsol_sol, m, n)
+        TAc.print(LANG.render_feedback("out_sol", f"{al.seq_to_str(gplsol_sol)}"), "white", ["reverse"])
+        gplsol_sol = al.seq_to_subset(gplsol_sol, m, n)
     elif ENV['sol_style'] == 'subset':
-        TAc.print(LANG.render_feedback("out_sol", f"{pl.subset_to_str(gplsol_sol)}"), "white", ["reverse"])
-    print_separator(TAc, LANG)
-
-    # Print optimal solution
-    TAc.print(LANG.render_feedback("in-title", "The PirelloneLib solution is:"), "yellow", ["reverse"])
-    if ENV['sol_style'] == 'seq':
-        TAc.print(LANG.render_feedback("in-sol", f"{pl.seq_to_str(pl.subset_to_seq(opt_sol_subset))}"), "green", ["bold"])
-    elif ENV['sol_style'] == 'subset':
-        TAc.print(LANG.render_feedback("in-sol", f"{pl.subset_to_str(opt_sol_subset)}"), "green", ["bold"])
-    print_separator(TAc, LANG)
+        TAc.print(LANG.render_feedback("out_sol", f"{al.subset_to_str(gplsol_sol)}"), "white", ["reverse"])
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    
+    # Get an optimal solution
+    opt_sol_subset = al.min_cover(m,n,instance)
+    opt_val = len(opt_sol_subset)
+    print(f"opt_sol_subset={opt_sol_subset}, opt_val={opt_val}")
 
     # Check the correctness of the user solution
-    check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, gplsol_sol)
+    if ENV['sol_style'] == 'seq':
+        user_sol_subset = al.seq_to_subset(gplsol_sol, ENV['m'], ENV['n'])
+        user_sol_seq = gplsol_sol
+    else:
+        user_sol_seq = al.subset_to_seq(gplsol_sol)
+        user_sol_subset = gplsol_sol
+    # check feasibility of the user solution
+    print(f"user_sol_seq={user_sol_seq}, user_sol_subset={user_sol_subset}")
+    if al.is_feasible_shooting(m,n,instance,beams=user_sol_seq,silent=False,TAc=TAc,LANG=LANG):
+        TAc.OK()
+        TAc.print(LANG.render_feedback('feasible', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
+    else:
+        TAc.NO()
+        TAc.print(LANG.render_feedback('error', f"The solution is not correct. The pirellone cell in row={certificate_of_no[0]} and col={certificate_of_no[1]} stays on."), "red", ["bold"])
+        exit(0)
+    # check optimlity of the user solution
+    if ENV['sol_style'] == 'seq':
+        if len(opt_sol_seq) != len(user_sol_seq):
+            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
+            exit(0)
+    elif ENV['sol_style'] == 'subset':
+        if not al.is_optimal(user_sol_subset):
+            TAc.print(LANG.render_feedback('not-minimal', "This sequence is not minimal."), "yellow", ["bold"])
+            exit(0)
+    TAc.print(LANG.render_feedback('minimal', "The solution is minimal!"), "green", ["bold"])
+
 
 exit(0)

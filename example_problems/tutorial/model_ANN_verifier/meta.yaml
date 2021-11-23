@@ -3,44 +3,35 @@
 public_folder: public
 services:
   gimme_instance:
-    description: This service provides you with a pseudo-random ANN instance, i.e., an oriented graph with (1,...,n) input nodes, (1,...m) hidden layer/s, and a final output layer, each composed by (1,...,k) node/s. You can also specify whether you want to get only the random seed for the instance or also the instance file downloaded and/or its display on the screen.
+    description: 'This service provides you with instances of weighted neural networks (ANNs). A neural network is characterized by the number of its layers, and the type and number of nodes in each layer. The ANN is weighted when for every two nodes a and b contained in subsequent and consecutive layers the weight associated to the (a,b) synapsis is also specified. You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall an ANN you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random ANN we mean the tuple <n_1,n_2, ..., n_nl,seed> where nl denotes the number of its layers and, for i=1,...,nl, layer i has n_i nodes. Level 0 is the input layer, level n_l is the output layer. The number of hidden layers is n_nl - 2.\n   The ANN requested is returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing ANNs is the following: the first line contains the integer nl; the second line contains the integers n_1,n_2, ..., n_nl in this order and separated by spaces, then follow nl-1 lines, one for each consecutive pair of layers. The i-th of these lines displays the n_i x n_(i+1) weights for synapses between layer i and layer i+1. Here, the weight between the p-th node of layer i and the q-th node of layer i+1 is in position q+(p-1)n_(i+1). It is assumed that all indexes start from 1.'
     evaluator: [python,services/gimme_instance_server.py]
     args:
-      input_mode:
-        regex: ^(random|seed|instance_id)$
+      instance_spec:
+        regex: ^(random|catalogue1)$
         default: random
-        explain: 'choose the way to input your ANN among:' 
-        explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <nodes_il,nodes_hl,nodes_out,seed>.'
-        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <nodes_il,nodes_hl,nodes_out,seed>.'
-        explain3: '[instance_id] the service get the instance selected generated with make'
-      nodes_il:
-        regex: ^([1-9][0-9]{0,1})$
-        default: 2
-        explain: 'Number of nodes of the input layer.'
-      nodes_hl:
-        regex: ^([1-9]{1,3}|,{0,1}){1,5}$
-        default: 4
-        explain: Number of nodes for each hidden layer of the ANN.
-        example: 2,1,3 --> this ANN will have three hidden layers; the first one composed by two nodes the second one of 3 nodes, and similarly the last one composed by three nodes.
-      nodes_out:
-        regex: ^([1-9][0-9]{0,1})$
-        default: 1
-        explain: 'Number of nodes of the output layer.'
+        explain: 'choose an option among:' 
+        explain1: '[random] the service uses the specificated seed to generate and return the pseudo-random instance <n_1,n_2, ..., n_nl,seed>. Here, nl denotes the number of layers and the generated ANN has n_i nodes in layer i, for i=1,...,nl. Level 0 is the input layer, level n_l is the output layer. The number of hidden layers is n_nl - 2.'
+        explain2: '[catalogue1] the service will return an instance taken from a catalogue of hardcoded instances (the catalogue named \''catalogue1\''). More precisely, the instance returned is the one with the given instance_id.'
+      n_nodes:
+        regex: ^\s*(([1-9](\s)*){2,6})$
+        default: "3 4 1"
+        explain: through this argument you can specify the number of nodes in each layer of the ANN. Just input a sequence n_1 n_2  ...  n_nl of positive natural numbers in the interval [1,9] and separated by spaces. Here, the integer nl should fall in the interval [2,6] and denotes the number of layers of the ANN. For every i=1,...,nl, the ANN will contain n_i nodes in layer i. Level 0 is the input layer, level n_l is the output layer.
+        example: with n_nodes= 5 3 2 1 you are asking for an ANN with an input layer of 5 nodes, an output layer of 1 node, and two hidden layers (the first one composed by 3 nodes the second one of 2 nodes)
       seed:
-        explain: 'This argument is used when you hold the instance descriptor of a specific instance and want to get that instance either downloaded in local as a file and/or displayed on your terminal screen. By a \''descriptor\'' we mean a triple <m,n,seed> that you hold from previous calls to this or other services for this problem.'
-        regex: ^[1-9][0-9]{5,5}$
-        default: 123456
+        explain: 'Set up this argument when you hold the seed and the instance descriptor of the specific instance that you want to be produced by the service (whether downloaded in local as a file or displayed on your terminal screen). By an \''instance descriptor\'' we mean a tuple <n_1,n_2, ..., n_nl,seed> that you may have got from previous calls to this or other services for this problem. When this argument is left to its default value (random_seed) then the service first chooses a seed at random (and communicates it to the user) and then produces the pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       instance_id:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
-        explain: 'This argument is taken into account when input_mode=instance_id. It is used to identify a particular instance within the catalogue of hardcoded instances.'
+        regex: ^([1-9][0-9]*)$
+        default: 1
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
       silent:
         regex: ^(0|1)$
         default: 0
         explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output to file ('>') you will get a valid instance file for the other services.
       display:
         regex: ^(0|1)$
-        default: 0
+        default: 1
         explain: If this flag is set to 1 then the instance file is listed by the service.
       download:
         regex: ^(0|1)$
@@ -49,35 +40,27 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  gimme_sol_forward_prop:
-    description: 'This service provides you with a solution of a forward propagation for an instance of ANN (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from nodes_il, nodes_hl, nodes_out and its random seed.'
-    evaluator: [python, services/gimme_sol_server.py]
+  simulate_forward_prop:
+    description: 'This service provides you with a solution of a forward propagation for an instance of ANN (either provided by you, or from a catalogue, or generated at random) and given the output values of the nodes in the input layer.'
+    evaluator: [python, services/simulate_forward_prop_server.py]
     args:
-      input_mode:
-        regex: ^(random|seed|terminal)$
-        default: random
-        explain: 'choose the way to input your pirellone among:' 
-        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
-        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
+      instance_spec:
+        regex: ^(random|catalogue1|terminal)$
+        default: catalogue1
+        explain: 'choose the way to input your ANN among the following:' 
+        explain1: '[random] the service uses the pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
+        explain2: '[catalogue1] the service uses the hardcoded instance of the given instance_id as taken from the catalogue of hardcoded instances named catalogue1.'
         explain3: '[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations.'
-        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt.'
-      nodes_il:
-        regex: ^([1-9][0-9]{0,1})$
-        default: 2
-        explain: 'Number of nodes of the input layer.'
-      nodes_hl:
-        regex: ^([1-9]{1,3}|,{0,1}){1,5}$
-        default: 4
-        explain: Number of nodes for each hidden layer of the ANN.
-        example: 2,1,3 --> this ANN will have three hidden layers; the first one composed by two nodes the second one of 3 nodes, and similarly the last one composed by three nodes.
-      nodes_out:
-        regex: ^([1-9][0-9]{0,1})$
-        default: 1
-        explain: 'Number of nodes of the output layer.'
+        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt.'
+      n_nodes:
+        regex: ^\s*(([1-9](\s)*){2,6})$
+        default: "3 4 1"
+        explain: through this argument you can specify the number of nodes in each layer of the ANN. Just input a sequence n_1 n_2  ...  n_nl of positive natural numbers in the interval [1,9] and separated by spaces. Here, the integer nl should fall in the interval [2,6] and denotes the number of layers of the ANN. For every i=1,...,nl, the ANN will contain n_i nodes in layer i. Level 0 is the input layer, level n_l is the output layer.
+        example: with n_nodes= 5 3 2 1 you are asking for an ANN with an input layer of 5 nodes, an output layer of 1 node, and two hidden layers (the first one composed by 3 nodes the second one of 2 nodes)
       seed:
-        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(000000|[1-9][0-9]{5,5})$
-        default: 000000
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n_1,n_2, ..., n_nl,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -85,30 +68,26 @@ services:
     description: 'This service checks your solution for a single forward propagation on an instance of ANN (either provided by you or generated at random).You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from nodes_il, nodes_hl, nodes_out and its random seed.'
     evaluator: [python, services/check_sol_server.py]
     args:
-      input_mode:
-        regex: ^(random|seed|instance_id)$
+      instance_spec:
+        regex: ^(random|catalogue1|terminal)$
         default: random
-        explain: 'choose the way to input your ANN among:' 
-         explain1: '[random] the service generates a seed at random and then returns it as well as the pseudo-random instance <nodes_il,nodes_hl,nodes_out,seed>.'
-        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <nodes_il,nodes_hl,nodes_out,seed>.'
-        explain3: '[instance_id] the service get the instance selected generated with make'
-      nodes_il:
-        regex: ^([1-9][0-9]{0,1})$
-        default: 2
-        explain: 'Number of nodes of the input layer.'
-      nodes_hl:
-        regex: ^([1-9]{1,3}|,{0,1}){1,5}$
-        default: 4
-        explain: Number of nodes for each hidden layer of the ANN.
-        example: 2,1,3 --> this ANN will have three hidden layers; the first one composed by two nodes the second one of 3 nodes, and similarly the last one composed by three nodes.
-      nodes_out:
-        regex: ^([1-9][0-9]{0,1})$
-        default: 1
-        explain: 'Number of nodes of the output layer.'
+        explain: 'choose the way to input your ANN among the following:' 
+        explain1: '[random] the service uses the pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
+        explain2: '[catalogue1] the service uses the hardcoded instance of the given instance_id as taken from the catalogue of hardcoded instances named catalogue1.'
+        explain3: '[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations.'
+      n_nodes:
+        regex: ^\s*(([1-9](\s)*){2,6})$
+        default: "3 4 1"
+        explain: through this argument you can specify the number of nodes in each layer of the ANN. Just input a sequence n_1 n_2  ...  n_nl of positive natural numbers in the interval [1,9] and separated by spaces. Here, the integer nl should fall in the interval [2,6] and denotes the number of layers of the ANN. For every i=1,...,nl, the ANN will contain n_i nodes in layer i. Level 0 is the input layer, level n_l is the output layer.
+        example: with n_nodes= 5 3 2 1 you are asking for an ANN with an input layer of 5 nodes, an output layer of 1 node, and two hidden layers (the first one composed by 3 nodes the second one of 2 nodes)
       seed:
-        explain: specify the numeric code to reproduce the very same pseudo-random instance as in a previous run. Called with seed=000000, the service chooses its seed at random (and communicates it to the user).
-        regex: ^(000000|[1-9][0-9]{5,5})$
-        default: 000000
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        default: 1
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

@@ -131,7 +131,7 @@ class Lang:
         for arg_name, arg_type in self.ENV.args_list:
             arg_val = self.ENV[arg_name]
             if arg_type == bool:
-                self.opening_msg += f"{arg_name}={'1 (True)' if arg_val else '0 (False)'} (i.e., {arg_val}), "
+                self.opening_msg += f"{arg_name}={'1' if arg_val else '0'} (i.e., {arg_val}), "
             elif arg_name=="seed" and self.ENV.seed_generated:
                 self.opening_msg += f"{arg_name}={arg_val} (randomly generated, as 'random_seed' was passed), "
             else:

@@ -1,0 +1,12 @@
+0 0 0 1 1
+0 0 2 1 2
+0 2 0 2 1
+0 2 2 3 3
+0 1 1 2 2
+#end
+
+# should yield the following labeling of the 4x4-grid:
+0NW3
+W4NS
+NW4N
+1EW4
