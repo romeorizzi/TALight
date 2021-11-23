@@ -36,7 +36,7 @@ services:
       download:
         regex: ^(0|1)$
         default: 0
-        explain: 'If this flag is set to 1 then the instance file is downloaded in the \''download\'' sub-folder of the folder from which this TALight service call has been issued.'
+        explain: 'If this flag is set to 1 then the instance file named 'instance_seed.txt' (where seed is the seed chosen) is downloaded in the \''download\'' sub-folder of the folder from which this TALight service call has been issued.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
