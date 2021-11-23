@@ -12,13 +12,13 @@ from scc_lib import *
 
 # METADATA OF THIS TAL_SERVICE:
 problem="graph_connectivity"
-service="check_certificate_of_connectivity"
+service="eval_bot_deciding_connectivity"
 args_list = [
-    ('n',int), 
-    #('m',int), 
-    ('how_to_input_the_graph',str), 
-    ('silent',int),
-    ('lang',str),
+    ('goal',str), 
+    ('check_also_yes_certificate',int),
+    ('check_also_no_certificate',int),
+    ('code_lang',str),
+    ('lang',str)
 ]
 
 ENV =Env(args_list)
@@ -26,10 +26,13 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 #TAc.print(LANG.opening_msg, "green")
 
-n = ENV['n']
-m = n-1
-seed = ENV['how_to_input_the_graph']
-silent = ENV['silent']
+goal = ENV['goal']
+check_also_yes_certificate = ENV['check_also_yes_certificate']
+check_also_no_certificate = ENV['check_also_no_certificate']
+code_lang = ENV['code_lang']
+lang = ENV['lang']
+
+'''
 g,graph_print,edges,seed = GenerateGraph(seed, n, m, True)
 
 # Stampo il grafo + info
@@ -72,19 +75,18 @@ is_correct, not_conn = span.isConnected(True)
 
 is_correct = has_outer_edges and has_outer_edges
 
-'''
+
 out=""
 for e in not_in_graph:
     out+=str(e[0])+","+str(e[0])+";"
-'''
-import sys
-sys.stderr.write(str(is_correct)+ "\n")
+
+
 
 if(is_correct):
     if (silent == 0):
-        TAc.print("ESATTO, il certificato e' corretto.","green")
+        TAc.print("\n\nESATTO, il certificato e' corretto.\n","green")
 else:
-    TAc.print("SBAGLIATO, il certificato che mi hai dato non e' uno spanning tree corretto.","red")
+    TAc.print("\n\nSBAGLIATO, il certificato che mi hai dato non e' uno spanning tree corretto.\n","red")
     # Printo elenco archi non in g (se esistono)
     if(len(not_in_graph) != 0):
         TAc.print("Questi archi non appartengono al grafo","green")
@@ -92,5 +94,5 @@ else:
             print(e)
     TAc.print("Questi nodi del grafo non sono raggiunti dal tuo spanning tree","green")
     for n in not_conn:
-        print(n)
-    TAc.print("#end","green")
+            print(n)
+'''

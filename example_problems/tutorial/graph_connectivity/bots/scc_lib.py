@@ -1,1 +1,1 @@
-../services/scc_lib.py
+../scc_lib.py

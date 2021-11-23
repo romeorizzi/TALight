@@ -1,5 +1,5 @@
 APRIRE LA CARTELLA
-CD ~/TALight/example_problems/tutorial/graph_connectivity/bots
+cd ~/TALight/example_problems/tutorial/graph_connectivity/bots
 
 AVVIARE IL SERVER
 rtald -d ~/TALight/example_problems/tutorial
