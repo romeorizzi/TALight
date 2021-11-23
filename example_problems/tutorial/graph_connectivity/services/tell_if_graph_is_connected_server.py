@@ -66,7 +66,11 @@ for i in range(m):
 
 #creazione grafo completata
 
-if g.isConnected():
+
+# Check se connesso
+is_connected, _ = g.isConnected(False)
+
+if is_connected:
     TAc.print(LANG.render_feedback("graph-connected", f'\nThe submitted graph is connected.\n'),"green")
     #TAc.print(LANG.render_feedback("graph-connected", f'\nIl grafo fornito eACCENTATA connesso.\n'),"green")
     if ENV['with_yes_certificate']:
@@ -76,7 +80,7 @@ if g.isConnected():
             for elem in sp_tree:
                 print(elem)
 else:  # input graph g is NOT connected
-    TAc.print("\nIl grafo fornito non eACCENTATA connesso.\n","red")
+    TAc.print("\nIl grafo fornito NON è connesso.\n","red")
     if ENV['with_no_certificate']:
         sp_tree, not_visited = g.spanning_tree()
         TAc.print("\nEcco una separazione dei nodi:\n","yellow")

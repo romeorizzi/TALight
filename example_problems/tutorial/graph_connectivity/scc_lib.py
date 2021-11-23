@@ -68,7 +68,10 @@ class Graph():
 		for i in range(self.V): 
 			if not visited[i]:
 				not_conn.append(i)
-		#print(f"visited: {visited}")
+		
+		import sys
+		sys.stderr.write(f"visited: {visited}\n")
+		sys.stderr.write(f"len not_conn: {len(not_conn)}\n")
 
 		if(len(not_conn) != 0):
 			if(return_not_connected):
