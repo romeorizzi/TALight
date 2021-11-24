@@ -24,7 +24,11 @@ services:
       instance_id:
         regex: ^([1-9][0-9]*)$
         default: 1
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
+      format:
+        regex: ^(only_values.txt|values_with_info.txt|dat)$
+        default: only_values.txt
+        explain: choose the encoding for the txt input file.
       silent:
         regex: ^(0|1)$
         default: 0
@@ -36,7 +40,7 @@ services:
       download:
         regex: ^(0|1)$
         default: 0
-        explain: 'If this flag is set to 1 then the instance file named 'instance_seed.txt' (where seed is the seed chosen) is downloaded in the \''download\'' sub-folder of the folder from which this TALight service call has been issued.'
+        explain: 'If this flag is set to 1 then the instance file named "instance_seed.txt" (where seed is the seed chosen) is downloaded in the \''download\'' sub-folder of the folder from which this TALight service call has been issued.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

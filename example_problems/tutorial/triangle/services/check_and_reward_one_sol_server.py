@@ -49,15 +49,13 @@ if ENV['how_to_input_the_triangle'] == "my_own_triangle":
     TAc.OK()
     TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
 else:
-    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],ENV['how_to_input_the_triangle'])
+    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_triangle']),TAc,LANG)
 if not ENV['silent'] or ENV['display_triangle'] or ENV['reward_the_path'] or ENV['how_to_input_the_triangle'] == "my_own_triangle":
     TAc.print(LANG.render_feedback("feasible-path", f'Your solution path ({ENV["path"]}) is a feasible one for this problem since it comprises {ENV["n"]-1} subsequent choices of directions (the correct number).'), "green", ["bold"])
 if ENV['display_triangle']:
     TAc.print(LANG.render_feedback("display-triangle", f'The triangle of reference is the following:'), "green", ["bold"])
     tl.print_triangle(triangle)
 if ENV['reward_the_path']:
-    TAc.print(LANG.render_feedback("path-reward", 'Your path collects the following reward values when descending the triangle:'), "green", ["bold"])
-    print(tl.calculate_path(triangle,ENV["path"].replace(" ", ""))[0])
-    TAc.print(LANG.render_feedback("path-reward", f'The total reward collected by your path is {tl.calculate_path(triangle,ENV["path"].replace(" ", ""))[1]}.'), "green", ["bold"])        
+    TAc.print(LANG.render_feedback("path-reward", f'The total reward collected by your path is {tl.calculate_path(triangle,ENV["path"].replace(" ", ""))}.'), "green", ["bold"])        
 
 exit(0)
