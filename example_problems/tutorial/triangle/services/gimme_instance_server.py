@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
-import random
 
 from multilanguage import Env, Lang, TALcolors
 
@@ -22,7 +21,7 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 
 # Get Triangle
-instance = tl.random_triangle(ENV['n'], ENV['MIN_VAL'], ENV['MAX_VAL'], ENV['seed'], TAc=TAc, LANG=LANG)
+instance = tl.random_triangle(ENV['n'], ENV['MIN_VAL'], ENV['MAX_VAL'], ENV['seed'], TAc, LANG)
 
 # Print Instance
 if ENV['file_format']:
@@ -30,5 +29,4 @@ if ENV['file_format']:
 else:
     TAc.print(LANG.render_feedback("show_instance", f"Here is your pseudo-random triangle (<n={ENV['n']},MIN_VAL={ENV['MIN_VAL']},MAX_VAL={ENV['MAX_VAL']},seed={ENV['seed']}>):"), "yellow", ["bold"])
     tl.print_triangle(instance, file_format=False)
-
 exit(0)
