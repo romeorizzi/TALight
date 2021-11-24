@@ -17,6 +17,9 @@ DEFAULT_FORMAT='only_values.txt'
 
 # INSTANCE GENERATOR FUNCTIONS:
 def gen_instance(n_nodes,seed:int):
+    
+    n_nodes = n_nodes.split(' ')
+    n_nodes = list(map(int, n_nodes))
     assert len(n_nodes) >= 2 
 
     random.seed(seed)
@@ -34,16 +37,6 @@ def gen_instance(n_nodes,seed:int):
         ann.append(weights)
 
     return ann
-
-
-def instance_to_str(instance):
-    instance_str = str(instance[0]) + '\n'
-    instance_str += ' '.join(str(e) for e in instance[1]) + '\n'
-
-    for i in range(2,len(instance)):
-        instance_str += ' '.join(str(e) for e in instance[i]) + '\n'
-
-    return instance_str
 
 
 def instance_to_txt(instance, style='only_values'):

@@ -1,0 +1,8 @@
+param TOT_LAYERS := 5;  # Total Number of layers in the ANN
+param N_NODES := 5 3 4 3 1;  # Number of nodes for each layer
+param ANN_WEIGTHS :=
+                     1   4 -5 9 3 -9 -10 10 8 -8 9 4 -4 10 0 1
+                     2   -9 4 5 4 -7 5 6 10 -9 8 -10 4
+                     3   6 10 1 2 4 5 1 -1 10 7 3 1
+                     4   4 -7 9 ;
+end;

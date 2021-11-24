@@ -14,16 +14,19 @@ COPY: hardcoded/instance1.dat
 COPY: hardcoded/instance2.only_values.txt
 COPY: hardcoded/instance2.values_with_info.txt
 COPY: hardcoded/instance2.dat
-
+COPY: hardcoded/instance3.only_values.txt
+COPY: hardcoded/instance3.values_with_info.txt
+COPY: hardcoded/instance3.dat
 #     n_nodes,   seed
-GEN:  3 4 1      777771
-GEN:  4 6 6 2    777771
-GEN:  5 3 4 3 1  777771
+GEN:  "3 4 1"      777321
+GEN:  "4 6 6 2"    777831
+GEN:  "5 3 4 3 1"  777461
 
-suite: n_nodes_at_most_5 #instances with max 2 hidden layers
+suite: n_nodes_at_most_5 
+# instances with max 5 nodes for each layer
 #     n_nodes,     seed
-GEN:  5 5 5 2      777777
-GEN:  3 5 5 5 4 1  777666
-GEN:  2 4 4 1      777123
+GEN:  "5 5 5 2"      777223
+GEN:  "3 5 5 5 4 1"  777553
+GEN:  "2 4 4 1"      777647
 
 
