@@ -20,16 +20,26 @@ def startAlgo():
     grafo = Graph(numNodes)
 
     # Getting sp. tree dimensions
-    spoon = input().strip()
-    n, m = spoon.split(' ')
+    #spoon = input().strip()
+    #n, m = spoon.split(' ')
 
     # Getting arcs
     spoon = input().strip()
+
     while spoon[0] != "#":
         v, u = spoon.split(' ')
         v, u = int(v), int(u)
         grafo.addEdge(v, u)
         spoon = input().strip()
+
+        if(len(spoon) == 0):
+            spoon = input().strip()
+
+    # Ricevo istruzioni dal servizio
+    while spoon != "# Tell me how long is your spanning tree".strip():
+        spoon = input().strip()
+
+    sys.stderr.write("finito\n")
 
     # Checking spanning tree
     input_spTree, not_visited = grafo.spanning_tree()
@@ -43,8 +53,13 @@ def startAlgo():
         print(f"{u} {v}")
 
     # Getting response
-    spoon = input()
-    print(spoon)
+    spoon = input().strip()
+
+
+    while spoon != "#end".strip():
+        spoon = input().strip()
+        print(spoon)
+        sys.stderr.write(str(spoon)+ "\n")
 
 # Main
 spoon = input().strip()

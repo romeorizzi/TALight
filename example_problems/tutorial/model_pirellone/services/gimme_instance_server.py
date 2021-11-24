@@ -41,9 +41,9 @@ else:
     if environ["TAL_seed"] == "random_seed":
         # adjust the ENV['seed'] value to the solvability param
         if ENV['instance_solvability'] == 'solvable':
-            ENV['seed'] = pl.gen_instance_seed(solvable=True)
+            ENV.arg['seed'] = pl.gen_instance_seed(solvable=True)
         elif ENV['instance_solvability'] == 'unsolvable':
-            ENV['seed'] = pl.gen_instance_seed(solvable=False)
+            ENV.arg['seed'] = pl.gen_instance_seed(solvable=False)
 
     # Get pirellone
     try:
@@ -60,6 +60,6 @@ if ENV['silent']:
 else:
     TAc.print(LANG.render_feedback("instance-title", f'The {ENV["m"]}x{ENV["n"]} 0,1-matrix is:'), "yellow", ["bold"])
     TAc.print(pl.instance_to_str(instance, format=ENV['format']), "white", ["bold"])
-    TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance-descriptor", f'The instance descriptor of the above pseudo-random 0,1-matrix is <n={ENV["m"]},m={ENV["n"]},seed={ENV["seed"]}>.'), "yellow", ["bold"])
 
 exit(0)

@@ -1,6 +1,7 @@
 %YAML 1.2
 ---
 public_folder: public
+description: hey mama come mi diverto
 services:
   log_debug_your_insertion_sort_bot:
     description: |+
@@ -9,7 +10,7 @@ services:
         #LOG_flush_tmp_buffer_on_pos <i>
         #LOG_clone_to_its_right_ele_in_pos <i>
         #LOG_compare_what_in_tmp_buffer_with_what_in_pos <i> <outcome>
-        #LOG_output_final_array <final_array>
+        #LOG_output_final_sorted_array <final_array>
      The service validates your correct understanding/implementation of the InsertionSort algorithm by check the coherence of the resulting log sequence, or signals the very first anomaly in behaviour based only on such log lines.
      The abstract machine is designed in such a way that there exists a unique recipt for operating it in such a way to always guarantee the success in ultimately outputting as final array the sorted list of incoming elements, whatever these elements turn out to be in the future of the online process. And this unique corrept recipt essentially is the InsertionSort algorithm archetype.
      Therefore, your log lines can be checked step-by-step to correspond to the steps of an always-correct sorting algorithm operating the InsertionSortMachine. Moreover, since the InsertionSort algorithm is the unique such algorithm, the service offers the intended validation. Finally, this also means that when trying to operate this machine the problem solver is bound to discover the logic of the InsertionSort algorithm (even without any prior knowledge about this classic algorithm). 
@@ -48,10 +49,10 @@ services:
     description: |+
      In a call to this service you plug in your insert_sort bot remotely running on an instance of us. Your bot will access the array to be sorted only through the following primities
         CMD_GET_DIM <n>
-        CMD_MEMORY_LOAD_FROM_POS <i>
-        CMD_MEMORY_WRITE_ON_POS <i>
-        CMD_COPY_FROM_POS <i> TO_POS <j>
-        CMD_COMPARE_WHAT_IN_POS <i> LESS_THAN_WHAT_IN_MEMORY
+        CMD_LOAD_NEXT_INPUT_ELEMENT_IN_TMP_BUFFER [the server answers 1 if the operation is successfull and 0 when there are no other input elements]
+        CMD_FLUSH_TMP_BUFFER_ON_POS <i>
+        CMD_CLONE_TO_ITS_RIGHT_ELE_IN_POS <i>
+        CMD_COMPARE_WHAT_IN_TMP_BUFFER_WITH_WHAT_IN_POS <i> [the server answers < or >= ]
         CMD_FINISHED
      the service will ignore all lines not beginning with the prefix "CMD_", and will ultimately tell whether the array is sorted but also confirm whether the algorithm executed was the Insertion Sort algorithm or signal the very first discrepancy in behaviour.
     evaluator: [python3, services/remote_insertion_sort_api_server.py]

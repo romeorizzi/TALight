@@ -77,13 +77,14 @@ out=""
 for e in not_in_graph:
     out+=str(e[0])+","+str(e[0])+";"
 '''
-
+import sys
+sys.stderr.write(str(is_correct)+ "\n")
 
 if(is_correct):
     if (silent == 0):
-        TAc.print("\n\nESATTO, il certificato e' corretto.\n","green")
+        TAc.print("ESATTO, il certificato e' corretto.","green")
 else:
-    TAc.print("\n\nSBAGLIATO, il certificato che mi hai dato non e' uno spanning tree corretto.\n","red")
+    TAc.print("SBAGLIATO, il certificato che mi hai dato non e' uno spanning tree corretto.","red")
     # Printo elenco archi non in g (se esistono)
     if(len(not_in_graph) != 0):
         TAc.print("Questi archi non appartengono al grafo","green")
@@ -91,4 +92,5 @@ else:
             print(e)
     TAc.print("Questi nodi del grafo non sono raggiunti dal tuo spanning tree","green")
     for n in not_conn:
-            print(n)
+        print(n)
+    TAc.print("#end","green")

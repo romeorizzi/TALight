@@ -263,7 +263,7 @@ def get_instance_from_dat(pirellone, style=''):
 
 # PIRELLONE GENERATOR FUNCTIONS:
 def is_solvable_seed(seed):
-    """If this seed is associated to a solvable pirellone instance return True, False otherwise."""
+    """Returns True if the given seed would generate a solvable pirellone instance, False otherwise."""
     # We reserve those seed divisible by 3 to the NOT solvable instances
     return (seed % 3) != 0
 
@@ -272,7 +272,7 @@ def gen_instance_seed(solvable=None):
     """This function returns a random seed to generate a pirellone instance with the specificated solvability."""
     random.seed(None)
     seed = random.randint(100002,999999)
-    # Check solvability
+    # Check solvability requirement:
     if solvable == None:
         return seed
     # ajust seed if not suitable:
