@@ -43,7 +43,6 @@ class Env:
         self.exe_fullname = argv[0]
         self.exe_path_from_META_DIR = path.split(self.exe_fullname)[0]
         self.exe_name = path.split(self.exe_fullname)[-1]
-        self.TAL_DIR = environ["TAL_HOME"]
         self.META_DIR = environ["TAL_META_DIR"]
         self.CODENAME = environ["TAL_META_CODENAME"]
         self.service = environ["TAL_META_SERVICE"]
