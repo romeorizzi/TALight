@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import random
-import math
 
 from termcolor import colored
 
@@ -114,9 +113,6 @@ def best_path_cost(triangle):
             dist -= 1
             i += 1
     return triangle_array[i]
-
-def highlight_triangle(small_triangle,big_triangle):
-    return
     
 def random_path(m,n):
     directions = ["L","R"]
@@ -126,15 +122,21 @@ def random_path(m,n):
         path = ''.join(map(str,random.choices(directions, k=random.randint(m,n-1))))
     return path
 
-def triangle_fits(small_triangle,big_triangle):
-   small_array = []
-   big_array = []
-   for s in small_triangle:
-       small_array += s
-   for b in big_triangle:
-       big_array += b
-   print(small_array)
-       
-   s_dist = len(small_array)
-   b_dist = len(big_array)
-   return True
+def fits(start,livello,big_triangle,small_triangle,small_size):
+    small_index = 1
+    pos = start
+    array = [big_triangle[start]]
+    for profondita in range(small_size - 1):
+        pos += livello
+        livello += 1
+        for index in range(profondita + 2):
+            if big_triangle[pos + index] != small_triangle[small_index]:
+                return False
+            small_index +=1
+    return True
+
+def cast_to_array(triangle):
+    array = []
+    for i in triangle:
+        array += i
+    return array

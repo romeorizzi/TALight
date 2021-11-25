@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
 import random
+import math
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
@@ -46,15 +47,14 @@ if ENV['how_to_input_the_big_triangle'] == "my_own_triangle":
 elif ENV['how_to_input_the_big_triangle'] == "random":
     bign = 0
     if ENV['displayable']:
-        bign =random.randint(10,30)
+        bign =random.randint(1,30)
     else:
-        bign =random.randint(10,100)
+        bign =random.randint(1,100)
     seed = random.randint(100000,999999)
     big_triangle = tl.random_triangle(bign, ENV['MIN_VAL'], ENV['MAX_VAL'], seed, TAc, LANG)
 else:
     big_triangle = tl.random_triangle(ENV["big_n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_big_triangle']),TAc,LANG)
-    
-    
+print([bign,seed])        
 # SMALL TRIANGLE GENERATION
 
 if ENV['how_to_input_the_small_triangle'] == "my_own_triangle":
@@ -84,10 +84,23 @@ elif ENV['how_to_input_the_small_triangle'] == "random":
     small_triangle = tl.random_triangle(smalln, ENV['MIN_VAL'], ENV['MAX_VAL'], seed, TAc, LANG)
 else:
     small_triangle = tl.random_triangle(ENV["small_n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_small_triangle']),TAc,LANG)
-    
-right_answer = tl.triangle_fits(small_triangle,big_triangle)    
-    
-    
+print([smalln,seed])
+
+big = tl.cast_to_array(big_triangle)
+small = tl.cast_to_array(small_triangle)
+L = len(big_triangle)
+l = len(small_triangle)
+
+right_answer = "no"
+
+livello = 1
+for i in range(int(((L-l+1)*(L-l+2))/2)):   
+    if i >= livello*(livello+1)/2:
+        livello +=1
+    if tl.fits(i,livello,big,small,int(math.sqrt(2*len(small)-1))):
+        right_answer = "yes"
+        break
+     
 if ENV['displayable']:
     TAc.print(LANG.render_feedback("displayable-big",f'The big triangle is displayed here:\n'), "green")
     tl.print_triangle(big_triangle)
@@ -99,8 +112,7 @@ answer = TALinput(str, token_recognizer=lambda val,TAc,LANG: tl.check_yes_or_no_
 if answer == right_answer:
     if not ENV['silent']:
         TAc.OK()
-        TAc.print(LANG.render_feedback("right-answer", f'We agree, the answer is {right_answer}, as you can see here:\n'), "green", ["bold"])
-        tl.highlight_triangle(small_triangle,big_triangle)
+        TAc.print(LANG.render_feedback("right-answer", f'We agree, the answer is {right_answer}.\n'), "green", ["bold"])
 else:
     TAc.NO()
     TAc.print(LANG.render_feedback("wrong-answer", f'We don\'t agree, the answer is {right_answer}.'), "red", ["bold"])
