@@ -22,8 +22,8 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       instance_id:
-        regex: ^([1-9][0-9]*)$
-        default: 1
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
         explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       format:
         regex: ^(only_values.txt|values_with_info.txt|dat)$
@@ -45,7 +45,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   simulate_forward_prop:
-    description: 'This service provides you with a solution of a forward propagation for an instance of ANN (either provided by you, or from a catalogue, or generated at random) and given the output values of the nodes in the input layer.'
+    description: 'This service provides you with a solution of a forward propagation for an instance of ANN (either provided by you, or from a catalogue, or generated at random) and given the output values of the nodes for particular random values generated for the input layer.'
     evaluator: [python, services/simulate_forward_prop_server.py]
     args:
       instance_spec:
@@ -54,8 +54,12 @@ services:
         explain: 'choose the way to input your ANN among the following:' 
         explain1: '[random] the service uses the pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
         explain2: '[catalogue1] the service uses the hardcoded instance of the given instance_id as taken from the catalogue of hardcoded instances named catalogue1.'
-        explain3: '[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations.'
+        explain3: '[terminal] you enter your instance (ANN) directly by either typing it line after line or through cut and paste operations.'
         # explain4: '[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt.'
+      instance_id:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       n_nodes:
         regex: ^\s*(([1-9](\s)*){2,6})$
         default: "3 4 1"
@@ -89,8 +93,8 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       instance_id:
-        regex: ^([1-9][0-9]*)$
-        default: 1
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
         explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$

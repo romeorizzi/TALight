@@ -94,3 +94,61 @@ def instance_to_str(instance, format='default'):
         return instance_to_dat(instance, format_secondary)
     if format_primary == 'txt':
         return instance_to_txt(instance, format_secondary)
+
+
+def get_instance_from_str(instance, format):
+    """This function returns the string representation of the given ANN instance according to the indicated format."""
+    # Parsing format
+    format_list = format.split('.')
+    if len(format_list) == 1:
+        format_primary = format_list[0]
+        format_secondary = ''
+    else:
+        format_primary = format_list[1]
+        format_secondary = format_list[0]
+    # Get pirellone in str format
+    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
+    if format_primary == 'dat':
+        return get_instance_from_dat(instance, format_secondary)
+    if format_primary == 'txt':
+        return get_instance_from_txt(instance, format_secondary)
+
+
+def get_instance_from_txt(instance, style='only_values'):
+    """This function returns the string representation of the given ANN instance according to the indicated format."""
+    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    final_instance = list()
+    lines = instance.split('\n')
+
+    for l in lines:
+        if len(l) != 0:
+            if len(l.split()) == 1:
+                final_instance.append(int(l.split()[0]))
+            else:
+                final_instance.append([int(e) for e in l.split()])
+    return final_instance
+
+# to adapt with model_ANN_verifier
+def get_instance_from_dat(pirellone, style=''):
+    """This function returns the string representation of the given pirellone instance according to the indicated format."""
+    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    instance = list()
+    # Get lines
+    lines = pirellone.split('\n')
+    # Parse lines
+    for l in lines:
+        l = l.strip() # remove whitespace before and after
+        # Filter the matrix lines
+        if l != '' and l[:5] != 'param' and l[:3] != 'end':
+            l = l.replace(';', '') #ignore ;
+            row = list()
+            for e in l.split()[1:]:
+                row.append(int(e))
+            instance.append(row)
+    return instance
+
+
+def compute_linear_forward_propagation(instance, values_input_layer):
+    # [3, [3, 4, 1], [-5, -3, -3, -9, -5, -7, -7, 8, 0, -3, -2, 9], [-10, -3, -5, -5]]
+    return 1
+        
