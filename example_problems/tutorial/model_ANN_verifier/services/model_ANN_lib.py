@@ -148,7 +148,60 @@ def get_instance_from_dat(pirellone, style=''):
     return instance
 
 
-def compute_linear_forward_propagation(instance, values_input_layer):
+# Initialize a network
+def initialize_network(instance):
     # [3, [3, 4, 1], [-5, -3, -3, -9, -5, -7, -7, 8, 0, -3, -2, 9], [-10, -3, -5, -5]]
-    return 1
-        
+
+    # here we take the third element of instance list, i.e. the first list of weights between the input layer and the fist hidden layer and
+    hidden_layer = []
+    for i in range(2, len(instance)-1):
+        weights = instance[i]
+        n = instance[1][i-1]
+        output=[weights[j:j + n] for j in range(0, len(instance[i]), n)]
+        hidden_layer.append(output)
+
+    output_layer = []
+
+    return hidden_layer, output_layer
+
+
+# Calculate neuron activation for an input
+def propagate(weights, inputs):
+    activation = weights[-1]
+    print(activation)
+    print(weights, len(weights))
+    print(inputs)
+    for i in range(len(weights)-1):
+        activation += weights[i] * inputs[i]
+    
+    return activation
+
+
+
+# function (ReLU) for the neuron activation
+def activate(value):
+	return max(0, value)
+
+
+
+# Forward propagate input to a network output
+def forward_propagate(network, input_value):
+    inputs = input_value
+    for layer in network:
+        new_inputs = []
+        for node in layer:
+            print(node)
+            value = propagate(node, inputs)
+            node['output'] = activate(value)
+            new_inputs.append(node['output'])
+            inputs = new_inputs
+    return inputs
+
+def compute_linear_forward_propagation(instance, values_input_layer):
+    network = initialize_network(instance)
+    print(network)
+    #print(forward_propagate(network, values_input_layer))
+    
+    
+instance = [3, [3, 4, 1], [-5, -3, -3, -9, -5, -7, -7, 8, 0, -3, -2, 9], [-10, -3, -5, -5]]
+compute_linear_forward_propagation(instance, [-5, 4, 2])
