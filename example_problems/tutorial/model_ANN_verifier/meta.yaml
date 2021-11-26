@@ -69,6 +69,10 @@ services:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n_1,n_2, ..., n_nl,seed>.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      activation:
+        explain: specify the type of activation of each node in the ANN instance.
+        regex: ^(linear|ReLU)$
+        default: linear
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

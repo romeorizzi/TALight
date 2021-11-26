@@ -33,7 +33,7 @@ def gen_instance(n_nodes,seed:int):
 
     # then we generate n_nodes_i * n_nodes_i+1 weights
     for i in range(1,len(n_nodes)):
-        weights = [random.randint(-10,10) for _ in range(n_nodes[i-1]*n_nodes[i])] 
+        weights = [round(random.uniform(-1,1),2) for _ in range(n_nodes[i-1]*n_nodes[i])] 
         ann.append(weights)
 
     return ann
@@ -150,58 +150,61 @@ def get_instance_from_dat(pirellone, style=''):
 
 # Initialize a network
 def initialize_network(instance):
-    # [3, [3, 4, 1], [-5, -3, -3, -9, -5, -7, -7, 8, 0, -3, -2, 9], [-10, -3, -5, -5]]
+    # [3, [3, 4, 3, 2], [-5, -3, -3, -9, -5, -7, -7, 8, 0, -3, -2, 9],[-5, -3, -3, -9, -5, -7, -7, 8, 0, -3, -2, 9], [-10, -3, -5]]
 
-    # here we take the third element of instance list, i.e. the first list of weights between the input layer and the fist hidden layer and
-    hidden_layer = []
+    # here we take the third element of instance list, i.e., the first list of weights between the input layer and the fist hidden layer
+    hidden_layer = {}
+    index = 1
     for i in range(2, len(instance)-1):
         weights = instance[i]
-        n = instance[1][i-1]
-        output=[weights[j:j + n] for j in range(0, len(instance[i]), n)]
-        hidden_layer.append(output)
+        n = instance[1][i-2]
+        hidden_layer[f'h_{str(index)}'] = [weights[j:j + n] for j in range(0, len(instance[i]), n)]
+        index += 1
+        
 
-    output_layer = []
+    output_layer = {}
+    weights = instance[-1]
+    n = instance[1][-2]
+    output_layer['out']=[weights[j:j + n] for j in range(0, instance[1][-1])]
+   
 
     return hidden_layer, output_layer
 
 
-# Calculate neuron activation for an input
-def propagate(weights, inputs):
-    activation = weights[-1]
-    print(activation)
-    print(weights, len(weights))
-    print(inputs)
-    for i in range(len(weights)-1):
-        activation += weights[i] * inputs[i]
+# function (ReLU) for the neuron activation if required
+def activate(value, activation):
+    if activation == 'ReLU':
+	    return max(0, value)
     
-    return activation
+    return value
 
 
+def compute_forward_propagation(instance, values_input_layer,activation):
+    hidden_layers, output_layer = initialize_network(instance)
+    input_values = values_input_layer
 
-# function (ReLU) for the neuron activation
-def activate(value):
-	return max(0, value)
+    # propagation for each hidden layer
+    for node in hidden_layers:
+        new_input = []
+        for weights in hidden_layers[node]:
+            new_value = 0
+            for i in range(len(weights)):
+                new_value += input_values[i] * weights[i]
+                new_value = activate(new_value, activation)
 
+            new_input.append(new_value)
 
-
-# Forward propagate input to a network output
-def forward_propagate(network, input_value):
-    inputs = input_value
-    for layer in network:
-        new_inputs = []
-        for node in layer:
-            print(node)
-            value = propagate(node, inputs)
-            node['output'] = activate(value)
-            new_inputs.append(node['output'])
-            inputs = new_inputs
-    return inputs
-
-def compute_linear_forward_propagation(instance, values_input_layer):
-    network = initialize_network(instance)
-    print(network)
-    #print(forward_propagate(network, values_input_layer))
+        input_values = new_input
     
-    
-instance = [3, [3, 4, 1], [-5, -3, -3, -9, -5, -7, -7, 8, 0, -3, -2, 9], [-10, -3, -5, -5]]
-compute_linear_forward_propagation(instance, [-5, 4, 2])
+    # compute the output value/s
+    for node in output_layer:
+        final_output = []
+        for weights in output_layer[node]:
+            final_value = 0
+            for i in range(len(weights)):
+                final_value += input_values[i] * weights[i]
+                final_value = activate(final_value, activation)
+             
+            final_output.append(final_value)
+
+    return final_output

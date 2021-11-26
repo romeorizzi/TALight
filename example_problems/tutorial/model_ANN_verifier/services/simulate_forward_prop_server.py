@@ -55,10 +55,11 @@ if ENV['instance_spec'] != 'random':
 else:
     TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(x) for x in instance[1])}, seed = {ENV["seed"]}'), "yellow", ["bold"]) 
 n_nodes_input_layer = instance[1][0]
-values_input_layer = [random.randint(-20,20) for _ in range(n_nodes_input_layer)] 
-
-TAc.print(LANG.render_feedback("values_generated", f'The values generated for the input layer are: {values_input_layer}'), "yellow", ["bold"])
+values_input_layer = [random.randint(-10,10) for _ in range(n_nodes_input_layer)] 
+values_input = ", ".join(str(i) for i in values_input_layer)
+TAc.print(LANG.render_feedback("values_generated", f'The values generated for the input layer are: {values_input}'), "yellow", ["bold"])
 
 # compute forward_propagation
-output = annl.compute_linear_forward_propagation(instance, values_input_layer)
+output = annl.compute_forward_propagation(instance, values_input_layer, ENV['activation'])
+output = " ".join(str(round(x,2)) for x in output)
 TAc.print(LANG.render_feedback("output", f'\nThe output is: {output}'), "white", ["bold"])
