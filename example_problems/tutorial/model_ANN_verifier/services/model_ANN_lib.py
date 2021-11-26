@@ -123,9 +123,9 @@ def get_instance_from_txt(instance, style='only_values'):
     for l in lines:
         if len(l) != 0:
             if len(l.split()) == 1:
-                final_instance.append(int(l.split()[0]))
+                final_instance.append(float(l.split()[0]))
             else:
-                final_instance.append([int(e) for e in l.split()])
+                final_instance.append([float(e) for e in l.split()])
     return final_instance
 
 # to adapt with model_ANN_verifier

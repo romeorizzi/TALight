@@ -78,15 +78,15 @@ services:
         default: it
   check_sol_forward_prop:
     description: 'This service checks your solution for a single forward propagation on an instance of ANN (either provided by you or generated at random).You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from nodes_il, nodes_hl, nodes_out and its random seed.'
-    evaluator: [python, services/check_sol_server.py]
+    evaluator: [python, services/check_sol_forward_prop_server.py]
     args:
       instance_spec:
         regex: ^(random|catalogue1|terminal)$
-        default: random
+        default: catalogue1
         explain: 'choose the way to input your ANN among the following:' 
         explain1: '[random] the service uses the pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
         explain2: '[catalogue1] the service uses the hardcoded instance of the given instance_id as taken from the catalogue of hardcoded instances named catalogue1.'
-        explain3: '[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations.'
+        explain3: '[terminal] you enter your instance (ANN) directly by either typing it line after line or through cut and paste operations.'
       n_nodes:
         regex: ^\s*(([1-9](\s)*){2,6})$
         default: "3 4 1"
@@ -94,12 +94,24 @@ services:
         example: with n_nodes= 5 3 2 1 you are asking for an ANN with an input layer of 5 nodes, an output layer of 1 node, and two hidden layers (the first one composed by 3 nodes the second one of 2 nodes)
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
+        regex: ^([1-9][0-9]{5,5})$
+        default: 777321
       instance_id:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
+      input_values:
+        regex: ^\s*((-|.|[0-9](\s)*){2,6})$
+        explain: through this argument you can specify the input values used in the input layer to compute the forward propagation. 
+        example: with input_values= 5 3 2 you are saying that for an ANN with first node of the input layer you passed 5, for the second 3 and for the last node 2.
+      output_values:
+        regex: ^\s*(([-|.|0-9](\s)*){1,6})$
+        explain: through this argument you can specify the output value/s obtained at the end of a single forward propagation. 
+        example: with output_values= 0.9 2 you are saying that the output obtained for the first output_node is 0.9 and for the last one 2.
+      activation:
+        explain: specify the type of activation of each node in the ANN instance.
+        regex: ^(linear|ReLU)$
+        default: linear
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

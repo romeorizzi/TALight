@@ -12,9 +12,11 @@ from math_modeling import ModellingProblemHelper, get_problem_path_from
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('instance_spec',str),
-    ('instance_id',int),
     ('n_nodes',str),
     ('seed',int),
+    ('instance_id',int),
+    ('input_values',str),
+    ('output_values',str),
     ('activation',str)
 ]
 
@@ -37,6 +39,10 @@ if ENV['instance_spec'] == 'catalogue1':
 elif ENV['instance_spec'] == 'random':
     # Get instance
     assert ENV['instance_spec'] == 'random'
+    if ENV['seed'] == 'random_seed':
+        TAc.print(LANG.render_feedback("random_seed_error", 'You are asking the check a solution on a new random instance, please insert the seed you get for the pseudo random generation'), "yellow", ["bold"])
+        exit(0)
+
     instance = annl.gen_instance(ENV['n_nodes'], ENV['seed'])
 
 else:
@@ -52,15 +58,26 @@ else:
 
 # generate the variables of the ANN
 if ENV['instance_spec'] != 'random':
-    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(x) for x in instance[1])}, instance_id = {ENV["instance_id"]}'), "yellow", ["bold"]) 
+    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(int(x)) for x in instance[1])}, instance_id = {ENV["instance_id"]}'), "yellow", ["bold"]) 
 else:
-    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(x) for x in instance[1])}, seed = {ENV["seed"]}'), "yellow", ["bold"]) 
-n_nodes_input_layer = instance[1][0]
-values_input_layer = [random.randint(-10,10) for _ in range(n_nodes_input_layer)] 
-values_input = ", ".join(str(i) for i in values_input_layer)
-TAc.print(LANG.render_feedback("values_generated", f'The values generated for the input layer are: {values_input}'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(int(x)) for x in instance[1])}, seed = {ENV["seed"]}'), "yellow", ["bold"]) 
 
-# compute forward_propagation
-output = annl.compute_forward_propagation(instance, values_input_layer, ENV['activation'])
-output = " ".join(str(round(x,2)) for x in output)
-TAc.print(LANG.render_feedback("output", f'\nThe output is: {output}'), "white", ["bold"])
+# check the solution
+input_values = ENV['input_values'].split(' ')
+input_values = list(map(float, input_values))
+
+output_values = ENV['output_values'].split(' ')
+output_values = list(map(float, output_values))
+output_values = [round(num,2) for num in output_values]
+
+server_output = annl.compute_forward_propagation(instance, input_values, ENV['activation'])
+server_output = [round(num,2) for num in server_output]
+
+
+#print(output_values, server_output)
+if output_values == server_output:
+    TAc.print(LANG.render_feedback("correct", f'Your output is correct!'), "green", ["bold"])
+else:
+    TAc.print(LANG.render_feedback("incorrect", f'No! Your output is not correct...'), "red", ["bold"])
+
+exit(0)
