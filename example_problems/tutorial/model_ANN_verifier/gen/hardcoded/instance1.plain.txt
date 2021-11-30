@@ -1,0 +1,10 @@
+#Number of layers:
+3
+#Number of nodes in each layer:
+3 4 1
+#Weights of the synapses (u,v):
+# External for u in layer 1. Internal for v in layer 2:
+0.88 0.72 -0.8 -0.93 0.31 -0.51 -0.25 -0.25 -0.18 0.03 0.11 -0.88
+# External for u in layer 2. Internal for v in layer 3:
+-0.58 0.72 0.39 -0.02
+

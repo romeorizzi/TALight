@@ -185,8 +185,8 @@ def get_instance_from_txt(matrix, style='only_matrix'):
     lines = matrix.split('\n')
     if format == "with_m_and_n":
         lines = lines[2:]
-    for l in lines:
-        instance.append([int(e) for e in l.split()])
+    for line in lines:
+        instance.append([int(e) for e in line.split()])
     return instance
 
 
@@ -197,13 +197,13 @@ def get_instance_from_dat(matrix, style=''):
     # Get lines
     lines = matrix.split('\n')
     # Parse lines
-    for l in lines:
-        l = l.strip() # remove whitespace before and after
+    for line in lines:
+        line = line.strip() # remove whitespace before and after
         # Filter the matrix lines
-        if l != '' and l[:5] != 'param' and l[:3] != 'end':
-            l = l.replace(';', '') #ignore ;
+        if line != '' and line[:5] != 'param' and line[:3] != 'end':
+            line = line.replace(';', '') #ignore ;
             row = list()
-            for e in l.split()[1:]:
+            for e in line.split()[1:]:
                 row.append(int(e))
             instance.append(row)
     return instance

@@ -1,0 +1,28 @@
+# generator parameters: 
+# n_nodes, seed
+#   n_nodes (str)  number of nodes for each layer. 5 3 1 input layer of 5 nodes, an output layer of 1 node, and one hidden layer composed by 3 nodes.
+#   seed (int)
+
+add_format: dat
+add_format: plain.txt
+
+suite: public_examples
+COPY: hardcoded/instance1.plain.txt
+COPY: hardcoded/instance1.dat
+COPY: hardcoded/instance2.plain.txt
+COPY: hardcoded/instance2.dat
+COPY: hardcoded/instance3.plain.txt
+COPY: hardcoded/instance3.dat
+#     n_nodes,   seed
+GEN:  "3 4 1"      777321
+GEN:  "4 6 6 2"    777831
+GEN:  "5 3 4 3 1"  777461
+
+suite: n_nodes_at_most_5 
+# instances with max 5 nodes for each layer
+#     n_nodes,     seed
+GEN:  "5 5 5 2"      777223
+GEN:  "3 5 5 5 4 1"  777553
+GEN:  "2 4 4 1"      777647
+
+

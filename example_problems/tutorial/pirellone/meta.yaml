@@ -8,6 +8,8 @@ services:
     args:
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -47,6 +49,8 @@ services:
         explain: Number of columns of the big matrix.
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -70,6 +74,8 @@ services:
         explain2: "[any]  the service server provides two random 0/1-vectors of length m and n, respectively. These characteristic vectors specify the rows and columns of the submatrix."
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -94,6 +100,8 @@ services:
     args:
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       coding:
         regex: ^(seq|subset)$
         default: seq
@@ -115,6 +123,8 @@ services:
         explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -129,6 +139,8 @@ services:
         explain1: "[correct]  bla bla"
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -166,6 +178,8 @@ services:
         explain: Number of your moves (those made by Trilly do not count).
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

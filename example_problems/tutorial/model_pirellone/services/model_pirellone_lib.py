@@ -235,9 +235,9 @@ def get_instance_from_txt(pirellone, style='only_matrix'):
     lines = pirellone.split('\n')
     if format == "with_m_and_n":
         lines = lines[2:]
-    for l in lines:
-        if len(l) != 0:
-            instance.append([int(e) for e in l.split()])
+    for line in lines:
+        if len(line) != 0:
+            instance.append([int(e) for e in line.split()])
     return instance
 
 
@@ -248,13 +248,13 @@ def get_instance_from_dat(pirellone, style=''):
     # Get lines
     lines = pirellone.split('\n')
     # Parse lines
-    for l in lines:
-        l = l.strip() # remove whitespace before and after
+    for line in lines:
+        line = line.strip() # remove whitespace before and after
         # Filter the matrix lines
-        if l != '' and l[:5] != 'param' and l[:3] != 'end':
-            l = l.replace(';', '') #ignore ;
+        if line != '' and line[:5] != 'param' and line[:3] != 'end':
+            line = line.replace(';', '') #ignore ;
             row = list()
-            for e in l.split()[1:]:
+            for e in line.split()[1:]:
                 row.append(int(e))
             instance.append(row)
     return instance
@@ -263,7 +263,7 @@ def get_instance_from_dat(pirellone, style=''):
 
 # PIRELLONE GENERATOR FUNCTIONS:
 def is_solvable_seed(seed):
-    """If this seed is associated to a solvable pirellone instance return True, False otherwise."""
+    """Returns True if the given seed would generate a solvable pirellone instance, False otherwise."""
     # We reserve those seed divisible by 3 to the NOT solvable instances
     return (seed % 3) != 0
 
@@ -272,7 +272,7 @@ def gen_instance_seed(solvable=None):
     """This function returns a random seed to generate a pirellone instance with the specificated solvability."""
     random.seed(None)
     seed = random.randint(100002,999999)
-    # Check solvability
+    # Check solvability requirement:
     if solvable == None:
         return seed
     # ajust seed if not suitable:

@@ -13,6 +13,7 @@ args_list = [
     ('n_nodes',str),
     ('seed',int),
     ('instance_id',int),
+    ('format',str),
     ('silent',bool),
     ('display',bool),
     ('download',bool),
@@ -24,30 +25,31 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
-n_nodes = ENV['n_nodes'].split(' ')
-n_nodes = list(map(int, n_nodes))
-
 if ENV['instance_spec'] == 'catalogue1':
     # Initialize ModellingProblemHelper
     mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
     # Get dat file
-    instance_str = mph.get_file_str_from_id(ENV['instance_id'])
-    instance = annl.get_instance_from_str(instance_str)
+    instance_str = mph.get_file_str_from_id(ENV['instance_id'], ENV['format'])
+    #instance = annl.get_instance_from_str(instance_str)
 
 else:
     # Get instance
     assert ENV['instance_spec'] == 'random'
-    instance = annl.gen_instance(n_nodes, ENV['seed'])
-    instance_str = annl.instance_to_str(instance)
+    instance = annl.gen_instance(ENV['n_nodes'], ENV['seed'])
+    instance_str = annl.instance_to_str(instance, ENV['format'])
 
 
 # Print Instance
-if ENV['silent']:
-    TAc.print(LANG.render_feedback("instance", f'Seed: {ENV["seed"]} \n{instance_str}'), "yellow", ["bold"])
-else:
-    TAc.print(LANG.render_feedback("instance-title", f'The ANN composed by {len(n_nodes)} layers is:'), "yellow", ["bold"])
-    TAc.print(annl.instance_to_str(instance), "white", ["bold"])
-    if not ENV['instance_spec'] == 'instance_id':
-        TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
+if ENV['display']: 
+    if not ENV['silent']:
+        TAc.print(LANG.render_feedback("instance-title", f'The ANN generated is:'), "yellow", ["bold"])
+    if ENV['instance_spec'] == 'random':
+        TAc.print(f'#Seed: {ENV["seed"]}', "yellow", ["bold"])
+    TAc.print(instance_str, "white", ["bold"])
+
+if ENV['download']:
+    instance_file = open(f'download/instance_{ENV["seed"]}.txt', 'w')
+    instance_file.write(instance_str)
+    instance_file.close()
 
 exit(0)
