@@ -11,8 +11,8 @@ import re
 ### CONSTANTS #########################################
 FORMAT_AVAILABLES = ['dat', 'txt']
 DAT_STYLES_AVAILABLES = ['']
-TXT_STYLES_AVAILABLES = ['only_values','values_with_info']
-DEFAULT_FORMAT='only_values.txt'
+TXT_STYLES_AVAILABLES = ['plain']
+DEFAULT_FORMAT='plain.txt'
 #######################################################
 
 # INSTANCE GENERATOR FUNCTIONS:
@@ -39,21 +39,17 @@ def gen_instance(n_nodes,seed:int):
     return ann
 
 
-def instance_to_txt(instance, style='only_values'):
+def instance_to_txt(instance, style='plain'):
     """This function returns the string representation of the given matrix instance according to the indicated style"""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
-    instance_str = 'Tot_layers: ' + str(instance[0]) + '\n' if style=='values_with_info' else str(instance[0]) + '\n'
-    instance_str += 'Tot_Nodes: ' + ' '.join(str(e) for e in instance[1]) + '\n' if style=='values_with_info' else ' '.join(str(e) for e in instance[1]) + '\n'
+    instance_str = '#Number of layers:\n' + str(instance[0]) + '\n'
+    instance_str += '#Number of nodes in each layer:\n' + ' '.join(str(e) for e in instance[1]) + '\n#Weights of the synapses (u,v):\n'
     
-    if style=='values_with_info':
-        instance_str += 'ANN_weigths: \n' 
-
     for i in range(2,len(instance)):
+        instance_str += f'# External for u in layer {i-1}. Internal for v in layer {i}:\n'
         instance_str += ' '.join(str(e) for e in instance[i]) + '\n'
-
     return instance_str
 
-#print(instance_to_txt([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],'values_with_info'))
 
 def instance_to_dat(instance, style=''):
     """This function returns the dat representation of the given matrix instance according to the indicated style"""
@@ -114,18 +110,18 @@ def get_instance_from_str(instance, format):
         return get_instance_from_txt(instance, format_secondary)
 
 
-def get_instance_from_txt(instance, style='only_values'):
+def get_instance_from_txt(instance, style='plain'):
     """This function returns the string representation of the given ANN instance according to the indicated format."""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     final_instance = list()
     lines = instance.split('\n')
 
-    for l in lines:
-        if len(l) != 0:
-            if len(l.split()) == 1:
-                final_instance.append(float(l.split()[0]))
+    for line in lines:
+        if len(line) != 0 and line[0] != '#':
+            if len(line.split()) == 1:
+                final_instance.append(float(line.split()[0]))
             else:
-                final_instance.append([float(e) for e in l.split()])
+                final_instance.append([float(e) for e in line.split()])
     return final_instance
 
 # to adapt with model_ANN_verifier
@@ -136,13 +132,13 @@ def get_instance_from_dat(pirellone, style=''):
     # Get lines
     lines = pirellone.split('\n')
     # Parse lines
-    for l in lines:
-        l = l.strip() # remove whitespace before and after
+    for line in lines:
+        line = line.strip() # remove whitespace before and after
         # Filter the matrix lines
-        if l != '' and l[:5] != 'param' and l[:3] != 'end':
-            l = l.replace(';', '') #ignore ;
+        if line != '' and line[:5] != 'param' and line[:3] != 'end':
+            line = line.replace(';', '') #ignore ;
             row = list()
-            for e in l.split()[1:]:
+            for e in line.split()[1:]:
                 row.append(int(e))
             instance.append(row)
     return instance
@@ -208,3 +204,36 @@ def compute_forward_propagation(instance, values_input_layer,activation):
             final_output.append(final_value)
 
     return final_output
+
+
+# TESTS
+if __name__ == "__main__":
+
+    # TO_STRING and FROM_STRING FUNCTIONS:
+
+
+    print('Test: instance_to_str()')
+    #assert instance_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
+
+#print(instance_to_txt([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],'values_with_info'))
+    
+    print('==> OK\n')
+
+
+    print('Test: instance_to_txt()')
+    print('MAYBE TODO?')
+    print('==> OK\n')
+
+
+    print('Test: instance_to_dat()')
+    print('MAYBE TODO?')
+    print('==> OK\n')
+
+
+    print('Test: get_instance_from_str()')
+    print('==> OK\n')
+
+
+    print('Test: get_instance_from_txt()')
+    assert get_instance_from_txt('0 0\n1 1', 'only_matrix') == [[0, 0], [1, 1]]
+    print('==> OK\n')

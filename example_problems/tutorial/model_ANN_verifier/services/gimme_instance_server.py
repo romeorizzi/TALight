@@ -40,14 +40,12 @@ else:
 
 
 # Print Instance
-if ENV['display']:
-    if ENV['silent']:
-        TAc.print(LANG.render_feedback("instance", f'Seed: {ENV["seed"]} \n{instance_str}'), "yellow", ["bold"])
-    else:
+if ENV['display']: 
+    if not ENV['silent']:
         TAc.print(LANG.render_feedback("instance-title", f'The ANN generated is:'), "yellow", ["bold"])
-        TAc.print(instance_str, "white", ["bold"])
-        if not ENV['instance_spec'] == 'instance_id':
-            TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
+    if ENV['instance_spec'] == 'random':
+        TAc.print(f'#Seed: {ENV["seed"]}', "yellow", ["bold"])
+    TAc.print(instance_str, "white", ["bold"])
 
 if ENV['download']:
     instance_file = open(f'download/instance_{ENV["seed"]}.txt', 'w')

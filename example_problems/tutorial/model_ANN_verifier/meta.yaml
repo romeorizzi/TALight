@@ -3,7 +3,7 @@
 public_folder: public
 services:
   gimme_instance:
-    description: 'This service provides you with instances of weighted neural networks (ANNs). A neural network is characterized by the number of its layers, and the type and number of nodes in each layer. The ANN is weighted when for every two nodes a and b contained in subsequent and consecutive layers the weight associated to the (a,b) synapsis is also specified. You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall an ANN you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random ANN we mean the tuple <n_1,n_2, ..., n_nl,seed> where nl denotes the number of its layers and, for i=1,...,nl, layer i has n_i nodes. Level 0 is the input layer, level n_l is the output layer. The number of hidden layers is n_nl - 2.\n   The ANN requested is returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing ANNs is the following: the first line contains the integer nl; the second line contains the integers n_1,n_2, ..., n_nl in this order and separated by spaces, then follow nl-1 lines, one for each consecutive pair of layers. The i-th of these lines displays the n_i x n_(i+1) weights for synapses between layer i and layer i+1. Here, the weight between the p-th node of layer i and the q-th node of layer i+1 is in position q+(p-1)n_(i+1). It is assumed that all indexes start from 1.'
+    description: 'This service provides you with instances of weighted neural networks (ANNs). A neural network is characterized by the number of its layers, and the type and number of nodes in each layer. The ANN is weighted when for every two nodes a and b contained in subsequent and consecutive layers the weight associated to the (a,b) synapse is also specified. You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall an ANN you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random ANN we mean the tuple <n_1,n_2, ..., n_nl,seed> where nl denotes the number of its layers and, for i=1,...,nl, layer i has n_i nodes. Level 0 is the input layer, level n_l is the output layer. The number of hidden layers is n_nl - 2.\n   The ANN requested is returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing ANNs is the following: the first line contains the integer nl; the second line contains the integers n_1,n_2, ..., n_nl in this order and separated by spaces, then follow nl-1 lines, one for each consecutive pair of layers. The i-th of these lines displays the n_i x n_(i+1) weights for synapses between layer i and layer i+1. Here, the weight between the p-th node of layer i and the q-th node of layer i+1 is in position q+(p-1)n_(i+1). It is assumed that all indexes start from 1.'
     evaluator: [python,services/gimme_instance_server.py]
     args:
       instance_spec:
@@ -22,12 +22,12 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       instance_id:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        regex: ^([1-9][0-9]*)$
+        default: 1
         explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       format:
-        regex: ^(only_values.txt|values_with_info.txt|dat)$
-        default: only_values.txt
+        regex: ^(plain.txt|dat)$
+        default: plain.txt
         explain: choose the encoding for the txt input file.
       silent:
         regex: ^(0|1)$
@@ -45,7 +45,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   simulate_forward_prop:
-    description: 'This service provides you with a solution of a forward propagation for an instance of ANN (either provided by you, or from a catalogue, or generated at random) and given the output values of the nodes for particular random values generated for the input layer.'
+    description: 'This service emulates a forward propagation process in a weighted ANN (either provided by you, or from a catalogue, or generated at random). You can provide the service with the output values for the nodes in the input layer, or ask the service to generate them at random. The service will return the output values for all the nodes in each layer specified in the argument \''watch_layers\''.'
     evaluator: [python, services/simulate_forward_prop_server.py]
     args:
       instance_spec:
@@ -57,8 +57,8 @@ services:
         explain3: '[terminal] you enter your instance (ANN) directly by either typing it line after line or through cut and paste operations.'
         # explain4: '[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt.'
       instance_id:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        regex: ^([1-9][0-9]*)$
+        default: 1
         explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       n_nodes:
         regex: ^\s*(([1-9](\s)*){2,6})$
@@ -73,6 +73,9 @@ services:
         explain: specify the type of activation of each node in the ANN instance.
         regex: ^(linear|ReLU)$
         default: linear
+      watch_layers:
+        regex: ^(all|last|\s*(([1-6](\s)*){1,6}))$
+        default: last
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -97,8 +100,8 @@ services:
         regex: ^([1-9][0-9]{5,5})$
         default: 777321
       instance_id:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        regex: ^([1-9][0-9]*)$
+        default: 1
         explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       input_values:
         regex: ^\s*((-|.|[0-9](\s)*){2,6})$

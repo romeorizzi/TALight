@@ -1,6 +1,0 @@
-param TOT_LAYERS := 3;  # Total Number of layers in the ANN
-param N_NODES := 3 4 1;  # Number of nodes for each layer
-param ANN_WEIGTHS :=
-                     1   0.88 0.72 -0.8 -0.93 0.31 -0.51 -0.25 -0.25 -0.18 0.03 0.11 -0.88
-                     2   -0.58 0.72 0.39 -0.02 ;
-end;
