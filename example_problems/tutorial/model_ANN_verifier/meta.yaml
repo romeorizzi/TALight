@@ -69,6 +69,11 @@ services:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n_1,n_2, ..., n_nl,seed>.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      input_values:
+        regex: ^(random|\s*((-|.|[0-9](\s)*){2,36}))$
+        explain: through this argument you can specify the input values used in the input layer to compute the forward propagation. 
+        example: with input_values= 5 3 2 you are saying that for an ANN with first node of the input layer you passed 5, for the second 3 and for the last node 2.
+        default: random
       activation:
         explain: specify the type of activation of each node in the ANN instance.
         regex: ^(linear|ReLU)$
@@ -76,6 +81,10 @@ services:
       watch_layers:
         regex: ^(all|last|\s*(([1-6](\s)*){1,6}))$
         default: last
+      decimal_digits:
+        regex: ^[0-5]$
+        explain: used to specify the tolerance/precision required for the output values.
+        default: 2
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -104,11 +113,11 @@ services:
         default: 1
         explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       input_values:
-        regex: ^\s*((-|.|[0-9](\s)*){2,6})$
+        regex: ^\s*((-|.|[0-9](\s)*){2,36})$
         explain: through this argument you can specify the input values used in the input layer to compute the forward propagation. 
         example: with input_values= 5 3 2 you are saying that for an ANN with first node of the input layer you passed 5, for the second 3 and for the last node 2.
       output_values:
-        regex: ^\s*(([-|.|0-9](\s)*){1,6})$
+        regex: ^\s*(([-|.|0-9](\s)*){1,36})$
         explain: through this argument you can specify the output value/s obtained at the end of a single forward propagation. 
         example: with output_values= 0.9 2 you are saying that the output obtained for the first output_node is 0.9 and for the last one 2.
       decimal_digits:

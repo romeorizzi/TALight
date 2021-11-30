@@ -17,6 +17,7 @@ args_list = [
     ('instance_id',int),
     ('input_values',str),
     ('output_values',str),
+    ('decimal_digits', int),
     ('activation',str)
 ]
 
@@ -26,10 +27,10 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
+format = 'plain.txt'
 
-# get the instance
-if ENV['instance_spec'] == 'catalogue1':
-    format = 'plain.txt'
+# ====================== get the instance ==========================================
+if ENV['instance_spec'] == 'catalogue1':    
     # Initialize ModellingProblemHelper
     mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
     # Get dat file
@@ -47,31 +48,36 @@ elif ENV['instance_spec'] == 'random':
 
 else:
     TAc.print(LANG.render_feedback("user_instance", 'Insert your instance: '), "yellow", ["bold"]) 
-    # TODO insert regex for input provided by user
-    instance_str = TALinput(str,TAc=TAc, LANG=LANG)
-    instance = annl.get_instance_from_str(instance_str)
-    '''
     instance_str = ''
-    for token in instance_raw:
-        instance_str += token
-    '''
+   
+    while True:
+        input = TALinput(str, TAc=TAc, LANG=LANG)
+        if 'end' in input:
+            break
 
-# generate the variables of the ANN
-if ENV['instance_spec'] != 'random':
-    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(int(x)) for x in instance[1])}, instance_id = {ENV["instance_id"]}'), "yellow", ["bold"]) 
+        instance_str += ' '.join(str(e) for e in input) 
+        instance_str += '\n'
+        
+    instance = annl.get_instance_from_str(instance_str,format)
+
+if ENV['instance_spec'] == 'catalogue1':
+    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(x) for x in instance[1])}, instance_id = {ENV["instance_id"]}'), "yellow", ["bold"]) 
+elif ENV['instance_spec'] == 'terminal':
+    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(x) for x in instance[1])}'), "yellow", ["bold"]) 
 else:
-    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(int(x)) for x in instance[1])}, seed = {ENV["seed"]}'), "yellow", ["bold"]) 
+    TAc.print(LANG.render_feedback("instance", f'The instance on which the server will perform the forward propagation is:\n{" ".join(str(x) for x in instance[1])}, seed = {ENV["seed"]}'), "yellow", ["bold"]) 
 
-# check the solution
+
 input_values = ENV['input_values'].split(' ')
 input_values = list(map(float, input_values))
 
 output_values = ENV['output_values'].split(' ')
 output_values = list(map(float, output_values))
-output_values = [round(num,2) for num in output_values]
+output_values = [round(num,ENV['decimal_digits']) for num in output_values]
 
+# ====================== generate server solution ==========================================
 server_output = annl.compute_forward_propagation(instance, input_values, ENV['activation'])
-server_output = [round(num,2) for num in server_output]
+server_output = [round(num,ENV['decimal_digits']) for num in server_output]
 
 
 #print(output_values, server_output)

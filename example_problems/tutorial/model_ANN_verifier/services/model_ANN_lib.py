@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # from tabulate import tabulate
+from typing import final
 import pandas as pd
 import copy
 import random
@@ -69,7 +70,7 @@ def instance_to_dat(instance, style=''):
     output += "end;"
     return output
 
-#print(instance_to_dat([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],''))
+
 
 def instance_to_str(instance, format='default'):
     """This function returns the string representation of the given ANN instance according to the indicated format"""
@@ -129,12 +130,12 @@ def get_instance_from_txt(instance, style='plain'):
     return final_instance
 
 # to adapt with model_ANN_verifier
-def get_instance_from_dat(pirellone, style=''):
+def get_instance_from_dat(instance, style=''):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
     assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     instance = list()
     # Get lines
-    lines = pirellone.split('\n')
+    lines = instance.split('\n')
     # Parse lines
     for line in lines:
         line = line.strip() # remove whitespace before and after
@@ -179,6 +180,45 @@ def activate(value, activation):
     return value
 
 
+def compute_forward_propagation_with_print(instance, values_input_layer, activation, watch_layers, decimal_digits, TAc, LANG):
+    hidden_layers, output_layer = initialize_network(instance)
+    input_values = values_input_layer
+    watch_layers = watch_layers.strip(' ')
+
+    # propagation for each hidden layer
+    layer = 2
+    for node in hidden_layers:
+        new_input = []
+        for weights in hidden_layers[node]:
+            new_value = 0
+            for i in range(len(weights)):
+                new_value += input_values[i] * weights[i]
+                new_value = activate(new_value, activation)
+
+            new_input.append(new_value)
+
+        input_values = new_input
+        # check if the user has required to print the value at each layer
+        if 'all' in watch_layers or str(layer) in watch_layers:
+            TAc.print(LANG.render_feedback("output", f'The outputs for the layer {layer} are: {" ".join(str(round(v,decimal_digits)) for v in input_values)}'), "white", ["bold"])
+        layer += 1
+    
+    # compute the output value/s
+    for node in output_layer:
+        final_output = []
+        for weights in output_layer[node]:
+            final_value = 0
+            for i in range(len(weights)):
+                final_value += input_values[i] * weights[i]
+                final_value = activate(final_value, activation)
+             
+            final_output.append(final_value)
+
+    
+    if 'all' in watch_layers or 'last' in watch_layers or str(layer) in watch_layers:
+        TAc.print(LANG.render_feedback("output", f'The outputs for the last layer are: {" ".join(str(round(v,decimal_digits)) for v in final_output)}'), "white", ["bold"])
+
+
 def compute_forward_propagation(instance, values_input_layer,activation):
     hidden_layers, output_layer = initialize_network(instance)
     input_values = values_input_layer
@@ -195,7 +235,7 @@ def compute_forward_propagation(instance, values_input_layer,activation):
             new_input.append(new_value)
 
         input_values = new_input
-    
+       
     # compute the output value/s
     for node in output_layer:
         final_output = []
@@ -209,7 +249,6 @@ def compute_forward_propagation(instance, values_input_layer,activation):
 
     return final_output
 
-
 # TESTS
 if __name__ == "__main__":
 
@@ -219,7 +258,7 @@ if __name__ == "__main__":
     print('Test: instance_to_str()')
     #assert instance_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
 
-#print(instance_to_txt([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],'values_with_info'))
+    #print(instance_to_txt([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],'values_with_info'))
     
     print('==> OK\n')
 
@@ -230,7 +269,8 @@ if __name__ == "__main__":
 
 
     print('Test: instance_to_dat()')
-    print('MAYBE TODO?')
+    #assert instance_to_dat([[0, 0], [1, 1]]) == '0 0\n1 1'
+    #print(instance_to_dat([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],''))
     print('==> OK\n')
 
 
