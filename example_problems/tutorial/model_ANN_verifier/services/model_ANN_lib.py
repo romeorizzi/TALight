@@ -116,10 +116,14 @@ def get_instance_from_txt(instance, style='plain'):
     final_instance = list()
     lines = instance.split('\n')
 
+    read_lines = 0
     for line in lines:
         if len(line) != 0 and line[0] != '#':
-            if len(line.split()) == 1:
-                final_instance.append(float(line.split()[0]))
+            read_lines += 1
+            if read_lines == 1:
+                final_instance.append(int(line))
+            elif read_lines == 2: 
+                final_instance.append(list(map(int,line.split())))
             else:
                 final_instance.append([float(e) for e in line.split()])
     return final_instance

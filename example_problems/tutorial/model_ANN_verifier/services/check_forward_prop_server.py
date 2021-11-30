@@ -29,7 +29,7 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # get the instance
 if ENV['instance_spec'] == 'catalogue1':
-    format = 'only_values.txt'
+    format = 'plain.txt'
     # Initialize ModellingProblemHelper
     mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
     # Get dat file
