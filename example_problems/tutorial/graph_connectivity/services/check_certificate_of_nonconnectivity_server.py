@@ -2,13 +2,11 @@
 
 from re import M
 from sys import stderr, exit
-
-import collections
-
+from os import environ
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-from scc_lib import *
+import graph_connectivity_lib as gcl
 
 # METADATA OF THIS TAL_SERVICE:
 problem="graph_connectivity"
@@ -22,37 +20,51 @@ args_list = [
     ('lang',str),
 ]
 
-ENV =Env(args_list)
-TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+ENV = Env(args_list)
+TAc = TALcolors(ENV)
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 #TAc.print(LANG.opening_msg, "green")
 
-n = ENV['n']
-m = n-1
-seed = ENV['how_to_input_the_graph']
-the_bipartition = ENV['the_bipartition']
-silent = ENV['silent']
-g,graph_print,edges,seed = GenerateGraph(seed, n, m, False)
 
-# Stampo il grafo + info
-print("#start:")
-print(f"# The assigned instance is:\n#   number of nodes: {n}\n#   number of arcs: {m}\n#   Seed: {seed}\n", end="")
+m = ENV['n'] - 1
+if ENV["how_to_input_the_graph"] == "lazy":
+    ENV.arg['how_to_input_the_graph'] = gcl.gen_instance_seed(False)
 
-print("graph:")
-print(graph_print)
+g, graph_print, edges = gcl.generate_graph(ENV["n"], m, int(ENV['how_to_input_the_graph']), TAc=TAc, LANG=LANG)
+
+# print the graph + info
+TAc.print("#start:", "yellow")
+TAc.print(LANG.render_feedback("assigned-instance", f"# The assigned instance is:\n#   number of nodes: {ENV['n']}\n#   number of arcs: {m}\n#   Seed: {ENV['how_to_input_the_graph']}"), "yellow")
+
+TAc.print("graph:", "yellow")
+TAc.print(graph_print, "white")
+
+#stderr.write("seed: " + ENV['how_to_input_the_graph']+"\n")
+'''
+import networkx as nx
+import matplotlib.pyplot as plt
+
+G = nx.Graph() # For networkx 
+
+for u, v in g.list_connected_edges():
+    G.add_edge(u, v)
+
+nx.draw(G, with_labels = True)
+plt.show()
+'''
 
 cert_conn = []
 cert_non_conn = []
 
-# Prendo bipartizione da input se "lazy"
-if the_bipartition == "lazy":
-    print("# give me your bipartition in the format as \'the_bipartition\' argument")
-    the_bipartition = input()
+#take the bipartition from input if "lazy"
+if ENV['the_bipartition'] == "lazy":
+    TAc.print(LANG.render_feedback("give-bipartition","# give me your bipartition in the format as \'the_bipartition\' argument"),"yellow")
+    ENV.arg['the_bipartition'] = input()
 
     # TODO: check regex
 
 # Splitting 'the_bipartition'
-cert_conn, cert_non_conn = the_bipartition.split("versus")
+cert_conn, cert_non_conn = ENV['the_bipartition'].split("versus")
 
 cert_conn = cert_conn.split()
 cert_non_conn = cert_non_conn.split()
@@ -62,9 +74,9 @@ cert_conn = list(map(int, cert_conn))
 cert_non_conn = list(map(int, cert_non_conn))
 
 
-# Controllo il certificato
+# Check the certificate
 
-# Cerco uno spanning tree e genero i 2 insiemi
+# look for a spanning tree and generate the 2 sets
 spTree, not_spTree_list = g.spanning_tree() 
 
 conn_list = []
@@ -79,7 +91,7 @@ for elem in not_spTree_list:
 nonconn_list = list(set(nonconn_list))
 
 '''
-# Printo il mio certificato
+# Print my certificate
 conn_out = ""
 for elem in conn_list:
     conn_out += str(elem) + " "
@@ -95,22 +107,25 @@ stderr.write(out)
 
 equals = sorted(cert_conn) == sorted(conn_list) and sorted(cert_non_conn) == sorted(nonconn_list)
 
+stderr.write("cert_conn: " + str(cert_conn))
+stderr.write("conn_list: " + str(conn_list))
 
 stderr.write("equals: " + str(equals))
 
-# Se corretto
+# If correct
 if(equals):
-    if(silent == 0):
-        print(equals)
-else: # Se è sbagliato
-    # Guardo gli elementi CONNESSI del certificato corretti
-    conn_corretti = set(cert_conn).intersection(set(conn_list))
-    conn_corretti = list(map(str, conn_corretti))
+    if(ENV['silent'] == 0):
+        TAc.print(LANG.render_feedback("correct-certificate",'Good! Your certificate is correct'),"green")
+else: # If it's wrong
+    TAc.print(LANG.render_feedback("wrong-certificate-lets-check",'WRONG, the certificate you gave me is not a correct spanning tree..Let\'s check it:'),"red")
+    #look at the CONNECTED certificate items that is correct
+    conn_correct = set(cert_conn).intersection(set(conn_list))
+    conn_correct = list(map(str, conn_correct))
 
-    print("Questi sono gli elementi connessi che hai azzeccato: " + ",".join(conn_corretti))
-    # Guardo gli elementi NON CONNESSI del certificato corretti
-    conn_non_corretti = set(cert_non_conn).intersection(set(nonconn_list))
-    conn_non_corretti = list(map(str, conn_non_corretti))
+    TAc.print(LANG.render_feedback("right-connected","These are the connected items you guessed at: " + ",".join(conn_correct)),"white")
+    #look at the UNCONNECTED certificate items that is correct
+    conn_wrong = set(cert_non_conn).intersection(set(nonconn_list))
+    conn_wrong = list(map(str, conn_wrong))
 
-    print("\nQuesti invece sono gli elementi non connessi che hai azzeccato: " + ",".join(conn_non_corretti))
+    TAc.print(LANG.render_feedback("wrong-connected","\nThese, on the other hand, are the unconnected items you guessed at: " + ",".join(conn_wrong)),"white")
 

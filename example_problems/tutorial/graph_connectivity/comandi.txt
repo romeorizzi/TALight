@@ -18,9 +18,7 @@ rtal connect -a how_to_input_the_graph=lazy -a n=10 graph_connectivity check_cer
 
 # 3
 
-rtal connect -a how_to_input_the_graph=lazy -a n=10 -a the_bipartition="1 2 3 versus 4 5 6" graph_connectivity check_certificate_of_nonconnectivity
-
-
+tal connect -a how_to_input_the_graph=42783 -a n=10 -a the_bipartition="1 2 3 versus 4 5 6" graph_connectivity check_certificate_of_nonconnectivity -- ./certificate_of_nonconnectivity_bot.py
 
 
 PER PRINTARE
