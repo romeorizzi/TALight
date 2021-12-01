@@ -27,7 +27,7 @@ with open(COMMANDS_FULLPATH, "r") as file:
 
 # Init gendict:
 gendict = dict()
-instance_id = 0
+instance_id = 1
 
 # copy name associations: (instance_name, instance_id)
 copy_name_id = dict()
@@ -99,6 +99,7 @@ for line in gen_lines:
             target_abs_fullpath = path.join(cur_suite_path, target_filename)
             system(f"{GENERATOR_PATH} {args} {format} > {target_abs_fullpath}")
             gendict[instance_id][format] = target_filename
+        print(f"generated instance with instance_id={instance_id}")
         instance_id += 1
 
     if not line_recognized:

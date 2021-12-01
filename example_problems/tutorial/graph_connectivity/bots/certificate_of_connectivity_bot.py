@@ -3,8 +3,7 @@
 from sys import stderr, exit
 
 import sys
-sys.path.append('..')
-from scc_lib import *
+import graph_connectivity_lib as gcl
 
 def startAlgo():
     numNodes = None
@@ -15,31 +14,26 @@ def startAlgo():
         if spoon[:len("#   number of nodes:")] == '#   number of nodes:':
             numNodes = spoon.split(':')[1]
             numNodes = int("".join(numNodes.split()))
+        # Getting number archs
+        if spoon[:len("#   number of arcs: ")] == '#   number of arcs: ':
+            m = spoon.split(':')[1]
+            m = int("".join(m.split()))
         spoon = input().strip()
     # Creating graph
-    grafo = Graph(numNodes)
+    grafo = gcl.Graph(numNodes)
 
-    # Getting sp. tree dimensions
-    #spoon = input().strip()
-    #n, m = spoon.split(' ')
 
     # Getting arcs
-    spoon = input().strip()
-
-    while spoon[0] != "#":
+   
+    for _ in range(m):
+        spoon = input().strip()
         v, u = spoon.split(' ')
         v, u = int(v), int(u)
-        grafo.addEdge(v, u)
-        spoon = input().strip()
-
-        if(len(spoon) == 0):
-            spoon = input().strip()
+        grafo.add_edge(v, u)
 
     # Ricevo istruzioni dal servizio
-    while spoon != "# Tell me how long is your spanning tree".strip():
+    while spoon[:len("# Tell me")] != "# Tell me":
         spoon = input().strip()
-
-    sys.stderr.write("finito\n")
 
     # Checking spanning tree
     input_spTree, not_visited = grafo.spanning_tree()
@@ -57,14 +51,14 @@ def startAlgo():
 
 
     while spoon != "#end".strip():
-        spoon = input().strip()
         print(spoon)
         sys.stderr.write(str(spoon)+ "\n")
+        spoon = input().strip()
 
 # Main
 spoon = input().strip()
 while spoon[:len("#start")] != "#start":
     spoon = input().strip()
 
-#LEGGO il grafo
+# Reading the graph
 startAlgo()

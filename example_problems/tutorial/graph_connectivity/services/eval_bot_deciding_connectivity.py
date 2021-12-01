@@ -3,12 +3,11 @@
 from re import M
 from sys import stderr, exit
 
-import collections
-
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
-
-from scc_lib import *
+import random 
+import graph_connectivity_lib as gcl
+from time import monotonic
 
 # METADATA OF THIS TAL_SERVICE:
 problem="graph_connectivity"
@@ -21,78 +20,100 @@ args_list = [
     ('lang',str)
 ]
 
-ENV =Env(args_list)
-TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-#TAc.print(LANG.opening_msg, "green")
-
-goal = ENV['goal']
-check_also_yes_certificate = ENV['check_also_yes_certificate']
-check_also_no_certificate = ENV['check_also_no_certificate']
-code_lang = ENV['code_lang']
-lang = ENV['lang']
+ENV = Env(args_list)
+TAc = TALcolors(ENV)
+LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 '''
-g,graph_print,edges,seed = GenerateGraph(seed, n, m, True)
+#Usa: 
+ENV['goal']
+ENV['check_also_yes_certificate']
+ENV['check_also_no_certificate']
+ENV['code_lang']
+ENV['lang']
+'''
+n = random.randint(2, 1000)
+m = random.randint(1, 1000)
+while m > (n * n - 1)/2:
+    m = random.randint(1, 1000)
+seed = gcl.gen_instance_seed(connected=True)
 
-# Stampo il grafo + info
-print("#start:")
-print(f"# The assigned instance is:\n#   number of nodes: {n}\n#   number of arcs: {m}\n#   Seed: {seed}\n", end="")
+g, graph_print, edges = gcl.generate_graph(n, m, seed , TAc=TAc, LANG=LANG)
+correct_answer, _ = g.is_connected(return_not_connected=False)
 
-print("graph:")
-print(graph_print)
+TAc.print(LANG.render_feedback("assigned-instance",f"Instance:\n n: {n}\nm: {m}\n seed: {seed}"), "yellow")
+TAc.print(f"{graph_print}", "white")
 
-print(f"#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each arc, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the arc, in this order.\n# Any line beggining with the '#' character is ignored.\n# If you prefer, you can use the 'TA_send_txt_file.py' util here to send us the lines of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.")
+# Getting answer (y or n)
+start = monotonic()
+user_answer = input()
+end = monotonic()
+time = end - start
 
-span = Graph(int(n))
-has_outer_edges = True
-not_in_graph = []
+# Getting certificate
+if(ENV['check_also_yes_certificate'] or ENV['check_also_no_certificate']):
+    TAc.print(LANG.render_feedback("waiting-sp-tree",f"#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each arc, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the arc, in this order.\n# Any line beggining with the \'#\' character is ignored.\n# If you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself."), "yellow")
 
-# Asking and getting sp.tree length
-print("# Tell me how long is your spanning tree")
-sptree_len = TALinput(int, 1, TAc=TAc)
+    span = gcl.graph(int(ENV['n']))
+    has_outer_edges = True
+    not_in_graph = []
 
+    # Asking and getting sp.tree length
+    TAc.print(LANG.render_feedback("waiting-sp-tree-len","# Tell me how many rows are in your spanning tree table"), "yellow")
+    start = monotonic()
+    sptree_len = TALinput(int, 1, TAc=TAc)
 
-for i in range(sptree_len[0]):
-    head, tail = TALinput(int, 2, TAc=TAc)
-    head, tail = int(head),int(tail)
+    for i in range(sptree_len[0]):
+        head, tail = TALinput(int, 2, TAc=TAc)
+        head, tail = int(head),int(tail)
 
-    if tail >= n or head >= n or tail < 0 or head < 0:
-        TAc.print(LANG.render_feedback("n-at-least-1", f"# ERRORE: entrambi gli estremi di un arco devono essere nodi del grafo, ossia numeri interi ricompresi nell'intervallo [0,{ENV['MAXN']}."), "red")
-        exit(0)
+        # Checking if the inserted nodes are in the range [0, n]
+        if tail >= ENV['n'] or head >= ENV['n'] or tail < 0 or head < 0:
+            TAc.print(LANG.render_feedback("n-at-least-1", f'# ERROR: both ends of an arc must be nodes of the graph, i.e. integers in the range [0,{ENV["MAXN"]}.'), "red")
+            exit(0)
 
-    # Verifico l'esistenza degli archi (e dei nodi)
-    if(g.checkEdge(head,tail)):
-        span.addEdge(head, tail)
+        # check the existence of the arcs (and nodes)
+        if(g.check_edge(head,tail)):
+            span.add_edge(head, tail)
+        else:
+            has_outer_edges = False
+            arco = (int(head),int(tail))
+            not_in_graph.append(arco)
+    end = monotonic()
+    time_certificate = end - start
+
+    # check if is connect
+    is_certificate_correct, not_conn = span.is_connected(True)
+    is_certificate_correct = is_certificate_correct and has_outer_edges
+
+# Checking input validity
+if (user_answer == 'Y' or user_answer == 'y'):
+    user_answer = "yes"
+if (user_answer == 'N' or user_answer == 'n'):
+    user_answer = "no"
+if (user_answer!= 'yes' and user_answer!='no'):
+    TAc.print(LANG.render_feedback("not-input", "Input not valid. You can say Y,N,yes,no"),"red")
+    exit(0)
+
+# Wrong answers
+if(user_answer == "yes" and correct_answer == False):
+    TAc.print(LANG.render_feedback("wrong-not-connected", "WRONG, the graph is not connected"),"red")
+    exit(0)
+if(user_answer == "no" and correct_answer == True):
+    TAc.print(LANG.render_feedback("wrong-connected", "WRONG, the graph is connected"),"red")
+    exit(0)
+
+if(ENV['goal']=="correct"):
+    if(ENV['check_also_yes_certificate'] or ENV['check_also_no_certificate']):
+        if is_certificate_correct:
+            TAc.print(LANG.render_feedback("correct-certificate",'Good! Your certificate is correct'),"green")
+        else:
+            TAc.print(LANG.render_feedback("wrong-certificate",f"WRONG! Certificate is not correct"), "red")
     else:
-        has_outer_edges = False
-        arco = (int(head),int(tail))
-        not_in_graph.append(arco)
+        TAc.print(LANG.render_feedback("right",f"Right!"), "green")
 
-
-# Controllo se è connesso
-is_correct, not_conn = span.isConnected(True)
-
-is_correct = has_outer_edges and has_outer_edges
-
-
-out=""
-for e in not_in_graph:
-    out+=str(e[0])+","+str(e[0])+";"
-
-
-
-if(is_correct):
-    if (silent == 0):
-        TAc.print("\n\nESATTO, il certificato e' corretto.\n","green")
+if time > 1:
+    TAc.print(LANG.render_feedback("not-efficient","Your algorithm as a whole is not very efficient, it takes more than a second\n"),"red")
 else:
-    TAc.print("\n\nSBAGLIATO, il certificato che mi hai dato non e' uno spanning tree corretto.\n","red")
-    # Printo elenco archi non in g (se esistono)
-    if(len(not_in_graph) != 0):
-        TAc.print("Questi archi non appartengono al grafo","green")
-        for e in not_in_graph:
-            print(e)
-    TAc.print("Questi nodi del grafo non sono raggiunti dal tuo spanning tree","green")
-    for n in not_conn:
-            print(n)
-'''
+    TAc.print(LANG.render_feedback("efficient","Your algorithm overall seems to be efficient!\n"),"green")
+exit(0) 

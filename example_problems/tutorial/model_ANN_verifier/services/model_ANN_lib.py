@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # from tabulate import tabulate
+from typing import final
 import pandas as pd
 import copy
 import random
@@ -11,8 +12,8 @@ import re
 ### CONSTANTS #########################################
 FORMAT_AVAILABLES = ['dat', 'txt']
 DAT_STYLES_AVAILABLES = ['']
-TXT_STYLES_AVAILABLES = ['only_values','values_with_info']
-DEFAULT_FORMAT='only_values.txt'
+TXT_STYLES_AVAILABLES = ['plain']
+DEFAULT_FORMAT='plain.txt'
 #######################################################
 
 # INSTANCE GENERATOR FUNCTIONS:
@@ -39,21 +40,17 @@ def gen_instance(n_nodes,seed:int):
     return ann
 
 
-def instance_to_txt(instance, style='only_values'):
+def instance_to_txt(instance, style='plain'):
     """This function returns the string representation of the given matrix instance according to the indicated style"""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
-    instance_str = 'Tot_layers: ' + str(instance[0]) + '\n' if style=='values_with_info' else str(instance[0]) + '\n'
-    instance_str += 'Tot_Nodes: ' + ' '.join(str(e) for e in instance[1]) + '\n' if style=='values_with_info' else ' '.join(str(e) for e in instance[1]) + '\n'
+    instance_str = '#Number of layers:\n' + str(instance[0]) + '\n'
+    instance_str += '#Number of nodes in each layer:\n' + ' '.join(str(e) for e in instance[1]) + '\n#Weights of the synapses (u,v):\n'
     
-    if style=='values_with_info':
-        instance_str += 'ANN_weigths: \n' 
-
     for i in range(2,len(instance)):
+        instance_str += f'# External for u in layer {i-1}. Internal for v in layer {i}:\n'
         instance_str += ' '.join(str(e) for e in instance[i]) + '\n'
-
     return instance_str
 
-#print(instance_to_txt([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],'values_with_info'))
 
 def instance_to_dat(instance, style=''):
     """This function returns the dat representation of the given matrix instance according to the indicated style"""
@@ -73,7 +70,7 @@ def instance_to_dat(instance, style=''):
     output += "end;"
     return output
 
-#print(instance_to_dat([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],''))
+
 
 def instance_to_str(instance, format='default'):
     """This function returns the string representation of the given ANN instance according to the indicated format"""
@@ -114,35 +111,39 @@ def get_instance_from_str(instance, format):
         return get_instance_from_txt(instance, format_secondary)
 
 
-def get_instance_from_txt(instance, style='only_values'):
+def get_instance_from_txt(instance, style='plain'):
     """This function returns the string representation of the given ANN instance according to the indicated format."""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     final_instance = list()
     lines = instance.split('\n')
 
-    for l in lines:
-        if len(l) != 0:
-            if len(l.split()) == 1:
-                final_instance.append(float(l.split()[0]))
+    read_lines = 0
+    for line in lines:
+        if len(line) != 0 and line[0] != '#':
+            read_lines += 1
+            if read_lines == 1:
+                final_instance.append(int(line))
+            elif read_lines == 2: 
+                final_instance.append(list(map(int,line.split())))
             else:
-                final_instance.append([float(e) for e in l.split()])
+                final_instance.append([float(e) for e in line.split()])
     return final_instance
 
 # to adapt with model_ANN_verifier
-def get_instance_from_dat(pirellone, style=''):
+def get_instance_from_dat(instance, style=''):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
     assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     instance = list()
     # Get lines
-    lines = pirellone.split('\n')
+    lines = instance.split('\n')
     # Parse lines
-    for l in lines:
-        l = l.strip() # remove whitespace before and after
+    for line in lines:
+        line = line.strip() # remove whitespace before and after
         # Filter the matrix lines
-        if l != '' and l[:5] != 'param' and l[:3] != 'end':
-            l = l.replace(';', '') #ignore ;
+        if line != '' and line[:5] != 'param' and line[:3] != 'end':
+            line = line.replace(';', '') #ignore ;
             row = list()
-            for e in l.split()[1:]:
+            for e in line.split()[1:]:
                 row.append(int(e))
             instance.append(row)
     return instance
@@ -179,6 +180,45 @@ def activate(value, activation):
     return value
 
 
+def compute_forward_propagation_with_print(instance, values_input_layer, activation, watch_layers, decimal_digits, TAc, LANG):
+    hidden_layers, output_layer = initialize_network(instance)
+    input_values = values_input_layer
+    watch_layers = watch_layers.strip(' ')
+
+    # propagation for each hidden layer
+    layer = 2
+    for node in hidden_layers:
+        new_input = []
+        for weights in hidden_layers[node]:
+            new_value = 0
+            for i in range(len(weights)):
+                new_value += input_values[i] * weights[i]
+                new_value = activate(new_value, activation)
+
+            new_input.append(new_value)
+
+        input_values = new_input
+        # check if the user has required to print the value at each layer
+        if 'all' in watch_layers or str(layer) in watch_layers:
+            TAc.print(LANG.render_feedback("output", f'The outputs for the layer {layer} are: {" ".join(str(round(v,decimal_digits)) for v in input_values)}'), "white", ["bold"])
+        layer += 1
+    
+    # compute the output value/s
+    for node in output_layer:
+        final_output = []
+        for weights in output_layer[node]:
+            final_value = 0
+            for i in range(len(weights)):
+                final_value += input_values[i] * weights[i]
+                final_value = activate(final_value, activation)
+             
+            final_output.append(final_value)
+
+    
+    if 'all' in watch_layers or 'last' in watch_layers or str(layer) in watch_layers:
+        TAc.print(LANG.render_feedback("output", f'The outputs for the last layer are: {" ".join(str(round(v,decimal_digits)) for v in final_output)}'), "white", ["bold"])
+
+
 def compute_forward_propagation(instance, values_input_layer,activation):
     hidden_layers, output_layer = initialize_network(instance)
     input_values = values_input_layer
@@ -195,7 +235,7 @@ def compute_forward_propagation(instance, values_input_layer,activation):
             new_input.append(new_value)
 
         input_values = new_input
-    
+       
     # compute the output value/s
     for node in output_layer:
         final_output = []
@@ -208,3 +248,36 @@ def compute_forward_propagation(instance, values_input_layer,activation):
             final_output.append(final_value)
 
     return final_output
+
+# TESTS
+if __name__ == "__main__":
+
+    # TO_STRING and FROM_STRING FUNCTIONS:
+
+
+    print('Test: instance_to_str()')
+    #assert instance_to_str([[0, 0], [1, 1]]) == '0 0\n1 1'
+
+    #print(instance_to_txt([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],'values_with_info'))
+    
+    print('==> OK\n')
+
+
+    print('Test: instance_to_txt()')
+    print('MAYBE TODO?')
+    print('==> OK\n')
+
+
+    print('Test: instance_to_dat()')
+    #assert instance_to_dat([[0, 0], [1, 1]]) == '0 0\n1 1'
+    #print(instance_to_dat([3, [3, 4, 1], [1,2,3,4,5,6,7,8,9,10,11,12], [1,2,3,4]],''))
+    print('==> OK\n')
+
+
+    print('Test: get_instance_from_str()')
+    print('==> OK\n')
+
+
+    print('Test: get_instance_from_txt()')
+    assert get_instance_from_txt('0 0\n1 1', 'only_matrix') == [[0, 0], [1, 1]]
+    print('==> OK\n')

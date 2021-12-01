@@ -74,8 +74,8 @@ def is_solvable(pirellone):
     return True 
 
 def print_pirellone(pirellone):
-    for l in pirellone:
-        print(*l) 
+    for line in pirellone:
+        print(*line) 
         
 def check_off_lights(pirellone,solu, LANG, TAc):
     pirellone1=[line[:] for line in pirellone]

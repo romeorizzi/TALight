@@ -25,8 +25,8 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       instance_id:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        regex: ^([1-9][0-9]*)$
+        default: 1
         explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then this catalogue of hardcoded instances is automatically set up with make when setting up the server.'
       instance_solvability:
         regex: ^(solvable|unsolvable|surprise_me)$
@@ -188,7 +188,7 @@ services:
         explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
         example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
       instance_id:
-        regex: ^(-1|[0-9]*)$
+        regex: ^(-1|[1-9][0-9]*)$
         default: -1
         explain: 'If different from -1 then the dat file and the input.txt files are those for the instance with id <instance_id> contained in a small archive of reference instances'
       lang: 

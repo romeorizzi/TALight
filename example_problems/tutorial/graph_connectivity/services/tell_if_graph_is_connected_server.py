@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 from sys import stderr, exit
-import collections
 
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from bot_interface import service_server_requires_and_gets_the_only_file, BotInterface
 
-from scc_lib import *
+import graph_connectivity_lib as gcl
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -16,9 +15,9 @@ args_list = [
     ('input_mode',str),
 ]
 
-ENV =Env(args_list)
-TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+ENV = Env(args_list)
+TAc = TALcolors(ENV)
+LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 
@@ -28,28 +27,28 @@ if ENV['input_mode'] == 'terminal':
     # Input prima riga: n,m
     n, m = TALinput(int, 2, TAc=TAc)
     if n < 1:
-        TAc.print(LANG.render_feedback("n-LB", f'# ERRORE: il numero di nodi del grafo deve essere almeno 1. Invece il primo dei numeri che hai inserito è n={n}.'), "red")
+        TAc.print(LANG.render_feedback("n-LB", f'# ERROR: the number of nodes in the graph must be at least 1. Instead the first of the numbers you entered is n={n}.'), "red")
         exit(0)
     if m < 0:
-        TAc.print(LANG.render_feedback("m-LB", f'# ERRORE: il numero di archi del grafo non può essere negativo. Invece il secondo dei numeri che hai inserito è m={m}.'), "red")
+        TAc.print(LANG.render_feedback("m-LB", f'# ERROR: The number of arcs in the graph cannot be negative. Instead the second of the numbers you entered is m={m}.'), "red")
         exit(0)
     if n > 1000:
-        TAc.print(LANG.render_feedback("n-UB", f'# ERRORE: il numero di nodi del grafo non può eccedere 1000. Invece il primo dei numeri che hai inserito è n={n}.'), "red")
+        TAc.print(LANG.render_feedback("n-UB", f'# ERROR: The number of nodes in the graph cannot exceed 1000. Instead the first of the numbers you entered is n={n}.'), "red")
         exit(0)
     if m > 10000:
-        TAc.print(LANG.render_feedback("m-UB", f'# ERRORE: il numero di archi del grafo non può eccedere 10000. Invece il secondo dei numeri che hai inserito è m={m}.'), "red")
+        TAc.print(LANG.render_feedback("m-UB", f'# ERROR: The number of arcs in the graph cannot exceed 10000. Instead the second of the numbers you entered is m={m}.'), "red")
         exit(0)
 else: # input_mode=TA_send_files_bot
-    graph=service_server_requires_and_gets_the_only_file().decode()
+    graph = service_server_requires_and_gets_the_only_file().decode()
 
     lines=graph.splitlines()
-    n,m = map(int,lines[0].split())
+    n, m = map(int,lines[0].split())
 
 
 #print("#grafo fatto")
-g = Graph(int(n))
+g = gcl.Graph(int(n))
 
-# Input degli m archi
+# Input of m arcs
 for i in range(m):
     # INPUT
     if ENV['input_mode'] == 'terminal':
@@ -57,36 +56,36 @@ for i in range(m):
     else:
         head, tail = map(int,lines[i+1].split())
 
-    # Controllo numerazione dei nodi tra 0 e n
+    # Check node numbering between 0 and n
     if tail >= n or head >= n or tail < 0 or head < 0:
-        TAc.print(LANG.render_feedback("wrong-range-for-node", f'# ERRORE: entrambi gli estremi di un arco devono essere nodi del grafo, ossia numeri interi ricompresi nell\'intervallo [0,{ENV["MAXN"]}.'), "red")
+        TAc.print(LANG.render_feedback("wrong-range-for-node", f'# ERROR: both ends of an arc must be nodes of the graph, i.e. integers in the range [0,{ENV["MAXN"]}.'), "red")
         exit(0)
 
-    g.addEdge(int(head),int(tail))
+    g.add_edge(int(head),int(tail))
 
-#creazione grafo completata
+# Graph creation completed
 
 
-# Check se connesso
-is_connected, _ = g.isConnected(False)
+# Check if connect
+is_connected, _ = g.is_connected(False)
 
 if is_connected:
-    TAc.print(LANG.render_feedback("graph-connected", f'\nThe submitted graph is connected.\n'),"green")
-    #TAc.print(LANG.render_feedback("graph-connected", f'\nIl grafo fornito eACCENTATA connesso.\n'),"green")
+    TAc.print(LANG.render_feedback("graph-connected", f'Good! The submitted graph is connected.\n'),"green")
+    #TAc.print(LANG.render_feedback("graph-connected", f'\nThe submitted graph is connected.\n'),"green")
     if ENV['with_yes_certificate']:
         sp_tree, not_visited = g.spanning_tree()
         if ENV['with_yes_certificate']:
-            TAc.print("\nEcco uno spanning tree:\n","yellow")
+            TAc.print(LANG.render_feedback("printing-sp-tree", "Here there is a spanning tree:\n","yellow"))
             for elem in sp_tree:
-                print(elem)
+                TAc.print(elem, "white")
 else:  # input graph g is NOT connected
-    TAc.print("\nIl grafo fornito NON è connesso.\n","red")
+    TAc.print(LANG.render_feedback("graph-not-connected","The provided graph is NOT connected."),"red")
     if ENV['with_no_certificate']:
         sp_tree, not_visited = g.spanning_tree()
-        TAc.print("\nEcco una separazione dei nodi:\n","yellow")
+        TAc.print(LANG.render_feedback("printing-bipartition","I'll give you a bipartition of the graph.\nHere there are the connected nodes:"),"yellow")
         for elem in sp_tree:
-            print(elem[0])
-        print("--")
+            TAc.print(elem[0], "white")
+        TAc.print(LANG.render_feedback("print-not-conected","\nAnd here the not connected ones:"), "yellow")
         for elem in not_visited:
-            print(elem)
+            TAc.print(elem, "white")
 exit(0)  
