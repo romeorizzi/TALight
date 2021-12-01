@@ -1,3 +1,6 @@
+#run this file to create 100 random couples [big_triangle,small_triangle]
+#if the i-th small_triangle fits in the associated big_triangle, then the i-th digit in "result.txt" will be 1, 0 otherwise
+
 import sys
 import random
 
