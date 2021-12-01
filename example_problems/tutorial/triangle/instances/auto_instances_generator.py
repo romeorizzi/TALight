@@ -1,5 +1,5 @@
-import random
 import sys
+import random
 
 def random_triangle(n:int, MIN_VAL:int, MAX_VAL:int, seed:int):
     
@@ -23,14 +23,23 @@ for i in range(how_many):
     print(n)
     for row in triangle:
         print(' '.join([str(ele).ljust(2) for ele in row]))
-
+        
+res = open("results.txt","w")
+res.write("")
+res.close()
 for i in range(how_many):      
     n = random.randrange(1,6)
     r = random.randint(0,3)
-    if r == 0:
-        seed = random.randrange(100000,1000000)
-    else:
+    if r == 1:
         seed = seeds[i]
+        res = open("results.txt","a")
+        res.write("1")
+        res.close()
+    else:
+        seed = random.randrange(100000,1000000)
+        res = open("results.txt","a")
+        res.write("0")
+        res.close()    
     triangle = random_triangle(n, 0, 99,seed)
     txt_file = "small_instance_" + str(i) + ".txt"
     output = open(txt_file,"w")
