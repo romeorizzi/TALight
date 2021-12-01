@@ -55,7 +55,7 @@ TAc.print("Solution of permuted matrix: ", "yellow", ["bold"])
 solu=input()
 solu=solu.split()
 
-risultato,_=pl.check_off_lights(p_pirellone,solu)
+risultato,_=pl.check_off_lights(p_pirellone,solu,LANG,TAc)
 if risultato :
     TAc.OK()
     TAc.print(LANG.render_feedback("shoter","Correct solution."), "green", ["bold"])

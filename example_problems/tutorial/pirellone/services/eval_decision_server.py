@@ -2,6 +2,7 @@
 from sys import stderr, exit
 from time import monotonic
 import copy
+import random
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
@@ -10,6 +11,7 @@ import pirellone_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
+    ('size',str),
     ('goal',str),
     ('with_check_of_sol',bool),
 ]
@@ -33,7 +35,7 @@ TAc.print(LANG.render_feedback("explain-protocol","# Each instance describes a 0
 # efficient   | 100 compilato; 100 python, java   | =M |
 #
 # 1 secondo
-
+##########CAMBIATO IL SENSO DEL SERVIZIO PRIMA ERA VALUTAZIONE DEL CODICE, ORA BOH VALUTAZIONE DI UNA SOLUZIONE DATA? comunque sbagliato.
 
 for i in range(15):
     if ENV['size']=='small':
@@ -46,8 +48,9 @@ for i in range(15):
         m=8
         n=8
     pirellone,_,sr,sc=pl.random_pirellone(m, n, solvable=True,s=True)
-    print(pirellone)
+    pl.print_pirellone(pirellone)
     sol_togive=pl.solution_irredundant(pirellone,sr,sc)
+    print(" ".join(sol_togive))
     a=monotonic()
     sol=input()
     sol_to_ver=[]
@@ -60,7 +63,7 @@ for i in range(15):
     
         b=monotonic() 
         time=b-a
-        moff,_=pl.check_off_lights(pirellone,sol_to_ver)
+        moff,_=pl.check_off_lights(pirellone,sol_to_ver,LANG,TAc)
         if not moff:
             TAc.print(LANG.render_feedback("wrong",f"# No!The solution of the matrix of seed={_} is not correct."), "red", ["bold"])
             exit(0)

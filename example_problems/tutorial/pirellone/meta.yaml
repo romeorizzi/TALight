@@ -113,6 +113,9 @@ services:
   eval_decision:
     evaluator: [python, services/eval_decision_server.py]
     args:
+      size:
+        regex: ^(small|medium|large)$
+        default: medium
       goal:
         regex: ^(correct|efficient)$
         default: correct

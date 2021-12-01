@@ -82,7 +82,7 @@ elif ENV['submatrix_type']=='random_seed':
     TAc.print(LANG.render_feedback("sub-matrix-sol",f"Solution of the submatrix {sub_m}x{sub_n} : "), "yellow", ["bold"])
 solu=input()
 solu=solu.split()
-b,solvable=pl.check_off_lights(sub_pirellone,solu)
+b,solvable=pl.check_off_lights(sub_pirellone,solu,LANG,TAc)
 if b and solvable=='s':
     TAc.OK()
     TAc.print(LANG.render_feedback('correct',"This sequence turns off all lights."), "green", ["bold"])

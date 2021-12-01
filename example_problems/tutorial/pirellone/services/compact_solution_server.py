@@ -57,7 +57,7 @@ elif goal=="min":
 risultato,_ = pl.check_off_lights(pirellone, solu, LANG, TAc)
 if risultato:
     TAc.OK()
-    TAc.print(LANG.render_feedback("correct","Your solution turns off the entire binary matrix.", ["bold"]))
+    TAc.print(LANG.render_feedback("correct","Your solution turns off the entire binary matrix."),"green", ["bold"])
 else:
     TAc.NO()
     TAc.print(LANG.render_feedback("same-on","Some lights are on!"), "red", ["bold"])
