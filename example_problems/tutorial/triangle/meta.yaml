@@ -159,9 +159,9 @@ services:
         explain: if nothing is wrong with your answer then the service runs silently; otherwise it explains what is the problem in clear.
         regex: ^(0|1)$
         default: 0
-  check_triangle_in_triangle:
-    description: this service asks you to check whether a given triangle fits inside a bigger triangle.
-    evaluator: [python, services/check_triangle_in_triangle_server.py]
+  eval_number_of_triangles_in_triangle:
+    description: this service asks you to count how many times a given triangle fits inside a bigger triangle.
+    evaluator: [python, services/eval_number_of_triangles_in_triangle_server.py]
     args:
       big_n:
         regex: ^([1-9][0-9]{0,1}|100)$

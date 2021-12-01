@@ -31,7 +31,7 @@ def print_triangle(triangle, file_format:bool =False):
     if file_format:
         print(n)
         for row in triangle:
-            print(' '.join([str(ele).rjust(2) for ele in row]))
+            print(' '.join([str(ele).ljust(2) for ele in row]))
     else:
         left_margin = (2 * n) - 2
         for row in triangle:
@@ -46,9 +46,7 @@ def print_path(triangle, path_values, TAc, LANG):
     if len(triangle) - 1 != len(path_values):
         TAc.print(LANG.render_feedback("wrong-path-length", f"Error: The path you provided is not a feasible solution for this triangle, as it doesn't comprise {len(triangle) - 1} directions."),"red", ["bold"])
         exit(0)
-    triangle_array = []
-    for l in triangle:
-        triangle_array += l
+    triangle_array = cast_to_array(triangle)
     n = len(triangle)
     path = [0]
     i = 0
@@ -76,9 +74,7 @@ def print_path(triangle, path_values, TAc, LANG):
     return 
         
 def calculate_path(triangle,path_values):
-    triangle_array = []
-    for l in triangle:
-        triangle_array += l
+    triangle_array = cast_to_array(triangle)
     n = len(triangle)
     path = [triangle_array[0]]
     s = triangle_array[0]
@@ -98,9 +94,7 @@ def calculate_path(triangle,path_values):
 
 def best_path_cost(triangle):
     dist = len(triangle)
-    triangle_array = []
-    for l in triangle:
-        triangle_array += l
+    triangle_array = cast_to_array(triangle)
     triangle_array = triangle_array[::-1]
     i  = 0
     count = 1
@@ -123,6 +117,7 @@ def random_path(m,n):
     return path
 
 def fits(start,livello,big_triangle,small_triangle,small_size):
+    indexes = [start]
     small_index = 1
     pos = start
     array = [big_triangle[start]]
@@ -131,12 +126,57 @@ def fits(start,livello,big_triangle,small_triangle,small_size):
         livello += 1
         for index in range(profondita + 2):
             if big_triangle[pos + index] != small_triangle[small_index]:
-                return False
+                return False, []
             small_index +=1
-    return True
+            indexes.append(pos+index)
+    return True, indexes
 
 def cast_to_array(triangle):
     array = []
     for i in triangle:
         array += i
     return array
+
+def print_triangle_occurencies(big_triangle,small_triangle,indexes,levels):
+    big_array = cast_to_array(big_triangle)
+    small_array = cast_to_array(small_triangle)
+    n = len(big_triangle)
+    m = len(small_triangle)
+    occurency = 0
+    left_margin = (2 * n) - 2
+    for row in big_triangle:
+        print(end="  "*left_margin)
+        left_margin -= 1
+        for ele in row:
+            if ele == indexes[occurency]:
+                occurency += 1
+                print(colored(str(ele).ljust(2),'cyan',attrs=['bold']), end='  ')
+            else:
+                print(str(ele).ljust(2), end='  ')
+        print()
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
