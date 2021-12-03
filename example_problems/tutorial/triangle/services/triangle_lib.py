@@ -116,67 +116,44 @@ def random_path(m,n):
         path = ''.join(map(str,random.choices(directions, k=random.randint(m,n-1))))
     return path
 
-def fits(start,livello,big_triangle,small_triangle,small_size):
+def next_indexes(start, livello, small_size):
+    last_visited = start
     indexes = [start]
-    small_index = 1
-    pos = start
-    array = [big_triangle[start]]
-    for profondita in range(small_size - 1):
-        pos += livello
-        livello += 1
-        for index in range(profondita + 2):
-            if big_triangle[pos + index] != small_triangle[small_index]:
-                return False, []
-            small_index +=1
-            indexes.append(pos+index)
-    return True, indexes
+    for i in range(1, small_size):
+        last_visited += livello
+        for j in range(i + 1):
+            indexes.append(last_visited+j)
+        last_visited += 1 
+    return indexes
 
+def fits(start,livello,big_triangle,small_triangle,indexes):
+    for i in range(len(indexes)):
+        if small_triangle[i] != big_triangle[indexes[i]]:
+            return False
+        
+    return True
+    
 def cast_to_array(triangle):
     array = []
     for i in triangle:
         array += i
     return array
 
-def print_triangle_occurencies(big_triangle,small_triangle,indexes,levels):
+def print_triangle_occurencies(big_triangle,indexes):
     big_array = cast_to_array(big_triangle)
-    small_array = cast_to_array(small_triangle)
     n = len(big_triangle)
-    m = len(small_triangle)
-    occurency = 0
+    count = 0
+    index = 0
     left_margin = (2 * n) - 2
     for row in big_triangle:
         print(end="  "*left_margin)
         left_margin -= 1
         for ele in row:
-            if ele == indexes[occurency]:
-                occurency += 1
+            if index in indexes:
                 print(colored(str(ele).ljust(2),'cyan',attrs=['bold']), end='  ')
+                count += 1
             else:
                 print(str(ele).ljust(2), end='  ')
+            index += 1
         print()
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+   

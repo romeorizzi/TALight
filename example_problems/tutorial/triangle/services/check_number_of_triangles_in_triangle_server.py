@@ -24,17 +24,13 @@ args_list = [
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-'''    
+  
 # START CODING YOUR SERVICE:
-
 # CHECK SIZES
-
 if ENV["big_n"] < ENV["small_n"]:
     TAc.print(LANG.render_feedback("wrong-triangles-sizes", f'Error: the size of the bigger triangle ({ENV["big_n"]}) is smaller than the size of the smaller triangle ({ENV["small_n"]}).'), "red", ["bold"])
     exit(0)
-
 # BIG TRIANGLE GENERATION
-
 if ENV['how_to_input_the_big_triangle'] == "my_own_triangle":
     big_triangle = []
     TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["big_n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
@@ -56,7 +52,6 @@ else:
     big_triangle = tl.random_triangle(ENV["big_n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_big_triangle']),TAc,LANG)
 print([bign,seed])        
 # SMALL TRIANGLE GENERATION
-
 if ENV['how_to_input_the_small_triangle'] == "my_own_triangle":
     small_triangle = []
     TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["small_n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
@@ -84,11 +79,7 @@ elif ENV['how_to_input_the_small_triangle'] == "random":
     small_triangle = tl.random_triangle(smalln, ENV['MIN_VAL'], ENV['MAX_VAL'], seed, TAc, LANG)
 else:
     small_triangle = tl.random_triangle(ENV["small_n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_small_triangle']),TAc,LANG)
-print([smalln,seed])
-'''
 
-big_triangle = [[1],[2,3],[1,1,1],[5,6,7,8],[1,3,2,5,6],[4,7,8,9,1,2],[1,5,2,4,3,1,1],[0,4,1,1,3,4,4,4]]
-small_triangle = [[2],[1,1]]
 big = tl.cast_to_array(big_triangle)
 small = tl.cast_to_array(small_triangle)
 L = len(big_triangle)
@@ -97,17 +88,15 @@ l = len(small_triangle)
 right_answer = 0
 
 livello = 1
-levels = []
 indexes = []
 for i in range(int(((L-l+1)*(L-l+2))/2)):   
     if i >= livello*(livello+1)/2:
         livello +=1
-    if tl.fits(i,livello,big,small,int(math.sqrt(2*len(small)-1)))[0]:
-        right_answer +=1
-        levels.append(livello)
-        indexes.append(tl.fits(i,livello,big,small,int(math.sqrt(2*len(small)-1)))[1])
-print(indexes)
-print(levels)     
+    if big[i] == small[0]:
+        if tl.fits(i,livello,big,small,tl.next_indexes(i,livello,l)):
+            indexes.append(tl.next_indexes(i,livello,l))
+            right_answer += 1
+            
 if ENV['displayable']:
     TAc.print(LANG.render_feedback("displayable-big",f'The big triangle is displayed here:\n'), "green")
     tl.print_triangle(big_triangle)
@@ -119,11 +108,14 @@ answer = TALinput(int, token_recognizer=lambda val,TAc,LANG: True, TAc=TAc, LANG
 if answer == right_answer:
     if not ENV['silent']:
         TAc.OK()
-        TAc.print(LANG.render_feedback("right-answer", f'We agree, the answer is {right_answer}.\n'), "green", ["bold"])
-        if right_answer != 0:
-            tl.print_triangle_occurencies(big_triangle,small_triangle,indexes,levels)     
+        if answer != 0:
+            TAc.print(LANG.render_feedback("right-answer", f'We agree, the answer is {right_answer}, as you can see below.\n'), "green", ["bold"])
+            if right_answer != 0:
+                tl.print_triangle_occurencies(big_triangle,sum(indexes,[]))     
+        else:
+            TAc.print(LANG.render_feedback("right-answer", f'We agree, the answer is {right_answer}.\n'), "green", ["bold"])
 else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-answer", f'We don\'t agree, the answer is {right_answer}.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-answer", f'We don\'t agree, the answer is {right_answer}.'), "red", ["bold"])  
 exit(0)
 
