@@ -8,11 +8,13 @@ import random
 import re
 import networkx as nx
 
+import string
+
 ### CONSTANTS #########################################
 FORMAT_AVAILABLES = ['dat', 'txt']
 DAT_STYLES_AVAILABLES = ['']
-TXT_STYLES_AVAILABLES = ['only_matrix', 'with_m_and_n']
-DEFAULT_FORMAT='only_matrix.txt'
+TXT_STYLES_AVAILABLES = ['only_strings', 'with_m_and_n']
+DEFAULT_FORMAT='only_strings.txt'
 #######################################################
 
 
@@ -127,8 +129,8 @@ def subset_to_str_list(subset_sol):
             ' '.join([str(e) for e in subset_sol[1]])]
 
 
-def instance_to_str(matrix, format='default'):
-    """This function returns the string representation of the given matrix instance according to the indicated format"""
+def instance_to_str(problem, format='default'):
+    """This function returns the string representation of the given two strings instance according to the indicated format"""
     # Get default
     format = DEFAULT_FORMAT if format=='default' else format
     # Parsing format
@@ -139,43 +141,44 @@ def instance_to_str(matrix, format='default'):
     else:
         format_primary = format_list[1]
         format_secondary = format_list[0]
-    # Get matrix in str format
+    # Get problem in str format
     assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
     if format_primary == 'dat':
-        return instance_to_dat(matrix, format_secondary)
+        return instance_to_dat(problem, format_secondary)
     if format_primary == 'txt':
-        return instance_to_txt(matrix, format_secondary)
+        return instance_to_txt(problem, format_secondary)
 
 
-def instance_to_txt(matrix, style='only_matrix'):
-    """This function returns the string representation of the given matrix instance according to the indicated style"""
+def instance_to_txt(problem, style='only_strings'):
+    """This function returns the string representation of the given two strings instance according to the indicated style"""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     output = ""
     if style == "with_m_and_n":
-        output = f"{len(matrix)} {len(matrix[0])}\n"
-    output += '\n'.join((' '.join(str(col) for col in row) for row in matrix))
+        output = f"{len(problem[0])} {len(problem[1])}\n"
+    output += '\n'.join((' '.join(str(char) for char in string) for string in problem))
     return output
 
 
-def instance_to_dat(matrix, style=''):
-    """This function returns the dat representation of the given matrix instance according to the indicated style"""
+def instance_to_dat(problem, style=''):
+    """This function returns the dat representation of the given two strings instance according to the indicated style"""
     assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
-    M = len(matrix)
-    N = len(matrix[0])
-    output = f"param M := {M};  # Number of rows\n"
-    output += f"param N := {N};  # Number of columns\n"
-    output += "param MATRIX :  " + " ".join([str(i) for i in range(1,N+1)]) + " :=\n"
-    for i in range(M):
-        output += f"            {i+1}   "
-        output += ' '.join(str(col) for col in matrix[i])
-        output += ";\n" if i == (M - 1) else "\n"
+    M = len(problem[0])
+    N = len(problem[1])
+    output = f"param M := {M};  # Number of characters of the first string\n"
+    output += f"param N := {N};  # Number of characters of the second string\n"
+    # output += "param FIRST_STRING :=  " + " ".join([str(char) for char in problem[0]]) + ";\n"
+    output += "param FIRST_STRING : " + " ".join([str(i) for i in range(1,M+1)]) + " :=\n"
+    output += f"                     " + " ".join([str(char) + " "*(len(str(i))-1) for i,char in enumerate(problem[0], start=1)]) + ";\n"
+    # output += "param SECOND_STRING :=  " + " ".join([str(char) for char in problem[1]]) + ";\n"
+    output += "param SECOND_STRING : " + " ".join([str(i) for i in range(1,N+1)]) + " :=\n"
+    output += f"                      " + " ".join([str(char) + " "*(len(str(i))-1) for i,char in enumerate(problem[1], start=1)]) + ";\n"
     output += "end;"
     return output
 
 
 # FROM STRING
-def get_instance_from_str(matrix, format):
-    """This function returns the string representation of the given matrix instance according to the indicated format."""
+def get_instance_from_str(problem, format):
+    """This function returns the string representation of the given two string instances according to the indicated format."""
     # Parsing format
     format_list = format.split('.')
     if len(format_list) == 1:
@@ -184,53 +187,69 @@ def get_instance_from_str(matrix, format):
     else:
         format_primary = format_list[1]
         format_secondary = format_list[0]
-    # Get matrix in str format
+    # Get two strings in str format
     assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
     if format_primary == 'dat':
-        return get_instance_from_dat(matrix, format_secondary)
+        return get_instance_from_dat(problem, format_secondary)
     if format_primary == 'txt':
-        return get_instance_from_txt(matrix, format_secondary)
+        return get_instance_from_txt(problem, format_secondary)
 
 
-def get_instance_from_txt(matrix, style='only_matrix'):
-    """This function returns the string representation of the given matrix instance according to the indicated format."""
+def get_instance_from_txt(problem, style='only_strings'):
+    """This function returns the string representation of the given two strings instance according to the indicated format."""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     instance = list()
-    lines = matrix.split('\n')
+    lines = problem.split('\n')
     if format == "with_m_and_n":
-        lines = lines[2:]
+        lines = lines[1:]
     for line in lines:
         if len(line) != 0:
-            instance.append([int(e) for e in line.split()])
+            instance.append([e for e in line.split()])
     return instance
 
 
-def get_instance_from_dat(matrix, style=''):
-    """This function returns the string representation of the given matrix instance according to the indicated format."""
+def get_instance_from_dat(problem, style=''):
+    """This function returns the string representation of the given two strings instance according to the indicated format."""
     assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     instance = list()
     # Get lines
-    lines = matrix.split('\n')
+    lines = problem.split('\n')
     # Parse lines
     for line in lines:
         line = line.strip() # remove whitespace before and after
-        # Filter the matrix lines
+        # Filter the problem lines
         if line != '' and line[:5] != 'param' and line[:3] != 'end':
             line = line.replace(';', '') #ignore ;
-            row = list()
+            string = list()
             for e in line.split()[1:]:
-                row.append(int(e))
-            instance.append(row)
+                string.append(int(e))
+            instance.append(string)
     return instance
 
 
 # INSTANCE GENERATOR FUNCTIONS:
-def gen_instance(m:int,n:int,seed:int):
+def gen_instance(m:int,n:int,alphabet:str,seed:int):
     assert m >= 0
     assert n >= 0
+    if alphabet == "lowercase":
+        instance_alphabet = string.ascii_lowercase
+    elif alphabet == "uppercase":
+        instance_alphabet = string.ascii_uppercase
+    elif alphabet == "digits":
+        instance_alphabet = string.digits
+    elif alphabet == "lowercase_and_digits":
+        instance_alphabet = string.ascii_lowercase + string.digits
+    elif alphabet == "uppercase_and_digits":
+        instance_alphabet = string.ascii_uppercase + string.digits
+    elif alphabet == "lowercase_uppercase":
+        instance_alphabet = string.ascii_letters
+    else: # alphabet == "all"
+        instance_alphabet = string.ascii_letters + string.digits
     random.seed(seed)
-    matrix=[[random.randint(0,1) for j in range(n) ] for i in range(m)]
-    return matrix
+    problem = []
+    problem.append([random.choice(instance_alphabet) for i in range(m)])
+    problem.append([random.choice(instance_alphabet) for i in range(n)])
+    return problem
 
 
 def visualizza(matrix):

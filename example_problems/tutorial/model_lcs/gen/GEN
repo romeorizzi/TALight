@@ -1,34 +1,58 @@
 # generator parameters: 
-# m, n, solvable, seed
-#   m (int)  number of rows   of the pirellone 0/1-matrix
-#   n (int)  number of columns  of the pirellone 0/1-matrix
-#   solvable (0/1) if the pirellone gotta be solvable then 1, if the pirellone gotta be unsolvable then 0
+# m, n, alphabet, seed
+#   m (int)  number of character of the first string
+#   n (int)  number of character of the second string
+#   alphabet (str) the alphabet over which the two strings must be generated
 #   seed (int)
 
 add_format: dat
-add_format: only_matrix.txt
+add_format: only_strings.txt
 add_format: with_m_and_n.txt
 
 suite: public_examples
-COPY: hardcoded/instance1.only_matrix.txt
+COPY: hardcoded/instance1.only_strings.txt
 COPY: hardcoded/instance1.with_m_and_n.txt
 COPY: hardcoded/instance1.dat
 
-suite: m_and_n_at_most_5_solvable
-#     m,  n, solvable, seed
-GEN:  4   4  1         777777
-GEN:  4   4  1         777666
-GEN:  5   4  1         777123
-GEN:  4   5  1         777456
-GEN:  5   5  1         132777
-GEN:  5   5  1         456777
+suite: m_and_n_at_least_5_lowercase
+#     m,  n, alphabet, seed
+GEN:  5   5  lowercase 132777
+GEN:  10  10 lowercase 777777
+GEN:  20  25 lowercase 777456
 
-suite: m_and_n_at_most_5_unsolvable
-#     m,  n, solvable, seed
-GEN:  4   4  0         777777
-GEN:  4   4  0         777666
-GEN:  5   4  0         777123
-GEN:  4   5  0         777456
-GEN:  5   5  0         132777
-GEN:  5   5  0         456777
+suite: m_and_n_at_least_5_all
+#     m,  n, alphabet, seed
+GEN:  5   5  all       132777
+GEN:  10  10 all       777777
+GEN:  20  25 all       777456
 
+suite: m_and_n_at_least_5_uppercase
+#     m,  n, alphabet, seed
+GEN:  5   5  uppercase 132777
+GEN:  10  10 uppercase 777777
+GEN:  20  25 uppercase 777456
+
+suite: m_and_n_at_least_5_digits
+#     m,  n, alphabet, seed
+GEN:  5   5  digits    132777
+GEN:  10  10 digits    777777
+GEN:  25  25 digits    777123
+GEN:  20  25 digits    777456
+
+suite: m_and_n_at_least_5_lowercase_and_digits
+#     m,  n, alphabet,            seed
+GEN:  5   5  lowercase_and_digits 132777
+GEN:  10  10 lowercase_and_digits 777777
+GEN:  20  25 lowercase_and_digits 777456
+
+suite: m_and_n_at_least_5_uppercase_and_digits
+#     m,  n, alphabet,            seed
+GEN:  5   5  uppercase_and_digits 132777
+GEN:  10  10 uppercase_and_digits 777777
+GEN:  20  25 uppercase_and_digits 777456
+
+suite: m_and_n_at_least_5_lowercase_uppercase
+#     m,  n, alphabet,            seed
+GEN:  5   5  lowercase_uppercase  132777
+GEN:  10  10 lowercase_uppercase  777777
+GEN:  20  25 lowercase_uppercase  777456

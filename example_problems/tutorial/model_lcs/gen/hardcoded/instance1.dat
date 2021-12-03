@@ -1,17 +1,7 @@
-param M := 5;  # Number of rows
-
-param N := 5;  # Number of columns
-
-param PIRELLONE :  1 2 3 4 5 :=
-
-              1    1 0 1 1 0
-
-              2    0 1 0 0 1
-
-              3    1 0 1 1 0 
-
-              4    0 1 0 0 1
-
-              5    0 1 0 0 1 ;
-
+param M := 5;  # Number of characters of the first string
+param N := 5;  # Number of characters of the second string
+param FIRST_STRING : 1 2 3 4 5 :=
+                     r s u q c;
+param SECOND_STRING : 1 2 3 4 5 :=
+                      p z u y a;
 end;
