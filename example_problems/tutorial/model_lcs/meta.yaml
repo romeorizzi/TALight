@@ -3,8 +3,6 @@
 public_folder: public
 services:
   gimme_instance:
-  # alphabet significa: solo lettere minuscole, solo lettere maiuscole, solo numeri, le precedenti a coppie o tutte e tre le precedenti?
-  # in tal caso bisogna mettere un parametro per "alphabet"
     description: 'Call this service to get an instance for the Longest Subsequence Problem (LCS), i.e., a pair of strings s and t over a same alphabet, and of length m and n, respectively. You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall an LCS instance you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random LCS instance we mean the triple <m,n,alphabet,seed>.\n   The two strings s and t comprising the instance ere returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing LCS instances is the following: the first line contains the two integers m and n; then follow 2 lines, the first contains the string s and the second contains the string t.'
     evaluator: [python,services/gimme_instance_server.py]
     args:
@@ -23,8 +21,8 @@ services:
         default: 4
         explain: Length of the string t.
       alphabet:
-        regex: ^(lowercase|uppercase|digits|lowercase_and_digits|uppercase_and_digits|lowercase_uppercase|all)$
-        default: digits
+        regex: ^(dna|lowercase|lowercase_uppercase)$
+        default: dna
         explain: The alphabet over which the two strings will be created.
       seed:
         explain: 'Set up this argument when you hold the seed and the instance descriptor of the specific instance that you want to be produced by the service (whether downloaded in local as a file or displayed on your terminal screen). By an \''instance descriptor\'' we mean a triple <m,n,alphabet,seed> that you may have got from previous calls to this or other services for this problem. When this argument is left to its default value (random_seed) then the service first chooses a seed at random (and communicates it to the user) and then produces the pseudo-random instance <m,n,seed>.'
@@ -57,19 +55,17 @@ services:
         default: it
   
   gimme_sol:
-    description: 'This service provides you with a solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed.'
+    description: 'This service provides you with a solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, alphabet, and its random seed.'
     evaluator: [python, services/gimme_sol_server.py]
     args:
       instance_spec:
-        regex: ^(random|seed|terminal)$
-        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
-        # regex: ^(random|seed|terminal|TA_send_files_bot)$
+        regex: ^(random|seed|terminal|TA_send_files_bot)$
         default: random
-        explain: 'choose the way to input your pirellone among:' 
+        explain: 'choose the way to input your two strings among:' 
         explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,alphabet,seed>.'
         explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,alphabet,seed>.'
-        explain3: '[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations.'
-        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt.'
+        explain3: '[terminal] you enter your instance (two strings) directly by either typing it string by string or through cut and paste operations.'
+        explain4: '[TA_send_files_bot] with this, you can send to the service an instance (two strings) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_lcs/bots/ directory. Call the service with: rtal connect model_lcs gimme_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -78,6 +74,10 @@ services:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
         explain: Length of the string t.
+      alphabet:
+        regex: ^(dna|lowercase|lowercase_uppercase)$
+        default: dna
+        explain: The alphabet over which the two strings will be created.
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -191,67 +191,6 @@ services:
         default: subset
         explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
         example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-  
-  # TODO
-  eval_SAT_model:
-    evaluator: [python, services/eval_SAT_model_server.py]
-    args:
-      goal:
-        regex: ^(correct|efficient)$
-        default: correct
-        explain: Set your goal (efficient includes also correct).
-      with_check_of_sol:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
-      seed:
-        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-
-  # TODO
-  eval_MiniZinc_model:
-    evaluator: [python, services/eval_MiniZinc_model_server.py]
-    args:
-      goal:
-        regex: ^(correct|efficient)$
-        default: correct
-        explain: Set your goal (efficient includes also correct).
-      with_check_of_sol:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
-      seed:
-        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-  
-  # TODO
-  eval_your_solver_bot:
-    description: 'This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered solvable random instance (also met with other services): a solvable random instance can be reconstructed from m, n, and its random seed.'
-    evaluator: [python, services/eval_decision_server.py]
-    args:
-      goal:
-        regex: ^(correct|efficient)$
-        default: correct
-        explain: Set your goal (efficient includes also correct).
-      with_check_of_sol:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
-      seed:
-        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

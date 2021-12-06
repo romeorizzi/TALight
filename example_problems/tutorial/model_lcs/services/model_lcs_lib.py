@@ -19,7 +19,7 @@ DEFAULT_FORMAT='only_strings.txt'
 
 
 # CONVERTERS FUNCTIONS:
-def subset_to_seq(subset_sol):
+def subset_to_subsequence(subset_sol):
     """Convert subset solution (e.g.: [[0,1],[0,0,1]]) into sequence solution (e.g.: ['r2','c3'])"""
     m = len(subset_sol[0])
     n = len(subset_sol[1])
@@ -233,24 +233,38 @@ def gen_instance(m:int,n:int,alphabet:str,seed:int):
     assert n >= 0
     if alphabet == "lowercase":
         instance_alphabet = string.ascii_lowercase
-    elif alphabet == "uppercase":
-        instance_alphabet = string.ascii_uppercase
-    elif alphabet == "digits":
-        instance_alphabet = string.digits
-    elif alphabet == "lowercase_and_digits":
-        instance_alphabet = string.ascii_lowercase + string.digits
-    elif alphabet == "uppercase_and_digits":
-        instance_alphabet = string.ascii_uppercase + string.digits
     elif alphabet == "lowercase_uppercase":
         instance_alphabet = string.ascii_letters
-    else: # alphabet == "all"
-        instance_alphabet = string.ascii_letters + string.digits
+    else: # alphabet == "dna"
+        instance_alphabet = "ACGT"
     random.seed(seed)
     problem = []
     problem.append([random.choice(instance_alphabet) for i in range(m)])
     problem.append([random.choice(instance_alphabet) for i in range(n)])
     return problem
 
+
+# CORE FUNCTIONS:
+def get_sol(s, t, m, n):
+    risp = [[0]*(n+1) for _ in range(m+1)]
+    for i in range(m):
+        for j in range(n):
+            if s[i] == t[j]:
+                risp[i+1][j+1] = 1 + risp[i][j]
+            else:
+                risp[i+1][j+1] = max(risp[i+1][j],risp[i][j+1])
+
+    solution = {}
+    while m > 0 and n > 0:  
+        if s[m-1] == t[n-1]:
+            solution[(m-1, n-1)] = s[m-1]
+            m-=1
+            n-=1
+        elif risp[m-1][n] > risp[m][n-1]:
+            m-=1
+        else:
+            n-=1
+    return solution
 
 def visualizza(matrix):
     index=pd.Index([str(i) for i in range(len(matrix))])

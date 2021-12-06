@@ -12,8 +12,7 @@ args_list = [
     ('instance_spec',str),
     ('m',int),
     ('n',int),
-    ('alphabet', str), #ascii_letters, ascii_lower[upper]case, digits
-    # seed è già presente in ENV
+    ('alphabet', str),
     ('instance_id',int),
     ('format',str),
     ('silent',bool),
