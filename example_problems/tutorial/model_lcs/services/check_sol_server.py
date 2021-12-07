@@ -98,7 +98,7 @@ if ENV['sol_style'] == 'annotated_subseq':
         )
         if line[0] != "#end":
             if ll.check_input(TAc, LANG, ENV, line):
-                user_sol[(int(line[1]), int(line[2]))] = line[0]    
+                user_sol[(int(line[1]), int(line[2]))] = line[0]
 
 if ll.check_sol(TAc, LANG, ENV, user_sol, instance[0], instance[1]):
     TAc.print(LANG.render_feedback("correct-sol", 'Your solution is correct. Well done! You have found the Longest Common Subsequence.'), "green", ["bold"]) 

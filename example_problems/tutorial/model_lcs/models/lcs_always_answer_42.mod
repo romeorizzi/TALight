@@ -5,13 +5,15 @@
 /  2. as a testing/checking/debugging tool for the problem-maker when crafting the problem. A further piece of advice to the problem-maker il placed at the bottom of this file. 
 */
 
-param M integer, >= 1;  # Numero di righe del pirellone
-param N integer, >= 1;  # Numero di colonne del pirellone
+param M integer, >= 1;  # Number of characters of the first string
+param N integer, >= 1;  # Number of characters of the second string
 
-set Rows := 1..M;  # Insieme degli indici di riga
-set Cols := 1..N;  # Insieme degli indici di colonna
+set S_indexes := 1..M;  # Set of indexes for the first string
+set T_indexes := 1..N;  # Set of indexes for the second string
 
-param PIRELLONE{Rows, Cols} binary; # 0 = cella spenta, 1 = accesa.
+set STRINGS;
+param FIRST_STRING {STRINGS} symbolic;
+param SECOND_STRING {STRINGS} symbolic;
 
 printf "42\n" > "output.txt";
 

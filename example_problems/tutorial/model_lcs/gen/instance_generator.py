@@ -4,10 +4,10 @@ from sys import argv, exit
 import model_lcs_lib as ll
 
 
-def main(n, m, alphabet, gen_seed, format):
+def main(m, n, alphabet, gen_seed, format):
     # Automatic cast:
-    n = int(n)
     m = int(m)
+    n = int(n)
     alphabet = alphabet
     gen_seed = int(gen_seed)
 
