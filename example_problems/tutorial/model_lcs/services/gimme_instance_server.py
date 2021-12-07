@@ -44,9 +44,9 @@ else:
 if ENV['silent']:
     print(instance_str)
 else:
-    TAc.print(LANG.render_feedback("instance-title", f'The first string of {ENV["m"]} character and the second string of {ENV["n"]} character, over the alphabet {ENV["alphabet"]} are:'), "yellow", ["bold"])
-    TAc.print(ll.instance_to_str(instance, format=ENV["format"]), "white", ["bold"])
-    if not ENV['instance_spec'] == 'instance_id':
+    TAc.print(LANG.render_feedback("instance-title", f'The first string of {len(instance[0])} character and the second string of {len(instance[1])} character are:'), "yellow", ["bold"])
+    TAc.print(instance_str, "white", ["bold"])
+    if not ENV['instance_spec'] == 'catalogue1':
         TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
 
 exit(0)

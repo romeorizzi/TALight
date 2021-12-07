@@ -20,39 +20,14 @@ GEN:  5   5  lowercase 132777
 GEN:  10  10 lowercase 777777
 GEN:  20  25 lowercase 777456
 
-suite: m_and_n_at_least_5_all
-#     m,  n, alphabet, seed
-GEN:  5   5  all       132777
-GEN:  10  10 all       777777
-GEN:  20  25 all       777456
-
-suite: m_and_n_at_least_5_uppercase
-#     m,  n, alphabet, seed
-GEN:  5   5  uppercase 132777
-GEN:  10  10 uppercase 777777
-GEN:  20  25 uppercase 777456
-
-suite: m_and_n_at_least_5_digits
-#     m,  n, alphabet, seed
-GEN:  5   5  digits    132777
-GEN:  10  10 digits    777777
-GEN:  25  25 digits    777123
-GEN:  20  25 digits    777456
-
-suite: m_and_n_at_least_5_lowercase_and_digits
-#     m,  n, alphabet,            seed
-GEN:  5   5  lowercase_and_digits 132777
-GEN:  10  10 lowercase_and_digits 777777
-GEN:  20  25 lowercase_and_digits 777456
-
-suite: m_and_n_at_least_5_uppercase_and_digits
-#     m,  n, alphabet,            seed
-GEN:  5   5  uppercase_and_digits 132777
-GEN:  10  10 uppercase_and_digits 777777
-GEN:  20  25 uppercase_and_digits 777456
-
 suite: m_and_n_at_least_5_lowercase_uppercase
 #     m,  n, alphabet,            seed
 GEN:  5   5  lowercase_uppercase  132777
 GEN:  10  10 lowercase_uppercase  777777
 GEN:  20  25 lowercase_uppercase  777456
+
+suite: m_and_n_at_least_5_dna
+#     m,  n, alphabet,  seed
+GEN:  5   5  dna        132777
+GEN:  10  10 dna        777777
+GEN:  20  25 dna        777456

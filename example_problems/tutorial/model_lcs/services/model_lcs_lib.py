@@ -101,6 +101,15 @@ def process_user_sol(ENV, TAc, LANG, raw_sol, m, n):
     
 
 # TO STRING
+def annotated_subseq_to_str(solution):
+    return ('\n'.join([f'{solution.get(key)} {key[0]} {key[1]}' for key in sorted(solution)]))
+
+def subsequence_to_str(sequence):
+    return " ".join(sequence.get(key) for key in sorted(sequence))
+
+def sequence_to_str(sequence):
+    return " ".join(e for e in sequence)
+
 def seq_to_str(seq_sol):
     """From a sequence solution (e.g.: ['r2']) returns its string form (e.g.: 'r2')"""
     return ' '.join(seq_sol)
@@ -152,11 +161,7 @@ def instance_to_str(problem, format='default'):
 def instance_to_txt(problem, style='only_strings'):
     """This function returns the string representation of the given two strings instance according to the indicated style"""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
-    output = ""
-    if style == "with_m_and_n":
-        output = f"{len(problem[0])} {len(problem[1])}\n"
-    output += '\n'.join((' '.join(str(char) for char in string) for string in problem))
-    return output
+    return '\n'.join(sequence_to_str(string) for string in problem)
 
 
 def instance_to_dat(problem, style=''):
@@ -200,11 +205,11 @@ def get_instance_from_txt(problem, style='only_strings'):
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     instance = list()
     lines = problem.split('\n')
-    if format == "with_m_and_n":
+    if style == "with_m_and_n":
         lines = lines[1:]
     for line in lines:
         if len(line) != 0:
-            instance.append([e for e in line.split()])
+            instance.append(line.split())
     return instance
 
 
@@ -220,10 +225,7 @@ def get_instance_from_dat(problem, style=''):
         # Filter the problem lines
         if line != '' and line[:5] != 'param' and line[:3] != 'end':
             line = line.replace(';', '') #ignore ;
-            string = list()
-            for e in line.split()[1:]:
-                string.append(int(e))
-            instance.append(string)
+            instance.append(line.split())
     return instance
 
 
@@ -231,12 +233,7 @@ def get_instance_from_dat(problem, style=''):
 def gen_instance(m:int,n:int,alphabet:str,seed:int):
     assert m >= 0
     assert n >= 0
-    if alphabet == "lowercase":
-        instance_alphabet = string.ascii_lowercase
-    elif alphabet == "lowercase_uppercase":
-        instance_alphabet = string.ascii_letters
-    else: # alphabet == "dna"
-        instance_alphabet = "ACGT"
+    instance_alphabet = get_alphabet(alphabet)
     random.seed(seed)
     problem = []
     problem.append([random.choice(instance_alphabet) for i in range(m)])
@@ -245,7 +242,16 @@ def gen_instance(m:int,n:int,alphabet:str,seed:int):
 
 
 # CORE FUNCTIONS:
-def get_sol(s, t, m, n):
+def get_alphabet(alphabet):
+    if alphabet == "lowercase":
+        return string.ascii_lowercase
+    elif alphabet == "lowercase_uppercase":
+        return string.ascii_letters
+    else: # alphabet == "dna"
+        return "ACGT"
+
+
+def get_sol(s, t, m, n, sol_style="length"):
     risp = [[0]*(n+1) for _ in range(m+1)]
     for i in range(m):
         for j in range(n):
@@ -253,18 +259,89 @@ def get_sol(s, t, m, n):
                 risp[i+1][j+1] = 1 + risp[i][j]
             else:
                 risp[i+1][j+1] = max(risp[i+1][j],risp[i][j+1])
+    if sol_style == "length":
+        return risp[m][n]
+    else:
+        solution = {}
+        while m > 0 and n > 0:
+            if s[m-1] == t[n-1]:
+                solution[(m-1, n-1)] = s[m-1]
+                m-=1
+                n-=1
+            elif risp[m-1][n] > risp[m][n-1]:
+                m-=1
+            else:
+                n-=1
+        return solution
 
-    solution = {}
-    while m > 0 and n > 0:  
-        if s[m-1] == t[n-1]:
-            solution[(m-1, n-1)] = s[m-1]
-            m-=1
-            n-=1
-        elif risp[m-1][n] > risp[m][n-1]:
-            m-=1
-        else:
-            n-=1
-    return solution
+
+def check_input(TAc, LANG, ENV, line):
+    if line[0] not in string.ascii_letters:
+        TAc.print(LANG.render_feedback('error-first-not-character', '#ERROR: The first element must be the single common character.'), 'red', ['bold'])
+        exit(0)
+    if line[1] not in string.digits:
+        TAc.print(LANG.render_feedback('error-second-not-digit', '#ERROR: The second element must be a digit, corresponding to the index of the common character in the first string.'), 'red', ['bold'])
+        exit(0)
+    if line[2] not in string.digits:
+        TAc.print(LANG.render_feedback('error-third-not-digit', '#ERROR: The third element must be a digit, corresponding to the index of the common character in the second string.'), 'red', ['bold'])
+        exit(0)        
+    if int(line[1]) not in range(ENV['m']):
+        TAc.print(LANG.render_feedback('error-second-not-index', f"#ERROR: The second element must be the index of the single common character in the first string. Must be in the range {{0, {ENV['m']}}}."), 'red', ['bold'])
+        exit(0)
+    if int(line[2]) not in range(ENV['n']):
+        TAc.print(LANG.render_feedback('error-second-not-index', f"#ERROR: The second element must be the index of the single common character in the first string.. Must be in the range {{0, {ENV['n']}}}."), 'red', ['bold'])
+        exit(0)
+    return True
+
+
+def check_sol(TAc, LANG, ENV, user_sol, s, t):
+    sol = get_sol(s, t, len(s), len(t))
+    if sol != len(user_sol):
+        TAc.print(LANG.render_feedback('error-wrong-sol', f'#ERROR: Your solution differs from the correct one. Your length is {len(user_sol)}, the correct solution length is {sol}.'), 'red', ['bold'])
+        exit(0) 
+    if ENV['sol_style'] == 'subsequence':
+        i = 0
+        j = 0
+        for char in user_sol:
+            s_found = True
+            t_found = True
+            while i < len(s) and s_found:
+                if char == s[i]:
+                    s_found = False
+                i += 1
+            while j < len(t) and t_found:
+                if char == t[j]:
+                    t_found = False
+                j += 1
+            if s_found:
+                TAc.print(LANG.render_feedback('error-no-matching-char', f'#ERROR: Your solution include a character ({char}) which is not included in the one of the first string.'), 'red', ['bold'])
+                exit(0)
+            if t_found:
+                TAc.print(LANG.render_feedback('error-no-matching-char', f'#ERROR: Your solution include a character ({char}) which is not included in the one of the second string.'), 'red', ['bold'])
+                exit(0)
+    if ENV['sol_style'] == 'annotated_subseq':
+        sorted_keys = sorted(user_sol)
+        temp_s = -1
+        temp_t = -1
+        for pair in sorted_keys:
+            if pair[0] == temp_s:
+                TAc.print(LANG.render_feedback('error-index-s-duplicate', f'#ERROR: The index {pair[0]} has been referenced twice. You can select a character of a string just one time.'), 'red', ['bold'])
+                exit(0)
+            if pair[1] == temp_t:
+                TAc.print(LANG.render_feedback('error-index-t-duplicate', f'#ERROR: The index {pair[1]} has been referenced twice. You can select a character of a string just one time.'), 'red', ['bold'])
+                exit(0)
+            if pair[1] < temp_t:
+                TAc.print(LANG.render_feedback('error-index-t-unordered', f'#ERROR: The index {pair[1]} is lower than the previous index {temp_t}, but indexes, for both s and t string, must be referenced once and in non decreasing order.'), 'red', ['bold'])
+                exit(0)
+            if s[pair[0]] != user_sol.get(pair):
+                TAc.print(LANG.render_feedback('error-s-no-matching-char', f'#ERROR: The char in position {pair[0]} of the first string is not: {s[pair[0]]}'), 'red', ['bold'])
+                exit(0)
+            if user_sol.get(pair) != t[pair[1]]:
+                TAc.print(LANG.render_feedback('error-t-no-matching-char', f'#ERROR: The char in position {pair[1]} of the second string is not: {t[pair[1]]}'), 'red', ['bold'])
+                exit(0) 
+            temp_s = pair[0]
+            temp_t = pair[1]
+    return True
 
 def visualizza(matrix):
     index=pd.Index([str(i) for i in range(len(matrix))])
