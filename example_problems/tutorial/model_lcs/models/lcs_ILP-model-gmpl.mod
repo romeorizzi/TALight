@@ -43,5 +43,4 @@ for{i in S_indexes} {
     }
 	printf "\n" >> "solution.txt";
 }
-printf "\n" >> "solution.txt";
 

@@ -161,33 +161,29 @@ services:
         default: it
   
   eval_GMPL_model:
-    description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_style`. Examples of the supported dat styles are given in the folder `examples` where each example instance is encoded in every supported dat style (filename and extensions in the form `instance_name`.`dat_style`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance (the service stops at the first failure). You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_pirellone eval_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py path_to_model_file_dir/your_pirellone.mod'
+    description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_style`. Examples of the supported dat styles are given in the folder `examples` where each example instance is encoded in every supported dat style (filename and extensions in the form `instance_name`.`dat_style`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance (the service stops at the first failure). You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_lcs eval_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py path_to_model_file_dir/your_lcs.mod'
     evaluator: [python, services/eval_GMPL_model_server.py]
     args:
       goal:
-        regex: ^(public_examples|m_and_n_at_most_5|m_and_n_at_most10|m_and_n_at_most20|m_and_n_at_most30|m_and_n_at_most50|m_and_n_at_most100|m_and_n_at_most200|m_and_n_at_most300)$
-        default: m_and_n_at_most_5
+        regex: ^(public_examples|m_and_n_at_least_5_dna|m_and_n_at_least_20_lowercase|m_and_n_at_least_60_lowercase_uppercase)$
+        default: m_and_n_at_least_5_dna
+        #controllare
         explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
-      type_of_check:
-        regex: ^(no|yes|min)$
-        default: no
-        explain: 'choose among the following options:' 
-        explain1: '[no] the `solution.txt` file written by your model is considered ok if it begins with the string \''NO SOLUTION\'' if and only if the testcase pirellone instance has no solution.'
-        explain2: '[yes] beyond the above requirement, for all solvable instances, the `solution.txt` file should contain a valid solution which will be checked by the service.'
-        explain3: '[min] beyond the above requirement, for all solvable instances, the `solution.txt` should contain the minimum solution.'
-      only_solvable_instances:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1, then your model will be tested only on instances that are guaranteed to possess a solution.
+      #controllare se serve
+      # type_of_check:
+      #   regex: ^(no|yes)$
+      #   default: no
+      #   explain: 'choose among the following options:' 
+      #   explain1: '[no] the `solution.txt` file written by your model is considered ok if it begins with the string \''NO SOLUTION\'' if and only if the testcase pirellone instance has no solution.'
+      #   explain2: '[yes] beyond the above requirement, for all solvable instances, the `solution.txt` file should contain a valid solution which will be checked by the service.'
       dat_style:
         regex: ^(default)$
         default: default
         explain: 'choose how to encode the dat file. For now there is only one format'
       sol_style:
-        regex: ^(seq|subset)$
-        default: subset
-        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
-        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
+        regex: ^(subsequence|annotated_subseq)$
+        default: subsequence
+        explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

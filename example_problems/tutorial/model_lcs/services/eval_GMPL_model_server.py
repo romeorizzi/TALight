@@ -1,15 +1,15 @@
-#!/usr/bin/env python3
+    #!/usr/bin/env python3
 from sys import exit, path
 from multilanguage import Env, Lang, TALcolors
 
-import model_asteroid_lib as al
+import model_lcs_lib as ll
 from math_modeling import ModellingProblemHelper, get_problem_path_from
 
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('goal',str),
-    ('type_of_check',str),
+    # ('type_of_check',str),
     ('sol_style',str),
     ('dat_style',str),
 ]
@@ -22,23 +22,16 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START MATH_MODELING:
 # Create list of test directory names to be test from the goal
 tests_dirname_list = ["public_examples"]
-tmp_tests_list = [  "m_and_n_at_most_5",   \
-                    "m_and_n_at_most_10",  \
-                    "m_and_n_at_most_20",  \
-                    "m_and_n_at_most_30",  \
-                    "m_and_n_at_most_50",  \
-                    "m_and_n_at_most_100", \
-                    "m_and_n_at_most_200", \
-                    "m_and_n_at_most_300"  ]
+tmp_tests_list = [  "m_and_n_at_least_5_dna", "m_and_n_at_least_20_lowercase", "m_and_n_at_least_60_lowercase_uppercase" ]
 # Remove useless test
-for test in reversed(tmp_tests_list):
+for test in tmp_tests_list:
+    tests_dirname_list.append(test)
     if test == ENV['goal']:
         break
-    tmp_tests_list.remove(test)
 
 # Get formats
 dat_style = ''                # default
-txt_style = 'only_matrix'     # default
+txt_style = 'only_strings'     # default
 
 # Initialize ModellingProblemHelper
 mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
@@ -67,26 +60,31 @@ for test_dir in tests_dirname_list:
 
         # Get input
         input_str = mph.get_file_str_from_path(input_file_path)
-        instance = al.get_instance_from_txt(input_str, style=txt_style)
-        m = len(instance)
-        n = len(instance[0])
+        instance = ll.get_instance_from_txt(input_str, style=txt_style)
+        m = len(instance[0])
+        n = len(instance[1])
 
         # Perform optimal solution
-        # TODO 1: get the optimal solution
-        opt_sol_subset = al.min_cover(m,n,instance)
+        annotated_subseq_sol = ll.get_sol(instance[0], instance[1], m, n)
         
         # Perform solution with GPLSOL
         mph.run_GLPSOL(dat_file_path)
 
         # Get raw solution and parse it
         raw_sol = mph.get_raw_sol()
-        gplsol_sol = al.process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
+        gplsol_sol = ll.process_user_sol(TAc, LANG, raw_sol, instance)
 
-        # DEBUG:
-        # print(f'opt_sol_subset: {opt_sol_subset}')
-        # print(f'gplsol_sol:     {gplsol_sol}')
-            
-        # Check the correctness of the user solution
-        # TODO 2: check the gplsol_solution
+        user_sol_subsequence = ll.annotated_subseq_to_sequence(gplsol_sol)
+        user_sol_annotated_subseq = gplsol_sol
+
+        if ENV['sol_style'] == 'subsequence':
+            if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
+                TAc.OK()
+                TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
+        elif ENV['sol_style'] == 'annotated_subseq':
+            if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
+                TAc.OK()
+                TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
+
 
 exit(0)

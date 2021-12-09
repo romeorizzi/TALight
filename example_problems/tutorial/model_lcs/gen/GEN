@@ -14,20 +14,20 @@ COPY: hardcoded/instance1.only_strings.txt
 COPY: hardcoded/instance1.with_m_and_n.txt
 COPY: hardcoded/instance1.dat
 
-suite: m_and_n_at_least_5_lowercase
-#     m,  n, alphabet, seed
-GEN:  5   5  lowercase 132777
-GEN:  10  10 lowercase 777777
-GEN:  20  25 lowercase 777456
-
-suite: m_and_n_at_least_5_lowercase_uppercase
-#     m,  n, alphabet,            seed
-GEN:  5   5  lowercase_uppercase  132777
-GEN:  10  10 lowercase_uppercase  777777
-GEN:  20  25 lowercase_uppercase  777456
-
 suite: m_and_n_at_least_5_dna
 #     m,  n, alphabet,  seed
 GEN:  5   5  dna        132777
 GEN:  10  10 dna        777777
 GEN:  20  25 dna        777456
+
+suite: m_and_n_at_least_20_lowercase
+#     m,  n, alphabet, seed
+GEN:  25  25 lowercase 132777
+GEN:  30  30 lowercase 777777
+GEN:  50  50 lowercase 777456
+
+suite: m_and_n_at_least_60_lowercase_uppercase
+#     m,   n,  alphabet,            seed
+GEN:  60   60  lowercase_uppercase  132777
+GEN:  80   80  lowercase_uppercase  777777
+GEN:  99   99 lowercase_uppercase  777456

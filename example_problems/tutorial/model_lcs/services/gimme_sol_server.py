@@ -62,7 +62,7 @@ solution = ll.get_sol(instance[0], instance[1], ENV['m'], ENV['n'], ENV['sol_sty
 TAc.print(LANG.render_feedback("solution-title", f"The solution for this instance is:"), "green", ["bold"])
 
 if ENV['sol_style'] == 'subsequence':
-    TAc.print(LANG.render_feedback("solution", f'{ll.subsequence_to_str(solution)}'), "white", ["reverse"])
+    TAc.print(LANG.render_feedback("solution", f'{ll.sequence_to_str(ll.annotated_subseq_to_sequence(solution))}'), "white", ["reverse"])
 elif ENV['sol_style'] == 'annotated_subseq':
     TAc.print(LANG.render_feedback("legend-annotated_subseq", f"(LCS Character - First string index - Second string index)"), "white", ["bold"])
     TAc.print(LANG.render_feedback("solution", f'{ll.annotated_subseq_to_str(solution)}'), "white", ["reverse"])
