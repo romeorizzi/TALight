@@ -11,11 +11,11 @@ def startAlgo():
     # Getting graph
     while spoon[:len("graph:")] != "graph:":
         # Getting number of nodes
-        if spoon[:len("#   number of nodes:")] == '#   number of nodes:':
+        if spoon[:len("#   number of nodes:")] == "#   number of nodes:":
             numNodes = spoon.split(':')[1]
             numNodes = int("".join(numNodes.split()))
         # Getting number archs
-        if spoon[:len("#   number of arcs: ")] == '#   number of arcs: ':
+        if spoon[:len("#   number of arcs: ")] == "#   number of arcs: ":
             m = spoon.split(':')[1]
             m = int("".join(m.split()))
         spoon = input().strip()

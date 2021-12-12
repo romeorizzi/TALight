@@ -12,12 +12,12 @@ import graph_connectivity_lib as gcl
 problem="graph_connectivity"
 service="check_certificate_of_nonconnectivity"
 args_list = [
-    ('n',int), 
+    ("n",int), 
     #('m',int), 
-    ('how_to_input_the_graph',str), 
-    ('the_bipartition',str),
-    ('silent',int),
-    ('lang',str),
+    ("how_to_input_the_graph",str), 
+    ("the_bipartition",str),
+    ("silent",int),
+    ("lang",str),
 ]
 
 ENV = Env(args_list)
@@ -26,17 +26,17 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 #TAc.print(LANG.opening_msg, "green")
 
 
-m = ENV['n'] - 1
+m = ENV["n"] - 1
 if ENV["how_to_input_the_graph"] == "lazy":
-    ENV.arg['how_to_input_the_graph'] = gcl.gen_instance_seed(False)
+    ENV.arg["how_to_input_the_graph"] = gcl.gen_instance_seed(False)
 
-g, graph_print, edges = gcl.generate_graph(ENV["n"], m, int(ENV['how_to_input_the_graph']), TAc=TAc, LANG=LANG)
+g, graph_print, edges = gcl.generate_graph(ENV["n"], m, int(ENV["how_to_input_the_graph"]), TAc=TAc, LANG=LANG)
 
 # print the graph + info
-TAc.print("#start:", "yellow")
-TAc.print(LANG.render_feedback("assigned-instance", f"# The assigned instance is:\n#   number of nodes: {ENV['n']}\n#   number of arcs: {m}\n#   Seed: {ENV['how_to_input_the_graph']}"), "yellow")
+TAc.print('#start:', "yellow")
+TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of arcs: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
 
-TAc.print("graph:", "yellow")
+TAc.print('graph:', "yellow")
 TAc.print(graph_print, "white")
 
 #stderr.write("seed: " + ENV['how_to_input_the_graph']+"\n")
@@ -57,14 +57,14 @@ cert_conn = []
 cert_non_conn = []
 
 #take the bipartition from input if "lazy"
-if ENV['the_bipartition'] == "lazy":
-    TAc.print(LANG.render_feedback("give-bipartition","# give me your bipartition in the format as \'the_bipartition\' argument"),"yellow")
-    ENV.arg['the_bipartition'] = input()
+if ENV["the_bipartition"] == "lazy":
+    TAc.print(LANG.render_feedback("give-bipartition",'# give me your bipartition in the format as \'the_bipartition\' argument'),"yellow")
+    ENV.arg["the_bipartition"] = input()
 
     # TODO: check regex
 
 # Splitting 'the_bipartition'
-cert_conn, cert_non_conn = ENV['the_bipartition'].split("versus")
+cert_conn, cert_non_conn = ENV["the_bipartition"].split("versus")
 
 cert_conn = cert_conn.split()
 cert_non_conn = cert_non_conn.split()
@@ -114,7 +114,7 @@ stderr.write("equals: " + str(equals))
 
 # If correct
 if(equals):
-    if(ENV['silent'] == 0):
+    if(ENV["silent"] == 0):
         TAc.print(LANG.render_feedback("correct-certificate",'Good! Your certificate is correct'),"green")
 else: # If it's wrong
     TAc.print(LANG.render_feedback("wrong-certificate-lets-check",'WRONG, the certificate you gave me is not a correct spanning tree..Let\'s check it:'),"red")
@@ -122,10 +122,10 @@ else: # If it's wrong
     conn_correct = set(cert_conn).intersection(set(conn_list))
     conn_correct = list(map(str, conn_correct))
 
-    TAc.print(LANG.render_feedback("right-connected","These are the connected items you guessed at: " + ",".join(conn_correct)),"white")
+    TAc.print(LANG.render_feedback("right-connected",'These are the connected items you guessed at: ' + ",".join(conn_correct)),"white")
     #look at the UNCONNECTED certificate items that is correct
     conn_wrong = set(cert_non_conn).intersection(set(nonconn_list))
     conn_wrong = list(map(str, conn_wrong))
 
-    TAc.print(LANG.render_feedback("wrong-connected","\nThese, on the other hand, are the unconnected items you guessed at: " + ",".join(conn_wrong)),"white")
+    TAc.print(LANG.render_feedback("wrong-connected",'\nThese, on the other hand, are the unconnected items you guessed at: ' + ",".join(conn_wrong)),"white")
 

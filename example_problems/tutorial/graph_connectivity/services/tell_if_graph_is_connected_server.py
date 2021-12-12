@@ -10,9 +10,9 @@ import graph_connectivity_lib as gcl
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('with_yes_certificate',bool), 
-    ('with_no_certificate',bool),
-    ('input_mode',str),
+    ("with_yes_certificate",bool), 
+    ("with_no_certificate",bool),
+    ("input_mode",str),
 ]
 
 ENV = Env(args_list)
@@ -21,7 +21,7 @@ LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 
-if ENV['input_mode'] == 'terminal':
+if ENV["input_mode"] == "terminal":
     TAc.print(LANG.render_feedback("ok-congruent", f'#? waiting for your directed graph.\nFormat: each line two numbers separated by space. Then follow m lines, one for each arc, each with two numbers in the interval [0,n). These specify the tail node and the head node of the arc, in this order.\nBounds: n<=1000, m<=10000.\nAny line beggining with the \'#\' character is ignored.\nIf you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the \'rtal connect\' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), 'yellow')
 
     # Input prima riga: n,m
@@ -51,7 +51,7 @@ g = gcl.Graph(int(n))
 # Input of m arcs
 for i in range(m):
     # INPUT
-    if ENV['input_mode'] == 'terminal':
+    if ENV["input_mode"] == "terminal":
         head, tail = TALinput(int, 2, TAc=TAc)
     else:
         head, tail = map(int,lines[i+1].split())
@@ -72,20 +72,20 @@ is_connected, _ = g.is_connected(False)
 if is_connected:
     TAc.print(LANG.render_feedback("graph-connected", f'Good! The submitted graph is connected.\n'),"green")
     #TAc.print(LANG.render_feedback("graph-connected", f'\nThe submitted graph is connected.\n'),"green")
-    if ENV['with_yes_certificate']:
+    if ENV["with_yes_certificate"]:
         sp_tree, not_visited = g.spanning_tree()
-        if ENV['with_yes_certificate']:
-            TAc.print(LANG.render_feedback("printing-sp-tree", "Here there is a spanning tree:\n","yellow"))
+        if ENV["with_yes_certificate"]:
+            TAc.print(LANG.render_feedback("printing-sp-tree", 'Here there is a spanning tree:\n',"yellow"))
             for elem in sp_tree:
                 TAc.print(elem, "white")
 else:  # input graph g is NOT connected
-    TAc.print(LANG.render_feedback("graph-not-connected","The provided graph is NOT connected."),"red")
-    if ENV['with_no_certificate']:
+    TAc.print(LANG.render_feedback("graph-not-connected",'The provided graph is NOT connected.'),"red")
+    if ENV["with_no_certificate"]:
         sp_tree, not_visited = g.spanning_tree()
-        TAc.print(LANG.render_feedback("printing-bipartition","I'll give you a bipartition of the graph.\nHere there are the connected nodes:"),"yellow")
+        TAc.print(LANG.render_feedback("printing-bipartition",'I\'ll give you a bipartition of the graph.\nHere there are the connected nodes:'),"yellow")
         for elem in sp_tree:
             TAc.print(elem[0], "white")
-        TAc.print(LANG.render_feedback("print-not-conected","\nAnd here the not connected ones:"), "yellow")
+        TAc.print(LANG.render_feedback("print-not-conected",'\nAnd here the not connected ones:'), "yellow")
         for elem in not_visited:
             TAc.print(elem, "white")
 exit(0)  

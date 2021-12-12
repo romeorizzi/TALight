@@ -12,11 +12,11 @@ import graph_connectivity_lib as gcl
 problem="graph_connectivity"
 service="check_certificate_of_connectivity"
 args_list = [
-    ('n',int), 
+    ("n",int), 
     #('m',int), 
-    ('how_to_input_the_graph',str), 
-    ('silent',int),
-    ('lang',str),
+    ("how_to_input_the_graph",str), 
+    ("silent",int),
+    ("lang",str),
 ]
 
 ENV = Env(args_list)
@@ -24,24 +24,24 @@ TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 #TAc.print(LANG.opening_msg, "green")
 
-m = ENV['n'] - 1
+m = ENV["n"] - 1
 g, graph_print, edges = gcl.generate_graph(ENV["n"], m, gcl.gen_instance_seed(True), TAc=TAc, LANG=LANG)
 
 # print the graph + info
-TAc.print("#start:", "yellow")
+TAc.print('#start:', "yellow")
 TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of arcs: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
 
-TAc.print("graph:", "yellow")
+TAc.print('graph:', "yellow")
 TAc.print(graph_print, "white")
 
-TAc.print(LANG.render_feedback("waiting-sp-tree",f"#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each arc, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the arc, in this order.\n# Any line beggining with the \'#\' character is ignored.\n# If you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the 'rtal connect' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself."), "yellow")
+TAc.print(LANG.render_feedback("waiting-sp-tree",f'#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each arc, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the arc, in this order.\n# Any line beggining with the \'#\' character is ignored.\n# If you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the \'rtal connect\' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
 
-span = gcl.Graph(int(ENV['n']))
+span = gcl.Graph(int(ENV["n"]))
 has_outer_edges = True
 not_in_graph = []
 
 # Asking and getting sp.tree length
-TAc.print(LANG.render_feedback("waiting-sp-tree-len","# Tell me how many rows are in your spanning tree table"), "yellow")
+TAc.print(LANG.render_feedback("waiting-sp-tree-len",'# Tell me how many rows are in your spanning tree table'), "yellow")
 
 sptree_len = TALinput(int, 1, TAc=TAc)
 
@@ -50,7 +50,7 @@ for i in range(sptree_len[0]):
     head, tail = int(head),int(tail)
 
     # Checking if the inserted nodes are in the range [0, n]
-    if tail >= ENV['n'] or head >= ENV['n'] or tail < 0 or head < 0:
+    if tail >= ENV["n"] or head >= ENV["n"] or tail < 0 or head < 0:
         TAc.print(LANG.render_feedback("n-at-least-1", f'# ERROR: both ends of an arc must be nodes of the graph, i.e. integers in the range [0,{ENV["MAXN"]}.'), "red")
         exit(0)
 
@@ -75,7 +75,7 @@ for e in not_in_graph:
 stderr.write(str(is_correct)+"\n")
 
 if(is_correct):
-    if (ENV['silent'] == 0):
+    if (ENV["silent"] == 0):
         TAc.print(LANG.render_feedback("correct-certificate",'Good! Your certificate is correct'),"green")
 else:
     TAc.print(LANG.render_feedback("wrong-certificate-lets-check",'WRONG, the certificate you gave me is not a correct spanning tree..Let\'s check it:'),"red")
