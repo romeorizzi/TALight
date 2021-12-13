@@ -8,50 +8,29 @@ import matplotlib.pyplot as plt
 
 class Graph(): 
   
-    def __init__(self, vertices:int): 
-        """Constructor: contains number of nodes (V) and a list of arcs """
-        self.V = vertices 
+    def __init__(self, num_nodes:int): 
+        """Constructor: a graph is the number of its nodes (n), the number of its edges (m), and a dictionary (graph) associating to each node the list of its neighbors. The labels of the nodes are the integers in [0,n)."""
+        self.n = num_nodes 
+        self.m = 0 
         self.graph = defaultdict(list) 
 
     def add_edge(self, v:int, u:int): 
-        """Add one undirected arc to the graph"""
+        """Add one edge to the undirected graph"""
         self.graph[v].append(u) 
-        self.graph[u].append(v) 
-
-    def to_string(self):
-        """Returns a string containing the list of all arcs"""
-        import json
-        return json.dumps(self.graph)
+        self.graph[u].append(v)
+        self.m += 1
 
     def check_edge(self, v:int, u:int):
-        """Checks if an (u,v) arc exists"""
-        if u == 0 and v == 0:
-            return True
+        """Checks if an (u,v) edge exists"""
+        return  u in self.graph[v]
 
-        if u in self.graph[v] and v in self.graph[u]:
-            return True
-        return False
+    def list_edges(self):
+        """Returns a list containing all the existent edges"""
+        return [ (v, u) for v in range(self.n) for u in range(self.n) if self.check_edge(v, u) ]
 
-    def list_not_connected_edges(self):
-        """Returns a list containing all the non-existent arcs"""
-        list_nc = []
-
-        for v in range(self.V):
-            for u in range(self.V):
-                if not self.check_edge(v, u):
-                    list_nc.append((v, u))
-        return list_nc
-
-    def list_connected_edges(self):
-        """Returns a list containing all the existent arcs"""
-        list_c = []
-        counter = 0
-        for v in range(self.V):
-            for u in range(self.V):
-                if self.check_edge(v, u):
-                    list_c.append((v, u))
-                    counter = counter +1
-        return list_c
+    def list_nonedges(self):
+        """Returns a list containing all the non-existent edges"""
+        return [ (v, u) for v in range(self.n) for u in range(self.n) if u != v and not self.check_edge(v, u) ]
 
     def dfs_util(self, v:int, visited:list): 
         """DFS with v initial node"""
@@ -63,11 +42,11 @@ class Graph():
     def is_connected(self, return_not_connected=False):
         """Return if the graph is connected or not, by using DFS"""
         v = 0
-        visited = [False] * (self.V)
+        visited = [False] * (self.n)
         not_conn = []
 
         self.dfs_util(v, visited)
-        for i in range(self.V): 
+        for i in range(self.n): 
             if not visited[i]:
                 not_conn.append(i)
         #sys.stderr.write(f"visited: {visited}\n")
@@ -93,13 +72,13 @@ class Graph():
         - the spanning tree in the form of a routing table
         - list of nodes not touched by the spanning tree"""  
         v = 0
-        visited = [-1] * (self.V)
+        visited = [-1] * (self.n)
 
         spanning_tree = []
         not_visited = []
 
         self.dfs_spanning(v, v, visited)
-        for i in range(self.V): 
+        for i in range(self.n): 
             if visited[i] == -1:
                 not_visited.append(i)
             else:
@@ -107,23 +86,47 @@ class Graph():
         
         return spanning_tree, not_visited
 
+# RENDITIONS AND VISUALIZATIONS:
+    def to_str(self):
+        str_rep = f"{self.n} {self.m}\n"
+        for tail,head in self.list_edges():
+            str_rep += f"{tail} {head}\n"
+        return str_rep
+
+    def to_json(self):
+        """Returns a string containing the list of all edges"""
+        import json
+        return json.dumps(self.graph)
+    
+# SECTION FRIEND FUNCTIONS:
+
+def graph_union(list_of_graphs):
+    num_nodes = sum(g.n for g in list_of_graphs)
+    union_graph = Graph(num_nodes)
+    offset = 0 # number of previously already included nodes
+    for g in list_of_graphs:
+        for tail,head in g.list_edges():
+            union_graph.add_edge(tail+offset, head+offset)
+        offset += g.n
+    return union_graph
+    
 # SECTION GENERATORS:
 
 def generate_tree_edges(prufer:list,m:int, g:Graph):
     """Generating a labelled tree via Prufer's proof of Cayley's theorem"""
-    vertices = m + 2
+    num_nodes = m + 2
     graph_print = ""
 
     # Initialize the array of vertices
-    vertex_set = [0] * vertices
+    vertex_set = [0] * num_nodes
 
     # Counting Number of occurrences of vertex in code
-    for i in range(vertices - 2):
+    for i in range(num_nodes - 2):
         vertex_set[prufer[i]] += 1
 
     # Find the smallest label not present in prufer[].
-    for i in range(vertices - 2):
-        for j in range(vertices):
+    for i in range(num_nodes - 2):
+        for j in range(num_nodes):
             # If j+1 is not present in prufer set
             if (vertex_set[j] == 0):
                 # Remove from Prufer set and add the pair to the graph
@@ -139,7 +142,7 @@ def generate_tree_edges(prufer:list,m:int, g:Graph):
     # For the last element
     j = 0
     head = -1
-    for i in range(vertices):
+    for i in range(num_nodes):
         if (vertex_set[i] == 0 and j == 0):
             head = i
             j += 1
@@ -148,7 +151,7 @@ def generate_tree_edges(prufer:list,m:int, g:Graph):
             graph_print = graph_print + f"{head} {i}\n"
             break
 
-    return g, graph_print
+    return g
 
 def is_connected_seed(seed:int):
     """Returns True if the given seed would generate a connected graph, False otherwise."""
@@ -173,14 +176,15 @@ def gen_instance_seed(connected=None):
     return seed
 
 def generate_connected_graph(n:int, m:int, TAc, LANG):
-    """Generates a connected graph by creating a labelled tree and adds some additional arcs"""
+    """When called with n-1 <= m <= (n * (n-1) )//2, this function generates and returns a simple connected graph with n nodes and m edges.
+       Otherwise, it explains the problem and terminates the service.
+       Generation of the graph: first creates a random labelled tree using Cayley's bijection, and then adds the m-(n-1) additional edges at random."""
+    if m > (n * (n-1) )//2:
+            TAc.print(LANG.render_feedback("m-too-big", f'Error: m is too big. I can\'t generate a simple graph with m={m} edges over n={n} nodes. Try to give me a smaller value for the argument m.'), "red", ["bold"])
+            exit(0)
     if(m < n- 1):
         TAc.print(LANG.render_feedback("m-too-small", f'Error: I can not generate a connected graph over n={n} nodes and with only m={m} edges.'), "yellow", ["bold"])
         exit(0)
-    if (n * n-1)/2 < m:
-            TAc.print(LANG.render_feedback("m-too-big", f'Error: m is too big. I can\'t generate a non-connected graph. Try to give me a lower m value'), "red", ["bold"])
-            exit(0)
-                
     g = Graph(n)
 
     length = n-2 # m
@@ -190,94 +194,57 @@ def generate_connected_graph(n:int, m:int, TAc, LANG):
     for i in range(length):
         arr[i] = random.randint(0, length + 1) # tolgo il +1?
 
-    g, graph_print = generate_tree_edges(arr, length, g)
+    g = generate_tree_edges(arr, length, g)
 
-    # Randomly add arcs until you reach m
-    for i in range(m-length-1):
-        head, tail = random.choice(g.list_not_connected_edges())
-        g.add_edge(head, tail)
-        #graph_print += "---\n"
-        graph_print = graph_print+f"{head} {tail}\n"
+    available_edges = g.list_nonedges()
+    # Randomly add edges until you reach m
+    for i in range(m-n+1):
+        rnd_index = random.randrange(len(available_edges))
+        g.add_edge(available_edges[rnd_index][0], available_edges[rnd_index][1])
+        del available_edges[rnd_index]
+    return g
 
-    return g, graph_print
-
-def generate_non_connected_graph(n:int, m:int, TAc, LANG):
-    """Generates a non connected graph by creating two separated connected graphs"""
-    if(n < 2):
-        TAc.print(LANG.render_feedback("n-only-one", f'Error: I can not generate a NOT connected graph with only one node.'), "red", ["bold"])
-        exit(0)
-    tmp_n = int(n/2)
-    tmp_m = int(m/2)
-    g3 = Graph(n)
-    graph_print3 = ""
-
-    #check that the number of arcs is greater than m
-    if(((tmp_n * (tmp_n-1))/2 + ((n-tmp_n) * (n-tmp_n-1))/2 < m)): #particular case
-        if (n-1 * n-2)/2 < m:
-            TAc.print(LANG.render_feedback("m-too-big", f'Error: m is too big. I can\'t generate a non-connected graph. Try to give me a lower m value'), "red", ["bold"])
+def generate_disconnected_graph(n:int, m:int, TAc, LANG):
+    """Generates a NOT connected graph with n nodes and m edges.
+       When called with m <= ((n-1) * (n-2) )//2, such a graph exists and the function can generate and return it.
+       Otherwise, the problem is explained and the service is terminated.
+       Generation of the graph: by creating two (or more) separated connected graphs."""
+    if m > ((n-1) * (n-2) )//2:
+            TAc.print(LANG.render_feedback("m-too-big", f'Error: m is too big. I can\'t generate a simple graph with m={m} edges over n={n} nodes. Try to give me a smaller value for the argument m.'), "red", ["bold"])
             exit(0)
-
-        g1, graph_print1 = generate_connected_graph(n-1,m-1, TAc, LANG) 
-
-        s = graph_print1.split('\n')
-        for elem in s:
-            if not elem == '':
-                head,tail = [int(temp)for temp in elem.split() if temp.isdigit()]
-                #print(str(head) + " " +str(tail))
-                g3.add_edge(head,tail)
-                graph_print3 = graph_print3+f"{head} {tail}\n"
-                # Adding the last node
-        g3.add_edge(n-1,n-1)
-        graph_print3 = graph_print3+f"{n-1} {n-1}\n"
-    else:
-        #common case
-        #generate two graphs
-        '''print("tmp_n= " + str(tmp_n) + " tmp_m= " + str(tmp_m))
-        print("n-tmp_n= " + str(n-tmp_n) + " m-tmp_m= " + str(m-tmp_m))'''
-
-        g1, graph_print1 = generate_connected_graph(tmp_n, tmp_m, TAc, LANG)
-        g2, graph_print2 = generate_connected_graph(n-tmp_n, m-tmp_m, TAc, LANG)
-        
-        #first possible solution using the list_connected_edges() function
-        '''
-        for head, tail in g1.list_connected_edges():
-            g3.add_edge(head,tail)
-            graph_print3 = graph_print3+f"{head} {tail}\n"
-        for head, tail in g2.list_connected_edges():
-            g3.add_edge(head+tmp_n,tail+tmp_n)
-            graph_print3 = graph_print3+f"{head+tmp_n} {tail+tmp_n}\n"
-
-        '''
-
-        #second solution
-        s = graph_print1.split('\n')
-
-        for elem in s:
-            if not elem == '':
-                head,tail = [int(temp)for temp in elem.split() if temp.isdigit()]
-                #print(str(head) + " " +str(tail))
-                g3.add_edge(head,tail)
-                graph_print3 = graph_print3+f"{head} {tail}\n"
-
-        s = graph_print2.split('\n')
-        for elem in s:
-            if not elem == '':
-                head,tail = [int(temp)for temp in elem.split() if temp.isdigit()]
-                #print(str(head) + " " +str(tail))
-                g3.add_edge(head+tmp_n,tail+tmp_n)
-                graph_print3 = graph_print3+f"{head+tmp_n} {tail+tmp_n}\n"
-
-    return g3, graph_print3
+    descriptor_list = [(n,m)] # obvious decomposition in a single connected component
+    top_m = descriptor_list[-1][1]
+    top_n = descriptor_list[-1][0]
+    while top_m <= ((top_n-1) * (top_n-2))//2:
+        try_n1 = random.randrange(1,top_n//2)
+        try_n2 = top_n - try_n1
+        while (try_n1*(try_n1-1)//2 + try_n2*(try_n2-1)//2 < top_m):
+            try_n1 -= 1
+            try_n2 += 1
+        max_try_m1 = try_n1*(try_n1-1)//2
+        max_try_m2 = try_n2*(try_n2-1)//2        
+        min_try_m1 = top_m - max_try_m2
+        try_m1 = random.randint(min_try_m1,max_try_m1)
+        try_m2 = top_m - try_m1
+        descriptor_list.append((try_n1,try_m1))
+        descriptor_list.append((try_n2,try_m2))
+        top_m = descriptor_list[-1][1]
+        top_n = descriptor_list[-1][0]
+    random.shuffle(descriptor_list)
+    list_of_connected_components = []
+    for n_tmp,m_tmp in descriptor_list:
+        list_of_connected_components.append(generate_connected_graph(n_tmp,m_tmp, TAc, LANG))
+    return graph_union(list_of_connected_components)
 
 def generate_graph(n:int, m:int, seed:int, TAc, LANG):
-    """Generates a graph given n, m and seed."""
+    """Generates the pseudo-random graph <n, m, seed>."""
     random.seed(seed)
     if is_connected_seed(seed): # Generate connected graph
-        g, graph_print = generate_connected_graph(n, m, TAc=TAc, LANG=LANG) 
+        g = generate_connected_graph(n, m, TAc=TAc, LANG=LANG) 
     else: # Generate NOT connected graph
-        g, graph_print = generate_non_connected_graph(n, m, TAc=TAc, LANG=LANG)
+        g = generate_disconnected_graph(n, m, TAc=TAc, LANG=LANG)
     
-    return g, graph_print, g.list_connected_edges()
+    return g, g.to_str(), g.list_edges()
 
 if __name__ == "__main__":
 
@@ -298,7 +265,7 @@ if __name__ == "__main__":
     
     G = nx.Graph() # For networkx 
 
-    for u, v in grafo.list_connected_edges():
+    for u, v in grafo.list_edges():
         G.add_edge(u, v)
 
     nx.draw(G, with_labels = True)

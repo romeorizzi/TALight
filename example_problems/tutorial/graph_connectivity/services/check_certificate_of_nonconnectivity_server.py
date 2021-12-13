@@ -25,7 +25,7 @@ TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 #TAc.print(LANG.opening_msg, "green")
 
-
+# START CODING YOUR SERVICE:
 m = ENV["n"] - 1
 if ENV["how_to_input_the_graph"] == "lazy":
     ENV.arg["how_to_input_the_graph"] = gcl.gen_instance_seed(False)
@@ -34,7 +34,7 @@ g, graph_print, edges = gcl.generate_graph(ENV["n"], m, int(ENV["how_to_input_th
 
 # print the graph + info
 TAc.print('#start:', "yellow")
-TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of arcs: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
+TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of edges: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
 
 TAc.print('graph:', "yellow")
 TAc.print(graph_print, "white")
@@ -46,7 +46,7 @@ import matplotlib.pyplot as plt
 
 G = nx.Graph() # For networkx 
 
-for u, v in g.list_connected_edges():
+for u, v in g.list_edges():
     G.add_edge(u, v)
 
 nx.draw(G, with_labels = True)

@@ -52,7 +52,7 @@ time = end - start
 
 # Getting certificate
 if(ENV["check_also_yes_certificate"] or ENV["check_also_no_certificate"]):
-    TAc.print(LANG.render_feedback("waiting-sp-tree",f'#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each arc, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the arc, in this order.\n# Any line beggining with the \'#\' character is ignored.\n# If you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the \'rtal connect\' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
+    TAc.print(LANG.render_feedback("waiting-sp-tree",f'#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each edge, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the edge, in this order.\n# Any line beggining with the \'#\' character is ignored.\n# If you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the \'rtal connect\' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
 
     span = gcl.graph(int(ENV["n"]))
     has_outer_edges = True
@@ -69,16 +69,16 @@ if(ENV["check_also_yes_certificate"] or ENV["check_also_no_certificate"]):
 
         # Checking if the inserted nodes are in the range [0, n]
         if tail >= ENV['n'] or head >= ENV["n"] or tail < 0 or head < 0:
-            TAc.print(LANG.render_feedback("n-at-least-1", f'# ERROR: both ends of an arc must be nodes of the graph, i.e. integers in the range [0,{ENV["MAXN"]}.'), "red")
+            TAc.print(LANG.render_feedback("n-at-least-1", f'# ERROR: both ends of an edge must be nodes of the graph, i.e. integers in the range [0,{ENV["MAXN"]}.'), "red")
             exit(0)
 
-        # check the existence of the arcs (and nodes)
+        # check the existence of the edges (and nodes)
         if(g.check_edge(head,tail)):
             span.add_edge(head, tail)
         else:
             has_outer_edges = False
-            arco = (int(head),int(tail))
-            not_in_graph.append(arco)
+            edge = (int(head),int(tail))
+            not_in_graph.append(edge)
     end = monotonic()
     time_certificate = end - start
 

@@ -5,7 +5,7 @@ services:
 # prendere spunto da model pirellone per la generazione dell'istanza
 # prendere spunto da pirellone o da euler_dir per i servizio eval
   gimme_a_graph:
-    description: 'This service provides you with a random undirected graph with n nodes and m arcs. You can ask this service to produce a graph already met with this or other services, by just providing its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random graph we mean the triple <n,m,seed>. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). In the second case you are given the possibility to specify whether the generated graph should be connected or not, or let the service decide also on this. In either case, the generated pseudo-random graph is returned in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing graphs is the following: the first line contains the two integers n and m; then follow m lines, one for each arc. Each of these lines comprises two integers (the two endonodes of the arc). It is assumed that the labels of the nodes are the integers in [0,n).'
+    description: 'This service provides you with a random undirected simple graph with n nodes and m edges. (Simple means no loops and no parallel edges.) You can ask this service to produce a graph already met with this or other services, by just providing its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random graph we mean the triple <n,m,seed>. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). In the second case you are given the possibility to specify whether the generated graph should be connected or not, or let the service decide also on this. In either case, the generated pseudo-random graph is returned in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing graphs is the following: the first line contains the two integers n and m; then follow m lines, one for each edge. Each of these lines comprises two integers (the two endonodes of the edge). It is assumed that the labels of the nodes are the integers in [0,n).'
     evaluator: [python,services/gimme_graph_server.py]
     args:
       n:
@@ -26,7 +26,7 @@ services:
       silent:
         regex: ^(0|1)$
         default: 0
-        explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output to file ('>') you will get a valid instance file for the other services.
+        explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output of the rtal call to file (e.g., with > from the shell) you will get a valid instance file for the other services.
       # display:
       #   regex: ^(0|1)$
       #   default: 0
@@ -48,7 +48,7 @@ services:
         regex: ^(0|1)$
         default: 0
       with_no_certificate:
-        explain: when the input graph is NOT connected, please, send me a certificate in the form of a non-trivial partition of the nodes such that no arc has endpoints on different sides of the bipartition.
+        explain: when the input graph is NOT connected, please, send me a certificate in the form of a non-trivial partition of the nodes such that no edge has endpoints on different sides of the bipartition.
         regex: ^(0|1)$
         default: 0
       input_mode:

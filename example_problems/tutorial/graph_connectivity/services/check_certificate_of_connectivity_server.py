@@ -29,12 +29,12 @@ g, graph_print, edges = gcl.generate_graph(ENV["n"], m, gcl.gen_instance_seed(Tr
 
 # print the graph + info
 TAc.print('#start:', "yellow")
-TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of arcs: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
+TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of edges: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
 
 TAc.print('graph:', "yellow")
 TAc.print(graph_print, "white")
 
-TAc.print(LANG.render_feedback("waiting-sp-tree",f'#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each arc, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the arc, in this order.\n# Any line beggining with the \'#\' character is ignored.\n# If you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the \'rtal connect\' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
+TAc.print(LANG.render_feedback("waiting-sp-tree",f'#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each edge, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the edge, in this order.\n# Any line beggining with the \'#\' character is ignored.\n# If you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the \'rtal connect\' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
 
 span = gcl.Graph(int(ENV["n"]))
 has_outer_edges = True
@@ -51,16 +51,16 @@ for i in range(sptree_len[0]):
 
     # Checking if the inserted nodes are in the range [0, n]
     if tail >= ENV["n"] or head >= ENV["n"] or tail < 0 or head < 0:
-        TAc.print(LANG.render_feedback("n-at-least-1", f'# ERROR: both ends of an arc must be nodes of the graph, i.e. integers in the range [0,{ENV["MAXN"]}.'), "red")
+        TAc.print(LANG.render_feedback("n-at-least-1", f'# ERROR: both ends of an edge must be nodes of the graph, i.e. integers in the range [0,{ENV["MAXN"]}.'), "red")
         exit(0)
 
-    # check the existence of the arcs (and nodes)
+    # check the existence of the edges (and nodes)
     if(g.check_edge(head,tail)):
         span.add_edge(head, tail)
     else:
         has_outer_edges = False
-        arco = (int(head),int(tail))
-        not_in_graph.append(arco)
+        edge = (int(head),int(tail))
+        not_in_graph.append(edge)
 
 # check if is connect
 is_correct, not_conn = span.is_connected(True)
@@ -80,9 +80,9 @@ if(is_correct):
 else:
     TAc.print(LANG.render_feedback("wrong-certificate-lets-check",'WRONG, the certificate you gave me is not a correct spanning tree..Let\'s check it:'),"red")
     
-    # Printo elenco archi non in g (se esistono)
+    # Printo elenco edgehi non in g (se esistono)
     if(len(not_in_graph) != 0):
-        TAc.print(LANG.render_feedback("not-in-graph",'These arcs don\'t belong to the graph'),"green")
+        TAc.print(LANG.render_feedback("not-in-graph",'These edges don\'t belong to the graph'),"green")
         for e in not_in_graph:
             print(e)
     TAc.print(LANG.render_feedback("not-in-sp-tree",'These graph nodes are not reached by your spanning tree'),"green")

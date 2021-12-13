@@ -140,7 +140,7 @@ class Lang:
         self.TAc.print(self.opening_msg, "green")
 
     def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionary=None, obj=None):
-        """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the harcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
+        """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the hardcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
         #print("render_feedback has received msg_code="+msg_code+"\nrendition_of_the_hardcoded_msg="+rendition_of_the_hardcoded_msg+"\ntrans_dictionary=",end="")
         #print(trans_dictionary)
         if self.to_be_printed_opening_msg:
