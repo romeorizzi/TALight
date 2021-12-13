@@ -29,14 +29,14 @@ if environ["TAL_seed"] == "random_seed":
     elif ENV["graph_connectivity"] == "disconnected":
         ENV.arg["seed"] = gcl.gen_instance_seed(connected=False)
 
-g, graph_print, edges = gcl.generate_graph(ENV["n"], ENV["m"], ENV["seed"], TAc=TAc, LANG=LANG)
+g = gcl.generate_graph(ENV["n"], ENV["m"], ENV["seed"], TAc=TAc, LANG=LANG)
 
 # Print Instance
 if ENV["silent"]:
-    TAc.print(graph_print, "white", ["bold"])
+    print(g.to_str())
 else:
     TAc.print(LANG.render_feedback("instance-descriptor", f'Here is the pseudo-random graph <n={ENV["n"]},m={ENV["m"]},seed={ENV["seed"]}>:'), "yellow", ["bold"])
-    TAc.print(graph_print, "white", ["bold"])
+    TAc.print(g.to_str(), "white", ["bold"])
     TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
 
 exit(0)

@@ -244,7 +244,7 @@ def generate_graph(n:int, m:int, seed:int, TAc, LANG):
     else: # Generate NOT connected graph
         g = generate_disconnected_graph(n, m, TAc=TAc, LANG=LANG)
     
-    return g, g.to_str(), g.list_edges()
+    return g
 
 if __name__ == "__main__":
 

@@ -74,7 +74,7 @@ if is_connected:
     if ENV["with_yes_certificate"]:
         sp_tree, not_visited = g.spanning_tree()
         if ENV["with_yes_certificate"]:
-            TAc.print(LANG.render_feedback("printing-sp-tree", 'Here there is a spanning tree:\n',"yellow"))
+            TAc.print(LANG.render_feedback("printing-sp-tree", 'As a certificate, here is a spanning tree that guarantees the mutual reachability between any two nodes (for every node, we report its father in the tree. The father of the root node 0 is 0 itself):'),"yellow")
             for elem in sp_tree:
                 TAc.print(elem, "white")
 else:  # input graph g is NOT connected
