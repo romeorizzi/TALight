@@ -19,13 +19,21 @@ services:
         explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
         default: 99
       seed:
-        explain: The argument `seed` of this service is either a six digit number or the string `random_seed`. In the first case, then the service yields and returns the pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. In the second case, the service first generate a valid numeric seed and then returns the corresponding pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>. In either case, the service displays both the instance and the the seed used for its generation.  
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       file_format:
         regex: ^(0|1)$
-        explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output to file ('>') you will get a valid instance file for the other services.
+        explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output of the rtal call to file (e.g., with > from the shell) you will get a valid instance file for the other services.
         default: 0
+      # display:
+      #   regex: ^(0|1)$
+      #   default: 0
+      #   explain: If this flag is set to 1 then the instance file is listed by the service.
+      # download:
+      #   regex: ^(0|1)$
+      #   default: 0
+      #   explain: 'If this flag is set to 1 then the instance file is downloaded in the \''download\'' sub-folder of the folder from which this TALight service call has been issued.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -172,15 +180,23 @@ services:
         explain: the number of rows of the smaller triangle if inserted by seed or manually
         default: 2
       MIN_VAL:
-        regex: ^(0|[1-9][0-9]{0,1})$
-        explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
+        regex: ^([0-9])$
+        explain: all numbers of the two triangles are integers in the interval [MIN_VAL,MAX_VAL]
         default: 0
       MAX_VAL:
-        regex: ^(0|[1-9][0-9]{0,1})$
-        explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
-        default: 99
-      displayable:
-        explain: when this flag is set to 1 then the bigger triangle the service provides you is likely to be displayed.
+        regex: ^([0-9])$
+        explain: all numbers of the two triangles are integers in the interval [MIN_VAL,MAX_VAL]
+        default: 1
+      display_big:
+        explain: when this flag is set to 1 then the big triangle is displayed.
+        regex: ^(0|1)$
+        default: 1
+      display_small:
+        explain: when this flag is set to 1 then the small triangle is displayed.
+        regex: ^(0|1)$
+        default: 1
+      display_sol:
+        explain: when this flag is set to 1 then the immersions of the small triangle into the big triangle are displayed.
         regex: ^(0|1)$
         default: 1
       how_to_input_the_big_triangle:
