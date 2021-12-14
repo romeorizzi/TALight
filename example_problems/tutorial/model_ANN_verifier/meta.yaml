@@ -152,15 +152,6 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: If this flag is set to 1 then, the solution obtained from GPLSOL will be checked. In order to perform this check, it is mandatory that also the input.txt file is sent to the sever via the TA_send_files_bot.py
-      txt_style:
-        regex: ^(only_matrix|with_m_and_n)$
-        default: only_matrix
-        explain: 'choose how to encode the txt input file.'
-      sol_style:
-        regex: ^(seq|subset)$
-        default: subset
-        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
-        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
       instance_id:
         regex: ^(-1|[1-9][0-9]*)$
         default: -1
