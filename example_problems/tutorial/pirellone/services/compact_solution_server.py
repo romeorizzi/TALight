@@ -2,7 +2,7 @@
 from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
-
+from TALinputs import TALinput
 import pirellone_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -43,8 +43,7 @@ longsol=pl.solution_pad(shortsol,m,n,m+n+d,seed)
 print(" ".join(longsol))
 
 TAc.print("Short solution: ", "yellow", ["bold"])
-solu=input()
-solu=solu.split()
+solu=TALinput(str, sep=" ",  regex="^((r|c)[0-9]{0,9})+$", TAc=TAc, LANG=LANG)
 
 
 if goal=="m_plus_n":
