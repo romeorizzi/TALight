@@ -60,11 +60,7 @@ else:
     m = len(instance[0])
     n = len(instance[1])
 
-
-# Perform solution with GPLSOL and get raw solution
 mph.run_GLPSOL(dat_file_path)
-raw_sol = mph.get_raw_sol()
-
 
 # print GPLSOL stdout
 if ENV['display_output']:
@@ -73,6 +69,11 @@ if ENV['display_output']:
     TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["BOLD"])  
     TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
 
+if gplsol_output.find("NO PRIMAL") != -1:
+    TAc.print(LANG.render_feedback('error-no-sol', f'#ERROR: Your model does not generate a solution.'), 'red', ['bold'])
+    exit(0)
+
+raw_sol = mph.get_raw_sol()
 
 # print GPLSOL stderr
 if ENV['display_error']:
@@ -124,10 +125,10 @@ if ENV['check_solution']:
     if ENV['sol_style'] == 'subsequence':
         if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
             TAc.OK()
-            TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
+            TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
     elif ENV['sol_style'] == 'annotated_subseq':
         if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
             TAc.OK()
-            TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
+            TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
 
 exit(0)

@@ -58,9 +58,9 @@ def instance_to_dat(problem, style=''):
     assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     M = len(problem[0])
     N = len(problem[1])
-    output = f"param M := {M};  # Number of characters of the first string\n"
-    output += f"param N := {N};  # Number of characters of the second string\n"
-    output += "param: STRINGS: FIRST_STRING    SECOND_STRING :=\n"
+    output = f"param M := {M};  # Number of characters of the first string s\n"
+    output += f"param N := {N};  # Number of characters of the second string t\n"
+    output += "param: STRINGS: S_STRING    T_STRING :=\n"
     for j in range(max(M, N)):
         if j < M and j < N:
             output += f'            {j+1} {problem[0][j]}             {problem[1][j]}\n'
@@ -195,7 +195,7 @@ def check_sol(TAc, LANG, ENV, user_sol, s, t):
     sol = get_sol(s, t, len(s), len(t), "length")
     if sol != len(user_sol):
         TAc.print(LANG.render_feedback('error-wrong-sol', f'#ERROR: Your solution differs from the correct one. Your length is {len(user_sol)}, the correct solution length is {sol}.'), 'red', ['bold'])
-        exit(0) 
+        return False 
     if ENV['sol_style'] == 'subsequence':
         i = 0
         j = 0
@@ -212,10 +212,10 @@ def check_sol(TAc, LANG, ENV, user_sol, s, t):
                 j += 1
             if s_found:
                 TAc.print(LANG.render_feedback('error-no-matching-char', f'#ERROR: Your solution include a character ({char}) which is not included in the one of the first string.'), 'red', ['bold'])
-                exit(0)
+                return False
             if t_found:
                 TAc.print(LANG.render_feedback('error-no-matching-char', f'#ERROR: Your solution include a character ({char}) which is not included in the one of the second string.'), 'red', ['bold'])
-                exit(0)
+                return False
     if ENV['sol_style'] == 'annotated_subseq':
         sorted_keys = sorted(user_sol)
         temp_s = -1
@@ -223,19 +223,19 @@ def check_sol(TAc, LANG, ENV, user_sol, s, t):
         for pair in sorted_keys:
             if pair[0] == temp_s:
                 TAc.print(LANG.render_feedback('error-index-s-duplicate', f'#ERROR: The index {pair[0]} has been referenced twice. You can select a character of a string just one time.'), 'red', ['bold'])
-                exit(0)
+                return False
             if pair[1] == temp_t:
                 TAc.print(LANG.render_feedback('error-index-t-duplicate', f'#ERROR: The index {pair[1]} has been referenced twice. You can select a character of a string just one time.'), 'red', ['bold'])
-                exit(0)
+                return False
             if pair[1] < temp_t:
                 TAc.print(LANG.render_feedback('error-index-t-unordered', f'#ERROR: The index {pair[1]} is lower than the previous index {temp_t}, but indexes, for both s and t string, must be referenced once and in non decreasing order.'), 'red', ['bold'])
-                exit(0)
+                return False
             if s[pair[0]] != user_sol.get(pair):
                 TAc.print(LANG.render_feedback('error-s-no-matching-char', f'#ERROR: The char in position {pair[0]} of the first string is not: {s[pair[0]]}'), 'red', ['bold'])
-                exit(0)
+                return False
             if user_sol.get(pair) != t[pair[1]]:
                 TAc.print(LANG.render_feedback('error-t-no-matching-char', f'#ERROR: The char in position {pair[1]} of the second string is not: {t[pair[1]]}'), 'red', ['bold'])
-                exit(0) 
+                return False 
             temp_s = pair[0]
             temp_t = pair[1]
     return True
@@ -247,7 +247,7 @@ def process_user_sol(TAc, LANG, raw_sol, instance):
     for i, line in enumerate(raw_sol):
         values = line.split()
         for j, e in enumerate(values):
-            if e == '0':
+            if e == '1':
                 if instance[0][i] == instance[1][j]:
                     sol[(i, j)] = (instance[0][i])  
                 else:

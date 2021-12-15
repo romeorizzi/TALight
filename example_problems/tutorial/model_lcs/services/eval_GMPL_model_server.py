@@ -21,13 +21,12 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START MATH_MODELING:
 # Create list of test directory names to be test from the goal
-tests_dirname_list = ["public_examples"]
-tmp_tests_list = [  "m_and_n_at_least_5_dna", "m_and_n_at_least_20_lowercase", "m_and_n_at_least_60_lowercase_uppercase" ]
+tests_dirname_list = ["public_examples", "m_and_n_at_least_5_dna", "m_and_n_at_least_20_lowercase", "m_and_n_at_least_60_lowercase_uppercase" ]
 # Remove useless test
-for test in tmp_tests_list:
-    tests_dirname_list.append(test)
+for test in reversed(tests_dirname_list):
     if test == ENV['goal']:
         break
+    tests_dirname_list.remove(test)
 
 # Get formats
 dat_style = ''                # default
@@ -42,7 +41,8 @@ TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get you
 # Get mod
 mph.receive_mod_file(single_file_passed_to_the_bot=True)
 
-
+passed_tests = 0
+total_tests = 0
 # Test all instance until the goal selected.
 for test_dir in tests_dirname_list:
     # Print test_dir:
@@ -66,25 +66,35 @@ for test_dir in tests_dirname_list:
 
         # Perform optimal solution
         annotated_subseq_sol = ll.get_sol(instance[0], instance[1], m, n)
-        
-        # Perform solution with GPLSOL
+
         mph.run_GLPSOL(dat_file_path)
 
+        gplsol_output = mph.get_out_str()
+        total_tests += 1
+        if gplsol_output.find("NO PRIMAL") != -1:
+            TAc.print(LANG.render_feedback('error-no-sol', f'#ERROR: Your model does not generate a solution.'), 'red', ['bold'])
+        else:
+        
+        # Perform solution with GPLSOL
+
         # Get raw solution and parse it
-        raw_sol = mph.get_raw_sol()
-        gplsol_sol = ll.process_user_sol(TAc, LANG, raw_sol, instance)
+            raw_sol = mph.get_raw_sol()
+            gplsol_sol = ll.process_user_sol(TAc, LANG, raw_sol, instance)
 
-        user_sol_subsequence = ll.annotated_subseq_to_sequence(gplsol_sol)
-        user_sol_annotated_subseq = gplsol_sol
+            user_sol_subsequence = ll.annotated_subseq_to_sequence(gplsol_sol)
+            user_sol_annotated_subseq = gplsol_sol
 
-        if ENV['sol_style'] == 'subsequence':
-            if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
-                TAc.OK()
-                TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
-        elif ENV['sol_style'] == 'annotated_subseq':
-            if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
-                TAc.OK()
-                TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
+            if ENV['sol_style'] == 'subsequence':
+                if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
+                    passed_tests += 1
+                    TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])
+                    # TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
+            elif ENV['sol_style'] == 'annotated_subseq':
+                if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
+                    passed_tests += 1
+                    TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])
+                    # TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your modelel is correct."), "green", ["bold"])
 
 
+TAc.print(LANG.render_feedback('passed-tests', f'Your model has passed {passed_tests} tests over {total_tests} total tests.'), "green", ["bold"])
 exit(0)

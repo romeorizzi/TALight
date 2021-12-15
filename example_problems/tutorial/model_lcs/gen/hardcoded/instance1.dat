@@ -1,7 +1,7 @@
-param M := 3;  # Number of characters of the first string
-param N := 4;  # Number of characters of the second string
+param M := 3;  # Number of characters of the first string s
+param N := 4;  # Number of characters of the second string t
 
-param: STRINGS : FIRST_STRING   SECOND_STRING:=
+param: STRINGS : S_STRING   T_STRING:=
             1 "T"             "A"
             2 "A"             "C"
             3 "C"             "T"

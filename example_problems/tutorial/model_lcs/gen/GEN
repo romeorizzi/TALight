@@ -1,7 +1,7 @@
 # generator parameters: 
 # m, n, alphabet, seed
-#   m (int)  number of character of the first string
-#   n (int)  number of character of the second string
+#   m (int)  number of character of the first string s
+#   n (int)  number of character of the second string t
 #   alphabet (str) the alphabet over which the two strings must be generated
 #   seed (int)
 
