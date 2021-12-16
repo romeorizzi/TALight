@@ -124,16 +124,12 @@ services:
         regex: ^(0|[1-9][0-9]{0,1})$
         explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
         default: 99
-      displayable:
-        explain: when this flag is set to 1 then the triangle the service provides you is likely to be displayed.
-        regex: ^(0|1)$
-        default: 1
       silent:  
         explain: if nothing is wrong with your answer then the service runs silently; otherwise it explains what is the problem in clear.
         regex: ^(0|1)$
         default: 0
   eval_feasible_solution:
-    description: this service asks you to evaluate the reward collected by a path we give you as a feasible solution for a triangle.
+    description: this service evaluates your code for calculating the reward collected by a path we give you as a feasible solution for a triangle.
     evaluator: [python, services/eval_feasible_solution_server.py]
     args:
       n:
@@ -148,21 +144,19 @@ services:
         regex: ^(0|[1-9][0-9]{0,1})$
         explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
         default: 99
-      displayable:
-        explain: when this flag is set to 1 then the triangle the service provides you is likely to be displayed.
-        regex: ^(0|1)$
-        default: 1
       how_to_input_the_triangle:
         regex: ^(my_own_triangle|([1-9][0-9]{5,5})|random)$
         explain: if you enter a seed (an integer in the range [100000,999999]) then the service acts on the pseudo-random triangle <n,MIN_VAL,MAX_VAL,seed>, which you might have previously encountered in previous calls to this or other services for this problem. If how_to_input_the_triangle=my_own_triangle, the service allows you to enter your own triangle. Otherwise, if how_to_input_the_triangle=random, the service provides you a triangle created by a pseudo-random seed. 
         default: random
-      feedback:
-        regex: ^(yes_no|bigger_or_smaller|true_reward)$
-        default: yes_no
-        explain: "the options are as follows:"
-        explain1: -yes_no= just tell me whether my reward is or is not the right reward for the given path.
-        explain2: -bigger_or_smaller= tell me whether the reward is bigger or smaller than the right reward for the given path, in case they differ.
-        explain3: -true_reward= please, tell me the true reward for the given path.
+      goal:
+        explain: set your goal (efficient includes also correct).
+        regex: ^(correct|efficient)$
+        default: correct
+      code_lang: 
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+        explain: 
       silent:  
         explain: if nothing is wrong with your answer then the service runs silently; otherwise it explains what is the problem in clear.
         regex: ^(0|1)$
