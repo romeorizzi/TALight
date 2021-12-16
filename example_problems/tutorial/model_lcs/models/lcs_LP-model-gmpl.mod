@@ -40,23 +40,28 @@ subject to fun_4{i in {PD_S_indexes} }:
 
 
 # lanciamo il Solver:
-solve(timelimit=30);
+solve;
 
 # comandi utili per debugging:
-display M;
-display N;
-display S_indexes;
-display T_indexes;
-display PD_S_indexes;
-display PD_T_indexes;
-display numMatches;
-display PD;
+# display M;
+# display N;
+# display S_indexes;
+# display T_indexes;
+# display PD_S_indexes;
+# display PD_T_indexes;
+# display numMatches;
+# display PD;
 
 # printing the solution:
 printf "" > "solution.txt";
 for{i in S_indexes} {
     for{j in T_indexes} {
-        printf "%d ", PD[i,j] >> "solution.txt";
+        for{{0}: PD[i,j] > PD[i+1,j] and PD[i,j] > PD[i, j+1]} {
+            printf "1 " >> "solution.txt";
+        } for{{0}: PD[i,j] <= PD[i+1,j] or PD[i,j] <= PD[i, j+1]} {
+            printf "0 " >> "solution.txt";
+        }
+        # printf "%d ", PD[i,j] >> "solution.txt";
     }
 	printf "\n" >> "solution.txt";
 }
