@@ -75,7 +75,8 @@ def feasible_solution(triangle):                 ###############################
     return random_path                           ############################################
 #############################################################################################  
 #############################################################################################  
-         
+
+#CHECK TIME ELAPSED         
 for triangle in instances:
     start = monotonic() 
     p = input() 
@@ -101,6 +102,6 @@ TAc.OK()
 TAc.print(LANG.render_feedback("seems-correct-strong", f'Your solution appears to be correct (checked on several instances).'), "green")
 if ENV["goal"] == "efficient":
     TAc.OK()
-    TAc.print(LANG.render_feedback("efficient", f'# Ok. ♥ Your solution is {ENV["goal"]}: its running time is linear in the length of T and S.'), "green")
+    TAc.print(LANG.render_feedback("efficient", f"Your solution's running time is linear in the depth of the triangle."), "green")
  
 exit(0)
