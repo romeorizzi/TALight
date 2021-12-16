@@ -21,7 +21,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START MATH_MODELING:
 # Create list of test directory names to be test from the goal
-tests_dirname_list = ["public_examples", "m_and_n_at_least_5_dna", "m_and_n_at_least_20_lowercase", "m_and_n_at_least_60_lowercase_uppercase" ]
+tests_dirname_list = ["public_examples", "m_and_n_at_least_5_dna", "m_and_n_at_least_20_lowercase", "m_and_n_at_least_20_lowercase_uppercase" ]
 # Remove useless test
 for test in reversed(tests_dirname_list):
     if test == ENV['goal']:
