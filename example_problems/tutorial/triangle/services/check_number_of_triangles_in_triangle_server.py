@@ -75,8 +75,8 @@ for i in range(int(((L-l+1)*(L-l+2))/2)):
     if i >= livello*(livello+1)/2:
         livello +=1
     if big[i] == small[0]:
-        if tl.fits(i,livello,big,small,tl.next_indexes(i,livello,l)):
-            indexes.append(tl.next_indexes(i,livello,l))
+        if tl.fits(i,livello,big,small,l)[0]:
+            indexes.append(tl.fits(i,livello,big,small,l)[1])
             right_answer += 1
             
 if ENV["display_big"]:

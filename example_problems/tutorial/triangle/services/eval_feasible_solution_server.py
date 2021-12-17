@@ -11,8 +11,6 @@ import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('MIN_VAL',int),
-    ('MAX_VAL',int),
     ('goal',str),
     ('code_lang',str),
 ]
@@ -26,11 +24,10 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 instances = []
 MAX_ROWS = 10
-NUM_OF_INSTANCES = 100
+NUM_OF_INSTANCES = 25
 #EFFICIENT
 if ENV["goal"] == "efficient":
     MAX_ROWS *= 5
-    NUM_OF_INSTANCES *=5
     if ENV["code_lang"] == "compiled":
         MAX_ROWS *= 2
     scaling_factor = 1.3
@@ -68,7 +65,7 @@ def is_feasible_solution(path):
 #CHECK TIME ELAPSED         
 for triangle in instances:
     start = monotonic() 
-    p = input() 
+    p = input(triangle) 
     end = monotonic()
     time += end-start
     if !right_length(instance,p):
@@ -81,8 +78,9 @@ for triangle in instances:
     if !is_feasible_solution(p):
         TAc.NO()
         TAc.print(LANG.render_feedback("no-way-wrong-directions", f'{p} is not a feasible solution, as it contains directions different from "L" or "R".'), "red")
+        exit(0)
     print(f'Correct! [took {time} seconds on your machine]')
-    if time > 50:
+    if time > 1:
         TAc.OK()
         TAc.print(LANG.render_feedback("seems-correct-weak", f'Your solution answers correctly on a first set of instances, but it took too much to answer to the last instance.'), "green")
         exit(0)

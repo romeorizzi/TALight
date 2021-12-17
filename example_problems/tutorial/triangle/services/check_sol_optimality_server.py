@@ -7,8 +7,6 @@ from multilanguage import Env, Lang, TALcolors
 import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="triangle"
-service="check_sol_value"
 args_list = [
     ('n',int),
     ('MIN_VAL',int),
