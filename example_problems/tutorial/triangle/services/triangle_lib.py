@@ -116,7 +116,7 @@ def random_path(m,n):
         path = ''.join(map(str,random.choices(directions, k=random.randint(m,n-1))))
     return path
 
-def next_indexes(start, livello, small_size):
+def fits(start,livello,big_triangle,small_triangle,small_size):
     last_visited = start
     indexes = [start]
     for i in range(1, small_size):
@@ -124,14 +124,10 @@ def next_indexes(start, livello, small_size):
         for j in range(i + 1):
             indexes.append(last_visited+j)
         last_visited += 1 
-    return indexes
-
-def fits(start,livello,big_triangle,small_triangle,indexes):
     for i in range(len(indexes)):
         if small_triangle[i] != big_triangle[indexes[i]]:
-            return False
-        
-    return True
+            return False,[]
+    return True,indexes
     
 def cast_to_array(triangle):
     array = []

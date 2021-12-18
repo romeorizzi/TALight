@@ -3,8 +3,9 @@ from sys import exit
 
 from multilanguage import Env, Lang, TALcolors
 
-import model_lcs_lib as ll
+import model_ANN_lib as annl
 from math_modeling import ModellingProblemHelper, get_problem_path_from
+
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -13,8 +14,6 @@ args_list = [
     ('display_error',bool),
     ('display_solution',bool),
     ('check_solution',bool),
-    ('txt_style',str),
-    ('sol_style',str),
     ('instance_id',int),
 ]
 
@@ -24,6 +23,10 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
+# Get formats
+dat_style = ''  # default
+
+
 
 # Initialize ModellingProblemHelper
 mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
@@ -36,7 +39,7 @@ if not ENV['check_solution']:
     mph.receive_mod_file()
     # Receive dat file from bot or from the archive folder
     if ENV['instance_id'] != -1: #case: use instance_id
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=('dat'))
+        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
     else:
         mph.receive_dat_file()
         dat_file_path = None
@@ -46,21 +49,23 @@ else:
     mph.receive_mod_file()
     # Receive dat and input files from bot or from the archive folder
     if ENV['instance_id'] != -1: #case: use instance_id
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=('dat'))
-        input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(ENV['txt_style'] + '.txt'))
+        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
+        input_str = mph.get_file_str_from_id(ENV['instance_id'], format=('plain.txt'))
     else:
         mph.receive_dat_file()
         dat_file_path = None
         mph.receive_input_file()
         input_str = mph.get_input_str()
-    instance = ll.get_instance_from_txt(input_str, style=ENV['txt_style'])    
-    print(instance)
-    
-    # numero righe e colonne pirellone
-    m = len(instance[0])
-    n = len(instance[1])
+    instance = annl.get_instance_from_txt(input_str, style='plain')
 
+
+print(instance)
+print(dat_file_path)
+
+# Perform solution with GPLSOL and get raw solution
 mph.run_GLPSOL(dat_file_path)
+raw_sol = mph.get_raw_sol()
+
 
 # print GPLSOL stdout
 if ENV['display_output']:
@@ -69,11 +74,6 @@ if ENV['display_output']:
     TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["BOLD"])  
     TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
 
-if gplsol_output.find("NO PRIMAL") != -1:
-    TAc.print(LANG.render_feedback('error-no-sol', f'#ERROR: Your model does not generate a solution.'), 'red', ['bold'])
-    exit(0)
-
-raw_sol = mph.get_raw_sol()
 
 # print GPLSOL stderr
 if ENV['display_error']:
@@ -97,38 +97,27 @@ if ENV['check_solution']:
     TAc.print(LANG.render_feedback("start-check", f"Now start the check of the GPLSOL solution..."), "yellow", ["bold"])
 
     # Print instance
-    TAc.print(LANG.render_feedback("instance-title", f'The first string of {m} character and the second string of {n} character are:'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("instance", f"{ll.instance_to_str(instance)}"), "white", ["bold"])
+    TAc.print(LANG.render_feedback("instance-title", f"The ANN instance is:"), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance", f"{annl.instance_to_str(instance)}"), "white", ["bold"])
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
     # Parse the raw solution
-    gplsol_sol = ll.process_user_sol(TAc, LANG, raw_sol, instance)
+    gplsol_sol = process_user_sol(ENV, TAc, LANG, raw_sol)
 
     # Print processed GPLSOL solution
-    TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["BOLD"])    
-    if ENV['sol_style'] == 'subsequence':
-        TAc.print(LANG.render_feedback("out_sol", f"{ll.sequence_to_str(ll.annotated_subseq_to_sequence(gplsol_sol))}"), "white", ["reverse"])
-    elif ENV['sol_style'] == 'annotated_subseq':
-        TAc.print(LANG.render_feedback("out_sol", f"{ll.annotated_subseq_to_str(gplsol_sol)}"), "white", ["reverse"])
-    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    TAc.print(LANG.render_feedback("sol-title", "The processed GPLSOL solution is:"), "yellow", ["BOLD"])
     
-    annotated_subseq_sol = ll.get_sol(instance[0], instance[1], m, n)
-    subsequence_sol = ll.annotated_subseq_to_sequence(annotated_subseq_sol)
-    print(f"The annotated solution = {annotated_subseq_sol}, the subsequence solution = {subsequence_sol}")
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
-    user_sol_subsequence = ll.annotated_subseq_to_sequence(gplsol_sol)
-    user_sol_annotated_subseq = gplsol_sol
+    # Perform optimal solution
+    opt_sol_subset = annl.get_opt_sol(instance)
 
-    # check feasibility of the user solution
-    print(f"Your annotated solution = {user_sol_annotated_subseq}, you subsequence solution = {user_sol_subsequence}")
+    # Print optimal solution
+    TAc.print(LANG.render_feedback("in-title", "The optimal solution is:"), "yellow", ["reverse"])
 
-    if ENV['sol_style'] == 'subsequence':
-        if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
-            TAc.OK()
-            TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
-    elif ENV['sol_style'] == 'annotated_subseq':
-        if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
-            TAc.OK()
-            TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+
+    # Check the correctness of the user solution
+    check_sol_with_feedback(ENV, TAc, LANG, instance, opt_sol_subset, gplsol_sol, m=m, n=n)
 
 exit(0)

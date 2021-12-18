@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
 import random
+import math
+from time import monotonic
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
@@ -9,13 +11,8 @@ import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('n',int),
-    ('MIN_VAL',int),
-    ('MAX_VAL',int),
-    ('displayable',bool),
-    ('how_to_input_the_triangle',str),
-    ('feedback',str),
-    ('silent',bool),
+    ('goal',str),
+    ('code_lang',str),
 ]
 
 
@@ -23,53 +20,75 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
-# START CODING YOUR SERVICE:
+# GENERATE INSTANCES
 
-# TRIANGLE GENERATION
-
-if ENV['how_to_input_the_triangle'] == "my_own_triangle":
-    triangle = []
-    TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
-    for i in range(1,ENV["n"]+1):
-        TAc.print(LANG.render_feedback("insert-line", f'Insert line i={i}, that is, {i} integers separated by spaces:'), "yellow")
-        line = TALinput(int, i, token_recognizer=lambda val,TAc,LANG: tl.check_val_range(val,ENV['MIN_VAL'],ENV['MAX_VAL'],TAc,LANG), TAc=TAc, LANG=LANG)
-        triangle.append(line)
-    TAc.OK()
-    TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
-    path = tl.random_path(ENV['n'])
-elif ENV['how_to_input_the_triangle'] == "random":
-    n = 0
-    if ENV['displayable']:
-        n =random.randint(1,20)
-    else:
-        n=random.randint(1,100)
-    seed = random.randint(100000,999999)
-    triangle = tl.random_triangle(n, ENV['MIN_VAL'], ENV['MAX_VAL'], seed, TAc, LANG)
-    path = tl.random_path(n-1,n)
+instances = []
+MAX_ROWS = 10
+NUM_OF_INSTANCES = 25
+#EFFICIENT
+if ENV["goal"] == "efficient":
+    MAX_ROWS *= 5
+    if ENV["code_lang"] == "compiled":
+        MAX_ROWS *= 2
+    scaling_factor = 1.3
+    n = 1
+    for _ in range(NUM_OF_INSTANCES):
+        seed = random.randint(100000,999999)
+        instances.append(tl.random_triangle(n, 0, 99, seed, TAc, LANG))
+        n = math.ceil(n*scaling_factor)
+        if n>MAX_ROWS:
+            n = MAX_ROWS
+#NOT EFFICIENT
 else:
-    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_triangle']),TAc,LANG)
-    path = tl.random_path(ENV['n'],ENV['n']) 
-if ENV['displayable']:
-    TAc.print(LANG.render_feedback("displayable-path",f'The path {path} moving towards the bottom of the triangle is displayed here:\n'), "green")
-    tl.print_path(triangle,path,TAc,LANG)
-TAc.print(LANG.render_feedback("reward-question", f'\nGiven this path, which reward does it collect?\nYour answer shall be a positive integer.'), "green")
-right_answer = tl.calculate_path(triangle,path)
-answer = TALinput(int, token_recognizer=lambda val,TAc,LANG: True, TAc=TAc, LANG=LANG)[0]
-if answer == right_answer:
-    if not ENV['silent'] or ENV['feedback'] == "yes_no":
+    if ENV["code_lang"] == "compiled":
+        MAX_ROWS *= 2
+    scaling_factor = 1.3
+    n = 1
+    for _ in range(NUM_OF_INSTANCES):
+        seed = random.randint(100000,999999)
+        instances.append(tl.random_triangle(n, 0, 99, seed, TAc, LANG))
+        n = math.ceil(n*scaling_factor)
+        if n>MAX_ROWS:
+            n = MAX_ROWS
+            
+def right_length(instance,answer):
+    if len(instance) == len(answer)+1:
+        return True
+    return False
+
+def is_feasible_solution(path):                  
+    for el in path:           
+        if el != "R" and el != "L":
+            return False
+    return True 
+
+#CHECK TIME ELAPSED         
+for triangle in instances:
+    start = monotonic() 
+    p = input(triangle) 
+    end = monotonic()
+    time += end-start
+    if !right_length(instance,p):
+        TAc.NO()
+        if len(p) < len(instance) -1:
+            TAc.print(LANG.render_feedback("no-way-short", f'{p} is not a feasible solution, as it is too short.'), "red")
+        else:
+            TAc.print(LANG.render_feedback("no-way-long", f'{p} is not a feasible solution, as it is too long.'), "red")
+        exit(0)
+    if !is_feasible_solution(p):
+        TAc.NO()
+        TAc.print(LANG.render_feedback("no-way-wrong-directions", f'{p} is not a feasible solution, as it contains directions different from "L" or "R".'), "red")
+        exit(0)
+    print(f'Correct! [took {time} seconds on your machine]')
+    if time > 1:
         TAc.OK()
-        TAc.print(LANG.render_feedback("right-answer", f'We agree, the answer is {right_answer}.'), "green", ["bold"])
-else:
-    TAc.NO()
-    if ENV['feedback'] == "yes_no":
-        TAc.print(LANG.render_feedback("wrong-answer", f'We don\'t agree, the reward you provided is not the right one for the given path.'), "red", ["bold"])
-    if ENV['feedback'] == "bigger_or_smaller":    
-        if answer < right_answer:
-            TAc.print(LANG.render_feedback("smaller-than-right", f'We don\'t agree, the reward you provided is smaller than the right one for the given path.'), "red", ["bold"])
-            exit(0)
-        TAc.print(LANG.render_feedback("bigger-than-right", f'We don\'t agree, the reward you provided is bigger than the right one for the given path.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("seems-correct-weak", f'Your solution answers correctly on a first set of instances, but it took too much to answer to the last instance.'), "green")
         exit(0)
-    if ENV['feedback'] == "true_reward":
-        TAc.print(LANG.render_feedback("right-reward", f'The right reward for the given path is {right_answer}.'), "yellow", ["bold"])
-        exit(0)
+
+TAc.OK()
+TAc.print(LANG.render_feedback("seems-correct-strong", f'Your solution appears to be correct (checked on several instances).'), "green")
+if ENV["goal"] == "efficient":
+    TAc.OK()
+    TAc.print(LANG.render_feedback("efficient", f"Your solution's running time is linear in the depth of the triangle."), "green")
+ 
 exit(0)

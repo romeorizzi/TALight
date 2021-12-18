@@ -3,7 +3,7 @@ from sys import stderr, exit
 import random
 
 from multilanguage import Env, Lang, TALcolors
-
+from TALinputs import TALinput
 import pirellone_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -52,8 +52,7 @@ for i in range(0,m):
         p_pirellone[i]=pc_pirellone[int(r[i])-1]
 
 TAc.print("Solution of permuted matrix: ", "yellow", ["bold"])
-solu=input()
-solu=solu.split()
+solu=TALinput(str, sep=" ",  regex="^((r|c)[0-9]{0,9})+$", TAc=TAc, LANG=LANG)
 
 risultato,_=pl.check_off_lights(p_pirellone,solu,LANG,TAc)
 if risultato :

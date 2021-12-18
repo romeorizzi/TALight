@@ -5,15 +5,15 @@
 /  2. as a testing/checking/debugging tool for the problem-maker when crafting the problem. A further piece of advice to the problem-maker il placed at the bottom of this file. 
 */
 
-param M integer, >= 1;  # Number of characters of the first string
-param N integer, >= 1;  # Number of characters of the second string
+param M integer, >= 1;  # Number of characters of the first string s
+param N integer, >= 1;  # Number of characters of the second string t
 
-set S_indexes := 1..M;  # Set of indexes for the first string
-set T_indexes := 1..N;  # Set of indexes for the second string
+set S_indexes := 1..M;  # Set of indexes for the first string s
+set T_indexes := 1..N;  # Set of indexes for the second string t
 
 set STRINGS;
-param FIRST_STRING {STRINGS} symbolic;
-param SECOND_STRING {STRINGS} symbolic;
+param S_STRING {STRINGS} symbolic;
+param T_STRING {STRINGS} symbolic;
 
 printf "42\n" > "output.txt";
 

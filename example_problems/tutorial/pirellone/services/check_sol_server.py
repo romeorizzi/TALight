@@ -31,8 +31,7 @@ pl.print_pirellone(pirellone)
 
 if ENV['coding']=='seq':
     TAc.print(LANG.render_feedback("sequence-r-c","Sequence of rows and columms: "), "yellow", ["bold"])
-    solu=input()
-    solu=solu.split()
+    solu=TALinput(str, sep=" ",  regex="^((r|c)[0-9]{0,9})+$", TAc=TAc, LANG=LANG)
 elif ENV['coding']=='subset':
     TAc.print(LANG.render_feedback("rows-sol","Rows solution: "), "yellow", ["bold"])
     rs = TALinput(int, num_tokens=m)

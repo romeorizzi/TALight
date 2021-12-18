@@ -80,8 +80,7 @@ elif ENV['submatrix_type']=='random_seed':
     print(" ".join(vl))
     pl.print_pirellone(sub_pirellone)     
     TAc.print(LANG.render_feedback("sub-matrix-sol",f"Solution of the submatrix {sub_m}x{sub_n} : "), "yellow", ["bold"])
-solu=input()
-solu=solu.split()
+solu=TALinput(str, sep=" ",  regex="^((r|c)[0-9]{0,9})+$", TAc=TAc, LANG=LANG)
 b,solvable=pl.check_off_lights(sub_pirellone,solu,LANG,TAc)
 if b and solvable=='s':
     TAc.OK()

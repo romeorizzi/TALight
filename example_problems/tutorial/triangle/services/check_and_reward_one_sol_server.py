@@ -27,11 +27,11 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # CHECK WHETHER THE PATH L/R ENCODING STRING HAS THE RIGHT LENGTH
 
-if len(ENV["path"].replace(" ", "")) != ENV["n"]-1:
+if len(ENV["path"]) != ENV["n"]-1:
     TAc.NO()
-    if len(ENV["path"].replace(" ", "")) < ENV["n"]-1:
+    if len(ENV["path"]) < ENV["n"]-1:
         TAc.print(LANG.render_feedback("path-too-short", f'The string of the L/R choices encoding your path is too short for a triangle with n={ENV["n"]} rows.'), "red", ["bold"])
-    if len(ENV["path"].replace(" ", "")) > ENV["n"]-1:
+    if len(ENV["path"]) > ENV["n"]-1:
         TAc.print(LANG.render_feedback("path-too-long", f'The string of the L/R choices encoding your path is too long for a triangle with n={ENV["n"]} rows.'), "red", ["bold"])
     TAc.print(LANG.render_feedback("wrong-path-length", f'The true number of required choices is n-1={ENV["n"]-1} instead of {len(ENV["path"].replace(" ", ""))}.'), "red", ["bold"])
     exit(0)
