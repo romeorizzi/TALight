@@ -72,7 +72,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   tell_me_about_config:
-    description: use with caution this spoilering service in order to get more or less detailed information about a certain configuration of the the chococroc game.
+    description: use with caution this spoilering service in order to get more or less detailed information about a certain configuration of the chococroc game.
     evaluator: [python, services/tell_me_about_config.py]
     args:
       m:
@@ -95,7 +95,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play:
-    description: use this service if you want to play a game with our player, you can start first or second on every configuration you want.
+    description: use this service if you want to play a match of the chococroc game against our player. You can choose the starting configuration and whether to be first or second to move. . 
     evaluator: [python, services/play.py]
     args:
       m:
@@ -110,15 +110,18 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: If you to start as first player use 0, if you want to start as second player use 1.
-      value:
-        regex: ^0$
-        default: 0
-        explain: You play the game against our computer.
+      watch_value:
+        regex: ^(no_watch|watch_winner|num_winning_moves|watch_grundy_val)$
+        default: no_watch
+        explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
+      game:
+        regex: ^chococroc$
+        default: chococroc
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play_val_measuring_game:
-    description: use this service if you want to play a game with our player, you can start first or second on every configuration you want.
+    description: use this service if you want to play a match of the MeasuringGame(chococroc) against our player. You can choose the starting configuration and whether to be first or second to move. The MeasuringGame(chococroc) game is defined as the game sum of a chococrock game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a chococroc game position. 
     evaluator: [python, services/play.py]
     args:
       m:
@@ -133,10 +136,13 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: If you to start as first player use 0, if you want to start as second player use 1.
-      value:
-        regex: ^1$
-        default: 1
-        explain: You play the game against our computer correlating the match with a NIM tower.
+      watch_value:
+        regex: ^(no_watch|watch_winner|num_winning_moves|watch_grundy_val)$
+        default: no_watch
+        explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
+      game:
+        regex: ^measuring_game$
+        default: measuring_game
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
