@@ -63,9 +63,9 @@ else:
 mph.run_GLPSOL(dat_file_path)
 
 # print GPLSOL stdout
+gplsol_output = mph.get_out_str()
 if ENV['display_output']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-    gplsol_output = mph.get_out_str()
     TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["BOLD"])  
     TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
 
