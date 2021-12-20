@@ -44,10 +44,11 @@ solve;
 
 # printing the solution:
 printf "" > "solution.txt";
+
 for{i in S_indexes} {
     for{j in T_indexes} {
-        printf "%d ", SelectedMatch[i,j] >> "solution.txt";
+		for{{0}: SelectedMatch[i,j] == 1} {
+            printf "%s %d %d\n", S_STRING[i], i-1, j-1 >> "solution.txt";
+        }
     }
-	printf "\n" >> "solution.txt";
 }
-

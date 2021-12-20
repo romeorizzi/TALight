@@ -57,12 +57,8 @@ printf "" > "solution.txt";
 for{i in S_indexes} {
     for{j in T_indexes} {
         for{{0}: PD[i,j] > PD[i+1,j] and PD[i,j] > PD[i, j+1]} {
-            printf "1 " >> "solution.txt";
-        } for{{0}: PD[i,j] <= PD[i+1,j] or PD[i,j] <= PD[i, j+1]} {
-            printf "0 " >> "solution.txt";
+            printf "%s %d %d\n", S_STRING[i], i-1, j-1 >> "solution.txt";
         }
-        # printf "%d ", PD[i,j] >> "solution.txt";
     }
-	printf "\n" >> "solution.txt";
 }
 

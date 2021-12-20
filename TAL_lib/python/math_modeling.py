@@ -23,6 +23,7 @@ class ModellingProblemHelper():
                 sol_filename      = 'solution.txt',      \
                 out_filename      = 'output.txt',        \
                 err_filename      = 'error.txt',         \
+                ef_filename      = 'explicit_formulation.txt',         \
                 instances_dirname = 'instances',      \
                 gendict_filename  = 'gen_dictionary.json'):
         self.__TAc = TAc
@@ -33,6 +34,7 @@ class ModellingProblemHelper():
         self.__sol_path        = os.path.join(problem_path, tmp_dirname, sol_filename)
         self.__out_path        = os.path.join(problem_path, tmp_dirname, out_filename)
         self.__err_path        = os.path.join(problem_path, tmp_dirname, err_filename)
+        self.__ef_path         = os.path.join(problem_path, tmp_dirname, ef_filename)
         self.__instances_path  = os.path.join(problem_path, instances_dirname)
         self.__gendict_path    = os.path.join(self.__instances_path, gendict_filename)
 
@@ -94,6 +96,74 @@ class ModellingProblemHelper():
             self.__TAc.print(f"Fail to create the input file in: {self.__in_path}", "red", ["bold"])
             exit(0)
 
+    def receive_ef_file(self):
+        self.__init_tmp_dir()
+        ef = service_server_requires_and_gets_file_of_handle('ef').decode()
+        try:
+            with open(self.__ef_path, 'w') as ef_file:
+                ef_file.write(ef)
+        except os.error as err:
+            self.__TAc.print(f"Fail to create the explicit formulation file in: {self.__ef_path}", "red", ["bold"])
+            exit(0)            
+
+    def run_ef_GLPSOL(self, ef_format):
+            
+        try:
+            with open(self.__out_path, 'w') as out_file:
+                try:
+                    if ef_format == "math":
+                        with open(self.__err_path, 'w') as err_file:
+                            # RUN gplsol
+                            command = ["glpsol", "--math", self.__ef_path, "-d", self.__dat_path]
+                            subprocess.run(command, cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
+                    else:
+                        with open(self.__err_path, 'w') as err_file:
+                            # RUN gplsol
+                            command = ["glpsol", f"--{ef_format}", self.__ef_path]
+                            subprocess.run(command, cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
+                except os.error as err:
+                    self.__TAc.print(f"Fail to create stderr file in: {self.__err_path}", "red", ["bold"])
+                    exit(0)
+                except subprocess.TimeoutExpired as err:
+                    self.__TAc.print(f"Too much computing time! Deadline exceeded.", "red", ["bold"])
+                    exit(0)
+                except subprocess.CalledProcessError as err: 
+                    self.__TAc.print(f"The call to glpsol on your .dat file returned error:\n{err}", "red", ["bold"])
+                    exit(0)
+                except Exception as err:
+                    self.__TAc.print(f"Processing returned with error:\n{err}", "red", ["bold"])
+                    exit(0)
+        except os.error as err:
+            self.__TAc.print(f"Fail to create stdout file in: {self.__out_path}", "red", ["bold"])
+            exit(0)
+
+    def run_GLPSOL_with_ef(self, dat_file_path=None, ef_format=None):
+        
+        if not dat_file_path:
+            dat_file_path = self.__dat_path
+        
+        try:
+            with open(self.__out_path, 'w') as out_file:
+                try:
+                    with open(self.__err_path, 'w') as err_file:
+                        # RUN gplsol
+                        command = ["glpsol", "-m", self.__mod_path, "-d", dat_file_path, f"--{ef_format}", self.__ef_path]
+                        subprocess.run(command, cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
+                except os.error as err:
+                    self.__TAc.print(f"Fail to create stderr file in: {self.__err_path}", "red", ["bold"])
+                    exit(0)
+                except subprocess.TimeoutExpired as err:
+                    self.__TAc.print(f"Too much computing time! Deadline exceeded.", "red", ["bold"])
+                    exit(0)
+                except subprocess.CalledProcessError as err: 
+                    self.__TAc.print(f"The call to glpsol on your .dat file returned error:\n{err}", "red", ["bold"])
+                    exit(0)
+                except Exception as err:
+                    self.__TAc.print(f"Processing returned with error:\n{err}", "red", ["bold"])
+                    exit(0)
+        except os.error as err:
+            self.__TAc.print(f"Fail to create stdout file in: {self.__out_path}", "red", ["bold"])
+            exit(0)
 
     def run_GLPSOL(self, dat_file_path=None):
         """launches glpsol on the .mod and .dat files contained in TMP_DIR. The stdout, stderr and solution of glpsol are saved in files."""
@@ -157,6 +227,16 @@ class ModellingProblemHelper():
         except os.error as err:
             self.__TAc.print(f"Fail to read the stderr file of GPLSOL in {self.__err_path}", "red", ["bold"])
             exit(0)
+
+
+    def get_ef_str(self):
+        """Return a string that contains the explicit formulation of GPLSOL."""
+        try:
+            with open(self.__ef_path, 'r') as file:
+                return file.read()
+        except os.error as err:
+            self.__TAc.print(f"Fail to read the explicit formulation file of GPLSOL in {self.__ef_path}", "red", ["bold"])
+            exit(0)            
 
 
     def get_raw_sol(self):
