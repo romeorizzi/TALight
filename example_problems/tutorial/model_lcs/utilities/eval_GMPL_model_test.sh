@@ -1,0 +1,1 @@
+rtal connect model_lcs eval_GMPL_model -agoal=m_and_n_at_least_5_dna -- bots/TA_send_files_bot.py models/lcs_ILP-model-gmpl.mod
