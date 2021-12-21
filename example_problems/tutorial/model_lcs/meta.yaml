@@ -145,8 +145,8 @@ services:
         default: 0
         explain: If this flag is set to 1 then the service displays the explicit formulation obtained from your abstract model applied to the specific instance.
       explicit_formulation_format:
-        regex: ^(wmps|wfreemps|wlp|wglp)$
-        default: wglp
+        regex: ^(mps|freemps|lp|glp)$
+        default: glp
       check_solution:
         regex: ^(0|1)$
         default: 0

@@ -147,7 +147,7 @@ class ModellingProblemHelper():
                 try:
                     with open(self.__err_path, 'w') as err_file:
                         # RUN gplsol
-                        command = ["glpsol", "-m", self.__mod_path, "-d", dat_file_path, f"--{ef_format}", self.__ef_path]
+                        command = ["glpsol", "-m", self.__mod_path, "-d", dat_file_path, f"--w{ef_format}", self.__ef_path]
                         subprocess.run(command, cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
                 except os.error as err:
                     self.__TAc.print(f"Fail to create stderr file in: {self.__err_path}", "red", ["bold"])
