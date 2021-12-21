@@ -1,5 +1,5 @@
 ## clean everything
-make clean-all
+make clean
 
 ## generate instances
 make

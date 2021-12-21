@@ -22,7 +22,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START MATH_MODELING:
 
-tests_dirname_list = ["public_examples", "m_and_n_at_least_5_dna", "m_and_n_at_least_20_lowercase", "m_and_n_at_least_20_lowercase_uppercase"]
+tests_dirname_list = ["public_examples", "at_most_20_dna", "at_most_50_lowercase", "at_most_80_lowercase_uppercase"]
 
 for test in reversed(tests_dirname_list):
     if test == ENV['goal']:
@@ -38,14 +38,20 @@ TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get you
 
 mph.receive_mod_file(single_file_passed_to_the_bot=True)
 
-passed_tests = 0
+total_passed_tests = 0
 total_tests = 0
+tests = {}
 
 for test_dir in tests_dirname_list:
+    tests[test_dir] = {}
+    passed_dir_tests = 0
+    total_dir_tests = 0
 
     TAc.print(LANG.render_feedback('test_dir', f"[TEST]: {test_dir}"), "green", ["bold"])
 
     for instance_id, paths in mph.get_instances_paths_in(test_dir).items():
+                
+        total_dir_tests += 1
 
         TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
         TAc.print(LANG.render_feedback('instance-id', f"Check instance id={instance_id}:"), "green", ["bold"])
@@ -61,11 +67,14 @@ for test_dir in tests_dirname_list:
         annotated_subseq_sol = ll.get_sol(instance[0], instance[1], m, n)
 
         mph.run_GLPSOL(dat_file_path)
+        
+        total_tests += 1
 
         glpsol_output = mph.get_out_str()
-        total_tests += 1
+
         if glpsol_output.find("NO PRIMAL") != -1:
             TAc.print(LANG.render_feedback('error-no-sol', f'#ERROR: Your model does not generate a solution.'), 'red', ['bold'])
+            tests[test_dir][instance_id] = "NO!"
         else:
             raw_sol = mph.get_raw_sol()
             glpsol_sol = ll.process_user_sol(raw_sol)
@@ -75,15 +84,32 @@ for test_dir in tests_dirname_list:
 
             if ENV['sol_style'] == 'subsequence':
                 if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
-                    passed_tests += 1
+                    total_passed_tests += 1
+                    passed_dir_tests += 1
                     TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])
+                    tests[test_dir][instance_id] = "YES!"
+                else:                    
+                    tests[test_dir][instance_id] = "NO!"
                 TAc.print(LANG.render_feedback("out_sol", f"Your solution:\n{ll.sequence_to_str(user_sol_subsequence)}"), "white", ["reverse"])
             elif ENV['sol_style'] == 'annotated_subseq':
                 if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
-                    passed_tests += 1
+                    total_passed_tests += 1
+                    passed_dir_tests += 1
                     TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])
+                    tests[test_dir][instance_id] = "YES!"
+                else:
+                    tests[test_dir][instance_id] = "NO!"
                 TAc.print(LANG.render_feedback("out_sol", f"Your solution:\n{ll.annotated_subseq_to_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
 
+    
+    TAc.print(LANG.render_feedback('dir-passed-tests', f'Your model has passed {passed_dir_tests} tests over {total_dir_tests} total tests in {test_dir} directory.'), "green", ["bold"])
 
-TAc.print(LANG.render_feedback('passed-tests', f'Your model has passed {passed_tests} tests over {total_tests} total tests.'), "green", ["bold"])
+TAc.print(LANG.render_feedback("separator", "\n<================>SUMMARY<================>"), "yellow", ["reverse"])
+for test_dir in tests_dirname_list:
+    TAc.print(LANG.render_feedback('test-dir', f'{test_dir}:'), "green", ["bold"])
+    for test in tests[test_dir]:
+        TAc.print(LANG.render_feedback('test-summary', f'instance_id: {test}\t\t passed: {tests[test_dir][test]}'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+
+TAc.print(LANG.render_feedback('passed-tests', f'Your model has passed {total_passed_tests} tests over {total_tests} total tests.'), "green", ["bold"])
 exit(0)

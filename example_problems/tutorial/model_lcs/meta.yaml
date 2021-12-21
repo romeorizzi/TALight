@@ -191,8 +191,8 @@ services:
     evaluator: [python, services/eval_GMPL_model_server.py]
     args:
       goal:
-        regex: ^(public_examples|m_and_n_at_least_5_dna|m_and_n_at_least_20_lowercase|m_and_n_at_least_20_lowercase_uppercase)$
-        default: m_and_n_at_least_5_dna
+        regex: ^(public_examples|at_most_20_dna|at_most_50_lowercase|at_most_80_lowercase_uppercase)$
+        default: at_most_20_dna
         explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
       dat_style:
         regex: ^(default)$
