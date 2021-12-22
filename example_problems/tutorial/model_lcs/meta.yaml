@@ -55,7 +55,7 @@ services:
         default: it
   
   gimme_sol:
-    description: 'This service provides you with a solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, alphabet, and its random seed.'
+    description: 'This service provides you with a solution for an instance (either provided by you or generated at random) of the LCS problem. You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, alphabet, and its random seed.'
     evaluator: [python, services/gimme_sol_server.py]
     args:
       instance_spec:
@@ -90,7 +90,7 @@ services:
         default: it
   
   check_sol:
-    description: 'This service checks your solution for an instance (either provided by you or generated at random). You can even call this service on an already encountered random instance (also met with other services): a random instance can be reconstructed from m, n, alphabet and its random seed.'
+    description: 'This service checks your solution for an instance (either provided by you or generated at random) of the LCS problem. You can even call this service on an already encountered random instance (also met with other services): a random instance can be reconstructed from m, n, alphabet and its random seed.'
     evaluator: [python, services/check_sol_server.py]
     args:
       instance_spec:
