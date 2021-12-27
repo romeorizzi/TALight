@@ -38,11 +38,11 @@ while m > (n * n - 1)/2:
     m = random.randint(1, 1000)
 seed = gcl.gen_instance_seed(connected=True)
 
-g, graph_print, edges = gcl.generate_graph(n, m, seed , TAc=TAc, LANG=LANG)
+g = gcl.generate_graph(n, m, seed , TAc=TAc, LANG=LANG)
 correct_answer, _ = g.is_connected(return_not_connected=False)
 
 TAc.print(LANG.render_feedback("assigned-instance",f'Instance:\n n: {n}\nm: {m}\n seed: {seed}'), "yellow")
-TAc.print(f'{graph_print}', "white")
+TAc.print(f'{g.to_str()}', "white")
 
 # Getting answer (y or n)
 start = monotonic()

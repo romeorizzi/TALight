@@ -30,14 +30,14 @@ m = ENV["n"] - 1
 if ENV["how_to_input_the_graph"] == "lazy":
     ENV.arg["how_to_input_the_graph"] = gcl.gen_instance_seed(False)
 
-g, graph_print, edges = gcl.generate_graph(ENV["n"], m, int(ENV["how_to_input_the_graph"]), TAc=TAc, LANG=LANG)
+g = gcl.generate_graph(ENV["n"], m, int(ENV["how_to_input_the_graph"]), TAc=TAc, LANG=LANG)
 
 # print the graph + info
 TAc.print('#start:', "yellow")
 TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of edges: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
 
 TAc.print('graph:', "yellow")
-TAc.print(graph_print, "white")
+TAc.print(g.to_str(), "white")
 
 #stderr.write("seed: " + ENV['how_to_input_the_graph']+"\n")
 '''

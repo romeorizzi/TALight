@@ -25,14 +25,14 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 #TAc.print(LANG.opening_msg, "green")
 
 m = ENV["n"] - 1
-g, graph_print, edges = gcl.generate_graph(ENV["n"], m, gcl.gen_instance_seed(True), TAc=TAc, LANG=LANG)
+g = gcl.generate_graph(ENV["n"], m, gcl.gen_instance_seed(True), TAc=TAc, LANG=LANG)
 
 # print the graph + info
 TAc.print('#start:', "yellow")
 TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of edges: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
 
 TAc.print('graph:', "yellow")
-TAc.print(graph_print, "white")
+TAc.print(g.to_str(), "white")
 
 TAc.print(LANG.render_feedback("waiting-sp-tree",f'#? waiting for your spanning tree as routing table.\n# Format: each line two numbers separated by space. Then follow m lines, one for each edge, each with two numbers in the interval [0,n).\n# These specify the tail node and the head node of the edge, in this order.\n# Any line beggining with the \'#\' character is ignored.\n# If you prefer, you can use the \'TA_send_txt_file.py\' util here to send us the lines of a file. Just plug in the util at the \'rtal connect\' command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
 

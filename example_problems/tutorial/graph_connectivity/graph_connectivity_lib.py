@@ -97,6 +97,14 @@ class Graph():
         """Returns a string containing the list of all edges"""
         import json
         return json.dumps(self.graph)
+
+    def get_n(self):
+        """Returns the number of nodes"""
+        return self.n
+
+    def get_m(self):
+        """Returns the number of arcs"""
+        return self.m
     
 # SECTION FRIEND FUNCTIONS:
 
@@ -138,7 +146,7 @@ def generate_tree_edges(prufer:list,m:int, g:Graph):
 
                 graph_print = graph_print+f"{j} {prufer[i]}\n"
                 break
-    
+
     # For the last element
     j = 0
     head = -1
@@ -250,8 +258,8 @@ if __name__ == "__main__":
 
     n=8
     m=11
-    grafo, gp, boh = generate_graph(n, m, seed=gen_instance_seed(True), TAc=None, LANG=None)
-    print(gp)
+    grafo= generate_graph(n, m, seed=gen_instance_seed(True), TAc=None, LANG=None)
+    print(grafo.to_str())
 
     print(grafo.is_connected(return_not_connected=True))
     '''

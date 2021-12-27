@@ -22,9 +22,7 @@ def startAlgo():
     # Creating graph
     grafo = gcl.Graph(numNodes)
 
-
     # Getting arcs
-   
     for _ in range(m):
         spoon = input().strip()
         v, u = spoon.split(' ')
