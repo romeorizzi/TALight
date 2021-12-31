@@ -53,8 +53,8 @@ nx.draw(G, with_labels = True)
 plt.show()
 '''
 
-cert_conn = []
-cert_non_conn = []
+user_conn = []
+user_non_conn = []
 
 #take the bipartition from input if "lazy"
 if ENV["the_bipartition"] == "lazy":
@@ -64,14 +64,14 @@ if ENV["the_bipartition"] == "lazy":
     # TODO: check regex
 
 # Splitting 'the_bipartition'
-cert_conn, cert_non_conn = ENV["the_bipartition"].split("versus")
+user_conn, user_non_conn = ENV["the_bipartition"].split("versus")
 
-cert_conn = cert_conn.split()
-cert_non_conn = cert_non_conn.split()
+user_conn = user_conn.split()
+user_non_conn = user_non_conn.split()
 
 # Cast to int
-cert_conn = list(map(int, cert_conn))
-cert_non_conn = list(map(int, cert_non_conn))
+user_conn = list(map(int, user_conn))
+user_non_conn = list(map(int, user_non_conn))
 
 
 # Check the certificate
@@ -95,22 +95,20 @@ nonconn_list = list(set(nonconn_list))
 conn_out = ""
 for elem in conn_list:
     conn_out += str(elem) + " "
+conn_out = conn_out[:-1]
 
 notconn_out = ""
 for elem in nonconn_list:
     notconn_out += str(elem) + " "
+notconn_out = notconn_out[:-1]
 
 out = conn_out + " versus " + notconn_out
-
-stderr.write(out)
 '''
 
-equals = sorted(cert_conn) == sorted(conn_list) and sorted(cert_non_conn) == sorted(nonconn_list)
+#stderr.write(out)
 
-stderr.write("cert_conn: " + str(cert_conn))
-stderr.write("conn_list: " + str(conn_list))
-
-stderr.write("equals: " + str(equals))
+equals = sorted(user_conn) == sorted(conn_list) and sorted(user_non_conn) == sorted(nonconn_list)\
+         or sorted(user_non_conn) == sorted(conn_list) and sorted(user_conn) == sorted(nonconn_list)
 
 # If correct
 if(equals):
@@ -119,12 +117,12 @@ if(equals):
 else: # If it's wrong
     TAc.print(LANG.render_feedback("wrong-certificate-lets-check",'WRONG, the certificate you gave me is not a correct spanning tree..Let\'s check it:'),"red")
     #look at the CONNECTED certificate items that is correct
-    conn_correct = set(cert_conn).intersection(set(conn_list))
+    conn_correct = set(user_conn).intersection(set(conn_list))
     conn_correct = list(map(str, conn_correct))
 
     TAc.print(LANG.render_feedback("right-connected",'These are the connected items you guessed at: ' + ",".join(conn_correct)),"white")
     #look at the UNCONNECTED certificate items that is correct
-    conn_wrong = set(cert_non_conn).intersection(set(nonconn_list))
+    conn_wrong = set(user_non_conn).intersection(set(nonconn_list))
     conn_wrong = list(map(str, conn_wrong))
 
     TAc.print(LANG.render_feedback("wrong-connected",'\nThese, on the other hand, are the unconnected items you guessed at: ' + ",".join(conn_wrong)),"white")

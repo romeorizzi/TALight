@@ -26,11 +26,16 @@ class Graph():
 
     def list_edges(self):
         """Returns a list containing all the existent edges"""
-        return [ (v, u) for v in range(self.n) for u in range(self.n) if self.check_edge(v, u) ]
+        list = []
+        for u in range(self.n):
+            for v in self.graph[u]:
+                if((v, u) not in list):
+                    list.append((u,v))
+        return list
 
     def list_nonedges(self):
         """Returns a list containing all the non-existent edges"""
-        return [ (v, u) for v in range(self.n) for u in range(self.n) if u != v and not self.check_edge(v, u) ]
+        return [(v, u) for v in range(self.n) for u in range(self.n) if u != v and not self.check_edge(v, u) and not self.check_edge(u, v)]
 
     def dfs_util(self, v:int, visited:list): 
         """DFS with v initial node"""
@@ -45,7 +50,9 @@ class Graph():
         visited = [False] * (self.n)
         not_conn = []
 
+
         self.dfs_util(v, visited)
+
         for i in range(self.n): 
             if not visited[i]:
                 not_conn.append(i)
@@ -123,7 +130,6 @@ def graph_union(list_of_graphs):
 def generate_tree_edges(prufer:list,m:int, g:Graph):
     """Generating a labelled tree via Prufer's proof of Cayley's theorem"""
     num_nodes = m + 2
-    graph_print = ""
 
     # Initialize the array of vertices
     vertex_set = [0] * num_nodes
@@ -143,8 +149,6 @@ def generate_tree_edges(prufer:list,m:int, g:Graph):
                 g.add_edge(j, prufer[i])
 
                 vertex_set[prufer[i]] -= 1
-
-                graph_print = graph_print+f"{j} {prufer[i]}\n"
                 break
 
     # For the last element
@@ -156,7 +160,6 @@ def generate_tree_edges(prufer:list,m:int, g:Graph):
             j += 1
         elif (vertex_set[i] == 0 and j == 1):
             g.add_edge(head, i)
-            graph_print = graph_print + f"{head} {i}\n"
             break
 
     return g
@@ -220,24 +223,36 @@ def generate_disconnected_graph(n:int, m:int, TAc, LANG):
     if m > ((n-1) * (n-2) )//2:
             TAc.print(LANG.render_feedback("m-too-big", f'Error: m is too big. I can\'t generate a simple graph with m={m} edges over n={n} nodes. Try to give me a smaller value for the argument m.'), "red", ["bold"])
             exit(0)
-    descriptor_list = [(n,m)] # obvious decomposition in a single connected component
-    top_m = descriptor_list[-1][1]
-    top_n = descriptor_list[-1][0]
+    descriptor_list = [] # obvious decomposition in a single connected component
+    top_m = m
+    top_n = n
     while top_m <= ((top_n-1) * (top_n-2))//2:
-        try_n1 = random.randrange(1,top_n//2)
+        try_n1 = random.randrange(1,(top_n//2))
         try_n2 = top_n - try_n1
         while (try_n1*(try_n1-1)//2 + try_n2*(try_n2-1)//2 < top_m):
             try_n1 -= 1
             try_n2 += 1
         max_try_m1 = try_n1*(try_n1-1)//2
-        max_try_m2 = try_n2*(try_n2-1)//2        
+        max_try_m2 = try_n2*(try_n2-1)//2
+        flag=True
+        while (max_try_m1 + max_try_m2 > top_m):
+            if(try_n1 >= try_n2):
+                max_try_m1 -=1
+            else:
+                max_try_m2 -=1
+
         min_try_m1 = top_m - max_try_m2
+        while (min_try_m1 < try_n1-1):
+            min_try_m1 +=1
         try_m1 = random.randint(min_try_m1,max_try_m1)
         try_m2 = top_m - try_m1
         descriptor_list.append((try_n1,try_m1))
         descriptor_list.append((try_n2,try_m2))
         top_m = descriptor_list[-1][1]
         top_n = descriptor_list[-1][0]
+        if (top_m <= ((top_n-1) * (top_n-2))//2):
+            descriptor_list.remove((top_n,top_m))
+            
     random.shuffle(descriptor_list)
     list_of_connected_components = []
     for n_tmp,m_tmp in descriptor_list:
@@ -257,9 +272,10 @@ def generate_graph(n:int, m:int, seed:int, TAc, LANG):
 if __name__ == "__main__":
 
     n=8
-    m=11
-    grafo= generate_graph(n, m, seed=gen_instance_seed(True), TAc=None, LANG=None)
+    m=15
+    grafo= generate_graph(n, m, seed=gen_instance_seed(False), TAc=None, LANG=None)
     print(grafo.to_str())
+
 
     print(grafo.is_connected(return_not_connected=True))
     '''
@@ -271,10 +287,23 @@ if __name__ == "__main__":
     '''
 
     
-    G = nx.Graph() # For networkx 
+
+
+
+    # Edges e non
+    '''
+    print("-----")
+    print(grafo.list_edges())
+    print("-----")
+    print(grafo.list_nonedges())
+    '''
+
+    
+    # networkx print
+    G = nx.Graph() 
 
     for u, v in grafo.list_edges():
         G.add_edge(u, v)
-
     nx.draw(G, with_labels = True)
     plt.show()
+    
