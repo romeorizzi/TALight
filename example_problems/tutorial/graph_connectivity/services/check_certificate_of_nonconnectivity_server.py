@@ -5,7 +5,7 @@ from sys import stderr, exit
 from os import environ
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
-
+import re
 import graph_connectivity_lib as gcl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -60,8 +60,12 @@ user_non_conn = []
 if ENV["the_bipartition"] == "lazy":
     TAc.print(LANG.render_feedback("give-bipartition",'# give me your bipartition in the format as \'the_bipartition\' argument'),"yellow")
     ENV.arg["the_bipartition"] = input()
+    # Checking regex
+    x = re.search("^(lazy|(0  *|[1-9][0-9]{0,4}  *){1,999}versus  *(0  *|[1-9][0-9]{0,4}  *){0,998}(0|[1-9][0-9]{0,4}) *)$", ENV.arg["the_bipartition"])
 
-    # TODO: check regex
+    if(not x):
+        TAc.print(LANG.render_feedback("wrong-bipartition",'# wrong bipartition. See synopsis'),"yellow")
+        exit(0)
 
 # Splitting 'the_bipartition'
 user_conn, user_non_conn = ENV["the_bipartition"].split("versus")
