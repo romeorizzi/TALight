@@ -6,21 +6,18 @@ import sys
 import graph_connectivity_lib as gcl
 
 def startAlgo():
-    numNodes = None
     spoon = input().strip()
-    # Getting graph
+    # Skipping first lines
     while spoon[:len("graph:")] != "graph:":
-        # Getting number of nodes
-        if spoon[:len("#   number of nodes:")] == "#   number of nodes:":
-            numNodes = spoon.split(':')[1]
-            numNodes = int("".join(numNodes.split()))
-        # Getting number archs
-        if spoon[:len("#   number of arcs: ")] == "#   number of arcs: ":
-            m = spoon.split(':')[1]
-            m = int("".join(m.split()))
         spoon = input().strip()
+
+    dimensions = input().strip()
+
+    n, m = dimensions.split(' ')
+    n = int(n)
+    m = int(m)
     # Creating graph
-    grafo = gcl.Graph(numNodes)
+    grafo = gcl.Graph(n)
 
     # Getting arcs
     for _ in range(m):
@@ -59,7 +56,11 @@ def startAlgo():
 
     # Getting response
     spoon = input()
-    print(spoon)
+    
+    while spoon != "#end".strip():
+        print(spoon)
+        sys.stderr.write(str(spoon)+ "\n")
+        spoon = input().strip()
 
 # Main
 spoon = input().strip()

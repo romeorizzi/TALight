@@ -126,4 +126,4 @@ else: # If it's wrong
     conn_wrong = list(map(str, conn_wrong))
 
     TAc.print(LANG.render_feedback("wrong-connected",'\nThese, on the other hand, are the unconnected items you guessed at: ' + ",".join(conn_wrong)),"white")
-
+TAc.print('#end',"yellow")

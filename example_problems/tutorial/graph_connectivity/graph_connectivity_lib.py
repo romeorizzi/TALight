@@ -69,7 +69,6 @@ class Graph():
     def dfs_spanning(self, v:int, dad:int, visited:list): 
         """DFS that keeps track of visited nodes"""
         visited[v] = dad
-
         for node in self.graph[v]: 
             if visited[node] == -1: 
                 self.dfs_spanning(node, v, visited) 
@@ -89,7 +88,12 @@ class Graph():
             if visited[i] == -1:
                 not_visited.append(i)
             else:
-                spanning_tree.append((i, visited[i]))
+                if(i==0 and visited[i]==0):
+                    #print(f"skipping: {(i, visited[i])}")
+                    pass
+                else:
+                    spanning_tree.append((i, visited[i]))
+
         
         return spanning_tree, not_visited
 
@@ -271,13 +275,13 @@ def generate_graph(n:int, m:int, seed:int, TAc, LANG):
 
 if __name__ == "__main__":
 
-    n=8
-    m=15
-    grafo= generate_graph(n, m, seed=gen_instance_seed(False), TAc=None, LANG=None)
+    n=7
+    m=10
+    grafo= generate_graph(n, m, seed=gen_instance_seed(True), TAc=None, LANG=None)
     print(grafo.to_str())
 
 
-    print(grafo.is_connected(return_not_connected=True))
+    print(f"graph connected? {grafo.is_connected(return_not_connected=True)}")
     '''
 
     n=7
@@ -286,10 +290,6 @@ if __name__ == "__main__":
     print(gp)
     '''
 
-    
-
-
-
     # Edges e non
     '''
     print("-----")
@@ -297,13 +297,25 @@ if __name__ == "__main__":
     print("-----")
     print(grafo.list_nonedges())
     '''
-
-    
+    # spanning
+    sp_tree, non_sp_tree = grafo.spanning_tree()
+    print("spanning: ")
+    print(sp_tree)
+    print("NOT in spanning: ")
+    print(non_sp_tree)
     # networkx print
     G = nx.Graph() 
 
     for u, v in grafo.list_edges():
-        G.add_edge(u, v)
-    nx.draw(G, with_labels = True)
+        if((u, v) in sp_tree or (v, u) in sp_tree):
+            G.add_edge(u, v,color='r',)
+        else:
+            G.add_edge(u, v, color='black')
+    edges = G.edges()
+    colors = [G[u][v]['color'] for u,v in edges]
+
+    nx.draw(G, edge_color=colors, with_labels=True)
     plt.show()
+
+
     

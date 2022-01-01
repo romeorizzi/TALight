@@ -6,38 +6,35 @@ import sys
 import graph_connectivity_lib as gcl
 
 def startAlgo():
-    numNodes = None
     spoon = input().strip()
-    # Getting graph
+    # Skipping first lines
     while spoon[:len("graph:")] != "graph:":
-        # Getting number of nodes
-        if spoon[:len("#   number of nodes:")] == "#   number of nodes:":
-            numNodes = spoon.split(':')[1]
-            numNodes = int("".join(numNodes.split()))
-        # Getting number archs
-        if spoon[:len("#   number of arcs: ")] == "#   number of arcs: ":
-            m = spoon.split(':')[1]
-            m = int("".join(m.split()))
         spoon = input().strip()
-    # Creating graph
-    grafo = gcl.Graph(numNodes)
 
+    dimensions = input().strip()
+
+    n, m = dimensions.split(' ')
+    n = int(n)
+    m = int(m)
+    # Creating graph
+    grafo = gcl.Graph(n)
 
     # Getting arcs
-   
     for _ in range(m):
         spoon = input().strip()
         v, u = spoon.split(' ')
         v, u = int(v), int(u)
         grafo.add_edge(v, u)
 
+    #sys.stderr.write(grafo.to_str()+ "\n")
+    
     # Ricevo istruzioni dal servizio
     while spoon[:len("# Tell me")] != "# Tell me":
         spoon = input().strip()
 
     # Checking spanning tree
     input_spTree, not_visited = grafo.spanning_tree()
-
+    
     # Telling sp tree length
     print(len(input_spTree))
 
