@@ -1,6 +1,6 @@
 [package]
 name = "rtal"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Dario Ostuni <dario.ostuni@gmail.com>"]
 edition = "2018"
 
