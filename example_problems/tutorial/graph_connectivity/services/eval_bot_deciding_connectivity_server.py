@@ -79,9 +79,12 @@ if (is_connected and ENV["check_also_yes_certificate"]):
     # Asking and getting sp.tree length
     TAc.print(LANG.render_feedback("waiting-sp-tree-len",'# Tell me how many rows are in your spanning tree table'), "yellow")
     start = monotonic()
+
     sptree_len = TALinput(int, 1, TAc=TAc)
+
     stderr.write(f"sp.tree len: {sptree_len}\n")
-    span = gcl.Graph(sptree_len[0])
+    span = gcl.Graph(n)
+
     has_outer_edges = True
     not_in_graph = []
 
@@ -90,7 +93,6 @@ if (is_connected and ENV["check_also_yes_certificate"]):
         head, tail = TALinput(int, 2, TAc=TAc)
         head, tail = int(head),int(tail)
 
-        
 
         # Checking if the inserted nodes are in the range [0, n]
         if tail >= n or head >= n or tail < 0 or head < 0:
@@ -116,6 +118,7 @@ if (is_connected and ENV["check_also_yes_certificate"]):
 
 # no cert
 if (not is_connected and ENV["check_also_no_certificate"]):
+    # Bipartition?
     pass
 
 
