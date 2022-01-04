@@ -10,6 +10,7 @@ def check_val_range(val:int, MIN_VAL:int, MAX_VAL:int, TAc, LANG):
     return True
 
 def check_yes_or_no_answer(ans:str, TAc, LANG):
+    ans = ans.split()[0]
     if ans != "yes" and ans != "no":
         TAc.print(LANG.render_feedback("wrong-answer-range", f"The answer you provided is not 'yes' or 'no'."), "red", ["bold"])
         return False
