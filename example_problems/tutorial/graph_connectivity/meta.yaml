@@ -40,7 +40,7 @@ services:
         default: it
   
   tell_if_graph_is_connected:
-    description: This service recognizes the connectivity property for graphs. Besides telling whether the given graph is connected or not, the service can also be asked to provide a certificate of connectivity (or a certificate of non-connectivity).
+    description: This service recognizes the connectivity property for undirected graphs. Besides telling whether the given graph is connected or not, the service can also be asked to provide a certificate of connectivity (or a certificate of non-connectivity).
     evaluator: [python, services/tell_if_graph_is_connected_server.py]
     args:
       with_yes_certificate:
@@ -55,27 +55,35 @@ services:
         regex: ^(terminal|TA_send_files_bot)$
         default: terminal
         explain: "choose the way to input your graph among:"
-        explain1: "[terminal] you enter your instance (directed graph) directly by either typing it line after line or through cut and paste operations."
+        explain1: "[terminal] you enter your instance (undirected graph) directly by either typing it line after line or through cut and paste operations."
         explain2: "[TA_send_files_bot] send to the service a graph contained in a file on your local machine. To send the file you must use the TA_transfer_files_bot.py bot placed in the graph_connectivity/bots/ directory. Call the service with: rtal graph_connectivity tell_if_graph_is_connected -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_certificate_of_connectivity:
-    description: this service checks whether a routing table towards some root node is valid. If so it encodes a spanning tree and proves the connectivity of the graph
+    description: this service checks the validity of your certificate of connectivity for a given graph, or your ability to yield such a certificate when a connected graph is given to you. The form of the certificate is that of a routing table where every node directs to its father (or next node) in an arborescence of paths directed towards the root node (always node 0).
     evaluator: [python, services/check_certificate_of_connectivity_server.py]
     args:
-      input_mode:
-        regex: ^(terminal|TA_send_files_bot)$
-        default: terminal
-        explain: "choose the way to input your graph among:"
-        explain1: "[terminal] you enter your instance (directed graph) directly by either typing it line after line or through cut and paste operations."
-        explain2: "[TA_send_files_bot] with this, you can send to the service an instance (graph) encoded in a file sitting in your machine. To send the file you must to use the TA_send_files_bot.py bot placed in model_graph/bots/ directory. Call the service with: rtal connect strongly_connected_components check_is_sc -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt."
-      n:
-        regex: ^([1-9][0-9]{0,4}|1000)$
-        explain: the number of nodes of the graph
       how_to_input_the_graph:
-        regex: ^(lazy|([1-9]|[0-9]{5,5}))$
-        explain: you can either enter the code (random seed) of one of our instances (n,seed) defining a graph you may have already encountered in other services for this problem or ask to enter your graph after the service has started up (lazy)
+        regex: ^(random|file|TA_send_files_bot|terminal)$
+        explain: 'choose the way to input your graph among:'
+        explain1: '[terminal] you enter your instance (undirected graph) directly by either typing it line after line or through cut and paste operations.'
+        explain2: '[TA_send_files_bot] send to the service a graph contained in a file on your local machine. To send the file you must use the TA_transfer_files_bot.py bot placed in the graph_connectivity/bots/ directory. Call the service with: rtal graph_connectivity tell_if_graph_is_connected -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt.'
+        explain3: '[file] send to the service a graph contained in a file on your local machine using the syntax allowed with TALight version 2.'
+        explain4: '[random] You can ask this service to produce a graph already met with this or other services, by just providing its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random graph we mean the triple <n,m,seed>. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). See the service \''gimme_a_graph\'' for more details on our family of pseudo-random graphs. When the choice of the seed is left to the service, it makes sure to choose a seed for a connected graph.'
+        default: random
+      n:
+        regex: ^([1-9][0-9]{0,3}|1000)$
+        default: 6
+        explain: 'Number of nodes of the graph (an integer in the interval [1,1000]). This argument is meaningful only in case the argument \''how_to_input_the_graph\'' is set to \''random\''.'   
+      m:
+        regex: ^(0|[1-9][0-9]{0,4}|10000)$
+        default: 10
+        explain: 'Number of edges of the graph (an integer in the interval [0,10000]). This argument is meaningful only in case the argument \''how_to_input_the_graph\'' is set to \''random\''.'
+      seed:
+        explain: 'This argument is meaningful only in case the argument \''how_to_input_the_graph\'' is set to \''random\''. It specifies the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n,m,seed>.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       silent:
         explain: if you specify the graph (through its generating seed) when launching rtal and nothing is wrong with your routing table for the graph then the service runs silently; otherwise it explains what is the problem in clear.
         regex: ^(0|1)$
@@ -84,15 +92,29 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_certificate_of_nonconnectivity:
-    description: this service checks whether a bipartition of the nodes is a valid certificate of the non-connectivity of a given graph
+    description: this service checks the validity of your certificate of non-connectivity for a given graph, or your ability to yield such a certificate when a non-connected graph is given to you. The form of the certificate is that of a bipartition of the nodes with the property that both classes of the bipartition are not empty and no edge of the graph has its two endpoints belonging to different classes.
     evaluator: [python, services/check_certificate_of_nonconnectivity_server.py]
     args:
-      n:
-        regex: ^([1-9][0-9]{0,4}|1000)$
-        explain: the number of nodes of the graph
       how_to_input_the_graph:
-        regex: ^(lazy|([1-9]|[0-9]{5,5}))$
-        explain: you can either enter the code (random seed) of one of our instances (n,seed) defining a graph you may have already encountered in other services for this problem or ask to enter your graph after the service has started up (lazy)
+        regex: ^(random|file|TA_send_files_bot|terminal)$
+        explain: 'choose the way to input your graph among:'
+        explain1: '[terminal] you enter your instance (undirected graph) directly by either typing it line after line or through cut and paste operations.'
+        explain2: '[TA_send_files_bot] send to the service a graph contained in a file on your local machine. To send the file you must use the TA_transfer_files_bot.py bot placed in the graph_connectivity/bots/ directory. Call the service with: rtal graph_connectivity tell_if_graph_is_connected -ainput_mode=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_graph.txt.'
+        explain3: '[file] send to the service a graph contained in a file on your local machine using the syntax allowed with TALight version 2.'
+        explain4: '[random] You can ask this service to produce a graph already met with this or other services, by just providing its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random graph we mean the triple <n,m,seed>. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). See the service \''gimme_a_graph\'' for more details on our family of pseudo-random graphs. When the choice of the seed is left to the service, it makes sure to choose a seed for a non-connected graph.'
+        default: random
+      n:
+        regex: ^([1-9][0-9]{0,3}|1000)$
+        default: 6
+        explain: 'Number of nodes of the graph (an integer in the interval [1,1000]). This argument is meaningful only in case the argument \''how_to_input_the_graph\'' is set to \''random\''.'   
+      m:
+        regex: ^(0|[1-9][0-9]{0,4}|10000)$
+        default: 10
+        explain: 'Number of edges of the graph (an integer in the interval [0,10000]). This argument is meaningful only in case the argument \''how_to_input_the_graph\'' is set to \''random\''.'
+      seed:
+        explain: 'This argument is meaningful only in case the argument \''how_to_input_the_graph\'' is set to \''random\''. It specifies the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n,m,seed>.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
       the_bipartition:
         regex: ^(lazy|(0  *|[1-9][0-9]{0,4}  *){1,999}versus  *(0  *|[1-9][0-9]{0,4}  *){0,998}(0|[1-9][0-9]{0,4}) *)$
       silent:

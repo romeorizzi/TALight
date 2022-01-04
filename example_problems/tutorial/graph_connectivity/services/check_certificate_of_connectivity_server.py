@@ -13,7 +13,7 @@ problem="graph_connectivity"
 service="check_certificate_of_connectivity"
 args_list = [
     ("n",int), 
-    #('m',int), 
+    ('m',int), 
     ("how_to_input_the_graph",str), 
     ("silent",int),
     ("lang",str),
@@ -25,11 +25,11 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 #TAc.print(LANG.opening_msg, "green")
 
 m = ENV["n"] - 1
-g = gcl.generate_graph(ENV["n"], m, gcl.gen_instance_seed(True), TAc=TAc, LANG=LANG)
+g = gcl.generate_graph(ENV["n"], ENV["m"], gcl.gen_instance_seed(True), TAc=TAc, LANG=LANG)
 
 # print the graph + info
 TAc.print('#start:', "yellow")
-TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of edges: {m}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
+TAc.print(LANG.render_feedback("assigned-instance", f'# The assigned instance is:\n#   number of nodes: {ENV["n"]}\n#   number of edges: {ENV["m"]}\n#   Seed: {ENV["how_to_input_the_graph"]}'), "yellow")
 
 TAc.print('graph:', "yellow")
 TAc.print(g.to_str(), "white")
