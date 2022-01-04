@@ -62,25 +62,26 @@ def is_feasible_solution(path):
             return False
     return True 
 
-#CHECK TIME ELAPSED         
-for triangle in instances:
+#CHECK TIME ELAPSED  
+time = 0       
+for instance in instances:
     start = monotonic() 
-    p = input(triangle) 
+    p = input(instance) 
     end = monotonic()
     time += end-start
-    if !right_length(instance,p):
+    if not right_length(instance,p):
         TAc.NO()
         if len(p) < len(instance) -1:
             TAc.print(LANG.render_feedback("no-way-short", f'{p} is not a feasible solution, as it is too short.'), "red")
         else:
             TAc.print(LANG.render_feedback("no-way-long", f'{p} is not a feasible solution, as it is too long.'), "red")
         exit(0)
-    if !is_feasible_solution(p):
+    if not is_feasible_solution(p):
         TAc.NO()
         TAc.print(LANG.render_feedback("no-way-wrong-directions", f'{p} is not a feasible solution, as it contains directions different from "L" or "R".'), "red")
         exit(0)
     print(f'Correct! [took {time} seconds on your machine]')
-    if time > 1:
+    if time > 20:
         TAc.OK()
         TAc.print(LANG.render_feedback("seems-correct-weak", f'Your solution answers correctly on a first set of instances, but it took too much to answer to the last instance.'), "green")
         exit(0)
