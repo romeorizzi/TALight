@@ -15,7 +15,6 @@ args_list = [
     ('code_lang',str),
 ]
 
-
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
@@ -31,7 +30,7 @@ if ENV["goal"] == "efficient":
     if ENV["code_lang"] == "compiled":
         MAX_ROWS *= 2
     scaling_factor = 1.3
-    n = 1
+    n = 2
     for _ in range(NUM_OF_INSTANCES):
         seed = random.randint(100000,999999)
         instances.append(tl.random_triangle(n, 0, 99, seed, TAc, LANG))
@@ -43,7 +42,7 @@ else:
     if ENV["code_lang"] == "compiled":
         MAX_ROWS *= 2
     scaling_factor = 1.3
-    n = 1
+    n = 2
     for _ in range(NUM_OF_INSTANCES):
         seed = random.randint(100000,999999)
         instances.append(tl.random_triangle(n, 0, 99, seed, TAc, LANG))
@@ -51,8 +50,8 @@ else:
         if n>MAX_ROWS:
             n = MAX_ROWS
             
-def right_length(instance,answer):
-    if len(instance) == len(answer)+1:
+def right_length(triangle,answer):
+    if len(triangle) == len(answer)+1:
         return True
     return False
 
@@ -64,26 +63,31 @@ def is_feasible_solution(path):
 
 #CHECK TIME ELAPSED  
 time = 0       
-for instance in instances:
-    start = monotonic() 
-    p = input(instance) 
+for triangle in instances:
+    start = monotonic()
+    TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
+    TAc.print(len(triangle), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
+    tl.print_triangle(triangle)
+    TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
+    answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
     end = monotonic()
     time += end-start
-    if not right_length(instance,p):
+    if not right_length(triangle,answer):
         TAc.NO()
-        if len(p) < len(instance) -1:
-            TAc.print(LANG.render_feedback("no-way-short", f'{p} is not a feasible solution, as it is too short.'), "red")
+        if len(answer) < len(triangle) -1:
+            TAc.print(LANG.render_feedback("no-way-short", f'{answer} is not a feasible solution, as it is too short.'), "red")
         else:
-            TAc.print(LANG.render_feedback("no-way-long", f'{p} is not a feasible solution, as it is too long.'), "red")
+            TAc.print(LANG.render_feedback("no-way-long", f'{answer} is not a feasible solution, as it is too long.'), "red")
         exit(0)
-    if not is_feasible_solution(p):
+    if not is_feasible_solution(answer):
         TAc.NO()
-        TAc.print(LANG.render_feedback("no-way-wrong-directions", f'{p} is not a feasible solution, as it contains directions different from "L" or "R".'), "red")
+        TAc.print(LANG.render_feedback("no-way-wrong-directions", f'{answer} is not a feasible solution, as it contains directions different from "L" or "R".'), "red")
         exit(0)
     print(f'Correct! [took {time} seconds on your machine]')
-    if time > 20:
+    if time > 3:
         TAc.OK()
-        TAc.print(LANG.render_feedback("seems-correct-weak", f'Your solution answers correctly on a first set of instances, but it took too much to answer to the last instance.'), "green")
+        TAc.print(LANG.render_feedback("seems-correct-weak", f'Your solution answers correctly on a first set of instances, but it took too much to answer to the last triangle.'), "green")
         exit(0)
 
 TAc.OK()

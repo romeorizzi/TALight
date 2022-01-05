@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
 
+import random
+import math
+from time import monotonic
+
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 import triangle_lib as tl
+
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -17,31 +22,6 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
-def cast_to_array(triangle):
-    array = []
-    for i in triangle:
-        array += i
-    return array
-
-def calculate_path(triangle,path_values):
-    triangle_array = cast_to_array(triangle)
-    n = len(triangle)
-    path = [triangle_array[0]]
-    s = triangle_array[0]
-    i = 0
-    last_pos = 0
-    for move in path_values:
-        if(move == "L"):
-            path.append(triangle_array[i+1 + last_pos])
-            s += triangle_array[i+1 + last_pos]
-            last_pos += i + 1 
-        else:
-            path.append(triangle_array[i+2 + last_pos])
-            s += triangle_array[i+2 + last_pos]
-            last_pos += i + 2 
-        i += 1
-    return s
-
 instances = []
 MAX_ROWS = 10
 NUM_OF_INSTANCES = 10
@@ -51,40 +31,50 @@ if ENV["goal"] == "efficient":
     NUM_OF_INSTANCES *=5
     if ENV["code_lang"] == "compiled":
         MAX_ROWS *= 2
-    scaling_factor = 1.3
-    n = 1
-    for _ in range(NUM_OF_INSTANCES):
-        seed = random.randint(100000,999999)
-        instances.append(tl.random_triangle(n, 0, 99, seed, TAc, LANG))
-        n = math.ceil(n*scaling_factor)
-        if n>MAX_ROWS:
-            n = MAX_ROWS
+    scaling_factor = 1.4
+
 #NOT EFFICIENT
 else:
     if ENV["code_lang"] == "compiled":
         MAX_ROWS *= 2
     scaling_factor = 1.3
-    n = 1
-    for _ in range(NUM_OF_INSTANCES):
-        directions = ["L","R"]
-        path = ""
-        seed = random.randint(100000,999999)
-        for _ in range(n-1):
-            path += random.choice(directions)
-        instances.append([tl.random_triangle(n, 0, 99, seed, TAc, LANG),path,seed,n])
-        n = math.ceil(n*scaling_factor)
-        if n>MAX_ROWS:
-            n = MAX_ROWS
+
+n = 2
+for _ in range(NUM_OF_INSTANCES):
+    directions = ["L","R"]
+    path = ""
+    seed = random.randint(100000,999999)
+    for _ in range(n-1):
+        path += random.choice(directions)
+    instances.append([tl.random_triangle(n, 0, 99, seed, TAc, LANG),path,seed,n])
+    n = math.ceil(n*scaling_factor)
+    if n>MAX_ROWS:
+        n = MAX_ROWS
             
 #CHECK TIME ELAPSED         
 for el in instances:
+    time = 0
+    triangle = el[0]
+    path = el[1] 
+    seed = el[2]
+    n = el[3]
+    TAc.print(LANG.render_feedback("triangle-size",f'We have a triangle whose size is:'),"white")
+    print(n)
+    TAc.print(LANG.render_feedback("display-triangle",f'The representation of the triangle instance of reference is:'),"white")
+    tl.print_triangle(triangle)
+    TAc.print(LANG.render_feedback("rough-triangle",f'This triangle can be described as a list of lists, where each of these lists represents a line of the triangle.'),"white")
+    print(triangle)
+    TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
+    print(path)
+    TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
     start = monotonic() 
-    answer = int(input([el[0],el[1]]))
+    answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
+    print(answer)
     end = monotonic()
     time += end-start
-    if answer != calculate_path(el[0],el[1]):
+    if answer != tl.calculate_path(triangle,path):
         TAc.NO()
-        TAc.print(LANG.render_feedback("no-wrong-sol", f'{answer} is the wrong solution. The  reward for this path in this triangle (seed:{el[2]}, {el[3]} rows) is {calculate_path(el[0],el[1])}.'), "red")
+        TAc.print(LANG.render_feedback("no-wrong-sol", f'{answer} is the wrong solution. The  reward for this path in this triangle (seed:{seed}, {n} rows) is {tl.calculate_path(triangle,path)}.'), "red")
         exit(0)
     print(f'Correct! The answer is {answer} [took {time} seconds on your machine]')
     if ENV['goal'] == 'efficient':

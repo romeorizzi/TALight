@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
 
+import random
+import math
+from time import monotonic
+
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
@@ -16,28 +20,6 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
-def cast_to_array(triangle):
-    array = []
-    for i in triangle:
-        array += i
-    return array
-
-def best_path_cost(triangle):
-    dist = len(triangle)
-    triangle_array = cast_to_array(triangle)
-    triangle_array = triangle_array[::-1]
-    i  = 0
-    count = 1
-    while dist > 1:
-        triangle_array[i + dist] = max(triangle_array[i] + triangle_array[i + dist], triangle_array[i + 1] + triangle_array[i + dist])
-        count += 1
-        i += 1
-        if count == dist:
-            count = 1
-            dist -= 1
-            i += 1
-    return triangle_array[i]
-
 instances = []
 MAX_ROWS = 10
 NUM_OF_INSTANCES = 10
@@ -47,38 +29,43 @@ if ENV["goal"] == "efficient":
     NUM_OF_INSTANCES *=5
     if ENV["code_lang"] == "compiled":
         MAX_ROWS *= 2
-    scaling_factor = 1.3
-    n = 1
-    for _ in range(NUM_OF_INSTANCES):
-        seed = random.randint(100000,999999)
-        instances.append(tl.random_triangle(n, 0, 99, seed, TAc, LANG))
-        n = math.ceil(n*scaling_factor)
-        if n>MAX_ROWS:
-            n = MAX_ROWS
+    scaling_factor = 1.4
+
 #NOT EFFICIENT
 else:
     if ENV["code_lang"] == "compiled":
         MAX_ROWS *= 2
     scaling_factor = 1.3
-    n = 1
-    for _ in range(NUM_OF_INSTANCES):
-        seed = random.randint(100000,999999)
-        instances.append([tl.random_triangle(n, 0, 99, seed, TAc, LANG),seed,n])
-        n = math.ceil(n*scaling_factor)
-        if n>MAX_ROWS:
-            n = MAX_ROWS
+n = 2
+for _ in range(NUM_OF_INSTANCES):
+    seed = random.randint(100000,999999)
+    instances.append([tl.random_triangle(n, 0, 99, seed, TAc, LANG),seed,n])
+    n = math.ceil(n*scaling_factor)
+    if n>MAX_ROWS:
+        n = MAX_ROWS
             
 #CHECK TIME ELAPSED         
 for el in instances:
+    time = 0
+    triangle = el[0]
+    seed = el[1]
+    n = el[2]
+    TAc.print(LANG.render_feedback("triangle-size", f'We give you a triangle with this number of rows:'), "white")
+    print(n)
+    TAc.print(LANG.render_feedback("print-triangle", f'The triangle of reference is:'), "white")
+    tl.print_triangle(triangle)
+    TAc.print(LANG.render_feedback("rought-triangle", f'The triangle can be seen as a list of lists. In this case we have:'), "white")
+    print(triangle)
+    TAc.print(LANG.render_feedback("best-path-question", f'Which is the best collectable reward in this triangle?'), "white")
     start = monotonic() 
-    p = int(input(el[0]))
+    answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
     end = monotonic()
     time += end-start
-    if p != best_path_cost(el[0]):
+    if answer != tl.best_path_cost(el[0]):
         TAc.NO()
-        TAc.print(LANG.render_feedback("no-wrong-sol", f'{p} is the wrong solution. The best reward for this triangle (seed:{el[1]}, {el[2]} rows) is {best_path_cost(el[0])}'), "red")
+        TAc.print(LANG.render_feedback("no-wrong-sol", f'{answer} is the wrong solution. The best reward for this triangle (seed:{seed}, {n} rows) is {tl.best_path_cost(triangle)}'), "red")
         exit(0)
-    print(f'Correct! The answer is {p} [took {time} seconds on your machine]')
+    print(f'Correct! The answer is {answer} [took {time} seconds on your machine]')
     if ENV['goal'] == 'efficient':
         if time > 1:
             TAc.OK()
