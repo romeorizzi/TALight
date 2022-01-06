@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from sys import stderr, exit, argv
 import random
+import time
 
 usage="""I am an efficient (linear time) bot that provides the maximum collectable reward in a triangle."""
 
@@ -31,7 +32,7 @@ def best_path_cost(triangle):
             dist -= 1
             i += 1
     return triangle_array[i]
-
+count = 0
 while True:
     #get triangle size:
     myinput() # eat triangle size statement
@@ -45,6 +46,5 @@ while True:
     # give your answer:
     myinput() # eat prompt
     print(best_path_cost(triangle))
-    myinput()
 exit(0)
 

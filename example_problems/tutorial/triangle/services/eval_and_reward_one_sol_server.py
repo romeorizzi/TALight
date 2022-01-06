@@ -10,8 +10,6 @@ from multilanguage import Env, Lang, TALcolors
 
 import triangle_lib as tl
 
-
-
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('goal',str),
@@ -22,146 +20,277 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
-instances = []
-MAX_ROWS = 10
-NUM_OF_INSTANCES = 10
-#EFFICIENT
-if ENV["goal"] == "efficient":
-    MAX_ROWS *= 5
-    NUM_OF_INSTANCES *=5
+# START CODING YOUR SERVICE:
+
+# INSTANCES FOR GOAL = correct
+
+instances = { 'correct' : [] }
+MIN_VAL = 10
+MAX_VAL = 99
+NUM_INSTANCES = 3
+for n in range(2, 7):
+    for _ in range(NUM_INSTANCES):
+        seed = random.randint(100000,999999)
+        path = "".join(random.choices(["L","R"],k=n-1))
+        instances['correct'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed, path])
+
+# INSTANCES FOR GOAL = 2^n o n^2      
+  
+if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2':
+    instances['time_at_most_2_exp_n'] = []
+    MIN_N = 8  # could still be 2^{\choose(n,2)}
+    MAX_N = 15  # we intend to evaluate positively solutions as bad as O(2^n)
     if ENV["code_lang"] == "compiled":
-        MAX_ROWS *= 2
-    scaling_factor = 1.4
+        MAX_N = 18
+    NUM_INSTANCES = 1
+    for _ in range(MIN_N, MAX_N):
+        seed = random.randint(100000,999999)
+        path = "".join(random.choices(["L","R"],k=n-1))
+        instances['time_at_most_2_exp_n'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed, path])
 
-#NOT EFFICIENT
-else:
+# INSTANCES FOR GOAL = n^2
+
+if ENV["goal"] == 'time_at_most_n_exp_2':
+    instances['time_at_most_n_exp_2'] = []
+    MIN_N = 16  # could still be 2^n
     if ENV["code_lang"] == "compiled":
-        MAX_ROWS *= 2
-    scaling_factor = 1.3
+        MIN_N = 19  # could still be 2^n
+    MAX_N = 50  # we intend to evaluate positively only the linear O(n^2) solutions
+    if ENV["code_lang"] == "compiled":
+        MAX_N = 100
+    NUM_INSTANCES = 1
+    scaling_factor = 1.1
+    n = MIN_N
+    while n < MAX_N:
+        seed = random.randint(100000,999999)
+        path = "".join(random.choices(["L","R"],k=n-1))
+        instances['time_at_most_n_exp_2'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed, path])
+        n = math.ceil(n*scaling_factor)
+        scaling_factor += 0.1
+        if n > MAX_N:
+           n = MAX_N
 
-n = 2
-for _ in range(NUM_OF_INSTANCES):
-    directions = ["L","R"]
-    path = ""
-    seed = random.randint(100000,999999)
-    for _ in range(n-1):
-        path += random.choice(directions)
-    instances.append([tl.random_triangle(n, 0, 99, seed, TAc, LANG),path,seed,n])
-    n = math.ceil(n*scaling_factor)
-    if n>MAX_ROWS:
-        n = MAX_ROWS
-            
-#CHECK TIME ELAPSED         
-for el in instances:
-    time = 0
-    triangle = el[0]
-    path = el[1] 
-    seed = el[2]
-    n = el[3]
-    TAc.print(LANG.render_feedback("triangle-size",f'We have a triangle whose size is:'),"white")
-    print(n)
-    TAc.print(LANG.render_feedback("display-triangle",f'The representation of the triangle instance of reference is:'),"white")
-    tl.print_triangle(triangle)
-    TAc.print(LANG.render_feedback("rough-triangle",f'This triangle can be described as a list of lists, where each of these lists represents a line of the triangle.'),"white")
-    print(triangle)
-    TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
-    print(path)
-    TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
-    start = monotonic() 
-    answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
-    print(answer)
-    end = monotonic()
-    time += end-start
-    if answer != tl.calculate_path(triangle,path):
-        TAc.NO()
-        TAc.print(LANG.render_feedback("no-wrong-sol", f'{answer} is the wrong solution. The  reward for this path in this triangle (seed:{seed}, {n} rows) is {tl.calculate_path(triangle,path)}.'), "red")
-        exit(0)
-    print(f'Correct! The answer is {answer} [took {time} seconds on your machine]')
-    if ENV['goal'] == 'efficient':
-        if time > 1:
-            TAc.OK()
-            TAc.print(LANG.render_feedback("seems-correct-weak", f'Your solution answers correctly on a first set of instances, but it took too much to answer to the last instance.'), "green")
+def print_goal_summary(goal,visited_instances):
+    TAc.print(LANG.render_feedback("summary", f'\nSUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'), "white", ["bold"])
+    right = 0
+    wrong = 0
+    out_of_time = 0
+    for ans in visited_instances:
+        if ans[2] == "right":
+            time = ans[1]
+            TAc.print(LANG.render_feedback("right-ans", f'Correct! Took time {time} on your machine.\n'), "green")
+            right += 1
+        elif ans[2] == "wrong":
+            time = ans[1]
+            n = ans[0][1] 
+            MIN_VAL = ans[0][2] 
+            MAX_VAL = ans[0][3] 
+            seed = ans[0][4] 
+            path = [0][5]
+            TAc.print(LANG.render_feedback("wrong-ans", f'NO! You gave the wrong solution for the instance with this parameters:\nn = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "yellow")
+            wrong += 1  
+        else:
+            time = ans[1]
+            n = ans[0][1] 
+            MIN_VAL = ans[0][2] 
+            MAX_VAL = ans[0][3] 
+            seed = ans[0][4]
+            path = [0][5]
+            TAc.print(LANG.render_feedback("out-of-time-ans", f'The evaluation has been stopped since your solution took too much time to perform on the instance with this parameters:\nn = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "white")
+            out_of_time += 1
+    if out_of_time > 0 and wrong == 0 and right >0:
+        TAc.print(LANG.render_feedback("right-not-in-time", f'OK! Your solution works well on some instances, but it didn\'t achieve the goal "{goal}".\n'), "yellow")
+    elif out_of_time > 0 and wrong == 0 and right == 0:
+        TAc.print(LANG.render_feedback("not-in-time", f'Your solution didn\'t achieve the goal "{goal}".\n'), "yellow")
+    elif right == len(visited_instances):
+        TAc.print(LANG.render_feedback("right-in-time", f'OK! Your solution achieved the goal "{goal}"!.\n'), "green")
+    elif wrong > 0:
+        TAc.print(LANG.render_feedback("right-in-time", f'NO! Your solution doesn\'t work well on some instances!.\n'), "red")
+        
+MAX_TIME = 3
+
+#CHECK TIME ELAPSED FOR correct 
+        
+if ENV["goal"] == 'correct':
+    visited_instances = []
+    for instance in instances['correct']:
+        triangle = instance[0]
+        n = instance[1]
+        path = instance[5]
+        TAc.print(LANG.render_feedback("triangle-size", f'We give you a triangle with this number of rows:'), "white")
+        print(n)
+        TAc.print(LANG.render_feedback("print-triangle", f'The triangle of reference is:'), "white")
+        tl.print_triangle(triangle)
+        TAc.print(LANG.render_feedback("rough-triangle", f'The triangle can be seen as a list of lists. In this case we have:'), "white")
+        print(triangle)
+        TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
+        print(path)
+        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
+        start = monotonic() 
+        answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
+        end = monotonic()
+        time = end-start
+        if time > MAX_TIME:
+            visited_instances.append([instance,time,"out_of_time"])
+            print_goal_summary('correct',visited_instances)
             exit(0)
-    else:
-        if time > 50:
-            TAc.OK()
-            TAc.print(LANG.render_feedback("seems-correct-weak", f'Your solution answers correctly on a first set of instances, but it took too much to answer to the last instance.'), "green")
-            exit(0)
-
-TAc.OK()
-TAc.print(LANG.render_feedback("seems-correct-strong", f'Your solution appears to be correct (checked on several instances).'), "green")
-if ENV["goal"] == "efficient":
-    TAc.OK()
-    TAc.print(LANG.render_feedback("efficient", f"Your solution's running time is linear in the depth of the triangle."), "green")
-exit(0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# CHECK WHETHER THE PATH L/R ENCODING STRING HAS THE RIGHT LENGTH
-
-if len(ENV["path"].replace(" ", "")) != ENV["n"]-1:
-    TAc.NO()
-    if len(ENV["path"].replace(" ", "")) < ENV["n"]-1:
-        TAc.print(LANG.render_feedback("path-too-short", f'The string of the L/R choices encoding your path is too short for a triangle with n={ENV["n"]} rows.'), "red", ["bold"])
-    if len(ENV["path"].replace(" ", "")) > ENV["n"]-1:
-        TAc.print(LANG.render_feedback("path-too-long", f'The string of the L/R choices encoding your path is too long for a triangle with n={ENV["n"]} rows.'), "red", ["bold"])
-    TAc.print(LANG.render_feedback("wrong-path-length", f'The true number of required choices is n-1={ENV["n"]-1} instead of {len(ENV["path"].replace(" ", ""))}.'), "red", ["bold"])
+        elif answer != tl.calculate_path(triangle,path):
+            visited_instances.append([instance,time,"wrong"])
+        else:
+            visited_instances.append([instance,time,"right"])
+    print_goal_summary('correct',visited_instances)
     exit(0)
 
+#CHECK TIME ELAPSED FOR time_at_most_2_exp_n
+       
+elif ENV["goal"] == 'time_at_most_2_exp_n':
+    visited_instances_correct = []
+    for instance in instances['correct']:
+        triangle = instance[0]
+        n = instance[1]
+        path = instance[5]
+        TAc.print(LANG.render_feedback("triangle-size", f'We give you a triangle with this number of rows:'), "white")
+        print(n)
+        TAc.print(LANG.render_feedback("print-triangle", f'The triangle of reference is:'), "white")
+        tl.print_triangle(triangle)
+        TAc.print(LANG.render_feedback("rough-triangle", f'The triangle can be seen as a list of lists. In this case we have:'), "white")
+        print(triangle)
+        TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
+        print(path)
+        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
+        start = monotonic() 
+        answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
+        end = monotonic()
+        time = end-start
+        if time > MAX_TIME:
+            visited_instances_correct.append([instance,time,"out_of_time"])
+            print_goal_summary('correct',visited_instances_correct)
+            exit(0)
+        elif answer != tl.calculate_path(triangle,path):
+            visited_instances_correct.append([instance,time,"wrong"])
+        else:
+            visited_instances_correct.append([instance,time,"right"])
+    
+    visited_instances_2_exp_n = []
+    for instance in instances['time_at_most_2_exp_n']:
+        triangle = instance[0]
+        n = instance[1]
+        path = instance[5]
+        TAc.print(LANG.render_feedback("triangle-size", f'We give you a triangle with this number of rows:'), "white")
+        print(n)
+        TAc.print(LANG.render_feedback("print-triangle", f'The triangle of reference is:'), "white")
+        tl.print_triangle(triangle)
+        TAc.print(LANG.render_feedback("rough-triangle", f'The triangle can be seen as a list of lists. In this case we have:'), "white")
+        print(triangle)
+        TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
+        print(path)
+        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
+        start = monotonic() 
+        answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
+        end = monotonic()
+        time = end-start
+        if time > MAX_TIME:
+            visited_instances_2_exp_n.append([instance,time,"out_of_time"])
+            print_goal_summary('correct',visited_instances_correct)
+            print_goal_summary('time_at_most_2_exp_n',visited_instances)
+            exit(0)
+        elif answer != tl.calculate_path(triangle,path):
+            visited_instances_2_exp_n.append([instance,time,"wrong"])
+        else:
+            visited_instances_2_exp_n.append([instance,time,"right"])
+    print_goal_summary('correct',visited_instances_correct)
+    print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n)    
+    exit(0)
+    
+#CHECK TIME ELAPSED FOR time_at_most_n_exp_2
 
-# TRIANGLE GENERATION
-
-if ENV['how_to_input_the_triangle'] == "my_own_triangle":
-    triangle = []
-    TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
-    for i in range(1,ENV["n"]+1):
-        TAc.print(LANG.render_feedback("insert-line", f'Insert line i={i}, that is, {i} integers separated by spaces:'), "yellow")
-        line = TALinput(int, i, token_recognizer=lambda val,TAc,LANG: tl.check_val_range(val,0,99,TAc,LANG), TAc=TAc, LANG=LANG)
-        triangle.append(line)
-    TAc.OK()
-    TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
 else:
-    triangle = tl.random_triangle(ENV["n"],0,99,int(ENV['how_to_input_the_triangle']),TAc,LANG)
-if not ENV['silent'] or ENV['display_triangle'] or ENV['reward_the_path'] or ENV['how_to_input_the_triangle'] == "my_own_triangle":
-    TAc.print(LANG.render_feedback("feasible-path", f'Your solution path ({ENV["path"]}) is a feasible one for this problem since it comprises {ENV["n"]-1} subsequent choices of directions (the correct number).'), "green", ["bold"])
-if ENV['display_triangle']:
-    TAc.print(LANG.render_feedback("display-triangle", f'The triangle of reference is the following:'), "green", ["bold"])
-    tl.print_triangle(triangle)
-if ENV['reward_the_path']:
-    TAc.print(LANG.render_feedback("path-reward", f'The total reward collected by your path is {tl.calculate_path(triangle,ENV["path"].replace(" ", ""))}.'), "green", ["bold"])        
-
-exit(0)
+    visited_instances_correct = []
+    for instance in instances['correct']:
+        triangle = instance[0]
+        n = instance[1]
+        path = instance[5]
+        TAc.print(LANG.render_feedback("triangle-size", f'We give you a triangle with this number of rows:'), "white")
+        print(n)
+        TAc.print(LANG.render_feedback("print-triangle", f'The triangle of reference is:'), "white")
+        tl.print_triangle(triangle)
+        TAc.print(LANG.render_feedback("rough-triangle", f'The triangle can be seen as a list of lists. In this case we have:'), "white")
+        print(triangle)
+        TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
+        print(path)
+        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
+        start = monotonic() 
+        answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
+        end = monotonic()
+        time = end-start
+        if time > MAX_TIME:
+            visited_instances_correct.append([instance,time,"out_of_time"])
+            print_goal_summary('correct',visited_instances_correct)
+            exit(0)
+        elif answer != tl.calculate_path(triangle,path):
+            visited_instances_correct.append([instance,time,"wrong"])
+        else:
+            visited_instances_correct.append([instance,time,"right"])
+    
+    visited_instances_2_exp_n = []
+    for instance in instances['time_at_most_2_exp_n']:
+        triangle = instance[0]
+        n = instance[1]
+        path = instance[5]
+        TAc.print(LANG.render_feedback("triangle-size", f'We give you a triangle with this number of rows:'), "white")
+        print(n)
+        TAc.print(LANG.render_feedback("print-triangle", f'The triangle of reference is:'), "white")
+        tl.print_triangle(triangle)
+        TAc.print(LANG.render_feedback("rough-triangle", f'The triangle can be seen as a list of lists. In this case we have:'), "white")
+        print(triangle)
+        TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
+        print(path)
+        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
+        print(triangle)
+        start = monotonic() 
+        answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
+        end = monotonic()
+        time = end-start
+        if time > MAX_TIME:
+            visited_instances_2_exp_n.append([instance,time,"out_of_time"])
+            print_goal_summary('correct',visited_instances_correct)
+            print_goal_summary('time_at_most_2_exp_n',visited_instances)
+            exit(0)
+        elif answer != tl.calculate_path(triangle,path):
+            visited_instances_2_exp_n.append([instance,time,"wrong"])
+        else:
+            visited_instances_2_exp_n.append([instance,time,"right"])
+    
+    visited_instances_n_exp_2 = []
+    for instance in instances['time_at_most_n_exp_2']:
+        triangle = instance[0]
+        n = instance[1]
+        path = instance[5]
+        TAc.print(LANG.render_feedback("triangle-size", f'We give you a triangle with this number of rows:'), "white")
+        print(n)
+        TAc.print(LANG.render_feedback("print-triangle", f'The triangle of reference is:'), "white")
+        tl.print_triangle(triangle)
+        TAc.print(LANG.render_feedback("rough-triangle", f'The triangle can be seen as a list of lists. In this case we have:'), "white")
+        print(triangle)
+        TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
+        print(path)
+        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
+        start = monotonic() 
+        answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
+        end = monotonic()
+        time = end-start
+        if time > MAX_TIME:
+            visited_instances_n_exp_2.append([instance,time,"out_of_time"])
+            print_goal_summary('correct',visited_instances_correct)
+            print_goal_summary('time_at_most_2_exp_n',visited_instances)
+            print_goal_summary('time_at_most_n_exp_2',visited_instances_n_exp_2) 
+            exit(0)
+        elif answer != tl.calculate_path(triangle,path):
+            visited_instances_n_exp_2.append([instance,time,"wrong"])
+        else:
+            visited_instances_n_exp_2.append([instance,time,"right"])
+    
+    print_goal_summary('correct',visited_instances_correct)
+    print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n) 
+    print_goal_summary('time_at_most_n_exp_2',visited_instances_n_exp_2) 
+    exit(0)

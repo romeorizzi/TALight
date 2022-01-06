@@ -51,7 +51,5 @@ while True:
     # give your answer:
     myinput() # eat prompt
     print(calculate_path(t,path))
-    myinput()
-    myinput()
 exit(0)
 

@@ -24,16 +24,18 @@ def fits(start,livello,big_triangle,small_triangle,small_size):
     return True,indexes
 
 while True:
-    # get triangle size:
-    myinput() # eat triangle size statement
-    sizes = eval(myinput()) 
-    l = sizes[0]
-    L = sizes[1]
-    # get triangle arrays: 
-    myinput() # eat triangle arrays statement
-    arrays = eval(myinput())   
-    small_array = arrays[0]
-    big_array = arrays[1]
+    # get small triangle size:
+    myinput() # eat small triangle size statement
+    l = int(myinput())
+    # get big triangle size:
+    myinput() # eat big triangle size statement
+    L = int(myinput())
+    # get small triangle array: 
+    myinput() # eat small triangle array statement
+    small_array = eval(myinput())
+    # get big triangle array: 
+    myinput() # eat big triangle array statement
+    big_array = eval(myinput())
     # give your answer:
     myinput() # eat prompt
     answer = 0
@@ -46,6 +48,20 @@ while True:
             if fits(i,livello,big_array,small_array,l)[0]:
                 indexes.append(fits(i,livello,big_array,small_array,l)[1])
                 answer += 1
-    print(answer)
-    myinput()
+    print(f"{answer} #the answer is {answer}")
 exit(0)
+
+
+
+             
+             
+               
+             
+             
+             
+             
+             
+             
+             
+             
+             

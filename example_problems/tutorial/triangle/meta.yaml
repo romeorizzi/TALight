@@ -178,7 +178,7 @@ services:
     args:
       goal:
         explain: set your goal (efficient includes also correct).
-        regex: ^(correct|efficient)$
+        regex: ^(correct|time_at_most_2_exp_n|time_at_most_n_exp_2)$
         default: correct
       code_lang: 
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
@@ -190,7 +190,7 @@ services:
     args:
       goal:
         explain: set your goal (efficient includes also correct).
-        regex: ^(correct|time_at_most_2^n|time_at_most_n^2)$
+        regex: ^(correct|time_at_most_2_exp_n|time_at_most_n_exp_2)$
         default: correct
       check_also_sol:
         explain: when this flag is set to 1 then the service expects and checks also the solution, not only its value.
@@ -210,7 +210,7 @@ services:
     args:
       goal:
         explain: set your goal (efficient includes also correct).
-        regex: ^(correct|efficient)$
+        regex: ^(correct|time_at_most_2_exp_n|time_at_most_n_exp_2)$
         default: correct
       code_lang: 
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
@@ -222,7 +222,7 @@ services:
     args:
       goal:
         explain: set your goal (efficient includes also correct).
-        regex: ^(correct|efficient)$
+        regex: ^(correct|time_at_most_2_exp_n|time_at_most_n_exp_2)$
         default: correct
       code_lang: 
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
