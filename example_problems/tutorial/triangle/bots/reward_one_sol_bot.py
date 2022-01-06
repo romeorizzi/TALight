@@ -2,7 +2,7 @@
 from sys import stderr, exit, argv
 import random
 
-usage="""I am an efficient (linear time) bot that checks whether a given candidate solution for a given triangle instance is indeed a feasible solution. This is the case if and only if the candidate solution is a string in {L,R}^n where n is the size of the assigned triangle."""
+usage="""I am an efficient (linear time) bot that provides the reward for a feasible solution (path) in a given triangle."""
 
 def myinput():
     spoon = ""
