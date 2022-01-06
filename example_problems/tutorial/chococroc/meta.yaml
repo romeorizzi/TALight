@@ -114,15 +114,12 @@ services:
         regex: ^(no_watch|watch_winner|num_winning_moves|watch_grundy_val)$
         default: no_watch
         explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
-      game:
-        regex: ^chococroc$
-        default: chococroc
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play_val_measuring_game:
-    description: use this service if you want to play a match of the MeasuringGame(chococroc) against our player. You can choose the starting configuration and whether to be first or second to move. The MeasuringGame(chococroc) game is defined as the game sum of a chococrock game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a chococroc game position. 
-    evaluator: [python, services/play.py]
+    description: use this service if you want to play a match of the MeasuringGame(chococroc) against our player. You can choose the starting configuration and whether to be first or second to move. The MeasuringGame(chococroc) game is defined as the game sum of a chococroc game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a chococroc game position. 
+    evaluator: [python, services/play_val_measuring_game.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -132,6 +129,10 @@ services:
         regex: ^([1-9][0-9]{0,50})$
         default: 1
         explain: Number of columns of the chocolate bar.
+      nim:
+        regex: ^([0-9][0-9]{0,50})$
+        default: 0
+        explain: The height of the pile in the nim game.
       player:
         regex: ^(0|1)$
         default: 0
@@ -140,9 +141,6 @@ services:
         regex: ^(no_watch|watch_winner|num_winning_moves|watch_grundy_val)$
         default: no_watch
         explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
-      game:
-        regex: ^measuring_game$
-        default: measuring_game
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

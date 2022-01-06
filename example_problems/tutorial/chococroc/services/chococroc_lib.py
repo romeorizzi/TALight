@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import string
 import random
 
 def grundy_sum(val1:int, val2:int):
@@ -17,16 +16,19 @@ def grundy_val(m:int, n:int = 1):
         return m//2
     return grundy_val(m//2)
 
-def find_move(m, n):
+def find_move(m, n, nim=0):
     for s in range(1, m // 2 + 1):
-        if not grundy_val(m - s, n):
+        if not grundy_sum(grundy_val(m - s, n), nim):
             return (0, s)
     for s in range(1, n // 2 + 1):
-        if not grundy_val(m, n - s):
+        if not grundy_sum(grundy_val(m, n - s), nim):
             return (1, s)
+    return (None,None)
     
-def winning_move(m,n):
-    (direction, sz) = find_move(m, n)
+def winning_move(m,n,nim=0):
+    (direction, sz) = find_move(m, n, nim)
+    if (direction, sz)==(None,None):
+        return (None,None)
     if direction:
         return (m,n-sz)
     else:
@@ -38,6 +40,8 @@ def reverse(tuples):
 
 def winning_moves(m,n):
     (direction, sz) = find_move(m, n)
+    if (direction, sz)==(None,None):
+        return {(None,None)}
     move1=(None,None)
     move2=(None,None)
     if direction: # the move reduces by sz the number n of columns
@@ -50,15 +54,11 @@ def winning_moves(m,n):
     else: # the move reduces by sz the number n of rows
         move2=(n-sz,m)
     if move1==reverse(move2):
-        return move1
+        return {move1}
     else:
         return {move1, (move2[1],move2[0])}
 
-def computer_move(m,n):
-    assert m > 1 or n > 1
-    grundy_value = grundy_val(m,n)
-    if grundy_value > 0:
-        return winning_move(m,n)
+def computer_random_choice_chococroc(m,n):
     coordinates = []
     if m > 1:
         coordinates.append('rows')
@@ -70,59 +70,35 @@ def computer_move(m,n):
     else:
         return (m, n-random.randint(1,n//2))
 
-def not_a_number(move):
-    try:
-        int(move)
-        return False
-    except ValueError:
-        return True
+def computer_move(m,n):
+    assert m > 1 or n > 1
+    grundy_value = grundy_val(m,n)
+    if grundy_value > 0:
+        return winning_move(m,n)
+    return computer_random_choice_chococroc(m,n)
 
-def move_control(move, m):
-    if not_a_number(move):
-        return True
-    move=int(move)
-    if m%2==0:
-        if move>=m or move<m//2:
-            return True
+def computer_decision_move(m,n,nim):
+    chococroc_grundy_value=grundy_val(m,n)
+    game_grundy_value=grundy_sum(chococroc_grundy_value, nim)
+    if game_grundy_value==0:
+        games = []
+        if m > 1 or n > 1:
+            games.append('chococroc')
+        if nim > 0:
+            games.append('nim')
+        selected_game = random.choice(games)
+        if selected_game == 'chococroc':
+            new_m,new_n = computer_random_choice_chococroc(m,n)
+            return new_m,new_n,nim
         else:
-            return False
-    else:
-        if move>=m or move<(m//2)+1:
-            return True
-        else:
-            return False
-
-def player_move(m,n,TAc,LANG):
-    direction=input('Insert your move (rows/columns):\n')
-    while direction != 'rows' and direction != 'columns':
-        direction=input('Wrong direction. Try again:\n')
-
-    while True:        
-        if direction=='rows':
-            if m==1:
-                TAc.print(LANG.render_feedback("invalid-move", f'You can\'t move in this direction because there is only 1 row.'), "red", ["bold"])
-                while direction != 'columns':
-                    direction=input('Change direction. Try again:\n')
-            else:
-                move=input('Insert number of rows remaining:\n')
-                while move_control(move,m):
-                    move=input('Your move is not correct, try again:\n')
-                move=int(move)
-                TAc.print(LANG.render_feedback("user-move", f'Your move: {move} x {n}.'), "yellow", ["bold"])
-                return (move, n)
-
-        elif direction=='columns':
-            if n==1:
-                TAc.print(LANG.render_feedback("invalid-move", f'You can\'t move in this direction because there is only 1 column.'), "red", ["bold"])
-                while direction != 'rows':
-                    direction=input('Change direction. Try again:\n')
-            else:
-                move=input('Insert number of columns remaining:\n')
-                while move_control(move,n):
-                    move=input('Your move is not correct, try again:\n')
-                move=int(move)
-                TAc.print(LANG.render_feedback("user-move", f'Your move: {m} x {move}.'), "yellow", ["bold"])
-                return (m, move)
+            return m,n,nim-random.randint(1,nim)
+    new_m,new_n = winning_move(m,n,nim)
+    if (new_m,new_n)!=(None,None):
+        return new_m,new_n,nim
+    move_on_nim=0
+    while grundy_sum(chococroc_grundy_value, nim-move_on_nim)!=0:
+        move_on_nim+=1
+    return m,n,nim-move_on_nim
 
 # TESTS
 if __name__ == "__main__":
@@ -135,6 +111,6 @@ if __name__ == "__main__":
 
     print('Test: grundy_val(m, n)')
     print('TO BE DONE')
-
-
-
+    print('Test: computer decision move')
+    if (7,7,0)==computer_decision_move(7,7,9):
+        print('==> OK\n')
