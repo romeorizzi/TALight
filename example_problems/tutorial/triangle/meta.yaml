@@ -190,12 +190,20 @@ services:
     args:
       goal:
         explain: set your goal (efficient includes also correct).
-        regex: ^(correct|efficient)$
+        regex: ^(correct|time_at_most_2^n|time_at_most_n^2)$
         default: correct
+      check_also_sol:
+        explain: when this flag is set to 1 then the service expects and checks also the solution, not only its value.
+        regex: ^(0|1)$
+        default: 0
       code_lang: 
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
         regex: ^(python|java|nodejs|compiled)$
         default: python
+      seed:
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
   eval_and_reward_one_sol:
     description: this service evaluates your code which calculates the reward for a given path in a triangle.
     evaluator: [python, services/eval_and_reward_one_sol_server.py]

@@ -20,30 +20,83 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
-instances = []
-MAX_ROWS = 10
-NUM_OF_INSTANCES = 10
-#EFFICIENT
-if ENV["goal"] == "efficient":
-    MAX_ROWS *= 5
-    NUM_OF_INSTANCES *=5
-    if ENV["code_lang"] == "compiled":
-        MAX_ROWS *= 2
-    scaling_factor = 1.4
+# START CODING YOUR SERVICE:
+TAc.print(LANG.render_feedback("triangle-size", f'We give you a triangle with this number of rows:'), "white")
 
-#NOT EFFICIENT
-else:
+goals = [ 'correct' ]  # we intend to evaluate positively solutions as bad as O(2^{\choose(n,2)})
+instances = { 'correct' : [] }
+MIN_VAL = 10
+MAX_VAL = 99
+NUM_INSTANCES = 3
+for n in range(2, 7):
+    for _ in range(NUM_INSTANCES):
+        seed = random.randint(100000,999999)
+        instances['correct'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed])
+
+prerequisites = {}
+prerequisites['time_at_most_n^2'] = [time_at_most_2^n]
+prerequisites['time_at_most_2^n'] = ['correct']
+        
+if ENV["goal"] in {'time_at_most_2^n','time_at_most_n^2'}:
+    goals.append('time_at_most_2^n')
+    instances['time_at_most_2^n'] = []
+    MIN_N = 8  # could still be 2^{\choose(n,2)}
+    MAX_N = 15  # we intend to evaluate positively solutions as bad as O(2^n)
     if ENV["code_lang"] == "compiled":
-        MAX_ROWS *= 2
-    scaling_factor = 1.3
-n = 2
-for _ in range(NUM_OF_INSTANCES):
-    seed = random.randint(100000,999999)
-    instances.append([tl.random_triangle(n, 0, 99, seed, TAc, LANG),seed,n])
-    n = math.ceil(n*scaling_factor)
-    if n>MAX_ROWS:
-        n = MAX_ROWS
-            
+        MAX_N = 18
+    NUM_INSTANCES = 1
+    for _ in range(MIN_N, MAX_N):
+        seed = random.randint(100000,999999)
+        instances['time_at_most_2^n'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed])
+
+if ENV["goal"] == 'time_at_most_n^2':
+    goals.append('time_at_most_n^2')
+    instances['time_at_most_n^2'] = []
+    MIN_N = 16  # could still be 2^n
+    if ENV["code_lang"] == "compiled":
+        MIN_N = 19  # could still be 2^n
+    MAX_N = 50  # we intend to evaluate positively only the linear O(n^2) solutions
+    if ENV["code_lang"] == "compiled":
+        MAX_N = 100
+    NUM_INSTANCES = 1
+    scaling_factor = 1.1
+    n = MIN_N
+    while n < MAX_N:
+        seed = random.randint(100000,999999)
+        instances['time_at_most_n^2'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed])
+        n = math.ceil(n*scaling_factor)
+        scaling_factor += 0.1
+        if n > MAX_ROWS:
+           n = MAX_ROWS
+
+goals_achieved = []
+goal_failed = None
+for goal in goals:
+    TAc.print(LANG.render_feedback("goal-open", f'We now test whether your solution attains goal {goal}:'), "yellow")
+    for instance in instances[goal]:
+        TAc.print(LANG.render_feedback("goal-failed", f'Your solution has failed on the above test instance. Goal {goal} has not been achieved.'), "yellow")
+        if not test(instance):
+            goal_failed = goal
+            print_summary_and_exit()
+    goals_achieved.append(goal)
+    TAc.print(LANG.render_feedback("goal-achieved", f'Your solution has achieved goal {goal}!'), "yellow")
+
+def print_summary_and_exit():
+    TAc.print(LANG.render_feedback("summary", f'\nSUMMARY OF THE RESULTSS:'), "green", ["bold"])
+    for goal in goals_achieved:
+        TAc.print(LANG.render_feedback("goal", f' - Goal {goal}: '), end='', "white")
+        TAc.print(LANG.render_feedback("achieved", 'achieved!'), end='', "green")
+    if goal_failed != None:
+        TAc.print(LANG.render_feedback("goal-failed", f' - Goal {goal_failed}: '), end='', "white")
+        TAc.print(LANG.render_feedback("failed", 'failed!'), end='', "red", ["bold"])
+        if ENV["goal"] == goal_failed:
+            TAc.print(LANG.render_feedback("evaluation-stopped1", f'The evaluation has been stopped because of failure on a test-case for your goal.'), "white")
+        else:
+            TAc.print(LANG.render_feedback("evaluation-stopped2", f'The evaluation has been stopped because of failure on a test-case for goal {goal_failed}. Goal {goal_failed} is a necessary prerequisite for your goal {ENV["goal"]}.'), "white")
+    exit(0)
+        
+           
+
 #CHECK TIME ELAPSED         
 for el in instances:
     time = 0
