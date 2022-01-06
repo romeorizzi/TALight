@@ -20,7 +20,7 @@ def random_triangle(n:int, MIN_VAL:int, MAX_VAL:int, seed:int, TAc, LANG):
     if MAX_VAL < MIN_VAL:
         TAc.print(LANG.render_feedback("range-is-empty", f"Error: I can not choose the integers for the triangle from the range [{MIN_VAL},{MAX_VAL}] since this range is empty.", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
         exit(0)
-    random.seed(seed,version=2)
+    random.seed(seed)
     triangle = []
     values = [i for i in range (MIN_VAL,MAX_VAL+1)]
     for row in range(0,n):
