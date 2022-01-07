@@ -38,8 +38,8 @@ def reverse(tuples):
     new_tup = tuples[::-1]
     return new_tup
 
-def winning_moves(m,n):
-    (direction, sz) = find_move(m, n)
+def winning_moves(m,n,nim=0):
+    (direction, sz) = find_move(m, n, nim)
     if (direction, sz)==(None,None):
         return {(None,None)}
     move1=(None,None)
@@ -48,7 +48,7 @@ def winning_moves(m,n):
         move1=(m,n-sz)
     else: # the move reduces by sz the number m of rows
         move1=(m-sz,n)
-    (direction, sz) = find_move(n, m)
+    (direction, sz) = find_move(n, m, nim)
     if direction: # the move reduces by sz the number m of columns
         move2=(n,m-sz)
     else: # the move reduces by sz the number n of rows
@@ -99,6 +99,14 @@ def computer_decision_move(m,n,nim):
     while grundy_sum(chococroc_grundy_value, nim-move_on_nim)!=0:
         move_on_nim+=1
     return m,n,nim-move_on_nim
+
+def count_winning_moves_nim (m, n, nim):
+    chococroc_grundy_value = grundy_val(m, n)
+    count=0
+    for i in range(1, nim+1):
+        if grundy_sum(chococroc_grundy_value, nim-i)==0:
+            count +=1
+    return count
 
 # TESTS
 if __name__ == "__main__":
