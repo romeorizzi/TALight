@@ -40,12 +40,19 @@ if ENV['player'] == 1: #se l'utente vuole giocare per secondo
     elif ENV['watch_value'] == 'num_winning_moves' :
         win_moves = cl.winning_moves(new_m, new_n)
         win_moves.discard((None, None))
-        if len(win_moves) == 2:
-             TAc.print(LANG.render_feedback("num-winning-moves-2", f'You want to know the number of winning moves: for the current configuration ({new_m}, {new_n}) the number of winning moves is 2'), "green", ["bold"])
-        elif len(win_moves) == 1:
-            TAc.print(LANG.render_feedback("num-winning-moves-1", f'You want to know the number of winning moves: for the current configuration ({new_m}, {new_n}) the number of winning moves is 1'), "green", ["bold"])
+        if len(win_moves) >= 1:
+            TAc.print(LANG.render_feedback("num-winning-moves-n", f'You want to know the number of winning moves: for the current configuration ({new_m}, {new_n}) the number of winning moves is {len(win_moves)}'), "green", ["bold"])
         else:
             TAc.print(LANG.render_feedback("num-winning-moves-0", f'You want to know the number of winning moves: for the current configuration ({new_m}, {new_n}) there are not winning moves'), "green", ["bold"])
+    elif(ENV['watch_value'] == 'list_winning_moves'):
+        win_moves = cl.winning_moves(new_m, new_n)
+        win_moves.discard((None, None))
+        if len(win_moves) > 1:
+            TAc.print(LANG.render_feedback("list-multiple-winning-moves", f'You want to know the winning moves: for the current configuration ({new_m}, {new_n}) the winning moves are {win_moves}'), "green", ["bold"])
+        elif len(win_moves) == 1:
+            TAc.print(LANG.render_feedback("list-one-winning-moves", f'You want to know the winning moves: for the current configuration ({new_m}, {new_n}) the winning move is {win_moves}'), "green", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback("list-none-winning-moves", f'You want to know the winning moves: for the current configuration ({new_m}, {new_n}) there are not winning moves'), "green", ["bold"])
     elif(ENV['watch_value'] == 'watch_grundy_val'):
         TAc.print(LANG.render_feedback("watch-grundy-server-move", f'You want to watch the grundy value: for the current configuration ({new_m}, {new_n}) the grundy value is {cl.grundy_val(new_m, new_n)}'), "green", ["bold"])
 
@@ -93,12 +100,19 @@ while True:
     elif ENV['watch_value'] == 'num_winning_moves' :
         win_moves = cl.winning_moves(new_m, new_n)
         win_moves.discard((None, None))
-        if len(win_moves) == 2:
-             TAc.print(LANG.render_feedback("num-winning-moves-2", f'You want to know the number of winning moves: for the current configuration ({new_m}, {new_n}) the number of winning moves is 2'), "green", ["bold"])
-        elif len(win_moves) == 1:
-            TAc.print(LANG.render_feedback("num-winning-moves-1", f'You want to know the number of winning moves: for the current configuration ({new_m}, {new_n}) the number of winning moves is 1'), "green", ["bold"])
+        if len(win_moves) >= 1:
+            TAc.print(LANG.render_feedback("num-winning-moves-n", f'You want to know the number of winning moves: for the current configuration ({new_m}, {new_n}) the number of winning moves is {len(win_moves)}'), "green", ["bold"])
         else:
             TAc.print(LANG.render_feedback("num-winning-moves-0", f'You want to know the number of winning moves: for the current configuration ({new_m}, {new_n}) there are not winning moves'), "green", ["bold"])
+    elif(ENV['watch_value'] == 'list_winning_moves'):
+        win_moves = cl.winning_moves(new_m, new_n)
+        win_moves.discard((None, None))
+        if len(win_moves) > 1:
+            TAc.print(LANG.render_feedback("list-multiple-winning-moves", f'You want to know the winning moves: for the current configuration ({new_m}, {new_n}) the winning moves are {win_moves}'), "green", ["bold"])
+        elif len(win_moves) == 1:
+            TAc.print(LANG.render_feedback("list-one-winning-moves", f'You want to know the winning moves: for the current configuration ({new_m}, {new_n}) the winning move is {win_moves}'), "green", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback("list-none-winning-moves", f'You want to know the winning moves: for the current configuration ({new_m}, {new_n}) there are not winning moves'), "green", ["bold"])
     elif (ENV['watch_value'] == 'watch_grundy_val'):
         TAc.print(LANG.render_feedback("watch-grundy-after-user", f'You want to watch the grundy value: for the current configuration ({new_m}, {new_n}) the grundy value is {cl.grundy_val(new_m, new_n)}'), "green", ["bold"])
 
@@ -112,11 +126,18 @@ while True:
     elif ENV['watch_value'] == 'num_winning_moves' :
         win_moves = cl.winning_moves(m,n)
         win_moves.discard((None, None))
-        if len(win_moves) == 2:
-             TAc.print(LANG.render_feedback("num-winning-moves-2", f'You want to know the number of winning moves: for the current configuration ({m}, {n}) the number of winning moves is 2'), "green", ["bold"])
-        elif len(win_moves) == 1:
-            TAc.print(LANG.render_feedback("num-winning-moves-1", f'You want to know the number of winning moves: for the current configuration ({m}, {n}) the number of winning moves is 1'), "green", ["bold"])
+        if len(win_moves) >= 1:
+            TAc.print(LANG.render_feedback("num-winning-moves-n", f'You want to know the number of winning moves: for the current configuration ({m}, {n}) the number of winning moves is {len(win_moves)}'), "green", ["bold"])
         else:
             TAc.print(LANG.render_feedback("num-winning-moves-0", f'You want to know the number of winning moves: for the current configuration ({m}, {n}) there are not winning moves'), "green", ["bold"])
+    elif(ENV['watch_value'] == 'list_winning_moves'):
+        win_moves = cl.winning_moves(m, n)
+        win_moves.discard((None, None))
+        if len(win_moves) > 1:
+            TAc.print(LANG.render_feedback("list-multiple-winning-moves", f'You want to know the winning moves: for the current configuration ({m}, {n}) the winning moves are {win_moves}'), "green", ["bold"])
+        elif len(win_moves) == 1:
+            TAc.print(LANG.render_feedback("list-one-winning-moves", f'You want to know the winning moves: for the current configuration ({m}, {n}) the winning move is {win_moves}'), "green", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback("list-none-winning-moves", f'You want to know the winning moves: for the current configuration ({m}, {n}) there are not winning moves'), "green", ["bold"])
     elif(ENV['watch_value'] == 'watch_grundy_val'):
         TAc.print(LANG.render_feedback("watch-grundy-after-server", f'You want to watch the grundy value: for the current configuration ({m}, {n}) the grundy value is {cl.grundy_val(m,n)}'), "green", ["bold"])
