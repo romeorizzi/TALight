@@ -111,7 +111,7 @@ services:
         default: 0
         explain: If you to start as first player use 0, if you want to start as second player use 1.
       watch_value:
-        regex: ^(no_watch|watch_winner|num_winning_moves|watch_grundy_val)$
+        regex: ^(no_watch|watch_winner|num_winning_moves|list_winning_moves|watch_grundy_val)$
         default: no_watch
         explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
       lang:
@@ -138,7 +138,7 @@ services:
         default: 0
         explain: If you to start as first player use 0, if you want to start as second player use 1.
       watch_value:
-        regex: ^(no_watch|watch_winner|num_winning_moves|watch_grundy_val)$
+        regex: ^(no_watch|watch_winner|num_winning_moves|list_winning_moves|watch_grundy_val)$
         default: no_watch
         explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
       lang:
