@@ -45,6 +45,9 @@ class Env:
         self.exe_name = path.split(self.exe_fullname)[-1]
         self.META_DIR = environ["TAL_META_DIR"]
         self.CODENAME = environ["TAL_META_CODENAME"]
+        self.OUTPUT_FILES = environ["TAL_META_OUTPUT_FILES"]
+        self.INPUT_FILES = environ["TAL_META_INPUT_FILES"]
+        self.LOG_FILES = environ.get("TAL_META_LOG_FILES")
         self.service = environ["TAL_META_SERVICE"]
         self.problem = path.split(environ["TAL_META_DIR"])[-1]
         assert(self.problem == self.CODENAME)
