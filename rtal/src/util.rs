@@ -1,171 +1,86 @@
-use crate::fail;
-use log::error;
-use rustls::{ClientSession, StreamOwned};
-use std::io::ErrorKind;
-use std::io::Read;
-use std::io::Write;
-use std::net::TcpStream;
-use std::process;
-use std::sync::mpsc::{self, TryRecvError};
-use std::thread::spawn;
-use std::time::Duration;
-use std::time::Instant;
-use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-use tungstenite::error::Error::Io;
-use tungstenite::protocol::WebSocket;
-use tungstenite::stream::Stream;
-use tungstenite::Message::Binary;
+use futures_util::{Sink, SinkExt, Stream, StreamExt};
+use serde::{Deserialize, Serialize};
+use std::fmt::Display;
+use tokio_tungstenite::tungstenite::Error as TsError;
+use tokio_tungstenite::tungstenite::Message;
+use twox_hash::xxh3::hash128;
 
-const TICK_DURATION_MS: u64 = 10;
 const BUFFER_SIZE: usize = 1 << 20;
 
-pub trait StreamOp {
-    fn set_read_timeout(&mut self, dur: Option<Duration>) -> std::io::Result<()>;
-    fn set_nodelay(&mut self, toggle: bool) -> std::io::Result<()>;
+#[derive(Serialize, Deserialize, Debug)]
+struct BinaryDataHeader {
+    name: String,
+    size: usize,
+    hash: u128,
 }
 
-impl StreamOp for TcpStream {
-    fn set_read_timeout(&mut self, dur: Option<Duration>) -> std::io::Result<()> {
-        TcpStream::set_read_timeout(self, dur)
-    }
-    fn set_nodelay(&mut self, toggle: bool) -> std::io::Result<()> {
-        TcpStream::set_nodelay(self, toggle)
-    }
-}
-
-impl StreamOp for Stream<TcpStream, StreamOwned<ClientSession, TcpStream>> {
-    fn set_read_timeout(&mut self, dur: Option<Duration>) -> std::io::Result<()> {
-        match &mut *self {
-            Stream::Plain(x) => x.set_read_timeout(dur),
-            Stream::Tls(x) => x.get_mut().set_read_timeout(dur),
-        }
-    }
-    fn set_nodelay(&mut self, toggle: bool) -> std::io::Result<()> {
-        match &mut *self {
-            Stream::Plain(x) => TcpStream::set_nodelay(x, toggle),
-            Stream::Tls(x) => TcpStream::set_nodelay(x.get_mut(), toggle),
-        }
-    }
-}
-
-fn ignore_result<T, E>(_: Result<T, E>) {}
-
-macro_rules! cwrite {
-    ($stream:expr, $color:expr, $($arg:tt)+) => {
-        {
-            ignore_result($stream.set_color(ColorSpec::new().set_bold(true).set_fg(Some($color))));
-            ignore_result(write!(&mut $stream, $($arg)+));
-            ignore_result($stream.set_color(ColorSpec::new().set_bold(false).set_fg(None)));
-        }
-    }
-}
-
-pub fn connect_streams<T: Read + Write + StreamOp, R: 'static + Read + Send, W: Write>(ws: &mut WebSocket<T>, mut pout: R, mut pin: W, echo: bool, timeout_ms: u64) {
-    let mut stdout = StandardStream::stdout(ColorChoice::Auto);
-    match ws.get_mut().set_read_timeout(Some(Duration::from_millis(TICK_DURATION_MS))) {
-        Ok(()) => {}
-        Err(x) => fail!("Cannot set_read_timeout: {}", x),
+pub async fn send_binary_data<T: Sink<Message> + Unpin>(
+    wsout: &mut T,
+    name: &str,
+    data: &[u8],
+) -> Result<(), String>
+where
+    <T as Sink<Message>>::Error: Display,
+{
+    let header = BinaryDataHeader {
+        name: name.to_string(),
+        size: data.len(),
+        hash: hash128(data),
     };
-    match ws.get_mut().set_nodelay(true) {
-        Ok(()) => {}
-        Err(x) => fail!("Cannot set_nodelay: {}", x),
+    let serialized_header = match serde_json::to_string(&header) {
+        Ok(x) => x,
+        Err(x) => return Err(format!("Cannot serialize binary header: {}", x)),
     };
-    let (tx, rx) = mpsc::channel();
-    spawn(move || {
-        let mut buffer = vec![0_u8; BUFFER_SIZE];
-        while let Ok(size) = pout.read(&mut buffer) {
-            if size == 0 {
-                break;
+    if let Err(x) = wsout.send(Message::Text(serialized_header)).await {
+        return Err(format!("Cannot send binary header: {}", x));
+    }
+    for offset in (0..data.len()).step_by(BUFFER_SIZE) {
+        let slice = &data[offset..data.len().min(offset + BUFFER_SIZE)];
+        if let Err(x) = wsout.send(Message::Binary(slice.to_vec())).await {
+            return Err(format!("Cannot send binary data: {}", x));
+        }
+    }
+    Ok(())
+}
+
+pub async fn recv_binary_data<U: Stream<Item = Result<Message, TsError>> + Unpin>(
+    wsin: &mut U,
+) -> Result<(String, Vec<u8>), String> {
+    let header = loop {
+        match wsin.next().await {
+            Some(Ok(Message::Text(x))) => break x,
+            Some(Ok(_)) => continue,
+            Some(Err(x)) => return Err(format!("Error while receiving binary header: {}", x)),
+            None => {
+                return Err(format!(
+                    "Connection interrupted while waiting for binary header"
+                ))
             }
-            match tx.send(buffer[..size].to_vec()) {
-                Ok(()) => {}
-                Err(_) => break,
-            };
         }
-    });
-    let mut start = Instant::now();
+    };
+    let header = match serde_json::from_str::<BinaryDataHeader>(&header) {
+        Ok(x) => x,
+        Err(x) => return Err(format!("Received invalid binary header: {}", x)),
+    };
+    let mut buffer = Vec::new();
     loop {
-        let msg = match ws.read_message() {
-            Ok(x) => x,
-            Err(Io(x)) if x.kind() == ErrorKind::WouldBlock || x.kind() == ErrorKind::TimedOut => {
-                if Instant::now().duration_since(start) >= Duration::from_millis(timeout_ms) {
-                    break;
-                }
-                match rx.try_recv() {
-                    Err(TryRecvError::Empty) => continue,
-                    Err(TryRecvError::Disconnected) => break,
-                    Ok(x) => {
-                        start = Instant::now();
-                        if echo {
-                            cwrite!(stdout, Color::Green, "{}", String::from_utf8_lossy(&x));
-                        }
-                        match ws.write_message(Binary(x)) {
-                            Ok(()) => continue,
-                            Err(_) => break,
-                        }
-                    }
-                }
-            }
-            Err(_) => break,
-        };
-        match msg {
-            Binary(x) => {
-                start = Instant::now();
-                if echo {
-                    cwrite!(stdout, Color::Yellow, "{}", String::from_utf8_lossy(&x));
-                }
-                match pin.write_all(&x) {
-                    Ok(()) => continue,
-                    Err(_) => break,
-                };
-            }
-            _ => {}
-        };
-    }
-    match ws.get_mut().set_read_timeout(None) {
-        Ok(()) => {}
-        Err(x) => fail!("Cannot set_read_timeout: {}", x),
-    };
-    match ws.get_mut().set_nodelay(false) {
-        Ok(()) => {}
-        Err(x) => fail!("Cannot set_nodelay: {}", x),
-    };
-}
-
-pub fn connect_process<T: Read + Write + StreamOp>(ws: &mut WebSocket<T>, mut ps: process::Child, echo: bool, timeout_ms: u64) {
-    let stdin = match ps.stdin.take() {
-        Some(x) => x,
-        None => fail!("Cannot take control of stdin"),
-    };
-    let stdout = match ps.stdout.take() {
-        Some(x) => x,
-        None => fail!("Cannot take control of stdout"),
-    };
-    connect_streams(ws, stdout, stdin, echo, timeout_ms);
-    match ps.kill() {
-        _ => {}
-    }
-    match ps.wait() {
-        _ => {}
-    }
-}
-
-#[macro_export]
-macro_rules! crash {
-    ($($arg:tt)+) => {
-        {
-            error!($($arg)+);
-            exit(1)
+        if buffer.len() >= header.size {
+            break;
         }
+        let mut data = match wsin.next().await {
+            Some(Ok(Message::Binary(x))) => x,
+            Some(Ok(_)) => continue,
+            Some(Err(x)) => return Err(format!("Error while receiving binary data: {}", x)),
+            None => {
+                return Err(format!(
+                    "Connection interrupted while waiting for binary data"
+                ))
+            }
+        };
+        buffer.append(&mut data);
     }
-}
-
-#[macro_export]
-macro_rules! fail {
-    ($($arg:tt)+) => {
-        {
-            error!($($arg)+);
-            return;
-        }
+    if hash128(&buffer) != header.hash {
+        return Err(format!("Received corrupted binary data"));
     }
+    Ok((header.name, buffer))
 }
