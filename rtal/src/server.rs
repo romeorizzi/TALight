@@ -53,7 +53,7 @@ fn handle_connection(
     for (argname, argvalue) in args {
         eval.env("TAL_".to_string() + &argname, argvalue);
     }
-    eval.env("TAL_ISATTY", if tty { "1" } else { "0" });
+    eval.env("TAL_META_TTY", if tty { "1" } else { "0" });
     eval.env("TAL_META_CODENAME", codename);
     eval.env("TAL_META_SERVICE", service);
     eval.stdin(Stdio::piped());

@@ -14,7 +14,7 @@ import graph_coloring_utilities as Utilities
 args_list = [
     ('num_nodes',int),
     ('format',str),
-    ('ISATTY',bool),
+    ('META_TTY',bool),
 ]
 
 ENV = Env(args_list)

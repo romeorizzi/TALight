@@ -22,7 +22,7 @@ args_list = [
     ('arg2',str),
     ('arg3',bool),
     ('lang',str),
-    ('ISATTY',bool),
+    ('META_TTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

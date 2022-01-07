@@ -15,7 +15,7 @@ args_list = [
     ('goal',str),
     ('code_lang',str),
     ('lang',str),
-    ('ISATTY',bool),
+    ('META_TTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

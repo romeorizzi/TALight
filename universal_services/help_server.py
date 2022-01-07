@@ -9,7 +9,7 @@ service="help"
 args_list = [
     ('page',str),
     ('lang',str),
-    ('ISATTY',bool),
+    ('META_TTY',bool),
 ]
 
 ENV =Env(args_list, problem, service, argv[0])

@@ -16,7 +16,7 @@ args_list = [
     ('tell_maximal_correct_feedback',bool),
     ('silent',bool),
     ('lang',str),
-    ('ISATTY',bool),
+    ('META_TTY',bool),
 ]
 
 ENV =Env(problem, service, args_list)

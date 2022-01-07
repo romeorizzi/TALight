@@ -12,7 +12,7 @@ service="empass_static_strategy_lighter_or_heavier"
 args_list = [
     ('lb', int),
     ('lang', str),
-    ('ISATTY', bool),
+    ('META_TTY', bool),
 ]
 
 ENV =Env(problem, service, args_list)

@@ -9,7 +9,7 @@ int main() {
    char* ENV_lang = getenv("TAL_lang");
    char* ENV_white_string = getenv("TAL_white_string");
    char* ENV_hash_type = getenv("TAL_hash_type");
-   int   ENV_colored_feedback = (getenv("TAL_ISATTY") == "1");
+   int   ENV_colored_feedback = (getenv("TAL_META_TTY") == "1");
 
    // Da aggiugere libreria per supporto dei colori e multilinga ...
    
