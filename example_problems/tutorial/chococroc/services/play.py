@@ -25,6 +25,31 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 m=ENV['m']
 n=ENV['n']
+
+if(ENV['watch_value'] == 'watch_winner'):
+    if(cl.grundy_val(m,n) > 0):
+        TAc.print(LANG.render_feedback("watch-winner-user-after-server", f'You want to watch the winner: starting from this configuration ({m}, {n}) you will win the game'), "green", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("watch-winner-server-after-server", f'You want to watch the winner: starting from this configuration ({m}, {n}) i will win the game'), "green", ["bold"])
+elif ENV['watch_value'] == 'num_winning_moves' :
+    win_moves = cl.winning_moves(m,n)
+    win_moves.discard((None, None))
+    if len(win_moves) >= 1:
+        TAc.print(LANG.render_feedback("num-winning-moves-n", f'You want to know the number of winning moves: for the current configuration ({m}, {n}) the number of winning moves is {len(win_moves)}'), "green", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("num-winning-moves-0", f'You want to know the number of winning moves: for the current configuration ({m}, {n}) there are not winning moves'), "green", ["bold"])
+elif(ENV['watch_value'] == 'list_winning_moves'):
+    win_moves = cl.winning_moves(m, n)
+    win_moves.discard((None, None))
+    if len(win_moves) > 1:
+        TAc.print(LANG.render_feedback("list-multiple-winning-moves", f'You want to know the winning moves: for the current configuration ({m}, {n}) the winning moves are {win_moves}'), "green", ["bold"])
+    elif len(win_moves) == 1:
+        TAc.print(LANG.render_feedback("list-one-winning-moves", f'You want to know the winning moves: for the current configuration ({m}, {n}) the winning move is {win_moves}'), "green", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("list-none-winning-moves", f'You want to know the winning moves: for the current configuration ({m}, {n}) there are not winning moves'), "green", ["bold"])
+elif(ENV['watch_value'] == 'watch_grundy_val'):
+    TAc.print(LANG.render_feedback("watch-grundy-after-server", f'You want to watch the grundy value: for the current configuration ({m}, {n}) the grundy value is {cl.grundy_val(m,n)}'), "green", ["bold"])
+
 if ENV['player'] == 1: #se l'utente vuole giocare per secondo
     if m==1 and n==1: #inserisce una configurazione 1x1 il computer non ha mosse quindi vince l'utente
         TAc.print(LANG.render_feedback("you-have-won", f'It is my turn to move, on conf (1,1). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
