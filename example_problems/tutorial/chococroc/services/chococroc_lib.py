@@ -108,6 +108,15 @@ def count_winning_moves_nim (m, n, nim):
             count +=1
     return count
 
+def winning_moves_nim(m, n, nim):
+    chococroc_grundy_value = grundy_val(m, n)
+    win_moves={(None,None,None)}
+    for i in range(1, nim+1):
+        if grundy_sum(chococroc_grundy_value, nim-i)==0:
+            win_moves.add((m,n,nim-i))
+    win_moves.discard((None,None,None))
+    return win_moves
+
 # TESTS
 if __name__ == "__main__":
     # GRUNDY-SPRAGUE THEORY FUNCTIONS:
