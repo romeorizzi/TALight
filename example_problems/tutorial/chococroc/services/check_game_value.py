@@ -40,7 +40,7 @@ if ENV['value'] == -1:
         TAc.print(LANG.render_feedback("not-a-lost-conf-wanna-play", f'You can check this out playing a game against our service \'play\', playing as second a game starting from configuration {ENV["m"]} x {ENV["n"]}. If you succeed winning then you disprove our claim or the optimality of our player (either way, let us know).'), "yellow", ["bold"])
     elif not ENV['silent']:
         TAc.OK()
-        TAc.print(LANG.render_feedback("ok-lost-conf", f'We agree with your conjecture that the configuration {ENV["m"]} x {ENV["n"]} is a lost one. If you succeed winning then you disprove our claim or the optimality of our player (either way, let us know).'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("ok-lost-conf", f'We agree with your conjecture that the configuration {ENV["m"]} x {ENV["n"]} is a lost one.'), "green", ["bold"])
 
 if ENV['value'] >= 0:
     if grundy_val != ENV['value']:
