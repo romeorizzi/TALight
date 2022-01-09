@@ -19,7 +19,7 @@ public class TALcolors {
     private String msg_style = "";
     private String colors = "";
 
-    String colored_print = System.getenv("ISATTY");
+    String colored_print = System.getenv("META_TTY");
 
     public void print(String msg_text, String color, List<String> characterFormats, String end) {
         colorOption co = new colorOption();
@@ -117,7 +117,7 @@ class TALcolors:
     def __init__(self, ENV):
         self.numNO = 0
         self.numOK = 0
-        self.colored_print = ENV["ISATTY"] and termcolor_is_installed
+        self.colored_print = ENV["META_TTY"] and termcolor_is_installed
 
     def print(self, msg_text, *msg_rendering, **kwargs):
       if type(msg_rendering[-1]) == list:

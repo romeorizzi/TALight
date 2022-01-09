@@ -39,7 +39,7 @@ for i in range (NUM_INSTANCES):
     couple = [tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed, TAc, LANG),tl.random_triangle(MIN_BIG_N+i, MIN_VAL, MAX_VAL, big_seed, TAc, LANG)]
     instances['correct'].append([couple, [MIN_SMALL_N,MIN_BIG_N+i], MIN_VAL, MAX_VAL, [small_seed,big_seed]])
     
-# INSTANCES FOR GOAL = 2^n o n^2      
+# INSTANCES FOR GOAL = 2^n or n^2      
 
 # SMALL INSTANCES
   

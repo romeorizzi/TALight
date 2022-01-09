@@ -27,7 +27,7 @@ class Env:
         return self.arg.get(key)
     def __init__(self, args_list):
         self.arg = {}
-        args_list.append(("ISATTY",bool))
+        args_list.append(("META_TTY",bool))
         if "TAL_lang" in environ:
             args_list.append(("lang",str))
         if "TAL_seed" in environ:
@@ -45,6 +45,9 @@ class Env:
         self.exe_name = path.split(self.exe_fullname)[-1]
         self.META_DIR = environ["TAL_META_DIR"]
         self.CODENAME = environ["TAL_META_CODENAME"]
+        self.OUTPUT_FILES = environ["TAL_META_OUTPUT_FILES"]
+        self.INPUT_FILES = environ["TAL_META_INPUT_FILES"]
+        self.LOG_FILES = environ.get("TAL_META_LOG_FILES")
         self.service = environ["TAL_META_SERVICE"]
         self.problem = path.split(environ["TAL_META_DIR"])[-1]
         assert(self.problem == self.CODENAME)
@@ -168,7 +171,7 @@ class TALcolors:
     def __init__(self, ENV):
         self.numNO = 0
         self.numOK = 0
-        self.colored_print = ENV["ISATTY"] and termcolor_is_installed
+        self.colored_print = ENV["META_TTY"] and termcolor_is_installed
 
     def print(self, msg_text, *msg_rendering, **kwargs):
       if type(msg_rendering[-1]) == list:

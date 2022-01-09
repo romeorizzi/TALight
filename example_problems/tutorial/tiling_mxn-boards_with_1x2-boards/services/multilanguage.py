@@ -138,7 +138,7 @@ class TALcolors:
     def __init__(self, ENV):
         self.numNO = 0
         self.numOK = 0
-        self.colored_print = ENV["ISATTY"] and termcolor_is_installed
+        self.colored_print = ENV["META_TTY"] and termcolor_is_installed
 
     def print(self, msg_text, *msg_rendering, **kwargs):
       if type(msg_rendering[-1]) == list:

@@ -14,7 +14,7 @@ public class sum_and_product_server {
         args_list.put("num_questions","int");
         args_list.put("numbers","String");
         args_list.put("lang","String");
-        args_list.put("ISATTY","String");
+        args_list.put("META_TTY","String");
         System.out.println(args.length);
         Env env= new Env(problem,service,args_list);
         TALcolors TAc = new TALcolors();

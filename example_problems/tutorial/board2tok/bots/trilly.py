@@ -93,7 +93,7 @@ spoon = input().strip()
 while spoon.startswith("# "):
     if len(argv) == 1:
         if spoon.startswith("#  with arguments:"):
-            variables = spoon[len("#  with arguments: "):spoon.find(", ISATTY")].replace("(i.e., False)", "").replace("(i.e., True)", "").split(", ")
+            variables = spoon[len("#  with arguments: "):spoon.find(", META_TTY")].replace("(i.e., False)", "").replace("(i.e., True)", "").split(", ")
             arguments = { var.split("=")[0] : var.split("=")[1] for var in variables }
     if spoon.endswith(") empty."):
         hole_coordinates = spoon.split("(")[-1].split(")")[0].split(", ")

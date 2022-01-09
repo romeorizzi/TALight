@@ -13,7 +13,7 @@ args_list = [
     ('hash_type',str),
     ('alphabet_white_string',str),
     ('length_white_string',int),
-    ('ISATTY',bool),
+    ('META_TTY',bool),
 ]
 
 ENV =Env(args_list)

@@ -9,7 +9,7 @@ from multilanguage import Env, Lang, TALcolors
 args_list = [
     ('num_questions',int),
     ('numbers',str),
-    ('ISATTY',bool),
+    ('META_TTY',bool),
 ]
 
 ENV =Env(args_list)

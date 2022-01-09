@@ -11,7 +11,7 @@ from hash_and_cipher import hash_value
 args_list = [
     ('hash_type',str),
     ('white_string',str),
-    ('ISATTY',bool),
+    ('META_TTY',bool),
 ]
 
 ENV =Env(args_list)
