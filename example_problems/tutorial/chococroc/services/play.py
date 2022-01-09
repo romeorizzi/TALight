@@ -57,6 +57,7 @@ if ENV['player'] == 1: #se l'utente vuole giocare per secondo
         exit(0)
     new_m,new_n=cl.computer_move(m,n) #altrimenti il computer fa la sua mossa e m, n assumono i nuovi valori
     TAc.print(LANG.render_feedback("server-move", f'My move is from conf ({m},{n}) to conf ({new_m},{new_n}).\nThe turn is now to you, on conf ({new_m},{new_n})'), "green", ["bold"])
+    
     if ENV['watch_value'] == 'watch_winner':
         if cl.grundy_val(new_m, new_n) > 0 :
             TAc.print(LANG.render_feedback("watch-winner-user-after-server", f'You want to watch the winner: starting from this configuration ({new_m}, {new_n}) you will win the game'), "green", ["bold"])
@@ -81,7 +82,8 @@ if ENV['player'] == 1: #se l'utente vuole giocare per secondo
     elif(ENV['watch_value'] == 'watch_grundy_val'):
         TAc.print(LANG.render_feedback("watch-grundy-server-move", f'You want to watch the grundy value: for the current configuration ({new_m}, {new_n}) the grundy value is {cl.grundy_val(new_m, new_n)}'), "green", ["bold"])
 
-    m,n=new_m,new_n    
+    m,n=new_m,new_n
+
 while True:
     if m==1 and n==1: #se la mossa del computer porta ad avere 1x1 l'utente non ha mosse quindi vince il computer
         TAc.print(LANG.render_feedback("you-have-lost", f'It is your turn to move, on conf (1,1). Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
@@ -117,6 +119,7 @@ while True:
         TAc.print(LANG.render_feedback("you-have-won", 'It is my turn to move, on conf (1,1). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
         TAc.print(LANG.render_feedback("you-won", f'You won!'), "green", ["bold"])        
         exit(0)
+    
     if(ENV['watch_value'] == 'watch_winner'):
         if(cl.grundy_val(new_m, new_n) == 0):
             TAc.print(LANG.render_feedback("watch-winner-user-after-user", f'You want to watch the winner: starting from this configuration ({new_m}, {new_n}) you will win the game'), "green", ["bold"])
@@ -143,6 +146,7 @@ while True:
 
     m,n=cl.computer_move(new_m,new_n) #altrimenti il computer fa la sua mossa
     TAc.print(LANG.render_feedback("server-move", f'My move is from conf ({new_m},{new_n}) to conf ({m},{n}).\nThe turn is now to you, on conf ({m},{n})'), "green", ["bold"])
+    
     if(ENV['watch_value'] == 'watch_winner'):
         if(cl.grundy_val(m,n) > 0):
             TAc.print(LANG.render_feedback("watch-winner-user-after-server", f'You want to watch the winner: starting from this configuration ({m}, {n}) you will win the game'), "green", ["bold"])
