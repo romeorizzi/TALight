@@ -51,11 +51,11 @@ elif ENV ['watch_value'] == 'list_winning_moves':
     win_moves_with_nim.discard((None,None,None))
     win_moves_with_nim.update(cl.winning_moves_nim(m, n, nim))
     if len(win_moves_with_nim) > 1:
-        TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} the winning moves are {win_moves_with_nim}'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} the winning moves are {win_moves_with_nim}'), "green", ["bold"])
     elif len(win_moves_with_nim) == 1:
-        TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} the winning move is {win_moves_with_nim}'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} the winning move is {win_moves_with_nim}'), "green", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} there are not winning moves'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} there are not winning moves'), "green", ["bold"])
 elif ENV ['watch_value'] == 'watch_grundy_val':
     TAc.print(LANG.render_feedback("watch-grundy-server-move-sum", f'You want to watch the grundy value: for the current configuration ({m}, {n}) and a nim tower of height {nim} the grundy value is {cl.grundy_sum(cl.grundy_val(m, n), nim)}'), "green", ["bold"])
 
@@ -66,7 +66,7 @@ if ENV['player'] == 1:
         exit(0)
     new_m,new_n,new_nim=cl.computer_decision_move(m,n,nim)
     TAc.print(LANG.render_feedback("server-move-play-val", f'My move is from conf ({m},{n}) to conf ({new_m},{new_n}) and from a nim tower of height {nim} to a nim tower of height {new_nim}.\nThe turn is now to you, on conf ({new_m},{new_n}) and a nim tower of height {new_nim}'), "green", ["bold"])
-    #qui vanno le varianti
+
     if ENV['watch_value'] == 'watch_winner':
         if (cl.grundy_sum(cl.grundy_val(new_m, new_n), new_nim) > 0):
             TAc.print(LANG.render_feedback("watch-winner-user-after-server-sum", f'You want to watch the winner: starting from this configuration ({new_m}, {new_n}) and a nim tower of height {new_nim} you will win the game'), "green", ["bold"])
@@ -90,15 +90,16 @@ if ENV['player'] == 1:
         win_moves_with_nim.discard((None,None,None))
         win_moves_with_nim.update(cl.winning_moves_nim(new_m, new_n, new_nim))
         if len(win_moves_with_nim) > 1:
-            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} the winning moves are {win_moves_with_nim}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} the winning moves are {win_moves_with_nim}'), "green", ["bold"])
         elif len(win_moves_with_nim) == 1:
-            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} the winning move is {win_moves_with_nim}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} the winning move is {win_moves_with_nim}'), "green", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} there are not winning moves'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} there are not winning moves'), "green", ["bold"])
     elif ENV ['watch_value'] == 'watch_grundy_val':
         TAc.print(LANG.render_feedback("watch-grundy-server-move-sum", f'You want to watch the grundy value: for the current configuration ({new_m}, {new_n}) and a nim tower of height {new_nim} the grundy value is {cl.grundy_sum(cl.grundy_val(new_m, new_n), new_nim)}'), "green", ["bold"])
 
-    m,n,nim=new_m,new_n,new_nim    
+    m,n,nim=new_m,new_n,new_nim
+
 while True:
     if m==1 and n==1 and nim==0:
         TAc.print(LANG.render_feedback("you-have-lost-play-val", f'It is your turn to move, on conf (1,1) and a nim tower of height 0. Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
@@ -113,9 +114,14 @@ while True:
         if new_nim > nim:
             TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
             TAc.print(LANG.render_feedback("wrong-grow-move", f'You are cheating. A move can not increase the height of the nim tower.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
         elif new_nim < 0:
             TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
             TAc.print(LANG.render_feedback("negative-move", f'You are cheating. A move can not decrease the height of the nim tower under 0.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
+        elif new_nim!=nim:
+            TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
         exit(0)
     if new_m == m and new_n == n and new_nim == nim:
         TAc.print(LANG.render_feedback("not-valid", f'No! Your move from conf ({m},{n}) to conf ({new_m},{new_n}) is not valid.'), "red", ["bold"])
@@ -123,12 +129,10 @@ while True:
         TAc.print(LANG.render_feedback("dull-nim-move", f'You are cheating. Your move must either reduce the number of rows or the number of columns or the height of the nim tower. Otherwise, you have not really moved but simply passed.'), "red", ["bold"])
         exit(0)
     if new_m == m and new_n == n and new_nim > nim:
-        #TAc.print(LANG.render_feedback("not-valid", f'No! Your move from conf ({m},{n}) to conf ({new_m},{new_n}) is not valid.'), "red", ["bold"])
         TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
         TAc.print(LANG.render_feedback("wrong-grow-move", f'You are cheating. A move can not increase the height of the nim tower.'), "red", ["bold"])        
         exit(0)
     if new_m == m and new_n == n and new_nim < 0:
-        #TAc.print(LANG.render_feedback("not-valid", f'No! Your move from conf ({m},{n}) to conf ({new_m},{new_n}) is not valid.'), "red", ["bold"])
         TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
         TAc.print(LANG.render_feedback("negative-move", f'You are cheating. A move can not decrease the height of the nim tower under 0.'), "red", ["bold"])
         exit(0)
@@ -144,9 +148,14 @@ while True:
         if new_nim > nim:
             TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
             TAc.print(LANG.render_feedback("wrong-grow-move", f'You are cheating. A move can not increase the height of the nim tower.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
         elif new_nim < 0:
             TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
             TAc.print(LANG.render_feedback("negative-move", f'You are cheating. A move can not decrease the height of the nim tower under 0.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
+        elif new_nim!=nim:
+            TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
         exit(0)
     if new_pos < pos - (pos//2):
         TAc.print(LANG.render_feedback("not-valid", f'No! Your move from conf ({m},{n}) to conf ({new_m},{new_n}) is not valid.'), "red", ["bold"])
@@ -154,9 +163,14 @@ while True:
         if new_nim > nim:
             TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
             TAc.print(LANG.render_feedback("wrong-grow-move", f'You are cheating. A move can not increase the height of the nim tower.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
         elif new_nim < 0:
             TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
             TAc.print(LANG.render_feedback("negative-move", f'You are cheating. A move can not decrease the height of the nim tower under 0.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
+        elif new_nim!=nim:
+            TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
         exit(0)
     if (new_m!=m or new_n!=n) and new_nim!=nim:
         TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
@@ -166,7 +180,7 @@ while True:
         TAc.print(LANG.render_feedback("you-have-won-play-val", 'It is my turn to move, on conf (1,1)  and a nim tower of height 0. Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
         TAc.print(LANG.render_feedback("you-won", f'You won!'), "green", ["bold"])        
         exit(0)
-    #qui vanno le varianti
+
     if ENV['watch_value'] == 'watch_winner':
         if (cl.grundy_sum(cl.grundy_val(new_m, new_n), new_nim) == 0):
             TAc.print(LANG.render_feedback("watch-winner-user-after-server-sum", f'You want to watch the winner: starting from this configuration ({new_m}, {new_n}) and a nim tower of height {new_nim} you will win the game'), "green", ["bold"])
@@ -190,16 +204,17 @@ while True:
         win_moves_with_nim.discard((None,None,None))
         win_moves_with_nim.update(cl.winning_moves_nim(new_m, new_n, new_nim))
         if len(win_moves_with_nim) > 1:
-            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} the winning moves are {win_moves_with_nim}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} the winning moves are {win_moves_with_nim}'), "green", ["bold"])
         elif len(win_moves_with_nim) == 1:
-            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} the winning move is {win_moves_with_nim}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} the winning move is {win_moves_with_nim}'), "green", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} there are not winning moves'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({new_m}, {new_n}) and the nim tower of height {new_nim} there are not winning moves'), "green", ["bold"])
     elif ENV ['watch_value'] == 'watch_grundy_val':
         TAc.print(LANG.render_feedback("watch-grundy-server-move-sum", f'You want to watch the grundy value: for the current configuration ({new_m}, {new_n}) and a nim tower of height {new_nim} the grundy value is {cl.grundy_sum(cl.grundy_val(new_m, new_n), new_nim)}'), "green", ["bold"])
+    
     m,n,nim=cl.computer_decision_move(new_m,new_n,new_nim)
     TAc.print(LANG.render_feedback("server-move-play-val", f'My move is from conf ({new_m},{new_n}) to conf ({m},{n}) and from a nim tower of height {new_nim} to a nim tower of height {nim}.\nThe turn is now to you, on conf ({m},{n}) and a nim tower of height {nim}'), "green", ["bold"])
-    #qui vanno le varianti
+
     if ENV['watch_value'] == 'watch_winner':
         if (cl.grundy_sum(cl.grundy_val(m, n), nim) > 0):
             TAc.print(LANG.render_feedback("watch-winner-user-after-server-sum", f'You want to watch the winner: starting from this configuration ({m}, {n}) and a nim tower of height {nim} you will win the game'), "green", ["bold"])
@@ -223,10 +238,10 @@ while True:
         win_moves_with_nim.discard((None,None,None))
         win_moves_with_nim.update(cl.winning_moves_nim(m, n, nim))
         if len(win_moves_with_nim) > 1:
-            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} the winning moves are {win_moves_with_nim}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} the winning moves are {win_moves_with_nim}'), "green", ["bold"])
         elif len(win_moves_with_nim) == 1:
-            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} the winning move is {win_moves_with_nim}'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} the winning move is {win_moves_with_nim}'), "green", ["bold"])
         else:
-            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'You want to watch the number of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} there are not winning moves'), "green", ["bold"])
+            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'You want to watch the list of winning moves: for the current configuration ({m}, {n}) and the nim tower of height {nim} there are not winning moves'), "green", ["bold"])
     elif ENV ['watch_value'] == 'watch_grundy_val':
         TAc.print(LANG.render_feedback("watch-grundy-server-move-sum", f'You want to watch the grundy value: for the current configuration ({m}, {n}) and a nim tower of height {nim} the grundy value is {cl.grundy_sum(cl.grundy_val(m, n), nim)}'), "green", ["bold"])
