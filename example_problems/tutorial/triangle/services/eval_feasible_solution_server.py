@@ -129,7 +129,7 @@ if ENV["goal"] == 'correct':
         start = monotonic()
         answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
         end = monotonic()
-        time += end-start
+        time = end-start
         if time > MAX_TIME:
             visited_instances.append([instance,time,"out_of_time"])
             print_goal_summary('correct',visited_instances)
@@ -178,7 +178,7 @@ elif ENV["goal"] == 'time_at_most_2_exp_n':
         start = monotonic()
         answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
         end = monotonic()
-        time += end-start
+        time = end-start
         if time > MAX_TIME:
             visited_instances_2_exp_n.append([instance,time,"out_of_time"])
             print_goal_summary('correct',visited_instances_correct)

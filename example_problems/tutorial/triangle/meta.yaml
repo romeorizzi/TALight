@@ -184,9 +184,9 @@ services:
         explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
         regex: ^(python|java|nodejs|compiled)$
         default: python
-  eval_sol_optimality:
+  eval_best_sol:
     description: this service evaluates your code which calculates the best reward collectable in a triangle.
-    evaluator: [python, services/eval_sol_optimality_server.py]
+    evaluator: [python, services/eval_best_sol_server.py]
     args:
       goal:
         explain: set your goal (efficient includes also correct).

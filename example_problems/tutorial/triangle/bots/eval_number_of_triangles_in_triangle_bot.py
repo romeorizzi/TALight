@@ -48,7 +48,7 @@ while True:
             if fits(i,livello,big_array,small_array,l)[0]:
                 indexes.append(fits(i,livello,big_array,small_array,l)[1])
                 answer += 1
-    print(f"{answer} #the answer is {answer}")
+    print(answer)
 exit(0)
 
 

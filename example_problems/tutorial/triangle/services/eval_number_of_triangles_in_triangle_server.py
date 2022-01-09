@@ -47,12 +47,12 @@ if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2'
     instances['time_at_most_2_exp_n'] = []
     NUM_INSTANCES = 6
     MIN_SMALL_N = 2
-    MAX_SMALL_N = 5
+    MAX_SMALL_N = 4
     MIN_BIG_N = 7
     MAX_BIG_N = 12
     scaling_factor = 1.1
     if ENV["code_lang"] == "compiled":
-        MAX_N = 18
+        MAX_BIG_N = 18
         scaling_factor = 1.2
     for n in range(NUM_INSTANCES):
         small_seed = random.randint(100000,999999)
@@ -74,7 +74,7 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
     instances['time_at_most_n_exp_2'] = []
     NUM_INSTANCES = 15
     MIN_SMALL_N = 2
-    MAX_SMALL_N = 10
+    MAX_SMALL_N = 4
     MIN_BIG_N = 20
     MAX_BIG_N = 50
     scaling_factor = 1.1
