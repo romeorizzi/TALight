@@ -153,4 +153,54 @@ def print_triangle_occurencies(big_triangle,indexes):
                 print(str(ele).ljust(2), end='  ')
             index += 1
         print()
-   
+
+def print_goal_summary(goal,visited_instances,TAc,LANG):
+    TAc.print(LANG.render_feedback("summary", f'\n# SUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'), "white", ["bold"])
+    right = 0
+    wrong = 0
+    out_of_time = 0
+    path_flag = 0 
+    for ans in visited_instances:
+        path = ""
+        if ans[2] == "right":
+            time = ans[1]
+            TAc.print(LANG.render_feedback("right-ans", f'# Correct! Took time {time} on your machine.\n'), "green")
+            right += 1
+        elif ans[2] == "wrong":
+            time = ans[1]
+            n = ans[0][1] 
+            MIN_VAL = ans[0][2] 
+            MAX_VAL = ans[0][3] 
+            seed = ans[0][4]
+            try:
+                path = ans[3]
+            except IndexError:
+                path_flag = 1
+            if path_flag:
+                TAc.print(LANG.render_feedback("wrong-ans", f'# NO! You gave the wrong solution for the instance with this parameters:\n#n = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "yellow")
+            else:
+                TAc.print(LANG.render_feedback("wrong-ans", f'# NO! You gave the wrong solution for the instance with this parameters:\n#n = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}.\n'), "yellow")
+            wrong += 1  
+        else:
+            time = ans[1]
+            n = ans[0][1] 
+            MIN_VAL = ans[0][2] 
+            MAX_VAL = ans[0][3] 
+            seed = ans[0][4]
+            try:
+                path = ans[3]
+            except IndexError:
+                path_flag = 1
+            if path_flag:
+                TAc.print(LANG.render_feedback("out-of-time-ans", f'# The evaluation has been stopped since your solution took too much time to perform on the instance with this parameters:\n#n = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "white")
+            else:
+                Ac.print(LANG.render_feedback("out-of-time-ans", f'# The evaluation has been stopped since your solution took too much time to perform on the instance with this parameters:\n#n = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "white")
+            out_of_time += 1
+    if out_of_time > 0 and wrong == 0 and right >0:
+        TAc.print(LANG.render_feedback("right-not-in-time", f'# OK! Your solution works well on some instances, but it didn\'t achieve the goal "{goal}".\n'), "yellow")
+    elif out_of_time > 0 and wrong == 0 and right == 0:
+        TAc.print(LANG.render_feedback("not-in-time", f'# Your solution didn\'t achieve the goal "{goal}".\n'), "yellow")
+    elif right == len(visited_instances):
+        TAc.print(LANG.render_feedback("right-in-time", f'# OK! Your solution achieved the goal "{goal}"!.\n'), "green")
+    elif wrong > 0:
+        TAc.print(LANG.render_feedback("right-in-time", f'# NO! Your solution doesn\'t work well on some instances!.\n'), "red")   

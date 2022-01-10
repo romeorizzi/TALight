@@ -160,6 +160,6 @@ if argv[1] == "4":
                 if fits(i,livello,big_array,small_array,l)[0]:
                     indexes.append(fits(i,livello,big_array,small_array,l)[1])
                     wrong_answer += 1
-        print(answer)
+        print(wrong_answer)
     exit(0)
 
