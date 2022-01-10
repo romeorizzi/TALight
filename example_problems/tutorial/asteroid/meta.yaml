@@ -27,7 +27,7 @@ services:
       instance_id:
         regex: ^([1-9][0-9]*)$
         default: 1
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       format:
         regex: ^(only_matrix.txt|with_m_and_n.txt|dat)$
         default: only_matrix.txt
@@ -77,7 +77,7 @@ services:
       instance_id:
         regex: ^([1-9][0-9]*)$
         default: 1
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       sol_style:
         regex: ^(seq|subset)$
         default: seq
