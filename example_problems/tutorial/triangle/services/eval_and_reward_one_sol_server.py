@@ -27,7 +27,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 instances = { 'correct' : [] }
 MIN_VAL = 10
 MAX_VAL = 99
-NUM_INSTANCES = 3
+NUM_INSTANCES = 5
 for n in range(2, 7):
     for _ in range(NUM_INSTANCES):
         seed = random.randint(100000,999999)
@@ -71,14 +71,14 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
            n = MAX_N
 
 def print_goal_summary(goal,visited_instances):
-    TAc.print(LANG.render_feedback("summary", f'\nSUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'), "white", ["bold"])
+    TAc.print(LANG.render_feedback("summary", f'\n# SUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'), "white", ["bold"])
     right = 0
     wrong = 0
     out_of_time = 0
     for ans in visited_instances:
         if ans[2] == "right":
             time = ans[1]
-            TAc.print(LANG.render_feedback("right-ans", f'Correct! Took time {time} on your machine.\n'), "green")
+            TAc.print(LANG.render_feedback("right-ans", f'# Correct! Took time {time} on your machine.\n'), "green")
             right += 1
         elif ans[2] == "wrong":
             time = ans[1]
@@ -86,8 +86,8 @@ def print_goal_summary(goal,visited_instances):
             MIN_VAL = ans[0][2] 
             MAX_VAL = ans[0][3] 
             seed = ans[0][4] 
-            path = [0][5]
-            TAc.print(LANG.render_feedback("wrong-ans", f'NO! You gave the wrong solution for the instance with this parameters:\nn = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "yellow")
+            path = ans[3]
+            TAc.print(LANG.render_feedback("wrong-ans", f'# NO! You gave the wrong solution for the instance with this parameters:\nn = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "yellow")
             wrong += 1  
         else:
             time = ans[1]
@@ -95,24 +95,24 @@ def print_goal_summary(goal,visited_instances):
             MIN_VAL = ans[0][2] 
             MAX_VAL = ans[0][3] 
             seed = ans[0][4]
-            path = [0][5]
-            TAc.print(LANG.render_feedback("out-of-time-ans", f'The evaluation has been stopped since your solution took too much time to perform on the instance with this parameters:\nn = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "white")
+            path = ans[3]
+            TAc.print(LANG.render_feedback("out-of-time-ans", f'# The evaluation has been stopped since your solution took too much time to perform on the instance with this parameters:\nn = {n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {seed}, path = {path}.\n'), "white")
             out_of_time += 1
     if out_of_time > 0 and wrong == 0 and right >0:
-        TAc.print(LANG.render_feedback("right-not-in-time", f'OK! Your solution works well on some instances, but it didn\'t achieve the goal "{goal}".\n'), "yellow")
+        TAc.print(LANG.render_feedback("right-not-in-time", f'# OK! Your solution works well on some instances, but it didn\'t achieve the goal "{goal}".\n'), "yellow")
     elif out_of_time > 0 and wrong == 0 and right == 0:
-        TAc.print(LANG.render_feedback("not-in-time", f'Your solution didn\'t achieve the goal "{goal}".\n'), "yellow")
+        TAc.print(LANG.render_feedback("not-in-time", f'# Your solution didn\'t achieve the goal "{goal}".\n'), "yellow")
     elif right == len(visited_instances):
-        TAc.print(LANG.render_feedback("right-in-time", f'OK! Your solution achieved the goal "{goal}"!.\n'), "green")
+        TAc.print(LANG.render_feedback("right-in-time", f'# OK! Your solution achieved the goal "{goal}"!.\n'), "green")
     elif wrong > 0:
-        TAc.print(LANG.render_feedback("right-in-time", f'NO! Your solution doesn\'t work well on some instances!.\n'), "red")
+        TAc.print(LANG.render_feedback("right-in-time", f'# NO! Your solution doesn\'t work well on some instances!.\n'), "red")
         
-MAX_TIME = 3
+MAX_TIME = 2
 
 #CHECK TIME ELAPSED FOR correct 
         
 if ENV["goal"] == 'correct':
-    visited_instances = []
+    visited_instances_correct = []
     for instance in instances['correct']:
         triangle = instance[0]
         n = instance[1]
@@ -131,14 +131,14 @@ if ENV["goal"] == 'correct':
         end = monotonic()
         time = end-start
         if time > MAX_TIME:
-            visited_instances.append([instance,time,"out_of_time"])
-            print_goal_summary('correct',visited_instances)
+            visited_instances_correct.append([instance,time,"out_of_time",path])
+            print_goal_summary('correct',visited_instances_correct)
             exit(0)
         elif answer != tl.calculate_path(triangle,path):
-            visited_instances.append([instance,time,"wrong"])
+            visited_instances_correct.append([instance,time,"wrong",path])
         else:
-            visited_instances.append([instance,time,"right"])
-    print_goal_summary('correct',visited_instances)
+            visited_instances_correct.append([instance,time,"right",path])
+    print_goal_summary('correct',visited_instances_correct)
     exit(0)
 
 #CHECK TIME ELAPSED FOR time_at_most_2_exp_n
@@ -163,13 +163,13 @@ elif ENV["goal"] == 'time_at_most_2_exp_n':
         end = monotonic()
         time = end-start
         if time > MAX_TIME:
-            visited_instances_correct.append([instance,time,"out_of_time"])
+            visited_instances_correct.append([instance,time,"out_of_time",path])
             print_goal_summary('correct',visited_instances_correct)
             exit(0)
         elif answer != tl.calculate_path(triangle,path):
-            visited_instances_correct.append([instance,time,"wrong"])
+            visited_instances_correct.append([instance,time,"wrong",path])
         else:
-            visited_instances_correct.append([instance,time,"right"])
+            visited_instances_correct.append([instance,time,"right",path])
     
     visited_instances_2_exp_n = []
     for instance in instances['time_at_most_2_exp_n']:
@@ -184,20 +184,20 @@ elif ENV["goal"] == 'time_at_most_2_exp_n':
         print(triangle)
         TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
         print(path)
-        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
+        TAc.print(LANG.render_feedback("question-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
         start = monotonic() 
         answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
         end = monotonic()
         time = end-start
         if time > MAX_TIME:
-            visited_instances_2_exp_n.append([instance,time,"out_of_time"])
+            visited_instances_2_exp_n.append([instance,time,"out_of_time",path])
             print_goal_summary('correct',visited_instances_correct)
-            print_goal_summary('time_at_most_2_exp_n',visited_instances)
+            print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n)
             exit(0)
         elif answer != tl.calculate_path(triangle,path):
-            visited_instances_2_exp_n.append([instance,time,"wrong"])
+            visited_instances_2_exp_n.append([instance,time,"wrong",path])
         else:
-            visited_instances_2_exp_n.append([instance,time,"right"])
+            visited_instances_2_exp_n.append([instance,time,"right",path])
     print_goal_summary('correct',visited_instances_correct)
     print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n)    
     exit(0)
@@ -224,13 +224,13 @@ else:
         end = monotonic()
         time = end-start
         if time > MAX_TIME:
-            visited_instances_correct.append([instance,time,"out_of_time"])
+            visited_instances_correct.append([instance,time,"out_of_time",path])
             print_goal_summary('correct',visited_instances_correct)
             exit(0)
         elif answer != tl.calculate_path(triangle,path):
-            visited_instances_correct.append([instance,time,"wrong"])
+            visited_instances_correct.append([instance,time,"wrong",path])
         else:
-            visited_instances_correct.append([instance,time,"right"])
+            visited_instances_correct.append([instance,time,"right",path])
     
     visited_instances_2_exp_n = []
     for instance in instances['time_at_most_2_exp_n']:
@@ -245,22 +245,21 @@ else:
         print(triangle)
         TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
         print(path)
-        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
-        print(triangle)
+        TAc.print(LANG.render_feedback("question-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
         start = monotonic() 
         answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
         end = monotonic()
         time = end-start
         if time > MAX_TIME:
-            visited_instances_2_exp_n.append([instance,time,"out_of_time"])
+            visited_instances_2_exp_n.append([instance,time,"out_of_time",path])
             print_goal_summary('correct',visited_instances_correct)
-            print_goal_summary('time_at_most_2_exp_n',visited_instances)
+            print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n)
             exit(0)
         elif answer != tl.calculate_path(triangle,path):
-            visited_instances_2_exp_n.append([instance,time,"wrong"])
+            visited_instances_2_exp_n.append([instance,time,"wrong",path])
         else:
-            visited_instances_2_exp_n.append([instance,time,"right"])
-    
+            visited_instances_2_exp_n.append([instance,time,"right",path])
+
     visited_instances_n_exp_2 = []
     for instance in instances['time_at_most_n_exp_2']:
         triangle = instance[0]
@@ -274,22 +273,21 @@ else:
         print(triangle)
         TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white")
         print(path)
-        TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
+        TAc.print(LANG.render_feedback("question-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white")
         start = monotonic() 
         answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
         end = monotonic()
         time = end-start
         if time > MAX_TIME:
-            visited_instances_n_exp_2.append([instance,time,"out_of_time"])
+            visited_instances_2_exp_n.append([instance,time,"out_of_time",path])
             print_goal_summary('correct',visited_instances_correct)
-            print_goal_summary('time_at_most_2_exp_n',visited_instances)
-            print_goal_summary('time_at_most_n_exp_2',visited_instances_n_exp_2) 
+            print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n)
+            print_goal_summary('time_at_most_n_exp_2',visited_instances_n_exp_2)
             exit(0)
         elif answer != tl.calculate_path(triangle,path):
-            visited_instances_n_exp_2.append([instance,time,"wrong"])
+            visited_instances_n_exp_2.append([instance,time,"wrong",path])
         else:
-            visited_instances_n_exp_2.append([instance,time,"right"])
-    
+            visited_instances_n_exp_2.append([instance,time,"right",path])
     print_goal_summary('correct',visited_instances_correct)
     print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n) 
     print_goal_summary('time_at_most_n_exp_2',visited_instances_n_exp_2) 

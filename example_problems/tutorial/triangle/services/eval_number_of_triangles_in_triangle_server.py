@@ -95,14 +95,14 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
 
 
 def print_goal_summary(goal,visited_instances):
-    TAc.print(LANG.render_feedback("summary", f'\nSUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'), "white", ["bold"])
+    TAc.print(LANG.render_feedback("summary", f'\n# SUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'), "white", ["bold"])
     right = 0
     wrong = 0
     out_of_time = 0
     for ans in visited_instances:
         if ans[2] == "right":
             time = ans[1]
-            TAc.print(LANG.render_feedback("right-ans", f'Correct! Took time {time} on your machine.\n'), "green")
+            TAc.print(LANG.render_feedback("right-ans", f'# Correct! Took time {time} on your machine.\n'), "green")
             right += 1
         elif ans[2] == "wrong":
             time = ans[1]
@@ -112,7 +112,7 @@ def print_goal_summary(goal,visited_instances):
             MAX_VAL = ans[0][3] 
             small_seed = ans[0][4][0] 
             big_seed = ans[0][4][1]
-            TAc.print(LANG.render_feedback("wrong-ans", f'NO! You gave the wrong solution for the instances with these parameters:\nSMALL TRIANGLE: n = {small_n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {small_seed}.\nBIG TRIANGLE: n = {big_n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {big_seed}.\n'), "yellow")
+            TAc.print(LANG.render_feedback("wrong-ans", f'# NO! You gave the wrong solution for the instances with these parameters:\nSMALL TRIANGLE: n = {small_n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {small_seed}.\nBIG TRIANGLE: n = {big_n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {big_seed}.\n'), "yellow")
             wrong += 1  
         else:
             time = ans[1]
@@ -122,23 +122,23 @@ def print_goal_summary(goal,visited_instances):
             MAX_VAL = ans[0][3] 
             small_seed = ans[0][4][0] 
             big_seed = ans[0][4][1]
-            TAc.print(LANG.render_feedback("out-of-time-ans", f'The evaluation has been stopped since your solution took too much time to perform on the instances with these parameters:\nSMALL TRIANGLE: n = {small_n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {small_seed}.\nBIG TRIANGLE: n = {big_n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {big_seed}.\n'), "white")
+            TAc.print(LANG.render_feedback("out-of-time-ans", f'# The evaluation has been stopped since your solution took too much time to perform on the instances with these parameters:\nSMALL TRIANGLE: n = {small_n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {small_seed}.\nBIG TRIANGLE: n = {big_n}, MIN_VAL = {MIN_VAL}, MAX_VAL = {MAX_VAL}, seed = {big_seed}.\n'), "white")
             out_of_time += 1
     if out_of_time > 0 and wrong == 0 and right >0:
-        TAc.print(LANG.render_feedback("right-not-in-time", f'OK! Your solution works well on some instances, but it didn\'t achieve the goal "{goal}".\n'), "yellow")
+        TAc.print(LANG.render_feedback("right-not-in-time", f'# OK! Your solution works well on some instances, but it didn\'t achieve the goal "{goal}".\n'), "yellow")
     elif out_of_time > 0 and wrong == 0 and right == 0:
-        TAc.print(LANG.render_feedback("not-in-time", f'Your solution didn\'t achieve the goal "{goal}".\n'), "yellow")
+        TAc.print(LANG.render_feedback("not-in-time", f'# Your solution didn\'t achieve the goal "{goal}".\n'), "yellow")
     elif right == len(visited_instances):
-        TAc.print(LANG.render_feedback("right-in-time", f'OK! Your solution achieved the goal "{goal}"!.\n'), "green")
+        TAc.print(LANG.render_feedback("right-in-time", f'# OK! Your solution achieved the goal "{goal}"!.\n'), "green")
     elif wrong > 0:
-        TAc.print(LANG.render_feedback("right-in-time", f'NO! Your solution doesn\'t work well on some instances!.\n'), "red")  
+        TAc.print(LANG.render_feedback("right-in-time", f'# NO! Your solution doesn\'t work well on some instances!.\n'), "red")  
 
-MAX_TIME = 3
+MAX_TIME = 2
 
 #CHECK TIME ELAPSED FOR correct 
         
 if ENV["goal"] == 'correct':
-    visited_instances = []
+    visited_instances_correct = []
     for instance in instances['correct']:
         small_triangle = instance[0][0]
         big_triangle = instance[0][1]
@@ -170,14 +170,14 @@ if ENV["goal"] == 'correct':
                     indexes.append(tl.fits(i,livello,big,small,l)[1])
                     right_answer += 1
         if time > MAX_TIME:
-            visited_instances.append([instance,time,"out_of_time"])
-            print_goal_summary('correct',visited_instances)
+            visited_instances_correct.append([instance,time,"out_of_time"])
+            print_goal_summary('correct',visited_instances_correct)
             exit(0)
         elif answer != right_answer:
-            visited_instances.append([instance,time,"wrong"])
+            visited_instances_correct.append([instance,time,"wrong"])
         else:
-            visited_instances.append([instance,time,"right"])
-    print_goal_summary('correct',visited_instances)
+            visited_instances_correct.append([instance,time,"right"])
+    print_goal_summary('correct',visited_instances_correct)
     exit(0)
 
 #CHECK TIME ELAPSED FOR time_at_most_2_exp_n
@@ -257,7 +257,7 @@ elif ENV["goal"] == 'time_at_most_2_exp_n':
         if time > MAX_TIME:
             visited_instances_2_exp_n.append([instance,time,"out_of_time"])
             print_goal_summary('correct',visited_instances_correct)
-            print_goal_summary('time_at_most_2_exp_n',visited_instances)
+            print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n)
             exit(0)
         elif answer != right_answer:
             visited_instances_2_exp_n.append([instance,time,"wrong"])
@@ -344,7 +344,7 @@ else:
         if time > MAX_TIME:
             visited_instances_2_exp_n.append([instance,time,"out_of_time"])
             print_goal_summary('correct',visited_instances_correct)
-            print_goal_summary('time_at_most_2_exp_n',visited_instances)
+            print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n)
             exit(0)
         elif answer != right_answer:
             visited_instances_2_exp_n.append([instance,time,"wrong"])
@@ -385,7 +385,7 @@ else:
         if time > MAX_TIME:
             visited_instances_n_exp_2.append([instance,time,"out_of_time"])
             print_goal_summary('correct',visited_instances_correct)
-            print_goal_summary('time_at_most_2_exp_n',visited_instances)
+            print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n)
             print_goal_summary('time_at_most_n_exp_2',visited_instances_n_exp_2) 
             exit(0)
         elif answer != right_answer:
