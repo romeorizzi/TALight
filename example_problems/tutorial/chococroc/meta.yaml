@@ -4,7 +4,7 @@ public_folder: public
 services:
   check_is_winning:
     description: use this service to check out your belief about a certain configuration to be a winning one.
-    evaluator: [python, services/check_game_value.py]
+    evaluator: [python, services/check_game_value_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -27,7 +27,7 @@ services:
         default: it
   check_is_lost:
     description: use this service to check out your belief about a certain configuration to be a lost one.
-    evaluator: [python, services/check_game_value.py]
+    evaluator: [python, services/check_game_value_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -50,7 +50,7 @@ services:
         default: it
   check_grundy_value:
     description: use this service to check out your conjectured grundy value for a certain configuration of the chococroc game.
-    evaluator: [python, services/check_game_value.py]
+    evaluator: [python, services/check_game_value_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -73,7 +73,7 @@ services:
         default: it
   tell_me_about_config:
     description: use with caution this spoilering service in order to get more or less detailed information about a certain configuration of the chococroc game.
-    evaluator: [python, services/tell_me_about_config.py]
+    evaluator: [python, services/tell_me_about_config_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -95,8 +95,12 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play:
-    description: use this service if you want to play a match of the chococroc game against our player. You can choose the starting configuration and whether to be first or second to move. . 
-    evaluator: [python, services/play.py]
+    description: 'use this service if you want to play a match of the chococroc game against our player. You can choose the starting configuration and whether to be first or second to move. You can also ask for supporting information. Finally, as with other interactive TALight services, you can plug in a bot of your to play in your behalf.\n   Example of direct use:\n    rtal connect chococroc play -aplayer=1 -am=10 -an=10 -awatch_value=no_watch -- bots/my_player.py -player=0\n   Example test your bot:\n    rtal connect chococroc play -aplayer=1 -am=10 -an=10 -awatch_value=no_watch -- bots/my_player.py -player=1'
+    example1: 'Example of direct use: rtal connect chococroc play -aplayer=1 -am=10 -an=10 -awatch_value=no_watch'
+    example2: 'Example test your bot: rtal connect chococroc play -aplayer=1 -am=10 -an=10 -awatch_value=no_watch -- bots/my_player.py -player=1'
+    #example1: [Example of direct use, rtal connect chococroc play -aplayer=1 -am=10 -an=10 -awatch_value=no_watch]
+    #example2: [Example test your bot, rtal connect chococroc play -aplayer=1 -am=10 -an=10 -awatch_value=no_watch -- bots/my_player.py -player=1]
+    evaluator: [python, services/play_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -118,8 +122,8 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play_val_measuring_game:
-    description: use this service if you want to play a match of the MeasuringGame(chococroc) against our player. You can choose the starting configuration and whether to be first or second to move. The MeasuringGame(chococroc) game is defined as the game sum of a chococroc game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a chococroc game position. 
-    evaluator: [python, services/play_val_measuring_game.py]
+    description: 'use this service if you want to play a match of the MeasuringGame(chococroc) against our player. You can choose the starting configuration and whether to be first or second to move. The MeasuringGame(chococroc) game is defined as the game sum of a chococroc game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a chococroc game position. You can choose whether to be first or second to move in the play. You can also ask for supporting information. Finally, as with other interactive TALight services, you can plug in a bot of your to play in your behalf.\n   Example of direct use:\n    rtal connect chococroc play_val_measuring_game -aplayer=1 -am=10 -an=10 -anim=0 -awatch_value=no_watch -- bots/my_player.py -player=0\n   Example test your bot:\n    rtal connect chococroc play_val_measuring_game -aplayer=1 -am=10 -an=10 -anim=0 -awatch_value=no_watch -- bots/my_player.py -player=1' 
+    evaluator: [python, services/play_val_measuring_game_server.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -132,7 +136,7 @@ services:
       nim:
         regex: ^([0-9][0-9]{0,50})$
         default: 0
-        explain: The height of the pile in the nim game.
+        explain: The height of the pile in the nim game. This will be precisely the Nim value of the sole chococroc configuration if and only if the whole compound configuration (chococroc configuration + one pile Nim configuration) is a lost configuration for the first to move player. 
       player:
         regex: ^(0|1)$
         default: 0

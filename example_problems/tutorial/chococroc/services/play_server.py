@@ -28,9 +28,9 @@ n=ENV['n']
 
 if(ENV['watch_value'] == 'watch_winner'):
     if(cl.grundy_val(m,n) > 0):
-        TAc.print(LANG.render_feedback("watch-winner-user-after-server", f'You want to watch the winner: starting from this configuration ({m}, {n}) you will win the game'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("watch-winner-user-after-server", f'watch_winner: you, since ({m}, {n}) is a winning configuration.'), "orange")
     else:
-        TAc.print(LANG.render_feedback("watch-winner-server-after-server", f'You want to watch the winner: starting from this configuration ({m}, {n}) i will win the game'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("watch-winner-server-after-server", f'watch_winner: me, since ({m}, {n}) is a winning configuration.'), "orange")
 elif ENV['watch_value'] == 'num_winning_moves' :
     win_moves = cl.winning_moves(m,n)
     win_moves.discard((None, None))
@@ -112,7 +112,7 @@ while True:
         exit(0)
     if new_pos < pos - (pos//2): #se la nuova situazione è minore rispetto la metà della posizione precedente è una mossa invalida
         TAc.print(LANG.render_feedback("not-valid", f'No! Your move from conf ({m},{n}) to conf ({new_m},{new_n}) is not valid.'), "red", ["bold"])
-        TAc.print(LANG.render_feedback("excessive-move", f'No! No valid move can more than half the value of a coordinate. (Here, 2*{new_pos}={2*new_pos} < {pos}).'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("excessive-move", f'No! No valid move can more than half the value of a coordinate. (Here, the double of {new_pos} is {2*new_pos}, but {2*new_pos} < {pos}).'), "red", ["bold"])
         exit(0)
 
     if new_m==1 and new_n==1: #se siamo rimasti con una sola riga e una sola colonna il computer non ha più mosse e vince l'utente

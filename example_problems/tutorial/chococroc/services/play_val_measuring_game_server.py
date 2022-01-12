@@ -61,11 +61,15 @@ elif ENV ['watch_value'] == 'watch_grundy_val':
 
 if ENV['player'] == 1:
     if m==1 and n==1 and nim==0:
-        TAc.print(LANG.render_feedback("you-have-won-play-val", f'It is my turn to move, on conf (1,1) and a nim tower of height 0. Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("you-won", f'You won!'), "green", ["bold"])        
+        TAc.print(LANG.render_feedback("you-have-won-play-val", f'It is my turn to move, on conf <chococoroc(1,1) + nim(0)>, that is, one single square chocolate bar (plus an empty Nim tower). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("you-won", f'You won!'), "green", ["bold"])
+        if ENV['player'] == 0:
+            TAc.print(LANG.render_feedback("wrong-grundy-val", f'Since we played optimally, you have successfully proven that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is NOT the number {ENV["nim"]}.'), "green", ["bold"])        
+        else:
+            TAc.print(LANG.render_feedback("correct-grundy-val", f'Since we played optimally, you have successfully proven that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is precisely {ENV["nim"]}.'), "green", ["bold"])
         exit(0)
     new_m,new_n,new_nim=cl.computer_decision_move(m,n,nim)
-    TAc.print(LANG.render_feedback("server-move-play-val", f'My move is from conf ({m},{n}) to conf ({new_m},{new_n}) and from a nim tower of height {nim} to a nim tower of height {new_nim}.\nThe turn is now to you, on conf ({new_m},{new_n}) and a nim tower of height {new_nim}'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("server-move-play-val", f'My move is from conf <chococoroc({m},{n}) + nim({nim})> to conf <chococoroc({new_m},{new_n}) + nim({new_nim})>'), "green", ["bold"])
 
     if ENV['watch_value'] == 'watch_winner':
         if (cl.grundy_sum(cl.grundy_val(new_m, new_n), new_nim) > 0):
@@ -102,17 +106,22 @@ if ENV['player'] == 1:
 
 while True:
     if m==1 and n==1 and nim==0:
-        TAc.print(LANG.render_feedback("you-have-lost-play-val", f'It is your turn to move, on conf (1,1) and a nim tower of height 0. Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("you-lost", f'You lost!'), "green", ["bold"])        
+        TAc.print(LANG.render_feedback("you-have-lost-play-val", f'It is your turn to move, on conf <chococoroc(1,1) + nim(0)> of the MeasuringGame(Chococroc) game, that is, one single square chocolate bar (plus an empty Nim tower). Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("you-lost", f'You lost!'), "green", ["bold"])
+        if ENV['player'] == 0:
+            TAc.print(LANG.render_feedback("correct-grundy-val-or-bad-move", f'The cases are two: either during this play you trew away a win with a bad move, or we have convinced you that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is precisely {ENV["nim"]}.'), "green", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback("wrong-grundy-val-or-bad-move", f'The cases are two: either during this play you trew away a win with a bad move, or we have convinced you that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is NOT the number {ENV["nim"]}.'), "green", ["bold"])        
         exit(0)
-    TAc.print(LANG.render_feedback("your-turn-play-val", f'It is your turn to move from conf ({m},{n}) or from a nim tower of height {nim} to a new conf (m,n) or a nim tower of new height.'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("user-move-play-val", f'Please, insert the three integers m, n and height separated by spaces: '), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("your-turn-play-val", f'It is your turn to move from conf <chococoroc(m={m},n={n}) + nim(height={nim})> of the MeasuringGame(Chococroc) game to a new conf of the MeasuringGame(Chococroc) game <chococoroc(m\',n\') + nim(height\')>. You should move either on the chococroc component or on the nim componet of the game.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("user-move-play-val", f'Please, insert the three integers m\', n\' and height\' separated by spaces: '), "yellow", ["bold"])
     new_m,new_n,new_nim = TALinput(int, 3, TAc=TAc)
     if new_m != m and new_n != n:
-        TAc.print(LANG.render_feedback("not-valid", f'No! Your move from conf ({m},{n}) to conf ({new_m},{new_n}) is not valid.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("not-valid", f'No! Your move from conf <({m},{n}),{nim}> to conf <({new_m},{new_n}),{new_nim}> is not valid.'), "red", ["bold"])
         TAc.print(LANG.render_feedback("double-move", f'You are cheating. A move can not alter both the number of rows (from {m} to {new_m}) and the number of columns (from {n} to {new_n})).'), "red", ["bold"])
+        exit(0)
         if new_nim > nim:
-            TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid.'), "red", ["bold"])
+            TAc.print(LANG.render_feedback("not-valid-nim", f'No! Your move from height {nim} to new height {new_nim} is not valid since {new_nim}>{nim}.'), "red", ["bold"])
             TAc.print(LANG.render_feedback("wrong-grow-move", f'You are cheating. A move can not increase the height of the nim tower.'), "red", ["bold"])
             TAc.print(LANG.render_feedback("wrong-nim-move", f'You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
         elif new_nim < 0:
