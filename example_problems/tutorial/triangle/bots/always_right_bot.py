@@ -2,12 +2,15 @@
 from sys import stderr, exit, argv
 import random
 
-usage=f"""I am a bot that always provides the right answer. I have the following functionalities:
-[1] eval feasible solution 
-[2] check and reward one sol
-[3] best sol
-[4] number of triangles in triangle
-."""
+usage=f"""# I am a bot that always provides the right answer. Call me with:
+#   > {argv[0]} <required functionality>
+# I support the following functionalities:
+#   [0] display this help message 
+#   [1] eval feasible solution 
+#   [2] check and reward one sol
+#   [3] best sol
+#   [4] number of triangles in triangle
+"""
 
 def myinput():
     spoon = ""
@@ -72,8 +75,8 @@ def best_path_cost(triangle):
             i += 1
     return triangle_array[i]
 
-if len(argv) != 2:
-    print("WARNING! Wrong number of arguments.")
+if len(argv) != 2 or argv[1]=='0':
+    print("# Error! Wrong number of arguments.")
     print(usage)
     exit(0)
 
