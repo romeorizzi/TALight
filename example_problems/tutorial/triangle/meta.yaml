@@ -189,7 +189,7 @@ services:
         default: python
 
   eval_best_sol:
-    description: this service evaluates your code which calculates the best reward collectable in a triangle.
+    description: this service evaluates your code which calculates the maximum reward collectable by a path descending in a triangle.
     evaluator: [python, services/eval_best_sol_server.py]
     args:
       goal:
