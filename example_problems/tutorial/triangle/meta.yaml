@@ -37,6 +37,7 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+
   check_and_reward_one_sol:
     description: this service checks whether a path is a feasible solution for a given triangle.
     evaluator: [python, services/check_and_reward_one_sol_server.py]
@@ -75,6 +76,7 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+
   check_sol_optimality:
     description: for a given triangle of integer numbers, the problem triangle asks you to find a path descending from its top vertex while maximizing the sum of the numbers on the visited positions. This service allows you to check the optimality of a path or the optimal solution value.
     evaluator: [python, services/check_best_sol_server.py]
@@ -241,10 +243,14 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
-        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+        explain: any string without space characters meaning one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  
-
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
 ...

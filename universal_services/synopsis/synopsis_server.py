@@ -8,6 +8,7 @@ from multilanguage import Env, Lang, TALcolors
 problem=os.path.split(environ["TAL_META_DIR"])[-1]
 args_list = [
     ('service',str),
+    ('metafile',str),
 ]
 
 ENV =Env(args_list)
@@ -51,8 +52,8 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
 
 
 meta_yaml_book = None
-if environ["TAL_lang"] != "hardcoded":
-    meta_yaml_file = os.path.join(environ["TAL_META_DIR"],"lang",environ["TAL_lang"],"meta","meta_"+ENV["service"]+"_"+environ["TAL_lang"]+".yaml")
+if environ["TAL_metafile"] != "main":
+    meta_yaml_file = os.path.join(environ["TAL_META_DIR"],"lang",environ["TAL_lang"],"meta","meta_"+ENV["service"]+"_"+environ["TAL_metafile"]+".yaml")
     meta_yaml_book = load_meta_yaml_file(meta_yaml_file, succeed_or_die = False)
 if meta_yaml_book == None:
     meta_yaml_file = os.path.join(environ["TAL_META_DIR"],"meta.yaml")
