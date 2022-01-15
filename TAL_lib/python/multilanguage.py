@@ -139,7 +139,7 @@ class Lang:
             else:
                 self.opening_msg += f"{arg_name}={arg_val}, "
         self.opening_msg = self.opening_msg[:-2] + ".\n"
-        self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {self.ENV.exe_fullname}).', {"problem":problem, "service":service, "lang":self.ENV["lang"]})
+        self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {self.ENV.exe_fullname}).', {"problem":problem, "service":service, "ENV":self.ENV, "lang":self.ENV["lang"]})
         self.TAc.print(self.opening_msg, "green")
 
     def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionary=None, obj=None):
