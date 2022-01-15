@@ -490,8 +490,10 @@ where
                     }
                     Some(Ok(Message::Text(x))) => match Reply::parse(&x) {
                         Ok(Reply::ConnectStop { status }) => {
-                            if let Err(x) = wsout.send(Message::Text(client_ended.clone())).await {
-                                break Err(format!("Cannot send data to server: {}", x));
+                            if !closing {
+                                if let Err(x) = wsout.send(Message::Text(client_ended.clone())).await {
+                                    break Err(format!("Cannot send data to server: {}", x));
+                                }
                             }
                             break status;
                         }
