@@ -17,8 +17,8 @@ args_list = [
     ('display_explicit_formulation',bool),
     ('explicit_formulation_format',str),
     ('check_solution',bool),
-    ('txt_style',str),
-    ('sol_style',str),
+    ('instance_format',str),
+    ('sol_format',str),
 ]
 
 ENV =Env(args_list)
@@ -32,7 +32,7 @@ mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES)
 
 if ENV['check_solution']:
     input_str = mph.get_input_str()
-    instance = ll.get_instance_from_txt(input_str, style=ENV['txt_style'])
+    instance = ll.get_instance_from_txt(input_str, style=ENV['instance_format'])
     print(instance)
     m = len(instance[0])
     n = len(instance[1])
@@ -85,22 +85,22 @@ if ENV['check_solution']:
     user_sol_annotated_subseq = glpsol_sol
 
     TAc.print(LANG.render_feedback("sol-title", "The GLPSOL solution is:"), "yellow", ["bold"])
-    if ENV['sol_style'] == 'subsequence':
+    if ENV['sol_format'] == 'subsequence':
         TAc.print(LANG.render_feedback("out_sol", f"{ll.sequence_to_str(user_sol_subsequence)}"), "white", ["reverse"])
-    elif ENV['sol_style'] == 'annotated_subseq':
+    elif ENV['sol_format'] == 'annotated_subseq':
         TAc.print(LANG.render_feedback("out_sol", f"{ll.annotated_subseq_to_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     
     annotated_subseq_sol = ll.get_sol(instance[0], instance[1], m, n)
     subsequence_sol = ll.annotated_subseq_to_sequence(annotated_subseq_sol)
 
-    if ENV['sol_style'] == 'subsequence':
+    if ENV['sol_format'] == 'subsequence':
         print(f"The subsequence solution = {subsequence_sol}")
         print(f"Your subsequence solution = {user_sol_subsequence}")
         if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
             TAc.OK()
             TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
-    elif ENV['sol_style'] == 'annotated_subseq':
+    elif ENV['sol_format'] == 'annotated_subseq':
         print(f"The annotated solution = {annotated_subseq_sol}")
         print(f"Your annotated solution = {user_sol_annotated_subseq}")
         if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):

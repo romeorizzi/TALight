@@ -60,7 +60,7 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 1
         explain: 'This argument is taken into account when instance_spec=instance_id. It is used to identify a particular instance within the catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then this catalogue of hardcoded instances is automatically set up with make when setting up the server.'
-      format:
+      instance_format:
         regex: ^(only_strings.txt|with_m_and_n.txt|dat)$
         default: only_strings.txt
         explain: choose the encoding for the txt input file.
@@ -107,7 +107,7 @@ services:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-      sol_style:
+      sol_format:
         regex: ^(subsequence|annotated_subseq)$
         default: subsequence
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
@@ -142,7 +142,7 @@ services:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,alphabet,seed>.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-      sol_style:
+      sol_format:
         regex: ^(subsequence|annotated_subseq)$
         default: subsequence
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
@@ -151,11 +151,11 @@ services:
         default: it
   
   try_GMPL_model:
-    description: 'This service allows you to validate (or also submit) your GMPL models for single instances of the LCS problem (input: two strings; output: a longest common subsequence). Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service runs a `glpsol` engine on your .mod and .dat files to build an explicit LP or ILP formulation of the instance and possibly solve it. If the flag `display_output` is set to 1, the output of `glpsol` will be echoed on your screen (on your local machine). We advocate that your model writes down on a file `solution.txt` the solution it finds. If the flag `display_solution` is set to 1, this file will be listed on your screen. If the flag `check_solution` is set to 1 then the service also checks the feasibility and optimality of the solution produced by your model for that instance. However, for these checks to take place two conditions mus be met. First, the file `solution.txt` should strictly adhere to one of our supported formats (examples in the `examples` folder in the archive downloaded with `rtal get model_lcs`. And you can further examples through the service  `gimme_sol`). Second, you must submit also the .instance file besides the .dat file and .mod file. Examples for the supported formats of the .instance file can be found in the `examples` directory or obtained from the service `gimme_sol`. When you have a personal TALight token (assigned to you for an exam or with the enrollment to a course), and you want that a positive evaluation gets accounted to you, then just supply your token to the service.' 
+    description: 'This service allows you to validate (or also submit) your GMPL models for single instances of the LCS problem (input: two strings; output: a longest common subsequence). Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service runs a `glpsol` engine on your .mod and .dat files to build an explicit LP or ILP formulation of the instance and possibly solve it. If the flag `display_output` is set to 1, the output of `glpsol` will be echoed on your screen (on your local machine). We advocate that your model writes down on a file `solution.txt` the solution it finds. If the flag `display_solution` is set to 1, this file will be listed on your screen. If the flag `check_solution` is set to 1 then the service also checks the feasibility and optimality of the solution produced by your model for that instance. However, for these checks to take place two conditions must be met. First, the file `solution.txt` should strictly adhere to one of our supported formats (you can find examples in the `examples` folder in the archive downloaded with `rtal get model_lcs`, and you can get further examples through the service `gimme_sol`). Second, you must submit also the .instance file besides the .dat file and .mod file. Examples for the supported formats of the .instance file can be found in the `examples` directory or obtained from the service `gimme_sol`. When you have a personal TALight token (assigned to you for an exam or with the enrollment to a course), and you want that a positive evaluation gets accounted to you, then just supply your token to the service. Only the positive submissions are taken in considerations and are never overwritten by the bad ones.' 
     example1: [when the model does not write on a file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat']
     example2: [to visualize the solution written in the file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -adisplay_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat']
     example3: [to ask validation of the solution written in the file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
-    example3: [to get credits for this instance in case of feasibility/optimality of the solution written in the file `solution.txt` by your model, '\n     rtal connect model_lcs try_GMPL_model -atoken=123456 -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
+    example4: [to get credits for this instance in case of feasibility/optimality of the solution written in the file `solution.txt` by your model, '\n     rtal connect model_lcs try_GMPL_model -atoken=123456 -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
     evaluator: [python, services/try_GMPL_model_server.py]
     files:
       - instance
@@ -185,14 +185,29 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: If this flag is set to 1 then, the solution obtained from GLPSOL will be checked. In order to perform this check, it is mandatory that also the input.txt file is sent to the sever via the TA_send_files_bot.py
-      txt_style:
+      instance_format:
         regex: ^(only_strings|with_m_and_n)$
         default: only_strings
-        explain: 'choose how to encode the txt input file.'
-      sol_style:
+        explain: 'choose the format of the instance file.'
+      sol_format:
         regex: ^(subsequence|annotated_subseq)$
         default: subsequence
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
+      token:
+        regex: ^(anonymous|[1-9][0-9]{5,5})$
+        default: anonymous
+      lang: 
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  get_my_instances:
+    description: 'If you hold a personal token to a course or exam, and intend to score points on this problem, you should first use this service in order to get the instances of your personal assignement, and next use the service `try_GMPL_model` or `try_solution` to check and/or submit your model or solution on each particular instance you can manage. After calling the service `get_my_instances` you will find the instances within the subfolder `output` of your current directory. Use the rtal -o argument if you prefer a different path or folder name.' 
+    evaluator: [python, services/get_my_instances_server.py]
+    args:
+      instance_format:
+        regex: ^(only_strings|with_m_and_n)$
+        default: only_strings
+        explain: 'choose the format of the instance file.'
       token:
         regex: ^(anonymous|[1-9][0-9]{5,5})$
         default: anonymous
@@ -231,7 +246,7 @@ services:
         regex: ^(default)$
         default: default
         explain: 'choose how to encode the dat file. For now there is only one format'
-      sol_style:
+      sol_format:
         regex: ^(subsequence|annotated_subseq)$
         default: subsequence
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
