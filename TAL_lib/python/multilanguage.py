@@ -103,9 +103,9 @@ class Lang:
                     except BaseException as exc:
                         if book_strictly_required:
                             for out in [stdout, stderr]:
-                                TAc.print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package 'ruamel' on your machine):", "red", ["bold"])
+                                TAc.print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted:", "red", ["bold"])
                                 TAc.print(f" the messages_book file `{self.messages_book_file}` for multilingual feedback is corrupted (not a valid .yaml file).", "red", ["bold"])
-                                print(f" The service {ENV.service} you required for problem {ENV.problem} strictly requires this .yaml file. As long as the 'ruamel' package is not installed in the environment where the 'rtald' daemon runs, this service can not be operated.", file=out)
+                                print(f" The service {ENV.service} you required for problem {ENV.problem} strictly requires this .yaml file.", file=out)
                                 print(exc, file=out)
                             exit(1)
                         else:
@@ -139,7 +139,7 @@ class Lang:
             else:
                 self.opening_msg += f"{arg_name}={arg_val}, "
         self.opening_msg = self.opening_msg[:-2] + ".\n"
-        self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {self.ENV.exe_fullname}).', {"problem":problem, "service":service, "lang":self.ENV["lang"]})
+        self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {self.ENV.exe_fullname}).', {"problem":problem, "service":service, "ENV":self.ENV, "lang":self.ENV["lang"]})
         self.TAc.print(self.opening_msg, "green")
 
     def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionary=None, obj=None):

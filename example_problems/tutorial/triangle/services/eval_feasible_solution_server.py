@@ -23,6 +23,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # INSTANCES FOR GOAL = correct
 
+goals = ['correct']
 instances = { 'correct' : [] }
 MIN_VAL = 10
 MAX_VAL = 99
@@ -30,11 +31,12 @@ NUM_INSTANCES = 3
 for n in range(2, 7):
     for _ in range(NUM_INSTANCES):
         seed = random.randint(100000,999999)
-        instances['correct'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed])
-
+        instances['correct'].append({'triangle' : tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), 'n' : n, 'MIN_VAL' : MIN_VAL, 'MAX_VAL' : MAX_VAL, 'seed' : seed, 'measured_time' : None, 'answer_is_correct' : None})
+        
 # INSTANCES FOR GOAL = 2^n o n^2      
   
 if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2':
+    goals.append('time_at_most_2_exp_n')
     instances['time_at_most_2_exp_n'] = []
     MIN_N = 8  # could still be 2^{\choose(n,2)}
     MAX_N = 15  # we intend to evaluate positively solutions as bad as O(2^n)
@@ -43,11 +45,12 @@ if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2'
     NUM_INSTANCES = 1
     for n in range(MIN_N, MAX_N):
         seed = random.randint(100000,999999)
-        instances['time_at_most_2_exp_n'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed])
+        instances['time_at_most_2_exp_n'].append({'triangle' : tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), 'n' : n, 'MIN_VAL' : MIN_VAL, 'MAX_VAL' : MAX_VAL, 'seed' : seed, 'measured_time' : None, 'answer_is_correct' : None})
 
 # INSTANCES FOR GOAL = n^2
 
 if ENV["goal"] == 'time_at_most_n_exp_2':
+    goals.append('time_at_most_n_exp_2')
     instances['time_at_most_n_exp_2'] = []
     MIN_N = 16  # could still be 2^n
     if ENV["code_lang"] == "compiled":
@@ -60,7 +63,7 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
     n = MIN_N
     while n < MAX_N:
         seed = random.randint(100000,999999)
-        instances['time_at_most_n_exp_2'].append([tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), n, MIN_VAL, MAX_VAL, seed])
+        instances['time_at_most_n_exp_2'].append({'triangle' : tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), 'n' : n, 'MIN_VAL' : MIN_VAL, 'MAX_VAL' : MAX_VAL, 'seed' : seed, 'measured_time' : None, 'answer_is_correct' : None})
         n = math.ceil(n*scaling_factor)
         scaling_factor += 0.1
         if n > MAX_N:
@@ -79,157 +82,66 @@ def is_feasible_solution(path):
            
 MAX_TIME = 2
 
-#CHECK TIME ELAPSED FOR correct 
-        
-if ENV["goal"] == 'correct':
-    visited_instances_correct = []
-    for instance in instances['correct']:
-        triangle = instance[0]
-        n = instance[1]
-        TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
-        TAc.print(n, "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
-        tl.print_triangle(triangle)
-        TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
-        start = monotonic()
-        answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
-        end = monotonic()
-        time = end-start
-        if time > MAX_TIME:
-            visited_instances_correct.append([instance,time,"out_of_time"])
-            tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-            exit(0)
-        elif not right_length(triangle,answer) or not is_feasible_solution(answer):
-            visited_instances_correct.append([instance,time,"wrong"])
-        else:
-            visited_instances_correct.append([instance,time,"right"])
-    tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-    exit(0)
+# FUNCTION TESTING ONE SINGLE TESTCASE: 
+def test(instance):
+    triangle = instance['triangle']
+    n = instance['n']
+    TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
+    TAc.print(n, "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
+    tl.print_triangle(triangle)
+    TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
+    start = monotonic()
+    answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
+    end = monotonic()
+    instance['measured_time'] = end-start
+    if right_length(triangle,answer) and is_feasible_solution(answer):
+        instance['answer_is_correct'] = True
+    else:
+        instance['answer_is_correct'] = False
 
-#CHECK TIME ELAPSED FOR time_at_most_2_exp_n
-       
-elif ENV["goal"] == 'time_at_most_2_exp_n':
-    visited_instances_correct = []
-    for instance in instances['correct']:
-        triangle = instance[0]
-        n = instance[1]
-        TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
-        TAc.print(n, "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
-        tl.print_triangle(triangle)
-        TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
-        start = monotonic() 
-        answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
-        end = monotonic()
-        time = end-start
-        if time > MAX_TIME:
-            visited_instances_correct.append([instance,time,"out_of_time"])
-            tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-            exit(0)
-        elif not right_length(triangle,answer) or not is_feasible_solution(answer):
-            visited_instances_correct.append([instance,time,"wrong"])
-        else:
-            visited_instances_correct.append([instance,time,"right"])
-    
-    visited_instances_2_exp_n = []
-    for instance in instances['time_at_most_2_exp_n']:
-        triangle = instance[0]
-        n = instance[1]
-        TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
-        TAc.print(n, "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
-        tl.print_triangle(triangle)
-        TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
-        start = monotonic()
-        answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
-        end = monotonic()
-        time = end-start
-        if time > MAX_TIME:
-            visited_instances_2_exp_n.append([instance,time,"out_of_time"])
-            tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-            tl.print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n,TAc,LANG)
-            exit(0)
-        elif not right_length(triangle,answer) or not is_feasible_solution(answer):
-            visited_instances_2_exp_n.append([instance,time,"wrong"])
-        else:
-            visited_instances_2_exp_n.append([instance,time,"right"])
-    tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-    tl.print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n,TAc,LANG)    
-    exit(0)
-    
-#CHECK TIME ELAPSED FOR time_at_most_n_exp_2
+# FUNCTION PRINTING SUMMARIES: 
 
-else:
-    visited_instances_correct = []
-    for instance in instances['correct']:
-        triangle = instance[0]
-        n = instance[1]
-        TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
-        TAc.print(n, "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
-        tl.print_triangle(triangle)
-        TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
-        start = monotonic() 
-        answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
-        end = monotonic()
-        time = end-start
-        if time > MAX_TIME:
-            visited_instances_correct.append([instance,time,"out_of_time"])
-            tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-            exit(0)
-        elif not right_length(triangle,answer) or not is_feasible_solution(answer):
-            visited_instances_correct.append([instance,time,"wrong"])
+def print_summaries():    
+    TAc.print(LANG.render_feedback('summary-of-results', '# SUMMARY OF RESULTS:'), 'green')
+    num_instances = {}
+    num_instances_passed = {}
+    num_instances_correct_ans = {}
+    num_instances_wrong_ans = {}
+    alive = True
+    for goal in goals:
+        num_instances[goal] = len(instances[goal])
+        num_instances_passed[goal] = 0
+        num_instances_correct_ans[goal] = 0
+        num_instances_wrong_ans[goal] = 0
+        for instance in instances[goal]:
+            if instance['answer_is_correct'] == False:
+                num_instances_wrong_ans[goal] += 1
+            elif instance['answer_is_correct'] == True:
+                num_instances_correct_ans[goal] += 1
+                if instance['measured_time'] <= MAX_TIME:
+                    num_instances_passed[goal] += 1
+        if alive:
+            tl.print_goal_summary(goal,instances[goal],num_instances_passed[goal],num_instances_correct_ans[goal],num_instances_wrong_ans[goal], out_of_time, TAc,LANG)
+        if num_instances_passed[goal] < num_instances[goal]:
+            alive = False
+    TAc.print(LANG.render_feedback('short-summary-of-results', '# SUMMARY OF RESULTS:'), 'green')
+    for goal in goals:
+        if num_instances_passed[goal] == num_instances[goal]:
+            TAc.print(LANG.render_feedback('goal-passed', f'# Goal {goal}: PASSED (passed instances: {num_instances_passed[goal]}/{num_instances[goal]} instances)'), 'green', ['bold'])
         else:
-            visited_instances_correct.append([instance,time,"right"])
-    
-    visited_instances_2_exp_n = []
-    for instance in instances['time_at_most_2_exp_n']:
-        triangle = instance[0]
-        n = instance[1]
-        TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
-        TAc.print(n, "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
-        tl.print_triangle(triangle)
-        TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
-        start = monotonic() 
-        answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
-        end = monotonic()
-        time = end-start
-        if time > MAX_TIME:
-            visited_instances_2_exp_n.append([instance,time,"out_of_time"])
-            tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-            tl.print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n,TAc,LANG)
+            TAc.print(LANG.render_feedback('goal-NOT-passed', f'# Goal {goal}: NOT passed (passed instances: {num_instances_passed[goal]}/{num_instances[goal]} instances, correct answers: {num_instances_correct_ans[goal]}/{num_instances[goal]}, wrong answers: {num_instances_wrong_ans[goal]}/{num_instances[goal]} instances)'), 'red', ['bold'])
+
+# MAIN: TEST ALL TESTCASES: 
+
+out_of_time = 0
+for goal in goals:
+    for instance in instances[goal]:
+        test(instance)
+        if instance['measured_time'] > MAX_TIME:
+            out_of_time += 1
+            print_summaries()
             exit(0)
-        elif not right_length(triangle,answer) or not is_feasible_solution(answer):
-            visited_instances_2_exp_n.append([instance,time,"wrong"])
-        else:
-            visited_instances_2_exp_n.append([instance,time,"right"])
-    
-    visited_instances_n_exp_2 = []
-    for instance in instances['time_at_most_n_exp_2']:
-        triangle = instance[0]
-        n = instance[1]
-        TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
-        TAc.print(n, "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
-        tl.print_triangle(triangle)
-        TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
-        start = monotonic() 
-        answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
-        end = monotonic()
-        time = end-start
-        if time > MAX_TIME:
-            visited_instances_n_exp_2.append([instance,time,"out_of_time"])
-            tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-            tl.print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n,TAc,LANG)
-            tl.print_goal_summary('time_at_most_n_exp_2',visited_instances_n_exp_2,TAc,LANG) 
-            exit(0)
-        elif not right_length(triangle,answer) or not is_feasible_solution(answer):
-            visited_instances_n_exp_2.append([instance,time,"wrong"])
-        else:
-            visited_instances_n_exp_2.append([instance,time,"right"])
-    
-    tl.print_goal_summary('correct',visited_instances_correct,TAc,LANG)
-    tl.print_goal_summary('time_at_most_2_exp_n',visited_instances_2_exp_n,TAc,LANG) 
-    tl.print_goal_summary('time_at_most_n_exp_2',visited_instances_n_exp_2,TAc,LANG) 
+            
+    print_summaries()
     exit(0)

@@ -89,4 +89,7 @@ The algorithm runs in phases and combined in the following structure.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
 ...

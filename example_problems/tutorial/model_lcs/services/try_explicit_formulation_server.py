@@ -40,7 +40,7 @@ glpsol_output = mph.get_out_str()
 
 if ENV['display_output']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-    TAc.print(LANG.render_feedback("out-title", "The GLPSOL stdout is: "), "yellow", ["BOLD"])
+    TAc.print(LANG.render_feedback("out-title", "The GLPSOL stdout is: "), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("stdout", f"{glpsol_output}"), "white", ["reverse"])
 
 if glpsol_output.find("NO PRIMAL") != -1:
@@ -50,7 +50,7 @@ if glpsol_output.find("NO PRIMAL") != -1:
 if ENV['display_error']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     glpsol_error = mph.get_err_str()
-    TAc.print(LANG.render_feedback("err-title", "The GLPSOL stderr is: "), "yellow", ["BOLD"])
+    TAc.print(LANG.render_feedback("err-title", "The GLPSOL stderr is: "), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("stderr", f"{glpsol_error}"), "white", ["reverse"])
 
 exit(0)

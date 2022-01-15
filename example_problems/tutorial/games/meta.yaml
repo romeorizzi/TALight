@@ -44,4 +44,7 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
 ...
