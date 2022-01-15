@@ -11,6 +11,7 @@ use tracing::{error, warn};
 use std::os::unix::fs::MetadataExt;
 
 #[derive(Parser, Debug, Clone)]
+#[clap(version)]
 struct CliArgs {
     #[clap(help = "Problem directory")]
     problem: PathBuf,
