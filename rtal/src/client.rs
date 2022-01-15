@@ -66,6 +66,7 @@ where
 }
 
 #[derive(Parser, Debug, Clone)]
+#[clap(version)]
 struct CliArgs {
     #[clap(
         short,
