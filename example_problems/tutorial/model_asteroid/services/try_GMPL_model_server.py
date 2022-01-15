@@ -70,7 +70,7 @@ raw_sol = mph.get_raw_sol()
 if ENV['display_output']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     gplsol_output = mph.get_out_str()
-    TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["BOLD"])  
+    TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["bold"])  
     TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
 
 
@@ -78,14 +78,14 @@ if ENV['display_output']:
 if ENV['display_error']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     gplsol_error = mph.get_err_str()
-    TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderr is: "), "yellow", ["BOLD"])  
+    TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderr is: "), "yellow", ["bold"])  
     TAc.print(LANG.render_feedback("stderr", f"{gplsol_error}"), "white", ["reverse"])
 
 
 # print GPLSOL solution.txt
 if ENV['display_solution']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-    TAc.print(LANG.render_feedback("sol-title", "The raw GPLSOL solution is: "), "yellow", ["BOLD"])  
+    TAc.print(LANG.render_feedback("sol-title", "The raw GPLSOL solution is: "), "yellow", ["bold"])  
     for line in raw_sol:
         print(line)
 
@@ -104,7 +104,7 @@ if ENV['check_solution']:
     gplsol_sol = al.process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
 
     # Print processed GPLSOL solution
-    TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["BOLD"])
+    TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["bold"])
     if ENV['sol_style'] == 'seq':
         TAc.print(LANG.render_feedback("out_sol", f"{al.seq_to_str(gplsol_sol)}"), "white", ["reverse"])
         gplsol_sol = al.seq_to_subset(gplsol_sol, m, n)
