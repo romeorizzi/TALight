@@ -52,11 +52,11 @@ where
 }
 
 fn parse_key_val_optional<T, U>(s: &str) -> Result<(T, U), Box<dyn Error + Send + Sync + 'static>>
-    where
-        T: FromStr,
-        T::Err: Error + Send + Sync + 'static,
-        U: FromStr,
-        U::Err: Error + Send + Sync + 'static,
+where
+    T: FromStr,
+    T::Err: Error + Send + Sync + 'static,
+    U: FromStr,
+    U::Err: Error + Send + Sync + 'static,
 {
     if let Some(pos) = s.find('=') {
         Ok((s[..pos].parse()?, s[pos + 1..].parse()?))
@@ -506,7 +506,10 @@ where
             size = pipein.read(&mut buffer), if !closing => {
                 let size = match size {
                     Ok(0) => {
-                        warn!("Read 0 bytes from stream");
+                        if let Err(x) = wsout.send(Message::Text(client_ended.clone())).await {
+                            break Err(format!("Cannot send data to server: {}", x));
+                        }
+                        closing = true;
                         continue;
                     }
                     Ok(x) => x,
