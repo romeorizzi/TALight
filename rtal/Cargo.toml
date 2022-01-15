@@ -9,6 +9,10 @@ name="rtal"
 path="src/client.rs"
 
 [[bin]]
+name="rtalc"
+path="src/check.rs"
+
+[[bin]]
 name="rtald"
 path="src/server.rs"
 
