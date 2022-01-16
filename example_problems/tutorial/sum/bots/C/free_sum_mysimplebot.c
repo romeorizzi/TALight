@@ -10,7 +10,6 @@ int main() {
     setvbuf(stdout, NULL, _IOLBF, BUFFER_SIZE);
     while(true) {
         fgets(buffer, BUFFER_SIZE, stdin);
-        fprintf(stderr, "Read %s", buffer);
         if(strncmp(buffer, "# WE HAVE FINISHED", 18) == 0) {
             break;
         } else if(buffer[0] == '#') {
