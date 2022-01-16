@@ -6,7 +6,6 @@ import unittest
 
 class BubbleSortMachine:
     def __init__(self):
-        #self.tmp_buffer = None
         self.working_array = []
         self.test_logs = []
 
@@ -55,9 +54,9 @@ class BubbleSortMachine:
             return False
 
         if self.working_array[first_position] < self.working_array[second_position]:
-            self.console(f"#LOG_compare_consecutive_elements {first_position} (<)", wait_for_receipt, expected_log)
+            self.console(f"#LOG_compare_consecutive_elements {first_position} (<) {second_position}", wait_for_receipt, expected_log)
             return True
-        self.console(f"#LOG_compare_consecutive_elements {first_position} (>=)", wait_for_receipt, expected_log)
+        self.console(f"#LOG_compare_consecutive_elements {first_position} (>=) {second_position}", wait_for_receipt, expected_log)
         return False
 
     # 3. Input vettore

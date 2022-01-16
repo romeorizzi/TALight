@@ -29,7 +29,6 @@ else:
     N = int(fin.readline())
     input_array_of_ints = list(map(int, fin.readline().strip().split()))
     fin.close()
-print(f"ecco l'array: {input_array_of_ints}")
 require_receipt = len(argv) > 2
 
 assert N == len(input_array_of_ints)
@@ -38,24 +37,17 @@ SM = BubbleSortMachine()
 SM.input_array(input_array_of_ints, wait_for_receipt=require_receipt)
 
 swap = True
+right_pos = 1
 while swap:
     swap = False
 
-    for i in range(len(input_array_of_ints)-1):
+    for i in range(len(input_array_of_ints)-right_pos):
         if(not SM.compare_consecutive_elements(i, wait_for_receipt=require_receipt)):
             SM.swap_consecutive_elements(i, wait_for_receipt=require_receipt)
             swap = True
-        print(str(SM.output_array(wait_for_receipt=require_receipt)))
+        SM.output_array(wait_for_receipt=require_receipt)
+    print ("end FOR")
+    right_pos += 1
 SM.output_final_sorted_array(wait_for_receipt=require_receipt)
-'''
-while n_ordered < N:
-    SM.load_next_input_element_in_tmp_buffer(input_array_of_ints[n_ordered], wait_for_receipt=require_receipt)
-    pos_cmp = n_ordered - 1
-    while pos_cmp >= 0 and SM.what_in_tmp_buffer_goes_before_than_what_in_pos(pos_cmp, wait_for_receipt=require_receipt):
-        SM.clone_to_its_right_ele_in_pos(pos_cmp, wait_for_receipt=require_receipt)
-        pos_cmp -= 1
-    SM.flush_tmp_buffer_on_pos(pos_cmp + 1, wait_for_receipt=require_receipt)
-    n_ordered += 1
-SM.output_final_sorted_array(wait_for_receipt=require_receipt)
-'''
+
 sleep(1)
