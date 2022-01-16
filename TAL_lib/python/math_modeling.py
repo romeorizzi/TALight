@@ -3,23 +3,14 @@
 NOTE: it needs to be placed in the services directory to work properly."""
 import subprocess, os, json
 
-from bot_interface import service_server_requires_and_gets_file_of_handle,service_server_requires_and_gets_the_only_file
-
-
-def get_problem_path_from(you_service_file_path):
-    """Call this with: get_problem_path_from(__file__)"""
-    service_dir_path = os.path.abspath(os.path.dirname(you_service_file_path))
-    return os.path.join(service_dir_path, '..')
-
-
 class ModellingProblemHelper():
     def __init__(self,
                 TAc,
+                tmp_path,                            \
                 problem_path,                            \
-                tmp_dirname       = 'tmp97815',          \
-                mod_filename      = 'model.mod',         \
-                dat_filename      = 'instance.dat',      \
-                in_filename       = 'input.txt',      \
+                mod_filename      = 'mod',         \
+                dat_filename      = 'dat',      \
+                in_filename       = 'instance',      \
                 sol_filename      = 'solution.txt',      \
                 out_filename      = 'output.txt',        \
                 err_filename      = 'error.txt',         \
@@ -27,84 +18,20 @@ class ModellingProblemHelper():
                 instances_dirname = 'instances',      \
                 gendict_filename  = 'gen_dictionary.json'):
         self.__TAc = TAc
-        self.__tmp_path        = os.path.join(problem_path, tmp_dirname)
-        self.__mod_path        = os.path.join(problem_path, tmp_dirname, mod_filename)
-        self.__dat_path        = os.path.join(problem_path, tmp_dirname, dat_filename)
-        self.__in_path         = os.path.join(problem_path, tmp_dirname, in_filename)
-        self.__sol_path        = os.path.join(problem_path, tmp_dirname, sol_filename)
-        self.__out_path        = os.path.join(problem_path, tmp_dirname, out_filename)
-        self.__err_path        = os.path.join(problem_path, tmp_dirname, err_filename)
-        self.__ef_path         = os.path.join(problem_path, tmp_dirname, ef_filename)
+        #print(f"problem_path={problem_path}")
+        #print(f"tmp_path={tmp_path}")
+        self.problem_path = problem_path
+        self.tmp_path = tmp_path
+        self.__mod_path        = os.path.join(tmp_path, mod_filename)
+        self.__dat_path        = os.path.join(tmp_path, dat_filename)
+        self.__in_path         = os.path.join(tmp_path, in_filename)
+        self.__sol_path        = os.path.join(tmp_path, sol_filename)
+        self.__out_path        = os.path.join(tmp_path, out_filename)
+        self.__err_path        = os.path.join(tmp_path, err_filename)
+        self.__ef_path         = os.path.join(tmp_path, ef_filename)
         self.__instances_path  = os.path.join(problem_path, instances_dirname)
         self.__gendict_path    = os.path.join(self.__instances_path, gendict_filename)
 
-
-    # TODO: fix PermissionError:
-    def __del__(self):
-        """Remove TMP_DIR"""
-        # os.remove(self.__tmp_path)
-
-
-    # MANAGE TMP_DIR FILES ---------------------------
-    def __init_tmp_dir(self):
-        """Creates a folder where to store the temporary files needed by the service. Our goal is that this should work whether the service is run in local or on a server."""
-        if not os.path.exists(self.__tmp_path):
-            os.makedirs(self.__tmp_path)
-
-
-    def receive_mod_file(self, single_file_passed_to_the_bot=False):
-        """Enable the service to recive the mod file. Use single_file_passed_to_the_bot=True if you call the bot with just this file, so as to avoid writing mod=path_to_bot/file.mod"""
-        # Initialize TMP_DIR
-        self.__init_tmp_dir()
-        # Manage mod file
-        if single_file_passed_to_the_bot:
-            mod = service_server_requires_and_gets_the_only_file().decode()
-        else:
-            mod = service_server_requires_and_gets_file_of_handle('mod').decode()
-        try:
-            with open(self.__mod_path, 'w') as mod_file:
-                mod_file.write(mod)
-        except os.error as err:
-            self.__TAc.print(f"Fail to create the mod file in: {self.__mod_path}", "red", ["bold"])
-            exit(0)
-
-
-    def receive_dat_file(self):
-        """Enable the service to recive the dat file."""
-        # Initialize TMP_DIR
-        self.__init_tmp_dir()
-        # Manage dat file
-        dat = service_server_requires_and_gets_file_of_handle('dat').decode()
-        try:
-            with open(self.__dat_path, 'w') as dat_file:
-                dat_file.write(dat)
-        except os.error as err:
-            self.__TAc.print(f"Fail to create the dat file in: {self.__dat_path}", "red", ["bold"])
-            exit(0)
-
-
-    def receive_input_file(self):
-        """Enable the service to recive the input file."""
-        # Initialize TMP_DIR
-        self.__init_tmp_dir()
-        # Manage input file
-        input = service_server_requires_and_gets_file_of_handle('input').decode()
-        try:
-            with open(self.__in_path, 'w') as dat_file:
-                dat_file.write(input)
-        except os.error as err:
-            self.__TAc.print(f"Fail to create the input file in: {self.__in_path}", "red", ["bold"])
-            exit(0)
-
-    def receive_ef_file(self):
-        self.__init_tmp_dir()
-        ef = service_server_requires_and_gets_file_of_handle('ef').decode()
-        try:
-            with open(self.__ef_path, 'w') as ef_file:
-                ef_file.write(ef)
-        except os.error as err:
-            self.__TAc.print(f"Fail to create the explicit formulation file in: {self.__ef_path}", "red", ["bold"])
-            exit(0)            
 
     def run_ef_GLPSOL(self, ef_format):
             
@@ -115,12 +42,12 @@ class ModellingProblemHelper():
                         with open(self.__err_path, 'w') as err_file:
                             # RUN gplsol
                             command = ["glpsol", "--math", self.__ef_path, "-d", self.__dat_path]
-                            subprocess.run(command, cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
+                            subprocess.run(command, cwd=self.problem_path, timeout=30.0, stdout=out_file, stderr=err_file)
                     else:
                         with open(self.__err_path, 'w') as err_file:
                             # RUN gplsol
                             command = ["glpsol", f"--{ef_format}", self.__ef_path]
-                            subprocess.run(command, cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
+                            subprocess.run(command, cwd=self.problem_path, timeout=30.0, stdout=out_file, stderr=err_file)
                 except os.error as err:
                     self.__TAc.print(f"Fail to create stderr file in: {self.__err_path}", "red", ["bold"])
                     exit(0)
@@ -137,10 +64,9 @@ class ModellingProblemHelper():
             self.__TAc.print(f"Fail to create stdout file in: {self.__out_path}", "red", ["bold"])
             exit(0)
 
-    def run_GLPSOL_with_ef(self, dat_file_path=None, ef_format=None):
+    def run_GLPSOL_with_ef(self, ef_format=None):
         
-        if not dat_file_path:
-            dat_file_path = self.__dat_path
+        dat_file_path = self.__dat_path
         
         try:
             with open(self.__out_path, 'w') as out_file:
@@ -148,7 +74,7 @@ class ModellingProblemHelper():
                     with open(self.__err_path, 'w') as err_file:
                         # RUN gplsol
                         command = ["glpsol", "-m", self.__mod_path, "-d", dat_file_path, f"--w{ef_format}", self.__ef_path]
-                        subprocess.run(command, cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
+                        subprocess.run(command, cwd=self.problem_path, timeout=30.0, stdout=out_file, stderr=err_file)
                 except os.error as err:
                     self.__TAc.print(f"Fail to create stderr file in: {self.__err_path}", "red", ["bold"])
                     exit(0)
@@ -165,11 +91,9 @@ class ModellingProblemHelper():
             self.__TAc.print(f"Fail to create stdout file in: {self.__out_path}", "red", ["bold"])
             exit(0)
 
-    def run_GLPSOL(self, dat_file_path=None):
+    def run_GLPSOL(self):
         """launches glpsol on the .mod and .dat files contained in TMP_DIR. The stdout, stderr and solution of glpsol are saved in files."""
-        # Get file dat path
-        if not dat_file_path:
-            dat_file_path = self.__dat_path
+        dat_file_path = self.__dat_path
         
         # Get files for stdoutRun GPLSOL
         try:
@@ -181,7 +105,7 @@ class ModellingProblemHelper():
                             "glpsol", 
                             "-m", self.__mod_path, 
                             "-d", dat_file_path,
-                        ], cwd=self.__tmp_path, timeout=30.0, stdout=out_file, stderr=err_file)
+                        ], cwd=self.problem_path, timeout=30.0, stdout=out_file, stderr=err_file)
                 except os.error as err:
                     self.__TAc.print(f"Fail to create stderr file in: {self.__err_path}", "red", ["bold"])
                     exit(0)
@@ -247,7 +171,7 @@ class ModellingProblemHelper():
         except os.error as err:
             self.__TAc.print(f"Fail to read the solution file of GPLSOL in {self.__sol_path}", "red", ["bold"])
             exit(0)
-
+            
 
     # MANAGE INPUTS/GENDICT FILES -------------------
     def get_path_from_id(self, id, format):
@@ -280,11 +204,9 @@ class ModellingProblemHelper():
             self.__TAc.print(f"Fail to read the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
             exit(0)
 
-
     def get_file_str_from_id(self, id, format):
         """Returns the contents of the file as a string with the selected id."""
         return self.get_file_str_from_path(self.get_path_from_id(id, format))
-
 
     def get_instances_paths_in(self, dir_name):
         """Returns the list of all file_path in the inputs directory grouped by instance"""

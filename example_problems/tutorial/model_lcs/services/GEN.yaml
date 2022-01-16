@@ -1,0 +1,22 @@
+%YAML 1.2
+---
+group 1:
+  instance_points : 10, 
+  num_instances: 4
+  source : random, 
+  m : 5
+  n : 5
+  alphabet : ACGT
+group 2:
+  instance_points : 10, 
+  num_instances: 4
+  source : random, 
+  m : 10
+  n : 10
+  alphabet : ACGT
+group 3:
+  instance_points : 10, 
+  num_instances: 2
+  source : catalogue1,
+  id: {1,2,3,4,5} 
+...

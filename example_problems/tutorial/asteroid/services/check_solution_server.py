@@ -23,7 +23,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE: 
 matrix=al.gen_instance(ENV['m'],ENV['n'],ENV['seed'])
-TAc.print(LANG.render_feedback("instance", f'Instance (of seed: {ENV['seed']}):'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("instance", f'Instance (of seed: {ENV["seed"]}):'), "yellow", ["bold"])
 al.visualizza(matrix)  
 TAc.print(LANG.render_feedback("user_sol", 'Insert your solution: '), "yellow", ["bold"]) 
 user_sol=[]

@@ -37,7 +37,7 @@ for _ in range(ENV['num_questions']):
     a, b = TALinput(int, 2, TAc=TAc)
     gen_new_pair = False
     if a+b > x+y:
-        TAc.NO() 
+        TAc.NO()
         TAc.print(LANG.render_feedback("over-sum", f"indeed, {a}+{b}={a+b} > {x+y}."), "yellow", ["underline"])
     elif a+b < x+y:    
         TAc.NO() 

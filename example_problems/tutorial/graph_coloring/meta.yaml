@@ -127,7 +127,7 @@ services:
         default: correct
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it	
+        default: it
   check_gadget_5deg:
     description: Can you find a 4-colorable graph G all of whose nodes have degree 4 except of five nodes of degree 3 and bound to have all the same color in every possible 4-coloring of G? Such a graph would allow you to cast the question of the 3-colorability of a given graph of maximum degree at most 5 down to the question of the 3-colorability of a graph of maximum degree at most 4. This service checks whether a graph provide by you has indeed these properties. If so, it can play as the basic gadget for such a reduction.
     evaluator: [python3, services/check_gadget_5deg.py]
@@ -223,4 +223,7 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
 ...

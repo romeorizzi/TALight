@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 from sys import exit
+import os.path
 
 from multilanguage import Env, Lang, TALcolors
 
 import model_asteroid_lib as al
-from math_modeling import ModellingProblemHelper, get_problem_path_from
+from math_modeling import ModellingProblemHelper
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -24,68 +25,43 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
-# Get formats
-dat_style = ''  # default
-txt_style = ENV['txt_style']
-
 # Initialize ModellingProblemHelper
-mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
+mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES)
 
-
-# Receive files and get instance
-if not ENV['check_solution']:
-    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat)."), "yellow")
-    # Receive mod file from bot
-    mph.receive_mod_file()
-    # Receive dat file from bot or from the archive folder
-    if ENV['instance_id'] != -1: #case: use instance_id
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
-    else:
-        mph.receive_dat_file()
-        dat_file_path = None
-else:
-    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (mod=your_mod_file.mod dat=your_dat_file.dat input=your_input_file.txt)."), "yellow")
-    # Receive mod file from bot
-    mph.receive_mod_file()
-    # Receive dat and input files from bot or from the archive folder
-    if ENV['instance_id'] != -1: #case: use instance_id
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
-        input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
-    else:
-        mph.receive_dat_file()
-        dat_file_path = None
-        mph.receive_input_file()
-        input_str = mph.get_input_str()
-    instance = al.get_instance_from_txt(input_str, style=txt_style)
+if ENV['check_solution']:
+    input_str = mph.get_input_str()
+    instance = al.get_instance_from_txt(input_str, style=ENV['txt_style'])
+    print(instance)
     m = len(instance)
     n = len(instance[0])
 
 
 # Perform solution with GPLSOL and get raw solution
-mph.run_GLPSOL(dat_file_path)
-raw_sol = mph.get_raw_sol()
-
+mph.run_GLPSOL()
+glpsol_output = mph.get_out_str()
 
 # print GPLSOL stdout
 if ENV['display_output']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-    gplsol_output = mph.get_out_str()
-    TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["BOLD"])  
-    TAc.print(LANG.render_feedback("stdout", f"{gplsol_output}"), "white", ["reverse"])
+    TAc.print(LANG.render_feedback("out-title", "The GPLSOL stdout is: "), "yellow", ["bold"])  
+    TAc.print(LANG.render_feedback("stdout", f"{glpsol_output}"), "white", ["reverse"])
 
+if glpsol_output.find("NO PRIMAL") != -1:
+    TAc.print(LANG.render_feedback('error-no-sol', f'#ERROR: Your model does not generate a solution.'), 'red', ['bold'])
+    exit(0)
 
 # print GPLSOL stderr
 if ENV['display_error']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     gplsol_error = mph.get_err_str()
-    TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderr is: "), "yellow", ["BOLD"])  
+    TAc.print(LANG.render_feedback("err-title", "The GPLSOL stderr is: "), "yellow", ["bold"])  
     TAc.print(LANG.render_feedback("stderr", f"{gplsol_error}"), "white", ["reverse"])
 
-
+raw_sol = mph.get_raw_sol()
 # print GPLSOL solution.txt
 if ENV['display_solution']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-    TAc.print(LANG.render_feedback("sol-title", "The raw GPLSOL solution is: "), "yellow", ["BOLD"])  
+    TAc.print(LANG.render_feedback("sol-title", "The raw GPLSOL solution is: "), "yellow", ["bold"])  
     for line in raw_sol:
         print(line)
 
@@ -104,7 +80,7 @@ if ENV['check_solution']:
     gplsol_sol = al.process_user_sol(ENV, TAc, LANG, raw_sol, m=m, n=n)
 
     # Print processed GPLSOL solution
-    TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["BOLD"])
+    TAc.print(LANG.render_feedback("sol-title", "The GPLSOL solution is:"), "yellow", ["bold"])
     if ENV['sol_style'] == 'seq':
         TAc.print(LANG.render_feedback("out_sol", f"{al.seq_to_str(gplsol_sol)}"), "white", ["reverse"])
         gplsol_sol = al.seq_to_subset(gplsol_sol, m, n)

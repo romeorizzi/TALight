@@ -144,7 +144,7 @@ def get_alphabet(alphabet):
         return string.ascii_lowercase
     elif alphabet == "lowercase_uppercase":
         return string.ascii_letters
-    else: # alphabet == "dna"
+    else: # alphabet == "DNA"
         return "ACGT"
 
 
@@ -242,7 +242,6 @@ def check_sol(TAc, LANG, ENV, user_sol, s, t):
 
 
 def process_user_sol(raw_sol):
-    
     sol = {}
     for line in raw_sol:
         values = line.split()

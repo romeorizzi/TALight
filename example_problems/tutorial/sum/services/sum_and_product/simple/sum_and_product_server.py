@@ -10,6 +10,7 @@ ENV['num_questions'] = int(environ["TAL_num_questions"])
 
 print(f"# I will serve: problem=sum, service=sum_and_product, numbers={ENV['numbers']}, num_questions={ENV['num_questions']}.")
 
+correct_answers = 0
 gen_new_pair = True    
 for _ in range(ENV['num_questions']):
     if gen_new_pair:
@@ -38,7 +39,10 @@ for _ in range(ENV['num_questions']):
         print(f"# No! indeed, {a}*{b}={a*b} < {x*y}.")
     else:
         assert (a + b == x+y) and (a * b == x*y)
+        correct_answers += 1
         print(f"# Ok! indeed, {a}+{b}={x+y} and {a}*{b}={x*y}.")
         gen_new_pair = True
-
+        
+print("# WE HAVE FINISHED")
+print(f"#    Correct answers: {correct_answers}/{ENV['num_questions']}")
 exit(0)

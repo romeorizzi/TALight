@@ -449,7 +449,11 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
             Err(x) => return Err(format!("Cannot spawn process: {}", x)),
         };
         let mut ev_stdin = process.stdin.take();
-        let mut ev_stdout = process.stdout.take();
+        let mut ev_stdout = match process.stdout.take() {
+            Some(x) => x,
+            None => return Err(format!("Child born without a stdout channel")),
+        };
+        let mut ev_stdout_ignore = false;
         wssend2!(wsout, Reply::ConnectStart { status: Ok(()) });
         let mut client_closed = false;
         let mut buffer = [0; BUFFER_SIZE];
@@ -470,7 +474,7 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
                         Some(Ok(Message::Text(x))) => match Request::parse(&x) {
                             Ok(Request::ConnectStop {}) => {
                                 ev_stdin = None;
-                                ev_stdout = None;
+                                ev_stdout_ignore = true;
                                 client_closed = true;
                                 continue;
                             }
@@ -490,11 +494,14 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
                         }
                     }
                 }
-                size = ev_stdout.as_mut().expect("Cannot fail").read(&mut buffer), if ev_stdout.is_some() => {
+                size = ev_stdout.read(&mut buffer) => {
                     let size = match size {
                         Ok(x) => x,
                         Err(x) => return Err(format!("Pipe closed by evaluator process: {}", x)),
                     };
+                    if ev_stdout_ignore {
+                        continue;
+                    }
                     if let Err(x) = wsout.send(Message::Binary(buffer[..size].into())).await {
                         warn!("Lost connection while communicating: {}", x);
                         return Ok(());

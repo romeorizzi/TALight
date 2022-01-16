@@ -27,7 +27,7 @@ services:
       instance_id:
         regex: ^([1-9][0-9]*)$
         default: 1
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       format:
         regex: ^(only_matrix.txt|with_m_and_n.txt|dat)$
         default: only_matrix.txt
@@ -77,7 +77,7 @@ services:
       instance_id:
         regex: ^([1-9][0-9]*)$
         default: 1
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       sol_style:
         regex: ^(seq|subset)$
         default: seq
@@ -118,7 +118,7 @@ services:
       instance_id:
         regex: ^([1-9][0-9]*)$
         default: 1
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       sol_style:
         regex: ^(seq|subset)$
         default: seq
@@ -160,7 +160,7 @@ services:
       instance_id:
         regex: ^([1-9][0-9]*)$
         default: 1
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       goal:
         regex: ^check_feasibiliy$
         default: check_feasibiliy
@@ -200,7 +200,7 @@ services:
       instance_id:
         regex: ^([1-9][0-9]*)$
         default: 1
-        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'	
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
       feedback:
         regex: ^(only_check|give_a_better_solution_if_any)$
         default: only_check
@@ -237,6 +237,10 @@ services:
   try_GMPL_model:
     description: 'This service allows you to validate your models for the Asteroid problem. Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service runs a `gplsol` engine on your model and instance to find out a solution following the instructions contained in your .mod file. To send your files you must use the TA_send_files_bot.py bot placed in the model_asteroid/bots/ directory. Call the service with:\n    rtal connect model_asteroid try_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py mod=path_to_model_file_dir/your_asteroid.mod dat=path_to_instance_file_dir/your_asteroid.dat input=path_to_input_file/input.txt\nHere, the `input.txt` file is required only if you want to get a validation of the solution contained in the file `solution.txt` generated by your model on the server. Examples for the format for the `input.txt` file can be found in the `examples` directory (see in the archive downloaded with `rtal get model_asteroid`).'
     evaluator: [python, services/try_GMPL_model_server.py]
+    files:
+      - instance
+      - mod
+      - dat
     args:
       display_output:
         regex: ^(0|1)$
@@ -328,6 +332,9 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
 
 ##possibili altri servizi ? , ora sono presenti le domande come nell'esame di ricerca operativa
 ...

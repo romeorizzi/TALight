@@ -1,12 +1,16 @@
 [package]
 name = "rtal"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Dario Ostuni <dario.ostuni@gmail.com>"]
 edition = "2021"
 
 [[bin]]
 name="rtal"
 path="src/client.rs"
+
+[[bin]]
+name="rtalc"
+path="src/check.rs"
 
 [[bin]]
 name="rtald"

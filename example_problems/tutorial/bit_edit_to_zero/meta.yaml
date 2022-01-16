@@ -77,6 +77,9 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
 
 ##possibili altri servizi più avanzati: dare la combinazione di mosse
 ...

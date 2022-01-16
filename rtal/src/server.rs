@@ -10,6 +10,7 @@ use tokio::runtime::Runtime;
 use tracing::error;
 
 #[derive(Parser, Debug, Clone)]
+#[clap(version)]
 struct CliArgs {
     #[clap(short, long, help = "Problems root directory", default_value = ".")]
     directory: PathBuf,

@@ -51,7 +51,22 @@ where
     Ok((s[..pos].parse()?, s[pos + 1..].parse()?))
 }
 
+fn parse_key_val_optional<T, U>(s: &str) -> Result<(T, U), Box<dyn Error + Send + Sync + 'static>>
+where
+    T: FromStr,
+    T::Err: Error + Send + Sync + 'static,
+    U: FromStr,
+    U::Err: Error + Send + Sync + 'static,
+{
+    if let Some(pos) = s.find('=') {
+        Ok((s[..pos].parse()?, s[pos + 1..].parse()?))
+    } else {
+        Ok((s.parse()?, "1".parse()?))
+    }
+}
+
 #[derive(Parser, Debug, Clone)]
+#[clap(version)]
 struct CliArgs {
     #[clap(
         short,
@@ -129,7 +144,7 @@ enum Command {
         problem: String,
         #[clap(help = "Service wanted", default_value = "solve")]
         service: String,
-        #[clap(short = 'a', long, multiple_occurrences(true), parse(try_from_str = parse_key_val), help = "Service arguments, can be specified multiple times with -a arg=val")]
+        #[clap(short = 'a', long, multiple_occurrences(true), parse(try_from_str = parse_key_val_optional), help = "Service arguments, can be specified multiple times with -a arg=val")]
         service_arg: Vec<(String, String)>,
         #[clap(short = 'f', long, multiple_occurrences(true), parse(try_from_str = parse_key_val), help = "File arguments, can be specified multiple times with -f arg=file")]
         file_arg: Vec<(String, String)>,
@@ -476,8 +491,10 @@ where
                     }
                     Some(Ok(Message::Text(x))) => match Reply::parse(&x) {
                         Ok(Reply::ConnectStop { status }) => {
-                            if let Err(x) = wsout.send(Message::Text(client_ended.clone())).await {
-                                break Err(format!("Cannot send data to server: {}", x));
+                            if !closing {
+                                if let Err(x) = wsout.send(Message::Text(client_ended.clone())).await {
+                                    break Err(format!("Cannot send data to server: {}", x));
+                                }
                             }
                             break status;
                         }
@@ -492,7 +509,10 @@ where
             size = pipein.read(&mut buffer), if !closing => {
                 let size = match size {
                     Ok(0) => {
-                        warn!("Read 0 bytes from stream");
+                        if let Err(x) = wsout.send(Message::Text(client_ended.clone())).await {
+                            break Err(format!("Cannot send data to server: {}", x));
+                        }
+                        closing = true;
                         continue;
                     }
                     Ok(x) => x,

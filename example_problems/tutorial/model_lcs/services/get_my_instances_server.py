@@ -1,25 +1,19 @@
 #!/usr/bin/env python3
 from sys import exit
 import os.path
+import ruamel
 
 from multilanguage import Env, Lang, TALcolors
 
-from math_modeling import ModellingProblemHelper
+from math_modeling import ModellingProblemHelper, get_problem_path_from
 
 import model_lcs_lib as ll
 
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('instance_spec',str),
-    ('m',int),
-    ('n',int),
-    ('alphabet', str),
-    ('instance_id',int),
     ('instance_format',str),
-    ('silent',bool),
-    ('display',bool),
-    ('download',bool),
+    ('token',str),
 ]
 
 ENV = Env(args_list)
@@ -28,9 +22,34 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 
+service_dir_path = os.path.abspath(os.path.dirname(__file__))
+print(f'__file__={__file__}')
+print(f'service_dir_path={service_dir_path}')
+
+GEN_file = os.path.join(service_dir_path,'services','GEN.yaml')
+try:
+  with open(GEN_file, 'r') as stream:
+    try:
+        self.messages_book = ruamel.yaml.safe_load(stream)
+    except BaseException as exc:
+        for out in [stdout, stderr]:
+            TAc.print(f"Internal error (if you are invoking a cloud service, please, report it to those responsible for the service hosted.", "red", ["bold"])
+            TAc.print(f" the GEN.yaml file `{GEN_file}` with the descriptors for the instances is corrupted (not a valid .yaml file).", "red", ["bold"])
+            print(f" The service {ENV.service} you required for problem {ENV.problem} strictly requires this .yaml file.", file=out)
+            print(exc, file=out)
+        exit(1)
+except IOError as ioe:
+    for out in [stdout, stderr]:
+        TAc.print(f"Internal error (please, report it to those responsible): the GEN.yaml file `{GEN_file}` with the descriptors for the instances could not be accessed.", "red", ["bold"])
+        print(f" The service {ENV.service} you required for problem {ENV.problem} strictly requires to have access to this .yaml file.", file=out)
+        print(ioe, file=out)
+    exit(1)
+
+
+
 if ENV['instance_spec'] == 'catalogue1':
-    mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR )
-    
+    # Initialize ModellingProblemHelper
+    mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES)
     # Get dat file
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format=ENV['instance_format'])
     instance = ll.get_instance_from_str(instance_str, format=ENV['instance_format'])
