@@ -29,8 +29,8 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 
 if ENV['instance_spec'] == 'catalogue1':
-    # Initialize ModellingProblemHelper
-    mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
+    mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR )
+    
     # Get dat file
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format=ENV['instance_format'])
     instance = ll.get_instance_from_str(instance_str, format=ENV['instance_format'])

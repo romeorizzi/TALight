@@ -6,6 +6,7 @@ import subprocess, os, json
 class ModellingProblemHelper():
     def __init__(self,
                 TAc,
+                tmp_path,                            \
                 problem_path,                            \
                 mod_filename      = 'mod',         \
                 dat_filename      = 'dat',      \
@@ -17,16 +18,17 @@ class ModellingProblemHelper():
                 instances_dirname = 'instances',      \
                 gendict_filename  = 'gen_dictionary.json'):
         self.__TAc = TAc
-        print(f"mod_filename={mod_filename}")
-        print(f"problem_path={problem_path}")
+        #print(f"problem_path={problem_path}")
+        #print(f"tmp_path={tmp_path}")
         self.problem_path = problem_path
-        self.__mod_path        = os.path.join(problem_path, mod_filename)
-        self.__dat_path        = os.path.join(problem_path, dat_filename)
-        self.__in_path         = os.path.join(problem_path, in_filename)
-        self.__sol_path        = os.path.join(problem_path, sol_filename)
-        self.__out_path        = os.path.join(problem_path, out_filename)
-        self.__err_path        = os.path.join(problem_path, err_filename)
-        self.__ef_path         = os.path.join(problem_path, ef_filename)
+        self.tmp_path = tmp_path
+        self.__mod_path        = os.path.join(tmp_path, mod_filename)
+        self.__dat_path        = os.path.join(tmp_path, dat_filename)
+        self.__in_path         = os.path.join(tmp_path, in_filename)
+        self.__sol_path        = os.path.join(tmp_path, sol_filename)
+        self.__out_path        = os.path.join(tmp_path, out_filename)
+        self.__err_path        = os.path.join(tmp_path, err_filename)
+        self.__ef_path         = os.path.join(tmp_path, ef_filename)
         self.__instances_path  = os.path.join(problem_path, instances_dirname)
         self.__gendict_path    = os.path.join(self.__instances_path, gendict_filename)
 
@@ -169,6 +171,28 @@ class ModellingProblemHelper():
         except os.error as err:
             self.__TAc.print(f"Fail to read the solution file of GPLSOL in {self.__sol_path}", "red", ["bold"])
             exit(0)
+            
+
+    # MANAGE INPUTS/GENDICT FILES -------------------
+    def get_path_from_id(self, id, format):
+        """Returns the path to the file selected with id."""
+        # Read gen-dictionary
+        try:
+            with open(self.__gendict_path, 'r') as file:
+                gendict = json.load(file)
+                info = gendict[str(id)]
+        except os.error as err:
+            self.__TAc.print(f"Fail to read the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
+            exit(0)
+        except KeyError as err:
+            self.__TAc.print(f"The id={id} is invalid.", "red", ["bold"])
+            exit(0)
+        # get path from gen-dictionary
+        try:
+            return os.path.join(self.__instances_path, info['suite'], info[format])
+        except KeyError as err:
+            self.__TAc.print(f"The format={format} is invalid.", "red", ["bold"])
+            exit(0)
 
 
     def get_file_str_from_path(self, path):
@@ -179,6 +203,10 @@ class ModellingProblemHelper():
         except os.error as err:
             self.__TAc.print(f"Fail to read the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
             exit(0)
+
+    def get_file_str_from_id(self, id, format):
+        """Returns the contents of the file as a string with the selected id."""
+        return self.get_file_str_from_path(self.get_path_from_id(id, format))
 
     def get_instances_paths_in(self, dir_name):
         """Returns the list of all file_path in the inputs directory grouped by instance"""

@@ -27,8 +27,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 
 # START CODING YOUR SERVICE:
-
-mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES)
+mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR )
 
 if ENV['check_solution']:
     input_str = mph.get_input_str()
