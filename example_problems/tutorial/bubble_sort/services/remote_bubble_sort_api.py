@@ -10,8 +10,8 @@ from TALinputs import TALinput
 from sys import stdout, stderr, exit, argv
 
 # METADATA OF THIS TAL_SERVICE:
-problem = "insert_sort"
-service = "log_debug_your_insertion_sort_bot_server"
+problem = "bubble_sort"
+service = "log_debug_your_bubble_sort_bot_server"
 args_list = [
     ('feedback', str),
     ('lang', str),

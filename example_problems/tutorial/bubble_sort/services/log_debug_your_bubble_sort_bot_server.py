@@ -5,11 +5,11 @@ from time import sleep
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-import insert_sort_lib
+import bubble_sort_lib
 
 # METADATA OF THIS TAL_SERVICE:
-problem = "insert_sort"
-service = "log_debug_your_insertion_sort_bot_server"
+problem = "bubble_sort"
+service = "log_debug_your_bubble_sort_bot_server"
 args_list = [
     ('feedback', str),
 ]
@@ -20,8 +20,8 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
     
 # START CODING YOUR SERVICE:
 
-insertion_sort = insert_sort_lib.InsertionSort([])
-ins_sort_ref_iterator = insertion_sort.generate_log_while_sorting()
+bubble_sort = bubble_sort_lib.BubbleSort([])
+ins_sort_ref_iterator = bubble_sort.generate_log_while_sorting()
 finished = False
 time_for_next_load_or_end = True
 while not finished:
