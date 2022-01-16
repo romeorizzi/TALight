@@ -4,10 +4,9 @@ from time import sleep
 
 import unittest
 
-
-class InsertionSortMachine:
+class BubbleSortMachine:
     def __init__(self):
-        self.tmp_buffer = None
+        #self.tmp_buffer = None
         self.working_array = []
         self.test_logs = []
 
@@ -20,48 +19,63 @@ class InsertionSortMachine:
             print("Insert a feedback line (or just press RETURN) to continue ...")
             input()
 
-    def load_next_input_element_in_tmp_buffer(self, val: int, wait_for_receipt: bool = True, expected_log: str = None):
-        if self.tmp_buffer is not None:
+    # 1.  scabio di elementi consecutivi
+    def swap_consecutive_elements(self, first_position: int, wait_for_receipt: bool = True, expected_log: str = None):
+        second_position = first_position + 1
+        
+        # Checking positions
+        if not 0 <= first_position < len(self.working_array):
+            print(f"Ahi, my problem-solver bot is asking to switch elements in pos {first_position} and {second_position}, but {first_position} (and therefore same for {second_position}) is not in the interval [0,{len(self.working_array)}).")
+        if not 0 <= second_position < len(self.working_array):
+            print(f"Ahi, my problem-solver bot is asking to switch elements in pos {first_position} and {second_position}, but {second_position} is not in the interval [0,{len(self.working_array)}).")
+        
+        # Swapping
+        self.working_array[first_position], self.working_array[second_position] = self.working_array[second_position], self.working_array[first_position]
+        
+        self.console(f"#LOG_swap_consecutive_elements {first_position} {second_position}", wait_for_receipt, expected_log)
+    
+    # 2.  confronto di elementi consecutivi
+    def compare_consecutive_elements(self, first_position: int, wait_for_receipt: bool = True, expected_log: str = None):
+        """Compares element at 'first_position' parameter with the next one."""
+        second_position = first_position + 1
+        
+        if self.working_array is None:
             print(
-                "Ahi, my problem-solver bot is overwriting a yet unflushed value stored in the tmp_buffer. This is going to erase information which will be definitely lost it in the Insertion Sort algorithm approach.")
-        self.tmp_buffer = val
-        self.console(f"#LOG_load_next_input_element_in_tmp_buffer (got {val})", wait_for_receipt, expected_log)
-
-    def flush_tmp_buffer_on_pos(self, i: int, wait_for_receipt: bool = True, expected_log: str = None):
-        if self.tmp_buffer is None:
-            print(
-                "Ahi, my problem-solver bot is flushing an empty tmp_buffer. I expect complaints from the checking server.")
-        while len(self.working_array) <= i:
-            self.working_array.append(None)
-        self.working_array[i] = self.tmp_buffer
-        self.tmp_buffer = None
-        self.console(f"#LOG_flush_tmp_buffer_on_pos {i}", wait_for_receipt, expected_log)
-
-    def clone_to_its_right_ele_in_pos(self, i: int, wait_for_receipt: bool = True, expected_log: str = None):
-        if not 0 <= i < len(self.working_array):
-            print(
-                f"Ahi, my problem-solver bot is asking to clone the element in pos {i} which does not exists since {i} is not in the interval [0,{len(self.working_array)}).")
-        if len(self.working_array) == i+1:
-            self.working_array.append(self.working_array[i])
-        else:
-            self.working_array[i + 1] = self.working_array[i]
-        self.console(f"#LOG_clone_to_its_right_ele_in_pos {i}", wait_for_receipt, expected_log)
-
-    def what_in_tmp_buffer_goes_before_than_what_in_pos(self, i: int, wait_for_receipt: bool = True, expected_log: str = None):
-        if self.tmp_buffer is None:
-            print(
-                "Ahi, my problem-solver bot asks to compare with others the element contained in the tmp_buffer, but this buffer is empty. I expect complaints from the checking server.")
+                "Ahi, my problem-solver bot asks to compare with others the element contained in the working_array, but this buffer is empty. I expect complaints from the checking server.")
             return False
-        if i >= len(self.working_array) or self.working_array[i] is None:
+        # Checking first element's existence
+        if first_position >= len(self.working_array) or self.working_array[first_position] is None:
             print(
-                f"Ahi, my problem-solver bot asks to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array. I expect complaints from the checking server.")
+                f"Ahi, my problem-solver bot asks to compare element contained in position {first_position} with its next element of the current working array. However, no element has ever been placed in this position of the array. I expect complaints from the checking server.")
             return False
-        if self.tmp_buffer < self.working_array[i]:
-            self.console(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (<)", wait_for_receipt, expected_log)
+        # Checking second element's existence
+        if second_position >= len(self.working_array) or self.working_array[second_position] is None:
+            print(
+                f"Ahi, my problem-solver bot asks to compare {second_position} with it previous element of the current working array. However, no element has ever been placed in this position of the array. I expect complaints from the checking server.")
+            return False
+
+        if self.working_array[first_position] < self.working_array[second_position]:
+            self.console(f"#LOG_compare_consecutive_elements {first_position} (<)", wait_for_receipt, expected_log)
             return True
-        self.console(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (>=)", wait_for_receipt, expected_log)
+        self.console(f"#LOG_compare_consecutive_elements {first_position} (>=)", wait_for_receipt, expected_log)
         return False
 
+    # 3. Input vettore
+    def input_array(self, vector: list, wait_for_receipt: bool = True, expected_log: str = None):
+        if vector is None or len(vector) == 0:
+            print("Ahi, my problem-solver bot is asking to insert a non existent working array.")
+        self.working_array = vector
+        self.console(f"#LOG_input_array (got {vector})", wait_for_receipt, expected_log)
+
+    # 4. Output vettore
+    def output_array(self, wait_for_receipt: bool = True, expected_log: str = None):
+        if self.working_array is None or len(self.working_array) == 0:
+            print("Ahi, my problem-solver bot is asking to get a non existent working array.")
+            return None
+        self.console(f"#LOG_output_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})", wait_for_receipt, expected_log)
+        return self.working_array
+    
+    # Output
     def output_final_sorted_array(self, wait_for_receipt: bool = True, expected_log: str = None):
         self.console(f"#LOG_output_final_sorted_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})", wait_for_receipt, expected_log)
 
@@ -74,83 +88,9 @@ if __name__ == "__main__":
     print("\nTEST 1: operating the InsertionSortMachine to sort <4: 12 11 15 13>")
 
     expected_logs = [
-        "#LOG_load_next_input_element_in_tmp_buffer (got 12)",
-        "#LOG_flush_tmp_buffer_on_pos 0",
-        "#LOG_load_next_input_element_in_tmp_buffer (got 11)",
-        "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (<)",
-        "#LOG_clone_to_its_right_ele_in_pos 0",
-        "#LOG_flush_tmp_buffer_on_pos 0",
-        "#LOG_load_next_input_element_in_tmp_buffer (got 15)",
-        "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (>=)",
-        "#LOG_flush_tmp_buffer_on_pos 2",
-        "#LOG_load_next_input_element_in_tmp_buffer (got 13)",
-        "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 2 (<)",
-        "#LOG_clone_to_its_right_ele_in_pos 2",
-        "#LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (>=)",
-        "#LOG_flush_tmp_buffer_on_pos 2",
-        "#LOG_output_final_sorted_array (4: 11 12 13 15)"
+        "TODO"
     ]
 
-    SM = InsertionSortMachine()
-    SM.load_next_input_element_in_tmp_buffer(12, wait_for_receipt=False, expected_log=expected_logs[0])
-    SM.flush_tmp_buffer_on_pos(0, wait_for_receipt=False, expected_log=expected_logs[1])
-    SM.load_next_input_element_in_tmp_buffer(11, wait_for_receipt=False, expected_log=expected_logs[2])
-    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(0, wait_for_receipt=False, expected_log=expected_logs[3])
-    SM.clone_to_its_right_ele_in_pos(0, wait_for_receipt=False, expected_log=expected_logs[4])
-    SM.flush_tmp_buffer_on_pos(0, wait_for_receipt=False, expected_log=expected_logs[5])
-    SM.load_next_input_element_in_tmp_buffer(15, wait_for_receipt=False, expected_log=expected_logs[6])
-    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1, wait_for_receipt=False, expected_log=expected_logs[7])
-    SM.flush_tmp_buffer_on_pos(2, wait_for_receipt=False, expected_log=expected_logs[8])
-    SM.load_next_input_element_in_tmp_buffer(13, wait_for_receipt=False, expected_log=expected_logs[9])
-    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(2, wait_for_receipt=False, expected_log=expected_logs[10])
-    SM.clone_to_its_right_ele_in_pos(2, wait_for_receipt=False, expected_log=expected_logs[11])
-    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1, wait_for_receipt=False, expected_log=expected_logs[12])
-    SM.flush_tmp_buffer_on_pos(2, wait_for_receipt=False, expected_log=expected_logs[13])
-    SM.output_final_sorted_array(wait_for_receipt=False, expected_log=expected_logs[14])
-
-    for e1, e2 in zip(expected_logs, SM.test_logs):
-        tc.assertEqual(e1, e2)
-
-    print("\nTEST 1 passed")
-
-    print("\nTEST 2: Returning tmp_buffer overload error while operating the InsertionSortMachine to sort <2: 12 11>")
-
-    SM = InsertionSortMachine()
-    SM.load_next_input_element_in_tmp_buffer(12, wait_for_receipt=False, expected_log=expected_logs[0])
-    tc.assertRaises(AssertionError, lambda: SM.load_next_input_element_in_tmp_buffer(11, wait_for_receipt=False, expected_log=expected_logs[0]))
-
-    print("\nTEST 2 passed")
-
-    print("\nTEST 3: Returning empty buffer flushing error while operating the InsertionSortMachine to sort <2: 12 11>")
-
-    SM = InsertionSortMachine()
-    tc.assertRaises(AssertionError, lambda: SM.flush_tmp_buffer_on_pos(1, wait_for_receipt=False, expected_log=expected_logs[1]))
-
-    print("\nTEST 3 passed")
-
-    print("\nTEST 4: Returning bad clone error while operating the InsertionSortMachine to sort <2: 12 11>")
-    tc.assertRaises(IndexError, lambda: SM.clone_to_its_right_ele_in_pos(3, wait_for_receipt=False, expected_log=expected_logs[4]))
-
-    print("\nTEST 4 passed")
-
-    print("\nTEST 5: Returning compare with empty buffer error while operating the InsertionSortMachine to sort <2: 12 11>")
-    SM = InsertionSortMachine()
-    tc.assertFalse(SM.what_in_tmp_buffer_goes_before_than_what_in_pos(0, wait_for_receipt=False, expected_log=expected_logs[7]))
-
-    print("\nTEST 5 passed")
-
-    print("\nTEST 6: Returning compare with bad working array index(2) error while operating the InsertionSortMachine to sort <2: 12 11>")
-    SM = InsertionSortMachine()
-    SM.load_next_input_element_in_tmp_buffer(12, wait_for_receipt=False, expected_log=expected_logs[0])
-    tc.assertFalse(SM.what_in_tmp_buffer_goes_before_than_what_in_pos(2, wait_for_receipt=False, expected_log=expected_logs[7]))
-
-    print("\nTEST 6 passed")
-
-    print("\nTEST 7: Returning general bad operation error while operating the InsertionSortMachine to sort <2: 12 11>")
-    SM = InsertionSortMachine()
-    tc.assertRaises(AssertionError, lambda: SM.load_next_input_element_in_tmp_buffer(12, wait_for_receipt=False, expected_log=expected_logs[4]))
-
-    print("\nTEST 7 passed")
-    print("\nfurther tests ...\n")
-
-    print("OK. All tests have been successfully passed!")
+    SM = BubbleSortMachine()
+   
+   # TODO
