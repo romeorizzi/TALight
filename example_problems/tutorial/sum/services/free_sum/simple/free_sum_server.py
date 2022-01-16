@@ -11,6 +11,7 @@ ENV['num_questions'] = int(environ["TAL_num_questions"])
 
 print(f"# I will serve: problem=sum, service=free_sum, numbers={ENV['numbers']}, obj={ENV['obj']}, num_questions={ENV['num_questions']}.")
 
+correct_answers = 0
 gen_new_s = True    
 for _ in range(ENV['num_questions']):
     if gen_new_s:
@@ -37,10 +38,14 @@ for _ in range(ENV['num_questions']):
             if a-b > 1:
                 print(f"# No! indeed, {a-1}+{b+1}={s} and {a-1}*{b+1}={(a-1)*(b+1)} > {a*b}={a}*{b}.")
             else:
-                gen_new_s = True
+                correct_answers += 1
                 print(f"# Ok! indeed, x={a} and y={b} have maximum product among the integer numbers with x+y={s}. Do you know why? Do you have a proof for your intuition?")
+                gen_new_s = True
         else:
+            correct_answers += 1
             print(f"# Ok! indeed, {a}+{b}={s}")
             gen_new_s = True
             
+print("# WE HAVE FINISHED")
+print(f"#    Correct answers: {correct_answers}/{ENV['num_questions']}")
 exit(0)
