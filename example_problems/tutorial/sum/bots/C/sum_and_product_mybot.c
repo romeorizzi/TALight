@@ -5,24 +5,24 @@
 #include <math.h>
 
 int main() {
-    const size_t BUFFER_SIZE = 4096;
-    char line[BUFFER_SIZE];
-    int s, p, x1, x2;
-    setvbuf(stdout, NULL, _IOLBF, BUFFER_SIZE);
-    while(true) {
-        fgets(line, BUFFER_SIZE, stdin);
-        fprintf(stderr, "# BOT> got line= %s", line);
-        if(strncmp(line, "# WE HAVE FINISHED", 18) == 0) {
-            break;
-        } else if(strlen(line) == 0 || line[0] == '#') {
-            continue;
-        } else {
-            sscanf(line, "%d %d", &s, &p);
-            int delta = (int) sqrt(s*s-4*p);
-            x1 = (s - delta)/2;
-            x2 = s - x1;
-            printf("%d %d\n", x1, x2);
-        }
+  const size_t BUFFER_SIZE = 4096;
+  char line[BUFFER_SIZE];
+  int s, p, x1, x2;
+  setvbuf(stdout, NULL, _IOLBF, BUFFER_SIZE);
+  while(true) {
+    fgets(line, BUFFER_SIZE, stdin);
+    fprintf(stderr, "# BOT> got line= %s", line);
+    if(strncmp(line, "# WE HAVE FINISHED", 18) == 0) {
+      break;
+    } else if(strlen(line) == 0 || line[0] == '#') {
+      continue;
+    } else {
+      sscanf(line, "%d %d", &s, &p);
+      int delta = (int) sqrt(s*s-4*p);
+      x1 = (s - delta)/2;
+      x2 = s - x1;
+      printf("%d %d\n", x1, x2);
     }
-    return 0;
+  }
+  return 0;
 }
