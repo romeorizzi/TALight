@@ -17,7 +17,7 @@ int main() {
             continue;
         } else {
             sscanf(line, "%d", &n);
-            printf("%d 0\n", n);
+            printf("%d %d\n", n/2, (n+1)/2);
         }
     }
     return 0;
