@@ -1,5 +1,3 @@
-%YAML 1.2
----
 public_folder: public
 services:
   gimme_instance:

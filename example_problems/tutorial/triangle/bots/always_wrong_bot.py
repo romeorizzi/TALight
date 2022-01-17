@@ -2,8 +2,8 @@
 from sys import stderr, exit, argv
 import random
 
-usage=f"""# I am a bot that always provides the wrong answer (used for testing). Call me with:
-#   > {argv[0]} <required functionality> <error_type>
+usage=f"""# I am a bot that always provides the wrong answer. Call me with:
+#   > {argv[0]} <required functionality>
 # I support the following functionalities:
 #   [0] display this help message 
 #   [1] eval feasible solution 
@@ -59,7 +59,7 @@ def calculate_path(triangle,path_values):
         i += 1
     return s
 
-def best_path_cost(triangle):
+def best_reward_and_path(triangle):
     dist = len(triangle)
     triangle_array = cast_to_array(triangle)
     triangle_array = triangle_array[::-1]
@@ -73,9 +73,21 @@ def best_path_cost(triangle):
             count = 1
             dist -= 1
             i += 1
-    return triangle_array[i]
+    reward = triangle_array[i]
+    triangle_array = triangle_array[::-1]
+    path = ""
+    last_pos = 0
+    dist = len(triangle)
+    for j in range(dist-1):
+        if triangle_array[j+1 + last_pos] > triangle_array[j+2 + last_pos] :
+            path += "L"
+            last_pos += j + 1 
+        else:
+            path += "R"
+            last_pos += j + 2 
+    return reward,path
 
-if len(argv) not in {2,3} or argv[1]=='0':
+if len(argv) != 2 or argv[1]=='0':
     print("# Error! Wrong number of arguments.")
     print(usage)
     exit(0)
@@ -92,8 +104,8 @@ if argv[1] == "1":
         # give your answer:
         myinput() # eat prompt
         directions = ['L','R']
-        answer = "".join(random.choices(directions,k=n))
-        print(answer)
+        answer = "".join(random.choices(directions,k=n-1))
+        print(answer+"R")
     exit(0)
 
 # EVAL AND REWARD ONE SOL
@@ -113,14 +125,14 @@ if argv[1] == "2":
         path = myinput().strip()
         # give your answer:
         myinput() # eat prompt
-        wrong_answer = calculate_path(t,path) + 1
-        print(wrong_answer)
+        print(calculate_path(t,path)+1)
     exit(0)
 
 
 # EVAL BEST SOL
 if argv[1] == "3":
     while True:
+        check_also_sol = False
         #get triangle size:
         myinput() # eat triangle size statement
         n = int(myinput())
@@ -130,10 +142,24 @@ if argv[1] == "3":
         # get triangle:
         myinput() # eat triangle array statement
         triangle = eval(myinput())
+        # get check_also_sol
+        myinput() # eat check_also_sol statement
+        if myinput() == "True":
+            check_also_sol = True
         # give your answer:
-        myinput() # eat prompt
-        wrong_answer = best_path_cost(triangle) + 1
-        print(wrong_answer)
+        if check_also_sol:
+            best_reward,best_path = best_reward_and_path(triangle)
+            # reward
+            myinput() # eat reward statement
+            print(best_reward+1)
+            # path
+            myinput() # eat path statement
+            print(best_path+"L")
+        else:
+            best_reward,_ = best_reward_and_path(triangle)
+            # reward
+            myinput() # eat reward statement
+            print(best_reward+1)
     exit(0)
 
 # EVAL NUMBER OF TRIANGLES IN TRIANGLE
@@ -153,7 +179,7 @@ if argv[1] == "4":
         big_array = eval(myinput())
         # give your answer:
         myinput() # eat prompt
-        wrong_answer = 1
+        answer = 0
         livello = 1
         indexes = []
         for i in range(int(((L-l+1)*(L-l+2))/2)):   
@@ -162,7 +188,7 @@ if argv[1] == "4":
             if big_array[i] == small_array[0]:
                 if fits(i,livello,big_array,small_array,l)[0]:
                     indexes.append(fits(i,livello,big_array,small_array,l)[1])
-                    wrong_answer += 1
-        print(wrong_answer)
+                    answer += 1
+        print(answer+1)
     exit(0)
 

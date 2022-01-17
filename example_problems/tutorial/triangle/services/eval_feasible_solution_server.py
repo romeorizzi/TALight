@@ -100,38 +100,6 @@ def test(instance):
     else:
         instance['answer_is_correct'] = False
 
-# FUNCTION PRINTING SUMMARIES: 
-
-def print_summaries():    
-    TAc.print(LANG.render_feedback('summary-of-results', '# SUMMARY OF RESULTS:'), 'green')
-    num_instances = {}
-    num_instances_passed = {}
-    num_instances_correct_ans = {}
-    num_instances_wrong_ans = {}
-    alive = True
-    for goal in goals:
-        num_instances[goal] = len(instances[goal])
-        num_instances_passed[goal] = 0
-        num_instances_correct_ans[goal] = 0
-        num_instances_wrong_ans[goal] = 0
-        for instance in instances[goal]:
-            if instance['answer_is_correct'] == False:
-                num_instances_wrong_ans[goal] += 1
-            elif instance['answer_is_correct'] == True:
-                num_instances_correct_ans[goal] += 1
-                if instance['measured_time'] <= MAX_TIME:
-                    num_instances_passed[goal] += 1
-        if alive:
-            tl.print_goal_summary(goal,instances[goal],num_instances_passed[goal],num_instances_correct_ans[goal],num_instances_wrong_ans[goal], out_of_time, TAc,LANG)
-        if num_instances_passed[goal] < num_instances[goal]:
-            alive = False
-    TAc.print(LANG.render_feedback('short-summary-of-results', '# SUMMARY OF RESULTS:'), 'green')
-    for goal in goals:
-        if num_instances_passed[goal] == num_instances[goal]:
-            TAc.print(LANG.render_feedback('goal-passed', f'# Goal {goal}: PASSED (passed instances: {num_instances_passed[goal]}/{num_instances[goal]} instances)'), 'green', ['bold'])
-        else:
-            TAc.print(LANG.render_feedback('goal-NOT-passed', f'# Goal {goal}: NOT passed (passed instances: {num_instances_passed[goal]}/{num_instances[goal]} instances, correct answers: {num_instances_correct_ans[goal]}/{num_instances[goal]}, wrong answers: {num_instances_wrong_ans[goal]}/{num_instances[goal]} instances)'), 'red', ['bold'])
-
 # MAIN: TEST ALL TESTCASES: 
 
 out_of_time = 0
@@ -140,8 +108,8 @@ for goal in goals:
         test(instance)
         if instance['measured_time'] > MAX_TIME:
             out_of_time += 1
-            print_summaries()
+            tl.print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG)
             exit(0)
             
-    print_summaries()
-    exit(0)
+    tl.print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG)
+exit(0)
