@@ -172,6 +172,7 @@ class TALcolors:
         self.numNO = 0
         self.numOK = 0
         self.colored_print = ENV["META_TTY"] and termcolor_is_installed
+        self.goals = {}
 
     def print(self, msg_text, *msg_rendering, **kwargs):
       if type(msg_rendering[-1]) == list:
@@ -198,13 +199,30 @@ class TALcolors:
           return msg_text
           
                 
-    def NO(self):
-        self.numNO += 1
+# The following last methods should next be moved to the TAL_lib bot_lib.py
+# and also be expanded in order to easily support for more or less advanced accountings on the correct/out-of-time/non correct in several possible ways answers of a bot on several questions (usually in a service eval_*)!
+# take as example:
+#   triangle/services/eval_feasible_solution_server.py
+#   for an accounting mechanism.
+    def NO(self, goal = None):
+        if goal == None:
+            self.numNO += 1
+        else:
+            if goal not in self.goals:
+                self.goals[goal] = {'numNo': 1, 'numOK': 0}
+            else:
+                self.goals[goal]['numNo'] += 1
         self.print("# ", "yellow", end="")
         self.print("No! ", "red", ["blink", "bold"], end="")
 
-    def OK(self):
-        self.numOK += 1
+    def OK(self, goal = None):
+        if goal == None:
+            self.numOK += 1
+        else:
+            if goal not in self.goals:
+                self.goals[goal] = {'numNo': 0, 'numOK': 1}
+            else:
+                self.goals[goal]['numOK'] += 1
         self.print("# ", "yellow", end="")
         self.print("OK! ", "green", ["bold"], end="")
 
@@ -212,4 +230,5 @@ class TALcolors:
         self.print("# I got bored (too much load on the server)", "white")
 
     def Finished(self):
-        self.print(f"# WE HAVE FINISHED\n#    Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
+        self.print(f"\n# SUMMARY OF RESULTS\n#    Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
+        self.print(f"\n# WE HAVE FINISHED", "white")
