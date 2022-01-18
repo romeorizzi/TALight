@@ -31,7 +31,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_instance:
-    description: 'Call this service to get an instance for the Longest Subsequence Problem (LCS), i.e., a pair of strings s and t over a same alphabet, and of length m and n, respectively. You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall an LCS instance you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random LCS instance we mean the triple <m,n,alphabet,seed>.\n   The two strings s and t comprising the instance ere returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing LCS instances is the following: the first line contains the two integers m and n; then follow 2 lines, the first contains the string s and the second contains the string t.'
+    description: 'Call this service to get an instance for the Longest Subsequence Problem (LCS), i.e., a pair of strings s and t over a same alphabet, and of length m and n, respectively. You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall an LCS instance you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random LCS instance we mean the triple <m,n,alphabet,seed>.\n   The two strings s and t comprising the instance are returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing LCS instances is the following: the first line contains the two integers m and n; then follow 2 lines, the first contains the string s and the second contains the string t.'
     evaluator: [python,services/gimme_instance_server.py]
     args:
       instance_spec:
@@ -204,9 +204,12 @@ services:
     description: 'If you hold a personal token to a course or exam, and intend to score points on this problem, you should first use this service in order to get the instances of your personal assignement, and next use the service `try_GMPL_model` or `try_solution` to check and/or submit your model or solution on each particular instance you can manage. After calling the service `get_my_instances` you will find the instances within the subfolder `output` of your current directory. Use the rtal -o argument if you prefer a different path or folder name.' 
     evaluator: [python, services/get_my_instances_server.py]
     args:
+      group:
+        regex: ^(catalogue1|random)$
+        default: random
       instance_format:
-        regex: ^(only_strings|with_m_and_n)$
-        default: only_strings
+        regex: ^(only_strings.txt|with_m_and_n.txt)$
+        default: only_strings.txt
         explain: 'choose the format of the instance file.'
       token:
         regex: ^(anonymous|[1-9][0-9]{5,5})$

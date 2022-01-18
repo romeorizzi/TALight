@@ -25,7 +25,7 @@ class ModellingProblemHelper():
         self.__mod_path        = os.path.join(tmp_path, mod_filename)
         self.__dat_path        = os.path.join(tmp_path, dat_filename)
         self.__in_path         = os.path.join(tmp_path, in_filename)
-        self.__sol_path        = os.path.join(tmp_path, sol_filename)
+        self.__sol_path        = os.path.join(problem_path, sol_filename)
         self.__out_path        = os.path.join(tmp_path, out_filename)
         self.__err_path        = os.path.join(tmp_path, err_filename)
         self.__ef_path         = os.path.join(tmp_path, ef_filename)
