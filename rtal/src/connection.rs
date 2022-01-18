@@ -10,7 +10,7 @@ use sanitize_filename::sanitize;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::Stdio;
 use tempfile::tempdir;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};
@@ -32,9 +32,23 @@ pub(crate) struct Client<T: AsyncRead + AsyncWrite + Unpin> {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-struct AuthData {
+pub struct AuthData {
     tokens: Vec<String>,
     save_directory: PathBuf,
+}
+
+impl AuthData {
+    pub async fn load(path: &Path) -> Result<AuthData, String> {
+        let file = match tokio::fs::read(path).await {
+            Ok(x) => x,
+            Err(x) => return Err(format!("Auth file missing: {}", x)),
+        };
+        let auth: AuthData = match serde_yaml::from_slice(&file) {
+            Ok(x) => x,
+            Err(x) => return Err(format!("Cannot parse auth file: {}", x)),
+        };
+        Ok(auth)
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -294,17 +308,10 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
                     let mut tinfo = None;
                     if let Some(t) = token {
                         if let Some(ref auth) = self.args.authentication {
-                            let file = match tokio::fs::read(auth).await {
+                            let auth = match AuthData::load(auth).await {
                                 Ok(x) => x,
                                 Err(x) => {
-                                    error!("Auth file missing: {}", x);
-                                    break;
-                                }
-                            };
-                            let auth: AuthData = match serde_yaml::from_slice(&file) {
-                                Ok(x) => x,
-                                Err(x) => {
-                                    error!("Cannot parse auth file: {}", x);
+                                    error!("{}", x);
                                     break;
                                 }
                             };

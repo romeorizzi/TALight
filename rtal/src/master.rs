@@ -89,6 +89,11 @@ async fn uds_listener(args: CliArgs) -> Result<(), Box<dyn Error>> {
 }
 
 pub(crate) async fn start(args: CliArgs) {
+    if let Some(ref auth) = args.authentication {
+        if let Err(x) = crate::connection::AuthData::load(auth).await {
+            warn!("Authentication data {:?} not available: {}", auth, x);
+        }
+    }
     #[cfg(unix)]
     let result = if args.unix_domain_socket {
         uds_listener(args).await
