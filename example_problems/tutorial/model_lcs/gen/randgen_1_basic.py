@@ -13,7 +13,7 @@ def main(m, n, alphabet, gen_seed, format):
 
     # Generate lcs instance
 
-    instance = ll.gen_instance(m, n, alphabet, gen_seed)
+    instance = ll.instance_randgen_1(m, n, alphabet, gen_seed)
 
     # Generate selected output
     print(ll.instance_to_str(instance, format))

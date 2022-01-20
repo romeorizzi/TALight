@@ -15,7 +15,8 @@ class ModellingProblemHelper():
                 out_filename      = 'output.txt',        \
                 err_filename      = 'error.txt',         \
                 ef_filename      = 'explicit_formulation.txt',         \
-                instances_dirname = 'instances',      \
+                instances_dirname = 'instances_catalogue',      \
+                all_instances_subfolder = 'all_instances',      \
                 gendict_filename  = 'gen_dictionary.json'):
         self.__TAc = TAc
         #print(f"problem_path={problem_path}")
@@ -29,8 +30,9 @@ class ModellingProblemHelper():
         self.__out_path        = os.path.join(tmp_path, out_filename)
         self.__err_path        = os.path.join(tmp_path, err_filename)
         self.__ef_path         = os.path.join(tmp_path, ef_filename)
-        self.__instances_path  = os.path.join(problem_path, instances_dirname)
-        self.__gendict_path    = os.path.join(self.__instances_path, gendict_filename)
+        self.__catalogue_path  = os.path.join(problem_path, instances_dirname)
+        self.__all_instances_path  = os.path.join(problem_path, instances_dirname, all_instances_subfolder)
+        self.__gendict_path    = os.path.join(self.__catalogue_path, gendict_filename)
 
 
     def run_ef_GLPSOL(self, ef_format):
@@ -177,19 +179,22 @@ class ModellingProblemHelper():
     def get_path_from_id(self, id, format):
         """Returns the path to the file selected with id."""
         # Read gen-dictionary
+        id_as_string = str(id).zfill(3)
         try:
             with open(self.__gendict_path, 'r') as file:
                 gendict = json.load(file)
-                info = gendict[str(id)]
-        except os.error as err:
-            self.__TAc.print(f"Fail to read the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
+                info = gendict[id_as_string]
+        except IOError as ioe:
+            self.__TAc.print(f"Fail to open the gen_dictionary .yaml file in: {self.__gendict_path}", "red", ["bold"])
             exit(0)
         except KeyError as err:
             self.__TAc.print(f"The id={id} is invalid.", "red", ["bold"])
             exit(0)
+        except os.error as err:
+            self.__TAc.print(f"Fail to read/parse the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
         # get path from gen-dictionary
         try:
-            return os.path.join(self.__instances_path, info['suite'], info[format])
+            return os.path.join(self.__all_instances_path, info[format])
         except KeyError as err:
             self.__TAc.print(f"The format={format} is invalid.", "red", ["bold"])
             exit(0)
@@ -200,8 +205,8 @@ class ModellingProblemHelper():
         try:
             with open(path, 'r') as file:
                 return file.read()
-        except os.error as err:
-            self.__TAc.print(f"Fail to read the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
+        except IOError as ioe:
+            self.__TAc.print(f"Fail to open the file: {path}", "red", ["bold"])
             exit(0)
 
     def get_file_str_from_id(self, id, format):
@@ -212,7 +217,7 @@ class ModellingProblemHelper():
         """Returns the list of all file_path in the inputs directory grouped by instance"""
         assert isinstance(dir_name, str)
         try:
-            dir_path = os.path.join(self.__instances_path, dir_name)
+            dir_path = os.path.join(self.__catalogue_path, dir_name)
             instances_paths = dict()
             for filename in os.listdir(dir_path):
                 tmp_parse = filename.split('.')
@@ -224,5 +229,5 @@ class ModellingProblemHelper():
                     instances_paths[id][format] = os.path.join(dir_path, filename)
             return instances_paths
         except os.error as err:
-            self.__TAc.print(f"Fail to read the instance file in: {self.__instances_path}", "red", ["bold"])
+            self.__TAc.print(f"Fail to read the instance file in: {self.__catalogue_path}", "red", ["bold"])
             exit(0)

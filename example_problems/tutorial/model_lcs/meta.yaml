@@ -31,15 +31,21 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_instance:
-    description: 'Call this service to get an instance for the Longest Subsequence Problem (LCS), i.e., a pair of strings s and t over a same alphabet, and of length m and n, respectively. You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall an LCS instance you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random LCS instance we mean the triple <m,n,alphabet,seed>.\n   The two strings s and t comprising the instance are returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing LCS instances is the following: the first line contains the two integers m and n; then follow 2 lines, the first contains the string s and the second contains the string t.'
+    description: 'Call this service to get an instance for the Longest Subsequence Problem (LCS), i.e., a pair of strings s and t. You have two main options when calling this service:\n    [source=catalogue] to get the instance with a specific id out from the catalogue of instances stored on the server. This catalogue is organized in collections that are all contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing `rtal get model_lcs`.\n    [source=random] to get the instance produced by the pseudo-random generator specified by the service argument `generator`. To recall an instance you have already met with this or other services, you only need to recall the exact configuration of the parameters that univokely leads the selected generator to yield that very same instance. The actual set of parameters needed depends on the generator, though it will always include the `seed` that is essential for every pseudo-random generator.\n   The two strings s and t comprising the instance are returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. The precise format of this stream can be regulated through the argument `instance_format`.'
     evaluator: [python,services/gimme_instance_server.py]
     args:
-      instance_spec:
-        regex: ^(random|catalogue1)$
+      source:
+        regex: ^(random|catalogue)$
         default: random
-        explain: 'choose an option among:' 
-        explain1: '[random] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,alphabet,seed>.'
-        explain2: '[catalogue1] the service will return an instance taken from a catalogue of hardcoded instances (the catalogue named \''catalogue1\''). More precisely, the instance returned is the one with the given instance_id.'
+        explain: 'choose an option among:\n     [random] the service delivers you the pseudo-random instance obtained when running the generator specified through argument `generator`. Every generator requires the user to specify a set of parameters (among which the `seed`) in order to univokely obtain the resulting instance. This set depends on the generator. Valid values for this set of parameters offer an "instance descriptor" in that univokely specify the instance for that generator. When calling this service make sure to pass the desired valued for all the arguments corresponding to the parameters required by the choosen generator. Passing the very same arguments/parameters you get the very same instance. This is helpful since it guarantees the reproducibility of any experiment and the possibility to use and explore a same instance with different services of this problem.\n     [catalogue] the service will return an instance taken from the catalogue of instances stored on the server. More precisely, the instance returned is the one with the given `instance_id`.'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        default: 1
+        explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. If you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. Also, all instance collections are public, that is, they are all contained in the .tar file that gets downloaded when the client issues `rtal get model_lcs`.'
+      generator:
+        regex: ^randgen_1$
+        default: randgen_1
+        explain: 'This argument is taken into account when source=random. It is used to specify the pseudo-random generator in case there are more options for it. Currently, the generators made available for this problem are:\n     [randgen_1] the \''instance descriptor\''  for this generator comprises 4 required parameters: `m`, `n`, `alphabet`, `seed`. The service then generates and returns the pseudo-random instance <m,n,alphabet,seed>.' 
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -49,21 +55,20 @@ services:
         default: 4
         explain: Length of the string t.
       alphabet:
-        regex: ^(dna|lowercase|lowercase_uppercase)$
-        default: dna
-        explain: The alphabet over which the two strings will be created.
+        regex: ^(DNA|lowercase|uppercase|lowercase_uppercase)$
+        default: DNA
+        explain: The alphabet over which the two strings will be created. DNA stand for the alphabet on the 4 letters A, C, G, T. The other options should be self-explanatory.
       seed:
-        explain: 'Set up this argument when you hold the seed and the instance descriptor of the specific instance that you want to be produced by the service (whether downloaded in local as a file or displayed on your terminal screen). By an \''instance descriptor\'' we mean a triple <m,n,alphabet,seed> that you may have got from previous calls to this or other services for this problem. When this argument is left to its default value (random_seed) then the service first chooses a seed at random (and communicates it to the user) and then produces the pseudo-random instance <m,n,seed>.'
+        explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-      instance_id:
-        regex: ^([1-9][0-9]*)$
-        default: 1
-        explain: 'This argument is taken into account when instance_spec=instance_id. It is used to identify a particular instance within the catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then this catalogue of hardcoded instances is automatically set up with make when setting up the server.'
       instance_format:
-        regex: ^(only_strings.txt|with_m_and_n.txt|dat)$
+        regex: ^(with_m_and_n.txt|only_strings.txt|dat)$
+        explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
+        explain1: '[with_m_and_n.txt] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
+        explain2: '[only_strings.txt] like the above, but with the first line omitted.'
+        dat: a possible datafile format for AMPL/GMPL use that we have decided to support.
         default: only_strings.txt
-        explain: choose the encoding for the txt input file.
       silent:
         regex: ^(0|1)$
         default: 0
@@ -84,13 +89,13 @@ services:
     description: 'This service provides you with a solution for an instance (either provided by you or generated at random) of the LCS problem. You can even call this service on an already encountered instance (also met with other services): a random instance can be reconstructed from m, n, alphabet, and its random seed.'
     evaluator: [python, services/gimme_sol_server.py]
     args:
-      instance_spec:
-        regex: ^(random|terminal|TA_send_files_bot)$
-        default: random
+      source:
+        regex: ^(randgen_1|terminal|TA_send_files_bot)$
+        default: randgen_1
         explain: 'choose the way to input your two strings among:' 
-        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,alphabet,seed>.'
+        explain1: '[randgen_1] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,alphabet,seed>.'
         explain2: '[terminal] you enter your instance (two strings) directly by either typing it string by string or through cut and paste operations.'
-        explain3: '[TA_send_files_bot] with this, you can send to the service an instance (two strings) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_lcs/bots/ directory. Call the service with: rtal connect model_lcs gimme_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
+        explain3: '[TA_send_files_bot] with this, you can send to the service an instance (two strings) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_lcs/bots/ directory. Call the service with: rtal connect model_lcs gimme_sol -asource=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance.txt.'
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -100,8 +105,8 @@ services:
         default: 4
         explain: Length of the string t.
       alphabet:
-        regex: ^(dna|lowercase|lowercase_uppercase)$
-        default: dna
+        regex: ^(DNA|lowercase|uppercase|lowercase_uppercase)$
+        default: DNA
         explain: The alphabet over which the two strings will be created.
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
@@ -119,13 +124,13 @@ services:
     description: 'This service checks your solution for an instance (either provided by you or generated at random) of the LCS problem. You can even call this service on an already encountered random instance (also met with other services): a random instance can be reconstructed from m, n, alphabet and its random seed.'
     evaluator: [python, services/check_sol_server.py]
     args:
-      instance_spec:
-        regex: ^(random|terminal|TA_send_files_bot)$
-        default: random
+      source:
+        regex: ^(randgen_1|terminal|TA_send_files_bot)$
+        default: randgen_1
         explain: 'choose the way to input your two strings among:' 
-        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,alphabet,seed>.'
+        explain1: '[randgen_1] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,alphabet,seed>.'
         explain3: '[terminal] you enter your instance (two strings) directly by either typing it string by string or through cut and paste operations.'
-        explain4: '[TA_send_files_bot] with this, you can send to the service an instance (two strings) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_lcs/bots/ directory. Call the service with: rtal connect model_lcs gimme_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance_with_solution.txt.'
+        explain4: '[TA_send_files_bot] with this, you can send to the service an instance (two strings) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_lcs/bots/ directory. Call the service with: rtal connect model_lcs gimme_sol -asource=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_instance_with_solution.txt.'
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -135,8 +140,8 @@ services:
         default: 4
         explain: Length of the string t.
       alphabet:
-        regex: ^(dna|lowercase|lowercase_uppercase)$
-        default: dna
+        regex: ^(DNA|lowercase|uppercase|lowercase_uppercase)$
+        default: DNA
         explain: The alphabet over which the two strings will be created.
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,alphabet,seed>.
@@ -155,7 +160,7 @@ services:
     example1: [when the model does not write on a file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat']
     example2: [to visualize the solution written in the file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -adisplay_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat']
     example3: [to ask validation of the solution written in the file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
-    example4: [to get credits for this instance in case of feasibility/optimality of the solution written in the file `solution.txt` by your model, '\n     rtal connect model_lcs try_GMPL_model -atoken=123456 -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
+    example4: [to get credits for this instance in case of feasibility/optimality of the solution written in the file `solution.txt` by your model, '\n     rtal connect -x token <YOUR_TOKEN> model_lcs try_GMPL_model -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
     evaluator: [python, services/try_GMPL_model_server.py]
     files:
       - instance
@@ -170,7 +175,7 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: If this flag is set to 1 then the service displays the log of the `glpsol` engine when running your model and instance.
-      display_solution:
+      display_raw_solution:
         regex: ^(0|1)$
         default: 0
         explain: If this flag is set to 1 then the service displays the content of the solution.txt file created by your model. This display is a raw listing of the file as it is (might help your debugging from remote).
@@ -193,20 +198,14 @@ services:
         regex: ^(subsequence|annotated_subseq)$
         default: subsequence
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
-      token:
-        regex: ^(anonymous|[1-9][0-9]{5,5})$
-        default: anonymous
       lang: 
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
   get_my_instances:
-    description: 'If you hold a personal token to a course or exam, and intend to score points on this problem, you should first use this service in order to get the instances of your personal assignement, and next use the service `try_GMPL_model` or `try_solution` to check and/or submit your model or solution on each particular instance you can manage. After calling the service `get_my_instances` you will find the instances within the subfolder `output` of your current directory. Use the rtal -o argument if you prefer a different path or folder name.' 
+    description: 'If you hold a personal token to a course or exam, and intend to collect points on this problem, you should first use this service in order to get the instances of your personal assignement, and next use the service `try_GMPL_model` or `try_solution` to check and/or submit your model or solution on each particular instance you can manage. After calling the service `get_my_instances` you will find the instances within the subfolder `output` of your current directory. Use the rtal -o argument if you prefer a different path or folder name.' 
     evaluator: [python, services/get_my_instances_server.py]
     args:
-      group:
-        regex: ^(catalogue1|random)$
-        default: random
       instance_format:
         regex: ^(only_strings.txt|with_m_and_n.txt)$
         default: only_strings.txt
@@ -242,8 +241,8 @@ services:
     evaluator: [python, services/eval_GMPL_model_server.py]
     args:
       goal:
-        regex: ^(public_examples|at_most_20_dna|at_most_50_lowercase|at_most_80_lowercase_uppercase)$
-        default: at_most_20_dna
+        regex: ^(public_examples|at_most_10|at_most_20|at_most_30|at_most_50|at_most_70|at_most_80|at_most_100)$
+        default: at_most_10
         explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
       dat_style:
         regex: ^(default)$

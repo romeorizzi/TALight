@@ -11,11 +11,12 @@ import model_lcs_lib as ll
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('instance_spec',str),
+    ('source',str),
+    ('instance_id',int),
+    ('generator',str),
     ('m',int),
     ('n',int),
     ('alphabet', str),
-    ('instance_id',int),
     ('instance_format',str),
     ('silent',bool),
     ('display',bool),
@@ -28,20 +29,22 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 
-if ENV['instance_spec'] == 'catalogue1':
-    mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR )
+if ENV['source'] == 'random':
+    # Get random instance
+    if ENV['generator'] == 'randgen_1':
+        instance = ll.instance_randgen_1(ENV['m'], ENV['n'], ENV['alphabet'], ENV['seed'])
+    else:
+        assert False
+    instance_str = ll.instance_to_str(instance, format=ENV['instance_format'])
+    output_filename = f"instance_{ENV['m']}_{ENV['n']}_{ENV['seed']}.{ENV['instance_format']}"
+else:
+    mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
     
-    # Get dat file
+    # Get instance from catalogue
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format=ENV['instance_format'])
     instance = ll.get_instance_from_str(instance_str, format=ENV['instance_format'])
     output_filename = f"instance_catalogue1_{ENV['instance_id']}.{ENV['instance_format']}"
 
-else:
-    # Get instance
-    assert ENV['instance_spec'] == 'random'
-    instance = ll.gen_instance(ENV['m'], ENV['n'], ENV['alphabet'], ENV['seed'])
-    instance_str = ll.instance_to_str(instance, format=ENV['instance_format'])
-    output_filename = f"instance_{ENV['m']}_{ENV['n']}_{ENV['seed']}.{ENV['instance_format']}"
 
 
 # Print Instance
@@ -52,7 +55,7 @@ else:
     TAc.print(LANG.render_feedback("instance-title", f'The first string of {len(instance[0])} character and the second string of {len(instance[1])} character are:'), "yellow", ["bold"])
     if ENV['display']:
         TAc.print(instance_str, "white", ["bold"])
-        if not ENV['instance_spec'] == 'catalogue1':
+        if not ENV['source'] == 'catalogue1':
             TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
 if ENV['download']:
     fout = open(os.path.join(ENV.OUTPUT_FILES,output_filename),'w')

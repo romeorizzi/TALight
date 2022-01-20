@@ -2,6 +2,9 @@
 from sys import exit
 import os.path
 
+
+from os import environ
+
 from multilanguage import Env, Lang, TALcolors
 
 from math_modeling import ModellingProblemHelper
@@ -13,7 +16,7 @@ import model_lcs_lib as ll
 args_list = [
     ('display_output',bool),
     ('display_error',bool),
-    ('display_solution',bool),
+    ('display_raw_solution',bool),
     ('display_explicit_formulation',bool),
     ('explicit_formulation_format',str),
     ('check_solution',bool),
@@ -29,7 +32,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR )
 
-if ENV['check_solution']:
+if ENV['check_solution'] or ENV.LOG_FILES != None:
     input_str = mph.get_input_str()
     instance = ll.get_instance_from_txt(input_str, style=ENV['instance_format'])
     print(instance)
@@ -65,17 +68,18 @@ if ENV['display_error']:
 
 raw_sol = mph.get_raw_sol()
 
-if ENV['display_solution']:
+if ENV['display_raw_solution']:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     TAc.print(LANG.render_feedback("sol-title", "The raw GLPSOL solution is: "), "yellow", ["bold"])
     for line in raw_sol:
         print(line)
 
-if ENV['check_solution']:
+solution_is_validated =  False
+if ENV['check_solution'] or ENV.LOG_FILES != None:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     TAc.print(LANG.render_feedback("start-check", f"Now start the check of the GLPSOL solution..."), "yellow", ["bold"])
 
-    TAc.print(LANG.render_feedback("instance-title", f'The first string of {m} character and the second string of {n} character are:'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance-title", f'The first string of {ENV["m"]} character and the second string of {ENV["n"]} character are:'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("instance", f"{ll.instance_to_str(instance)}"), "white", ["bold"])
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
@@ -90,20 +94,30 @@ if ENV['check_solution']:
         TAc.print(LANG.render_feedback("out_sol", f"{ll.annotated_subseq_to_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     
-    annotated_subseq_sol = ll.get_sol(instance[0], instance[1], m, n)
-    subsequence_sol = ll.annotated_subseq_to_sequence(annotated_subseq_sol)
+    max_val, an_opt_sol_annotated_subseq = ll.get_opt_val_and_sol(instance[0], instance[1])
+    an_opt_sol_subseq = ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq)
 
+    solution_is_correct = False
     if ENV['sol_format'] == 'subsequence':
-        print(f"The subsequence solution = {subsequence_sol}")
-        print(f"Your subsequence solution = {user_sol_subsequence}")
-        if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
-            TAc.OK()
-            TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
+        print(f"One optimal solution = {an_opt_sol_subseq}")
+        print(f"The solution obtained by your model = {user_sol_subsequence}")
+        if ll.check_sol_feas_and_opt(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
+            solution_is_correct = True
     elif ENV['sol_format'] == 'annotated_subseq':
-        print(f"The annotated solution = {annotated_subseq_sol}")
-        print(f"Your annotated solution = {user_sol_annotated_subseq}")
-        if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
-            TAc.OK()
-            TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
+        print(f"One optimal solution = {an_opt_sol_annotated_subseq}")
+        print(f"The solution obtained by your model = {user_sol_annotated_subseq}")
+        if ll.check_sol_feas_and_opt(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
+            solution_is_correct = True
+    if solution_is_correct:
+        TAc.OK()
+        TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
+
+if ENV.LOG_FILES != None:
+    if solution_is_correct:
+        print(f"ENV.LOG_FILES={ENV.LOG_FILES}")
+        log_file = open(os.path.join(ENV.LOG_FILES,'score'), 'w')
+        print("certificate of positive submission", file=log_file)
+        log_file.close()
+        TAc.print(LANG.render_feedback('positive-submission-recorded', "The positive result of your submission has been successfully recorded."), "green", ["bold"])
 
 exit(0)

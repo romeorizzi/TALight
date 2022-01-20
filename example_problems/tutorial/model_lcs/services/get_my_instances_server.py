@@ -13,7 +13,6 @@ import model_lcs_lib as ll
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('group',str),
     ('instance_format',str),
     ('token',str),
 ]
@@ -24,14 +23,13 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 
+if ENV.LOG_FILES is None:
+    TAc.print(LANG.render_feedback("no-token", f"This service requires an access token. Write `rtal connect -x <YOUR_PRIVATE_AUTH_TOKEN> get_my_instances` to get your instances downloaded."), "red", ["bold"])
+    exit(0)
+
 service_dir_path = os.path.abspath(os.path.dirname(__file__))
-#print(f'__file__={__file__}')
-#print(f'service_dir_path={service_dir_path}')
 
 GEN_file = os.path.join(service_dir_path,'GEN.yaml')
-
-#cartella in cui ci saranno i cataloghi scritti dal docente
-group_dir = os.path.join(ENV.META_DIR,'instances',ENV['group'])
 
 try:
   with open(GEN_file, 'r') as stream:
@@ -51,40 +49,43 @@ except IOError as ioe:
         print(ioe, file=out)
     exit(1)
 
-for key in GEN.keys():
-    if GEN[key]['source']=='random' and ENV['group']=='random':
-        seed=random.sample(range(100000, 999999),GEN[key]['num_instances'])
-        # random.sample genera una lista di numeri senza ripetizione; random.choices seleziona elementi da una lista con reinserimento (non è detto che siano tutti diversi)
+#########################################
+
+print(f"GEN={GEN}")
+
+for instances_group in GEN:
+    if GEN[instances_group]['source']=='random':
+        seed=random.sample(range(100000, 999999),GEN[instances_group]['num_instances'])
         for id in seed:
-            instance = ll.gen_instance(GEN[key]['m'], GEN[key]['n'], GEN[key]['alphabet'],id)
+            instance = ll.instance_randgen_1(GEN[instances_group]['m'], GEN[instances_group]['n'], GEN[instances_group]['alphabet'],id)
 
             instance_str = ll.instance_to_str(instance, format=ENV['instance_format'])
 
-            output_filename = f"instance_{GEN[key]['m']}_{GEN[key]['n']}_{id}.{ENV['instance_format']}"
+            output_filename = f"instance_{GEN[instances_group]}_{GEN[instances_group]['m']}_{GEN[instances_group]['n']}_{GEN[instances_group]['alphabet']}_{id}.{ENV['instance_format']}"
 
-            fout = open(os.path.join(ENV.OUTPUT_FILES,output_filename),'w')
+            fout = open(os.path.join(ENV.LOG_FILES,output_filename),'w')
 
             print(instance_str, file=fout)
             fout.close()
 
-    elif GEN[key]['source']!='random' and ENV['group']!='random':
+    elif GEN[instances_group]['source'] != 'random':
         # mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, group_dir)
 
         #leggo quali file ci sono nella cartella "ENV['group']"
         inst_path=os.listdir(group_dir)
 
         # scelgo due file random (diversi tra loro)
-        file= random.sample(inst_path,GEN[key]['num_instances'])
+        file= random.sample(inst_path,GEN[instances_group]['num_instances'])
         # print(file)
         
         # scelgo due seed tra quelli proposti in id:{1,2,3,4,5}
-        # seed=random.sample(list(GEN[key]['id']),GEN[key]['num_instances'])
+        # seed=random.sample(list(GEN[instances_group]['id']),GEN[instances_group]['num_instances'])
         # print(seed)
 
         # copio i file nella cartella 'output'
         for instance in file:
             source=os.path.join(group_dir,instance)
-            destination=ENV.OUTPUT_FILES
+            destination=ENV.LOG_FILES
             shutil.copy(source,destination)
 
       

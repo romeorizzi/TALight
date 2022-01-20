@@ -1,1 +1,1 @@
-../../../../TAL_lib/python/bot_interface.py
+/home/romeo/TALight/TAL_lib/python/bot_interface.py

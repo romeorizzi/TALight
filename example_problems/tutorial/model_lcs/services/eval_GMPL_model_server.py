@@ -22,7 +22,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START MATH_MODELING:
 
-tests_dirname_list = ["public_examples", "at_most_20_dna", "at_most_50_lowercase", "at_most_80_lowercase_uppercase"]
+tests_dirname_list = ["public_examples", "at_most_10_DNA", "at_most_20_DNA", "at_most_30_uppercase", "at_most_40_lowercase", "at_most_50_lowercase_uppercase", "at_most_70_uppercase", "at_most_80_lowercase", "at_most_100_DNA"]
 
 for test in reversed(tests_dirname_list):
     if test == ENV['goal']:
@@ -64,8 +64,6 @@ for test_dir in tests_dirname_list:
         m = len(instance[0])
         n = len(instance[1])
 
-        annotated_subseq_sol = ll.get_sol(instance[0], instance[1], m, n)
-
         mph.run_GLPSOL(dat_file_path)
         
         total_tests += 1
@@ -83,7 +81,7 @@ for test_dir in tests_dirname_list:
             user_sol_annotated_subseq = glpsol_sol
 
             if ENV['sol_style'] == 'subsequence':
-                if ll.check_sol(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
+                if ll.check_sol_feas_and_opt(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
                     total_passed_tests += 1
                     passed_dir_tests += 1
                     TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])
@@ -92,7 +90,7 @@ for test_dir in tests_dirname_list:
                     tests[test_dir][instance_id] = "NO!"
                 TAc.print(LANG.render_feedback("out_sol", f"Your solution:\n{ll.sequence_to_str(user_sol_subsequence)}"), "white", ["reverse"])
             elif ENV['sol_style'] == 'annotated_subseq':
-                if ll.check_sol(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
+                if ll.check_sol_feas_and_opt(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
                     total_passed_tests += 1
                     passed_dir_tests += 1
                     TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])

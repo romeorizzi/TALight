@@ -9,25 +9,95 @@ add_format: dat
 add_format: only_strings.txt
 add_format: with_m_and_n.txt
 
-suite: public_examples
-COPY: hardcoded/instance1.only_strings.txt
-COPY: hardcoded/instance1.with_m_and_n.txt
-COPY: hardcoded/instance1.dat
+collection: instances_hardcoded
+COPY: instances_hardcoded/instance_001_handmade.only_strings.txt
+COPY: instances_hardcoded/instance_001_handmade.with_m_and_n.txt
+COPY: instances_hardcoded/instance_001_handmade.dat
+COPY: instances_hardcoded/instance_002_handmade.only_strings.txt
+COPY: instances_hardcoded/instance_002_handmade.with_m_and_n.txt
+COPY: instances_hardcoded/instance_002_handmade.dat
 
-suite: at_most_20_DNA
-#     m,  n, alphabet,  seed
-GEN:  5   5  DNA       132777
-GEN:  10  10 DNA       777777
-GEN:  20  20 DNA       777456
+collection: instances_DNA_strlen_at_most_10
+#                randgen,    m,  n, alphabet,  seed
+GEN:  randgen_1_basic.py    10  10  DNA       132411
+GEN:  randgen_1_basic.py    10  10  DNA       132412
+GEN:  randgen_1_basic.py    10  10  DNA       177413
+GEN:  randgen_1_basic.py    10  10  DNA       177414
+GEN:  randgen_1_basic.py    10  10  DNA       177415
+GEN:  randgen_1_basic.py    10  10  DNA       177416
+GEN:  randgen_1_basic.py    10  10  DNA       177417
+GEN:  randgen_1_basic.py    10  10  DNA       177418
+GEN:  randgen_1_basic.py    10  10  DNA       177419
 
-suite: at_most_50_lowercase
-#     m,  n, alphabet, seed
-GEN:  30  30 lowercase 132777
-GEN:  40  40 lowercase 777777
-GEN:  50  50 lowercase 777456
+collection: instances_DNA_strlen_at_most_20
+#                randgen,    m,  n, alphabet,  seed
+GEN:  randgen_1_basic.py    20  20  DNA       232421
+GEN:  randgen_1_basic.py    20  20  DNA       232422
+GEN:  randgen_1_basic.py    20  20  DNA       277423
+GEN:  randgen_1_basic.py    20  20  DNA       277424
+GEN:  randgen_1_basic.py    20  20  DNA       277425
+GEN:  randgen_1_basic.py    20  20  DNA       277426
+GEN:  randgen_1_basic.py    20  20  DNA       277427
+GEN:  randgen_1_basic.py    20  20  DNA       277428
+GEN:  randgen_1_basic.py    20  20  DNA       277429
 
-suite: at_most_80_lowercase_uppercase
-#     m,   n,  alphabet,            seed
-GEN:  60   60  lowercase_uppercase  132777
-GEN:  70   70  lowercase_uppercase  777777
-GEN:  80   80  lowercase_uppercase  777456
+collection: instances_uppercase_strlen_at_most_30
+#                randgen,    m,  n, alphabet,  seed
+GEN:  randgen_1_basic.py    30  30 uppercase 332881
+GEN:  randgen_1_basic.py    30  30 uppercase 388882
+GEN:  randgen_1_basic.py    30  30 uppercase 388453
+GEN:  randgen_1_basic.py    30  30 uppercase 332884
+GEN:  randgen_1_basic.py    30  30 uppercase 388885
+GEN:  randgen_1_basic.py    30  30 uppercase 388456
+GEN:  randgen_1_basic.py    30  30 uppercase 332887
+GEN:  randgen_1_basic.py    30  30 uppercase 388888
+GEN:  randgen_1_basic.py    30  30 uppercase 388459
+
+collection: instances_lowercase_strlen_at_most_40
+#                randgen,    m,  n, alphabet,  seed
+GEN:  randgen_1_basic.py    40  40 lowercase 432881
+GEN:  randgen_1_basic.py    40  40 lowercase 488882
+GEN:  randgen_1_basic.py    40  40 lowercase 488453
+GEN:  randgen_1_basic.py    40  40 lowercase 432884
+GEN:  randgen_1_basic.py    40  40 lowercase 488885
+GEN:  randgen_1_basic.py    40  40 lowercase 488456
+GEN:  randgen_1_basic.py    40  40 lowercase 432887
+GEN:  randgen_1_basic.py    40  40 lowercase 488888
+GEN:  randgen_1_basic.py    40  40 lowercase 488459
+
+collection: instances_lowercase_uppercase_strlen_at_most_50
+#                randgen,    m,  n,           alphabet,  seed
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 532881
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588882
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588453
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 532884
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588885
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588456
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 532887
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588888
+GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588459
+
+collection: instances_uppercase_strlen_at_most_80
+#                randgen,    m,  n, alphabet,  seed
+GEN:  randgen_1_basic.py    80  80 uppercase 632881
+GEN:  randgen_1_basic.py    80  80 uppercase 688882
+GEN:  randgen_1_basic.py    80  80 uppercase 688453
+GEN:  randgen_1_basic.py    80  80 uppercase 632884
+GEN:  randgen_1_basic.py    80  80 uppercase 688885
+GEN:  randgen_1_basic.py    80  80 uppercase 688456
+GEN:  randgen_1_basic.py    80  80 uppercase 632887
+GEN:  randgen_1_basic.py    80  80 uppercase 688888
+GEN:  randgen_1_basic.py    80  80 uppercase 688459
+
+collection: instances_DNA_strlen_at_most_100
+#                randgen,    m,   n,  alphabet,  seed
+GEN:  randgen_1_basic.py    100  100  DNA       732411
+GEN:  randgen_1_basic.py    100  100  DNA       732412
+GEN:  randgen_1_basic.py    100  100  DNA       777413
+GEN:  randgen_1_basic.py    100  100  DNA       777414
+GEN:  randgen_1_basic.py    100  100  DNA       777415
+GEN:  randgen_1_basic.py    100  100  DNA       777416
+GEN:  randgen_1_basic.py    100  100  DNA       777417
+GEN:  randgen_1_basic.py    100  100  DNA       777418
+GEN:  randgen_1_basic.py    100  100  DNA       777419
+
