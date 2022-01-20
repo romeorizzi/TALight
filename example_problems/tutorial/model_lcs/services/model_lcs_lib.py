@@ -92,7 +92,7 @@ def get_instance_from_str(problem, format):
 
 
 def get_instance_from_txt(problem, style='only_strings'):
-    """This function returns the string representation of the given two strings instance according to the indicated format."""
+    """This function returns the two strings comprising the instance. The instance is taken from the stream `problem` where it is assumed encoded in the indicated format."""
     assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
     instance = list()
     lines = problem.split('\n')
