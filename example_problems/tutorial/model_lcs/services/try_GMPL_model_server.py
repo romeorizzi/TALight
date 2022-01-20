@@ -35,6 +35,7 @@ mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR )
 if ENV['check_solution'] or ENV.LOG_FILES != None:
     input_str = mph.get_input_str()
     instance = ll.get_instance_from_txt(input_str, style=ENV['instance_format'])
+    print(LANG.render_feedback('submitted-instance',f'# Submitted instance: '), end="")
     print(instance)
     m = len(instance[0])
     n = len(instance[1])

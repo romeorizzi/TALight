@@ -161,6 +161,7 @@ def get_opt_val_and_sol(s, t):
                 risp[i+1][j+1] = 1 + risp[i][j]
             else:
                 risp[i+1][j+1] = max(risp[i+1][j],risp[i][j+1])
+    opt_val = risp[m][n]
     an_opt_solution = {}
     while m > 0 and n > 0:
         if s[m-1] == t[n-1]:
@@ -171,7 +172,7 @@ def get_opt_val_and_sol(s, t):
             m-=1
         else:
             n-=1
-    return risp[m][n], an_opt_solution
+    return opt_val, an_opt_solution
 
 
 def check_input(TAc, LANG, ENV, line):
@@ -240,11 +241,15 @@ def check_sol_feas_and_opt(TAc, LANG, ENV, user_sol, s, t):
         TAc.print(LANG.render_feedback('not-feasible', f'# The solution produced is NOT feasible. The string `{user_sol}` is NOT a common subsequence of s=`{s}` and t=`{t}`.'), 'red', ['bold'])
         return False
     else:
-        TAc.print(LANG.render_feedback('feasible', f'# The solution produced is feasible. The string `{user_sol}` is a common subsequence of s=`{s}` and t=`{t}`.'), 'red', ['bold'])
+        TAc.print(LANG.render_feedback('feasible', f'# The solution produced is feasible. The string `{user_sol}` is a common subsequence of s=`{s}` and t=`{t}`.'), 'green')
     max_val, an_opt_sol = get_opt_val_and_sol(s, t)
-    if len(user_sol) != max_val:
+    print(f"max_val={max_val}, len(user_sol)={len(user_sol)}")
+    assert len(user_sol) <= max_val
+    if len(user_sol) < max_val:
         TAc.print(LANG.render_feedback('not-optimal', f'# The solution produced is NOT optimal. Its length is only {len(user_sol)} < {max_val}, where {max_val} is the length of the feasible solution `{an_opt_sol}`.'), 'red', ['bold'])
-        return False 
+        return False
+    TAc.print(LANG.render_feedback('feasible', f'# Great! The solution produced is feasible and optimal.'), 'green')
+    
     return True
 
 def process_user_sol(raw_sol):
