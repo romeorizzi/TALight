@@ -110,6 +110,28 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+  eval_given_sol:
+    evaluator: [python, services/eval_given_sol_server.py]
+    args:
+      m:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: Number of rows of the pirellone.
+      n:
+        regex: ^([1-9][0-9]{0,1})$
+        default: 4
+        explain: Number of columns of the pirellone.
+      with_check_of_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, for the yes instances, you should also provide a solution which will be checked by the service.
+      seed:
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
   eval_decision:
     evaluator: [python, services/eval_decision_server.py]
     args:
