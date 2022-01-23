@@ -223,7 +223,7 @@ services:
         default: python
 
   eval_number_of_triangles_in_triangle:
-    description: this service evaluates your code which calculates the occurencies of triangle in another triangle.
+    description: this service evaluates your code which calculates the occurencies of triangle Internalin another triangle.
     evaluator: [python, services/eval_number_of_triangles_in_triangle_server.py]
     args:
       goal:
@@ -244,10 +244,7 @@ services:
         explain: any string without space characters meaning one of the services of the problem {problem}
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-      metafile:
-        regex: ^(main|en|it)$
-        default: main
+        default: hardcoded
       metafile:
         regex: ^(main|en|it)$
         default: main
