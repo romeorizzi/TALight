@@ -18,6 +18,5 @@ while True:
         t =  int(numbers_nim)
         m,n,nim=cl.computer_decision_move(s,d,t)
         print(f"{m} {n} {nim}")
-
     if 'Since we played optimally' in line or 'The cases are two:' in line:
         exit(0)
