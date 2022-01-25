@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from sys import stderr, exit, argv
 import random
+from bot_lib import Bot
 
 usage=f"""# I am a bot that always provides the wrong answer. Call me with:
 #   > {argv[0]} <required functionality>
@@ -12,14 +13,6 @@ usage=f"""# I am a bot that always provides the wrong answer. Call me with:
 #   [4] number of triangles in triangle
 """
 
-def myinput():
-    spoon = ""
-    while len(spoon) == 0 or spoon[0] == '#':
-        try:
-            spoon = input()
-        except EOFError:
-            exit(0)
-    return spoon
 
 def fits(start,livello,big_triangle,small_triangle,small_size):
     last_visited = start
@@ -96,13 +89,13 @@ if len(argv) != 2 or argv[1]=='0':
 if argv[1] == "1":
     while True:
         # get triangle size:
-        myinput() # eat triangle-size statement
-        n = int(myinput())
+        BOT.input() # eat triangle-size statement
+        n = int(BOT.input())
         # get/eat triangle instance:
         for i in range(n+1):
-            myinput() # eat triangle-instance statement + n rows
+            BOT.input() # eat triangle-instance statement + n rows
         # give your answer:
-        myinput() # eat prompt
+        BOT.input() # eat prompt
         directions = ['L','R']
         answer = "".join(random.choices(directions,k=n-1))
         print(answer+"R")
@@ -112,53 +105,51 @@ if argv[1] == "1":
 if argv[1] == "2":
     while True:
         #get triangle size:
-        myinput() # eat triangle size statement
-        n = int(myinput())
+        BOT.input() # eat triangle size statement
+        n = int(BOT.input())
         # get/eat triangle instance:
         for i in range(n+1):
-            myinput() # eat triangle-instance statement + n rows
+            BOT.input() # eat triangle-instance statement + n rows
         # get triangle array:
-        myinput() # eat triangle array statement
-        t = eval(myinput())
+        BOT.input() # eat triangle array statement
+        t = eval(BOT.input())
         # get triangle path:
-        myinput() # eat path statement
-        path = myinput().strip()
+        BOT.input() # eat path statement
+        path = BOT.input().strip()
         # give your answer:
-        myinput() # eat prompt
+        BOT.input() # eat prompt
         print(calculate_path(t,path)+1)
     exit(0)
-
-
 # EVAL BEST SOL
 if argv[1] == "3":
     while True:
         check_also_sol = False
         #get triangle size:
-        myinput() # eat triangle size statement
-        n = int(myinput())
+        BOT.input() # eat triangle size statement
+        n = int(BOT.input())
         # get/eat triangle instance:
         for i in range(n+1):
-            myinput() # eat triangle-instance statement + n rows
+            BOT.input() # eat triangle-instance statement + n rows
         # get triangle:
-        myinput() # eat triangle array statement
-        triangle = eval(myinput())
+        BOT.input() # eat triangle array statement
+        triangle = eval(BOT.input())
         # get check_also_sol
-        myinput() # eat check_also_sol statement
-        if myinput() == "True":
+        BOT.input() # eat check_also_sol statement
+        if BOT.input() == "True":
             check_also_sol = True
         # give your answer:
         if check_also_sol:
             best_reward,best_path = best_reward_and_path(triangle)
             # reward
-            myinput() # eat reward statement
+            BOT.input() # eat reward statement
             print(best_reward+1)
             # path
-            myinput() # eat path statement
+            BOT.input() # eat path statement
             print(best_path+"L")
         else:
             best_reward,_ = best_reward_and_path(triangle)
             # reward
-            myinput() # eat reward statement
+            BOT.input() # eat reward statement
             print(best_reward+1)
     exit(0)
 
@@ -166,19 +157,19 @@ if argv[1] == "3":
 if argv[1] == "4":
     while True:
         # get small triangle size:
-        myinput() # eat small triangle size statement
-        l = int(myinput())
+        BOT.input() # eat small triangle size statement
+        l = int(BOT.input())
         # get big triangle size:
-        myinput() # eat big triangle size statement
-        L = int(myinput())
+        BOT.input() # eat big triangle size statement
+        L = int(BOT.input())
         # get small triangle array: 
-        myinput() # eat small triangle array statement
-        small_array = eval(myinput())
+        BOT.input() # eat small triangle array statement
+        small_array = eval(BOT.input())
         # get big triangle array: 
-        myinput() # eat big triangle array statement
-        big_array = eval(myinput())
+        BOT.input() # eat big triangle array statement
+        big_array = eval(BOT.input())
         # give your answer:
-        myinput() # eat prompt
+        BOT.input() # eat prompt
         answer = 0
         livello = 1
         indexes = []
@@ -191,4 +182,3 @@ if argv[1] == "4":
                     answer += 1
         print(answer+1)
     exit(0)
-
