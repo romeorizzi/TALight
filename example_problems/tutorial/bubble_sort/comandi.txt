@@ -1,0 +1,10 @@
+APRIRE LA CARTELLA
+cd ~/TALight/example_problems/tutorial/bubble_sort
+
+AVVIARE IL SERVER
+rtald -d ~/TALight/example_problems/tutorial
+
+
+# 1. log_debug_a_single_bubble_sort_phase
+rtal connect -e bubble_sort log_debug_a_single_bubble_sort_phase -- bots/test_bot.py bots/in_4132.txt
+

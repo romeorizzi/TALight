@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from sys import argv
 from time import sleep
-
+from bot_lib import Bot
 from template_lib import BubbleSortMachine
 
 usage=f"""Call me like this:
@@ -14,6 +14,8 @@ usage=f"""Call me like this:
 
    [wait_for_receipt] whenever you provide a second argument (its face value is not even checked) then the InsertionSort bot will wait for confirmation at every log step of the InsertionSortMachine it operates.
 """
+BOT = Bot(report_inputs=True,reprint_outputs=True)
+#line = BOT.input()
 # Args
 if len(argv) > 3:
     print(f"Error: you called this executable ({argv[0]}) providing too many arguments ({len(argv)-1} arguments received).")
@@ -30,6 +32,7 @@ else:
     input_array_of_ints = list(map(int, fin.readline().strip().split()))
     fin.close()
 require_receipt = len(argv) > 2
+require_receipt = False
 
 assert N == len(input_array_of_ints)
 SM = BubbleSortMachine()
@@ -41,12 +44,12 @@ right_pos = 1
 while swap:
     swap = False
 
-    for i in range(len(input_array_of_ints)-right_pos):
+    #for i in range(len(input_array_of_ints)-right_pos):
+    for i in range(len(input_array_of_ints)-1):
         if(not SM.compare_consecutive_elements(i, wait_for_receipt=require_receipt)):
             SM.swap_consecutive_elements(i, wait_for_receipt=require_receipt)
             swap = True
         SM.output_array(wait_for_receipt=require_receipt)
-    print ("end FOR")
     right_pos += 1
 SM.output_final_sorted_array(wait_for_receipt=require_receipt)
 
