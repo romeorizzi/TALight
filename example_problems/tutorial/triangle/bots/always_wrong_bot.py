@@ -13,6 +13,7 @@ usage=f"""# I am a bot that always provides the wrong answer. Call me with:
 #   [4] number of triangles in triangle
 """
 
+BOT = Bot(report_inputs=True,reprint_outputs=True)
 
 def fits(start,livello,big_triangle,small_triangle,small_size):
     last_visited = start
