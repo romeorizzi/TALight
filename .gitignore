@@ -1,17 +1,7 @@
-# CMS
-.inode
-**/input
-**/output
-
 # backups
 *~
 *.bak
 **/.DS_Store
-
-# LaTex
-*.pdf
-*.aux
-*.log
 
 # Byte-compiled / optimized / DLL files
 a.out
@@ -20,8 +10,8 @@ __pycache__/
 *$py.class
 *.class
 
-# management of this report in action
-TEMA_OGGI*
+# signatures and cryptography
+*.sig
 
 # archives
 *.zip
@@ -29,6 +19,20 @@ TEMA_OGGI*
 *.tar.gz
 *.tar
 *.7z
+
+# LaTex
+*.pdf
+*.aux
+*.log
+
+# CMS
+.inode
+**/input
+**/output
+
+# management of this report in action
+exam_sessions
+TEMA_OGGI*
 
 # Visual Studio
 .vs/

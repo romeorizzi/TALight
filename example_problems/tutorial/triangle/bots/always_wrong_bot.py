@@ -13,7 +13,8 @@ usage=f"""# I am a bot that always provides the wrong answer. Call me with:
 #   [4] number of triangles in triangle
 """
 
-BOT = Bot(report_inputs=True,reprint_outputs=True)
+# BOT = Bot(report_inputs=True,reprint_outputs=True)
+BOT = Bot(report_inputs=False,reprint_outputs=False)
 
 def fits(start,livello,big_triangle,small_triangle,small_size):
     last_visited = start
@@ -86,41 +87,34 @@ if len(argv) != 2 or argv[1]=='0':
     print(usage)
     exit(0)
 
-# EVAL FEASIBLE SOLUTION 
-if argv[1] == "1":
+#  BOT THAT YELDS A FEASIBLE SOLUTION
+def yield_feasible_solution_bot():
     while True:
-        # get triangle size:
-        BOT.input() # eat triangle-size statement
         n = int(BOT.input())
         # get/eat triangle instance:
-        for i in range(n+1):
-            BOT.input() # eat triangle-instance statement + n rows
-        # give your answer:
-        BOT.input() # eat prompt
+        for i in range(n):
+            BOT.input() # eat the n rows of the triangle
         directions = ['L','R']
         answer = "".join(random.choices(directions,k=n-1))
         print(answer+"R")
-    exit(0)
 
-# EVAL AND REWARD ONE SOL
-if argv[1] == "2":
+#  CHECK AND REWARD ONE SOL
+def check_and_reward_one_solution_bot():
     while True:
-        #get triangle size:
-        BOT.input() # eat triangle size statement
         n = int(BOT.input())
         # get/eat triangle instance:
-        for i in range(n+1):
-            BOT.input() # eat triangle-instance statement + n rows
-        # get triangle array:
-        BOT.input() # eat triangle array statement
-        t = eval(BOT.input())
-        # get triangle path:
-        BOT.input() # eat path statement
+        t = []
+        for i in range(n):
+            t.append(map(int,BOT.input().split()))
         path = BOT.input().strip()
-        # give your answer:
-        BOT.input() # eat prompt
         print(calculate_path(t,path)+1)
-    exit(0)
+        
+# MAIN:
+if argv[1] == "1":
+    yield_feasible_solution_bot()
+if argv[1] == "2":
+    check_and_reward_one_solution_bot()
+
 # EVAL BEST SOL
 if argv[1] == "3":
     while True:

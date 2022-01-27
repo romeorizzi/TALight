@@ -81,15 +81,13 @@ def test(instance):
     triangle = instance['triangle']
     n = instance['n']
     path = instance['path']
-    TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
+    TAc.print(LANG.render_feedback("triangle-size",'# We have a triangle whose number of rows is:'), "white", ["bold"])
     TAc.print(n, "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("print-triangle", f'The triangle of reference is:'), "white", ["bold"])
+    TAc.print(LANG.render_feedback("print-triangle", f'# The triangle of reference is:'), "white", ["bold"])
     tl.print_triangle(triangle)
-    TAc.print(LANG.render_feedback("rough-triangle", f'The triangle can be seen as a list of lists. In this case we have:'), "white", ["bold"])
-    TAc.print(triangle, "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("display-path",f'We give you the following path.'),"white", ["bold"])
+    TAc.print(LANG.render_feedback("display-path",f'# We give you the following path.'),"white", ["bold"])
     TAc.print(path, "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("display-path",f'Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white", ["bold"])
+    TAc.print(LANG.render_feedback("display-path",f'# Calculate the reward it gets descending from the top element following the directions contained in the path.'),"white", ["bold"])
     start = monotonic()
     answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
     end = monotonic()

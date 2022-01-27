@@ -1,28 +1,34 @@
 #!/usr/bin/env python3
-from sys import exit
+from sys import stderr
 
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
-from bot_interface import service_server_requires_and_gets_the_only_file
+from TALfiles import TALfilesHelper
 
 import model_lcs_lib as ll
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('source',str),
+    ('instance_format',str),
     ('m',int), 
     ('n',int),
     ('alphabet', str),
-    ('sol_style',str),
+    ('sol_format',str),
+    ('download',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+TALf = TALfilesHelper(TAc, ENV)
 
 
 # START CODING YOUR SERVICE:
-if ENV['source'] == 'random':
+if TALf.input_file_exists('instance'):
+    instance = ll.get_instance_from_txt(TALf.input_file_as_str('instance'), style=ENV['instance_format'])
+    TAc.print(LANG.render_feedback("successful-load", f'Your `instance` file has been successfully loaded.', "white", ["bold"])
+elif ENV['source'] == 'randgen_1':
     instance = ll.instance_randgen_1(ENV['m'], ENV['n'], ENV['alphabet'], ENV['seed'])
 
     TAc.print(LANG.render_feedback("seed", f"The seed is: {ENV['seed']}"), "yellow", ["bold"])
@@ -40,28 +46,18 @@ elif ENV['source'] == 'terminal':
     instance.append([e for e in TALinput(str, num_tokens=ENV['m'], regex=f"^({'|'.join(e for e in alphabet)})$", sep=' ', TAc=TAc)])
     instance.append([e for e in TALinput(str, num_tokens=ENV['n'], regex=f"^({'|'.join(e for e in alphabet)})$", sep=' ', TAc=TAc)])
 
-elif ENV['source'] == 'TA_send_files_bot':
-    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input file. An example of the accepted files is `examples/instance.txt`)."), "yellow")
-
-    instance_str = service_server_requires_and_gets_the_only_file().decode()
-    instance = ll.get_instance_from_str(instance_str, "only_strings.txt")
-    
-    if len(instance[0]) != ENV['m']:
-        TAc.print(LANG.render_feedback('error-s-length', f"#ERROR: The first string must have {ENV['m']} characters, you insert a string with {len(instance[0])} characters."), 'red', ['bold'])
-        exit(0)
-    if len(instance[1]) != ENV['n']:
-        TAc.print(LANG.render_feedback('error-t-length', f"#ERROR: The second string must have {ENV['n']} characters, you insert a string with {len(instance[1])} characters."), 'red', ['bold'])
-        exit(0)
-    TAc.print(LANG.render_feedback("instance-title", f'The first string of {ENV["m"]} character and the second string of {ENV["n"]} character are:'), "yellow", ["bold"])
-
-    TAc.print(LANG.render_feedback("instance", f"{instance_str}"), "white", ["bold"])
 
 max_len, an_opt_sol_annotated_subseq = ll.get_opt_val_and_sol(instance[0], instance[1])
 TAc.print(LANG.render_feedback("solution-title", f"The solution for this instance is:"), "green", ["bold"])
-if ENV['sol_style'] == 'subsequence':
+if ENV['sol_format'] == 'subsequence':
     TAc.print(LANG.render_feedback("solution", f'{ll.sequence_to_str(ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq))}'), "white", ["reverse"])
-elif ENV['sol_style'] == 'annotated_subseq':
+elif ENV['sol_format'] == 'annotated_subseq':
     TAc.print(LANG.render_feedback("legend-annotated_subseq", f"(LCS Character - First string index - Second string index)"), "white", ["bold"])
     TAc.print(LANG.render_feedback("solution", f'{ll.annotated_subseq_to_str(an_opt_sol_annotated_subseq)}'), "white", ["reverse"])
-
+if ENV['download']:
+    if ENV['sol_format'] == 'subsequence':
+        TALf.str2output_file(ll.sequence_to_str(ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq)),f'optimal_solution')
+    elif ENV['sol_format'] == 'annotated_subseq':
+        TALf.str2output_file(ll.annotated_subseq_to_str(an_opt_sol_annotated_subseq),f'optimal_solution')
+    
 exit(0)

@@ -131,7 +131,8 @@ class ModellingProblemHelper():
             with open(self.__in_path, 'r') as file:
                 return file.read()
         except os.error as err:
-            self.__TAc.print(f"Fail to read the input file in {self.__in_path}", "red", ["bold"])
+            self.__TAc.print(f"Fail to read you input file with the instance.", "red", ["bold"])
+            self.__TAc.print(f"Fail to read the input file in {self.__in_path}", "red", ["bold"], file=stderr)
             exit(0)
 
 

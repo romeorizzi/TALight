@@ -23,6 +23,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # INSTANCES FOR GOAL = correct
 
+LANG.print_opening_msg()
 goals = ['correct']
 instances = { 'correct' : [] }
 MIN_VAL = 10
@@ -86,11 +87,11 @@ MAX_TIME = 2
 def test(instance):
     triangle = instance['triangle']
     n = instance['n']
-    TAc.print(LANG.render_feedback("triangle-size",'We have a triangle whose number of rows is:'), "white", ["bold"])
+    TAc.print(LANG.render_feedback("triangle-size",'# We have a triangle whose number of rows is:'), "white", ["bold"])
     TAc.print(n, "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("triangle-instance",'Triangle instance of reference:'), "white", ["bold"])
+    TAc.print(LANG.render_feedback("triangle-instance",'# Triangle instance of reference:'), "white", ["bold"])
     tl.print_triangle(triangle)
-    TAc.print(LANG.render_feedback("ask-path", f'\nGiven this triangle, can you provide a feasible solution?'),"white",["bold"])
+    TAc.print(LANG.render_feedback("ask-path", f'\n# Given this triangle, can you provide a feasible solution?'),"white",["bold"])
     start = monotonic()
     answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
     end = monotonic()

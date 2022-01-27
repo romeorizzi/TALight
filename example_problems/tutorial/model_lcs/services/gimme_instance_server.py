@@ -3,11 +3,11 @@ from sys import exit
 import os.path
 
 from multilanguage import Env, Lang, TALcolors
+from TALfiles import TALfilesHelper
 
 from math_modeling import ModellingProblemHelper
 
 import model_lcs_lib as ll
-
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -26,6 +26,7 @@ args_list = [
 ENV = Env(args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
@@ -58,8 +59,6 @@ else:
         if not ENV['source'] == 'catalogue1':
             TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
 if ENV['download']:
-    fout = open(os.path.join(ENV.OUTPUT_FILES,output_filename),'w')
-    print(instance_str, file=fout)
-    fout.close()
-
+    TALf.str2output_file(instance_str,output_filename)
+ 
 exit(0)

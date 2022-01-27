@@ -2,9 +2,6 @@
 from sys import exit
 import os.path
 
-
-from os import environ
-
 from multilanguage import Env, Lang, TALcolors
 
 from math_modeling import ModellingProblemHelper
