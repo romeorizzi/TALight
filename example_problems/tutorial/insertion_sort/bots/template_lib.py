@@ -40,7 +40,7 @@ class InsertionSortMachine:
     def clone_to_its_right_ele_in_pos(self, i: int, wait_for_receipt: bool = True, expected_log: str = None):
         if not 0 <= i < len(self.working_array):
             print(
-                f"Ahi, my problem-solver bot is asking to clone the element in pos {i} which does not exists since {i} is not in the interval [0,{len(self.working_array)}).")
+                f"Ahi, the operator required to clone the element in pos {i} which does not exists since {i} is not in the interval [0,{len(self.working_array)}).")
         if len(self.working_array) == i+1:
             self.working_array.append(self.working_array[i])
         else:
@@ -50,11 +50,11 @@ class InsertionSortMachine:
     def what_in_tmp_buffer_goes_before_than_what_in_pos(self, i: int, wait_for_receipt: bool = True, expected_log: str = None):
         if self.tmp_buffer is None:
             print(
-                "Ahi, my problem-solver bot asks to compare with others the element contained in the tmp_buffer, but this buffer is empty. I expect complaints from the checking server.")
+                "Ahi, the operator required to compare with others the element contained in the tmp_buffer, but this buffer is empty. I expect complaints from the checking server.")
             return False
         if i >= len(self.working_array) or self.working_array[i] is None:
             print(
-                f"Ahi, my problem-solver bot asks to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array. I expect complaints from the checking server.")
+                f"Ahi, the operator required to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array. I expect complaints from the checking server.")
             return False
         if self.tmp_buffer < self.working_array[i]:
             self.console(f"#LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (<)", wait_for_receipt, expected_log)
