@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from sys import argv
 from time import sleep
-from bot_lib import Bot
 from template_lib import BubbleSortMachine
 
 usage=f"""I am an implementation of the first phase of the BubbleSort algorithm. Call me like this:
@@ -15,7 +14,6 @@ usage=f"""I am an implementation of the first phase of the BubbleSort algorithm.
 
    [wait_for_receipt] whenever you provide a second argument (its face value is not even checked) then the InsertionSort bot will wait for confirmation at every log step of the InsertionSortMachine it operates.
 """
-BOT = Bot(report_inputs=True,reprint_outputs=True)
 if len(argv) > 3:
     print(f"Error: you called this executable ({argv[0]}) providing too many arguments ({len(argv)-1} arguments received).")
     print(usage)
