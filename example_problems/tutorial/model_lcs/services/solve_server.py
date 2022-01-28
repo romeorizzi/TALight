@@ -25,9 +25,15 @@ TALf = TALfilesHelper(TAc, ENV)
 
 
 # START CODING YOUR SERVICE:
-if TALf.input_file_exists('instance'):
-    instance = ll.get_instance_from_txt(TALf.input_file_as_str('instance'), style=ENV['instance_format'])
-    TAc.print(LANG.render_feedback("successful-load", f'Your `instance` file has been successfully loaded.', "white", ["bold"])
+if TALf.exists_input_file('instance'):
+    print("CIAO 1")
+    #instance = ll.get_instance_from_txt(TALf.input_file_as_str('instance'), style=ENV['instance_format'])
+    instance = TALf.input_file_as_str('instance')
+    print(f'instance1 = {instance}')
+    instance = ll.get_instance_from_txt(instance, style=ENV['instance_format'])
+    print(f'instance2 = {instance}')
+    
+    TAc.print(LANG.render_feedback("successful-load", f'Your `instance` file has been successfully loaded.'), "white", ["bold"])
 elif ENV['source'] == 'randgen_1':
     instance = ll.instance_randgen_1(ENV['m'], ENV['n'], ENV['alphabet'], ENV['seed'])
 
@@ -37,15 +43,15 @@ elif ENV['source'] == 'randgen_1':
     TAc.print(LANG.render_feedback("instance", f"{ll.instance_to_str(instance)}"), "white", ["bold"])
 
 elif ENV['source'] == 'terminal':
+    print("CIAO 2")
     TAc.print(LANG.render_feedback("waiting", f'#? waiting for the first string of {ENV["m"]} character and the second string of {ENV["n"]} character, over the alphabet {ENV["alphabet"]}.\nFormat: the first line is the first string and the second line is the second string, each character must be separated by a space.\nAny line beggining with the "#" character is ignored.\nIf you prefer, you can use the "TA_send_txt_file.py" util here to send us the raw_instance of a file. Just plug in the util at the "rtal connect" command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
-    TAc.print(LANG.render_feedback("instance-title", f"Enter the first string and then the second string:"), "yellow", ["bold"])
+    instance = []
+    TAc.print(LANG.render_feedback("first-string", f'Enter the first string s (any alphanumeric string of uppercase and lowercase characters plus digits):'), "yellow", ["bold"])
+    instance.append([e for e in TALinput(str, regex=f"^(([a-zA-Z0-9])*)$", sep=' ', TAc=TAc)])
+    TAc.print(LANG.render_feedback("second-string", f'Enter the second string t (any alphanumeric string of uppercase and lowercase characters plus digits):'), "yellow", ["bold"])
+    instance.append([e for e in TALinput(str, regex=f"^(([a-zA-Z0-9])*)$", sep=' ', TAc=TAc)])
 
-    alphabet = ll.get_alphabet(ENV['alphabet'])
-
-    instance = list()
-    instance.append([e for e in TALinput(str, num_tokens=ENV['m'], regex=f"^({'|'.join(e for e in alphabet)})$", sep=' ', TAc=TAc)])
-    instance.append([e for e in TALinput(str, num_tokens=ENV['n'], regex=f"^({'|'.join(e for e in alphabet)})$", sep=' ', TAc=TAc)])
-
+print(f'instance = {instance}')
 
 max_len, an_opt_sol_annotated_subseq = ll.get_opt_val_and_sol(instance[0], instance[1])
 TAc.print(LANG.render_feedback("solution-title", f"The solution for this instance is:"), "green", ["bold"])

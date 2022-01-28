@@ -5,98 +5,101 @@ import random
 import string
 
 ### CONSTANTS #########################################
-FORMAT_AVAILABLES = ['dat', 'txt']
-DAT_STYLES_AVAILABLES = ['']
-TXT_STYLES_AVAILABLES = ['only_strings', 'with_m_and_n']
-DEFAULT_FORMAT='only_strings.txt'
+AVAILABLE_FORMATS = {'instance':{'only_strings':'only_strings.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat1':'dat'},'solution':{'subsequence':'subsequence.txt', 'annotated_subseq':'annotated_subseq.txt'}}
+DEFAULT_INSTANCE_FORMAT='only_strings'
+DEFAULT_SOLUTION_FORMAT='subsequence'
 #######################################################
 
-def annotated_subseq_to_sequence(solution):
-    return [solution.get(key) for key in sorted(solution)]
+def format_name_to_file_extension(format_name, format_gender):
+    assert format_gender in AVAILABLE_FORMATS, f'No format has been adopted for objects of the gender `{format_gender}`.'
+    assert format_name in AVAILABLE_FORMATS[format_gender], f'Format_name `{format_name}` unsupported for objects of gender {format_gender}.'
+    return AVAILABLE_FORMATS[format_gender][format_name]
 
-# TO STRING
+def file_extension_to_format_name(file_extension):
+    for format_gender in AVAILABLE_FORMATS:
+        for format_name in AVAILABLE_FORMATS[format_gender]:
+            if AVAILABLE_FORMATS[format_gender][format_name] == file_extension:
+                return format_name
+    assert False, f'No adopted format is associated to the file_extension `{file_extension}`.'
+
+def format_name_expand(format_name, format_gender):
+    long_format_name = format_name_to_file_extension(format_name, format_gender)
+    format_list = long_format_name.split('.')
+    if len(format_list) == 1:
+        format_primary = format_list[0]
+        format_secondary = None
+    else:
+        format_primary = format_list[1]
+        format_secondary = format_list[0]
+    return format_primary, format_secondary
+    
+# MANAGING REPRESENTATIONS OF SOLUTIONS:
+
 def annotated_subseq_to_str(solution):
     return ('\n'.join([f'{solution.get(key)} {key[0]} {key[1]}' for key in sorted(solution)]))
-
 
 def sequence_to_str(sequence):
     return " ".join(e for e in sequence)
 
+def annotated_subseq_to_sequence(solution):
+    return [solution.get(key) for key in sorted(solution)]
 
-def instance_to_str(problem, format='default'):
-    """This function returns the string representation of the given two strings instance according to the indicated format"""
-    # Get default
-    format = DEFAULT_FORMAT if format=='default' else format
-    # Parsing format
-    format_list = format.split('.')
-    if len(format_list) == 1:
-        format_primary = format_list[0]
-        format_secondary = ''
-    else:
-        format_primary = format_list[1]
-        format_secondary = format_list[0]
-    # Get problem in str format
-    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
+# MANAGING REPRESENTATIONS OF INSTANCES:
+
+# YIELD STRING REPRESENTATIONS OF GIVEN INSTANCE:
+
+def instance_to_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
+    """This function returns the string representation of the given <instance> provided in format <instance_format_name>"""
+    format_primary, format_secondary = format_name_expand(format_name, 'instance')
     if format_primary == 'dat':
-        return instance_to_dat(problem, format_secondary)
+        return instance_to_dat_str(instance, format_name)
     if format_primary == 'txt':
-        return instance_to_txt(problem, format_secondary)
+        return instance_to_txt_str(instance, format_name)
 
-
-def instance_to_txt(problem, style='only_strings'):
-    """This function returns the string representation of the given two strings instance according to the indicated style"""
-    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+def instance_to_txt_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
+    """Of the given <instance>, this function returns the .txt string in format <format_name>"""
+    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
     output= ""
-    if style == "with_m_and_n":
-        output += f'{len(problem[0])} {len(problem[1])}\n'
-    output += '\n'.join(sequence_to_str(string) for string in problem)
+    if format_name == "with_m_and_n":
+        output += f'{len(instance[0])} {len(instance[1])}\n'
+    output += '\n'.join(sequence_to_str(string) for string in instance)
     return output
 
-
-def instance_to_dat(problem, style=''):
-    """This function returns the dat representation of the given two strings instance according to the indicated style"""
-    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
-    M = len(problem[0])
-    N = len(problem[1])
+def instance_to_dat_str(instance, format_name=''):
+    """Of the given <instance>, this function returns the .dat string in format <format_name>"""
+    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
+    M = len(instance[0])
+    N = len(instance[1])
     output = f"param M := {M};  # Number of characters of the first string s\n"
     output += f"param N := {N};  # Number of characters of the second string t\n"
     output += "param: STRINGS: S_STRING    T_STRING :=\n"
     for j in range(max(M, N)):
         if j < M and j < N:
-            output += f'            {j+1} {problem[0][j]}             {problem[1][j]}\n'
+            output += f'            {j+1} {instance[0][j]}             {instance[1][j]}\n'
         elif j >= M:
-            output += f'            {j+1} .               {problem[1][j]}\n'
+            output += f'            {j+1} .               {instance[1][j]}\n'
         elif j >= N:
-            output += f'            {j+1} {problem[0][j]}             .\n'
+            output += f'            {j+1} {instance[0][j]}             .\n'
     output = output[:-1] + ";\nend;"
     return output
 
 
-# FROM STRING
-def get_instance_from_str(problem, format):
-    """This function returns the string representation of the given two string instances according to the indicated format."""
-    # Parsing format
-    format_list = format.split('.')
-    if len(format_list) == 1:
-        format_primary = format_list[0]
-        format_secondary = ''
-    else:
-        format_primary = format_list[1]
-        format_secondary = format_list[0]
-    # Get two strings in str format
-    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
+# GET INSTANCE FROM STRING REPRESENTATION:
+def get_instance_from_str(instance_as_str, instance_format_name=DEFAULT_INSTANCE_FORMAT):
+    """This function returns the instance it gets from its string representation as provided in format <instance_format_name>."""
+    format_primary, format_secondary = format_name_expand(format_name, 'instance')
     if format_primary == 'dat':
-        return get_instance_from_dat(problem, format_secondary)
+        return get_instance_from_dat(instance_as_str, format_name)
     if format_primary == 'txt':
-        return get_instance_from_txt(problem, format_secondary)
+        return get_instance_from_txt(instance_as_str, format_name)
 
 
-def get_instance_from_txt(problem, style='only_strings'):
-    """This function returns the two strings comprising the instance. The instance is taken from the stream `problem` where it is assumed encoded in the indicated format."""
-    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+def get_instance_from_txt(instance_as_str, format_name='only_strings'):
+    """This function returns the instance it gets from its .txt string representation in format <format_name>."""
+    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
     instance = list()
-    lines = problem.split('\n')
-    if style == "with_m_and_n":
+    lines = instance_as_str.split('\n')
+    if format_name == "with_m_and_n":
         lines = lines[1:]
     for line in lines:
         if len(line) != 0:
@@ -104,18 +107,15 @@ def get_instance_from_txt(problem, style='only_strings'):
     return instance
 
 
-def get_instance_from_dat(problem, style=''):
-    """This function returns the string representation of the given two strings instance according to the indicated format."""
-    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+def get_instance_from_dat(instance_as_str, format_name=''):
+    """This function returns the instance it gets from its .dat string representation in format <format_name>."""
     instance = list()
     instance.append(list())
     instance.append(list())
-    # Get lines
-    lines = problem.split('\n')
-    # Parse lines
+    lines = instance_as_str.split('\n')
     for line in lines:
         line = line.strip() # remove whitespace before and after
-        # Filter the problem lines
+        # Filter the instance_as_str lines
         if line != '' and line[:5] != 'param' and line[:3] != 'end':
             line = line.replace(';', '') #ignore ;
             line = line.split()
@@ -132,10 +132,10 @@ def instance_randgen_1(m:int,n:int,alphabet:str,seed:int):
     assert n >= 0
     instance_alphabet = get_alphabet(alphabet)
     random.seed(seed)
-    problem = []
-    problem.append([random.choice(instance_alphabet) for i in range(m)])
-    problem.append([random.choice(instance_alphabet) for i in range(n)])
-    return problem
+    instance = []
+    instance.append([random.choice(instance_alphabet) for i in range(m)])
+    instance.append([random.choice(instance_alphabet) for i in range(n)])
+    return instance
 
 
 # CORE FUNCTIONS:

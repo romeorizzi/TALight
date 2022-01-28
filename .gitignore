@@ -31,6 +31,7 @@ __pycache__/
 **/output
 
 # management of this report in action
+instances_catalogue
 exam_sessions
 TEMA_OGGI*
 

@@ -35,12 +35,12 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       instance_format:
-        regex: ^(with_m_and_n.txt|only_strings.txt|dat)$
+        regex: ^(with_m_and_n|only_strings|dat)$
+        default: only_strings
         explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
-        explain1: '[with_m_and_n.txt] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
-        explain2: '[only_strings.txt] like the above, but with the first line omitted.'
+        explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
+        explain2: '[only_strings] like the above, but with the first line omitted.'
         dat: a possible datafile format for AMPL/GMPL use that we have decided to support.
-        default: only_strings.txt
       silent:
         regex: ^(0|1)$
         default: 0
@@ -58,7 +58,7 @@ services:
         default: it
   
   solve:
-    description: 'This service provides you with a solution for a given instance of the LCS problem. You can either upload the instance file using the `-h` option of the `connect` subcommand of `rtal`, or try to input it directly from the terminal (supported only in `only_strings.txt` format) when the service has started. You may also specify a pseudo-random instance by providing its instance description for a selected generator. This last option might ease your calling this service on instances encounterd with other services.'
+    description: 'This service provides you with a solution for a given instance of the LCS problem. You can either upload the instance file on the `instance` handler of the service, using the `-f` option of the `connect` subcommand of `rtal`, or try to input your instance directly from the terminal (supported only in `only_strings` format) once the service has started. You may also specify a pseudo-random instance by providing its instance description for a selected generator. This last option might ease your calling this service on instances encounterd with other services.'
     evaluator: [python, services/solve_server.py]
     files:
       - instance
@@ -66,17 +66,17 @@ services:
       source:
         regex: ^(terminal|randgen_1)$
         default: terminal
-        explain: 'To send to the service an instance contained in a file sitting on your machine, you do not need to set this argument: just call the service with:\n   rtal connect model_lcs solve -finstance=fullpath_of_your_instance_file\nThe service assumes that the first two lines of the file ar just the two input strings. If the format of your file differs from `only_strings.txt` then, please, specify it via the argument `instance_format`. Otherwise, choose the way to input your two strings among:' 
+        explain: 'To send to the service an instance contained in a file sitting on your machine, you do not need to set this argument: just call the service with:\n   rtal connect model_lcs solve -finstance=fullpath_of_your_instance_file\nThe service assumes that the first two lines of the file ar just the two input strings. If the format of your file differs from `only_strings` then, please, specify it via the argument `instance_format`. Otherwise, choose the way to input your two strings among:' 
         explain1: ''
         explain2: '[terminal] you enter your instance (just two strings, one per line; no other formats supported) directly by either typing it directly or through cut and paste.'
         explain3: '[randgen_1] the service works on the pseudo-random instance `randgen_1(<m,n,alphabet,seed>)`. In this case you should specify the values for the service arguments comprising the instance descriptor, when different from their defaul values.'
       instance_format:
-        regex: ^(with_m_and_n.txt|only_strings.txt|dat)$
+        regex: ^(with_m_and_n|only_strings|dat)$
+        default: only_strings
         explain: Use this argument to specify the format of the .txt file containing the instance.
-        explain1: '[with_m_and_n.txt] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
-        explain2: '[only_strings.txt] like the above, but with the first line omitted.'
+        explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
+        explain2: '[only_strings] like the above, but with the first line omitted.'
         dat: a possible datafile format for AMPL/GMPL use that we have decided to support.
-        default: only_strings.txt
       m:
         regex: ^([1-9][0-9]{0,1})$
         default: 4
@@ -173,7 +173,7 @@ services:
       check_solution:
         regex: ^(0|1)$
         default: 0
-        explain: If this flag is set to 1 then, the solution obtained from GLPSOL will be checked. In order to perform this check, it is mandatory that also the input.txt file is sent to the sever via the TA_send_files_bot.py
+        explain: If this flag is set to 1 then, the solution obtained from GLPSOL will be checked. In order to perform this check, it is mandatory that also the input.txt file is also uploaded on the `instance` handler of the service, using the `-f` option of `rtal`.
       instance_format:
         regex: ^(only_strings|with_m_and_n)$
         default: only_strings
@@ -191,8 +191,8 @@ services:
     evaluator: [python, services/get_my_instances_server.py]
     args:
       instance_format:
-        regex: ^(only_strings.txt|with_m_and_n.txt)$
-        default: only_strings.txt
+        regex: ^(only_strings|with_m_and_n)$
+        default: only_strings
         explain: 'choose the format of the instance file.'
       token:
         regex: ^(anonymous|[1-9][0-9]{5,5})$
@@ -202,8 +202,10 @@ services:
         default: it
   
   try_explicit_formulation:
-    description: 'This service takes in input an explicit LP or ILP instance (i.e., a system of linear constraints on a set of real or possibly integer variables (plus, possibly, an objective function) and applies a solver to it in order to obtain a solution. The service returns the outcome of the computation performed by the solver. Call the service with:\n    rtal connect model_lcs try_explicit_formulation -- path_to_bot_dir/TA_send_files_bot.py ef=path_to_your_formulation_file_dir/your_formulation_file\nHere, your formulation file should be valid for the choosen format. See the argument `format` for the currently supported formats.'
+    description: 'This service takes in input an explicit LP or ILP instance (i.e., a system of linear constraints on a set of real or possibly integer variables (plus, possibly, an objective function) and applies a solver to it in order to obtain a solution. The service returns the outcome of the computation performed by the solver. Call the service with:\n    rtal connect -fexp_form=path_to_your_formulation_file_dir/your_formulation_file model_lcs try_explicit_formulation\nHere, your formulation file should be valid for the choosen format. See the argument `format` for the currently supported formats.'
     evaluator: [python, services/try_explicit_formulation_server.py]
+    files:
+      - exp_form
     args:
       display_output:
         regex: ^(0|1)$

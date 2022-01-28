@@ -5,9 +5,10 @@
 #   alphabet (str) the alphabet over which the two strings must be generated
 #   seed (int)
 
-add_format: dat
 add_format: only_strings.txt
 add_format: with_m_and_n.txt
+add_format: dat
+#add_format: gmpl_dat1.dat
 
 collection: instances_hardcoded
 COPY: instances_hardcoded/instance_001_handmade.only_strings.txt

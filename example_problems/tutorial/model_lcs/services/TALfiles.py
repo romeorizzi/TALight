@@ -12,18 +12,19 @@ class TALfilesHelper():
         self.__LOG_FILES = ENV.LOG_FILES
         self.__META_DIR = ENV.META_DIR
 
+
     def exists_input_file(self, file_handler):
         """Checks whether the rtal call to the TAL service has associated a client local file to the handler <file_handler>."""
-        return os.path.exists(os.path.join(self.__ENV.INPUT_FILES, 'file_handler'))
+        return os.path.exists(os.path.join(self.__INPUT_FILES, file_handler))
             
     def input_file_as_str(self, file_handler):
         """Returns, in the form of a single string, the content of the file that the rtal call to the TAL service has associated to the handler <file_handler>."""
-        if not exists_input_file(self, file_handler):
+        if not self.exists_input_file(file_handler):
             self.__TAc.print(f"Your rtal call to the service has associated no file to the handler `{file_handler}'.", "red", ["bold"])
             self.__TAc.print(f"The rtal call to the service has associated no file to the handler `{file_handler}'.", "red", ["bold"], file=stderr)
             exit(0)
         try:
-            path = os.path.join(self.__ENV.INPUT_FILES, 'file_handler')
+            path = os.path.join(self.__INPUT_FILES, file_handler)
             with open(path, 'r') as fin:
                 return fin.read()
         except IOError as ioe:
@@ -38,13 +39,13 @@ class TALfilesHelper():
     def str2output_file(self, content, filename, timestamped = True):
         """Creates an output file to result in local to the client and with the given <content>. The filename is prefixed by a timestamp when timestamped = True."""
         if timestamped:
-            filename = datetime.now(tz=None).strftime("%Y-%b-%d_%H:%M:%S.%f_") + filename
+            filename = datetime.now(tz=None).strftime("%Y-%b-%d_%H.%M.%S.%f_") + filename
         try:
-            with open(os.path.join(self.__ENV.OUTPUT_FILES,output_filename),'w') as fout:
+            with open(os.path.join(self.__OUTPUT_FILES,filename),'w') as fout:
                 print(content, file=fout)
         except os.error as err:
-            TAc.print(f"Fail to write down an output file named `{file_handler}'.", "red", ["bold"])
-            TAc.print(f"Fail to write down an output file named `{file_handler}'.", "red", ["bold"], file=stderr)
+            TAc.print(f"Fail to write down an output file named `{filename}'.", "red", ["bold"])
+            TAc.print(f"Fail to write down an output file named `{filename}'.", "red", ["bold"], file=stderr)
             exit(1)
 
 

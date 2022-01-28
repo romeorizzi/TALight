@@ -71,29 +71,30 @@ for line in gen_lines:
         line_recognized = True
         source_rel_path = line[len(keyword):].strip()
         source_file_path = path.join(GEN_FULLPATH, source_rel_path)
-        format = ".".join(source_rel_path.split(".")[1:])
+        file_full_extension = ".".join(source_rel_path.split(".")[1:])
         if not path.exists(source_file_path):
             print(f"{source_file_path} Not exists!")
             exit(1)
         # Get instance and save (instance_name, instance_id_as_str)
-        source_name = source_rel_path[:-(len(format)+1)] #e.g.: hardcoded/instance1
-        print(f"source_name={source_name}")
-        print(f"copy_name_id={copy_name_id}")
+        source_name = source_rel_path[:-(len(file_full_extension)+1)] #e.g.: hardcoded/instance1
         if source_name not in copy_name_id:
+            print("WARNING overlaps: source_name not in copy_name_id")
             copy_name_id[source_name] = instance_id_as_str
             gendict[instance_id_as_str] = {'collection' : cur_collection}
             instance_id += 1
             instance_id_as_str = str(instance_id).zfill(3)
         cur_id = copy_name_id[source_name]
-        print(f"cur_id={cur_id}")
+        print(f"\nGEN instance_id={cur_id}, by COPY")
+        print(f"-source_name={source_name}")
+        print(f"-copy_name_id={copy_name_id}")
         # Get target path
-        target_filename = f"instance{cur_id}.{format}"
+        target_filename = f"instance{cur_id}.{file_full_extension}"
         print(f"target_filename={target_filename}")
         target_abs_fullpath = path.join(cur_collection_path, target_filename)
         print(f"target_abs_fullpath={target_abs_fullpath}")
         shutil.copy(source_file_path, target_abs_fullpath)
         symlink(target_abs_fullpath, path.join(WHOLECATALOGUE_SUBFOLDER_FULLNAME,target_filename))
-        gendict[cur_id][format] = target_filename
+        gendict[cur_id][file_full_extension] = target_filename
 
     # CASE4:
     keyword = "GEN:"
@@ -105,15 +106,15 @@ for line in gen_lines:
         generator_command = path.join(GEN_FULLPATH, generator_executable)
         # Prepere gen-dictionary
         gendict[instance_id_as_str] = {'collection' : cur_collection}
-        # Create file for each format
-        for format in formats_availables:
-            target_filename = f"instance_{instance_id_as_str}.{format}"
+        # Create file for each format to be made available
+        for file_full_extension in formats_availables:
+            target_filename = f"instance_{instance_id_as_str}.{file_full_extension}"
             target_abs_fullpath = path.join(cur_collection_path, target_filename)
-            system(f"{generator_command} {args} {format} > {target_abs_fullpath}")
+            system(f"{generator_command} {args} {file_full_extension} > {target_abs_fullpath}")
             symlink(target_abs_fullpath, path.join(WHOLECATALOGUE_SUBFOLDER_FULLNAME,target_filename))
 
-            gendict[instance_id_as_str][format] = target_filename
-        print(f"generated instance with instance_id={instance_id}")
+            gendict[instance_id_as_str][file_full_extension] = target_filename
+        print(f"\nInstance {instance_id_as_str} generated and put in the collection `{cur_collection}`.")
         instance_id += 1
         instance_id_as_str = str(instance_id).zfill(3)
 
