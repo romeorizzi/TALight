@@ -47,6 +47,6 @@ while n_ordered < N:
         pos_cmp -= 1
     SM.flush_tmp_buffer_on_pos(pos_cmp + 1, wait_for_receipt=require_receipt)
     n_ordered += 1
-SM.output_final_array(wait_for_receipt=require_receipt)
+SM.output_final_sorted_array(wait_for_receipt=require_receipt)
 
 sleep(1)

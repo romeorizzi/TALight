@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-
 from sys import stdout, stderr, exit, argv
+
+from bot_lib import Bot
 
 
 class InsertionSort:

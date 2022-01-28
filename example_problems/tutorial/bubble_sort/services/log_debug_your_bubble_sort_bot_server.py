@@ -18,8 +18,10 @@ ENV = Env(args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
-bubble_sort = bubble_sort_lib.BubbleSort([])
-ins_sort_ref_iterator = bubble_sort.generate_log_while_sorting()
+# START CODING YOUR SERVICE:
+
+BSM = bubble_sort_lib.BubbleSortMachine([])
+ins_sort_ref_iterator = BSM.generate_log_while_sorting()
 finished = False
 
 array = None

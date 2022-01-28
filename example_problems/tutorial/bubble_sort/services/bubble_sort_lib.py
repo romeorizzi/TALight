@@ -4,7 +4,7 @@ from re import I
 from sys import stdout, stderr, exit, argv
 
 
-class BubbleSort:
+class BubbleSortMachine:
     def __init__(self, input_array):
         self.working_array = input_array
         self.log = []

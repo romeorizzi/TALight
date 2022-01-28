@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import argv, stderr
+from sys import argv
 from time import sleep
 import unittest
 

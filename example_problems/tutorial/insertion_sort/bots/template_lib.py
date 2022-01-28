@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
 from sys import argv
 from time import sleep
-
 import unittest
 
+from bot_lib import Bot
 
 class InsertionSortMachine:
     def __init__(self):
         self.tmp_buffer = None
         self.working_array = []
         self.test_logs = []
+        self.BOT = Bot(report_inputs=True,reprint_outputs=True)
 
     def console(self, log_msg, wait_for_receipt: bool, expected_log: str = None):
+        """This method is used by each basic primitive of the abstract Machine meant to be operated by the algorithm object of study, for which the machine has been designed.
+           The method implementing the primitive calls the console method in order to print the LOG message associated with the primitive.
+           After printing the LOG, the bot can be made to wait for an answer by passing wait_for_receipt = True.
+           The argument <expected_log> is used for self-testing (e.g., in unit testing). 
+        """ 
         assert expected_log is None or log_msg == expected_log
-        sleep(1)
-        print(log_msg)
+        sleep(0.2)
+        self.BOT.print(log_msg)
         self.test_logs.append(log_msg)
         if wait_for_receipt:
             print("Insert a feedback line (or just press RETURN) to continue ...")

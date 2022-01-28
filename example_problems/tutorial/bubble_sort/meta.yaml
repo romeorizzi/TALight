@@ -3,6 +3,7 @@
 public_folder: public
 services:
   log_debug_a_single_bubble_sort_phase:
+    evaluator: [python3, services/log_debug_your_bubble_sort_bot_server.py]
     description: |+
      The BubbleSort algorithm operates in place on an array A of n integer numbers, with the goal to sort it in non-decreasing order. Its basic primitive (checK_consecutive_pair(i)) is to look at a pair of consecutive positions (i,i+1), i=0,...,n-2, and check that A[i] <= A[i+1]. If the check is positive then this primitive just returns 0, otherwise it returns 1 and the elements A[i] and A[i+1] get swapped in the vector A. It follows that an element e=A[i] will ever be moved leftwards (with a call to the primitive) if and only if to the left of e lays an element A[j], j<i, such that A[j]>e. We call such elements weak.
      The algorithm runs in phases and combined in the following structure.
@@ -42,7 +43,6 @@ services:
      If you write your bot in python, then you can conveniently use the class BubbleSortMachine implemented in the `template_lib.py` library.
      In any case, your bot will run on your local machine, operating on the instance contained in the `example_array_of_ints.txt` file (or any other file you might prefer), and a log about its working will be sent to `stdout`.
      It is important to know that you can launch and test your bot in separate; then, when you plug it into the service using the `rtal` command as shown above, the stdout of your bot will be sent directly to the service (and the stdout of the service goes to the stdin of your bot). The purpose of the service is to validate the correctness of your implementation of the Bubble Sort algorithm by accessing its log messages.
-    evaluator: [python3, services/log_debug_your_bubble_sort_bot_server.py]
     args:
       feedback:
         regex: ^(only_signal_first_error|also_tell_what_expected_instead)$
