@@ -42,6 +42,10 @@ services:
      In any case, your bot will run on your local machine, operating on the instance contained in the `example_array_of_ints.txt` file (or any other file you might prefer), and a log about its working will be sent to `stdout`.
      It is important to know that you can launch and test your bot in separate; then, when you plug it into the service using the `rtal` command as shown above, the stdout of your bot will be sent directly to the service (and the stdout of the service goes to the stdin of your bot). The purpose of the service is to validate the correctness of your implementation of the Bubble Sort algorithm by accessing its log messages.
     args:
+      interactive:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the LOG lines are checked one by one.
       feedback:
         regex: ^(only_signal_first_error|also_tell_what_expected_instead)$
         default: only_signal_first_error

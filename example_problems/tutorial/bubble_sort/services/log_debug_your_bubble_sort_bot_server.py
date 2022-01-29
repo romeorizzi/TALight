@@ -11,12 +11,13 @@ import bubble_sort_lib
 problem = "bubble_sort"
 service = "log_debug_a_single_bubble_sort_phase"
 args_list = [
+    ('interactive', bool),
     ('feedback', str),
 ]
 
 ENV = Env(args_list)
 TAc = TALcolors(ENV)
-LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 
 # START CODING YOUR SERVICE:
 
