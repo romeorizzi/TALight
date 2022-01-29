@@ -2,12 +2,13 @@
 
 from sys import stderr
             
-def is_comment(line):
-    return len(line)==0 or line[0]=='#'
-
+def is_comment(line, empty_line_is_comment=True):
+    if empty_line_is_comment:
+        return len(line)==0 or line[0]=='#'
+    return len(line)>0 and line[0]=='#'
                               
 class Bot:
-    def __init__(self, report_inputs=False,reprint_outputs=False, omit_reporting_clines_on_stderr=False, omit_reprinting_clines_on_stderr=False,omit_reporting_clines_on_log_file=False,omit_reprinting_clines_on_log_file=False,log_file_name=None,skip_printing_clines=False, BOT_prefix_to_reported_input_line="# BOT> input_debug got line=",BOT_prefix_to_printed_lines="# BOT> printed="):
+    def __init__(self, report_inputs=False,reprint_outputs=False, omit_reporting_clines_on_stderr=False, omit_reprinting_clines_on_stderr=False,omit_reporting_clines_on_log_file=False,omit_reprinting_clines_on_log_file=False,log_file_name=None,skip_printing_clines=False, BOT_prefix_to_reported_input_line="# BOT> input_debug got line=",BOT_prefix_to_printed_lines="# BOT> printed=", empty_line_is_comment = True):
         """1. when report_inputs=True then every line input by the bot through the class method `input_debug` is reported on stdterr, and also on the log file (if log_file_name != None). However, comment lines (lines starting with the '#' character) are omitted depending on the truth value of the parameters:
               (stderr) omit_reporting_clines_on_stderr
               (log_file) omit_reporting_clines_on_log_file
@@ -24,6 +25,8 @@ class Bot:
         self.omit_reprinting_clines_on_log_file = omit_reprinting_clines_on_log_file
         self.skip_printing_clines=skip_printing_clines
         self.BOT_prefix_to_reported_input_line=BOT_prefix_to_reported_input_line
+        self.BOT_prefix_to_printed_lines=BOT_prefix_to_printed_lines
+        self.empty_line_is_comment = empty_line_is_comment
         
         self.log_file = None
         if log_file_name != None:
@@ -48,11 +51,11 @@ class Bot:
         #---------------------------                
         while True:
             line = input()
-            is_cline = is_comment(line)
+            is_cline = is_comment(line, self.empty_line_is_comment)
             if report_inputs and not (is_cline and omit_reporting_clines_on_stderr):
-                print(BOT_prefix_to_reported_input_line + line, file = stderr)
+                print(self.BOT_prefix_to_reported_input_line + line, file = stderr)
             if log_file != None and not (is_cline and omit_reporting_clines_on_log_file):
-                print(BOT_prefix_to_reported_input_line + line, file = log_file)
+                print(self.BOT_prefix_to_reported_input_line + line, file = log_file)
             if is_cline:
                 if line == '# WE HAVE FINISHED':
                     exit(0)   # exit upon termination of the service server
@@ -78,11 +81,11 @@ class Bot:
         if log_file == 'the_one_of_the_class':
             log_file = self.log_file
         #---------------------------    
-        is_cline = is_comment(line_msg)
+        is_cline = is_comment(line_msg, self.empty_line_is_comment)
         if is_cline and skip_printing_clines:
             return
         print(line_msg)
         if reprint_outputs and not (is_cline and omit_reprinting_clines_on_stderr):
-            print(BOT_prefix_to_printed_lines + line_msg, file = stderr)
+            print(self.BOT_prefix_to_printed_lines + line_msg, file = stderr)
         if log_file and not (is_cline and omit_reprinting_clines_on_log_file):
-            print(BOT_prefix_to_printed_lines + line_msg, file = log_file)
+            print(self.BOT_prefix_to_printed_lines + line_msg, file = log_file)

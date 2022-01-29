@@ -1,0 +1,5 @@
+LOG_input_array (3: 12 11 15)
+LOG_sort_pair_of_consecutive_elements_at_pos 0 1
+LOG_sort_pair_of_consecutive_elements_at_pos 1 2
+LOG_sort_pair_of_consecutive_elements_at_pos 0 1
+LOG_output_final_sorted_array (3: 11 12 15)

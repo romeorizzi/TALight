@@ -31,15 +31,15 @@ must_swap = False
 
 # 1. controllo che prenda in input
 line = input()
-while line[:5] != "#LOG_": # Skipping non-log inputs
+while line[:5] != "LOG_": # Skipping non-log inputs
     line = input()
 
-if "#LOG_input_array" not in line:
+if "LOG_input_array" not in line:
     TAc.print(LANG.render_feedback("no-array-input-first", f'No! Right now I was expecting the loading of the unordered array.'), "yellow", ["bold"])
     exit(0)
 
 # Getting array
-array = line[len("#LOG_input_array got [")+1:-2].split(", ")
+array = line[len("LOG_input_array got [")+1:-2].split(", ")
 array = [int(elem) for elem in array]
 
 
@@ -47,7 +47,7 @@ array = [int(elem) for elem in array]
 while not finished:
     line = input()
     # Skipping non-log inputs
-    while line[:5] != "#LOG_" or "#LOG_output_array" in line: 
+    while line[:5] != "LOG_" or "LOG_output_array" in line: 
         line = input()
 
     # 3. Output
@@ -88,8 +88,8 @@ while not finished:
         # Eseguo swap in locale
         array[cmp_pos], array[cmp_pos+1] = array[cmp_pos+1], array[cmp_pos]
         
-        if("#LOG_swap_consecutive_elements" in line):
-            bot_first_pos = int(line[len("#LOG_swap_consecutive_elements")+1:].split()[0])
+        if("LOG_swap_consecutive_elements" in line):
+            bot_first_pos = int(line[len("LOG_swap_consecutive_elements")+1:].split()[0])
             #print(f"swap - pos: {bot_first_pos} - cmp_pos: {cmp_pos}")
             must_swap = False
             if(bot_first_pos != cmp_pos):

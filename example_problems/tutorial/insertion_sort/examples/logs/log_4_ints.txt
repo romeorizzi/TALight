@@ -1,0 +1,16 @@
+LOG_load_next_input_element_in_tmp_buffer (got 3)
+LOG_flush_tmp_buffer_on_pos 0
+LOG_load_next_input_element_in_tmp_buffer (got 2)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (<)
+LOG_clone_to_its_right_ele_in_pos 0
+LOG_flush_tmp_buffer_on_pos 0
+LOG_load_next_input_element_in_tmp_buffer (got 1)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (<)
+LOG_clone_to_its_right_ele_in_pos 1
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (<)
+LOG_clone_to_its_right_ele_in_pos 0
+LOG_flush_tmp_buffer_on_pos 0
+LOG_load_next_input_element_in_tmp_buffer (got 5)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 2 (>=)
+LOG_flush_tmp_buffer_on_pos 3
+LOG_output_final_sorted_array (4: 1 2 3 5)

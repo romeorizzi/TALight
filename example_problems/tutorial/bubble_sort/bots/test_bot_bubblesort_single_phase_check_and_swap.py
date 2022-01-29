@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 from sys import argv
 from time import sleep
+
 from template_lib import BubbleSortMachine
 
 usage=f"""I am an implementation of the first phase of the BubbleSort algorithm. Call me like this:
-   > {argv[0]}  [ <input_filename> [wait_for_receipt] ]
+   > {argv[0]}  [ <input_filename> [wait_for_prompt] ]
 
    The two (optional) arguments are as follows:
    <input_filename> provides the fullname of a file where the input array is stored. This file comprises two lines:
-       -the first line contains the number <n> of integers to be sorted. 
-       -the second line contains <n> integer numbers separated by spaces.
-   When no argument is given, the input array is taken from stdin, according to the same format.
+         -the first line contains the number <n> of integers to be sorted. 
+         -the second line contains <n> integer numbers separated by spaces.
+       When no argument is given, the input array is taken from stdin, according to the same format.
 
-   [wait_for_receipt] whenever you provide a second argument (its face value is not even checked) then the InsertionSort bot will wait for confirmation at every log step of the InsertionSortMachine it operates.
+   [wait_for_prompt] whenever you provide a second argument (its face value is not even checked) then the bot will wait for a prompt at every, before operating the Sorting Machine primitive and printing the corresponding LOG line.
 """
+
 if len(argv) > 3:
     print(f"Error: you called this executable ({argv[0]}) providing too many arguments ({len(argv)-1} arguments received).")
     print(usage)
@@ -29,15 +31,13 @@ else:
     input_array_of_ints = list(map(int, fin.readline().strip().split()))
     fin.close()
     
+require_prompt = len(argv) > 2
 assert N == len(input_array_of_ints)
-# require_receipt = len(argv) > 2
-require_receipt = False
-
-BSM = BubbleSortMachine()
-BSM.input_array(input_array_of_ints, wait_for_receipt=require_receipt)
+BSM = BubbleSortMachine(wait_for_prompt=require_prompt)
+BSM.input_array(input_array_of_ints)
 
 for i in range(N-1):
-    if(not BSM.compare_consecutive_elements(i, wait_for_receipt=require_receipt)):
-        BSM.swap_consecutive_elements(i, wait_for_receipt=require_receipt)
-BSM.output_array_after_one_single_pass(wait_for_receipt=require_receipt)
+    if(not BSM.compare_consecutive_elements(i)):
+        BSM.swap_consecutive_elements(i)
+BSM.output_array_after_one_single_pass()
 

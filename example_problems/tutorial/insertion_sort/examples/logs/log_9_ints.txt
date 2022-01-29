@@ -1,0 +1,64 @@
+LOG_load_next_input_element_in_tmp_buffer (got 3)
+LOG_flush_tmp_buffer_on_pos 0
+LOG_load_next_input_element_in_tmp_buffer (got 4)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (>=)
+LOG_flush_tmp_buffer_on_pos 1
+LOG_load_next_input_element_in_tmp_buffer (got 1)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (<)
+LOG_clone_to_its_right_ele_in_pos 1
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (<)
+LOG_clone_to_its_right_ele_in_pos 0
+LOG_flush_tmp_buffer_on_pos 0
+LOG_load_next_input_element_in_tmp_buffer (got 8)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 2 (>=)
+LOG_flush_tmp_buffer_on_pos 3
+LOG_load_next_input_element_in_tmp_buffer (got 7)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 3 (<)
+LOG_clone_to_its_right_ele_in_pos 3
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 2 (>=)
+LOG_flush_tmp_buffer_on_pos 3
+LOG_load_next_input_element_in_tmp_buffer (got 6)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 4 (<)
+LOG_clone_to_its_right_ele_in_pos 4
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 3 (<)
+LOG_clone_to_its_right_ele_in_pos 3
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 2 (>=)
+LOG_flush_tmp_buffer_on_pos 3
+LOG_load_next_input_element_in_tmp_buffer (got 3)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 5 (<)
+LOG_clone_to_its_right_ele_in_pos 5
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 4 (<)
+LOG_clone_to_its_right_ele_in_pos 4
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 3 (<)
+LOG_clone_to_its_right_ele_in_pos 3
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 2 (<)
+LOG_clone_to_its_right_ele_in_pos 2
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (>=)
+LOG_flush_tmp_buffer_on_pos 2
+LOG_load_next_input_element_in_tmp_buffer (got 4)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 6 (<)
+LOG_clone_to_its_right_ele_in_pos 6
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 5 (<)
+LOG_clone_to_its_right_ele_in_pos 5
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 4 (<)
+LOG_clone_to_its_right_ele_in_pos 4
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 3 (>=)
+LOG_flush_tmp_buffer_on_pos 4
+LOG_load_next_input_element_in_tmp_buffer (got 2)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 7 (<)
+LOG_clone_to_its_right_ele_in_pos 7
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 6 (<)
+LOG_clone_to_its_right_ele_in_pos 6
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 5 (<)
+LOG_clone_to_its_right_ele_in_pos 5
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 4 (<)
+LOG_clone_to_its_right_ele_in_pos 4
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 3 (<)
+LOG_clone_to_its_right_ele_in_pos 3
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 2 (<)
+LOG_clone_to_its_right_ele_in_pos 2
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (<)
+LOG_clone_to_its_right_ele_in_pos 1
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (>=)
+LOG_flush_tmp_buffer_on_pos 1
+LOG_output_final_sorted_array (9: 1 2 3 3 4 4 6 7 8)

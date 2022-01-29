@@ -74,7 +74,8 @@ class Env:
                 
 
 class Lang:
-    def __init__(self, ENV, TAc, service_server_eval, book_strictly_required=False):
+    def __init__(self, ENV, TAc, service_server_eval, book_strictly_required=False, print_opening_msg = 'delayed'):
+        assert print_opening_msg in ['delayed','never','now']
         self.service_server_eval = service_server_eval
         self.ENV=ENV
         self.TAc=TAc
@@ -123,7 +124,11 @@ class Lang:
                         TAc.print(f"# Recoverable Error: The messages_book file `{self.messages_book_file}` for multilingual feedback could not be accessed.", "red", ["bold"], file=stderr)
                         print(ioe, file=stderr)
                         print(f"# --> We proceed with no support for languages other than English. Don't worry: this is not a big issue.", file=stderr)
-        # END: MESSAGE BOOK LOADING        
+        # END: MESSAGE BOOK LOADING
+        if print_opening_msg == 'now':
+            self.print_opening_msg()
+        elif print_opening_msg == 'never':
+            self.to_be_printed_opening_msg = False
         
     def print_opening_msg(self):
         self.to_be_printed_opening_msg = False

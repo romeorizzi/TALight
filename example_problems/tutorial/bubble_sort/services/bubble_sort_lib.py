@@ -12,20 +12,20 @@ class BubbleSortMachine:
     def swap_consecutive_elements(self, first_position: int):
         second_position = first_position + 1
         self.working_array[first_position], self.working_array[second_position] = self.working_array[second_position], self.working_array[first_position]
-        self.log.append(f"#LOG_swap_consecutive_elements {first_position} {second_position}")
+        self.log.append(f"LOG_swap_consecutive_elements {first_position} {second_position}")
     
     def compare_consecutive_elements(self, first_position: int):
         """Compares element at 'first_position' parameter with the next one."""
         second_position = first_position + 1
 
         if self.working_array[first_position] < self.working_array[second_position]:
-            self.log.append(f"#LOG_compare_consecutive_elements {first_position} (<) {second_position}")
+            self.log.append(f"LOG_compare_consecutive_elements {first_position} (<) {second_position}")
             return True
-        self.log.append(f"#LOG_compare_consecutive_elements {first_position} (>=) {second_position}")
+        self.log.append(f"LOG_compare_consecutive_elements {first_position} (>=) {second_position}")
         return False
 
     def generate_log_while_sorting(self):
-        self.log.append(f"#LOG_input_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})")
+        self.log.append(f"LOG_input_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})")
         yield self.log[-1]
         swap = True
         right_pos = 1
@@ -38,7 +38,7 @@ class BubbleSortMachine:
                     swap = True
                     yield self.log[-1]
             right_pos += 1
-        self.log.append(f"#LOG_output_final_sorted_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})")
+        self.log.append(f"LOG_output_final_sorted_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})")
         yield self.log[-1]
 
 if __name__ == "__main__":

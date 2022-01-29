@@ -2,7 +2,7 @@
 import math
 from bot_lib import Bot
 
-BOT = Bot(report_inputs=True,reprint_outputs=True)
+BOT = Bot(report_inputs=False,reprint_outputs=False)
 
 while True:
     line = BOT.input()
