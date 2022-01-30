@@ -53,9 +53,9 @@ class InsertionSortMachine():
 
     def what_in_tmp_buffer_goes_before_than_what_in_pos(self, i: int):
         if self.tmp_buffer is None:
-            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name, "Ahi, the operator required to compare with others the element contained in the tmp_buffer, but this buffer is empty.")
+            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name+"1", "Ahi, the operator required to compare with others the element contained in the tmp_buffer, but this buffer is empty.")
         if i >= len(self.working_array) or self.working_array[i] is None:
-            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name, f"Ahi, the operator required to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array.")
+            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name+"2", f"Ahi, the operator required to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array.")
         if self.tmp_buffer < self.working_array[i]:
             self.console(f"LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (<)")
             return True
@@ -157,14 +157,7 @@ if __name__ == "__main__":
     tc.assertRaises(AbstractMachineOperatingError, lambda: SM.what_in_tmp_buffer_goes_before_than_what_in_pos(2))
 
     print("\nTEST 6 passed")
+    
+    print("\nConsider adding further tests ...\n")
 
-    print("\nTEST 7: Returning general bad operation error while operating the InsertionSortMachine to sort <2: 12 11>")
-    SM = InsertionSortMachine(wait_for_prompt=False)
-    SM.load_next_input_element_in_tmp_buffer(12)
-    tc.assertEqual(expected_logs[0], SM.log[0])
-    tc.assertRaises(AbstractMachineOperatingError, lambda: SM.flush_tmp_buffer_on_pos(113))
-
-    print("\nTEST 7 passed")
-    print("\nfurther tests ...\n")
-
-    print("OK. All tests have been successfully passed!")
+    print("OK. All considered tests have been successfully passed!")
