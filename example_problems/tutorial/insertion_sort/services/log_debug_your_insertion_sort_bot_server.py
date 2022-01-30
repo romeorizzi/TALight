@@ -21,7 +21,7 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg =
     
 # START CODING YOUR SERVICE:
 
-insertion_sort = insert_sort_lib.InsertionSort([])
+insertion_sort = insert_sort_lib.InsertionSortMachine([])
 ins_sort_ref_iterator = insertion_sort.generate_log_while_sorting()
 finished = False
 time_for_next_load_or_end = True

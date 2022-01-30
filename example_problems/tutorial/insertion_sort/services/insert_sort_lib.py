@@ -4,7 +4,7 @@ from sys import stdout, stderr, exit, argv
 from bot_lib import Bot
 
 
-class InsertionSort:
+class InsertionSortMachine():
     def __init__(self, input_array):
         self.input_stream = input_array
         self.tmp_buffer = None
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     input_array_of_ints = list(map(int, fin.readline().strip().split()))
     fin.close()
     assert N == len(input_array_of_ints)
-    insertion_sort = InsertionSort(input_array_of_ints)
+    insertion_sort = InsertionSortMachine(input_array_of_ints)
     for st in insertion_sort.generate_log_while_sorting():
         print(st)
     print("\nNOW, AFTER WHOLE EXECUTION, LET'S PRINT AGAIN THE WHOLE LOG:")
