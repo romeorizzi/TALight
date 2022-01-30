@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-from sys import argv
+import sys
 from time import sleep
 import unittest
 
 from bot_lib import Bot
+
+class AbstractMachineOperatingError(Exception):
+    pass
 
 class InsertionSortMachine():
     def __init__(self, wait_for_prompt=False):
@@ -26,15 +29,13 @@ class InsertionSortMachine():
 
     def load_next_input_element_in_tmp_buffer(self, val: int):
         if self.tmp_buffer is not None:
-            print(
-                "Ahi, my problem-solver bot is overwriting a yet unflushed value stored in the tmp_buffer. This is going to erase information which will be definitely lost it in the Insertion Sort algorithm approach.")
+            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name, "Ahi, my problem-solver bot is overwriting a yet unflushed value stored in the tmp_buffer. This is going to erase information which will be definitely lost in the Insertion Sort algorithm approach.")
         self.tmp_buffer = val
         self.console(f"LOG_load_next_input_element_in_tmp_buffer (got {val})")
 
     def flush_tmp_buffer_on_pos(self, i: int):
         if self.tmp_buffer is None:
-            print(
-                "Ahi, my problem-solver bot is flushing an empty tmp_buffer. I expect complaints from the checking server.")
+            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name, "Ahi, my problem-solver bot is flushing an empty tmp_buffer. I expect complaints from the checking server.")
         while len(self.working_array) <= i:
             self.working_array.append(None)
         self.working_array[i] = self.tmp_buffer
@@ -43,8 +44,7 @@ class InsertionSortMachine():
 
     def clone_to_its_right_ele_in_pos(self, i: int):
         if not 0 <= i < len(self.working_array):
-            print(
-                f"Ahi, the operator required to clone the element in pos {i} which does not exists since {i} is not in the interval [0,{len(self.working_array)}).")
+            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name, f"Ahi, the operator required to clone the element in pos {i} which does not exists since {i} is not in the interval [0,{len(self.working_array)}).")
         if len(self.working_array) == i+1:
             self.working_array.append(self.working_array[i])
         else:
@@ -53,13 +53,9 @@ class InsertionSortMachine():
 
     def what_in_tmp_buffer_goes_before_than_what_in_pos(self, i: int):
         if self.tmp_buffer is None:
-            print(
-                "Ahi, the operator required to compare with others the element contained in the tmp_buffer, but this buffer is empty. I expect complaints from the checking server.")
-            return False
+            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name, "Ahi, the operator required to compare with others the element contained in the tmp_buffer, but this buffer is empty.")
         if i >= len(self.working_array) or self.working_array[i] is None:
-            print(
-                f"Ahi, the operator required to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array. I expect complaints from the checking server.")
-            return False
+            raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name, f"Ahi, the operator required to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array.")
         if self.tmp_buffer < self.working_array[i]:
             self.console(f"LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (<)")
             return True
@@ -125,39 +121,48 @@ if __name__ == "__main__":
     print("\nTEST 2: Returning tmp_buffer overload error while operating the InsertionSortMachine to sort <2: 12 11>")
 
     SM = InsertionSortMachine(wait_for_prompt=False)
-    SM.load_next_input_element_in_tmp_buffer(12, expected_log=expected_logs[0])
-    tc.assertRaises(AssertionError, lambda: SM.load_next_input_element_in_tmp_buffer(11, expected_log=expected_logs[0]))
+    SM.load_next_input_element_in_tmp_buffer(12)
+    tc.assertEqual(expected_logs[0], SM.log[0])
+    tc.assertRaises(AbstractMachineOperatingError, lambda: SM.load_next_input_element_in_tmp_buffer(11))
 
     print("\nTEST 2 passed")
 
     print("\nTEST 3: Returning empty buffer flushing error while operating the InsertionSortMachine to sort <2: 12 11>")
 
     SM = InsertionSortMachine(wait_for_prompt=False)
-    tc.assertRaises(AssertionError, lambda: SM.flush_tmp_buffer_on_pos(1, expected_log=expected_logs[1]))
-
+    tc.assertRaises(AbstractMachineOperatingError, lambda: SM.flush_tmp_buffer_on_pos(0))
+    
     print("\nTEST 3 passed")
 
     print("\nTEST 4: Returning bad clone error while operating the InsertionSortMachine to sort <2: 12 11>")
-    tc.assertRaises(IndexError, lambda: SM.clone_to_its_right_ele_in_pos(3, expected_log=expected_logs[4]))
+    SM = InsertionSortMachine(wait_for_prompt=False)
+    SM.load_next_input_element_in_tmp_buffer(12)
+    tc.assertEqual(expected_logs[0], SM.log[0])
+    SM.flush_tmp_buffer_on_pos(0)
+    tc.assertEqual(expected_logs[1], SM.log[1])
+    tc.assertRaises(AbstractMachineOperatingError, lambda: SM.clone_to_its_right_ele_in_pos(1))
 
     print("\nTEST 4 passed")
 
     print("\nTEST 5: Returning compare with empty buffer error while operating the InsertionSortMachine to sort <2: 12 11>")
     SM = InsertionSortMachine(wait_for_prompt=False)
-    tc.assertFalse(SM.what_in_tmp_buffer_goes_before_than_what_in_pos(0, expected_log=expected_logs[7]))
+    tc.assertRaises(AbstractMachineOperatingError, lambda: SM.what_in_tmp_buffer_goes_before_than_what_in_pos(0))
 
     print("\nTEST 5 passed")
 
     print("\nTEST 6: Returning compare with bad working array index(2) error while operating the InsertionSortMachine to sort <2: 12 11>")
     SM = InsertionSortMachine(wait_for_prompt=False)
-    SM.load_next_input_element_in_tmp_buffer(12, expected_log=expected_logs[0])
-    tc.assertFalse(SM.what_in_tmp_buffer_goes_before_than_what_in_pos(2, expected_log=expected_logs[7]))
+    SM.load_next_input_element_in_tmp_buffer(12)
+    tc.assertEqual(expected_logs[0], SM.log[0])
+    tc.assertRaises(AbstractMachineOperatingError, lambda: SM.what_in_tmp_buffer_goes_before_than_what_in_pos(2))
 
     print("\nTEST 6 passed")
 
     print("\nTEST 7: Returning general bad operation error while operating the InsertionSortMachine to sort <2: 12 11>")
     SM = InsertionSortMachine(wait_for_prompt=False)
-    tc.assertRaises(AssertionError, lambda: SM.load_next_input_element_in_tmp_buffer(12, expected_log=expected_logs[4]))
+    SM.load_next_input_element_in_tmp_buffer(12)
+    tc.assertEqual(expected_logs[0], SM.log[0])
+    tc.assertRaises(AbstractMachineOperatingError, lambda: SM.flush_tmp_buffer_on_pos(113))
 
     print("\nTEST 7 passed")
     print("\nfurther tests ...\n")
