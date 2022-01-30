@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import sys
-from time import sleep
 import unittest
 
 from abstract_machine_lib import AbstractMachine
@@ -14,18 +13,6 @@ class InsertionSortMachine(AbstractMachine):
         self.input_stream = input_array
         self.tmp_buffer = None
         self.working_array = []
-
-    def console(self, log_msg):
-        """This method is called by each basic primitive of the abstract Sorting Machine. The method implementing the primitive calls the console method in order to print the LOG message associated with the primitive.
-           If self.wait_for_prompt = True then the bot waits for an input line (not beginning with '#') before printing the LOG.
-        """ 
-        if self.wait_for_prompt:
-            line = self.BOT.input()
-        else:
-            sleep(0.1)
-        self.log.append(log_msg)
-        if self.log_on_console:
-            self.BOT.print(log_msg)
 
     def append_to_input_stream(self, new_ele: int):
         self.input_stream.append(new_ele)        
