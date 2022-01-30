@@ -9,31 +9,29 @@ class InsertionSortMachine():
     def __init__(self, wait_for_prompt=False):
         self.tmp_buffer = None
         self.working_array = []
-        self.test_logs = []
+        self.log = []
         self.BOT = Bot(report_inputs = wait_for_prompt,reprint_outputs = wait_for_prompt, BOT_prefix_to_reported_input_line="SERVER> ",BOT_prefix_to_printed_lines="BOT> ", empty_line_is_comment = False)
         self.wait_for_prompt = wait_for_prompt
 
-    def console(self, log_msg, expected_log: str = None):
+    def console(self, log_msg):
         """This method is called by each basic primitive of the abstract Sorting Machine. The method implementing the primitive calls the console method in order to print the LOG message associated with the primitive.
            If self.wait_for_prompt = True then the bot waits for an input line (not beginning with '#') before printing the LOG.
-           The argument <expected_log> is used for self-testing (e.g., in unit testing). 
         """ 
-        assert expected_log is None or log_msg == expected_log
         if self.wait_for_prompt:
             line = self.BOT.input()
         else:
             sleep(0.1)
         self.BOT.print(log_msg)
-        self.test_logs.append(log_msg)
+        self.log.append(log_msg)
 
-    def load_next_input_element_in_tmp_buffer(self, val: int, expected_log: str = None):
+    def load_next_input_element_in_tmp_buffer(self, val: int):
         if self.tmp_buffer is not None:
             print(
                 "Ahi, my problem-solver bot is overwriting a yet unflushed value stored in the tmp_buffer. This is going to erase information which will be definitely lost it in the Insertion Sort algorithm approach.")
         self.tmp_buffer = val
-        self.console(f"LOG_load_next_input_element_in_tmp_buffer (got {val})", expected_log)
+        self.console(f"LOG_load_next_input_element_in_tmp_buffer (got {val})")
 
-    def flush_tmp_buffer_on_pos(self, i: int, expected_log: str = None):
+    def flush_tmp_buffer_on_pos(self, i: int):
         if self.tmp_buffer is None:
             print(
                 "Ahi, my problem-solver bot is flushing an empty tmp_buffer. I expect complaints from the checking server.")
@@ -41,9 +39,9 @@ class InsertionSortMachine():
             self.working_array.append(None)
         self.working_array[i] = self.tmp_buffer
         self.tmp_buffer = None
-        self.console(f"LOG_flush_tmp_buffer_on_pos {i}", expected_log)
+        self.console(f"LOG_flush_tmp_buffer_on_pos {i}")
 
-    def clone_to_its_right_ele_in_pos(self, i: int, expected_log: str = None):
+    def clone_to_its_right_ele_in_pos(self, i: int):
         if not 0 <= i < len(self.working_array):
             print(
                 f"Ahi, the operator required to clone the element in pos {i} which does not exists since {i} is not in the interval [0,{len(self.working_array)}).")
@@ -51,9 +49,9 @@ class InsertionSortMachine():
             self.working_array.append(self.working_array[i])
         else:
             self.working_array[i + 1] = self.working_array[i]
-        self.console(f"LOG_clone_to_its_right_ele_in_pos {i}", expected_log)
+        self.console(f"LOG_clone_to_its_right_ele_in_pos {i}")
 
-    def what_in_tmp_buffer_goes_before_than_what_in_pos(self, i: int, expected_log: str = None):
+    def what_in_tmp_buffer_goes_before_than_what_in_pos(self, i: int):
         if self.tmp_buffer is None:
             print(
                 "Ahi, the operator required to compare with others the element contained in the tmp_buffer, but this buffer is empty. I expect complaints from the checking server.")
@@ -63,13 +61,13 @@ class InsertionSortMachine():
                 f"Ahi, the operator required to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array. I expect complaints from the checking server.")
             return False
         if self.tmp_buffer < self.working_array[i]:
-            self.console(f"LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (<)", expected_log)
+            self.console(f"LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (<)")
             return True
-        self.console(f"LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (>=)", expected_log)
+        self.console(f"LOG_compare_what_in_tmp_buffer_with_what_in_pos {i} (>=)")
         return False
 
-    def output_final_sorted_array(self, expected_log: str = None):
-        self.console(f"LOG_output_final_sorted_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})", expected_log)
+    def output_final_sorted_array(self):
+        self.console(f"LOG_output_final_sorted_array ({len(self.working_array)}: {' '.join(map(str,self.working_array))})")
         if self.wait_for_prompt:
             self.BOT.input() # to wait for termination by the server
 
@@ -100,27 +98,30 @@ if __name__ == "__main__":
     ]
 
     SM = InsertionSortMachine(wait_for_prompt=False)
-    SM.load_next_input_element_in_tmp_buffer(12, expected_log=expected_logs[0])
-    SM.flush_tmp_buffer_on_pos(0, expected_log=expected_logs[1])
-    SM.load_next_input_element_in_tmp_buffer(11, expected_log=expected_logs[2])
-    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(0, expected_log=expected_logs[3])
-    SM.clone_to_its_right_ele_in_pos(0, expected_log=expected_logs[4])
-    SM.flush_tmp_buffer_on_pos(0, expected_log=expected_logs[5])
-    SM.load_next_input_element_in_tmp_buffer(15, expected_log=expected_logs[6])
-    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1, expected_log=expected_logs[7])
-    SM.flush_tmp_buffer_on_pos(2, expected_log=expected_logs[8])
-    SM.load_next_input_element_in_tmp_buffer(13, expected_log=expected_logs[9])
-    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(2, expected_log=expected_logs[10])
-    SM.clone_to_its_right_ele_in_pos(2, expected_log=expected_logs[11])
-    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1, expected_log=expected_logs[12])
-    SM.flush_tmp_buffer_on_pos(2, expected_log=expected_logs[13])
-    SM.output_final_sorted_array(wait_for_prompt=False, expected_log=expected_logs[14])
+    SM.load_next_input_element_in_tmp_buffer(12)
+    SM.flush_tmp_buffer_on_pos(0)
+    SM.load_next_input_element_in_tmp_buffer(11)
+    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(0)
+    SM.clone_to_its_right_ele_in_pos(0)
+    SM.flush_tmp_buffer_on_pos(0)
+    SM.load_next_input_element_in_tmp_buffer(15)
+    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1)
+    SM.flush_tmp_buffer_on_pos(2)
+    SM.load_next_input_element_in_tmp_buffer(13)
+    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(2)
+    SM.clone_to_its_right_ele_in_pos(2)
+    SM.what_in_tmp_buffer_goes_before_than_what_in_pos(1)
+    SM.flush_tmp_buffer_on_pos(2)
+    SM.output_final_sorted_array()
 
-    for e1, e2 in zip(expected_logs, SM.test_logs):
+    for e1, e2 in zip(expected_logs, SM.log):
         tc.assertEqual(e1, e2)
 
     print("\nTEST 1 passed")
 
+    print("\nI PROSSIMI TEST SONO DA RIORGANIZZARE DIVERSAMENTE, LE PRIMITIVE DELLA MACCHINA NON DEVONO PRENDERE expected_log COME ARGOMENTO")
+
+    
     print("\nTEST 2: Returning tmp_buffer overload error while operating the InsertionSortMachine to sort <2: 12 11>")
 
     SM = InsertionSortMachine(wait_for_prompt=False)

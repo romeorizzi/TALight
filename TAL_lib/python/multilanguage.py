@@ -218,7 +218,7 @@ class TALcolors:
             else:
                 self.goals[goal]['numNo'] += 1
         self.print("# ", "yellow", end="")
-        self.print("No! ", "red", ["blink", "bold"], end="")
+        self.print("No! ", "red", ["bold"], end="")
 
     def OK(self, goal = None):
         if goal == None:
