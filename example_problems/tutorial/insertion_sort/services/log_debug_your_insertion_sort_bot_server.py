@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-from sys import exit
-from time import sleep
-
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-import insert_sort_lib
+from insert_sort_lib import InsertionSort_machine_plus_algo
 
 # METADATA OF THIS TAL_SERVICE:
 problem = "insert_sort"
@@ -21,7 +18,7 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg =
     
 # START CODING YOUR SERVICE:
 
-insertion_sort = insert_sort_lib.InsertionSortMachine([])
+insertion_sort = InsertionSort_machine_plus_algo([], log_on_console=False)
 ins_sort_ref_iterator = insertion_sort.generate_log_while_sorting()
 finished = False
 time_for_next_load_or_end = True
@@ -39,7 +36,7 @@ try:
             new_ele = int(line.split("(got ")[1].split(")")[0])
             insertion_sort.append_to_input_stream(new_ele)
             time_for_next_load_or_end = False
-        if "LOG_flush_tmp_buffer_on_pos" in line:
+        if "LOG_flush_tmp_buffer_ele_in_pos" in line:
             time_for_next_load_or_end = True
         if "LOG_output_final_sorted_array" in line:
             if not time_for_next_load_or_end:

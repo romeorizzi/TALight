@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 from sys import argv
-from time import sleep
 
-from template_lib import InsertionSortMachine
+from insert_sort_machine_lib import InsertionSortMachine
 
 usage=f"""Call me like this:
    > {argv[0]}  [ <input_filename> [wait_for_prompt] ]
@@ -33,16 +32,16 @@ else:
 
 require_prompt = len(argv) > 2
 assert N == len(input_array_of_ints)
-SM = InsertionSortMachine(wait_for_prompt=require_prompt)
+SM = InsertionSortMachine(input_array_of_ints, wait_for_prompt=require_prompt)
 
 n_ordered = 0
 while n_ordered < N:
-    SM.load_next_input_element_in_tmp_buffer(input_array_of_ints[n_ordered])
+    SM.load_next_input_element_in_tmp_buffer()
     pos_cmp = n_ordered - 1
-    while pos_cmp >= 0 and SM.what_in_tmp_buffer_goes_before_than_what_in_pos(pos_cmp):
+    while pos_cmp >= 0 and SM.compare_ele_in_tmp_buffer_with_ele_in_pos(pos_cmp):
         SM.clone_to_its_right_ele_in_pos(pos_cmp)
         pos_cmp -= 1
-    SM.flush_tmp_buffer_on_pos(pos_cmp + 1)
+    SM.flush_tmp_buffer_ele_in_pos(pos_cmp + 1)
     n_ordered += 1
 SM.output_final_sorted_array()
 

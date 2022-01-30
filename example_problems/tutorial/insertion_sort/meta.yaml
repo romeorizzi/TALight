@@ -7,9 +7,9 @@ services:
     description: |+
      This service is meant to supervision and validate your understanding and/or implementation of the InsertionSort algorithm while also supporting the authonomous discovery of this classical algorithm. The idea is to consider the InsertionSort algorithm as a recipt for operating an abstract InsertionSortMachine offering a restricted set of possible primitive operations on an expandable internal array (where the already sorted integers are stored) and a temporary buffer (where to load a new incoming integer). Upon execution of each one of these primitive operations, the abstract machine yields a predetermined log line that unambiguosly represents what has happened. The possible operations of the abstract InsertionSortMachine can be inferred by the list of the possible log lines (one for every operation):  
         LOG_load_next_input_element_in_tmp_buffer <val>
-        LOG_flush_tmp_buffer_on_pos <i>
+        LOG_flush_tmp_buffer_ele_in_pos <i>
         LOG_clone_to_its_right_ele_in_pos <i>
-        LOG_compare_what_in_tmp_buffer_with_what_in_pos <i> <outcome>
+        LOG_compare_ele_in_tmp_buffer_with_ele_in_pos <i> <outcome>
         LOG_output_final_sorted_array <final_array>
      The service validates your correct understanding/implementation of the InsertionSort algorithm by check the coherence of the resulting log sequence, or signals the very first anomaly in behaviour based only on such log lines.
      The abstract machine is designed in such a way that there exists a unique recipt for operating it in such a way to always guarantee the success in ultimately outputting as final array the sorted list of incoming elements, whatever these elements turn out to be in the future of the online process. And this unique corrept recipt essentially is the InsertionSort algorithm archetype.
@@ -56,7 +56,7 @@ services:
      In a call to this service you plug in your insert_sort bot remotely running on an instance of us. Your bot will access the array to be sorted only through the following primities
         CMD_GET_DIM <n>
         CMD_LOAD_NEXT_INPUT_ELEMENT_IN_TMP_BUFFER [the server answers 1 if the operation is successfull and 0 when there are no other input elements]
-        CMD_FLUSH_TMP_BUFFER_ON_POS <i>
+        CMD_FLUSH_TMP_BUFFER_ELE_IN_POS <i>
         CMD_CLONE_TO_ITS_RIGHT_ELE_IN_POS <i>
         CMD_COMPARE_WHAT_IN_TMP_BUFFER_WITH_WHAT_IN_POS <i> [the server answers < or >= ]
         CMD_FINISHED
