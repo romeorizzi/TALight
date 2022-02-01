@@ -91,7 +91,7 @@ def test(instance):
     TAc.print(n, "yellow", ["bold"])
     TAc.print(LANG.render_feedback("triangle-instance",'# Triangle instance of reference:'), "white", ["bold"])
     tl.print_triangle(triangle)
-    TAc.print(LANG.render_feedback("ask-path", f'\n# Given this triangle, can you provide a feasible solution?'),"white",["bold"])
+    TAc.print(LANG.render_feedback("ask-path", f'# Given this triangle, can you provide a feasible solution?'),"white",["bold"])
     start = monotonic()
     answer = TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
     end = monotonic()
@@ -110,7 +110,6 @@ for goal in goals:
         if instance['measured_time'] > MAX_TIME:
             out_of_time += 1
             tl.print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG)
-            exit(0)
-            
-    tl.print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG)
+            exit(0)            
+tl.print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG)
 exit(0)

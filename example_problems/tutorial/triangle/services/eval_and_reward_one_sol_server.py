@@ -109,5 +109,5 @@ for goal in goals:
             tl.print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG)
             exit(0)
             
-    tl.print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG)
+tl.print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG)
 exit(0)

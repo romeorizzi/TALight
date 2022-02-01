@@ -16,6 +16,7 @@ usage=f"""# I am a bot that always provides the wrong answer. Call me with:
 # BOT = Bot(report_inputs=True,reprint_outputs=True)
 BOT = Bot(report_inputs=False,reprint_outputs=False)
 
+
 def fits(start,livello,big_triangle,small_triangle,small_size):
     last_visited = start
     indexes = [start]
@@ -23,7 +24,7 @@ def fits(start,livello,big_triangle,small_triangle,small_size):
         last_visited += livello
         for j in range(i + 1):
             indexes.append(last_visited+j)
-        last_visited += 1 
+        last_visited += 1
     for i in range(len(indexes)):
         if small_triangle[i] != big_triangle[indexes[i]]:
             return False,[]
@@ -46,11 +47,11 @@ def calculate_path(triangle,path_values):
         if(move == "L"):
             path.append(triangle_array[i+1 + last_pos])
             s += triangle_array[i+1 + last_pos]
-            last_pos += i + 1 
+            last_pos += i + 1
         else:
             path.append(triangle_array[i+2 + last_pos])
             s += triangle_array[i+2 + last_pos]
-            last_pos += i + 2 
+            last_pos += i + 2
         i += 1
     return s
 
@@ -76,11 +77,11 @@ def best_reward_and_path(triangle):
     for j in range(dist-1):
         if triangle_array[j+1 + last_pos] > triangle_array[j+2 + last_pos] :
             path += "L"
-            last_pos += j + 1 
+            last_pos += j + 1
         else:
             path += "R"
-            last_pos += j + 2 
-    return reward,path
+            last_pos += j + 2
+    return [reward,path]
 
 if len(argv) != 2 or argv[1]=='0':
     print("# Error! Wrong number of arguments.")
@@ -96,8 +97,8 @@ def yield_feasible_solution_bot():
             BOT.input() # eat the n rows of the triangle
         directions = ['L','R']
         answer = "".join(random.choices(directions,k=n-1))
-        print(answer+"R")
-
+        print(answer+"L")
+        
 #  CHECK AND REWARD ONE SOL
 def check_and_reward_one_solution_bot():
     while True:
@@ -108,67 +109,53 @@ def check_and_reward_one_solution_bot():
             t.append(map(int,BOT.input().split()))
         path = BOT.input().strip()
         print(calculate_path(t,path)+1)
-        
-# MAIN:
-if argv[1] == "1":
-    yield_feasible_solution_bot()
-if argv[1] == "2":
-    check_and_reward_one_solution_bot()
 
-# EVAL BEST SOL
-if argv[1] == "3":
+#  EVAL BEST SOL
+def eval_best_solution_bot():
     while True:
         check_also_sol = False
-        #get triangle size:
-        BOT.input() # eat triangle size statement
+        # get triangle size:
         n = int(BOT.input())
         # get/eat triangle instance:
-        for i in range(n+1):
-            BOT.input() # eat triangle-instance statement + n rows
-        # get triangle:
-        BOT.input() # eat triangle array statement
-        triangle = eval(BOT.input())
+        triangle = []
+        for i in range(n):
+            triangle.append(map(int, BOT.input().split()))
         # get check_also_sol
-        BOT.input() # eat check_also_sol statement
-        if BOT.input() == "True":
+        if eval(BOT.input()):
             check_also_sol = True
         # give your answer:
         if check_also_sol:
-            best_reward,best_path = best_reward_and_path(triangle)
+            [best_reward,best_path] = best_reward_and_path(triangle)
             # reward
-            BOT.input() # eat reward statement
-            print(best_reward+1)
             # path
-            BOT.input() # eat path statement
-            print(best_path+"L")
+            print(str(best_reward+1)+best_path)
         else:
-            best_reward,_ = best_reward_and_path(triangle)
+            [best_reward, _] = best_reward_and_path(triangle)
             # reward
-            BOT.input() # eat reward statement
             print(best_reward+1)
-    exit(0)
 
-# EVAL NUMBER OF TRIANGLES IN TRIANGLE
-if argv[1] == "4":
+#  NUMBER OF TRIANGLES IN TRIANGLE 
+def eval_number_of_triangles_in_triangle_bot():
     while True:
         # get small triangle size:
-        BOT.input() # eat small triangle size statement
         l = int(BOT.input())
         # get big triangle size:
-        BOT.input() # eat big triangle size statement
         L = int(BOT.input())
-        # get small triangle array: 
-        BOT.input() # eat small triangle array statement
-        small_array = eval(BOT.input())
-        # get big triangle array: 
-        BOT.input() # eat big triangle array statement
-        big_array = eval(BOT.input())
+        # get small triangle array:
+        small_triangle = []
+        for i in range(l):
+            small_triangle.append(map(int, BOT.input().split()))
+        # get big triangle array:
+        big_triangle = []
+        for i in range(L):
+            big_triangle.append(map(int, BOT.input().split()))
         # give your answer:
-        BOT.input() # eat prompt
+        big_array = cast_to_array(big_triangle)
+        small_array = cast_to_array(small_triangle)
         answer = 0
         livello = 1
         indexes = []
-        for i in range(int(((L-l+1)*(L-l+2))/2)):   
+        for i in range(int(((L-l+1)*(L-l+2))/2)):
             if i >= livello*(livello+1)/2:
                 livello +=1
             if big_array[i] == small_array[0]:
@@ -176,4 +163,13 @@ if argv[1] == "4":
                     indexes.append(fits(i,livello,big_array,small_array,l)[1])
                     answer += 1
         print(answer+1)
-    exit(0)
+        
+# MAIN:
+if argv[1] == "1":
+    yield_feasible_solution_bot()
+if argv[1] == "2":
+    check_and_reward_one_solution_bot()
+if argv[1] == "3":
+    eval_best_solution_bot()
+if argv[1] == "4":
+    eval_number_of_triangles_in_triangle_bot()
