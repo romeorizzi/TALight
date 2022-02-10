@@ -177,7 +177,7 @@ class ModellingProblemHelper():
             
 
     # MANAGE INPUTS/GENDICT FILES -------------------
-    def get_path_from_id(self, id, format):
+    def get_path_from_id(self, id, format_name):
         """Returns the path to the file selected with id."""
         # Read gen-dictionary
         id_as_string = str(id).zfill(3)
@@ -195,9 +195,9 @@ class ModellingProblemHelper():
             self.__TAc.print(f"Fail to read/parse the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
         # get path from gen-dictionary
         try:
-            return os.path.join(self.__all_instances_path, info[format])
+            return os.path.join(self.__all_instances_path, info[format_name])
         except KeyError as err:
-            self.__TAc.print(f"The format={format} is invalid.", "red", ["bold"])
+            self.__TAc.print(f"The format={format_name} is invalid.", "red", ["bold"])
             exit(0)
 
 
@@ -210,9 +210,9 @@ class ModellingProblemHelper():
             self.__TAc.print(f"Fail to open the file: {path}", "red", ["bold"])
             exit(0)
 
-    def get_file_str_from_id(self, id, format):
+    def get_file_str_from_id(self, id, format_name):
         """Returns the contents of the file as a string with the selected id."""
-        return self.get_file_str_from_path(self.get_path_from_id(id, format))
+        return self.get_file_str_from_path(self.get_path_from_id(id, format_name))
 
     def get_instances_paths_in(self, dir_name):
         """Returns the list of all file_path in the inputs directory grouped by instance"""

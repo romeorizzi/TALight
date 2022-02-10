@@ -5,7 +5,7 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from bot_interface import service_server_requires_and_gets_the_only_file
 
-import model_lcs_lib as ll
+import lcs_lib as ll
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [

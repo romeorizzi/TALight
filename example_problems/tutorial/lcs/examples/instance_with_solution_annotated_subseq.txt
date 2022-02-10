@@ -1,0 +1,4 @@
+G A A A A C T
+C C A C C G G
+A 4 2
+C 5 3
