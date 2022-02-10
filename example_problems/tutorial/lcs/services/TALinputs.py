@@ -1,1 +1,1 @@
-/home/romeo/TALight/TAL_lib/python/TALinputs.py
+../../../../TAL_lib/python/TALinputs.py
