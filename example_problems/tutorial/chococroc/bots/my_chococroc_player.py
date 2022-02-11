@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 from bot_lib import Bot
+
 import chococroc_lib as cl
 
-BOT = Bot(report_inputs=True,reprint_outputs=True)
+BOT = Bot(report_inputs=False,reprint_outputs=False)
 
 while True:
     line = BOT.input()

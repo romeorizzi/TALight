@@ -234,6 +234,7 @@ class TALcolors:
     def GotBored(self):
         self.print("# I got bored (too much load on the server)", "white")
 
-    def Finished(self):
-        self.print(f"\n# SUMMARY OF RESULTS\n#    Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
+    def Finished(self,only_term_signal=False):
+        if not only_term_signal:
+            self.print(f"\n# SUMMARY OF RESULTS\n#    Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
         self.print(f"\n# WE HAVE FINISHED", "white")
