@@ -117,7 +117,7 @@ while True:
     
     TAc.print(LANG.render_feedback("your-turn-play-val", f'# It is your turn to move from conf <chococroc(m={m},n={n}) + nim(height={nim})> of the MeasuringGame(Chococroc) game to a new conf of the MeasuringGame(Chococroc) game <chococroc(m\',n\') + nim(height\')>. You should move either on the chococroc component or on the nim component of the game.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("user-move-play-val", f'# Please, insert the three integers m\', n\' and height\' encoding the new configuration produced by your move just underneath the current position we put you into: '), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("prompt", f'{m} {n} {nim}'), "yellow", ["bold"])    
+    TAc.print(LANG.render_feedback("prompt_nim", f'{m} {n} {nim}'), "yellow", ["bold"])
     new_m,new_n,new_nim = TALinput(int, 3, TAc=TAc)
     if new_m != m and new_n != n:
         TAc.print(LANG.render_feedback("not-valid", f'# No! Your move from conf <chococroc({m},{n}) + nim({nim})> to conf <chococroc({new_m},{new_n}) + ({new_nim})> is not valid.'), "red", ["bold"])
