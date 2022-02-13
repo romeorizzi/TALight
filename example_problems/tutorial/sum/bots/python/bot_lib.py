@@ -1,1 +1,1 @@
-/home/romeo/TALight/TAL_lib/python/bot_lib.py
+../../../../../TAL_lib/python/bot_lib.py
