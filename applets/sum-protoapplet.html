@@ -1,92 +1,102 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8"/>
-<title>Prototype RTAL</title>
-<script>
-let codename = "sum";
-let service = "free_sum";
-let numbers = "twodigits";
-  
-class RTAL {
-    constructor(url, problem, service, args = {}, callback) {
-        let self = this;
-        this.ready = false;
-        this.ws = new WebSocket(url);
-        this.ws.onmessage = (function(e) {
-            if(self.ready) {
-                let fs = new FileReader();
-                fs.onload = (function(r) {
-                    callback(r.target.result);
-                });
-                fs.readAsText(e.data);
-            } else {
-                let res = JSON.parse(e.data);
-                if(res.command == "ConnectionBegin") {
-                    self.ready = true;
-                }
-            }
-        });
-        this.ws.onopen = (function() {
-            let req = {
-                "magic": "rtal",
-                "version": 1,
-                "command": {
-                    "ConnectionRequest": {
-                        "codename": problem,
-                        "service": service,
-                        "args": args,
-                        "isatty": false
+    <meta charset="UTF-8" />
+    <title>Prototype RTAL</title>
+    <script>
+        let codename = "sum";
+        let service = "free_sum";
+        let numbers = "twodigits";
+
+        class RTAL {
+            constructor(url, problem, service, args = {}, callback) {
+                let self = this;
+                this.ready = false;
+                this.ws = new WebSocket(url);
+                this.ws.onmessage = (function (e) {
+                    if (self.ready) {
+                        let fs = new FileReader();
+                        fs.onload = (function (r) {
+                            callback(r.target.result);
+                        });
+                        fs.readAsText(e.data);
+                    } else {
+                        let res = JSON.parse(e.data);
+                        if ("Handshake" in res) {
+                            if (res.Handshake.magic == "rtal" && res.Handshake.version == 2) {
+                                let req = {
+                                    "ConnectBegin": {
+                                        "problem": problem,
+                                        "service": service,
+                                        "args": args,
+                                        "tty": false,
+                                        "files": []
+                                    }
+                                };
+                                self.ws.send(JSON.stringify(req));
+                            }
+                        } else if ("ConnectStart" in res) {
+                            self.ready = true;
+                        }
                     }
-                }
-            };
-            self.ws.send(JSON.stringify(req));
-        });
-    }
+                });
+                this.ws.onopen = (function () {
+                    let req = {
+                        "Handshake": {
+                            "magic": "rtal",
+                            "version": 2
+                        }
+                    };
+                    self.ws.send(JSON.stringify(req));
+                });
+            }
 
-    isReady() {
-        return this.ready;
-    }
+            isReady() {
+                return this.ready;
+            }
 
-    send(text) {
-        let encoder = new TextEncoder();
-        let encoded = encoder.encode(text + "\n");
-        this.ws.send(new Blob([encoded]));
-    }
-}
+            send(text) {
+                let encoder = new TextEncoder();
+                let encoded = encoder.encode(text + "\n");
+                this.ws.send(new Blob([encoded]));
+            }
+        }
 
-function logger_write(text) {
-    let logger = document.getElementById("log");
-    logger.innerHTML += text;
-    logger.scrollTop = logger.scrollHeight;
-}
+        function logger_write(text) {
+            let logger = document.getElementById("log");
+            logger.innerHTML += text;
+            logger.scrollTop = logger.scrollHeight;
+        }
 
-function cb(e) {
-    logger_write("< " + e);
-}
+        function cb(e) {
+            logger_write("< " + e);
+        }
 
-let rtal = new RTAL("ws://127.0.0.1:8080/", codename, service, {"numbers": numbers}, cb);
+        let rtal = new RTAL("ws://127.0.0.1:8008/", codename, service, { "numbers": numbers }, cb);
 
-function sender(obj) {
-    if(event.keyCode == 13) {
-        rtal.send(obj.value);
-        logger_write("> " + obj.value + "\n");
-        obj.value = "";
-    }
-}
-</script>
-<style>
-#log {
-    resize: none;
-    width: 100%;
-    height: 500px;
-}
-</style>
+        function sender(obj) {
+            if (event.keyCode == 13) {
+                rtal.send(obj.value);
+                logger_write("> " + obj.value + "\n");
+                obj.value = "";
+            }
+        }
+    </script>
+    <style>
+        #log {
+            resize: none;
+            width: 100%;
+            height: 500px;
+        }
+    </style>
 </head>
+
 <body>
-<div id="cnt">
-    <textarea id="log" readonly></textarea>
-    <input type="text" class="search" onkeydown="sender(this);"/>
-</div>
+    <div id="cnt">
+        <textarea id="log" readonly></textarea>
+        <input type="text" class="search" onkeydown="sender(this);" />
+    </div>
 </body>
+
 </html>
