@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from sys import argv
 from bot_lib import Bot
-
+import random
 
 BOT = Bot(report_inputs=True,reprint_outputs=True)
 
@@ -11,9 +11,10 @@ def compare(pos_cmp):
     cmp = True if cmp == '<' else False # true <, False >=
     return cmp
 
-# Asking dimensions
-print("CMD_GET_DIM")
-N = int(BOT.input())
+# Sending dimension
+max_array = 20
+N = random.randint(1, max_array)
+print(f"CMD_GET_DIM {N}")
 
 n_ordered = 0
 while n_ordered < N:
