@@ -18,15 +18,6 @@ args_list = [
     ('interactive', bool)
 ]
 
-'''
-CMD_GET_DIM <n>
-CMD_LOAD_NEXT_INPUT_ELEMENT_IN_TMP_BUFFER [the server answers 1 if the operation is successfull and 0 when there are no other input elements]
-CMD_FLUSH_TMP_BUFFER_ELE_IN_POS <i>
-CMD_CLONE_TO_ITS_RIGHT_ELE_IN_POS <i>
-CMD_COMPARE_WHAT_IN_TMP_BUFFER_WITH_WHAT_IN_POS <i> [the server answers < or >= ]
-CMD_FINISHED
-'''
-
 ENV = Env(args_list)
 TAc = TALcolors(ENV)
 LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
@@ -71,10 +62,12 @@ try:
 
         if("CMD_COMPARE_WHAT_IN_TMP_BUFFER_WITH_WHAT_IN_POS") in line:
             cmp = insertion_sort.compare_ele_in_tmp_buffer_with_ele_in_pos(int(line[-1]))
+            cmp = '<' if cmp == True else '>=' # true <, False >=
             print(cmp)
 
         if "CMD_LOAD_NEXT_INPUT_ELEMENT_IN_TMP_BUFFER" in line:
             if not time_for_next_load_or_end:
+                print(f"! porca merda", file=stderr)
                 TAc.print(LANG.render_feedback("wrong-place-for-loading-a-new-ele", f'No! Right now I was not expecting the loading of a new element in the tmp_buffer since the tmp_buffer is NOT empty! It currently contains the integer {new_ele}.'), "yellow", ["bold"])
                 exit(0)
             
@@ -86,25 +79,31 @@ try:
 
                 insertion_sort.append_to_input_stream(new_ele)
                 time_for_next_load_or_end = False
-        if "LOG_flush_tmp_buffer_ele_in_pos" in line:
+        if "CMD_FLUSH_TMP_BUFFER_ELE_IN_POS" in line:
             time_for_next_load_or_end = True
-        if "LOG_output_final_sorted_array" in line:
+
+        if "CMD_FINISHED" in line:
             if not time_for_next_load_or_end:
                 TAc.print(LANG.render_feedback("wrong-place-for-final-output", f'No! Right now I was not expecting the output of the final array since an element introduced in the tmp_buffer (the integer {new_ele}) is still there!'), "yellow", ["bold"])
                 exit(0)
             else:
                 finished = True
         
-        std_line = next(ins_sort_ref_iterator)
-        print(f"> {std_line}", file=stderr)
+        std_line = next(ins_sort_ref_iterator).upper().split(' (')[0]
+        std_line = std_line.replace("COMPARE_ELE_", "COMPARE_WHAT_").replace("WITH_ELE_IN","WITH_WHAT_IN")
+        
         '''
-        if std_line == line:
+        if(std_line[3:] == line[3:]):
             TAc.OK()
             TAc.print(LANG.render_feedback("line-of-log-ok", f'Your log is fully coherent till here ({std_line})'), "yellow", ["bold"])
         else:
             TAc.print(LANG.render_feedback("line-of-log-wrong", f'No! Here, the InsertionSort algorithm once implemented on our InsertionSortMachine would have produced the following line of log "{std_line}"'), "yellow", ["bold"])
             exit(0)
         '''
+        if(std_line[3:] != line[3:]):
+            TAc.print(LANG.render_feedback("line-of-log-wrong", f'No! Here, the InsertionSort algorithm once implemented on our InsertionSortMachine would have produced the following line of log "{std_line}"'), "yellow", ["bold"])
+            exit(0)
+
 except AbstractMachineOperatingError as inst:
     err_code, err_msg = inst.args
     TAc.print(LANG.render_feedback(err_code, f'No! Error in operating the InsertionSort Abstract Machine: {err_msg}'), "red", ["bold"])
