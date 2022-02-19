@@ -58,4 +58,6 @@ except AbstractMachineOperatingError as inst:
     exit(0)
 
 TAc.print(LANG.render_feedback("final-congrats",'CONGRATS! The log sent to the service id fully coherent with the execution of InsertionSort. \u2714'), "yellow", ["bold"])
+
+TAc.Finished(only_term_signal=True)
 exit(0)

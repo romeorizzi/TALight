@@ -2,11 +2,6 @@
 
 from sys import stderr
             
-def is_comment(line, empty_line_is_comment=True):
-    if empty_line_is_comment:
-        return len(line)==0 or line[0]=='#'
-    return len(line)>0 and line[0]=='#'
-                              
 class Bot:
     def __init__(self, report_inputs=False,reprint_outputs=False, omit_reporting_clines_on_stderr=False, omit_reprinting_clines_on_stderr=False,omit_reporting_clines_on_log_file=False,omit_reprinting_clines_on_log_file=False,log_file_name=None,skip_printing_clines=False, BOT_prefix_to_reported_input_line="# BOT> input_debug got line=",BOT_prefix_to_printed_lines="# BOT> printed=", empty_line_is_comment = True):
         """1. when report_inputs=True then every line input by the bot through the class method `input_debug` is reported on stdterr, and also on the log file (if log_file_name != None). However, comment lines (lines starting with the '#' character) are omitted depending on the truth value of the parameters:
@@ -33,6 +28,14 @@ class Bot:
             self.log_file = open(log_file_name, 'w')
             
 
+    def is_comment(line, empty_line_is_comment='default'):
+        assert empty_line_is_comment in ['default', True, False]
+        if empty_line_is_comment == default:
+            empty_line_is_comment = self.empty_line_is_comment
+        if empty_line_is_comment:
+            return len(line)==0 or line[0]=='#'
+        return len(line)>0 and line[0]=='#'
+                              
     def input(self, report_inputs=None,
                     omit_reporting_clines_on_stderr=None,
                     omit_reporting_clines_on_log_file=None,
@@ -81,7 +84,7 @@ class Bot:
         if log_file == 'the_one_of_the_class':
             log_file = self.log_file
         #---------------------------    
-        is_cline = is_comment(line_msg, self.empty_line_is_comment)
+        is_cline = self.is_comment(line_msg)
         if is_cline and skip_printing_clines:
             return
         print(line_msg)

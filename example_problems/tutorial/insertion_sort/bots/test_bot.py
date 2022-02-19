@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import argv
+from sys import argv, stderr
 
 from insertion_sort_machine_lib import InsertionSortMachine
 

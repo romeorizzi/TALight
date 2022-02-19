@@ -55,9 +55,9 @@ class InsertionSortMachine(AbstractMachine):
         if i >= len(self.working_array) or self.working_array[i] is None:
             raise AbstractMachineOperatingError(sys._getframe(  ).f_code.co_name+"_2", f"Ahi, the operator required to compare with others the element contained in position {i} of the current working array. However, no element has ever been placed in this position of the array.")
         if self.tmp_buffer < self.working_array[i]:
-            self.console(f"LOG_compare_ele_in_tmp_buffer_with_ele_in_pos {i} (<)")
+            self.console(f"LOG_compare_ele_in_tmp_buffer_with_ele_in_pos {i} (got <)")
             return True
-        self.console(f"LOG_compare_ele_in_tmp_buffer_with_ele_in_pos {i} (>=)")
+        self.console(f"LOG_compare_ele_in_tmp_buffer_with_ele_in_pos {i} (got >=)")
         return False
 
     def output_final_sorted_array(self):
@@ -77,16 +77,16 @@ if __name__ == "__main__":
         "LOG_load_next_input_element_in_tmp_buffer (got 12)",
         "LOG_flush_tmp_buffer_ele_in_pos 0",
         "LOG_load_next_input_element_in_tmp_buffer (got 11)",
-        "LOG_compare_ele_in_tmp_buffer_with_ele_in_pos 0 (<)",
+        "LOG_compare_ele_in_tmp_buffer_with_ele_in_pos 0 (got <)",
         "LOG_clone_to_its_right_ele_in_pos 0",
         "LOG_flush_tmp_buffer_ele_in_pos 0",
         "LOG_load_next_input_element_in_tmp_buffer (got 15)",
-        "LOG_compare_ele_in_tmp_buffer_with_ele_in_pos 1 (>=)",
+        "LOG_compare_ele_in_tmp_buffer_with_ele_in_pos 1 (got >=)",
         "LOG_flush_tmp_buffer_ele_in_pos 2",
         "LOG_load_next_input_element_in_tmp_buffer (got 13)",
-        "LOG_compare_ele_in_tmp_buffer_with_ele_in_pos 2 (<)",
+        "LOG_compare_ele_in_tmp_buffer_with_ele_in_pos 2 (got <)",
         "LOG_clone_to_its_right_ele_in_pos 2",
-        "LOG_compare_ele_in_tmp_buffer_with_ele_in_pos 1 (>=)",
+        "LOG_compare_ele_in_tmp_buffer_with_ele_in_pos 1 (got >=)",
         "LOG_flush_tmp_buffer_ele_in_pos 2",
         "LOG_output_final_sorted_array (4: 11 12 13 15)"
     ]

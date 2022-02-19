@@ -1,10 +1,10 @@
 LOG_load_next_input_element_in_tmp_buffer (got 12)
 LOG_flush_tmp_buffer_on_pos 0
 LOG_load_next_input_element_in_tmp_buffer (got 11)
-LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (<)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 0 (got <)
 LOG_clone_to_its_right_ele_in_pos 0
 LOG_flush_tmp_buffer_on_pos 0
 LOG_load_next_input_element_in_tmp_buffer (got 15)
-LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (>=)
+LOG_compare_what_in_tmp_buffer_with_what_in_pos 1 (got >=)
 LOG_flush_tmp_buffer_on_pos 2
 LOG_output_final_sorted_array (3: 11 12 15)

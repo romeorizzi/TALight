@@ -6,10 +6,10 @@ services:
   log_debug_your_insertion_sort_bot:
     description: |+
      This service is meant to supervision and validate your understanding and/or implementation of the InsertionSort algorithm while also supporting the authonomous discovery of this classical algorithm. The idea is to consider the InsertionSort algorithm as a recipt for operating an abstract InsertionSortMachine offering a restricted set of possible primitive operations on an expandable internal array (where the already sorted integers are stored) and a temporary buffer (where to load a new incoming integer). Upon execution of each one of these primitive operations, the abstract machine yields a predetermined log line that unambiguosly represents what has happened. The possible operations of the abstract InsertionSortMachine can be inferred by the list of the possible log lines (one for every operation):  
-        LOG_load_next_input_element_in_tmp_buffer <val>
+        LOG_load_next_input_element_in_tmp_buffer (got <val>)
         LOG_flush_tmp_buffer_ele_in_pos <i>
         LOG_clone_to_its_right_ele_in_pos <i>
-        LOG_compare_ele_in_tmp_buffer_with_ele_in_pos <i> <outcome>
+        LOG_compare_ele_in_tmp_buffer_with_ele_in_pos <i> (got <outcome>)
         LOG_output_final_sorted_array <final_array>
      The service validates your correct understanding/implementation of the InsertionSort algorithm by checking the coherence of the resulting sequence of log lines. In case of any anomaly, the service signals it and bails out asap.
      The goal of your recipt is to yield a sorted array. The abstract machine is designed in such a way that, at every given moment, there exists a unique recipt for operating it while guaranteeing the ultimate achievement of this goal whatever these elements turn out to be in the future of the online process. This unique corrept operational flow is the InsertionSort algorithm archetype.
@@ -36,7 +36,8 @@ services:
      In any case, your bot will run on your local machine, operating on the instance contained in the `example_array_of_ints.txt` file (or any other file you might prefer), and a log about its working will be sent to `stdout`.
      It is important to know that you can launch and test your bot in separate; then, when you plug it into the service using the `rtal` command as shown above, the stdout of your bot will be sent directly to the service (and the stdout of the service goes to the stdin of your bot). The purpose of the service is to validate the correctness of your implementation of the Insertion Sort algorithm by accessing its log messages.
     example1: [to directly edit or paste in your log lines into the service, '\n     rtal connect insertion_sort log_debug_your_insertion_sort_bot']
-    example2: [to directly edit or paste in your log lines into the service, '\n     rtal connect -e insertion_sort log_debug_your_insertion_sort_bot -- fullname_of_your_executable_Insertion_Sort_bot example_array_of_ints.txt other_arguments_to_your_bot']
+    example2: [to plug in yout bot in the service, '\n     rtal connect -e insertion_sort log_debug_your_insertion_sort_bot -- fullname_of_your_executable_Insertion_Sort_bot example_array_of_ints.txt other_arguments_to_your_bot']
+    example3: [example, '\n     rtal connect insertion_sort -ainteractive log_debug_your_insertion_sort_bot -- ../bots/test_bot.py ../examples/inputs/array_of_3_ints.txt  wait_for_prompt']
     evaluator: [python3, services/log_debug_your_insertion_sort_bot_server.py]
     args:
       interactive:
@@ -55,25 +56,26 @@ services:
 
   remote_insertion_sort_api:
     description: |+
-     In a call to this service you plug in your insertion_sort bot remotely running on an instance of us. Your bot will access the array to be sorted only through the following primities
-        CMD_GET_DIM <n>
+     In a call to this service you plug in your insertion_sort bot remotely running on an instance of us. Your bot will access the array to be sorted only through the following primitives
         CMD_LOAD_NEXT_INPUT_ELEMENT_IN_TMP_BUFFER [the server answers 1 if the operation is successfull and 0 when there are no other input elements]
         CMD_FLUSH_TMP_BUFFER_ELE_IN_POS <i>
         CMD_CLONE_TO_ITS_RIGHT_ELE_IN_POS <i>
-        CMD_COMPARE_WHAT_IN_TMP_BUFFER_WITH_WHAT_IN_POS <i> [the server answers < or >= ]
-        CMD_FINISHED
+        CMD_COMPARE_ELE_IN_TMP_BUFFER_WITH_ELE_IN_POS <i> [the server answers < or >= ]
+        CMD_OUTPUT_FINAL_SORTED_ARRAY
      the service will ignore all lines not beginning with the prefix "CMD_", and will ultimately tell whether the array is sorted but also confirm whether the algorithm executed was the Insertion Sort algorithm or signal the very first discrepancy in behaviour.
     evaluator: [python3, services/remote_insertion_sort_api_server.py]
     args:
       goal:
-        regex: ^(just_sort_the_array|adhere_to_insertion_sort_algorithm)$
-        default: adhere_to_insertion_sort_algorithm
+        regex: ^(just_simulate_the_process|correctly_sort_the_array)$
+        default: correctly_sort_the_array
       feedback:
-        regex: ^(only_signal_first_error|also_tell_what_expected_instead)$
-        default: only_signal_first_error
+        regex: ^(only_signal_first_error|signal_first_error_and_castigate|dry_castigate|signal_first_error_and_tell_what_expected_instead)$
+        default: signal_first_error_and_tell_what_expected_instead
         explain: "choose the feedback level. Options are as follows:"
-        explain1: "[only_signal_first_error]  stops with an error message at the very first unexpected behavior for the intended goal."
-        explain2: "[also_tell_what_expected_instead]  stops at the very first unexpected behavior but also explain what would have been the correct one."
+        explain1: "[only_signal_first_error]  stops at the very first unexpected behavior, signalling it as the first error in the algorithm expressed by your bot."
+        explain2: "[signal_first_error_and_castigate]  signal the very first unexpected behavior and continue the interaction in order to conduct the sorting bot to the eventual failure in achieving the intended goal."
+        explain3: "[dry_castigate]  stops with an error message at the very first unexpected behavior for the intended goal."
+        explain4: "[signal_first_error_and_tell_what_expected_instead]  signals the very first unexpected behavior and also explain what would have been the correct one. Then proceed in order to conduct the sorting bot to the eventual failure in achieving the intended goal."
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

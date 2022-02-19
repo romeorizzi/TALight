@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from sys import exit
+from sys import stdout, stderr, exit, argv
+import random
+
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
-from sys import stdout, stderr, exit, argv
 
 from insertion_sort_machine_lib import InsertionSortMachine, AbstractMachineOperatingError
 from insertion_sort_lib import InsertionSort_machine_plus_algo
-import random
 
 # METADATA OF THIS TAL_SERVICE:
 problem = "insertion_sort"
@@ -15,12 +15,11 @@ args_list = [
     ('feedback', str),
     ('lang', str),
     ('goal', str),
-    ('interactive', bool)
 ]
 
 ENV = Env(args_list)
 TAc = TALcolors(ENV)
-LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 
 # START CODING YOUR SERVICE:
 
