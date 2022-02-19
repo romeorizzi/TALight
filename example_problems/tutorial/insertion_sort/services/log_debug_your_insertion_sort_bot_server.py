@@ -2,10 +2,11 @@
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-from insert_sort_lib import InsertionSort_machine_plus_algo
+from insertion_sort_lib import InsertionSort_machine_plus_algo
+from insertion_sort_machine_lib import AbstractMachineOperatingError
 
 # METADATA OF THIS TAL_SERVICE:
-problem = "insert_sort"
+problem = "insertion_sort"
 service = "log_debug_your_insertion_sort_bot_server"
 args_list = [
     ('interactive', bool),

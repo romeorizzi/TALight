@@ -2,7 +2,7 @@
 import sys
 import unittest
 
-from insert_sort_machine_lib import InsertionSortMachine
+from insertion_sort_machine_lib import InsertionSortMachine
 
 class InsertionSort_machine_plus_algo(InsertionSortMachine):
     def generate_log_while_sorting(self):

@@ -4,12 +4,12 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from sys import stdout, stderr, exit, argv
 
-from insert_sort_machine_lib import InsertionSortMachine, AbstractMachineOperatingError
-from insert_sort_lib import InsertionSort_machine_plus_algo
+from insertion_sort_machine_lib import InsertionSortMachine, AbstractMachineOperatingError
+from insertion_sort_lib import InsertionSort_machine_plus_algo
 import random
 
 # METADATA OF THIS TAL_SERVICE:
-problem = "insert_sort"
+problem = "insertion_sort"
 service = "remote_insertion_sort_api"
 args_list = [
     ('feedback', str),

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from sys import argv
 
-from insert_sort_machine_lib import InsertionSortMachine
+from insertion_sort_machine_lib import InsertionSortMachine
 
 usage=f"""Call me like this:
    > {argv[0]}  [ <input_filename> [wait_for_prompt] ]
