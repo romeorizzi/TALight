@@ -76,7 +76,7 @@ for line in gen_lines:
             print(f"{source_file_path} Not exists!")
             exit(1)
         # Get instance and save (instance_name, instance_id_as_str)
-        source_name = source_rel_path[:-(len(file_full_extension)+1)] #e.g.: hardcoded/instance1
+        source_name = source_rel_path[:-(len(file_full_extension)+1)] #e.g.: instances_hardcoded/instance_001_handmade.only_strings.txt
         if source_name not in copy_name_id:
             print("WARNING overlaps: source_name not in copy_name_id")
             copy_name_id[source_name] = instance_id_as_str
@@ -88,7 +88,7 @@ for line in gen_lines:
         print(f"-source_name={source_name}")
         print(f"-copy_name_id={copy_name_id}")
         # Get target path
-        target_filename = f"instance{cur_id}.{file_full_extension}"
+        target_filename = f"instance_{cur_id}.{file_full_extension}"
         print(f"target_filename={target_filename}")
         target_abs_fullpath = path.join(cur_collection_path, target_filename)
         print(f"target_abs_fullpath={target_abs_fullpath}")
