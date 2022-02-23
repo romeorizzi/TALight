@@ -93,8 +93,8 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
       sol_format:
-        regex: ^(subsequence|annotated_subseq)$
-        default: subsequence
+        regex: ^(subseq|annotated_subseq)$
+        default: subseq
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
       download:
         regex: ^(0|1)$
@@ -106,7 +106,8 @@ services:
   
   check_sol:
     description: 'This service checks and assesses your solution for an instance of the LCS problem.'
-    explain: 'Call the service with:\n   rtal connect lcs check_sol -finstance=fullpath_of_your_instance_file -fsolution=fullpath_of_your_solution_file\nIf the format of your instance file differs from `only_strings` then, please, specify it via the argument `instance_format`.\nIf the format of your solution file differs from `subsequence` then, please, specify it via the argument `sol_format`.'
+    explain: 'Call the service with:\n   rtal connect lcs check_sol -finstance=fullpath_of_your_instance_file -fsolution=fullpath_of_your_solution_file\nIf the format of your instance file differs from `only_strings` then, please, specify it via the argument `instance_format`.\nIf the format of your solution file differs from `subseq` then, please, specify it via the argument `sol_format`.'
+    example: 'Call the service with:\n   rtal connect lcs check_sol -asol_format=annotated_subseq -finstance=instances_catalogue/all_instances/instance_003.only_strings.txt -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt'
     evaluator: [python, services/check_sol_server.py]
     files:
       - instance
@@ -119,8 +120,8 @@ services:
         explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
         explain2: '[only_strings] like the above, but with the first line omitted.'
       sol_format:
-        regex: ^(subsequence|annotated_subseq)$
-        default: subsequence
+        regex: ^(subseq|annotated_subseq)$
+        default: subseq
         explain: 'Use this argument to specify the format of the .txt file containing your solution. How can your solution be encoded? Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces. (You can find examples in the `examples` folder in the archive downloaded with `rtal get lcs`, and you can get further examples through the service `solve`.)'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
@@ -164,8 +165,8 @@ services:
         default: only_strings
         explain: 'choose the format of the instance file.'
       sol_format:
-        regex: ^(subsequence|annotated_subseq)$
-        default: subsequence
+        regex: ^(subseq|annotated_subseq)$
+        default: subseq
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
       lang: 
         regex: ^(hardcoded|hardcoded_ext|en|it)$
@@ -220,8 +221,8 @@ services:
         default: default
         explain: 'choose how to encode the dat file. For now there is only one format'
       sol_format:
-        regex: ^(subsequence|annotated_subseq)$
-        default: subsequence
+        regex: ^(subseq|annotated_subseq)$
+        default: subseq
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$

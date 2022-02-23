@@ -5,9 +5,9 @@ import random
 import string
 
 ### CONSTANTS #########################################
-AVAILABLE_FORMATS = {'instance':{'only_strings':'only_strings.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat1':'dat'},'solution':{'subsequence':'subsequence.txt', 'annotated_subseq':'annotated_subseq.txt'}}
+AVAILABLE_FORMATS = {'instance':{'only_strings':'only_strings.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat1':'dat'},'solution':{'subseq':'subseq.txt', 'annotated_subseq':'annotated_subseq.txt'}}
 DEFAULT_INSTANCE_FORMAT='only_strings'
-DEFAULT_SOLUTION_FORMAT='subsequence'
+DEFAULT_SOLUTION_FORMAT='subseq'
 #######################################################
 
 def format_name_to_file_extension(format_name, format_gender):
@@ -35,14 +35,49 @@ def format_name_expand(format_name, format_gender):
     
 # MANAGING REPRESENTATIONS OF SOLUTIONS:
 
-def annotated_subseq_to_str(solution):
-    return ('\n'.join([f'{solution.get(key)} {key[0]} {key[1]}' for key in sorted(solution)]))
+def str_to_sequence(string):
+    return [char for char in string]
 
 def sequence_to_str(sequence):
-    return " ".join(e for e in sequence)
+    #print(f"sequence_to_str called with {sequence=}")
+    return "".join(e for e in sequence)
 
-def annotated_subseq_to_sequence(solution):
-    return [solution.get(key) for key in sorted(solution)]
+def annotated_subseq_to_sequence(annotated_solution):
+    #print(f"annotated_subseq_to_sequence called with {annotated_solution=}")
+    return [annotated_solution[key] for key in sorted(annotated_solution)]
+
+def annotated_subseq_to_str(annotated_solution):
+    #print(f"annotated_subseq_to_str called with {annotated_solution=}")
+    return sequence_to_str(annotated_subseq_to_sequence(annotated_solution))
+
+def render_annotated_subseq_as_str(solution):
+    return ('\n'.join([f'{solution[key]} {key[0]} {key[1]}' for key in sorted(solution)]))
+
+def read_annotated_subseq(raw_annotated_subseq):
+    sol = {}
+    for line in raw_annotated_subseq[:-1].split('\n'):
+        values = line.split()
+        sol[(int(values[1]), int(values[2]))] = values[0]
+    return sol
+
+def check_input(TAc, LANG, line, m, n):
+    if line[0] not in string.ascii_letters:
+        TAc.print(LANG.render_feedback('error-first-not-character', '#ERROR: The first element must be the single common character.'), 'red', ['bold'])
+        exit(0)
+    if line[1] not in string.digits:
+        TAc.print(LANG.render_feedback('error-second-not-digit', '#ERROR: The second element must be a digit, corresponding to the index of the common character in the first string.'), 'red', ['bold'])
+        exit(0)
+    if line[2] not in string.digits:
+        TAc.print(LANG.render_feedback('error-third-not-digit', '#ERROR: The third element must be a digit, corresponding to the index of the common character in the second string.'), 'red', ['bold'])
+        exit(0)
+    if int(line[1]) not in range(m):
+        TAc.print(LANG.render_feedback('error-second-not-index', f"#ERROR: The second element must be the index of the single common character in the first string. Must be in the range {{0, {m}}}."), 'red', ['bold'])
+        exit(0)
+    if int(line[2]) not in range(n):
+        TAc.print(LANG.render_feedback('error-second-not-index', f"#ERROR: The second element must be the index of the single common character in the first string.. Must be in the range {{0, {n}}}."), 'red', ['bold'])
+        exit(0)
+    return True
+
 
 # MANAGING REPRESENTATIONS OF INSTANCES:
 
@@ -103,7 +138,7 @@ def get_instance_from_txt(instance_as_str, instance_format_name='only_strings'):
         lines = lines[1:]
     for line in lines:
         if len(line) != 0:
-            instance.append(line.split())
+            instance.append(line)
     return instance
 
 
@@ -150,9 +185,10 @@ def get_alphabet(alphabet):
         return "ACGT"
 
 
-def get_opt_val_and_sol(s, t):
+def opt_val_and_sol(s, t):
     """returns the maximum length of a common subsequence of strings s and t, and an optimal LCS(s,t)
     """
+    #print(f"opt_val_and_sol called with {s=} and {t=}")
     m = len(s); n = len(t)
     risp = [[0]*(n+1) for _ in range(m+1)]
     for i in range(m):
@@ -175,27 +211,9 @@ def get_opt_val_and_sol(s, t):
     return opt_val, an_opt_solution
 
 
-def check_input(TAc, LANG, ENV, line):
-    if line[0] not in string.ascii_letters:
-        TAc.print(LANG.render_feedback('error-first-not-character', '#ERROR: The first element must be the single common character.'), 'red', ['bold'])
-        exit(0)
-    if line[1] not in string.digits:
-        TAc.print(LANG.render_feedback('error-second-not-digit', '#ERROR: The second element must be a digit, corresponding to the index of the common character in the first string.'), 'red', ['bold'])
-        exit(0)
-    if line[2] not in string.digits:
-        TAc.print(LANG.render_feedback('error-third-not-digit', '#ERROR: The third element must be a digit, corresponding to the index of the common character in the second string.'), 'red', ['bold'])
-        exit(0)
-    if int(line[1]) not in range(m):
-        TAc.print(LANG.render_feedback('error-second-not-index', f"#ERROR: The second element must be the index of the single common character in the first string. Must be in the range {{0, {m}}}."), 'red', ['bold'])
-        exit(0)
-    if int(line[2]) not in range(n):
-        TAc.print(LANG.render_feedback('error-second-not-index', f"#ERROR: The second element must be the index of the single common character in the first string.. Must be in the range {{0, {n}}}."), 'red', ['bold'])
-        exit(0)
-    return True
 
-
-def check_sol_feasibility(TAc, LANG, ENV, user_sol, s, t):
-    if ENV['sol_format'] == 'subsequence':
+def check_sol_feasibility(TAc, LANG, user_sol, sol_format, s, t):
+    if sol_format == 'subseq':
         i = 0; j = 0
         for char in user_sol:
             not_yet_found_in_s = True
@@ -236,14 +254,13 @@ def check_sol_feasibility(TAc, LANG, ENV, user_sol, s, t):
             prev_pair = pair
     return True
 
-def check_sol_feas_and_opt(TAc, LANG, ENV, user_sol, s, t):
-    if not check_sol_feasibility(TAc, LANG, ENV, user_sol, s, t):
+def check_sol_feas_and_opt(TAc, LANG, user_sol, sol_format, s, t):
+    if not check_sol_feasibility(TAc, LANG, user_sol, sol_format, s, t):
         TAc.print(LANG.render_feedback('not-feasible', f'# The solution produced is NOT feasible. The string `{user_sol}` is NOT a common subsequence of s=`{s}` and t=`{t}`.'), 'red', ['bold'])
         return False
     else:
         TAc.print(LANG.render_feedback('feasible', f'# The solution produced is feasible. The string `{user_sol}` is a common subsequence of s=`{s}` and t=`{t}`.'), 'green')
-    max_val, an_opt_sol = get_opt_val_and_sol(s, t)
-    print(f"max_val={max_val}, len(user_sol)={len(user_sol)}")
+    max_val, an_opt_sol = opt_val_and_sol(s, t)
     assert len(user_sol) <= max_val
     if len(user_sol) < max_val:
         TAc.print(LANG.render_feedback('not-optimal', f'# The solution produced is NOT optimal. Its length is only {len(user_sol)} < {max_val}, where {max_val} is the length of the feasible solution `{an_opt_sol}`.'), 'red', ['bold'])
@@ -252,10 +269,3 @@ def check_sol_feas_and_opt(TAc, LANG, ENV, user_sol, s, t):
     
     return True
 
-def process_user_sol(raw_sol):
-    sol = {}
-    for line in raw_sol:
-        values = line.split()
-        sol[(int(values[1]), int(values[2]))] = values[0]
-    return sol
-    

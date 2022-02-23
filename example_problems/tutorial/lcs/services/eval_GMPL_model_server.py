@@ -75,7 +75,7 @@ for test_dir in tests_dirname_list:
             tests[test_dir][instance_id] = "NO!"
         else:
             raw_sol = mph.get_raw_sol()
-            glpsol_sol = ll.process_user_sol(raw_sol)
+            glpsol_sol = ll.read_annotated_subseq_sol(raw_sol)
 
             user_sol_subsequence = ll.annotated_subseq_to_sequence(glpsol_sol)
             user_sol_annotated_subseq = glpsol_sol
@@ -97,7 +97,7 @@ for test_dir in tests_dirname_list:
                     tests[test_dir][instance_id] = "YES!"
                 else:
                     tests[test_dir][instance_id] = "NO!"
-                TAc.print(LANG.render_feedback("out_sol", f"Your solution:\n{ll.annotated_subseq_to_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
+                TAc.print(LANG.render_feedback("out_sol", f"Your solution:\n{ll.render_annotated_subseq_as_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
 
     
     TAc.print(LANG.render_feedback('dir-passed-tests', f'Your model has passed {passed_dir_tests} tests over {total_dir_tests} total tests in {test_dir} directory.'), "green", ["bold"])

@@ -81,7 +81,7 @@ if ENV['check_solution'] or ENV.LOG_FILES != None:
     TAc.print(LANG.render_feedback("instance", f"{ll.instance_to_str(instance)}"), "white", ["bold"])
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
-    glpsol_sol = ll.process_user_sol(raw_sol)
+    glpsol_sol = ll.read_annotated_subseq_sol(raw_sol)
     user_sol_subsequence = ll.annotated_subseq_to_sequence(glpsol_sol)
     user_sol_annotated_subseq = glpsol_sol
 
@@ -89,10 +89,10 @@ if ENV['check_solution'] or ENV.LOG_FILES != None:
     if ENV['sol_format'] == 'subsequence':
         TAc.print(LANG.render_feedback("out_sol", f"{ll.sequence_to_str(user_sol_subsequence)}"), "white", ["reverse"])
     elif ENV['sol_format'] == 'annotated_subseq':
-        TAc.print(LANG.render_feedback("out_sol", f"{ll.annotated_subseq_to_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
+        TAc.print(LANG.render_feedback("out_sol", f"{ll.render_annotated_subseq_as_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     
-    max_val, an_opt_sol_annotated_subseq = ll.get_opt_val_and_sol(instance[0], instance[1])
+    max_val, an_opt_sol_annotated_subseq = ll.opt_val_and_sol(instance[0], instance[1])
     an_opt_sol_subseq = ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq)
 
     solution_is_correct = False

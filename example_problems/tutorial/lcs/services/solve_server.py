@@ -20,13 +20,13 @@ args_list = [
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
 
 
 # START CODING YOUR SERVICE:
 if TALf.exists_input_file('instance'):
-    instance = ll.get_instance_from_txt(TALf.input_file_as_str('instance'), instance_format_name=ENV['instance_format'])
+    instance = ll.get_instance_from_str(TALf.input_file_as_str('instance'), instance_format_name=ENV['instance_format'])
     TAc.print(LANG.render_feedback("successful-load", f'Your `instance` file has been successfully loaded.'), "white", ["bold"])
 elif ENV['source'] == 'randgen_1':
     instance = ll.instance_randgen_1(ENV['m'], ENV['n'], ENV['alphabet'], ENV['seed'])
@@ -39,21 +39,19 @@ elif ENV['source'] == 'terminal':
     TAc.print(LANG.render_feedback("second-string", f'Enter the second string t (any alphanumeric string of uppercase and lowercase characters plus digits):'), "yellow", ["bold"])
     instance.append([e for e in TALinput(str, regex=f"^(([a-zA-Z0-9])*)$", sep=' ', TAc=TAc)][0])
 
-TAc.print(instance, "red", ["bold"])
 TAc.print(LANG.render_feedback("this-is-the-instance", "This is the instance:"), "white", ["bold"])
 TAc.print(ll.instance_to_str(instance), "white", ["bold"])
 
-max_len, an_opt_sol_annotated_subseq = ll.get_opt_val_and_sol(instance[0], instance[1])
+max_len, an_opt_sol_annotated_subseq = ll.opt_val_and_sol(instance[0], instance[1])
 TAc.print(LANG.render_feedback("solution-title", f"An optimal solution to this instance is:"), "green", ["bold"])
-if ENV['sol_format'] == 'subsequence':
-    TAc.print(LANG.render_feedback("solution", f'{ll.sequence_to_str(ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq))}'), "white", ["reverse"])
+if ENV['sol_format'] == 'subseq':
+    TAc.print(LANG.render_feedback("solution", f'{ll.annotated_subseq_to_str(an_opt_sol_annotated_subseq)}'), "white", ["reverse"])
+    if ENV['download']:
+        TALf.str2output_file(ll.sequence_to_str(ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq)),f'opt_sol.subseq.txt')
 elif ENV['sol_format'] == 'annotated_subseq':
     TAc.print(LANG.render_feedback("legend-annotated_subseq", f"(LCS Character - First string index - Second string index)"), "white", ["bold"])
-    TAc.print(LANG.render_feedback("solution", f'{ll.annotated_subseq_to_str(an_opt_sol_annotated_subseq)}'), "white", ["reverse"])
-if ENV['download']:
-    if ENV['sol_format'] == 'subsequence':
-        TALf.str2output_file(ll.sequence_to_str(ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq)),f'optimal_solution')
-    elif ENV['sol_format'] == 'annotated_subseq':
-        TALf.str2output_file(ll.annotated_subseq_to_str(an_opt_sol_annotated_subseq),f'optimal_solution')
+    TAc.print(LANG.render_feedback("solution", f'{ll.render_annotated_subseq_as_str(an_opt_sol_annotated_subseq)}'), "white", ["reverse"])    
+    if ENV['download']:
+        TALf.str2output_file(ll.render_annotated_subseq_as_str(an_opt_sol_annotated_subseq),f'opt_sol.annotated_subseq.txt')
     
 exit(0)
