@@ -40,10 +40,8 @@ if ENV['source'] != 'catalogue':
         assert False
     instance_str = ll.instance_to_str(instance, format_name=ENV['instance_format'])
     output_filename = f"instance_{ENV['m']}_{ENV['n']}_{ENV['seed']}.{ENV['instance_format']}"
-else:
+else: # Get instance from catalogue
     mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
-    
-    # Get instance from catalogue
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=ll.format_name_to_file_extension(ENV['instance_format'], 'instance'))
     instance = ll.get_instance_from_str(instance_str, instance_format_name=ENV['instance_format'])
     output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['instance_format']}"
