@@ -23,6 +23,15 @@ TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE: 
 
+if ENV.LOG_FILES != None:
+    if ENV["instance_id"] == 0:
+        TAc.print(LANG.render_feedback("missing-instance_id", f'When this service is used to act a submission (i.e., when you provide a valid token) then it is required that you set a non-zero `instance_id` argument in order to specify an instance belonging to the catalogue. Call the service as follows:\n    rtal connect -x <MY_TOKEN> lcs check_sol -fsourcecode=./my_lcs_solver.py -asol_format=annotated_subseq -ainstance_id=3 -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt'), "red", ["bold"])
+        exit(0)
+    if TALf.exists_input_file('sourcecode'):
+        sourcecode_as_string = TALf.input_file_as_str('sourcecode')
+    else:
+        TAc.print(LANG.render_feedback("missing-sourcecode", f'When this service is used to act a submission (i.e., when you provide a valid token) then it is required that at the service call you supply also the source code implementing your solving algorithm. To associate this file to the `sourcecode` filehandler call the service as follows:\n    rtal connect -x <MY_TOKEN> lcs check_sol -fsourcecode=./my_lcs_solver.py -asol_format=annotated_subseq -ainstance_id=3 -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt'), "red", ["bold"])
+        exit(0)
 if ENV["instance_id"] == 0:
     if not TALf.exists_input_file('instance'):
         TAc.print(LANG.render_feedback("missing-instance", f'This service requires that either the `instance_id` argument is different than 0 so that the intended instance can be taken from the catalogue, or that the handle to a local file containing the instance is passed through the `instance` filehandler. Two call examples:\n    1.   rtal connect lcs check_sol -asol_format=annotated_subseq -finstance=instances_catalogue/all_instances/instance_003.only_strings.txt -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt\n    2.   rtal connect lcs check_sol -asol_format=annotated_subseq -ainstance_id=3 -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt'), "red", ["bold"])
@@ -68,6 +77,15 @@ if ENV["sol_format"] == 'annotated_subseq':
         ll.check_input(TAc, LANG, line.split(), m, n)
         
 if ll.check_sol_feas_and_opt(TAc, LANG, solution_as_subseq, 'subseq', instance[0], instance[1]):
-    TAc.print(LANG.render_feedback("correct-sol", 'Your solution is correct. Well done! You have found the Longest Common Subsequence.'), "green", ["bold"]) 
+    TAc.print(LANG.render_feedback("correct-sol", 'Your solution is correct. Well done! You have found the Longest Common Subsequence.'), "green", ["bold"])
+    if ENV.LOG_FILES != None:
+        TALf.str2log_file(content='OK. Instance {ENV["instance_id"]}. The submitted solution is feasible and optimum.', filename=f'OK_{ENV["instance_id"]}', timestamped = False)
+        TALf.str2log_file(content=sourcecode_as_string, filename=f"source_code.{TALf.lang_extension(TALf.input_filename('sourcecode'))}", timestamped = False)
+        TAc.print(LANG.render_feedback('positive-submission-recorded', "The positive result of your submission has been successfully recorded."), "green", ["bold"])
+else:
+    TAc.print(LANG.render_feedback("try-again", 'Correct your solution and try again.'), "green", ["bold"])
+    if ENV.LOG_FILES != None:
+        TALf.str2log_file(content='No. Bad solution for Instance {ENV["instance_id"]}.', filename=f'No_{ENV["instance_id"]}', timestamped = False)
+        TALf.str2log_file(content=sourcecode_as_string, filename=f"source_code.{TALf.lang_extension(TALf.input_filename('sourcecode'))}", timestamped = False)
 exit(0)
 
