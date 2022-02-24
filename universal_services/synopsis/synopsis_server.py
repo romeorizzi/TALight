@@ -98,6 +98,17 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
         TAc.print(a, "yellow", ["bold"])
         TAc.print('   regex: ', ["bold"], end="")
         print(meta_yaml_book['services'][ENV['service']]['args'][a]['regex'])
+        if "regex-explained" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
+            TAc.print('   regex-explained: ', ["bold"], end="")
+            print(meta_yaml_book['services'][ENV['service']]['args'][a]['regex-explained'])
+        if "regex-URL" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
+            TAc.print('   regex-URL: ', ["bold"], end="Ctrl-click on the link ")
+            print(meta_yaml_book['services'][ENV['service']]['args'][a]['regex-URL'])
+        if "default" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
+            TAc.print('   Default Value: ', ["bold"], end="")
+            print(meta_yaml_book['services'][ENV['service']]['args'][a]['default'])
+        else:
+            TAc.print(f'   The argument {a} is mandatory.', ["bold"])
         if "explain" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             if type(meta_yaml_book["services"][ENV["service"]]['args'][a]["explain"]) == str:
                 TAc.print(f"   {LANG.render_feedback('explain', 'Explanation')}: ", ["bold"], end="")
@@ -143,11 +154,6 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
                 TAc.print(f"   {LANG.render_feedback('note', 'Note')} {i}: ", ["bold"], end="")
                 print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['note'+str(i)]}'"))
                 i += 1        
-        if "default" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
-            TAc.print('   Default Value: ', ["bold"], end="")
-            print(meta_yaml_book['services'][ENV['service']]['args'][a]['default'])
-        else:
-            TAc.print(f'   The argument {a} is mandatory.', ["bold"])
 
 print(LANG.render_feedback("regex-cloud-resource", '\nThe arguments of all TALight services take in as possible values only simple strings that can be streamed from the \'rtal\' client to the \'rtald\' daemon (and finally acquired as environment variables). For each argument, the family of allowed string values is described by means of a regex. If the correct interpretation of the regex confuses you, then take profit of the online support at \'https://extendsclass.com/regex-tester.html\'.\n'))
 

@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import sys
+import os
+import shutil
+import argparse
+import csv
+from pathlib import Path
+import time
+import defaults
+
+REL_PATH_INSTANCES = 'instances_catalogue/all_instances'
+REL_PATH_SOLUTIONS = '../my_solutions'
+PATH_INSTANCES = os.path.join(os.getcwd(),REL_PATH_INSTANCES)
+PATH_SOLUTIONS = os.path.join(os.getcwd(),REL_PATH_SOLUTIONS)
+
+rtal connect lcs check_sol -asol_format=annotated_subseq -finstance=instances_catalogue/all_instances/instance_003.only_strings.txt -fsolution=output/2022-Feb-23_13.42.55.690320_opt_sol.annotated_subseq.txt
+
+rtal connect --output my_solutions lcs solve -finstance=instances_catalogue/all_instances/instance_003.only_strings.txt -adownload -asol_format=annotated_subseq
+
+def press_RETURN_to_continue():
+    risp = input("Continuare? (Premi <RETURN/Enter> per proseguire, qualsiasi altra immissione abortirà lo script)")
+    if risp == "":
+        print("Ok. Proseguiamo ...")
+    else:
+        print("Ok. Script abortito")
+        exit(1)
+
+
+if __name__ == "__main__":
+    check_active_conda_env("ROexam")
+    parser=argparse.ArgumentParser(
+    description='''Script to generate all exams for a given date and a given list of students''',
+    epilog="""-------------------""")
+    parser.add_argument('exam_date', type=str, default='2020-06-30', help='exam date in the format YYYY-MM-DD')
+#    parser.add_argument('students_list_csv', type=str, default=os.path.join(os.getcwd(),'students_lists','2020-06-30','lista_studenti_iscritti_con_chiavi.csv', help='csv file with students'' data')
+    parser.add_argument("--with_uncompressed_folder", help="the generated anchored folder will contain also the uncompressed folder",
+                    action="store_true")
+    parser.add_argument("--without_tgz", help="please, do NOT generate the .tgz archive (the one that ends up in the anchored folder)",
+                    action="store_true")
+    parser.add_argument("--without_zip", help="please, do NOT generate the unencrypted zip archive (the one without password protection that ends up in the anchored folder)",
+                    action="store_true")
+    parser.add_argument("--without_encrypted_zip", help="do NON generate the encrypted zip archive (the one with password protection that ends up in the unanchored folder with no anchor in the folder name)",
+                    action="store_true")
+    parser.add_argument("--with_encrypted_tgz", help="please, generate also the encrypted tgz archive (the one with password protection that ends up in the unanchored folder with no anchor in the folder name)",
+                    action="store_true")
+    args = parser.parse_args()
+    assert len(sys.argv) >= 2
+    exam_date = str(sys.argv[1])
+    FILE_STUDENTS_LIST = os.path.join(STUDENTS_LISTS_BASEFOLDER,exam_date,"lista_studenti_iscritti_con_chiavi.csv")
+    ALL_EXER_PER_STUD_FILE = os.path.join(STUDENTS_LISTS_BASEFOLDER,exam_date,ALL_EXER_PER_STUD)
+
+    if not os.path.exists(FILE_STUDENTS_LIST):
+        print(f"Error: I could not find the .csv file:\n    {FILE_STUDENTS_LIST}\nThis file is needed (see the name of this script!). If you are just playing around consider copying the file from another exam date and either use it as it is or drop all rows except the one for the TEST fake student. Also, it is easy to edit/create other lines: anchors (the third field) are just any random string of that same lenght as the others, and the password (the fourth field) is just 6 digits.")
+        exit(1)
+
+
+    print(f"For each student the shuttle will contain:")
+    if args.with_uncompressed_folder:
+        print("  + The uncompressed and directly accessible folder.")
+    if not args.without_zip:
+        print("  + The unprotected .zip archive hidden within the anchored folder.")
+    if not args.without_tgz:
+        print("  + The unprotected .tgz archive hidden within the anchored folder.")
+    if not args.without_encrypted_zip:
+        print("  + The encryption protected .zip archive within the unanchored folder.")
+    if args.with_encrypted_tgz:
+        print("  + The password protected .tgz archive within the unanchored folder.")
+    press_RETURN_to_continue()
+        
+        # Creation of shuttle:
+    PATH_SHUTTLE = os.path.join(os.getcwd(),REL_PATH_SHUTTLE)
+    if os.path.exists(PATH_SHUTTLE):
+        print(f"\nISSUE: The folder: {PATH_SHUTTLE}\nalready exists. You have tree options:\n   1. Erase the shuttle and recreate it from scratch (eE)\n   2. Proceed on a student by student basis (pP)   [this option allows to build the shuttle incrementally]\n   3. Quit this script (Return)   [and erase yourself those files you prefer before launching this script once again]\n")
+        answer = input(" > Enter your choice (one among 'eE' or 'pP' or any other character (even just Return): ")
+        if answer.upper() == 'E':
+            print("Ok, we erase the shuttle and recreate it from scratch.\n")
+            shutil.rmtree(PATH_SHUTTLE)
+            os.mkdir(PATH_SHUTTLE)
+        elif answer.upper() == 'P':
+            print("Ok, we now proceed on a student by student basis.\n")
+        else:
+            print("Ok, script aborted.\n")
+            exit(1)
+    else:
+        os.mkdir(PATH_SHUTTLE)
+
+    start_time = time.time()
+    if os.path.isfile(ALL_EXER_PER_STUD_FILE): # it deletes the csv file with all exercises per student if already existing
+        Path(ALL_EXER_PER_STUD_FILE).unlink()
+    all_exer_list = [] # to save all exercises assigned to each student
+    with open(FILE_STUDENTS_LIST) as csv_file: # it reads the students list csv and generates an exam for each one of them
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            matricola = row[0]
+            anchor = row[2]
+            passwd = row[3]
+            student_ID = row[4]
+            name = row[5]
+            surname = row[6]
+            print(f'\nGenerating the exam for {name} {surname} ({matricola})...')
+            e_list = student_ID + ',' + matricola + ',' 
+            chosen_exer = g.gen_one_exam(exam_date, student_ID, matricola, name, surname, anchor, passwd, as_zip=not args.without_zip, as_tgz=not args.without_tgz, as_folder=args.with_uncompressed_folder, as_encrypted_zip=not args.without_encrypted_zip, as_encrypted_tgz=args.with_encrypted_tgz)
+            for e in chosen_exer:
+                e_list += str(e) + ','
+            e_list += name + ',' + surname + '\n'
+            line_count += 1
+            all_exer_list += [e_list]
+        print(f'\nGenerated {line_count} exams.')
+    exer_file = open(ALL_EXER_PER_STUD_FILE,'w+') # writing the csv file with all exercises per student
+    for line in all_exer_list:
+        exer_file.write(str(line))
+    exer_file.close()
+    print("--- %s seconds ---" % (time.time() - start_time))
