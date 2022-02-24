@@ -29,7 +29,7 @@ services:
       alphabet:
         regex: ^(DNA|lowercase|uppercase|lowercase_uppercase)$
         default: DNA
-        explain: The alphabet over which the two strings will be created. DNA stands for the alphabet on the 4 letters A, C, G, T. The other options should be self-explanatory.
+        explain: The alphabet over which the two strings will be created. DNA stand for the alphabet on the 4 letters A, C, G, T. The other options should be self-explanatory.
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
@@ -42,7 +42,6 @@ services:
         explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
         explain1: '[with_m_and_n] a stream of three lines: the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t. The second line contains the string s and the third contains the string t.'
         explain2: '[only_strings] like the above, but with the first line omitted.'
-        dat: a possible datafile format for AMPL/GMPL use that we have decided to support.
       silent:
         regex: ^(0|1)$
         default: 0
@@ -60,7 +59,7 @@ services:
         default: it
   
   solve:
-    description: 'This service provides you with a solution for a given instance of the LCS problem. You can either upload the instance file on the `instance` handler of the service, using the `-f` option of the `connect` subcommand of `rtal`, or try to input your instance directly from the terminal (supported only in `only_strings` format) once the service has started. You may also specify a pseudo-random instance by providing its instance description for a selected generator. This last option might ease your calling this service on instances encounterd with other services.'
+    description: 'This service provides you with a solution for a given instance of the LCS problem. You can either upload the instance file on the `instance` filehandler of the service, using the `-f` option of the `connect` subcommand of `rtal`, or try to input your instance directly from the terminal (supported only in `only_strings` format) once the service has started. You may also specify a pseudo-random instance by providing its instance description for a selected generator. This last option might ease your calling this service on instances encounterd with other services.'
     evaluator: [python, services/solve_server.py]
     files:
       - instance
@@ -68,10 +67,9 @@ services:
       source:
         regex: ^(terminal|randgen_1)$
         default: terminal
-        explain: 'To send to the service an instance contained in a file sitting on your machine, you do not need to set this argument: just call the service with:\n   rtal connect lcs solve -finstance=fullpath_of_your_instance_file\nWith this call without any further arguments, the service assumes that the first two lines of the instance file are just the two input strings. (If the format of your file differs from `only_strings` then, please, specify it via the argument `instance_format`.) The source argument is used only when you do not associate a local file to the instance filehandler. If so, it determines the way your instance is input to the service:' 
-        explain1: ''
-        explain2: '[terminal] you enter your instance (just two strings, one per line; no other formats supported) directly by either typing it directly or through cut and paste.'
-        explain3: '[randgen_1] the service works on the pseudo-random instance `randgen_1(<m,n,alphabet,seed>)`. In this case you should specify the values for the service arguments comprising the instance descriptor, when different from their defaul values.'
+        explain: 'To send to the service an instance contained in a file sitting on your machine, you do not need to set this argument: just call the service with:\n       rtal connect lcs solve -finstance=fullpath_of_your_instance_file\n    With this call without any further arguments, the service assumes that the first two lines of the instance file are just the two input strings. (If the format of your file differs from `only_strings` then, please, specify it via the argument `instance_format`.) The source argument is used only when you do not associate a local file to the instance filehandler. If so, it determines the way your instance is input to the service:' 
+        explain1: '[terminal] you enter your instance (just two strings, one per line; no other formats supported) directly by either typing it directly or through cut and paste.'
+        explain2: '[randgen_1] the service works on the pseudo-random instance `randgen_1(<m,n,alphabet,seed>)`. In this case you should specify the values for the service arguments comprising the instance descriptor, when different from their defaul values.'
       instance_format:
         regex: ^(with_m_and_n|only_strings)$
         default: only_strings
@@ -79,25 +77,32 @@ services:
         explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
         explain2: '[only_strings] like the above, but with the first line omitted.'
       m:
-        regex: ^([1-9][0-9]{0,1})$
+        regex: ^([1-9][0-9]{0,2}|1000)$
+        regex-explained: a positive natural <= 1000
         default: 4
         explain: Length of the string s.
       n:
-        regex: ^([1-9][0-9]{0,1})$
+        regex: ^([1-9][0-9]{0,1}|1000)$
+        regex-explained: a positive natural <= 1000
         default: 4
         explain: Length of the string t.
       alphabet:
         regex: ^(DNA|lowercase|uppercase|lowercase_uppercase)$
         default: DNA
-        explain: The alphabet over which the two strings will be created.
+        explain: The alphabet over which the two strings will be created. DNA stands for the alphabet on the 4 letters A, C, G, T. The other options should be self-explanatory.
       seed:
-        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       sol_format:
-        regex: ^(subseq|annotated_subseq)$
+        regex: ^(only_val|subseq|annotated_subseq)$
         default: subseq
-        explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
+        explain: 'specify what meant by a solution and how it should be encoded. Choose one among the following options:'
+        explain1: '[only_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
+        explain2: '[subseq] the solution is a maximum length string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
+        explain3: '[annotated_subseq] the solution is a maximum length string which is a subsequence of both s and t. Such a solution is also annotated in that for each of its characters (each disposed on a different line) it specifies its position in s and its position in t, separated by spaces.'
       download:
         regex: ^(0|1)$
         default: 1

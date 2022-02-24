@@ -116,18 +116,17 @@ if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
             elif type(meta_yaml_book["services"][ENV["service"]]['args'][a]["explain"]) == list:
                 TAc.print("   " + LANG.render_feedback('explain-tagged', f'Explanation [{meta_yaml_book["services"][ENV["service"]]["args"][a]["explain"][0]}]') +": ", ["bold"], end="")
                 print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'][1]}'"))
-        else:
-            i = 1
-            while ("explain"+str(i)) in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
-              if type(meta_yaml_book["services"][ENV["service"]]['args'][a]["explain"+str(i)]) == str:
-                print(" "*6, end="")
-                print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)]}'"))
-                #TAc.print(f"   {LANG.render_feedback('explain', 'Explanation')} {i}: ", ["bold"], end="")
-                #print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)]}'"))
-              elif type(meta_yaml_book["services"][ENV["service"]]['args'][a]["explain"+str(i)]) == list:
-                TAc.print("   " + LANG.render_feedback('explain-tagged', f'Explanation {i} [{meta_yaml_book["services"][ENV["service"]]["args"][a]["explain"+str(i)][0]}]') +": ", ["bold"], end="")
-                print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)][1]}'"))
-              i += 1
+        i = 1
+        while ("explain"+str(i)) in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
+          if type(meta_yaml_book["services"][ENV["service"]]['args'][a]["explain"+str(i)]) == str:
+            print(" "*6, end="")
+            print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)]}'"))
+            #TAc.print(f"   {LANG.render_feedback('explain', 'Explanation')} {i}: ", ["bold"], end="")
+            #print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)]}'"))
+          elif type(meta_yaml_book["services"][ENV["service"]]['args'][a]["explain"+str(i)]) == list:
+            TAc.print("   " + LANG.render_feedback('explain-tagged', f'Explanation {i} [{meta_yaml_book["services"][ENV["service"]]["args"][a]["explain"+str(i)][0]}]') +": ", ["bold"], end="")
+            print(eval(f"f'{meta_yaml_book['services'][ENV['service']]['args'][a]['explain'+str(i)][1]}'"))
+          i += 1
         if "example" in meta_yaml_book['services'][ENV['service']]['args'][a].keys():
             if type(meta_yaml_book["services"][ENV["service"]]['args'][a]["example"]) == str:
                 TAc.print(f"   {LANG.render_feedback('example', 'Example')}: ", ["bold"], end="")

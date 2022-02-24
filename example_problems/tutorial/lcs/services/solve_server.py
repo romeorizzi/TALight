@@ -43,12 +43,18 @@ TAc.print(LANG.render_feedback("this-is-the-instance", "This is the instance:"),
 TAc.print(ll.instance_to_str(instance), "white", ["bold"])
 
 max_len, an_opt_sol_annotated_subseq = ll.opt_val_and_sol(instance[0], instance[1])
-TAc.print(LANG.render_feedback("solution-title", f"An optimal solution to this instance is:"), "green", ["bold"])
+if ENV['sol_format'] == 'only_val':
+    TAc.print(LANG.render_feedback("solution-val-title", f"The optimal solution value for this instance is:"), "green", ["bold"])
+    TAc.print(LANG.render_feedback("solution-only_val", f'{max_len}'), "white", ["reverse"])
+    if ENV['download']:
+        TALf.str2output_file(max_len,f'opt_val.txt')
+else:
+    TAc.print(LANG.render_feedback("solution-title", f"An optimal solution to this instance is:"), "green", ["bold"])
 if ENV['sol_format'] == 'subseq':
     TAc.print(LANG.render_feedback("solution", f'{ll.annotated_subseq_to_str(an_opt_sol_annotated_subseq)}'), "white", ["reverse"])
     if ENV['download']:
         TALf.str2output_file(ll.sequence_to_str(ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq)),f'opt_sol.subseq.txt')
-elif ENV['sol_format'] == 'annotated_subseq':
+if ENV['sol_format'] == 'annotated_subseq':
     TAc.print(LANG.render_feedback("legend-annotated_subseq", f"(LCS Character - First string index - Second string index)"), "white", ["bold"])
     TAc.print(LANG.render_feedback("solution", f'{ll.render_annotated_subseq_as_str(an_opt_sol_annotated_subseq)}'), "white", ["reverse"])    
     if ENV['download']:

@@ -13,7 +13,6 @@ import model_lcs_lib as ll
 args_list = [
     ('source',str),
     ('instance_id',int),
-    ('generator',str),
     ('m',int),
     ('n',int),
     ('alphabet', str),
@@ -25,14 +24,17 @@ args_list = [
 
 ENV = Env(args_list)
 TAc = TALcolors(ENV)
-LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+if ENV['silent']:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
+else:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
-if ENV['source'] == 'random':
+if ENV['source'] != 'catalogue':
     # Get random instance
-    if ENV['generator'] == 'randgen_1':
+    if ENV['source'] == 'randgen_1':
         instance = ll.instance_randgen_1(ENV['m'], ENV['n'], ENV['alphabet'], ENV['seed'])
     else:
         assert False
@@ -44,9 +46,7 @@ else:
     # Get instance from catalogue
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=ll.format_name_to_file_extension(ENV['instance_format'], 'instance'))
     instance = ll.get_instance_from_str(instance_str, instance_format_name=ENV['instance_format'])
-    output_filename = f"instance_catalogue1_{ENV['instance_id']}.{ENV['instance_format']}"
-
-
+    output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['instance_format']}"
 
 # Print Instance
 if ENV['silent']:
@@ -56,7 +56,7 @@ else:
     TAc.print(LANG.render_feedback("instance-title", f'The first string of {len(instance[0])} character and the second string of {len(instance[1])} character are:'), "yellow", ["bold"])
     if ENV['display']:
         TAc.print(instance_str, "white", ["bold"])
-        if not ENV['source'] == 'catalogue1':
+        if ENV['source'] != 'catalogue':
             TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
 if ENV['download']:
     TALf.str2output_file(instance_str,output_filename)
