@@ -32,7 +32,9 @@ class TALfilesHelper():
         try:
             path = self.input_filename(file_handler)
             with open(path, 'r') as fin:
-                return fin.read()
+                file_as_str = fin.read()
+                print(f'[The file you associated to the filehandler `{file_handler}` has been succesfully opened and converted to a string]')
+                return file_as_str
         except IOError as ioe:
             self.__TAc.print(f"Fail to open your input file with handler `{file_handler}'.", "red", ["bold"])
             self.__TAc.print(f"Fail to open the file `{path}`", "red", ["bold"], file=stderr)
