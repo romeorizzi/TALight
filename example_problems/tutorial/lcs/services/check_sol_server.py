@@ -73,8 +73,9 @@ if ENV["sol_format"] == 'annotated_subseq':
     TAc.print(LANG.render_feedback("user-sol-as-in-file", f'Your solution, as we have read it, is:'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("legend-annotated_subseq", f"(LCS Character - First string index - Second string index)"), "yellow", ["bold"])
     TAc.print(solution_annotated_subseq_as_string, "white", ["bold"])
-    for line in solution_annotated_subseq_as_string.split('\n'):
-        ll.check_input(TAc, LANG, line.split(), m, n)
+    list_of_triples = solution_annotated_subseq_as_string.split('\n')
+    for line, i in zip(list_of_triples,range(len(list_of_triples))):
+        ll.check_triple(TAc, LANG, line.split(), triple_num=i, s=instance[0], t=instance[1])
         
 if ll.check_sol_feas_and_opt(TAc, LANG, solution_as_subseq, 'subseq', instance[0], instance[1]):
     TAc.print(LANG.render_feedback("correct-sol", 'Your solution is correct. Well done! You have found the Longest Common Subsequence.'), "green", ["bold"])

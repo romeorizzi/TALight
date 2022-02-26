@@ -60,23 +60,26 @@ def read_annotated_subseq(raw_annotated_subseq):
         sol[(int(values[1]), int(values[2]))] = values[0]
     return sol
 
-def check_input(TAc, LANG, line, m, n):
-    if line[0] not in string.ascii_letters:
-        TAc.print(LANG.render_feedback('error-first-not-character', '#ERROR: The first element must be the single common character.'), 'red', ['bold'])
+def check_triple(TAc, LANG, triple, triple_num, s,t):
+    spec_error_msg = None
+    if triple[0] not in string.ascii_letters:
+        spec_error_msg = LANG.render_feedback('error-first-not-character', '#ERROR: The first element of the triple ({}) must be a single character common to s and t.')
+    elif not triple[1].isdecimal():
+        spec_error_msg = LANG.render_feedback('error-second-not-digit', '#ERROR: The second element of the triple must be a number, corresponding to the index of the common character in the first string.')
+    elif not triple[2].isdecimal():
+        spec_error_msg = LANG.render_feedback('error-third-not-digit', '#ERROR: The third element of the triple must be a number, corresponding to the index of the common character in the second string.')
+    elif int(triple[1]) not in range(len(s)):
+        spec_error_msg = LANG.render_feedback('error-second-not-index', f'#ERROR: The second element of the triple must be the index of the common character in the first string (string s, where {len(s)=}). As such, it must be an integer in the semi-closed interval [0, {len(s)}).')
+    elif int(triple[2]) not in range(len(t)):
+        spec_error_msg = LANG.render_feedback('error-second-not-index', f'#ERROR: The third element of the triple must be the index of the common character in the second string (string t, where {len(t)=}). As such, it must be an integer in the semi-closed interval [0, {len(t)}).')
+    elif s[int(triple[1])] != triple[0]:
+        spec_error_msg = LANG.render_feedback('wrong-char-in-string-s', f'#ERROR: s[{int(triple[1])}]={s[int(triple[1])]} != \'{triple[0]}\'.')
+    elif t[int(triple[2])] != triple[0]:
+        spec_error_msg = LANG.render_feedback('wrong-char-in-string-t', f'#ERROR: t[{int(triple[2])}]={t[int(triple[2])]} != \'{triple[0]}\'.')
+    if spec_error_msg != None:
+        TAc.print(LANG.render_feedback('error-in-triple', f'#ERROR: There is a problem in your annotated solution. The problem is in line {triple_num}, that comprises the three tokens {triple}.'), 'red', ['bold'])
+        TAc.print(spec_error_msg, 'red', ['bold'])
         exit(0)
-    if line[1] not in string.digits:
-        TAc.print(LANG.render_feedback('error-second-not-digit', '#ERROR: The second element must be a digit, corresponding to the index of the common character in the first string.'), 'red', ['bold'])
-        exit(0)
-    if line[2] not in string.digits:
-        TAc.print(LANG.render_feedback('error-third-not-digit', '#ERROR: The third element must be a digit, corresponding to the index of the common character in the second string.'), 'red', ['bold'])
-        exit(0)
-    if int(line[1]) not in range(m):
-        TAc.print(LANG.render_feedback('error-second-not-index', f"#ERROR: The second element must be the index of the single common character in the first string. Must be in the range {{0, {m}}}."), 'red', ['bold'])
-        exit(0)
-    if int(line[2]) not in range(n):
-        TAc.print(LANG.render_feedback('error-second-not-index', f"#ERROR: The second element must be the index of the single common character in the first string.. Must be in the range {{0, {n}}}."), 'red', ['bold'])
-        exit(0)
-    return True
 
 
 # MANAGING REPRESENTATIONS OF INSTANCES:
