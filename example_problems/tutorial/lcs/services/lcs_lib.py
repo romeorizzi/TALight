@@ -51,7 +51,7 @@ def annotated_subseq_to_str(annotated_solution):
     return sequence_to_str(annotated_subseq_to_sequence(annotated_solution))
 
 def render_annotated_subseq_as_str(solution):
-    return ('\n'.join([f'{solution[key]} {key[0]} {key[1]}' for key in sorted(solution)]))
+    return '\n'.join([f'{solution[key]} {key[0]} {key[1]}' for key in sorted(solution)])
 
 def read_annotated_subseq(raw_annotated_subseq):
     sol = {}
