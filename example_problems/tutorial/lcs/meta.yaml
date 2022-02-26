@@ -108,8 +108,8 @@ services:
         default: subseq
         explain: 'specify what meant by a solution and how it should be encoded. Choose one among the following options:'
         explain1: '[only_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
-        explain2: '[subseq] the solution is a maximum length string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
-        explain3: '[annotated_subseq] the solution is a maximum length string which is a subsequence of both s and t. Such a solution is also annotated in that for each of its characters (each disposed on a different line) it specifies its position in s and its position in t, separated by spaces.'
+        explain2: '[subseq] the solution is just a string, namely, any maximum length string which is a subsequence of both s and t.'
+        explain3: '[annotated_subseq] the solution is a maximum length string which is a subsequence of both s and t. However, this string is also annotated in that for each of its characters (each disposed on a different line, in their order) it specifies its position in s and its position in t, separated by spaces.'
       download:
         regex: ^(0|1)$
         default: 1
@@ -142,16 +142,49 @@ services:
         explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
         explain2: '[only_strings] like the above, but with the first line omitted.'
       sol_format:
-        regex: ^(subseq|annotated_subseq)$
+        regex: ^(only_val|subseq|annotated_subseq)$
         default: subseq
-        explain: 'Use this argument to specify the format of the .txt file containing your solution. How can your solution be encoded? If you intend to compute only the optimum value then this is encoded as a decimal number. Otherwise, to encode an optimum solution, this is either just a string which is a subsequence of both s and t, or one could also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces. (You can get examples on these three formats through the service `solve`.)'
+        explain: 'specify what meant by a solution and how it is encoded. Choose one among the following options:'
+        explain1: '[only_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
+        explain2: '[subseq] the solution is just a string, namely, any maximum length string which is a subsequence of both s and t.'
+        explain3: '[annotated_subseq] the solution is a maximum length string which is a subsequence of both s and t. However, this string is also annotated in that for each of its characters (each disposed on a different line, in their order) it specifies its position in s and its position in t, separated by spaces.'
+        note: In case you are registering the results of the service call on the server via your TALight token, then the value of this argument is also stored as the `only_val` option is clearly the weakest one.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  
+
+  eval_your_bot:
+    evaluator: [python, services/eval_your_bot_server.py]
+    description: 'this service evaluates the strength of the algorithm you have conceived, designed and implemented in order to solve the LCS problem. Obtain your solver bot coding your algorithm in your preferred programming language. Then plug in your bot at the rtal call of this service (`rtal connect lcs eval_your_bot -- <YOUR EXECUTABLE COMMAND>`, where <YOUR EXECUTABLE COMMAND> might be any of `my_bots/my_best_bot.exe <POSIBLE ARGUMENTS TO YOUR BOT>` or `python bots/my_bot2.py <POSIBLE ARGUMENTS TO YOUR BOT>`). Allowing for arguments to your bot allows you to adapt it either for debugging purposes or for dealing with instances and solutions in various forms. Your bot will be involved in a dialog where the server proposes instances and the bot computes and returns solutions. The communication protocol is very basic and can be inferred by launching the service without plugging in any bot. In general, any line starting with the `#` character is considered a comment and is ignored by the two communicating automatic agents (but might facilitate the understanding of a monitoring or developing human).  We offer you a fake server for this service (rtal-fake_lcs-eval_your_bot.py) in the tools folder, which might help you to experiment in local how your bot and the server should dialogate. Keep in mind that your bot will run on your local machine, while the service will run on the server. Your bot can print out logs on stderr, these will not be sent to the server. The library xxx, which is part of the TALight open source project can facilitate your coding of the bot. Also a full installation of TALight gives you more control and awareness and facilitates the break-on-through-to-the-other-side that we advocate as a teaching/learning paradigm. We have thought of a few goals for your bot. The goals are organized in a DAG representing the acyclic "prerequisite-of" binary relation. This DAG always has a unique sink (the `all` goal).'   
+    files:
+      - sourcecode
+    args:
+      goal:
+        explain: 'set your goal (a node of the DAG: correct => m_at_most_10, correct => n_at_most_10, m_at_most_10 => m_and_n_at_most_100, n_at_most_10 => m_and_n_at_most_100, m_at_most_10 => opt_val_at_most_20_m_an_n_at_most_500, n_at_most_10 => opt_val_at_most_20_m_an_n_at_most_500, opt_val_at_most_20_m_an_n_at_most_500 => all, m_and_n_at_most_100 => all).'
+        regex: ^(correct|m_at_most_10|n_at_most_10|opt_val_at_most_20_m_an_n_at_most_500|m_and_n_at_most_100|all)$
+        default: all
+      instance_format:
+        regex: ^(with_m_and_n|only_strings)$
+        default: only_strings
+        explain: Use this argument to specify the format of the instances in the stream from the service to your bot. (Examples for the supported formats of the instance file can be found in the `instances_catalogue` directory or obtained from the service `gimme_instance`.)
+        explain1: '[with_m_and_n] the first uncommented line of the stream contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
+        explain2: '[only_strings] like the above, but with the first line omitted.'
+      sol_format:
+        regex: ^(only_val|subseq|annotated_subseq)$
+        default: subseq
+        explain: 'Use this argument to specify the format of the solution in the stream from your bot to the service. With this argument you decide what is meant by a solution and how it should be encoded. Choose one among the following options:'
+        explain1: '[only_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
+        explain2: '[subseq] the solution is just a string, namely, any maximum length string which is a subsequence of both s and t.'
+        explain3: '[annotated_subseq] the solution is a maximum length string which is a subsequence of both s and t. However, this string is also annotated in that for each of its characters (each disposed on a different line, in their order) it specifies its position in s and its position in t, separated by spaces.'
+        note: 'In case you go for the `only_val` option then the goals your bot reaches are downgraded correspondingly (for example, `correct` becomes `correct_only_val`). '
+      seed:
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (`random_seed`) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed. Leave this argument to its default value when you intend to register the result of the evaluation on the server via your personal TALight token.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+
   get_my_instances:
     evaluator: [python, services/get_my_instances_server.py]
-    description: 'If you hold a personal token to a course or exam, and intend to collect points on this problem, you should first use this service in order to get the instances of your personal assignement, and next use the service `submit_solution` or `try_solution` to check and/or submit your model or solution on each particular instance you can manage. After calling the service `get_my_instances` you will find the instances within the subfolder `output` of your current directory. Use the rtal -o argument if you prefer a different path or folder name.' 
+    description: 'SERVICE NOT OFFERED AT PRESENT. If you hold a personal token to a course or exam, and intend to collect points on this problem, you should first use this service in order to get the instances of your personal assignement, and next use the service `submit_solution` or `try_solution` to check and/or submit your model or solution on each particular instance you can manage. After calling the service `get_my_instances` you will find the instances within the subfolder `output` of your current directory. Use the rtal -o argument if you prefer a different path or folder name.' 
     args:
       instance_format:
         regex: ^(only_strings|with_m_and_n)$
