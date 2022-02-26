@@ -66,7 +66,7 @@ services:
       - instance
     args:
       source:
-        regex: ^(terminal|randgen_1)$
+        regex: ^(catalogue|terminal|randgen_1)$
         default: terminal
         explain: 'To send to the service an instance contained in a file sitting on your machine, you do not need to set this argument: just call the service with:\n       rtal connect model_lcs solve -finstance=fullpath_of_your_instance_file\n    With this call without any further arguments, the service assumes that the first two lines of the instance file are just the two input strings. (If the format of your file differs from `only_strings` then, please, specify it via the argument `instance_format`.) The source argument is used only when you do not associate a local file to the instance filehandler. If so, it determines the way your instance is input to the service:' 
         explain1: '[terminal] you enter your instance (just two strings, one per line; no other formats supported) directly by either typing it directly or through cut and paste.'
