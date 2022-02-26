@@ -80,8 +80,9 @@ if ENV["sol_format"] == 'annotated_subseq':
 if ll.check_sol_feas_and_opt(TAc, LANG, solution_as_subseq, 'subseq', instance[0], instance[1]):
     TAc.print(LANG.render_feedback("correct-sol", 'Your solution is correct. Well done! You have found the Longest Common Subsequence.'), "green", ["bold"])
     if ENV.LOG_FILES != None:
-        TALf.str2log_file(content='OK. Instance {ENV["instance_id"]}. The submitted solution is feasible and optimum.\n\n   In the future we might consider to RSA-sign this message (the codebese is all ready, but the general setup of the server will have to be done on the server). Moreover, as for now we do not need to give value to these certificates.', filename=f'OK_{ENV["instance_id"]}', timestamped = False)
+        TALf.str2log_file(content='OK. Instance {ENV["instance_id"]}. Service check_sol. Problem lcs. The submitted solution is feasible and optimum.', filename=f'OK_{ENV["instance_id"]}', timestamped = False)
         TALf.str2log_file(content=sourcecode_as_string, filename=f"source_code.{TALf.lang_extension(TALf.input_filename('sourcecode'))}", timestamped = False)
+        TALf.str2output_file(content='OK. Instance {ENV["instance_id"]}. Service check_sol. Problem lcs. The submitted solution is feasible and optimum.\n\n   In the future we might consider to RSA-sign this message (the codebase is ready for this, but the general setup of the server will have to be done on the server, nor we have the infrastructure for the managing clear in mind). Moreover, as for now we do not need to give value to these certificates.', filename=f'OK_{ENV["instance_id"]}', timestamped = False)
         TAc.print(LANG.render_feedback('positive-submission-recorded', "The positive result of your submission has been successfully recorded."), "green", ["bold"])
 else:
     TAc.print(LANG.render_feedback("try-again", 'Correct your solution and try again.'), "green", ["bold"])
