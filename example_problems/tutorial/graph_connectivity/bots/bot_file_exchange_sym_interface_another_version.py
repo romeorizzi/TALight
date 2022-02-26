@@ -1,0 +1,1 @@
+/home/romeo/TALight/TAL_lib/python/bot_file_exchange_sym_interface_another_version.py

@@ -316,7 +316,7 @@ if ENV['display_tiling']:
         TAc.print(LANG.render_feedback('printing-sub-board', board[i][:2**ENV['k']]), 'white')
 # uncomment if TA_receive_files_bot.py works with TAlinput
 # else:
-#     from bot_interface import service_server_to_send_files
+#     from bot_file_exchange_sym_interface import service_server_to_send_files
 
 #     dict_of_files = { f"tiling.txt": '\n'.join(' '.join(map(str, board[i][:2**ENV['k']])) for i in range(2**ENV['k'])).encode('ascii') }
 #     service_server_to_send_files(dict_of_files)          

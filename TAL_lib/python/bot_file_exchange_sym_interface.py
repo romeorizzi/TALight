@@ -91,35 +91,55 @@ class BotInterface:
         num_files = int(next_string[20:])
         res = {}
         for i in range(num_files):
-            filename, data = self.input_line().split()
-            res[filename] = b64decode(data)
+            filename = self.input_line()
+            data = ""
+            while True:
+                line = self.input_line()
+                if line.startswith('#!end'):
+                    break
+                data += line + "\n"
+            res[filename] = data.encode()
         return res
 
-    def bot_write_files(filenames_to_files_map : Dict[str, bytes], basedir=os.path.join('.','downloads')):
+
+    def bot_write_files(self, filenames_to_files_map : Dict[str, bytes], basedir=os.path.join('.','downloads')):
         os.makedirs(basedir,exist_ok=True)
         for filename in filenames_to_files_map:
-            with open(filename, 'wb') as file_down:
-                file_down.write(filenames_to_files_map[filename])
+            with open(f'{basedir}/{filename}', 'wb') as file_down:
+                file_down.write(filenames_to_files_map[filename])      
+        print(f"#!ok. File has been sent.")          
 
-                        
-def service_server_requires_and_gets_file(conventional_name):
+
+
+def service_server_requires_and_gets_file_of_handle(conventional_name):
     print(f"#!gimme_file {conventional_name}")
     string_got=input()
     print(f"# ok. File {conventional_name} has been received.")    
     return b64decode(string_got.encode())
-                        
+
+
+def service_server_requires_and_gets_file_num(number):
+    return service_server_requires_and_gets_file_of_handle(f'file_handle{number}')
+
+
+def service_server_requires_and_gets_the_only_file():
+    return service_server_requires_and_gets_file_num(1)
+
+
 def service_server_to_send_files(filenames_to_files_map : Dict[str, BinaryIO]):
     """The server calls this function when the protocol enters a point where the server could send some files. In case there are no files to be sent, then use an empty dictionary as argument."""
     print(f"#!now_sending_files {len(filenames_to_files_map)}")
     for filename in filenames_to_files_map:
-        print(filename + " " + b64encode(filenames_to_files_map[filename].read()))
+        print(filename)
+        print(filenames_to_files_map[filename].decode())
+        print(f"#!end {filename} file.")
                         
                 
 """
 # Usage Example, files going from bot to server
 in the bot:
 
-from bot_interface import BotInterface
+from bot_file_exchange_sym_interface import BotInterface
 ...
 
 BTI = BotInterface(coloring_policy='standard-e')
@@ -132,7 +152,7 @@ BTI.bot_sends_required_files({
 })
 
 meanwhile, in the server:
-from bot_interface import service_server_requires_and_gets_file
+from bot_file_exchange_sym_interface import service_server_requires_and_gets_file
 ...
 service_server_requires_and_gets_file('problem_solver_mod')
 service_server_requires_and_gets_file('problem_solver_dat')
@@ -145,21 +165,21 @@ Notice: for the files sent from the bot to the server there must be a previous a
 # Usage Example, files going from server to bot
 in the bot:
 
-from bot_interface import BotInterface
+from bot_file_exchange_sym_interface import BotInterface
 ...
 
 BTI = BotInterface(coloring_policy='standard-e')
 
 # usually (but not necessarily) towards the end of the interaction between the bot and the server:
 
-BTI.bot_write_files(bot_finally_gets_files())
+BTI.bot_write_files(bot_collects_eventually_sent_files())
 
 meanwhile, in the server:
-from bot_interface import service_server_to_send_files
+from bot_file_exchange_sym_interface import service_server_to_send_files
 ...
 
 dict_of_files = { f"seq_n{n}.txt": " ".join(map(str,range(n))).encode('ascii')  for n in [10, 20, 30] }
-   service_server_to_send_files(dict_of_files)
+service_server_to_send_files(dict_of_files)
 
 print(dict_of_files['seq_n10.txt'].decode())   # to get on of the files in clear
 """

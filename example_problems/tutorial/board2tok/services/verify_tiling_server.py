@@ -4,7 +4,7 @@ from sys import stderr, exit
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-from bot_interface import service_server_requires_and_gets_the_only_file
+from bot_file_exchange_sym_interface import service_server_requires_and_gets_the_only_file
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [

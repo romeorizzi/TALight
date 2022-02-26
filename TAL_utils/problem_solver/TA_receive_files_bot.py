@@ -13,7 +13,7 @@ https://serverfault.com/questions/178457/can-i-send-some-text-to-the-stdin-of-an
 from sys import argv, stderr, exit
 from pathlib import Path
 
-from bot_interface import BotInterface
+from bot_file_exchange_sym_interface import BotInterface
 
 
 BTI = BotInterface(coloring_policy='standard-e')

@@ -4,7 +4,7 @@ from sys import stderr, exit
 
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
-from bot_interface import service_server_requires_and_gets_the_only_file, BotInterface
+from bot_file_exchange_sym_interface import service_server_requires_and_gets_the_only_file, BotInterface
 
 import graph_connectivity_lib as gcl
 
