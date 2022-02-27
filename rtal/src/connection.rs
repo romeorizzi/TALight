@@ -449,6 +449,10 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
         if token_info.is_some() {
             evaluator.env("TAL_META_LOG_FILES", logfile_dir.path());
         }
+        if let Some(ref token_info) = token_info {
+            evaluator.env("TAL_META_EXP_TOKEN", &token_info.token);
+            evaluator.env("TAL_META_EXP_LOG_DIR", &token_info.path);
+        }
         evaluator.stdin(Stdio::piped());
         evaluator.stdout(Stdio::piped());
         let mut process = match evaluator.spawn() {
