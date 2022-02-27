@@ -29,14 +29,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE:
 mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR )
 
-if ENV['check_solution'] or ENV.LOG_FILES != None:
-    input_str = mph.get_input_str()
-    instance = ll.get_instance_from_txt(input_str, instance_format_name=ENV['instance_format'])
-    print(LANG.render_feedback('submitted-instance',f'# Submitted instance: '), end="")
-    print(instance)
-    m = len(instance[0])
-    n = len(instance[1])
-
 if ENV['display_explicit_formulation']:
     mph.run_GLPSOL_with_ef(ENV['explicit_formulation_format'])
 
@@ -71,42 +63,30 @@ if ENV['display_raw_solution']:
     TAc.print(LANG.render_feedback("sol-title", "The raw GLPSOL solution is: "), "yellow", ["bold"])
     for line in raw_sol:
         print(line)
+        
 
-solution_is_validated =  False
 if ENV['check_solution'] or ENV.LOG_FILES != None:
     TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
     TAc.print(LANG.render_feedback("start-check", f"Now start the check of the GLPSOL solution..."), "yellow", ["bold"])
-
-    TAc.print(LANG.render_feedback("instance-title", f'The first string of {ENV["m"]} character and the second string of {ENV["n"]} character are:'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("instance", f"{ll.instance_to_str(instance)}"), "white", ["bold"])
-    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-
-    glpsol_sol = ll.read_annotated_subseq_sol(raw_sol)
-    user_sol_subsequence = ll.annotated_subseq_to_sequence(glpsol_sol)
-    user_sol_annotated_subseq = glpsol_sol
-
-    TAc.print(LANG.render_feedback("sol-title", "The GLPSOL solution is:"), "yellow", ["bold"])
-    if ENV['sol_format'] == 'subsequence':
-        TAc.print(LANG.render_feedback("out_sol", f"{ll.sequence_to_str(user_sol_subsequence)}"), "white", ["reverse"])
-    elif ENV['sol_format'] == 'annotated_subseq':
-        TAc.print(LANG.render_feedback("out_sol", f"{ll.render_annotated_subseq_as_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
-    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
-    
+    input_str = mph.get_input_str()
+    instance = ll.get_instance_from_txt(input_str, instance_format_name=ENV['instance_format'])
+    print(LANG.render_feedback("instance-title", f'The first string (of length {len(instance[0])}) and the second string (of length {len(instance[1])}) comprising the instance are:'))
+    TAc.print(ll.instance_to_str(instance), "white", ["bold"])
     max_val, an_opt_sol_annotated_subseq = ll.opt_val_and_sol(instance[0], instance[1])
     an_opt_sol_subseq = ll.annotated_subseq_to_sequence(an_opt_sol_annotated_subseq)
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
+    TAc.print(LANG.render_feedback("sol-title", "The solution obtained by GLPSOL on your model:"), "yellow", ["bold"])
+    if ENV['sol_format'] == 'subseq':
+        user_sol = raw_sol
+        TAc.print(ll.sequence_to_str(user_sol), "white", ["reverse"])
+        TAc.print(LANG.render_feedback("print-opt-sol-subseq", f"An optimal solution:\n   {an_opt_sol_subseq}"), "white", ["reverse"])
+    if ENV['sol_format'] == 'annotated_subseq':
+        user_sol = user_sol_annotated_subseq = ll.read_annotated_subseq("\n".join(raw_sol)+"\n")
+        TAc.print(ll.render_annotated_subseq_as_str(user_sol_annotated_subseq), "white", ["reverse"])
+        TAc.print(LANG.render_feedback("print-opt-sol-anotated-subseq", f"An optimal solution:\n   {an_opt_sol_annotated_subseq}"), "white", ["reverse"])
+    TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
 
-    solution_is_correct = False
-    if ENV['sol_format'] == 'subsequence':
-        print(f"One optimal solution = {an_opt_sol_subseq}")
-        print(f"The solution obtained by your model = {user_sol_subsequence}")
-        if ll.check_sol_feas_and_opt(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
-            solution_is_correct = True
-    elif ENV['sol_format'] == 'annotated_subseq':
-        print(f"One optimal solution = {an_opt_sol_annotated_subseq}")
-        print(f"The solution obtained by your model = {user_sol_annotated_subseq}")
-        if ll.check_sol_feas_and_opt(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
-            solution_is_correct = True
-    if solution_is_correct:
+    if ll.check_sol_feas_and_opt(TAc, LANG, user_sol, ENV['sol_format'], instance[0], instance[1]):
         TAc.OK()
         TAc.print(LANG.render_feedback('correct', "Therefore, the solution to your instance produced by your model is correct."), "green", ["bold"])
 

@@ -35,25 +35,28 @@ def format_name_expand(format_name, format_gender):
     
 # MANAGING REPRESENTATIONS OF SOLUTIONS:
 
-def str_to_sequence(string):
+def str_to_sequence(string: str) -> list:
+    #print(f"str_to_sequence  called with {string=}")
     return [char for char in string]
 
 def sequence_to_str(sequence):
-    #print(f"sequence_to_str called with {sequence=}")
+    #print(f"sequence_to_str  called with {sequence=}")
     return "".join(e for e in sequence)
 
 def annotated_subseq_to_sequence(annotated_solution):
-    #print(f"annotated_subseq_to_sequence called with {annotated_solution=}")
+    #print(f"annotated_subseq_to_sequence  called with {annotated_solution=}")
     return [annotated_solution[key] for key in sorted(annotated_solution)]
 
-def annotated_subseq_to_str(annotated_solution):
-    #print(f"annotated_subseq_to_str called with {annotated_solution=}")
+def annotated_subseq_to_str(annotated_solution) -> str:
+    #print(f"annotated_subseq_to_str  called with {annotated_solution=}")
     return sequence_to_str(annotated_subseq_to_sequence(annotated_solution))
 
-def render_annotated_subseq_as_str(solution):
+def render_annotated_subseq_as_str(solution) -> str:
+    #print(f"render_annotated_subseq_as_str  called with {solution=}")
     return '\n'.join([f'{solution[key]} {key[0]} {key[1]}' for key in sorted(solution)])
 
-def read_annotated_subseq(raw_annotated_subseq):
+def read_annotated_subseq(raw_annotated_subseq: str):
+    #print(f"read_annotated_subseq  called with {raw_annotated_subseq=}")
     sol = {}
     for line in raw_annotated_subseq[:-1].split('\n'):
         values = line.split()
@@ -246,11 +249,11 @@ def check_sol_feasibility(TAc, LANG, user_sol, sol_format, s, t):
             if pair[1] < prev_j_t:
                 TAc.print(LANG.render_feedback('error-crossing-pairs', f'# This solution is not feasible since it contains both the pair {pair} and the pair {prev_pair} which cross since {prev_pair[0]}<{pair[0]} but  {prev_pair[1]}>{pair[1]}.'), 'red', ['bold'])
                 return False
-            if s[pair[0]] != user_sol.get(pair):
-                TAc.print(LANG.render_feedback('error-s-no-matching-char', f'#ERROR: The char in position {pair[0]} of the first string is a `s[pair[0]]` and not a `{user_sols[pair]}`.'), 'red', ['bold'])
+            if s[pair[0]] != user_sol[pair]:
+                TAc.print(LANG.render_feedback('error-s-no-matching-char', f'#ERROR: The char in position {pair[0]} of the first string is a `{s[pair[0]]}` and not a `{user_sol[pair]}`.'), 'red', ['bold'])
                 return False
-            if user_sol.get(pair) != t[pair[1]]:
-                TAc.print(LANG.render_feedback('error-t-no-matching-char', f'#ERROR: The char in position {pair[1]} of the second string is a `t[pair[0]]` and not a `{user_sols[pair]}`.'), 'red', ['bold'])
+            if t[pair[1]] != user_sol[pair]:
+                TAc.print(LANG.render_feedback('error-t-no-matching-char', f'#ERROR: The char in position {pair[1]} of the second string is a `{t[pair[0]]}` and not a `{user_sol[pair]}`.'), 'red', ['bold'])
                 return False 
             prev_i_s = pair[0]
             prev_j_t = pair[1]
@@ -262,7 +265,7 @@ def check_sol_feas_and_opt(TAc, LANG, user_sol, sol_format, s, t):
         TAc.print(LANG.render_feedback('not-feasible', f'# The solution produced is NOT feasible. The string `{user_sol}` is NOT a common subsequence of s=`{s}` and t=`{t}`.'), 'red', ['bold'])
         return False
     else:
-        TAc.print(LANG.render_feedback('feasible', f'# The solution produced is feasible. The string `{user_sol}` is a common subsequence of s=`{s}` and t=`{t}`.'), 'green')
+        TAc.print(LANG.render_feedback('feasible', f'# The solution produced is feasible. Indeed, `{user_sol}` encodes a common subsequence of s=`{s}` and t=`{t}`.'), 'green')
     max_val, an_opt_sol = opt_val_and_sol(s, t)
     assert len(user_sol) <= max_val
     if len(user_sol) < max_val:

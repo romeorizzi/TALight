@@ -206,6 +206,7 @@ services:
     example2: [to visualize the solution written in the file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -adisplay_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat']
     example3: [to ask validation of the solution written in the file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
     example4: [to get credits for this instance in case of feasibility/optimality of the solution written in the file `solution.txt` by your model, '\n     rtal connect -x token <YOUR_TOKEN> model_lcs try_GMPL_model -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
+    example5: [a concrete example, '\n     rtal connect model_lcs try_GMPL_model -fmod=models/lcs_ILP-model-gmpl.mod -fdat=instances_catalogue/all_instances/instance_003.dat -adisplay_solution=1 -acheck_solution=1 -finstance=instances_catalogue/all_instances/instance_003.only_strings.txt -adisplay_raw_solution']
     files:
       - instance
       - mod
@@ -240,7 +241,7 @@ services:
         explain: 'choose the format of the instance file.'
       sol_format:
         regex: ^(subseq|annotated_subseq)$
-        default: subseq
+        default: annotated_subseq
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
       lang: 
         regex: ^(hardcoded|hardcoded_ext|en|it)$
@@ -269,19 +270,22 @@ services:
 
   eval_GMPL_model:
     evaluator: [python, services/eval_GMPL_model_server.py]
-    description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_format`. Examples of the supported dat formats are given in the folder `examples` where each example instance is encoded in every supported dat format (filename and extensions in the form `instance_name`.`dat_format`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance. You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_lcs eval_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py path_to_model_file_dir/your_lcs.mod'
+    description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_format`. Examples of the supported dat formats are given in the folder `examples` where each example instance is encoded in every supported dat format (filename and extensions in the form `instance_name`.`dat_format`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance. You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_lcs eval_GMPL_model -fmod=path_to_model_file_dir/your_lcs.mod'
+    example1: [a concrete example for a call, '\n     rtal connect model_lcs eval_GMPL_model -fmod=models/lcs_ILP-model-gmpl.mod -asol_format=annotated_subseq']
+    files:
+      - mod
     args:
       goal:
-        regex: ^(public_examples|at_most_10|at_most_20|at_most_30|at_most_50|at_most_70|at_most_80|at_most_100)$
-        default: at_most_10
+        regex: ^(hardcoded|DNA_strlen_at_most_10|DNA_strlen_at_most_20|uppercase_strlen_at_most_30|lowercase_strlen_at_most_40|lowercase_uppercase_strlen_at_most_50|suppercase_strlen_at_most_80|DNA_strlen_at_most_100)$
+        default: DNA_strlen_at_most_10
         explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
       dat_format:
-        regex: ^(default)$
-        default: default
+        regex: ^(gmpl_dat1)$
+        default: gmpl_dat1
         explain: 'choose how to encode the dat file. For now there is only one format'
       sol_format:
         regex: ^(subseq|annotated_subseq)$
-        default: subseq
+        default: annotated_subseq
         explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$

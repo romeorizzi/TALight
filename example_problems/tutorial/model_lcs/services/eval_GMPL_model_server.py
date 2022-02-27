@@ -3,7 +3,7 @@ from sys import exit
 
 from multilanguage import Env, Lang, TALcolors
 
-from math_modeling import ModellingProblemHelper, get_problem_path_from
+from math_modeling import ModellingProblemHelper
 
 import model_lcs_lib as ll
 
@@ -22,21 +22,20 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START MATH_MODELING:
 
-tests_dirname_list = ["public_examples", "at_most_10_DNA", "at_most_20_DNA", "at_most_30_uppercase", "at_most_40_lowercase", "at_most_50_lowercase_uppercase", "at_most_70_uppercase", "at_most_80_lowercase", "at_most_100_DNA"]
+goals = ["hardcoded", "DNA_strlen_at_most_10", "DNA_strlen_at_most_20", "uppercase_strlen_at_most_30", "lowercase_strlen_at_most_40", "lowercase_uppercase_strlen_at_most_50", "suppercase_strlen_at_most_80", "DNA_strlen_at_most_100"]
+tests_dirname_list = ["instances_" + goal for goal in goals]
+#print(f"{tests_dirname_list=}")
 
 for test in reversed(tests_dirname_list):
-    if test == ENV['goal']:
+    if test == "instances_" + ENV['goal']:
         break
     tests_dirname_list.remove(test)
+print(f"{tests_dirname_list=}")
+    
+dat_format = ENV['dat_format']
+instance_format = 'only_strings'
 
-dat_format = ''
-txt_format = 'only_strings'
-
-mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
-
-TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (your_mod_file.mod)."), "yellow")
-
-mph.receive_mod_file(single_file_passed_to_the_bot=True)
+mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
 
 total_passed_tests = 0
 total_tests = 0
@@ -56,15 +55,15 @@ for test_dir in tests_dirname_list:
         TAc.print(LANG.render_feedback("separator", "<================>"), "yellow", ["reverse"])
         TAc.print(LANG.render_feedback('instance-id', f"Check instance id={instance_id}:"), "green", ["bold"])
 
-        dat_file_path = paths[dat_format + 'dat']
-        input_file_path = paths[txt_format + '.txt']
+        dat_file_path = paths[ll.format_name_to_file_extension(dat_format,'instance')]
+        input_file_path = paths[ll.format_name_to_file_extension(instance_format,'instance')]
 
         input_str = mph.get_file_str_from_path(input_file_path)
-        instance = ll.get_instance_from_txt(input_str, format=txt_format)
+        instance = ll.get_instance_from_txt(input_str, instance_format)
         m = len(instance[0])
         n = len(instance[1])
 
-        mph.run_GLPSOL(dat_file_path)
+        mph.run_GLPSOL(dat_file_fullpath=dat_file_path)
         
         total_tests += 1
 
@@ -75,30 +74,20 @@ for test_dir in tests_dirname_list:
             tests[test_dir][instance_id] = "NO!"
         else:
             raw_sol = mph.get_raw_sol()
-            glpsol_sol = ll.read_annotated_subseq_sol(raw_sol)
+            if ENV['sol_format'] == 'subseq':
+                user_sol = raw_sol
+                TAc.print(LANG.render_feedback("print-out-sol-subseq", f"The solution obtained by your model:\n{ll.sequence_to_str(user_sol)}"), "white", ["reverse"])
+            if ENV['sol_format'] == 'annotated_subseq':
+                user_sol = user_sol_annotated_subseq = ll.read_annotated_subseq("\n".join(raw_sol)+"\n")
+                TAc.print(LANG.render_feedback("print-out-sol-annotated-subseq", f"The solution obtained by your model:\n{ll.render_annotated_subseq_as_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
 
-            user_sol_subsequence = ll.annotated_subseq_to_sequence(glpsol_sol)
-            user_sol_annotated_subseq = glpsol_sol
-
-            if ENV['sol_format'] == 'subsequence':
-                if ll.check_sol_feas_and_opt(TAc, LANG, ENV, user_sol_subsequence, instance[0], instance[1]):
-                    total_passed_tests += 1
-                    passed_dir_tests += 1
-                    TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])
-                    tests[test_dir][instance_id] = "YES!"
-                else:                    
-                    tests[test_dir][instance_id] = "NO!"
-                TAc.print(LANG.render_feedback("out_sol", f"Your solution:\n{ll.sequence_to_str(user_sol_subsequence)}"), "white", ["reverse"])
-            elif ENV['sol_format'] == 'annotated_subseq':
-                if ll.check_sol_feas_and_opt(TAc, LANG, ENV, user_sol_annotated_subseq, instance[0], instance[1]):
-                    total_passed_tests += 1
-                    passed_dir_tests += 1
-                    TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])
-                    tests[test_dir][instance_id] = "YES!"
-                else:
-                    tests[test_dir][instance_id] = "NO!"
-                TAc.print(LANG.render_feedback("out_sol", f"Your solution:\n{ll.render_annotated_subseq_as_str(user_sol_annotated_subseq)}"), "white", ["reverse"])
-
+            if ll.check_sol_feas_and_opt(TAc, LANG, user_sol, ENV['sol_format'], instance[0], instance[1]):
+                total_passed_tests += 1
+                passed_dir_tests += 1
+                TAc.print(LANG.render_feedback('correct', "OK!"), "green", ["bold"])
+                tests[test_dir][instance_id] = "YES!"
+            else:                    
+                tests[test_dir][instance_id] = "NO!"
     
     TAc.print(LANG.render_feedback('dir-passed-tests', f'Your model has passed {passed_dir_tests} tests over {total_dir_tests} total tests in {test_dir} directory.'), "green", ["bold"])
 

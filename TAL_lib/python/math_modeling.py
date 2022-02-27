@@ -6,15 +6,15 @@ import subprocess, os, json
 class ModellingProblemHelper():
     def __init__(self,
                 TAc,
-                tmp_path,                            \
-                problem_path,                            \
-                mod_filename      = 'mod',         \
-                dat_filename      = 'dat',      \
-                in_filename       = 'instance',      \
-                sol_filename      = 'solution.txt',      \
-                out_filename      = 'output.txt',        \
-                err_filename      = 'error.txt',         \
-                ef_filename      = 'explicit_formulation.txt',         \
+                tmp_path,                                       \
+                problem_path,                                   \
+                mod_filename      = 'mod',                      \
+                dat_filename      = 'dat',                      \
+                in_filename       = 'instance',                 \
+                sol_filename      = 'solution.txt',             \
+                out_filename      = 'output.txt',               \
+                err_filename      = 'error.txt',                \
+                ef_filename       = 'explicit_formulation.txt', \
                 instances_dirname = 'instances_catalogue',      \
                 all_instances_subfolder = 'all_instances',      \
                 gendict_filename  = 'gen_dictionary.json'):
@@ -35,8 +35,7 @@ class ModellingProblemHelper():
         self.__gendict_path    = os.path.join(self.__catalogue_path, gendict_filename)
 
 
-    def run_ef_GLPSOL(self, ef_format):
-            
+    def run_ef_GLPSOL(self, ef_format):            
         try:
             with open(self.__out_path, 'w') as out_file:
                 try:
@@ -66,9 +65,11 @@ class ModellingProblemHelper():
             self.__TAc.print(f"Fail to create stdout file in: {self.__out_path}", "red", ["bold"])
             exit(0)
 
-    def run_GLPSOL_with_ef(self, ef_format=None):
-        
-        dat_file_path = self.__dat_path
+    def run_GLPSOL_with_ef(self, ef_format=None, dat_file_fullpath=None):
+        if dat_file_fullpath == None:
+            dat_file_path = self.__dat_path
+        else:
+            dat_file_path = dat_file_fullpath
         
         try:
             with open(self.__out_path, 'w') as out_file:
@@ -93,9 +94,12 @@ class ModellingProblemHelper():
             self.__TAc.print(f"Fail to create stdout file in: {self.__out_path}", "red", ["bold"])
             exit(0)
 
-    def run_GLPSOL(self):
-        """launches glpsol on the .mod and .dat files contained in TMP_DIR. The stdout, stderr and solution of glpsol are saved in files."""
-        dat_file_path = self.__dat_path
+    def run_GLPSOL(self, dat_file_fullpath=None):
+        """If  dat_file_path==None  then this procedure launches glpsol on the .mod and .dat files contained in TMP_DIR. Otherwise, the dat file is on the server, in location <dat_file_fullpath>. The stdout, stderr and solution of glpsol are saved in files."""
+        if dat_file_fullpath == None:
+            dat_file_path = self.__dat_path
+        else:
+            dat_file_path = dat_file_fullpath
         
         # Get files for stdoutRun GPLSOL
         try:

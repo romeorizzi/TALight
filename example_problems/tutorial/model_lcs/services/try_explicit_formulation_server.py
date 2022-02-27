@@ -3,7 +3,7 @@ from sys import exit
 
 from multilanguage import Env, Lang, TALcolors
 
-from math_modeling import ModellingProblemHelper, get_problem_path_from
+from math_modeling import ModellingProblemHelper
 
 import model_lcs_lib as ll
 
@@ -22,20 +22,8 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 
-mph = ModellingProblemHelper(TAc, get_problem_path_from(__file__))
-
-if ENV['format'] == 'math':
-    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (ef=your_ef_file dat=your_dat_file.dat)."), "yellow")
-
-    mph.receive_ef_file()
-    mph.receive_dat_file()
-else:
-    TAc.print(LANG.render_feedback("start", f"# Hey, I am ready to start and get your input files (ef=your_ef_file)."), "yellow")
-
-    mph.receive_ef_file()
-
+mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
 mph.run_ef_GLPSOL(ENV['format'])
-
 glpsol_output = mph.get_out_str()
 
 if ENV['display_output']:
