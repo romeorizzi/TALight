@@ -17,6 +17,7 @@ args_list = [
     ('m',int), 
     ('n',int),
     ('alphabet', str),
+    ('seed',int),
     ('sol_format',str),
     ('download',bool),
 ]
@@ -56,7 +57,7 @@ TAc.print(ll.instance_to_str(instance), "white", ["bold"])
 
 max_len, an_opt_sol_annotated_subseq = ll.opt_val_and_sol(instance[0], instance[1])
 if ENV["sol_format"] == 'only_val':
-    TAc.print(LANG.render_feedback("solution-val-title", f"The optimal solution value for this instance is:"), "green", ["bold"])
+    TAc.print(LANG.render_feedback("solution-val-title", f"The optimal solution value for this instance is long:"), "green", ["bold"])
     TAc.print(LANG.render_feedback("solution-only_val", f'{max_len}'), "white", ["reverse"])
     if ENV["download"]:
         TALf.str2output_file(max_len,f'opt_val.txt')
