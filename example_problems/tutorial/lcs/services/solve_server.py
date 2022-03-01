@@ -17,7 +17,6 @@ args_list = [
     ('m',int), 
     ('n',int),
     ('alphabet', str),
-    ('seed',int),
     ('sol_format',str),
     ('download',bool),
 ]
