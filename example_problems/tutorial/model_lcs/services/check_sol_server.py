@@ -7,7 +7,7 @@ from TALfiles import TALfilesHelper
 
 from math_modeling import ModellingProblemHelper
 
-import lcs_lib as ll
+import model_lcs_lib as ll
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
