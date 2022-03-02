@@ -5,7 +5,7 @@ from multilanguage import Env, Lang, TALcolors
 
 from math_modeling import ModellingProblemHelper
 
-import model_lcs_lib as ll
+import lcs_lib as ll
 
 
 # METADATA OF THIS TAL_SERVICE:
