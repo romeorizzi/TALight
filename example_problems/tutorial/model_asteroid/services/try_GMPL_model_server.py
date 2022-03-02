@@ -4,7 +4,7 @@ import os.path
 
 from multilanguage import Env, Lang, TALcolors
 
-import model_asteroid_lib as al
+import asteroid_lib as al
 from math_modeling import ModellingProblemHelper
 
 

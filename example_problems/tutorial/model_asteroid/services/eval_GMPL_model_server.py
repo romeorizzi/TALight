@@ -2,7 +2,7 @@
 from sys import exit, path
 from multilanguage import Env, Lang, TALcolors
 
-import model_asteroid_lib as al
+import asteroid_lib as al
 from math_modeling import ModellingProblemHelper, get_problem_path_from
 
 
