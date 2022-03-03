@@ -12,7 +12,7 @@ def main(n, m, gen_seed, format):
     gen_seed = int(gen_seed)
 
     # Generate instance
-    (instance, seed) = al.gen_instance(m, n, gen_seed)
+    instance= al.gen_instance(m, n, gen_seed)
 
     # Generate selected output
     print(al.instance_to_str(instance, format))

@@ -8,7 +8,7 @@ add_format: dat
 add_format: only_matrix.txt
 add_format: with_m_and_n.txt
 
-suite: public_examples
+collection: hardcoded
 COPY: hardcoded/instance1.only_matrix.txt
 COPY: hardcoded/instance1.with_m_and_n.txt
 COPY: hardcoded/instance1.dat
@@ -16,16 +16,16 @@ COPY: hardcoded/instance2.only_matrix.txt
 COPY: hardcoded/instance2.with_m_and_n.txt
 COPY: hardcoded/instance2.dat
 #     m,  n, seed
-GEN:  4   4  777771
-GEN:  4   4  777771
-GEN:  10  10 777771
+GEN:  instance_generator.py   4   4  777771
+GEN:  instance_generator.py   4   4  777771
+GEN:  instance_generator.py   10  10 777771
 
-suite: m_and_n_at_most_5
+collection: m_and_n_at_most_5
 #     m,  n, seed
-GEN:  4   4  777777
-GEN:  4   4  777666
-GEN:  5   4  777123
-GEN:  4   5  777456
-GEN:  5   5  132777
-GEN:  5   5  456777
+GEN:  instance_generator.py   4   4  777777
+GEN:  instance_generator.py   4   4  777666
+GEN:  instance_generator.py   5   4  777123
+GEN:  instance_generator.py   4   5  777456
+GEN:  instance_generator.py   5   5  132777
+GEN:  instance_generator.py   5   5  456777
 

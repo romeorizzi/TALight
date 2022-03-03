@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from sys import argv, exit
 
-import model_lcs_lib as ll
+import lcs_lib as ll
 
 
 def main(m, n, alphabet, gen_seed, file_full_extension):
