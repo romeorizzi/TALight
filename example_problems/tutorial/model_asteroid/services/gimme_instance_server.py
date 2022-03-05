@@ -26,13 +26,16 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
-if ENV['source'] == 'catalogue1':
+if ENV['source'] == 'catalogue':
     # Initialize ModellingProblemHelper
     mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
     # Get dat file
-    print('the format is: ', ENV['format'][12:])
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=ENV['format'])
     instance = al.get_instance_from_str(instance_str, format=ENV['format'])
+    if ENV['format']=='only_matrix.txt':
+        m=len(instance)
+    else:
+        m=instance[0][0]
     output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['format']}"
 
 else:
@@ -46,11 +49,14 @@ else:
 if ENV['silent']:
         if ENV['display']:
             print(instance_str)
-else:
+elif not ENV['source'] == 'catalogue':
     TAc.print(LANG.render_feedback("instance-title", f'The {ENV["m"]}x{ENV["n"]} 0,1-matrix is:'), "yellow", ["bold"])
     TAc.print(al.instance_to_str(instance, format=ENV["format"]), "white", ["bold"])
-    if not ENV['source'] == 'instance_id':
-        TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("seed", f'The seed was: {ENV["seed"]}'), "yellow", ["bold"])
+else:
+    TAc.print(LANG.render_feedback("instance-title", f'The {m}x{len(instance[1])} 0,1-matrix is:'), "yellow", ["bold"])
+    TAc.print(instance_str, "white", ["bold"])
+
 if ENV['download']:
     TALf.str2output_file(instance_str,output_filename)
 exit(0)
