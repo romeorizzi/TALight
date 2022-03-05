@@ -3,9 +3,9 @@ from sys import exit
 
 from multilanguage import Env, Lang, TALcolors
 
-from math_modeling import ModellingProblemHelper, get_problem_path_from
+from math_modeling import ModellingProblemHelper
 
-import model_lcs_lib as ll
+import asteroid_lib as ll
 
 
 # METADATA OF THIS TAL_SERVICE:
