@@ -324,9 +324,16 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
                                 );
                                 continue;
                             }
+                            let log_path = match auth.save_directory.absolutize() {
+                                Ok(x) => x,
+                                Err(x) => {
+                                    error!("Cannot absolutize save directory: {}", x);
+                                    break;
+                                }
+                            };
                             tinfo = Some(TokenInfo {
                                 token: t,
-                                path: auth.save_directory,
+                                path: log_path.into(),
                             });
                         }
                     } else if self.args.only_auth {
