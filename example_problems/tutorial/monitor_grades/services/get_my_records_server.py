@@ -34,11 +34,25 @@ if not DEBUG:
 
 print([ (var_name, environ[var_name]) for var_name in environ if var_name[:4] == "TAL_"])
 
+print(f"{os.getcwd()=}")
+print(f"{environ['TAL_META_LOG_FILES']=}")
+print(f"{environ['TAL_META_EXP_LOG_DIR']=}")
+print(f"{environ['TAL_META_EXP_TOKEN']=}")
+
+# formato del filename dello .yaml file principale che descrive i contenuto di una cartella di LOG:
+# 123456_RomeoRizzi+2022-02-24_20-56-54_425        
+
+# assumendo che questa sia la richiesta di uno studente:
+yield_student_report(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
+
+
+
+
 ALLPROBLEM = "all_problems"
 ALLSERVICE = "all_services"
 OKCONSTANT = "OK"
 
-def main(problem : str, service : str, token : str, log_dir : str):
+def yield_student_report(problem : str, service : str, token : str, log_dir : str):
     path = os.path.join(os.getcwd(), log_dir)
 
     recent_date = ""
@@ -96,17 +110,3 @@ def printConsole(msg : str, isOK : bool):
         else:
             print("NO", msg)
 
-if __name__ == "__main__":
-    print(f"{os.getcwd()=}")
-    print(f"{environ['TAL_META_LOG_FILES']=}")
-    print(f"{environ['TAL_META_EXP_LOG_DIR']=}")
-    print(f"{environ['TAL_META_EXP_TOKEN']=}")
-    
-        
-    if DEBUG:
-        main("nomeproblema", "nomeservizio", "123456_RomeoRizzi", "log_algorithms")
-    else:
-        main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
-
-# formato del filename dello .yaml file principale che descrive i contenuto di una cartella di LOG:
-# 123456_RomeoRizzi+2022-02-24_20-56-54_425        
