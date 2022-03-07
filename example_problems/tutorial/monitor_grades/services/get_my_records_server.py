@@ -32,7 +32,7 @@ if not DEBUG:
 #TAc.print(LANG.render_feedback("TAL_META_EXP_LOG_DIR", f'ENV.TAL_META_EXP_LOG_DIR={environ["TAL_META_EXP_LOG_DIR"]}'), 'red', ['bold'])
 # END WARNING
 
-#print([ (var_name, environ[var_name]) for var_name in environ if var_name[:4] == "TAL_"])
+print([ (var_name, environ[var_name]) for var_name in environ if var_name[:4] == "TAL_"])
 
 ALLPROBLEM = "all_problems"
 ALLSERVICE = "all_services"
@@ -97,7 +97,16 @@ def printConsole(msg : str, isOK : bool):
             print("NO", msg)
 
 if __name__ == "__main__":
+    print(f"{os.getcwd()=}")
+    print(f"{environ['TAL_META_LOG_FILES']=}")
+    print(f"{environ['TAL_META_EXP_LOG_DIR']=}")
+    print(f"{environ['TAL_META_EXP_TOKEN']=}")
+    
+        
     if DEBUG:
         main("nomeproblema", "nomeservizio", "123456_RomeoRizzi", "log_algorithms")
     else:
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
+
+# formato del filename dello .yaml file principale che descrive i contenuto di una cartella di LOG:
+# 123456_RomeoRizzi+2022-02-24_20-56-54_425        
