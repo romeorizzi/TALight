@@ -39,7 +39,6 @@ class Env:
             else:
                 self.arg["seed"] = int(environ["TAL_seed"])
         self.args_list = args_list
-
         self.exe_fullname = argv[0]
         self.exe_path_from_META_DIR = path.split(self.exe_fullname)[0]
         self.exe_name = path.split(self.exe_fullname)[-1]
