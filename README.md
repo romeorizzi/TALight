@@ -48,7 +48,7 @@ All this, besides possibly springing you to become a proficient problem solver, 
 
 ## How to avoid installing the TALight server daemon (`tald`)
 
-The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://talight.tk/tutorial` that publicly exposes all services of its problems. To have a natural start with TALight, you can first explore the problems of this collection as deployed by this server.
+The whole problem collection of this multistage tutorial is hosted in the cloud at the web service server `wss://ta.di.univr.it/tal` that publicly exposes all services of its problems. To have a natural start with TALight, you can first explore the problems of this collection as deployed by this server.
 
 You can do this by running a TALight client (`rtal`) set up on your machine (Option&nbsp;2), or by using a browser to operate a TALight client exported by a cloud hosted service (Option&nbsp;3). 
 Option&nbsp;3 is not ideal but allows you to explore what TALight might offer if you have no permission to install anything on your PC, or even from a tablet or a smartphone (in which case the impediments will however get more serious).
@@ -71,15 +71,15 @@ Rather than using these repls, we suggest you to make your own (free) repl accou
 In your repl page in the browser, open the shell and ask for the TALight services from its command line. To do so, issue the rtal executable we placed there. The rtal command takes in a set of arguments that can be extended by the problem maker. You have to find out yourself the arbitrarily rich possibilities made available for each single problem. To give you a first start with this, here are a few examples of commands one could issue to explore what services are offered:
 
 ```bash
-./rtal -s wss://talight.tk/tutorial help
-./rtal -s wss://talight.tk/tutorial list
-./rtal -s wss://talight.tk/tutorial list sum -v
-./rtal -s wss://talight.tk/tutorial connect --help
-./rtal -s wss://talight.tk/tutorial connect sum synopsis
-./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=free_sum
-./rtal -s wss://talight.tk/tutorial connect sum synopsis -a service=help
-./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
-./rtal -s wss://talight.tk/tutorial connect sum free_sum
+./rtal -s wss://ta.di.univr.it/tal help
+./rtal -s wss://ta.di.univr.it/tal list
+./rtal -s wss://ta.di.univr.it/tal list sum -v
+./rtal -s wss://ta.di.univr.it/tal connect --help
+./rtal -s wss://ta.di.univr.it/tal connect sum synopsis
+./rtal -s wss://ta.di.univr.it/tal connect sum synopsis -a service=free_sum
+./rtal -s wss://ta.di.univr.it/tal connect sum synopsis -a service=help
+./rtal -s wss://ta.di.univr.it/tal connect sum -a page=sum_and_difference help
+./rtal -s wss://ta.di.univr.it/tal connect sum free_sum
 ```
 </details>
 
@@ -98,7 +98,7 @@ TALight intends to promote autonomous exploration. We wish these explorations mi
 We exhibit now the few basic `rtal` commands which support the exploration of a TALight problem.  
 In this section we only assume to have access to a functioning `rtal` command, either because it has been installed on the local machine or because we operate an instatiation of it in a cloud service. 
 In either case, we assume to operate the `rtal` command from a CLI environment, some powerful enough shell emulator.
-At this point, the only difference is: in the various examples of use listed here below, you should write `./rtal -s wss:INTENDED_ADDRESS` (like for example `./rtal -s wss://talight.tk/tutorial`) rather than `./rtal` when the `rtald` we are appealing to is deployed from some `INTENDED_ADDRESS` in the cloud rather than our local machine.
+At this point, the only difference is: in the various examples of use listed here below, you should write `./rtal -s wss:INTENDED_ADDRESS` (like for example `./rtal -s wss://ta.di.univr.it/tal`) rather than `./rtal` when the `rtald` we are appealing to is deployed from some `INTENDED_ADDRESS` in the cloud rather than our local machine.
 
 
 The rtal command takes in a set of arguments that can be extended by the problem maker. You have to find out yourself the arbitrarily rich possibilities made available for each single problem. To give you a first start with this, here are a few examples of commands one could issue to explore what services are offered:
@@ -285,7 +285,7 @@ From here, try out the following actions.
 To see the list of problems currently available on our tutorial collection server:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial list
+rtal -s wss://ta.di.univr.it/tal list
 ```
 
 (Of course, you should write `rtal.exe` instead of `rtal` if on Windows.)
@@ -293,56 +293,56 @@ rtal -s wss://talight.tk/tutorial list
 To get general help:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial help
+rtal -s wss://ta.di.univr.it/tal help
 ```
 
 To get more specific help on an `rtal` subcommand:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial help connect
+rtal -s wss://ta.di.univr.it/tal help connect
 ```
 
 To list the services of a deployed problem, like e.g. problem sum:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial list sum
+rtal -s wss://ta.di.univr.it/tal list sum
 ```
 
 To verbose out the format for the arguments supported by a problem service:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial list -v sum
+rtal -s wss://ta.di.univr.it/tal list -v sum
 ```
 
 Avendo quindi compre che il problema `sum` offre un servizio di `help`  quali siano le opzioni disponibili per quel parametro potremmo andare a scoprire informazioni più specifiche riguardo ai servizi del problema con:
 ```bash
-./rtal -s wss://talight.tk/tutorial connect sum -a page=sum_and_difference help
+./rtal -s wss://ta.di.univr.it/tal connect sum -a page=sum_and_difference help
 ```
 
 To request a service:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect sum free_sum
+rtal -s wss://ta.di.univr.it/tal connect sum free_sum
 ```
 
 To request a service specifying a non-default value for a parameter:
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -a obj=max_product sum free_sum
+rtal -s wss://ta.di.univr.it/tal connect -a obj=max_product sum free_sum
 ```
 
 To turn off the colors in the feedback (in case your situation does not support for it and our automatic detection mechanism for this limit has failed, then strange strings (called escape sequences in jargon) will clutter the feedback):
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -n -aobj=max_product sum free_sum
+rtal -s wss://ta.di.univr.it/tal connect -n -aobj=max_product sum free_sum
 ```
 
 To connect a bot of yours to play on your behalf:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://ta.di.univr.it/tal connect -e -aobj=max_product sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 <strong>If you are on Windows than you should write:</strong>
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e -aobj=max_product sum free_sum -- python ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://ta.di.univr.it/tal connect -e -aobj=max_product sum free_sum -- python ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 <strong>This is because only `.exe` files can be executed on Windows, scripts can not (even if their first line is the correct she-bang).
 
@@ -353,28 +353,28 @@ Of course, you can also use this second and longer form of the command also on L
 Ok, that bot did not behave that well because it was a simple one, but you can try the `sum_mymaxproductbot.py` in the same directory (of this report that you have cloned in local). Or you can assign to `sum_mysimplebot.py` a simpler task:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect -e sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://ta.di.univr.it/tal connect -e sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 
 When you succeed teaching a competence (like when you succeed instructing a bot to do something) then you get confirmed to have acquired that competence in the deep. Therefore, the submission of a bot offers a means to assess the competence. We might thus offer you an evaluation on your submissions. Apart for checking what is going on, you might then prefer to turn off the full report on the interaction between your bot and the program written by the problem maker who designed the service. In this case, just drop the `-e` flag:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
+rtal -s wss://ta.di.univr.it/tal connect sum free_sum -- ~/TALight/example_problems/tutorial/sum/bots/python/sum_mysimplebot.py 
 ```
 
 Since problem `sum` offers an `help` service, you can also get immediate directions about the problem by asking to this service, selecting the specific page through the use of arguments:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial connect sum help -a sum_and_difference
+rtal -s wss://ta.di.univr.it/tal connect sum help -a sum_and_difference
 ```
 
 With:
 
 ```bash 
-rtal -s wss://talight.tk/tutorial get sum
+rtal -s wss://ta.di.univr.it/tal get sum
 ```
 
-you invoke the `get` subcommand of the command `rtal` to download the `.tar` file `sum.tar`. This file is the archive of the public folder of problem `sum` on the `wss://talight.tk` server. Once you untar this folder, you find into it the statement of the problem `sum` and all other material relating to the problem (explanations, videos, links, ...) that the problem maker has collected and decided to make public (i.e., accessible to you through this simple mechanism). The folder `public` may be a rich tree of directories, and the whole tree, together with any material that is symlinked from within the tree (even if the material il placed outside) will then end up in the transmitted archive.
+you invoke the `get` subcommand of the command `rtal` to download the `.tar` file `sum.tar`. This file is the archive of the public folder of problem `sum` on the `wss://ta.di.univr.it/tal` server. Once you untar this folder, you find into it the statement of the problem `sum` and all other material relating to the problem (explanations, videos, links, ...) that the problem maker has collected and decided to make public (i.e., accessible to you through this simple mechanism). The folder `public` may be a rich tree of directories, and the whole tree, together with any material that is symlinked from within the tree (even if the material il placed outside) will then end up in the transmitted archive.
 
 <details><summary>How to untar an archive into the original folder</summary>  
 
