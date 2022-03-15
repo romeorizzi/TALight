@@ -1,1 +1,1 @@
-model_asteroid_lib.py
+../../asteroid/services/asteroid_lib.py
