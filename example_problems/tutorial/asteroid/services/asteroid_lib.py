@@ -6,6 +6,15 @@ import pandas as pd
 import copy
 import random
 import networkx as nx
+import re
+
+### CONSTANTS #########################################
+FORMAT_AVAILABLES = ['dat', 'txt']
+DAT_STYLES_AVAILABLES = ['']
+TXT_STYLES_AVAILABLES = ['only_matrix', 'with_m_and_n']
+DEFAULT_FORMAT='only_matrix.txt'
+#######################################################
+
 
 # CONVERTERS FUNCTIONS:
 def subset_to_seq(subset_sol):
