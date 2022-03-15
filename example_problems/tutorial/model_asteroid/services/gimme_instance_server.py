@@ -29,7 +29,6 @@ TALf = TALfilesHelper(TAc, ENV)
 if ENV['source'] == 'catalogue':
     # Initialize ModellingProblemHelper
     mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
-    # Get dat file
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=ENV['format'])
     instance = al.get_instance_from_str(instance_str, format=ENV['format'])
     if ENV['format']=='only_matrix.txt':

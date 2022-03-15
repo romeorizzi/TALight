@@ -69,8 +69,8 @@ services:
         default: 1
         explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the named catalogue of hardcoded instances. The whole catalogue is public, that is, it is contained in the file \''model_asteroid.tar\'' you get downloaded on your machine by issuing `rtal get model_asteroid`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
       instance_format:
-        regex: ^(with_m_and_n|only_matrix|dat)$
-        default: only_matrix
+        regex: ^(with_m_and_n.txt|only_matrix.txt|dat)$
+        default: only_matrix.txt
         explain: Use this argument to specify the format of the file containing the instance.
         explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m and n are the size of the matrix; then follow m lines, that are the rows of the matrix.'
         explain2: '[only_matrix] like the above, but with the first line omitted.'
@@ -90,7 +90,7 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       sol_format:
-        regex: ^(seq|subset)$
+        regex: ^(only_val|seq|subset)$
         default: seq
         explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
         example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
