@@ -3,7 +3,7 @@ GEN_DIR = $(shell pwd)/gen/
 
 gen-instances:
 	echo "Generating instances directory..."
-	./gen/TAL_gen_instances.py $(GEN_DIR)
+	./gen/TAL_make_catalogue.py $(GEN_DIR)
 
 clean-all:
 	echo "Removing instances directory..."

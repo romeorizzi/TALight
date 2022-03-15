@@ -51,7 +51,7 @@ services:
         default: it
   solve:
     evaluator: [python, services/solve_server.py]
-    description: 'This service provides you with a solution for a given instance of the Asteroid problem. You can either upload the instance file on the `instance` filehandler of the service, using the `-f` option of the `connect` subcommand of `rtal`, or try to input your instance directly from the terminal (supported only in `only_matrix` format) once the service has started. You may also specify a pseudo-random instance by providing its instance description for a selected generator. This last option might ease your calling this service on instances encounterd with other services.'
+    description: 'This service provides you with a solution for a given instance of the Asteroid problem. You can either upload the instance file on the `instance` filehandler of the service, using the `-f` option of the `connect` subcommand of `rtal`, or specify another source for the instance. In the second case, you can try to directly input your instance from the terminal (supported only in `only_matrix` format) once the service has started. You may also specify an instance from the catalogue, or a pseudo-random instance by providing its instance description for a selected generator. This last option might ease your calling this service on instances encounterd with other services.'
     files:
       - instance
     args:
