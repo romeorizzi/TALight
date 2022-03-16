@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 tokens:
-  - 123456_RomeoRizzi
+  - 123456__RomeoRizzi
   - 123456_anonymous
   - 134551_PincoPallo
 save_directory: log_algorithms
