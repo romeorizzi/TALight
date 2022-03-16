@@ -3,15 +3,16 @@
 from os import environ, listdir
 from os.path import isfile, isdir, join
 import os
-from Struttura import Struttura
 from FolderData import FolderData
 from FileData import FileData
+from Token import Token
 
 DEBUG = False
 
 if not DEBUG:
     from multilanguage import Env, Lang, TALcolors
     import monitor_grades_lib as mgl
+    from TALfiles import TALfilesHelper
 
     # METADATA OF THIS SERVICE
     args_list = [
@@ -38,24 +39,21 @@ ALLPROBLEM = "all_problems"
 ALLSERVICE = "all_services"
 OKCONSTANT = "OK"
 
-problemlist = Struttura()
+problemlist = Token()
 
 def main(problem : str, service : str, token : str, path : str): 
-    printConsole("Student: " + token, True)
-    printConsole("------------------------", True)
-    
     for x in listdir(path):
         fullpath = os.path.join(path, x)
         if (isdir(fullpath)):
             folderdata = FolderData(x, fullpath)
 
-            if (folderdata.token == token):
+            if (folderdata.token == token or ("__" in token)):
                 for y in listdir(fullpath):
                     filedata = FileData(y, os.path.join(fullpath, y), folderdata)
                         
                     if (filedata.problem == problem or problem == ALLPROBLEM):
                         if (filedata.service == service or service == ALLSERVICE):
-                            problemlist.addFile(filedata)
+                            problemlist.addToken(filedata)
 
     problemlist.printToConsole()
 
@@ -67,19 +65,9 @@ def main(problem : str, service : str, token : str, path : str):
 # ----------------------
 # Problem
 #   Service
-#       Goal1: {date}-{content1}, {date}-{content2}
-
-def printConsole(msg : str, isOK : bool):
-    if not DEBUG:
-        if (isOK):
-            TAc.print(msg, "green", ['bold'])
-        else:
-            TAc.print(msg, "red", ['bold'])
-    else:
-        if (isOK):
-            print("OK", msg)
-        else:
-            print("NO", msg)
+#       Goal1: 
+#           {date}-{content1}
+#           {date}-{content2}
 
 if __name__ == "__main__":
     if DEBUG:
