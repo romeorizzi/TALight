@@ -23,7 +23,7 @@ if not DEBUG:
     ENV = Env(args_list)
     TAc = TALcolors(ENV)
     LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
-    #TALf = TALfilesHelper(TAc, ENV)
+    TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
@@ -58,6 +58,10 @@ def main(problem : str, service : str, token : str, path : str):
                             problemlist.addFile(filedata)
 
     problemlist.printToConsole()
+
+    if not DEBUG:
+        if ENV['download'] == 1:
+            TALf.str2output_file(problemlist.createFile(), "result.csv")
 
 # Student Token
 # ----------------------
