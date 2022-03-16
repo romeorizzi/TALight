@@ -2,11 +2,10 @@
 
 from os import environ, listdir
 from os.path import isfile, isdir, join
-from sys import exit
 import os
-import datetime
-import time
-from typing import MutableSequence
+from Struttura import Struttura
+from FolderData import FolderData
+from FileData import FileData
 
 DEBUG = False
 
@@ -18,6 +17,7 @@ if not DEBUG:
     args_list = [
         ('problem', str),
         ('service', str),
+        ('download', int)
     ]
 
     ENV = Env(args_list)
@@ -32,71 +32,38 @@ if not DEBUG:
 #TAc.print(LANG.render_feedback("TAL_META_EXP_LOG_DIR", f'ENV.TAL_META_EXP_LOG_DIR={environ["TAL_META_EXP_LOG_DIR"]}'), 'red', ['bold'])
 # END WARNING
 
-print([ (var_name, environ[var_name]) for var_name in environ if var_name[:4] == "TAL_"])
-
-print(f"{os.getcwd()=}")
-print(f"{environ['TAL_META_LOG_FILES']=}")
-print(f"{environ['TAL_META_EXP_LOG_DIR']=}")
-print(f"{environ['TAL_META_EXP_TOKEN']=}")
-
-# formato del filename dello .yaml file principale che descrive i contenuto di una cartella di LOG:
-# 123456_RomeoRizzi+2022-02-24_20-56-54_425        
-
-# assumendo che questa sia la richiesta di uno studente:
-yield_student_report(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
-
-
-
+#print([ (var_name, environ[var_name]) for var_name in environ if var_name[:4] == "TAL_"])
 
 ALLPROBLEM = "all_problems"
 ALLSERVICE = "all_services"
 OKCONSTANT = "OK"
 
-def yield_student_report(problem : str, service : str, token : str, log_dir : str):
-    path = os.path.join(os.getcwd(), log_dir)
+problemlist = Struttura()
 
-    recent_date = ""
-    recent_folder = ""
-    
-    for x in listdir(path):
-        fullpath = os.path.join(os.getcwd(), log_dir, x)
-
-        s = str(x).split('+')
-
-        if (s[0] == token):
-            date_time_obj = time.strptime(s[1], '%Y-%m-%d_%H-%M-%S_%f')
-
-            if recent_date == "":
-                recent_date = date_time_obj
-                recent_folder = fullpath
-
-            if date_time_obj > recent_date:
-                recent_date = date_time_obj
-                recent_folder = fullpath
-                
+def main(problem : str, service : str, token : str, path : str): 
     printConsole("Student: " + token, True)
     printConsole("------------------------", True)
-                
-    for x in listdir(recent_folder):
-        s = str(x).split('_')
-        goal = s[3].split('.')[0]
+    
+    for x in listdir(path):
+        fullpath = os.path.join(path, x)
+        if (isdir(fullpath)):
+            folderdata = FolderData(x, fullpath)
 
-        if (s[1] == problem or problem == ALLPROBLEM):
-            if (s[2] == service or service == ALLSERVICE):
-                if (s[0] == OKCONSTANT):
-                    printConsole(goal, True)
-                else:
-                    printConsole(goal, False)
-               
-                printFileContent(os.path.join(recent_folder, x))
+            if (folderdata.token == token):
+                for y in listdir(fullpath):
+                    filedata = FileData(y, os.path.join(fullpath, y), folderdata)
+                        
+                    if (filedata.problem == problem or problem == ALLPROBLEM):
+                        if (filedata.service == service or service == ALLSERVICE):
+                            problemlist.addFile(filedata)
 
-                printConsole("--------------------", True)
+    problemlist.printToConsole()
 
-def printFileContent(filename : str):
-    file_descriptor = open(filename)
-    file_contents = file_descriptor.read()
-
-    printConsole(file_contents, True)
+# Student Token
+# ----------------------
+# Problem
+#   Service
+#       Goal1: {date}-{content1}, {date}-{content2}
 
 def printConsole(msg : str, isOK : bool):
     if not DEBUG:
@@ -110,3 +77,14 @@ def printConsole(msg : str, isOK : bool):
         else:
             print("NO", msg)
 
+if __name__ == "__main__":
+    if DEBUG:
+        main(ALLPROBLEM, ALLSERVICE, "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"))
+    else:
+        main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
+
+# formato della cartella:
+# 123456_RomeoRizzi+2022-02-24_20-56-54_425
+
+# formato del file contenuto nella cartella:
+# OK_nomeproblema_nomeservizio_goal
