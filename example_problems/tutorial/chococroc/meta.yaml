@@ -96,8 +96,8 @@ services:
         default: it
   play:
     description: use this service if you want to play a match of the chococroc game against our player. You can choose the starting configuration and whether to be first or second to move. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect chococroc play -aplayer=1 -am=10 -an=10 -awatch_value=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play -aplayer=1 -am=10 -an=10 -awatch_value=watch_winner -- bots/my_chococroc_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect chococroc play -aTALight_first_to_move=1 -am=10 -an=10 -awatch=no_watch']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play -aTALight_first_to_move=1 -am=10 -an=10 -awatch=watch_winner -- bots/my_chococroc_player.py']
     evaluator: [python, services/play_server.py]
     args:
       m:
@@ -108,21 +108,22 @@ services:
         regex: ^([1-9][0-9]{0,50})$
         default: 1
         explain: Number of columns of the chocolate bar.
-      player:
+      TALight_first_to_move:
         regex: ^(0|1)$
         default: 0
-        explain: If you to start as first player use 0, if you want to start as second player use 1.
-      watch_value:
+        explain: Set this flag to 1 if you want TAlight to take the first move in the match. When this flag is set to 0 you go first.
+      watch:
         regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
         default: no_watch
         explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+
   play_val_measuring_game:
     description: use this service if you want to play a match of the MeasuringGame(chococroc) against our player. You can choose the starting configuration and whether to be first or second to move. The MeasuringGame(chococroc) game is defined as the game sum of a chococroc game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a chococroc game position. You can choose whether to be first or second to move in the play. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect chococroc play_val_measuring_game -aplayer=1 -am=10 -an=10 -anim=0 -awatch_value=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play_val_measuring_game -aplayer=1 -am=10 -an=10 -anim=0 -awatch_value=watch_grundy_val -- bots/my_measuring_chococroc_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect chococroc play_val_measuring_game -aTALight_first_to_move=1 -am=10 -an=10 -anim=0 -awatch=no_watch']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play_val_measuring_game -aTALight_first_to_move=1 -am=10 -an=10 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_chococroc_player.py']
     evaluator: [python, services/play_val_measuring_game_server.py]
     args:
       m:
@@ -137,11 +138,11 @@ services:
         regex: ^([0-9][0-9]{0,50})$
         default: 0
         explain: The height of the pile in the nim game. This will be precisely the Nim value of the sole chococroc configuration if and only if the whole compound configuration (chococroc configuration + one pile Nim configuration) is a lost configuration for the first to move player. 
-      player:
+      TALight_first_to_move:
         regex: ^(0|1)$
         default: 0
-        explain: If you to start as first player use 0, if you want to start as second player use 1.
-      watch_value:
+        explain: Set this flag to 1 if you want TAlight to take the first move in the match. When this flag is set to 0 you go first.
+      watch:
         regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
         default: no_watch
         explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.

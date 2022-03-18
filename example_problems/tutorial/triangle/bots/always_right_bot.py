@@ -83,7 +83,7 @@ def best_reward_and_path(triangle):
             last_pos += j + 2
     return [reward,path]
 
-if len(argv) != 2 or argv[1]=='0':
+if len(argv) != 2:
     print("# Error! Wrong number of arguments.")
     print(usage)
     exit(0)

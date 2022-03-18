@@ -14,8 +14,8 @@ args_list = [
     ('m',int),
     ('n',int),
     ('nim',int),
-    ('player',int),
-    ('watch_value',str)
+    ('TALight_first_to_move',int),
+    ('watch',str)
 ]
 
 ENV =Env(args_list)
@@ -32,27 +32,47 @@ m=ENV['m']
 n=ENV['n']
 nim=ENV['nim']
 
-if ENV['player'] == 1:
-    if m==1 and n==1 and nim==0:
-        TAc.print(LANG.render_feedback("you-have-won-play-val", f'# It is my turn to move, on conf <chococroc(1,1) + nim(0)> of the MeasuringGame(Chococroc) game, that is, one single square chocolate bar (plus an empty Nim tower). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("you-won", f'# You won!'), "green", ["bold"])
-        TAc.print(LANG.render_feedback("correct-grundy-val", f'# Since we played optimally, you have successfully proven that the Grundy value of the Chococroc game configuration chococroc({m},{n}) is precisely {nim}.'), "green", ["bold"])
-        close_service_and_print_term_signal_for_bots()
+def I_have_lost():
+    TAc.print(LANG.render_feedback("TALight_lost", f'# It is my turn to move, on conf <chococroc(1,1) + nim(0)> of the MeasuringGame(Chococroc) game, that is, one single square chocolate bar (plus an empty Nim tower). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("you-won", f'# You won!'), "green", ["bold"])
+    if ENV["TALight_first_to_move"] == 0:
+        TAc.print(LANG.render_feedback("wrong-grundy-val", f'# Since we played optimally, you have successfully proven that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is NOT the number {ENV["nim"]}.'), "green", ["bold"])        
+    else:
+        TAc.print(LANG.render_feedback("correct-grundy-val", f'# Since we played optimally, you have successfully proven that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is precisely {ENV["nim"]}.'), "green", ["bold"])
+    close_service_and_print_term_signal_for_bots()
     
-    if ENV['watch_value'] == 'watch_winner':
-        if (cl.grundy_sum(cl.grundy_val(m, n), nim) == 0):
-            TAc.print(LANG.render_feedback("watch-winner-user-after-server-sum", f'# watch_winner: you, since <chococroc({m},{n}) + nim({nim})> is a losing configuration'), "blue")
+def you_have_lost():
+    TAc.print(LANG.render_feedback("you-have-lost", f'# It is your turn to move, on conf <chococroc(1,1) + nim(0)> of the MeasuringGame(Chococroc) game, that is, one single square chocolate bar (plus an empty Nim tower). Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("you-lost", f'# You lost!'), "green", ["bold"])
+    if ENV["TALight_first_to_move"] == 0:
+        TAc.print(LANG.render_feedback("correct-grundy-val-or-bad-move", f'# The cases are two: either during this play you trew away a win with a bad move, or we have convinced you that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is precisely {ENV["nim"]}.'), "green", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("wrong-grundy-val-or-bad-move", f'# The cases are two: either during this play you trew away a win with a bad move, or we have convinced you that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is NOT the number {ENV["nim"]}.'), "green", ["bold"])        
+    close_service_and_print_term_signal_for_bots()
+
+I_AM = LANG.render_feedback("I-am", 'I am')
+YOU_ARE = LANG.render_feedback("you-are", 'you are')
+TALIGHT_IS = LANG.render_feedback("TALight-is", 'TALight is')
+def watch(m,n,nim, first_to_move, second_to_move):
+    assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS] 
+    assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS]
+    if ENV["watch"] == 'no_watch':
+        return
+    TAc.print('# watch={ENV["watch"]}: ', "blue", end='')
+    if ENV["watch"] == 'watch_winner':
+        if(cl.grundy_sum(cl.grundy_val(m, n), nim) == 0):
+            TAc.print(LANG.render_feedback("watch-winner-who-moves-loses", f'{second_to_move} ahead, since <chococroc({m},{n}) + nim({nim})> is a who-moves-loses configuration.'), "blue")
         else:
-            TAc.print(LANG.render_feedback("watch-winner-server-after-server-sum", f'# watch_winner: me, since <chococroc({m},{n}) + nim({nim})> is a winning configuration'), "blue")
-    elif ENV ['watch_value'] == 'num_winning_moves':
+            TAc.print(LANG.render_feedback("watch-winner-who-moves-wins", f'{first_to_move} ahead, since <chococroc({m},{n}) + nim({nim})> is a who-moves-wins configuration.'), "blue")
+    elif ENV['watch'] == 'num_winning_moves' :
         win_moves = cl.winning_moves(m, n, nim)
         win_moves.discard((None, None))
         count_win_moves=cl.count_winning_moves_nim(m, n, nim)
         if (len(win_moves)+count_win_moves)>0:
-            TAc.print(LANG.render_feedback("num-winning-moves-n-choco-nim", f'# num_winning_moves: for the current configuration <chococroc({m},{n}) + nim({nim})> the number of winning moves is {len(win_moves)+count_win_moves}'), "blue")
+            TAc.print(LANG.render_feedback("num-winning-moves-n", f'the current configuration <chococroc({m},{n}) + nim({nim})> admits {len(win_moves)+count_win_moves} winning moves'), "blue")
         else:
-            TAc.print(LANG.render_feedback("num-winning-moves-n-choco-nim", f'# num_winning_moves: for the current configuration <chococroc({m},{n}) + nim({nim})> there are not winning moves'), "blue")
-    elif ENV ['watch_value'] == 'list_winning_moves':
+            TAc.print(LANG.render_feedback("num-winning-moves-0", f'# the current configuration <chococroc({m},{n}) + nim({nim})> admits no winning move'), "blue")
+    elif ENV['watch'] == 'list_winning_moves':
         win_moves = cl.winning_moves(m, n, nim)
         win_moves.discard((None, None))
         win_moves_with_nim={(None,None,None)}
@@ -62,59 +82,29 @@ if ENV['player'] == 1:
         win_moves_with_nim.discard((None,None,None))
         win_moves_with_nim.update(cl.winning_moves_nim(m, n, nim))
         if len(win_moves_with_nim) > 1:
-            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({m},{n}) + nim({nim})> the winning moves are {win_moves_with_nim}'), "blue")
+            TAc.print(LANG.render_feedback("list-multiple-winning-moves", f'# for the current configuration <chococroc({m},{n}) + nim({nim})> the winning moves are {win_moves_with_nim}'), "blue")
         elif len(win_moves_with_nim) == 1:
-            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({m},{n}) + nim({nim})> the winning move is {win_moves_with_nim}'), "blue")
+            TAc.print(LANG.render_feedback("list-one-winning-move", f'# for the current configuration <chococroc({m},{n}) + nim({nim})> the winning move is {win_moves_with_nim}'), "blue")
         else:
-            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({m},{n}) + nim({nim})> there are not winning moves'), "blue")
-    elif ENV ['watch_value'] == 'watch_grundy_val':
-        TAc.print(LANG.render_feedback("watch-grundy-server-move-sum", f'# watch_grundy_val: for the current configuration <chococroc({m},{n}) + nim({nim})> the grundy value is {cl.grundy_sum(cl.grundy_val(m, n), nim)}'), "blue")
+            TAc.print(LANG.render_feedback("list-none-winning-moves", f'# the current configuration <chococroc({m},{n}) + nim({nim})> admits no winning move'), "blue")
+    elif ENV['watch'] == 'watch_grundy_val':
+        TAc.print(LANG.render_feedback("watch-grundy-val", f'# the current configuration <chococroc({m},{n}) + nim({nim})> has grundy value {cl.grundy_sum(cl.grundy_val(m, n), nim)}'), "blue")
+
+
+        
+if ENV["TALight_first_to_move"] == 1: # if the user plays the match as second to move
+    watch(m,n,nim, first_to_move='I am', second_to_move='you are')
+    if m==1 and n==1 and nim==0: # no valid moves on the configuration (1,1,0). TALight first to move loses the match
+        I_have_lost()   
     
     new_m,new_n,new_nim=cl.computer_decision_move(m,n,nim)
-    TAc.print(LANG.render_feedback("server-move-play-val", f'# My move is from conf <chococroc({m},{n}) + nim({nim})> to conf <chococroc({new_m},{new_n}) + nim({new_nim})>.\n# The turn is now to you, on conf <chococroc({new_m},{new_n}) + nim({new_nim})>'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("server-move-play-val", f'# My move is from conf <chococroc({m},{n}) + nim({nim})> to conf <chococroc({new_m},{new_n}) + nim({new_nim})>.'), "green", ["bold"])
     m,n,nim=new_m,new_n,new_nim
 
 while True:
     if m==1 and n==1 and nim==0:
-        TAc.print(LANG.render_feedback("you-have-lost-play-val", f'# It is your turn to move, on conf <chococroc(1,1) + nim(0)> of the MeasuringGame(Chococroc) game, that is, one single square chocolate bar (plus an empty Nim tower). Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("you-lost", f'# You lost!'), "green", ["bold"])
-        if ENV['player'] == 0:
-            TAc.print(LANG.render_feedback("correct-grundy-val-or-bad-move", f'# The cases are two: either during this play you trew away a win with a bad move, or we have convinced you that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is precisely {ENV["nim"]}.'), "green", ["bold"])
-        else:
-            TAc.print(LANG.render_feedback("wrong-grundy-val-or-bad-move", f'# The cases are two: either during this play you trew away a win with a bad move, or we have convinced you that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is NOT the number {ENV["nim"]}.'), "green", ["bold"])        
-        close_service_and_print_term_signal_for_bots()
-    
-    if ENV['watch_value'] == 'watch_winner':
-        if (cl.grundy_sum(cl.grundy_val(m, n), nim) > 0):
-            TAc.print(LANG.render_feedback("watch-winner-user-after-server-sum", f'# watch_winner: you, since <chococroc({m},{n}) + nim({nim})> is a winning configuration'), "blue")
-        else:
-            TAc.print(LANG.render_feedback("watch-winner-server-after-server-sum", f'# watch_winner: me, since <chococroc({m},{n}) + nim({nim})> is a losing configuration'), "blue")
-    elif ENV ['watch_value'] == 'num_winning_moves':
-        win_moves = cl.winning_moves(m, n, nim)
-        win_moves.discard((None, None))
-        count_win_moves=cl.count_winning_moves_nim(m, n, nim)
-        if (len(win_moves)+count_win_moves)>0:
-            TAc.print(LANG.render_feedback("num-winning-moves-n-choco-nim", f'# num_winning_moves: for the current configuration <chococroc({m},{n}) + nim({nim})> the number of winning moves is {len(win_moves)+count_win_moves}'), "blue")
-        else:
-            TAc.print(LANG.render_feedback("num-winning-moves-n-choco-nim", f'# num_winning_moves: for the current configuration <chococroc({m},{n}) + nim({nim})> there are not winning moves'), "blue")
-    elif ENV ['watch_value'] == 'list_winning_moves':
-        win_moves = cl.winning_moves(m, n, nim)
-        win_moves.discard((None, None))
-        win_moves_with_nim={(None,None,None)}
-        for tuple in win_moves:
-            tuple+=(nim,)
-            win_moves_with_nim.add(tuple)
-        win_moves_with_nim.discard((None,None,None))
-        win_moves_with_nim.update(cl.winning_moves_nim(m, n, nim))
-        if len(win_moves_with_nim) > 1:
-            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({m},{n}) + nim ({nim})> the winning moves are {win_moves_with_nim}'), "blue")
-        elif len(win_moves_with_nim) == 1:
-            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({m},{n}) + nim ({nim})> the winning move is {win_moves_with_nim}'), "blue")
-        else:
-            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({m},{n}) + nim ({nim})> there are not winning moves'), "blue")
-    elif ENV ['watch_value'] == 'watch_grundy_val':
-        TAc.print(LANG.render_feedback("watch-grundy-server-move-sum", f'# watch_grundy_val: for the current configuration <chococroc({m},{n}) + nim ({nim})> the grundy value is {cl.grundy_sum(cl.grundy_val(m, n), nim)}'), "blue")
-    
+        you_have_lost()    
+    watch(m,n,nim, first_to_move=YOU_ARE, second_to_move=I_AM)    
     TAc.print(LANG.render_feedback("your-turn-play-val", f'# It is your turn to move from conf <chococroc(m={m},n={n}) + nim(height={nim})> of the MeasuringGame(Chococroc) game to a new conf of the MeasuringGame(Chococroc) game <chococroc(m\',n\') + nim(height\')>. You should move either on the chococroc component or on the nim component of the game.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("user-move-play-val", f'# Please, insert the three integers m\', n\' and height\' encoding the new configuration produced by your move just underneath the current position we put you into: '), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("prompt_nim", f'{m} {n} {nim}'), "yellow", ["bold"])
@@ -155,47 +145,10 @@ while True:
         TAc.print(LANG.render_feedback("wrong-nim-move", f'# You are cheating. You can not modify the height of the nim tower if you move on the chococroc game.'), "red", ["bold"])
         exit(0)
     if new_m==1 and new_n==1 and new_nim==0:
-        TAc.print(LANG.render_feedback("you-have-won-play-val", '# It is my turn to move, on conf <chococroc(1,1) + nim(0)> of the MeasuringGame(Chococroc) game, that is, one single square chocolate bar (plus an empty Nim tower). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("you-won", f'# You won!'), "green", ["bold"])        
-        if ENV['player'] == 0:
-            TAc.print(LANG.render_feedback("wrong-grundy-val", f'# Since we played optimally, you have successfully proven that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is NOT the number {ENV["nim"]}.'), "green", ["bold"])        
-        else:
-            TAc.print(LANG.render_feedback("correct-grundy-val", f'# Since we played optimally, you have successfully proven that the Grundy value of the Chococroc game configuration chococroc({ENV["m"]},{ENV["n"]}) is precisely {ENV["nim"]}.'), "green", ["bold"])
-        close_service_and_print_term_signal_for_bots()
-
-    if ENV['watch_value'] == 'watch_winner':
-        if (cl.grundy_sum(cl.grundy_val(new_m, new_n), new_nim) == 0):
-            TAc.print(LANG.render_feedback("watch-winner-user-after-server-sum", f'# watch_winner: you, since <chococroc({new_m},{new_n}) + nim({new_nim})> is a losing configuration'), "blue")
-        else:
-            TAc.print(LANG.render_feedback("watch-winner-server-after-server-sum", f'# watch_winner: me, since <chococroc({new_m},{new_n}) + nim({new_nim})> is a winning configuration'), "blue")
-    elif ENV ['watch_value'] == 'num_winning_moves':
-        win_moves = cl.winning_moves(new_m, new_n, new_nim)
-        win_moves.discard((None, None))
-        count_win_moves=cl.count_winning_moves_nim(new_m, new_n, new_nim)
-        if (len(win_moves)+count_win_moves)>0:
-            TAc.print(LANG.render_feedback("num-winning-moves-n-choco-nim", f'# num_winning_moves: for the current configuration <chococroc({new_m},{new_n}) + nim({new_nim})> the number of winning moves is {len(win_moves)+count_win_moves}'), "blue")
-        else:
-            TAc.print(LANG.render_feedback("num-winning-moves-n-choco-nim", f'# num_winning_moves: for the current configuration <chococroc({new_m},{new_n}) + nim({new_nim})> there are not winning moves'), "blue")
-    elif ENV ['watch_value'] == 'list_winning_moves':
-        win_moves = cl.winning_moves(new_m, new_n, new_nim)
-        win_moves.discard((None, None))
-        win_moves_with_nim={(None,None,None)}
-        for tuple in win_moves:
-            tuple+=(new_nim,)
-            win_moves_with_nim.add(tuple)
-        win_moves_with_nim.discard((None,None,None))
-        win_moves_with_nim.update(cl.winning_moves_nim(new_m, new_n, new_nim))
-        if len(win_moves_with_nim) > 1:
-            TAc.print(LANG.render_feedback("list-multiple-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({new_m},{new_n}) + nim({new_nim})> the winning moves are {win_moves_with_nim}'), "blue")
-        elif len(win_moves_with_nim) == 1:
-            TAc.print(LANG.render_feedback("list-one-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({new_m},{new_n}) + nim ({new_nim})> the winning move is {win_moves_with_nim}'), "blue")
-        else:
-            TAc.print(LANG.render_feedback("list-none-winning-moves-choco-nim", f'# list_winning_moves: for the current configuration <chococroc({new_m},{new_n}) + nim ({new_nim})> there are not winning moves'), "blue")
-    elif ENV ['watch_value'] == 'watch_grundy_val':
-        TAc.print(LANG.render_feedback("watch-grundy-server-move-sum", f'# watch_grundy_val: for the current configuration <chococroc({new_m},{new_n}) + nim ({new_nim})> the grundy value is {cl.grundy_sum(cl.grundy_val(new_m, new_n), new_nim)}'), "blue")
-
+        I_have_lost()
+    watch(new_m,new_n,new_nim, first_to_move=I_AM, second_to_move=YOU_ARE)    
     m,n,nim=cl.computer_decision_move(new_m,new_n,new_nim)
-    TAc.print(LANG.render_feedback("server-move-play-val", f'# My move is from conf <chococroc({new_m},{new_n}) + nim({new_nim})> to conf <chococroc({m},{n}) + nim({nim})>.\n# The turn is now to you, on conf <chococroc({m},{n}) + nim({nim})>'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("server-move-play-val", f'# My move is from conf <chococroc({new_m},{new_n}) + nim({new_nim})> to conf <chococroc({m},{n}) + nim({nim})>.'), "green", ["bold"])
 
 
 

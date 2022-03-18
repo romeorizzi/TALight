@@ -1,8 +1,8 @@
 public_folder: public
 services:
   gimme_instance:
-    description: This service provides you with a random triangle of integer numbers. The argument n specifies the number of rows of the triangle. For i=1,...,n the i-th row of the triangle comprises i integers in the interval [MIN_VAL,MAX_VAL]. You can opt to insert the seed yourself, or ask the service to choose the seed (and hence the actual triangle <n,MIN_VAL,MAX_VAL,seed>).
     evaluator: [python, services/gimme_instance_server.py]
+    description: This service provides you with a random triangle of integer numbers. The argument n specifies the number of rows of the triangle. For i=1,...,n the i-th row of the triangle comprises i integers in the interval [MIN_VAL,MAX_VAL]. You can opt to insert the seed yourself, or ask the service to choose the seed (and hence the actual triangle <n,MIN_VAL,MAX_VAL,seed>).
     args:
       n:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -20,7 +20,7 @@ services:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n,MIN_VAL,MAX_VAL,seed>.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
-      file_format:
+      silent:
         regex: ^(0|1)$
         explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output of the rtal call to file (e.g., with > from the shell) you will get a valid instance file for the other services.
         default: 0
@@ -37,8 +37,8 @@ services:
         default: it
 
   check_and_reward_one_sol:
-    description: this service checks whether a path is a feasible solution for a given triangle.
     evaluator: [python, services/check_and_reward_one_sol_server.py]
+    description: this service checks whether a path descending from the top vertex is a feasible solution for a given triangle.
     args:
       n:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -76,8 +76,8 @@ services:
         default: it
 
   check_sol_optimality:
-    description: for a given triangle of integer numbers, the problem triangle asks you to find a path descending from its top vertex while maximizing the sum of the numbers on the visited positions. This service allows you to check the optimality of a path or the optimal solution value.
     evaluator: [python, services/check_best_sol_server.py]
+    description: for a given triangle of integer numbers, the problem triangle asks you to find a path descending from its top vertex while maximizing the sum of the numbers on the visited positions. If you think to know what the best value is, you can call this service for confirmation. You can also ask the service to tell you what the true optimum value is.
     args:
       n:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -97,7 +97,8 @@ services:
         default: my_own_triangle
       opt_sol_val:
         regex: ^0|(|-)[1-9][0-9]{0,5}$
-        explain: A solution for a given triangle instance is a path from the top vertex of the triangle to an element of its last (bottom) row. Such a path is rewarded with the sum of the integers contained in the visited positions of the triangle. We are interested in maximizing this reward. Use the argument `opt_sol_val` to input to the service what you conjecture the maximum reward over all possible feasible paths.
+        default: 0
+        explain: Use this argument to tell the service what you conjecture to be the maximum reward possible over all feasible paths. Leave this argument to its default value in case you have non conjecture and only intend to use this service to be told about the optimum value. A solution for a given triangle instance is a path from the top vertex of the triangle to an element of its last (bottom) row. Such a path is rewarded with the sum of the integers contained in the visited positions of the triangle. We are interested in maximizing this reward. 
       feedback:
         regex: ^(yes_no|bigger_or_smaller|true_opt_val)$
         default: yes_no
@@ -175,9 +176,22 @@ services:
         regex: ^(0|1)$
         default: 0
 
-  eval_feasible_solution:
-    description: this service evaluates your code which has to provide a feasible solution for a triangle.
-    evaluator: [python, services/eval_feasible_solution_server.py]
+  eval_feasible_sol:
+    evaluator: [python, services/eval_feasible_sol_server.py]
+    description: "this service evaluates your code which has to provide a feasible solution for a given triangle of integer numbers. A feasible soluton is a descending path in the triamgle starting from the top vertex and reaching on element inthe last row. This path visits precisely one element for each of the n rows of the triangle and we assume it is encoded as a sequence in {L,R}^(n-1) (regex: (L|R){n-1,n-1}), where the i-th symbol of the sequence specifies whether the path turns Left or Right at the i-th step."
+    args:
+      goal:
+        explain: set your goal (efficient includes also correct).
+        regex: ^(correct|time_at_most_2_exp_n|time_at_most_n_exp_2)$
+        default: correct
+      code_lang: 
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+
+  eval_and_reward_one_sol:
+    description: this service evaluates your code which calculates the reward for a given path in a triangle.
+    evaluator: [python, services/eval_and_reward_one_sol_server.py]
     args:
       goal:
         explain: set your goal (efficient includes also correct).
@@ -209,21 +223,8 @@ services:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
 
-  eval_and_reward_one_sol:
-    description: this service evaluates your code which calculates the reward for a given path in a triangle.
-    evaluator: [python, services/eval_and_reward_one_sol_server.py]
-    args:
-      goal:
-        explain: set your goal (efficient includes also correct).
-        regex: ^(correct|time_at_most_2_exp_n|time_at_most_n_exp_2)$
-        default: correct
-      code_lang: 
-        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm.
-        regex: ^(python|java|nodejs|compiled)$
-        default: python
-
   eval_number_of_triangles_in_triangle:
-    description: this service evaluates your code which calculates the occurencies of triangle Internalin another triangle.
+    description: this service evaluates your code which takes in input two triangles and calculates the number of occurences of the small triangle withing the big one.
     evaluator: [python, services/eval_number_of_triangles_in_triangle_server.py]
     args:
       goal:

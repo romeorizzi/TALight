@@ -28,9 +28,9 @@ class Bot:
             self.log_file = open(log_file_name, 'w')
             
 
-    def is_comment(line, empty_line_is_comment='default'):
+    def is_comment(self, line, empty_line_is_comment='default'):
         assert empty_line_is_comment in ['default', True, False]
-        if empty_line_is_comment == default:
+        if empty_line_is_comment == 'default':
             empty_line_is_comment = self.empty_line_is_comment
         if empty_line_is_comment:
             return len(line)==0 or line[0]=='#'
@@ -54,7 +54,7 @@ class Bot:
         #---------------------------                
         while True:
             line = input()
-            is_cline = is_comment(line, self.empty_line_is_comment)
+            is_cline = self.is_comment(line, self.empty_line_is_comment)
             if report_inputs and not (is_cline and omit_reporting_clines_on_stderr):
                 print(self.BOT_prefix_to_reported_input_line + line, file = stderr)
             if log_file != None and not (is_cline and omit_reporting_clines_on_log_file):
