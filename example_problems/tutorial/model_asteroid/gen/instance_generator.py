@@ -15,7 +15,7 @@ def main(n, m, gen_seed, format):
     instance= al.gen_instance(m, n, gen_seed)
 
     # Generate selected output
-    print(al.instance_to_str(instance, format))
+    print(al.instance_to_str(instance, al.file_extension_to_format_name(format)))
 
 
 if __name__ == "__main__":

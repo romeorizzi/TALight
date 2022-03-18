@@ -5,7 +5,7 @@ import random
 import string
 
 ### CONSTANTS #########################################
-AVAILABLE_FORMATS = {'instance':{'only_strings':'only_strings.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat1':'dat'},'solution':{'subseq':'subseq.txt', 'annotated_subseq':'annotated_subseq.txt'}}
+AVAILABLE_FORMATS = {'instance':{'only_strings':'only_strings.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat':'dat'},'solution':{'subseq':'subseq.txt', 'annotated_subseq':'annotated_subseq.txt'}}
 DEFAULT_INSTANCE_FORMAT='only_strings'
 DEFAULT_SOLUTION_FORMAT='subseq'
 #######################################################

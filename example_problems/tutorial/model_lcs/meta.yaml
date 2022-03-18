@@ -37,7 +37,7 @@ services:
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
       instance_format:
-        regex: ^(with_m_and_n|only_strings|dat)$
+        regex: ^(with_m_and_n|only_strings|gmpl_dat)$
         default: only_strings
         explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
         explain1: '[with_m_and_n] a stream of three lines: the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t. The second line contains the string s and the third contains the string t.'

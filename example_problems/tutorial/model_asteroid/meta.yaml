@@ -30,10 +30,10 @@ services:
         regex-URL: 'https://extendsclass.com/regex/a55297b'
         default: 1
         explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument source. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
-      format:
-        regex: ^(only_matrix.txt|with_m_and_n.txt|dat)$
-        default: only_matrix.txt
-        explain: choose the encoding for the txt input file.
+      instance_format:
+        regex: ^(only_matrix|with_m_and_n|gmpl_dat)$
+        default: only_matrix
+        explain: choose the encoding for the input file.
       silent:
         regex: ^(0|1)$
         default: 0
