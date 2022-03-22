@@ -105,9 +105,46 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
+  check_sol:
+    evaluator: [python, services/check_sol_server.py]
+    description: 'This service checks and validates your solution for a given instance of the Asteroid problem (input: 0/1-matrices with the given number of rows (argument m) and columns (argument n)). In case your solution is not correct then you get the needed feedback. Besides the solution you must submit also the file with the instance in one of the supported formats. Examples for the supported formats of the instance file can be found in the `instances_catalogue` directory contained in the archive downloaded with `rtal get model_asteroid`, and further examples can be obtained from the service `gimme_instance`. You have two options on how to submit an instance: either use the `instance_id` argument to specify an instance within the catalogue or upload a local file through the `instance` filehandler. When you do both then the service checks that the two files have the same content. You must specify the `instance_id` argument when you want to use your personal TALight token to make a submission. Depending on the value for the argument `sol_format`, the service only checks the optimum value for this optimization problem, or it also checks the feasibility and optimality of the solution offered by you in one of the supported formats (you can get examples of such formats through the service `solve`). When you are enrolled to a course or exam that ask for it, then you may have been assigned a personal TALight token. When calling this service using your token you submit your solution for single instances of the Asteroid problem in the sense that the system keeps track of the outcomes of your submissions to this service assigning them to you via your personal token. In order to submit, it may be required that at the service call you supply also the source code implementing your solving algorithm (if so, use the `sourcecode` filehandler). After having assessed a few solutions produced by you, use the scripts in the scripts folder in order to submit the whole of your solutions. These scripts automate for you the process of submitting your solutions one by one and may also define the dataset as a convenient subset of the catalogue. You may first have a dry run launching the script without personal token, just to check that your solutions are correct as well as your general calling to the service. In any case, be told that the positive submissions are never overwritten by the bad ones.'
+    explain: 'Call the service with:\n   rtal connect model_asteroid check_sol -finstance=fullpath_of_your_instance_file -fsolution=fullpath_of_your_solution_file\nIf the format of your instance file differs from `only_matrix` then, please, specify it via the argument `instance_format`.\nIf the format of your solution file differs from `seq` then, please, specify it via the argument `sol_format`.'
+    example1: [ to get assesment of a solution produced by you for a certaint instance, 'Call the service with:\n       rtal connect model_asteroid check_sol -asol_format=subset -finstance=instances_catalogue/all_instances/instance_003.only_matrix.txt -fsolution=my_sols/all_instances/solution_003.subset.txt']
+    example2: [ 'to get credits for this instance in case of feasibility/optimality of the solution submitted', 'Call the service with:\n       rtal connect -x <MY_TOKEN> model_asteroid check_sol -fsourcecode=./my_model_asteroid_solver.py -asol_format=subset -ainstance_id=3 -fsolution=my_sols/all_instances/solution_003.subset.txt']
+    files:
+      - instance
+      - solution
+      - sourcecode
+    args: 
+      instance_id:
+        regex: ^([1-9][0-9]*|0)$
+        regex-explained: any positive natural (in its decimal representation). The default value of 0 can be used only when a local file is associated to the `instance` filehandler. 
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 0
+        explain: 'This argument is taken into account when other than 0. In this case, the instance is taken from the catalogue and, if a local file has been associated to the `instance` filehandler, then the service checks that the two files have the very same content. In case not, the service stops with a warning. We reacall that the whole catalogue is public, that is, it is contained in the file \''model_asteroid.tar\'' you get downloaded on your machine by issuing `rtal get model_asteroid`.'
+      instance_format:
+        regex: ^(with_m_and_n|only_matrix|gmpl_dat)$
+        default: only_matrix
+        explain: Use this argument to specify the format of the .txt file containing the instance of reference. (Examples for the supported formats of the instance file can be found in the `instances_catalogue` directory or obtained from the service `gimme_instance`.)
+        explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m and n are the size of the matrix; then follow m lines, that are the rows of the matrix.'
+        explain2: '[only_matrix] like the above, but with the first line omitted.'
+        explain3: '[gmpl_dat] a possible datafile format for AMPL/GMPL use that we have decided to support.'
+      sol_format:
+        regex: ^(only_val|seq|subset)$
+        default: seq
+        explain: 'specify what meant by a solution and how it should be encoded. Choose one among the following options:'
+        explain1: '[only_val] the solution is just a number identifying how many laser beams you have to shoot in order to destroy all of the asteroids;'
+        explain2: '[seq] the solution is a list of commands;'
+        explain3: '[subset] the solution is a subset of the row and column laser beams (i.e., as two incidence 0/1-vectors of length m and n, respectively).'
+        example: '\n [only_val] 2 \n [seq] r2 c4 \n [subset]:\n 1 0 1\n\n 0\n 1\n 1\n\n if the matrix is 3x3'
+        note: In case you are registering the results of the service call on the server via your TALight token, then the value of this argument is also stored as the `only_val` option is clearly the weakest one.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   check_feasibiliy_of_your_laser_beams:
     description: We give you a matrix with asteroids and you have to shoot out sufficient laser beams in order to destroy all of the asteroids. In other words, your task is to identify a set of rows and columns of the matrix that cover all the asteroids. This service is meant to verify this property.
-    evaluator: [python,services/check_solution_server.py]
+    evaluator: [python,services/check_sol_server.py]
     args:
       source:
         regex: ^(random|catalogue1|terminal)$
@@ -148,7 +185,7 @@ services:
         default: it
   check_optimality_of_your_laser_beams:
     description: We give you a matrix with asteroids and you have to return the minimum number of laser beams capable of destroying them all. You can use a laser beam to destroy all asteroids laying on a same row or column of the matix. This service checks that no solution exists using less beams.
-    evaluator: [python,services/check_solution_server.py]
+    evaluator: [python,services/check_sol_server.py]
     args:
       source:
         regex: ^(random|catalogue1|terminal)$

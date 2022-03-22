@@ -10,10 +10,10 @@ import asteroid_lib as al
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('instance_spec',str),
+    ('instance_id',str),
     ('m',int),
     ('n',int),
-    ('sol_style',str),
+    ('sol_format',str),
     ('goal',str),
 ]
 
@@ -28,12 +28,12 @@ TAc.print(LANG.render_feedback("instance", f'Instance (of seed: {ENV["seed"]}):'
 print(al.instance_to_str(matrix))
 TAc.print(LANG.render_feedback("user_sol", 'Insert your solution: '), "yellow", ["bold"]) 
 user_sol=[]
-if ENV['sol_style'] == 'seq':
+if ENV['sol_format'] == 'seq':
     raw_sol = TALinput(str,regex="^\s*|(r|c)(0|[1-9][0-9]{0,2})$", regex_explained="a single row or column (with indexes starting from 0). Example 1: r0 to specify the first row. Example 2: c2 to specify the third column.", token_recognizer=lambda move,TAc,LANG: al.check_one_move_seq(move,ENV['m'],ENV['n'],TAc,LANG), line_explained="a subset of rows and columns where indexes start from 0. Example: r0 c5 r2 r7", TAc=TAc, LANG=LANG)
     for token in raw_sol:
       if token != "":  
         user_sol.append((token[0],int(token[1:])))
-if ENV['sol_style'] == 'subset':
+if ENV['sol_format'] == 'subset':
     raw_sol_rows = TALinput(bool, num_tokens=ENV['m'], line_explained=f"enter {ENV['m']} 0,1-digits separated by spaces, one for each row. Example: {' '.join(str(random.randint(0,1)) for _ in range(ENV['m']))}", TAc=TAc, LANG=LANG)
     for val,index in zip(raw_sol_rows,range(ENV['m'])):
         if val == 1:

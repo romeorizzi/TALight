@@ -58,8 +58,7 @@ if ENV['instance_format']!='only_matrix':
     m=len(instance[0])
 else:
     m=len(instance)
-n=len(instance)
-
+n=len(instance[0])
 TAc.print(LANG.render_feedback("this-is-the-instance", 'This is the instance:'), "white", ["bold"])
 TAc.print(al.instance_to_str(instance), "white", ["bold"])
 
@@ -67,16 +66,16 @@ if ENV['source']=='random' and not TALf.exists_input_file('instance'):
     matrix=al.gen_instance(ENV['m'],ENV['n'],ENV['seed'])
 else:
     matrix=instance
-# print(matrix)
+# print(matrix,m,n)
 if ENV["sol_format"] == 'only_val':
-    opt_val=al.opt_val(ENV['m'],ENV['n'],matrix)
+    opt_val=al.opt_val(m,n,matrix)
     TAc.print(LANG.render_feedback("solution-val-title", f"The number of laser beams you need to shoot is:"), "green", ["bold"])
     TAc.print(LANG.render_feedback("solution-only_val", f'{opt_val}'), "white", ["reverse"])
     if ENV["download"]:
         TALf.str2output_file(opt_val,f'opt_val.txt')
 else:
     TAc.print(LANG.render_feedback("solution-title", f"An optimal solution to this instance is:"), "green", ["bold"])
-    solution=[elem for elem in al.min_cover(ENV['m'],ENV['n'],matrix)]
+    solution=[elem for elem in al.min_cover(m,n,matrix)]
     if ENV["sol_format"] == 'seq':
         TAc.print(LANG.render_feedback("solution-seq", ' '.join(solution)), "white", ["reverse"])
     # print('max_match_bip: ', al.max_match_bip(ENV['m'],ENV['n'],matrix))
