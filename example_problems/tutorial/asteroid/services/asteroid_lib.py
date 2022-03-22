@@ -7,7 +7,7 @@ import copy
 import random
 import networkx as nx
 import re
-
+import numpy as np
 ### CONSTANTS #########################################
 AVAILABLE_FORMATS = {'instance':{'only_matrix':'only_matrix.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat':'dat'},'solution':{'subseq':'seq.txt', 'subset':'annotated_subseq.txt'}}
 DEFAULT_INSTANCE_FORMAT='only_matrix'
@@ -163,6 +163,26 @@ def sol_to_str(matrix, subset_sol):
         sol_str += ' '.join(str(e) for e in matrix[i]) + '\n'
     return sol_str[:-1]
 
+def sol_to_subset(solution, matrix):
+    """Given a solution in 'seq' format (e.g.: ['r1 c2']), returns it in 'subset' form 
+    (e.g.: 
+    1 0 0 
+    
+    0
+    1
+    1 
+    )"""
+    transposed_matrix=np.transpose(matrix)
+    subset=[]
+    for laser in range (0,len(solution)):
+        if solution[laser][0]=='r':
+            sol=matrix[int(solution[laser][1])-1]
+            subset.append(' '.join(map(str, sol)))
+        else:
+            assert solution[laser][0]=='c'
+            sol=transposed_matrix[int(solution[laser][1])-1]
+            subset.append('\n'.join(map(str, sol)))
+    return '\n\n'.join(map(str, subset))
 
 def subset_to_str(subset_sol):
     sol = subset_to_str_list(subset_sol)
@@ -383,7 +403,6 @@ def max_match(m:int,n:int,matrix):
         G.add_node(f'r{i+1}',label=f'r{i+1}')
     for j in range(n):
         G.add_node(f'c{j+1}',label=f'c{j+1}')
-    
     for i in range(m):
         for j in range(n):
             if matrix[i][j]==1:
@@ -404,10 +423,11 @@ def min_cover(m:int,n:int,matrix):
     G.add_nodes_from(row_nodes, bipartite=0)
     G.add_nodes_from(col_nodes, bipartite=1)
     G.add_edges_from([(f'r{i+1}',f'c{j+1}') for i in range(m) for j in range(n) if matrix[i][j]==1])
-    #print(G.nodes)
-    #print(G.edges)
+    # print('\nNODI: ', G.nodes)
+    # print('\nARCHI: ', G.edges, '\n')
+    # print('G: ',G)
     matching = nx.bipartite.maximum_matching(G)
-    #print(nx.bipartite.to_vertex_cover(G, matching, col_nodes))
+    # print('\nnx.bipartite.to_vertex_cover: ',nx.bipartite.to_vertex_cover(G, matching, col_nodes))
     return nx.bipartite.to_vertex_cover(G, matching, col_nodes)
 
 def max_independent_set(m:int,n:int,matrix):

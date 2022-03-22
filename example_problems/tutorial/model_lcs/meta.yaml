@@ -42,7 +42,7 @@ services:
         explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
         explain1: '[with_m_and_n] a stream of three lines: the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t. The second line contains the string s and the third contains the string t.'
         explain2: '[only_strings] like the above, but with the first line omitted.'
-        explain3: '[dat] a possible datafile format for AMPL/GMPL use that we have decided to support.'
+        explain3: '[gmpl_dat] a possible datafile format for AMPL/GMPL use that we have decided to support.'
       silent:
         regex: ^(0|1)$
         default: 0
