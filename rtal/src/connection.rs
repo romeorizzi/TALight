@@ -607,7 +607,10 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
         if let Some(mut info) = token_info {
             let time = chrono::Local::now();
             let timestamp = time.format("%Y-%m-%d_%H-%M-%S_%3f");
-            let dirname = format!("{}+{}", info.token, timestamp);
+            let dirname = format!(
+                "{}+{}+{}+{}",
+                info.token, problem.name, service_name, timestamp
+            );
             info.path.push(dirname);
             if let Err(x) = tokio::fs::create_dir_all(&info.path).await {
                 return Err(format!("Cannot create directory {:?}: {}", info.path, x));
