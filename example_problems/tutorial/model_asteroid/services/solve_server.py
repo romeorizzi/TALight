@@ -30,7 +30,7 @@ TALf = TALfilesHelper(TAc, ENV)
 extension=al.format_name_to_file_extension(ENV['instance_format'], 'instance')
 if TALf.exists_input_file('instance'):
     instance = al.get_instance_from_str(TALf.input_file_as_str('instance'), instance_format=ENV["instance_format"])
-    TAc.print(LANG.render_feedback("successful-load", 'The file you have associated to `instance` filehandler has been successfully loaded.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance-successfully-loaded", 'The file you have associated to `instance` filehandler has been successfully loaded.'), "yellow", ["bold"])
     # print(instance)
 elif ENV["source"] == 'terminal':
     TAc.print(LANG.render_feedback("waiting", f'#? waiting for the {ENV["m"]} lines of {ENV["n"]} elements (0 or 1).\nFormat: you have to enter the {ENV["m"]} lines (corresponding to the {ENV["m"]} rows of the Asteroid matrix), where each of the {ENV["n"]} elements (0 or 1) must be separated by a space.\nAny line beggining with the "#" character is ignored.\nIf you prefer, you can use the "TA_send_txt_file.py" util here to send us the raw_instance of a file. Just plug in the util at the "rtal connect" command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
@@ -75,13 +75,16 @@ if ENV["sol_format"] == 'only_val':
         TALf.str2output_file(opt_val,f'opt_val.txt')
 else:
     TAc.print(LANG.render_feedback("solution-title", f"An optimal solution to this instance is:"), "green", ["bold"])
+    # print('max_match_bip: ', al.max_match_bip(m,n,matrix))
+    # print('max_match: ', al.max_match(m,n,matrix))
     solution=[elem for elem in al.min_cover(m,n,matrix)]
+    
     if ENV["sol_format"] == 'seq':
         TAc.print(LANG.render_feedback("solution-seq", ' '.join(solution)), "white", ["reverse"])
-    # print('max_match_bip: ', al.max_match_bip(ENV['m'],ENV['n'],matrix))
         if ENV["download"]:
             TALf.str2output_file(' '.join(solution),f'opt_sol.seq.txt')
     elif ENV["sol_format"] == 'subset':
+        # print(solution)
         TAc.print(LANG.render_feedback("solution", al.sol_to_subset(solution,matrix)), "white", ["reverse"])
         if ENV["download"]:
             TALf.str2output_file(al.sol_to_subset(solution,matrix),f'opt_sol.subset.txt')

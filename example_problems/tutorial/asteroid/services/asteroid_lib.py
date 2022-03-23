@@ -164,7 +164,7 @@ def sol_to_str(matrix, subset_sol):
     return sol_str[:-1]
 
 def sol_to_subset(solution, matrix):
-    """Given a solution in 'seq' format (e.g.: ['r1 c2']), returns it in 'subset' form 
+    """Given a solution in 'seq' format (e.g.: ['r1', 'c2']), returns it in 'subset' form 
     (e.g.: 
     1 0 0 
     
@@ -184,6 +184,40 @@ def sol_to_subset(solution, matrix):
             subset.append('\n'.join(map(str, sol)))
     return '\n\n'.join(map(str, subset))
 
+def subset_to_list_of_rows_and_columns(solution):
+    laser_beams=[]
+    prova='c '
+    j=0
+    for i in range (0,len(solution)-1):
+        if solution[i]!='' and len(solution[i])==1:
+            # print('siamo in posiz ',i,' con l\'elemento ', solution[i])
+            prova+=solution[i]+' '
+        elif solution[i]!='' and len(solution[i])!=1:
+            # print('siamo in posiz ',i,' con la riga ', solution[i])
+            laser_beams.insert(j,'r '+solution[i])
+        else:
+            if prova!='c ':
+                laser_beams.insert(j,prova.strip())
+                # print('inserisco in posiz ',j,'l\'elemento ',prova.strip())
+            j+=1
+            prova='c '
+    return(laser_beams)
+
+def list_of_rows_and_columns_to_seq(solution,matrix):
+    laser_beams=subset_to_list_of_rows_and_columns(solution)
+    standard_instance=subset_to_str_list(matrix)
+    transposed_instance=subset_to_str_list(np.transpose(matrix))
+    # print(standard_instance, transposed_instance)
+    seq=[]
+    for index in range (0,len(laser_beams)):
+        if laser_beams[index][0]=='r':
+            # print(laser_beams[index][0])
+            seq.insert(index,'r'+str(standard_instance.index(laser_beams[index][2:])+1))
+        elif laser_beams[index][0]=='c':
+            # print(laser_beams[index][0])
+            seq.insert(index,'c'+str(transposed_instance.index(laser_beams[index][2:])+1))
+    return seq
+
 def subset_to_str(subset_sol):
     sol = subset_to_str_list(subset_sol)
     return sol[0] + '\n' + sol[1]
@@ -191,8 +225,7 @@ def subset_to_str(subset_sol):
 
 def subset_to_str_list(subset_sol):
     """From a subset solution (e.g.: [[0,1],[0,0]]) returns a list with the rows string and the columns string (e.g.: ['0 1', '0 0']) or NO_SOL"""
-    return [' '.join([str(e) for e in subset_sol[0]]), \
-            ' '.join([str(e) for e in subset_sol[1]])]
+    return [' '.join([str(e) for e in subset_sol[i]]) for i in range (0,len(subset_sol))]
 
 
 def format_name_to_file_extension(format_name, format_gender):
@@ -346,11 +379,11 @@ def is_feasible_shooting(m:int,n:int,matrix_original,beams,silent:bool,TAc,LANG)
     for tipo_sparo, pos_sparo in beams: 
         pos_sparo = int(pos_sparo)
         if tipo_sparo=='r':
-            if pos_sparo < 1 or pos_sparo >= m:
+            if pos_sparo-1 < 0 or pos_sparo-1 >= m:
                 TAc.print(LANG.render_feedback("wrong-row", f"You shoot on the row {pos_sparo} but the row indexes go from 0 to {len(matrix_original)-1}."), "red", ["bold"])    
             num_met_destroyed+=spara_r(matrix_after_moves,pos_sparo)
         if tipo_sparo=='c':
-            if pos_sparo < 1 or pos_sparo >= n:
+            if pos_sparo-1 < 0 or pos_sparo-1 >= n:
                 TAc.print(LANG.render_feedback("wrong-col", f"You shoot on the column {pos_sparo} but the column indexes go from 0 to {len(matrix_original[0])-1}."), "red", ["bold"])
             num_met_destroyed+=spara_c(matrix_after_moves,pos_sparo)
     if conta_num_met_in(matrix_after_moves)==0:
@@ -407,7 +440,7 @@ def max_match(m:int,n:int,matrix):
         for j in range(n):
             if matrix[i][j]==1:
                 G.add_edge(f'r{i+1}',f'c{j+1}')
-    return nx.maximum_matching(G)   #return nx.max_weight_matching(G)
+    return nx.max_weight_matching(G)   #return nx.maximum_matching(G)
 
 def max_match_bip(m:int,n:int,matrix):
     G = nx.Graph()
