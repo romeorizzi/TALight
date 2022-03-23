@@ -54,11 +54,10 @@ else: # take instance from catalogue
     instance = al.get_instance_from_str(instance_str, instance_format=ENV["instance_format"])
     TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
     output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['instance_format']}.{extension}"
-if ENV['instance_format']!='only_matrix':
-    m=len(instance[0])
-else:
-    m=len(instance)
+
+m=len(instance)
 n=len(instance[0])
+
 TAc.print(LANG.render_feedback("this-is-the-instance", 'This is the instance:'), "white", ["bold"])
 TAc.print(al.instance_to_str(instance), "white", ["bold"])
 

@@ -32,7 +32,7 @@ def check_failed(log_file_tag):
     exit(0)
 
 def check_passed(log_file_tag):
-    TAc.print(LANG.render_feedback("correct-sol", 'Your solution is correct. Well done! You have found the laser beams you have to shoot.'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("correct-sol", 'Your solution is correct. Well done!'), "green", ["bold"])
     if ENV.LOG_FILES != None:
         TALf.str2log_file(content=f'OK. Instance {ENV["instance_id"]}. Service check_sol. Problem asteroid. The submitted solution is feasible and optimum.', filename=f'OK_{ENV["instance_id"]}_{log_file_tag}', timestamped = False)
         TALf.str2log_file(content=sourcecode_as_string, filename=f"source_code.{TALf.lang_extension(TALf.input_filename('sourcecode'))}", timestamped = False)
@@ -62,7 +62,6 @@ else: # take instance from catalogue
     TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
 if TALf.exists_input_file('instance'):
     instance2 = al.get_instance_from_str(TALf.input_file_as_str('instance'), instance_format=ENV["instance_format"])
-    # instance2 = al.get_instance_from_txt(TALf.input_file_as_str('instance'), instance_format=ENV["instance_format"])
     TAc.print(LANG.render_feedback("instance-successfully-loaded", 'The file you have associated to `instance` filehandler has been successfully loaded.'), "yellow", ["bold"])
     if instance2 == instance:
         TAc.print(LANG.render_feedback("same-instance", f'The instance contained in the loaded file is indeed the same as the instance from the catalogue with instance_id={ENV["instance_id"]}.'), "yellow", ["bold"])
@@ -74,11 +73,10 @@ if TALf.exists_input_file('instance'):
 TAc.print(LANG.render_feedback("this-is-the-instance", "The instance is:"), "yellow", ["bold"])
 TAc.print(al.instance_to_str(instance), "white", ["bold"])
 print()
-if ENV['instance_format']!='only_matrix':
-    m=len(instance[0])
-else:
-    m=len(instance)
+
+m=len(instance)
 n=len(instance[0])
+# print('m:',m,' n:',n)
 
 if not TALf.exists_input_file('solution'):
     TAc.print(LANG.render_feedback("missing-solution", f'This service requires that the handle to a local file containing your solution is passed. Call example:\n    rtal connect model_asteroid check_sol /asol_format=subset -finstance=instances_catalogue/all_instances/instance_003.only_matrix.txt -fsolution=my_sols/all_instances/solution_003.subset.txt'), "red", ["bold"])
@@ -90,32 +88,31 @@ if ENV["sol_format"] == 'only_val':
     opt_val=al.opt_val(m,n,instance)
     # print(opt_val, opt_val_as_int)
 
-    # opt_val, opt_sol = al.opt_val_and_sol(s=instance[0], t=instance[1])
     if opt_val_as_int < opt_val:
         TAc.print(LANG.render_feedback("opt-val-too-small", f'No, the number of laser beams you need to shoot is more than {opt_val_as_int}.'), "red", ["bold"])
         check_failed('opt_val')
     if opt_val_as_int > opt_val:
-        TAc.print(LANG.render_feedback("opt-val-too-big", f'The number of laser beams you need to shoot is less than {opt_val_as_int}.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("opt-val-too-big", f'No, he number of laser beams you need to shoot is less than {opt_val_as_int}.'), "red", ["bold"])
         check_failed('opt_val')
     if opt_val_as_int == opt_val:
         TAc.print(LANG.render_feedback("opt-val-correct", f'Yes! The number of laser beams you need to shoot is {opt_val_as_int}.'), "green", ["bold"])
         check_passed('opt_val')
 elif ENV["sol_format"] == 'seq':
     solution_seq_as_string = TALf.input_file_as_str('solution').strip('\n').split(' ')
-    TAc.print(LANG.render_feedback("solution-successfully-loaded", f'Your `solution` file has been successfully loaded.'), "white", ["bold"])
+    TAc.print(LANG.render_feedback("solution-successfully-loaded", f'Your `solution` file has been successfully loaded.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("user-sol-subseq-as-string", f'Your solution is:\n{al.seq_to_str(solution_seq_as_string)}'), "yellow", ["bold"])
 elif ENV["sol_format"] == 'subset':
     solution_subset_as_string=TALf.input_file_as_str('solution')
     TAc.print(LANG.render_feedback("solution-successfully-loaded", f'Your `solution` file has been successfully loaded.'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("user-sol-subset-as-string", f'Your solution, as we have read it, is:\n{solution_subset_as_string}'), "yellow", ["bold"])
     solution_subset=solution_subset_as_string.split('\n')
     solution_seq_as_string=al.list_of_rows_and_columns_to_seq(solution_subset,instance)
-        
+    TAc.print(LANG.render_feedback("user-sol-subset-as-string", f'Your solution, as we have read it, is:\n{solution_subset_as_string} \nSo you have choosen the rows/columns: {al.seq_to_str(solution_seq_as_string)} \n'), "yellow", ["bold"])
+
 if al.is_optimal_shooting(m,n,instance,solution_seq_as_string,silent=True,TAc=TAc,LANG=LANG):
+    TAc.print(LANG.render_feedback("opt-sol-seq-correct", f'Yes! You have found on which rows/columns you have to shoot the laser beams.'), "green", ["bold"])
     check_passed('opt_sol')
 else:
     check_failed()
-
 
 
 #--------------------------------------------------------

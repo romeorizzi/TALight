@@ -32,10 +32,7 @@ if ENV['source'] == 'catalogue':
     mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=al.format_name_to_file_extension(ENV['instance_format'], 'instance'))
     instance = al.get_instance_from_str(instance_str, instance_format=ENV['instance_format'])
-    if ENV['instance_format']!='only_matrix':
-        m=len(instance[0])
-    else:
-        m=len(instance)
+    m=len(instance)
     output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['instance_format']}.{extension}"
 
 else:

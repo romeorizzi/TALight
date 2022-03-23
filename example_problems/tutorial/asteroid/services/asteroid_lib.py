@@ -306,7 +306,7 @@ def get_instance_from_txt(matrix, instance_format='only_matrix'):
     instance = list()
     lines = matrix.split('\n')
     if instance_format == "with_m_and_n":
-        lines = lines[2:]
+        lines = lines[1:]
     for line in lines:
         if len(line) != 0:
             instance.append([int(e) for e in line.split()])
