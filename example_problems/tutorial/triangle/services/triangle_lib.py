@@ -1,9 +1,189 @@
 #!/usr/bin/env python3
+import os
 import random
 import math
 
 from termcolor import colored
+from contextlib import redirect_stdout
 
+### CONSTANTS #########################################
+AVAILABLE_FORMATS = {'instance':{'pyramid':'pyramid.txt', 'lines':'lines.txt', 'gmpl_dat':'dat'},'solution':{'int_and_string':'int_and_string.txt'}}
+DEFAULT_INSTANCE_FORMAT='lines.txt'
+DEFAULT_SOLUTION_FORMAT='int_and_string'
+#######################################################
+
+def format_name_to_file_extension(format_name, format_gender):
+    assert format_gender in AVAILABLE_FORMATS, f'No format has been adopted for objects of the gender `{format_gender}`.'
+    assert format_name in AVAILABLE_FORMATS[format_gender], f'Format_name `{format_name}` unsupported for objects of gender {format_gender}.'
+    return AVAILABLE_FORMATS[format_gender][format_name]
+
+def file_extension_to_format_name(file_extension):
+    for format_gender in AVAILABLE_FORMATS:
+        for format_name in AVAILABLE_FORMATS[format_gender]:
+            if AVAILABLE_FORMATS[format_gender][format_name] == file_extension:
+                return format_name
+    assert False, f'No adopted format is associated to the file_extension `{file_extension}`.'
+
+def format_name_expand(format_name, format_gender):
+    long_format_name = format_name_to_file_extension(format_name, format_gender)
+    format_list = long_format_name.split('.')
+    if len(format_list) == 1:
+        format_primary = format_list[0]
+        format_secondary = None
+    else:
+        format_primary = format_list[1]
+        format_secondary = format_list[0]
+    return format_primary, format_secondary
+    
+# MANAGING REPRESENTATIONS OF SOLUTIONS:
+
+def str_to_sequence(string: str) -> list:
+    #print(f"str_to_sequence  called with {string=}")
+    return [char for char in string]
+
+def sequence_to_str(sequence):
+    #print(f"sequence_to_str  called with {sequence=}")
+    return "".join(e for e in sequence)
+
+def annotated_subseq_to_sequence(annotated_solution):
+    #print(f"annotated_subseq_to_sequence  called with {annotated_solution=}")
+    return [annotated_solution[key] for key in sorted(annotated_solution)]
+
+def annotated_subseq_to_str(annotated_solution) -> str:
+    #print(f"annotated_subseq_to_str  called with {annotated_solution=}")
+    return sequence_to_str(annotated_subseq_to_sequence(annotated_solution))
+
+def render_annotated_subseq_as_str(solution) -> str:
+    #print(f"render_annotated_subseq_as_str  called with {solution=}")
+    return '\n'.join([f'{solution[key]} {key[0]} {key[1]}' for key in sorted(solution)])
+
+def read_annotated_subseq(raw_annotated_subseq: str):
+    #print(f"read_annotated_subseq  called with {raw_annotated_subseq=}")
+    sol = {}
+    for line in raw_annotated_subseq[:-1].split('\n'):
+        values = line.split()
+        sol[(int(values[1]), int(values[2]))] = values[0]
+    return sol
+
+# MANAGING REPRESENTATIONS OF INSTANCES:
+
+# YIELD STRING REPRESENTATIONS OF GIVEN INSTANCE:
+
+def instance_to_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
+    """This function returns the string representation of the given <instance> provided in format <instance_format_name>"""
+    format_primary, format_secondary = format_name_expand(format_name, 'instance')
+    if format_primary == 'dat':
+        return instance_to_dat_str(instance, format_name)
+    if format_primary == 'txt':
+        return instance_to_txt_str(instance, format_name)
+
+def instance_to_txt_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
+    """Of the given <instance>, this function returns the .txt string in format <format_name>"""
+    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
+    n = len(instance)
+    output= f''
+    if format_name == "pyramid":
+        for num_linea in range(n):
+            output+=f" "*2*(n-1-num_linea)
+            array = instance[num_linea]
+            for i in range(num_linea+1):
+                el = str(array[i])
+                if len(el) == 1:
+                    output += el + "   "
+                else:
+                    output += el + "  "
+            output += " "*2*(n-num_linea) + "\n"
+    else:
+        output += f'{n}\n'
+        for num_linea in range(n):
+            array = instance[num_linea]
+            for el in array:
+                output += str(el) + " "
+            output += "\n"
+    return output
+
+def instance_to_dat_str(instance, MIN_VAL, MAX_VAl, seed,format_name=''):
+    """Of the given <instance>, this function returns the .dat string in format <format_name>"""
+    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
+    n = len(instance)
+    MIN_VAL = int(MIN_VAL)
+    MAX_VAL = int(MAX_VAL)
+    seed = int(seed)
+    output = f"param n := {n};          # Number of lines of the triangle\n"
+    output += f"param MIN_VAL := {MIN_VAL};    # Minimum element value\n"
+    output += f"param MAX_VAL := {MAX_VAL};   # Maximum element value\n"
+    output += f"param seed := {seed};  # Seed generating the triangle\n"
+    output += "param: STRINGS "
+    for i in range(n):
+        output += "  "*i
+        output += f"LINE_{i+1} "
+    output += f":=\n               {instance[0]}    "
+    for i in range(1,n):
+        output += f" {instance[i]}"
+        output += " "*2
+    output += ";\nend;"
+    return output
+
+
+# GET INSTANCE FROM STRING REPRESENTATION:
+def get_instance_from_str(instance_as_str, instance_format_name=DEFAULT_INSTANCE_FORMAT):
+    """This function returns the instance it gets from its string representation as provided in format <instance_format_name>."""
+    format_primary, format_secondary = format_name_expand(instance_format_name, 'instance')
+    if format_primary == 'dat':
+        return get_instance_from_dat(instance_as_str, instance_format_name)
+    if format_primary == 'txt':
+        return get_instance_from_txt(instance_as_str, instance_format_name)
+
+
+def get_instance_from_txt(instance_as_str, instance_format_name):
+    """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
+    assert instance_format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{instance_format_name}` unsupported for objects of category `instance`.'
+    instance = []
+    if instance_format_name == "pyramid": 
+        elements = instance_as_str.split()
+        all_elements = a.split()
+        for i in range(len(all_elements)): # getting all the elements
+            all_elements[i] = int(all_elements[i])
+        i = 0
+        j = 1
+        while j < len(all_elements) + 1: # separating lines creating list of lists
+            instance.append(all_elements[i:j])
+            k = i
+            i = j
+            j += int(r(k+j)) + 1
+    else:
+        elements = instance_as_str.split()
+        all_elements = a.split()
+        for i in range(1,len(all_elements)): # getting all the elements starting from the second line
+            all_elements[i-1] = int(all_elements[i])
+        i = 0
+        j = 1
+        while j < len(all_elements) + 1: # separating lines creating list of lists
+            instance.append(all_elements[i:j])
+            k = i
+            i = j
+            j += int(r(k+j)) + 1
+    return instance
+
+def get_instance_from_dat(instance_as_str, format_name=''):
+    """This function returns the instance it gets from its .dat string representation in format <format_name>."""
+    instance = list()
+    instance.append(list())
+    instance.append(list())
+    lines = instance_as_str.split('\n')
+    for line in lines:
+        line = line.strip() # remove whitespace before and after
+        # Filter the instance_as_str lines
+        if line != '' and line[:5] != 'param' and line[:3] != 'end':
+            line = line.replace(';', '') #ignore ;
+            line = line.split()
+            if line[1] != '.':
+                instance[0].append((line[1]))
+            if line[-1] != '.':
+                instance[1].append((line[-1]))
+    return instance
+
+# SUPPORT METHODS
 def check_val_range(val:int, MIN_VAL:int, MAX_VAL:int, TAc, LANG):
     if val < MIN_VAL or val > MAX_VAL:
         TAc.print(LANG.render_feedback("val-out-of-range", f"The value {val} falls outside the valid range [{MIN_VAL},{MAX_VAL}].", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
@@ -17,10 +197,7 @@ def check_yes_or_no_answer(ans:str, TAc, LANG):
         return False
     return True
     
-def random_triangle(n:int, MIN_VAL:int, MAX_VAL:int, seed:int, TAc, LANG):
-    if MAX_VAL < MIN_VAL:
-        TAc.print(LANG.render_feedback("range-is-empty", f"Error: I can not choose the integers for the triangle from the range [{MIN_VAL},{MAX_VAL}] since this range is empty.", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
-        exit(0)
+def random_triangle(n:int, MIN_VAL:int, MAX_VAL:int, seed:int):
     random.seed(seed)
     triangle = []
     values = [i for i in range (MIN_VAL,MAX_VAL+1)]
@@ -28,22 +205,16 @@ def random_triangle(n:int, MIN_VAL:int, MAX_VAL:int, seed:int, TAc, LANG):
         triangle.append(random.choices(values, k=row+1))
     return triangle
 
-def print_triangle(triangle, file_format:bool =False):
+def print_triangle(triangle):
     n = len(triangle)
-    if file_format:
-        print(n)
-        for row in triangle:
-            print(' '.join([str(ele).ljust(2) for ele in row]))
-    else:
-        left_margin = (2 * n) - 2
-        for row in triangle:
-            print(end="  "*left_margin)
-            left_margin -= 1
-            for ele in row:
-                print(str(ele).ljust(2), end='  ')
-            print()
-
-            
+    left_margin = (2 * n) - 2
+    for row in triangle:
+        print(end="  "*left_margin)
+        left_margin -= 1
+        for ele in row:
+             print(str(ele).ljust(2), end='  ')
+        print()
+             
 def print_path(triangle, path_values, TAc, LANG):
     if len(triangle) - 1 != len(path_values):
         TAc.print(LANG.render_feedback("wrong-path-length", f"Error: The path you provided is not a feasible solution for this triangle, as it doesn't comprise {len(triangle) - 1} directions."),"red", ["bold"])
@@ -234,9 +405,12 @@ def separate_answer(answer):
         else:
             p += answer[i]
     return [int(r),p]
+       
+       
+       
+
         
-        
-        
+
         
         
         

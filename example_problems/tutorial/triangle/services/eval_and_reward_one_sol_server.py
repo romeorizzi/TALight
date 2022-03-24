@@ -33,7 +33,7 @@ for n in range(2, 7):
     for _ in range(NUM_INSTANCES):
         seed = random.randint(100000,999999)
         path = "".join(random.choices(["L","R"],k=n-1))
-        instances['correct'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
+        instances['correct'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
 
 # INSTANCES FOR GOAL = 2^n o n^2      
   
@@ -48,7 +48,7 @@ if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2'
     for _ in range(MIN_N, MAX_N):
         seed = random.randint(100000,999999)
         path = "".join(random.choices(["L","R"],k=n-1))
-        instances['time_at_most_2_exp_n'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
+        instances['time_at_most_2_exp_n'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
 
 # INSTANCES FOR GOAL = n^2
 
@@ -67,7 +67,7 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
     while n < MAX_N:
         seed = random.randint(100000,999999)
         path = "".join(random.choices(["L","R"],k=n-1))
-        instances['time_at_most_n_exp_2'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed, TAc, LANG), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
+        instances['time_at_most_n_exp_2'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
         n = math.ceil(n*scaling_factor)
         scaling_factor += 0.1
         if n > MAX_N:
@@ -96,7 +96,7 @@ def test(instance):
         instance['answer_is_correct'] = True
     else:
         instance['answer_is_correct'] = False
-
+    
 
 # MAIN: TEST ALL TESTCASES: 
 

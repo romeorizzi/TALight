@@ -8,7 +8,7 @@ usage=f"""# I am a bot that always provides the right answer. Call me with:
 # I support the following functionalities:
 #   [0] display this help message 
 #   [1] eval feasible solution 
-#   [2] check and reward one sol
+#   [2] eval and reward one sol
 #   [3] best sol
 #   [4] number of triangles in triangle
 """

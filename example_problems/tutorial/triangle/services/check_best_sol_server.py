@@ -21,6 +21,13 @@ args_list = [
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+
+#CHECK MIN_VAL <= MAX_VAL
+
+if ENV['MIN_VAL'] > ENV['MAX_VAL']:
+    TAc.NO()
+    TAc.print(LANG.render_feedback("range-is-empty", f"Error: I can not choose the integers for the triangle from the range [{MIN_VAL},{MAX_VAL}] since this range is empty.", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
+    exit(0)
     
 # START CODING YOUR SERVICE: 
 
@@ -35,7 +42,7 @@ if ENV['how_to_input_the_triangle'] == "my_own_triangle":
     TAc.OK()
     TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
 else:
-    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_triangle']),TAc,LANG)
+    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_triangle']))
 print(triangle)
 best_reward = tl.best_path_cost(triangle)
 

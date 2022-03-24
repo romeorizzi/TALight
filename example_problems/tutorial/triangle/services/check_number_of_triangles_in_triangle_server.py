@@ -24,12 +24,20 @@ args_list = [
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-  
+
 # START CODING YOUR SERVICE:
+
+#CHECK MIN_VAL <= MAX_VAL
+if ENV['MIN_VAL'] > ENV['MAX_VAL']:
+    TAc.NO()
+    TAc.print(LANG.render_feedback("range-is-empty", f"Error: I can not choose the integers for the triangle from the range [{MIN_VAL},{MAX_VAL}] since this range is empty.", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
+    exit(0)
+    
 # CHECK SIZES
 if ENV["big_n"] < ENV["small_n"]:
     TAc.print(LANG.render_feedback("wrong-triangles-sizes", f'Error: the size of the bigger triangle ({ENV["big_n"]}) is smaller than the size of the smaller triangle ({ENV["small_n"]}).'), "red", ["bold"])
     exit(0)
+    
 # BIG TRIANGLE GENERATION
 if ENV["how_to_input_the_big_triangle"] == "my_own_triangle":
     big_triangle = []
@@ -42,9 +50,9 @@ if ENV["how_to_input_the_big_triangle"] == "my_own_triangle":
     TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
 elif ENV["how_to_input_the_big_triangle"] == "random":
     seed = random.randint(100000,999999)
-    big_triangle = tl.random_triangle(ENV["big_n"], ENV["MIN_VAL"], ENV["MAX_VAL"], seed, TAc, LANG)
+    big_triangle = tl.random_triangle(ENV["big_n"], ENV["MIN_VAL"], ENV["MAX_VAL"], seed)
 else:
-    big_triangle = tl.random_triangle(ENV["big_n"],ENV["MIN_VAL"],ENV["MAX_VAL"],int(ENV["how_to_input_the_big_triangle"]),TAc,LANG)
+    big_triangle = tl.random_triangle(ENV["big_n"],ENV["MIN_VAL"],ENV["MAX_VAL"],int(ENV["how_to_input_the_big_triangle"]))
        
 # SMALL TRIANGLE GENERATION
 if ENV["how_to_input_the_small_triangle"] == "my_own_triangle":
@@ -58,9 +66,9 @@ if ENV["how_to_input_the_small_triangle"] == "my_own_triangle":
     TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
 elif ENV["how_to_input_the_small_triangle"] == "random":
     seed = random.randint(100000,999999)
-    small_triangle = tl.random_triangle(ENV["small_n"], ENV["MIN_VAL"], ENV["MAX_VAL"], seed, TAc, LANG)
+    small_triangle = tl.random_triangle(ENV["small_n"], ENV["MIN_VAL"], ENV["MAX_VAL"], seed)
 else:
-    small_triangle = tl.random_triangle(ENV["small_n"],ENV["MIN_VAL"],ENV["MAX_VAL"],int(ENV["how_to_input_the_small_triangle"]),TAc,LANG)
+    small_triangle = tl.random_triangle(ENV["small_n"],ENV["MIN_VAL"],ENV["MAX_VAL"],int(ENV["how_to_input_the_small_triangle"]))
 
 big = tl.cast_to_array(big_triangle)
 small = tl.cast_to_array(small_triangle)

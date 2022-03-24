@@ -36,7 +36,13 @@ if len(ENV["path"]) != ENV["n"]-1:
     TAc.print(LANG.render_feedback("wrong-path-length", f'The true number of required choices is n-1={ENV["n"]-1} instead of {len(ENV["path"].replace(" ", ""))}.'), "red", ["bold"])
     exit(0)
 
+# CHECK MIN_VAL <= MAX_VAL
 
+if ENV['MIN_VAL'] > ENV['MAX_VAL']:
+    TAc.NO()
+    TAc.print(LANG.render_feedback("range-is-empty", f"Error: I can not choose the integers for the triangle from the range [{MIN_VAL},{MAX_VAL}] since this range is empty.", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
+    exit(0)
+    
 # TRIANGLE GENERATION
 
 if ENV['how_to_input_the_triangle'] == "my_own_triangle":
@@ -49,7 +55,7 @@ if ENV['how_to_input_the_triangle'] == "my_own_triangle":
     TAc.OK()
     TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
 else:
-    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_triangle']),TAc,LANG)
+    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_triangle']))
 if not ENV['silent'] or ENV['display_triangle'] or ENV['reward_the_path'] or ENV['how_to_input_the_triangle'] == "my_own_triangle":
     TAc.print(LANG.render_feedback("feasible-path", f'Your solution path ({ENV["path"]}) is a feasible one for this problem since it comprises {ENV["n"]-1} subsequent choices of directions (the correct number).'), "green", ["bold"])
 if ENV['display_triangle']:
@@ -57,5 +63,5 @@ if ENV['display_triangle']:
     tl.print_triangle(triangle)
 if ENV['reward_the_path']:
     TAc.print(LANG.render_feedback("path-reward", f'The total reward collected by your path is {tl.calculate_path(triangle,ENV["path"].replace(" ", ""))}.'), "green", ["bold"])        
-
+print(tl.pyramid_str(triangle))
 exit(0)

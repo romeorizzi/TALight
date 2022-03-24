@@ -36,7 +36,7 @@ NUM_INSTANCES = 5
 for i in range (NUM_INSTANCES):
     small_seed = random.randint(100000,999999)
     big_seed = random.randint(100000,999999)
-    instances['correct'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed, TAc, LANG),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed, TAc, LANG),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
+    instances['correct'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
     MIN_BIG_N += 1
     if MIN_BIG_N > MAX_BIG_N:
         MIN_BIG_N = MAX_BIG_N
@@ -60,7 +60,7 @@ if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2'
     for n in range(NUM_INSTANCES):
         small_seed = random.randint(100000,999999)
         big_seed = random.randint(100000,999999)
-        instances['time_at_most_2_exp_n'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed, TAc, LANG),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed, TAc, LANG),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
+        instances['time_at_most_2_exp_n'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
         MIN_SMALL_N = math.ceil(scaling_factor*MIN_SMALL_N)
         if MIN_SMALL_N > MAX_SMALL_N:
             MIN_SMALL_N = MAX_SMALL_N
@@ -87,7 +87,7 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
     for _ in range(NUM_INSTANCES):
         small_seed = random.randint(100000,999999)
         big_seed = random.randint(100000,999999)
-        instances['time_at_most_n_exp_2'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed, TAc, LANG),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed, TAc, LANG),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
+        instances['time_at_most_n_exp_2'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
         MIN_SMALL_N = math.ceil(scaling_factor*MIN_SMALL_N)
         if MIN_SMALL_N > MAX_SMALL_N:
             MIN_SMALL_N = MAX_SMALL_N
