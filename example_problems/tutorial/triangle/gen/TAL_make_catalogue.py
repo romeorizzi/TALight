@@ -1,1 +1,1 @@
-/home/francesco/TALight/example_problems/tutorial/lcs/gen/TAL_make_catalogue.py
+../../../../TAL_lib/python/TAL_make_catalogue.py
