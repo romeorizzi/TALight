@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from sys import argv, stderr, exit
 
-import model_pirellone_lib as pl
+import pirellone_lib as pl
 
 
 def str2bool(v):
@@ -16,7 +16,8 @@ def main(n, m, solvable, gen_seed, format):
     gen_seed = int(gen_seed)
 
     # Generate pirellone instance
-    instance_seed = pl.gen_instance_seed(solvable, gen_seed)
+    # instance_seed = pl.gen_instance_seed(solvable, gen_seed)
+    instance_seed = pl.gen_instance_seed(solvable)
     pirellone = pl.gen_instance(m, n, instance_seed)
 
     # Generate selected output
