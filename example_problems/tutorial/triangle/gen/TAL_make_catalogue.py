@@ -1,0 +1,1 @@
+/home/francesco/TALight/example_problems/tutorial/lcs/gen/TAL_make_catalogue.py

@@ -13,18 +13,24 @@ args_list = [
     ('MAX_VAL',int),
 ]
 
-
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-    
+
+#CHECK MIN_VAL <= MAX_VAL
+
+if ENV['MIN_VAL'] > ENV['MAX_VAL']:
+    TAc.NO()
+    TAc.print(LANG.render_feedback("range-is-empty", f"Error: I can not choose the integers for the triangle from the range [{MIN_VAL},{MAX_VAL}] since this range is empty.", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
+    exit(0)
+
 # START CODING YOUR SERVICE:
 
 # TRIANGLE AND PATH GENERATION
 
 n = random.randint(1,30)
 seed = random.randint(100000,999999)
-triangle= tl.random_triangle(n, ENV['MIN_VAL'], ENV['MAX_VAL'], seed, TAc, LANG)
+triangle= tl.random_triangle(n, ENV['MIN_VAL'], ENV['MAX_VAL'], seed)
 path = tl.random_path(n-2,n)
 if len(triangle) -1 == len(path):
     right_answer = "yes"
