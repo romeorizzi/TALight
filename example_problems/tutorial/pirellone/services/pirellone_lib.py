@@ -5,10 +5,13 @@ from sys import exit
 
 ### CONSTANTS #########################################
 NO_SOL = 'NO SOLUTION'
-FORMAT_AVAILABLES = ['dat', 'txt']
-DAT_STYLES_AVAILABLES = ['']
-TXT_STYLES_AVAILABLES = ['only_matrix', 'with_m_and_n']
-DEFAULT_FORMAT='only_matrix.txt'
+# FORMAT_AVAILABLES = ['dat', 'txt']
+# DAT_STYLES_AVAILABLES = ['']
+# TXT_STYLES_AVAILABLES = ['only_matrix', 'with_m_and_n']
+# DEFAULT_FORMAT='only_matrix.txt'
+AVAILABLE_FORMATS = {'instance':{'only_matrix':'only_matrix.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat':'dat'},'solution':{'subseq':'seq.txt', 'subset':'annotated_subseq.txt'}}
+DEFAULT_INSTANCE_FORMAT='only_matrix'
+
 #######################################################
 
 
@@ -162,39 +165,43 @@ def subset_to_str_list(subset_sol):
     return [' '.join([str(e) for e in subset_sol[0]]), \
             ' '.join([str(e) for e in subset_sol[1]])]
 
+def format_name_to_file_extension(format_name, format_gender):
+    assert format_gender in AVAILABLE_FORMATS, f'No format has been adopted for objects of the gender `{format_gender}`.'
+    assert format_name in AVAILABLE_FORMATS[format_gender], f'Format_name `{format_name}` unsupported for objects of gender {format_gender}.'
+    return AVAILABLE_FORMATS[format_gender][format_name]
 
-def instance_to_str(pirellone, format='default'):
-    """This function returns the string representation of the given pirellone instance according to the indicated format"""
-    # Get default
-    format = DEFAULT_FORMAT if format=='default' else format
-    # Parsing format
-    format_list = format.split('.')
+def format_name_expand(format_name, format_gender):
+    long_format_name = format_name_to_file_extension(format_name, format_gender)
+    format_list = long_format_name.split('.')
     if len(format_list) == 1:
         format_primary = format_list[0]
-        format_secondary = ''
     else:
         format_primary = format_list[1]
-        format_secondary = format_list[0]
+    return format_primary
+
+def instance_to_str(pirellone, instance_format=DEFAULT_INSTANCE_FORMAT):
+    """This function returns the string representation of the given pirellone instance according to the indicated format"""
+    # Parsing format
+    format_primary = format_name_expand(instance_format, 'instance')
     # Get pirellone in str format
-    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
     if format_primary == 'dat':
-        return instance_to_dat(pirellone, format_secondary)
+        return instance_to_dat(pirellone, instance_format)
     if format_primary == 'txt':
-        return instance_to_txt(pirellone, format_secondary)
+        return instance_to_txt(pirellone, instance_format)
     
 
-def instance_to_txt(pirellone, style='only_matrix'):
+def instance_to_txt(pirellone, instance_format=DEFAULT_INSTANCE_FORMAT):
     """This function returns the string representation of the given pirellone instance according to the indicated style"""
-    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    assert instance_format in AVAILABLE_FORMATS['instance'], f'Instance_format [{instance_format}] unsupported for objects of category `instance`.'
     output = ""
-    if style == "with_m_and_n":
+    if instance_format == "with_m_and_n":
         output = f"{len(pirellone)} {len(pirellone[0])}\n"
     return output + '\n'.join((' '.join(str(col) for col in row) for row in pirellone))
 
 
-def instance_to_dat(pirellone, style=''):
+def instance_to_dat(pirellone, instance_format=''):
     """This function returns the dat representation of the given pirellone instance according to the indicated style"""
-    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    assert instance_format in AVAILABLE_FORMATS['instance'], f'Instance_format [{instance_format}] unsupported for objects of category `instance`.'
     M = len(pirellone)
     N = len(pirellone[0])
     output = f"param M := {M};  # Number of rows\n"
@@ -209,40 +216,33 @@ def instance_to_dat(pirellone, style=''):
 
 
 # FROM STRING
-def get_instance_from_str(pirellone, format):
+def get_instance_from_str(pirellone, instance_format=DEFAULT_INSTANCE_FORMAT):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
     # Parsing format
-    format_list = format.split('.')
-    if len(format_list) == 1:
-        format_primary = format_list[0]
-        format_secondary = ''
-    else:
-        format_primary = format_list[1]
-        format_secondary = format_list[0]
-    # Get pirellone in str format
-    assert format_primary in FORMAT_AVAILABLES, f'Value [{format_primary}] unsupported for the argument format_primary.'
+    format_primary = format_name_expand(instance_format, 'instance')
+    # Get matrix in str format
     if format_primary == 'dat':
-        return get_instance_from_dat(pirellone, format_secondary)
+        return get_instance_from_dat(pirellone, instance_format)
     if format_primary == 'txt':
-        return get_instance_from_txt(pirellone, format_secondary)
+        return get_instance_from_txt(pirellone, instance_format)
 
 
-def get_instance_from_txt(pirellone, style='only_matrix'):
+def get_instance_from_txt(pirellone, instance_format='only_matrix'):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
-    assert style in TXT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    assert instance_format in AVAILABLE_FORMATS['instance'], f'Format_name [{instance_format}] unsupported for objects of category `instance`.'
     instance = list()
     lines = pirellone.split('\n')
     if format == "with_m_and_n":
-        lines = lines[2:]
+        lines = lines[1:]
     for line in lines:
         if len(line) != 0:
             instance.append([int(e) for e in line.split()])
     return instance
 
 
-def get_instance_from_dat(pirellone, style=''):
+def get_instance_from_dat(pirellone, format_name=''):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
-    assert style in DAT_STYLES_AVAILABLES, f'Value [{style}] unsupported for the argument format_secondary when format_primary=txt'
+    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name [{format_name}] unsupported for objects of category `instance`.'
     instance = list()
     # Get lines
     lines = pirellone.split('\n')

@@ -45,7 +45,7 @@ services:
       download:
         regex: ^(0|1)$
         default: 0
-        explain: 'If this flag is set to 1 then the instance file is downloaded into the folder whose fullpath is specified by means of the -o flag (if this path is relative it homes from where the service call has been issued).'
+        explain: 'If this flag is set to 1 then the instance file is downloaded into the \''output\'' sub-folder of the folder from which this TALight service call has been issued (or into the folder whose fullpath is specified by means of the -o flag).'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

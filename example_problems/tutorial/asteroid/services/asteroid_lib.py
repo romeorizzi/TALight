@@ -11,7 +11,6 @@ import numpy as np
 ### CONSTANTS #########################################
 AVAILABLE_FORMATS = {'instance':{'only_matrix':'only_matrix.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat':'dat'},'solution':{'subseq':'seq.txt', 'subset':'annotated_subseq.txt'}}
 DEFAULT_INSTANCE_FORMAT='only_matrix'
-DEFAULT_SOLUTION_FORMAT='seq'
 #######################################################
 
 # CONVERTERS FUNCTIONS:
@@ -245,37 +244,35 @@ def format_name_expand(format_name, format_gender):
     format_list = long_format_name.split('.')
     if len(format_list) == 1:
         format_primary = format_list[0]
-        format_secondary = None
     else:
         format_primary = format_list[1]
-        format_secondary = format_list[0]
-    return format_primary, format_secondary
+    return format_primary
 
 
-def instance_to_str(matrix, format_name=DEFAULT_INSTANCE_FORMAT):
+def instance_to_str(matrix, instance_format=DEFAULT_INSTANCE_FORMAT):
     """This function returns the string representation of the given matrix instance according to the indicated format"""
     # Parsing format
-    format_primary, format_secondary = format_name_expand(format_name, 'instance')
+    format_primary = format_name_expand(instance_format, 'instance')
     # Get matrix in str format
     if format_primary == 'dat':
-        return instance_to_dat(matrix, format_name)
+        return instance_to_dat(matrix, instance_format)
     if format_primary == 'txt':
-        return instance_to_txt(matrix, format_name)
+        return instance_to_txt(matrix, instance_format)
 
 
-def instance_to_txt(matrix, format_name=DEFAULT_INSTANCE_FORMAT):
+def instance_to_txt(matrix, instance_format=DEFAULT_INSTANCE_FORMAT):
     """This function returns the string representation of the given matrix instance according to the indicated style"""
-    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name [{format_name}] unsupported for objects of category `instance`.'
+    assert instance_format in AVAILABLE_FORMATS['instance'], f'Instance_format [{instance_format}] unsupported for objects of category `instance`.'
     output = ""
-    if format_name == "with_m_and_n":
+    if instance_format == "with_m_and_n":
         output = f"{len(matrix)} {len(matrix[0])}\n"
     output += '\n'.join((' '.join(str(col) for col in row) for row in matrix))
     return output
 
 
-def instance_to_dat(matrix, format_name=''):
-    """This function returns the dat representation of the given matrix instance according to the indicated format_name"""
-    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name [{format_name}] unsupported for objects of category `instance`.'
+def instance_to_dat(matrix, instance_format=''):
+    """This function returns the dat representation of the given matrix instance according to the indicated instance_format"""
+    assert instance_format in AVAILABLE_FORMATS['instance'], f'Instance_format [{instance_format}] unsupported for objects of category `instance`.'
     M = len(matrix)
     N = len(matrix[0])
     output = f"param M := {M};  # Number of rows\n"
@@ -292,7 +289,7 @@ def instance_to_dat(matrix, format_name=''):
 # FROM STRING
 def get_instance_from_str(matrix, instance_format=DEFAULT_INSTANCE_FORMAT):
     """This function returns the string representation of the given matrix instance according to the indicated format."""
-    format_primary, format_secondary = format_name_expand(instance_format, 'instance')
+    format_primary = format_name_expand(instance_format, 'instance')
     # Get matrix in str format
     if format_primary == 'dat':
         return get_instance_from_dat(matrix, instance_format)
@@ -302,7 +299,7 @@ def get_instance_from_str(matrix, instance_format=DEFAULT_INSTANCE_FORMAT):
 
 def get_instance_from_txt(matrix, instance_format='only_matrix'):
     """This function returns the string representation of the given matrix instance according to the indicated format."""
-    assert instance_format in AVAILABLE_FORMATS['instance'], f'Format_name [{instance_format}] unsupported for objects of category `instance`.'
+    assert instance_format in AVAILABLE_FORMATS['instance'], f'Instance_format [{instance_format}] unsupported for objects of category `instance`.'
     instance = list()
     lines = matrix.split('\n')
     if instance_format == "with_m_and_n":
