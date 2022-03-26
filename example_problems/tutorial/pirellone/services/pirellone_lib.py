@@ -359,19 +359,26 @@ def check_sol(pirellone, sol):
     return True, None
 
 
-def is_solvable(pirellone, with_yes_certificate=False):
+# def is_solvable(pirellone, with_yes_certificate=False):
+#     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
+#     opt_sol = get_opt_sol_if_solvable(pirellone)
+#     solvable, _ = check_sol(pirellone, opt_sol)
+#     if with_yes_certificate:
+#         return solvable, opt_sol if solvable else None
+#     else:
+#         return solvable
+def is_solvable(pirellone):
     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
     opt_sol = get_opt_sol_if_solvable(pirellone)
     solvable, _ = check_sol(pirellone, opt_sol)
-    if with_yes_certificate:
+    if solvable:
         return solvable, opt_sol if solvable else None
     else:
         return solvable
 
-
 def get_opt_sol(pirellone):
     """Returns NO_SOL if the instance is unsolvable, otherwise the optimal solution."""
-    is_solv, opt_sol = is_solvable(pirellone, with_yes_certificate=True)
+    is_solv, opt_sol = is_solvable(pirellone)
     if is_solv:
         return opt_sol
     return NO_SOL
