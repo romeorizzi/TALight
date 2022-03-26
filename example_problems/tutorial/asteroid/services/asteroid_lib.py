@@ -9,6 +9,7 @@ import networkx as nx
 import re
 import numpy as np
 ### CONSTANTS #########################################
+NO_SOL = 'NO SOLUTION'
 AVAILABLE_FORMATS = {'instance':{'only_matrix':'only_matrix.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat':'dat'},'solution':{'subseq':'seq.txt', 'subset':'annotated_subseq.txt'}}
 DEFAULT_INSTANCE_FORMAT='only_matrix'
 #######################################################
@@ -189,15 +190,12 @@ def subset_to_list_of_rows_and_columns(solution):
     j=0
     for i in range (0,len(solution)-1):
         if solution[i]!='' and len(solution[i])==1:
-            # print('siamo in posiz ',i,' con l\'elemento ', solution[i])
             prova+=solution[i]+' '
         elif solution[i]!='' and len(solution[i])!=1:
-            # print('siamo in posiz ',i,' con la riga ', solution[i])
             laser_beams.insert(j,'r '+solution[i])
         else:
             if prova!='c ':
                 laser_beams.insert(j,prova.strip())
-                # print('inserisco in posiz ',j,'l\'elemento ',prova.strip())
             j+=1
             prova='c '
     return(laser_beams)

@@ -134,7 +134,7 @@ services:
         default: seq
         explain: 'specify what meant by a solution and how it should be encoded. Choose one among the following options:'
         explain1: '[only_val] the solution is just a number identifying how many laser beams you have to shoot in order to destroy all of the asteroids;'
-        explain2: '[seq] the solution is a list of commands;'
+        explain2: '[seq] the solution is a list of commands of the row and column laser beams;'
         explain3: '[subset] the solution is a subset of the row and column laser beams (i.e., as two incidence 0/1-vectors of length m and n, respectively).'
         example: '\n [only_val] 2 \n [seq] r2 c4 \n [subset]:\n 1 0 1\n\n 0\n 1\n 1\n\n if the matrix is 3x3'
         note: In case you are registering the results of the service call on the server via your TALight token, then the value of this argument is also stored as the `only_val` option is clearly the weakest one.

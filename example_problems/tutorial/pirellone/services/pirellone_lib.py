@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from doctest import OutputChecker
 import random, re, copy
 from sys import exit
 
@@ -34,16 +35,18 @@ def subset_to_seq(subset_sol):
 
 def seq_to_subset(seq_sol, m, n):
     """Convert sequence solution (e.g.: ['r0','c3']) into subset solution (e.g.: [[0,1],[0,0,1]])"""
-    if seq_sol == NO_SOL:
+    if seq_sol == NO_SOL.split(' '):
         return NO_SOL
     assert isinstance(seq_sol, list)
     subset_sol = [[0]*m,[0]*n]
     if not seq_sol == ['']:
         for e in seq_sol:
             if e[0] == 'r':
-                subset_sol[0][int(e[1:])] = (1-subset_sol[0][int(e[1:])])
+                assert int(e[1])<=m, f'You have chosen the row switch number {e[1]}, but there are at most {m} rows.'
+                subset_sol[0][int(e[1])-1] = (1-subset_sol[0][int(e[1])-1])
             elif e[0] == 'c':
-                subset_sol[1][int(e[1:])] = (1-subset_sol[1][int(e[1:])])
+                assert int(e[1])<=n, f'You have chosen the column switch number {e[1]}, but there are at most {n} columns.'
+                subset_sol[1][int(e[1])-1] = (1-subset_sol[1][int(e[1])-1])
             else:
                 raise RuntimeError(f'This seq_sol is bad written: {seq_sol}')
     return subset_sol
@@ -362,7 +365,8 @@ def is_solvable(pirellone, with_yes_certificate=False):
     solvable, _ = check_sol(pirellone, opt_sol)
     if with_yes_certificate:
         return solvable, opt_sol if solvable else None
-    return solvable
+    else:
+        return solvable
 
 
 def get_opt_sol(pirellone):
@@ -372,6 +376,12 @@ def get_opt_sol(pirellone):
         return opt_sol
     return NO_SOL
 
+def opt_val(pirellone):
+    if is_solvable(pirellone):
+        opt_val=len(subset_to_seq(get_opt_sol_if_solvable(pirellone)))
+    else:
+        opt_val=NO_SOL
+    return opt_val
 
 def get_padded_sol(m, n, seq_sol, pad_size):
     """From (m,n) and a sequence solution (e.g.: ['r2']), this functions returns a solution longer than at least pad_size."""

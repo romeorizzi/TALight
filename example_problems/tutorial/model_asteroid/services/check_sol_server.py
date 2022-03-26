@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from sys import exit
-import random
 from functools import partial
 
 from multilanguage import Env, Lang, TALcolors
@@ -92,7 +91,7 @@ if ENV["sol_format"] == 'only_val':
         TAc.print(LANG.render_feedback("opt-val-too-small", f'No, the number of laser beams you need to shoot is more than {opt_val_as_int}.'), "red", ["bold"])
         check_failed('opt_val')
     if opt_val_as_int > opt_val:
-        TAc.print(LANG.render_feedback("opt-val-too-big", f'No, he number of laser beams you need to shoot is less than {opt_val_as_int}.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("opt-val-too-big", f'No, the number of laser beams you need to shoot is less than {opt_val_as_int}.'), "red", ["bold"])
         check_failed('opt_val')
     if opt_val_as_int == opt_val:
         TAc.print(LANG.render_feedback("opt-val-correct", f'Yes! The number of laser beams you need to shoot is {opt_val_as_int}.'), "green", ["bold"])

@@ -5,7 +5,7 @@ import random
 from TALinputs import TALinput
 from bot_file_exchange_sym_interface import service_server_requires_and_gets_the_only_file
 
-import model_pirellone_lib as pl
+import pirellone_lib as pl
 
 
 def process_instance(ENV, TAc, LANG):
@@ -14,13 +14,14 @@ def process_instance(ENV, TAc, LANG):
         seed = pl.gen_instance_seed()
         # Get instance
         try:
-            instance, certificate= pl.gen_instance(ENV['m'], ENV['n'], seed, with_yes_certificate=True)
+            # instance, certificate= pl.gen_instance(ENV['m'], ENV['n'], seed, with_yes_certificate=True)
+            instance, certificate= pl.gen_instance(4, 4, seed, with_yes_certificate=True)
         except RuntimeError:
             TAc.print(LANG.render_feedback("error", f"Can't generate an unsolvable matrix {ENV['m']}x{ENV['n']}."), "red", ["bold"])
             exit(0)
         TAc.print(LANG.render_feedback("seed", f"The seed is: {seed}"), "yellow", ["bold"])
         # Print instance
-        TAc.print(LANG.render_feedback("instance-title", f"The matrix {ENV['m']}x{ENV['n']} is:"), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("instance-title", f"The matrix {len(instance)}x{len(instance[1])} is:"), "yellow", ["bold"])
         TAc.print(LANG.render_feedback("instance", f"{pl.instance_to_str(instance)}"), "white", ["bold"])
         # Returns instance and optimal solution
         return instance, pl.make_optimal(certificate) if pl.is_solvable_seed(seed) else pl.NO_SOL

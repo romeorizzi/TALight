@@ -128,34 +128,33 @@ services:
   check_sol:
     description: 'This service checks your solution for an instance (either provided by you or generated at random) for the Pirellone problem. You can even call this service on an already encountered random instance (also met with other services): a random instance can be reconstructed from m, n, and its random seed.'
     evaluator: [python, services/check_sol_server.py]
+    files:
+      - instance
+      - solution
+      - sourcecode
     args:
-      instance_spec:
-        regex: ^(random|seed|terminal)$
-        # NOTE: tolto TA_send_files_bot in quanto impedisce poi di ricevere input da terminale, funzione necessaria al fine di sottomettere la propria soluzione più corta.
-        # regex: ^(random|seed|terminal|TA_send_files_bot)$
-        default: random
-        explain: 'choose the way to input your pirellone among:' 
-        explain1: '[random] the service generate a seed at random and then returns it as well as the pseudo-random instance <m,n,seed>.'
-        explain2: '[seed] the service uses the seed specificated to generate and return the pseudo-random instance <m,n,seed>.'
-        explain3: '[terminal] you enter your instance (pirellone) directly by either typing it line after line or through cut and paste operations.'
-        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt.'
-      m:
-        regex: ^([1-9][0-9]{0,1})$
-        default: 4
-        explain: Number of rows of the pirellone.
-      n:
-        regex: ^([1-9][0-9]{0,1})$
-        default: 4
-        explain: Number of columns of the pirellone.
-      seed:
-        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        default: random_seed
-      sol_style:
-        regex: ^(seq|subset)$
+      instance_id:
+        regex: ^([1-9][0-9]*|0)$
+        regex-explained: any positive natural (in its decimal representation). The default value of 0 can be used only when a local file is associated to the `instance` filehandler. 
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 0
+        explain: 'This argument is taken into account when other than 0. In this case, the instance is taken from the catalogue and, if a local file has been associated to the `instance` filehandler, then the service checks that the two files have the very same content. In case not, the service stops with a warning. We reacall that the whole catalogue is public, that is, it is contained in the file \''model_pirellone.tar\'' you get downloaded on your machine by issuing `rtal get model_pirellone`.'
+      instance_format:
+        regex: ^(with_m_and_n|only_matrix|gmpl_dat)$
+        default: only_matrix
+        explain: Use this argument to specify the format of the file containing the instance of reference. (Examples for the supported formats of the instance file can be found in the `instances_catalogue` directory or obtained from the service `gimme_instance`.)
+        explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m and n are the size of the matrix; then follow m lines, that are the rows of the matrix.'
+        explain2: '[only_matrix] like the above, but with the first line omitted.'
+        explain3: '[gmpl_dat] a possible datafile format for AMPL/GMPL use that we have decided to support.'
+      sol_format:
+        regex: ^(only_val|seq|subset)$
         default: seq
-        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
-        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
+        explain: 'specify what meant by a solution and choose how it should be encoded. Choose one among the following options:'
+        explain1: '[only_val] the solution is just a number identifying how many switches you have to push;'
+        explain2: '[seq] the solution is a list of commands of the row and column switches;'
+        explain3: '[subset] the solution is a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively).'
+        example: '\n [only_val] 2 \n [seq] r2 c4 \n [subset]:\n 1 0 1\n\n 0\n 1\n 1\n\n if the matrix is 3x3'
+        note: In case you are registering the results of the service call on the server via your TALight token, then the value of this argument is also stored as the `only_val` option is clearly the weakest one.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
