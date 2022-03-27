@@ -68,7 +68,7 @@ if TALf.exists_input_file('instance'):
         TAc.print(LANG.render_feedback("different-instances", f'The instance contained in the loaded instance file differs from the one in the catalogue with instance_id={ENV["instance_id"]}.'), "red", ["bold"])
         
 TAc.print(LANG.render_feedback("this-is-the-instance", "The instance is:"), "yellow", ["bold"])
-TAc.print(pl.instance_to_str(instance), "white", ["bold"])
+TAc.print(pl.instance_to_str(instance, ENV['instance_format']), "white", ["bold"])
 print()
 
 m=len(instance)
@@ -127,5 +127,5 @@ elif pl.check_sol(instance,solution)[0]:
 elif lunghezza==opt_val and is_solvable:
     TAc.print(LANG.render_feedback("wrong-sol", f'No, you do not turn off all the lights.'), "red", ["bold"])
 else:
-    TAc.print(LANG.render_feedback("wrong-sol", f'No, you solution is wrong.'), "red", ["bold"])
-check_failed('opt_val')
+    TAc.print(LANG.render_feedback("wrong-sol", f'No, your solution is wrong.'), "red", ["bold"])
+    check_failed('opt_val')

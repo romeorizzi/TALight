@@ -90,13 +90,14 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
       sol_format:
-        regex: ^(only_val|seq|subset)$
+        regex: ^(only_val|seq|subset|rows_columns)$
         default: seq
         explain: 'specify what meant by a solution and how it should be encoded. Choose one among the following options:'
         explain1: '[only_val] the solution is just a number identifying how many laser beams you have to shoot in order to destroy all of the asteroids;'
         explain2: '[seq] the solution is a list of commands;'
         explain3: '[subset] the solution is a subset of the row and column laser beams (i.e., as two incidence 0/1-vectors of length m and n, respectively).'
-        example: '\n [only_val] 4 \n [seq] r2 c4 r3 r1 \n [subset]: 1 0 1\n 0 1 1 if the matrix is 3x3'
+        explain4: '[rows_columns] the solution is the list of the rows and/or the columns to be destroyed'
+        example: '\n - [only_val]: 3 \n - [seq]: r2 r3 c2 \n - [subset]: 0 1 1\n             0 1 0 0 \n             if the matrix is 3x4 \n - [rows_columns]: \n   1 0 1 1\n\n   0 1 1 1\n\n   1\n   0\n   0'
       download:
         regex: ^(0|1)$
         default: 0

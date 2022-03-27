@@ -16,12 +16,10 @@ def main(n, m, solvable, gen_seed, format):
     gen_seed = int(gen_seed)
 
     # Generate pirellone instance
-    # instance_seed = pl.gen_instance_seed(solvable, gen_seed)
-    instance_seed = pl.gen_instance_seed(solvable)
-    pirellone = pl.gen_instance(m, n, instance_seed)
+    pirellone = pl.gen_instance(m, n, gen_seed)
 
     # Generate selected output
-    print(pl.instance_to_str(pirellone, format))
+    print(pl.instance_to_str(pirellone, pl.file_extension_to_format_name(format)))
 
 
 if __name__ == "__main__":

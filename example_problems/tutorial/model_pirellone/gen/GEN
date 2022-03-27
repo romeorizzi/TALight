@@ -17,18 +17,18 @@ COPY: hardcoded/instance2.only_matrix.txt
 COPY: hardcoded/instance2.with_m_and_n.txt
 COPY: hardcoded/instance2.dat
 #     m,  n, solvable, seed
-GEN:  instance_generator.py   4   4   1  777771
-GEN:  instance_generator.py   4   4   1  777771
-GEN:  instance_generator.py   10  10  1 777771
+GEN:  instance_generator.py   4   4   1  263447
+GEN:  instance_generator.py   4   4   1  128710
+GEN:  instance_generator.py   10  10  1  527857
 
 collection: m_and_n_at_most_5_solvable
 #     m,  n, solvable, seed
-GEN:  instance_generator.py   4   4   1  777777
-GEN:  instance_generator.py   4   4   1  777666
-GEN:  instance_generator.py   5   4   1  777123
-GEN:  instance_generator.py   4   5   1  777456
-GEN:  instance_generator.py   5   5   1  132777
-GEN:  instance_generator.py   5   5   1  456777
+GEN:  instance_generator.py   4   4   1  344271
+GEN:  instance_generator.py   4   4   1  675683
+GEN:  instance_generator.py   5   4   1  792836
+GEN:  instance_generator.py   4   5   1  477301
+GEN:  instance_generator.py   5   5   1  350681
+GEN:  instance_generator.py   5   5   1  517573
 
 collection: m_and_n_at_most_5_unsolvable
 #     m,  n, solvable, seed
@@ -36,6 +36,6 @@ GEN:  instance_generator.py   4   4  0         777777
 GEN:  instance_generator.py   4   4  0         777666
 GEN:  instance_generator.py   5   4  0         777123
 GEN:  instance_generator.py   4   5  0         777456
-GEN:  instance_generator.py   5   5  0         132777
+GEN:  instance_generator.py   5   5  0         123777
 GEN:  instance_generator.py   5   5  0         456777
 

@@ -103,7 +103,7 @@ services:
         explain1: '[only_val] the solution is just a number identifying how many switches you have to push;'
         explain2: '[seq] the solution is a list of commands of the row and column switches;'
         explain3: '[subset] the solution is a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively).'
-        example: '\n [only_val] 3 \n [seq] r1 r3 c2 \n [subset]:\n 1 0 1\n0 1 0 if the matrix is 3x3'
+        example: '\n - [only_val]: 3 \n - [seq]: r2 r3 c2 \n - [subset]: 0 1 1\n             0 1 0 0 \n             if the matrix is 3x4'
       download:
         regex: ^(0|1)$
         default: 0
@@ -212,7 +212,7 @@ services:
         explain1: '[only_val] the solution is just a number identifying how many switches you have to push;'
         explain2: '[seq] the solution is a list of commands of the row and column switches;'
         explain3: '[subset] the solution is a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively).'
-        example: '\n [only_val] 2 \n [seq] r2 c4 \n [subset]:\n 1 0 1\n\n 0\n 1\n 1\n\n if the matrix is 3x3'
+        example: '\n - [only_val]: 3 \n - [seq]: r2 r3 c2 \n - [subset]: 0 1 1\n             0 1 0 0 \n             if the matrix is 3x4'
         note: In case you are registering the results of the service call on the server via your TALight token, then the value of this argument is also stored as the `only_val` option is clearly the weakest one.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$

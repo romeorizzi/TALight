@@ -16,16 +16,16 @@ COPY: hardcoded/instance2.only_matrix.txt
 COPY: hardcoded/instance2.with_m_and_n.txt
 COPY: hardcoded/instance2.dat
 #     m,  n, seed
-GEN:  instance_generator.py   4   4  777771
-GEN:  instance_generator.py   4   4  777771
+GEN:  instance_generator.py   4   4  854392
+GEN:  instance_generator.py   4   4  874167
 GEN:  instance_generator.py   10  10 777771
 
 collection: m_and_n_at_most_5
 #     m,  n, seed
-GEN:  instance_generator.py   4   4  777777
-GEN:  instance_generator.py   4   4  777666
-GEN:  instance_generator.py   5   4  777123
-GEN:  instance_generator.py   4   5  777456
-GEN:  instance_generator.py   5   5  132777
-GEN:  instance_generator.py   5   5  456777
+GEN:  instance_generator.py   4   4  613966
+GEN:  instance_generator.py   4   4  323170
+GEN:  instance_generator.py   5   4  497300
+GEN:  instance_generator.py   4   5  626518
+GEN:  instance_generator.py   5   5  709997
+GEN:  instance_generator.py   5   5  667521
 

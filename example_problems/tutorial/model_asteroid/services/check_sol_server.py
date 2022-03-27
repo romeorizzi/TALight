@@ -70,7 +70,7 @@ if TALf.exists_input_file('instance'):
         TAc.print(LANG.render_feedback("different-instances", f'The instance contained in the loaded instance file differs from the one in the catalogue with instance_id={ENV["instance_id"]}.'), "red", ["bold"])
         
 TAc.print(LANG.render_feedback("this-is-the-instance", "The instance is:"), "yellow", ["bold"])
-TAc.print(al.instance_to_str(instance), "white", ["bold"])
+TAc.print(al.instance_to_str(instance, instance_format=ENV['instance_format']), "white", ["bold"])
 print()
 
 m=len(instance)
@@ -103,9 +103,12 @@ elif ENV["sol_format"] == 'seq':
 elif ENV["sol_format"] == 'subset':
     solution_subset_as_string=TALf.input_file_as_str('solution')
     TAc.print(LANG.render_feedback("solution-successfully-loaded", f'Your `solution` file has been successfully loaded.'), "yellow", ["bold"])
-    solution_subset=solution_subset_as_string.split('\n')
-    solution_seq_as_string=al.list_of_rows_and_columns_to_seq(solution_subset,instance)
-    TAc.print(LANG.render_feedback("user-sol-subset-as-string", f'Your solution, as we have read it, is:\n{solution_subset_as_string} \nSo you have choosen the rows/columns: {al.seq_to_str(solution_seq_as_string)} \n'), "yellow", ["bold"])
+    solution=[]
+    m=len(instance)
+    solution.append(list(map(int,solution_subset_as_string[0:(m*2-1)].split())))
+    solution.append(list(map(int,solution_subset_as_string[m*2:].split())))
+    solution_seq_as_string=al.subset_to_seq(solution)
+    TAc.print(LANG.render_feedback("user-sol-subset-as-string", f'Your solution, as we have read it, is:\n{solution_subset_as_string}'), "yellow", ["bold"])
 
 if al.is_optimal_shooting(m,n,instance,solution_seq_as_string,silent=True,TAc=TAc,LANG=LANG):
     TAc.print(LANG.render_feedback("opt-sol-seq-correct", f'Yes! You have found on which rows/columns you have to shoot the laser beams.'), "green", ["bold"])

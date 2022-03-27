@@ -173,6 +173,13 @@ def format_name_to_file_extension(format_name, format_gender):
     assert format_name in AVAILABLE_FORMATS[format_gender], f'Format_name `{format_name}` unsupported for objects of gender {format_gender}.'
     return AVAILABLE_FORMATS[format_gender][format_name]
 
+def file_extension_to_format_name(file_extension):
+    for format_gender in AVAILABLE_FORMATS:
+        for format_name in AVAILABLE_FORMATS[format_gender]:
+            if AVAILABLE_FORMATS[format_gender][format_name] == file_extension:
+                return format_name
+    assert False, f'No adopted format is associated to the file_extension `{file_extension}`.'
+
 def format_name_expand(format_name, format_gender):
     long_format_name = format_name_to_file_extension(format_name, format_gender)
     format_list = long_format_name.split('.')
@@ -232,10 +239,10 @@ def get_instance_from_str(pirellone, instance_format=DEFAULT_INSTANCE_FORMAT):
 
 def get_instance_from_txt(pirellone, instance_format='only_matrix'):
     """This function returns the string representation of the given pirellone instance according to the indicated format."""
-    assert instance_format in AVAILABLE_FORMATS['instance'], f'Format_name [{instance_format}] unsupported for objects of category `instance`.'
+    assert instance_format in AVAILABLE_FORMATS['instance'], f'Instance_format [{instance_format}] unsupported for objects of category `instance`.'
     instance = list()
     lines = pirellone.split('\n')
-    if format == "with_m_and_n":
+    if instance_format == "with_m_and_n":
         lines = lines[1:]
     for line in lines:
         if len(line) != 0:
