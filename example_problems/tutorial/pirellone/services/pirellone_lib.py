@@ -18,7 +18,7 @@ DEFAULT_INSTANCE_FORMAT='only_matrix'
 
 # CONVERTERS FUNCTIONS:
 def subset_to_seq(subset_sol):
-    """Convert subset solution (e.g.: [[0,1],[0,0,1]]) into sequence solution (e.g.: ['r0','c3'])"""
+    """Convert subset solution (e.g.: [[0,1],[0,0,1]]) into sequence solution (e.g.: ['r2','c3'])"""
     if subset_sol == NO_SOL:
         return NO_SOL
     m = len(subset_sol[0])
@@ -26,10 +26,10 @@ def subset_to_seq(subset_sol):
     seq_sol = list()
     for i in range(m):
         if subset_sol[0][i]:
-            seq_sol.append(f"r{i}")
+            seq_sol.append(f"r{i+1}")
     for j in range(n):
         if subset_sol[1][j]:
-            seq_sol.append(f"c{j}")
+            seq_sol.append(f"c{j+1}")
     return seq_sol
 
 
@@ -359,26 +359,18 @@ def check_sol(pirellone, sol):
     return True, None
 
 
-# def is_solvable(pirellone, with_yes_certificate=False):
-#     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
-#     opt_sol = get_opt_sol_if_solvable(pirellone)
-#     solvable, _ = check_sol(pirellone, opt_sol)
-#     if with_yes_certificate:
-#         return solvable, opt_sol if solvable else None
-#     else:
-#         return solvable
-def is_solvable(pirellone):
+def is_solvable(pirellone, with_yes_certificate=False):
     """From a pirellone instance, this functions returns True if it is solvable, False otherwise."""
     opt_sol = get_opt_sol_if_solvable(pirellone)
     solvable, _ = check_sol(pirellone, opt_sol)
-    if solvable:
+    if with_yes_certificate:
         return solvable, opt_sol if solvable else None
     else:
         return solvable
 
 def get_opt_sol(pirellone):
     """Returns NO_SOL if the instance is unsolvable, otherwise the optimal solution."""
-    is_solv, opt_sol = is_solvable(pirellone)
+    is_solv, opt_sol = is_solvable(pirellone, with_yes_certificate=True)
     if is_solv:
         return opt_sol
     return NO_SOL
