@@ -24,53 +24,35 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # INSTANCES FOR GOAL = correct
 goals = ['correct']
-instances = { 'correct' : [] }
+instances = {}
+# N = small triangle size    M = big triangle size
 MIN_VAL = 0
 MAX_VAL = 1
-MIN_SMALL_N = 2
-MAX_SMALL_N = 2
-MIN_BIG_N = 5
-MAX_BIG_N = 10
+MIN_N = 2 
+MAX_N = 2 
+MIN_M = 5
+MAX_M = 10
 NUM_INSTANCES = 5
+scaling_factor = 1.5
 
-for i in range (NUM_INSTANCES):
-    small_seed = random.randint(100000,999999)
-    big_seed = random.randint(100000,999999)
-    instances['correct'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
-    MIN_BIG_N += 1
-    if MIN_BIG_N > MAX_BIG_N:
-        MIN_BIG_N = MAX_BIG_N
+instances['correct'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
     
 # INSTANCES FOR GOAL = 2^n o n^2      
-
-# SMALL INSTANCES
   
 if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2':
-    goals.append('time_at_most_2_exp_n')
-    instances['time_at_most_2_exp_n'] = []
-    NUM_INSTANCES = 6
-    MIN_SMALL_N = 2
-    MAX_SMALL_N = 4
-    MIN_BIG_N = 7
-    MAX_BIG_N = 12
+    goals.append('time_at_most_2_exp_n')    
+    NUM_INSTANCES = 12
+    MIN_N = 2
+    MAX_N = 4
+    MIN_M = 7
+    MAX_M = 12
     scaling_factor = 1.1
     if ENV["code_lang"] == "compiled":
-        MAX_BIG_N = 18
+        MAX_M = 18
         scaling_factor = 1.2
-    for n in range(NUM_INSTANCES):
-        small_seed = random.randint(100000,999999)
-        big_seed = random.randint(100000,999999)
-        instances['time_at_most_2_exp_n'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
-        MIN_SMALL_N = math.ceil(scaling_factor*MIN_SMALL_N)
-        if MIN_SMALL_N > MAX_SMALL_N:
-            MIN_SMALL_N = MAX_SMALL_N
-        MIN_BIG_N = math.ceil(scaling_factor*MIN_BIG_N)
-        if MIN_BIG_N > MAX_BIG_N:
-            MIN_BIG_N = MAX_BIG_N
+    instances['time_at_most_2_exp_n'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
 
 # INSTANCES FOR GOAL = n^2
-
-# SMALL INSTANCES
 
 if ENV["goal"] == 'time_at_most_n_exp_2':
     goals.append('time_at_most_n_exp_2')
@@ -80,26 +62,17 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
     MAX_SMALL_N = 4
     MIN_BIG_N = 20
     MAX_BIG_N = 50
-    scaling_factor = 1.1
+    scaling_factor = 1.2
     if ENV["code_lang"] == "compiled":
         MIN_BIG_N = 30
         MAX_BIG_N = 100
-    for _ in range(NUM_INSTANCES):
-        small_seed = random.randint(100000,999999)
-        big_seed = random.randint(100000,999999)
-        instances['time_at_most_n_exp_2'].append({'small_triangle': tl.random_triangle(MIN_SMALL_N, MIN_VAL, MAX_VAL, small_seed),'big_triangle': tl.random_triangle(MIN_BIG_N, MIN_VAL, MAX_VAL, big_seed),'MIN_VAL':MIN_VAL,'MAX_VAL':MAX_VAL,'MIN_SMALL_N': MIN_SMALL_N,'MAX_SMALL_N':MAX_SMALL_N,'MIN_BIG_N':MIN_BIG_N,'MAX_BIG_N':MAX_BIG_N,'small_seed':small_seed,'big_seed':big_seed,'measured_time' : None, 'answer_is_correct' : None})
-        MIN_SMALL_N = math.ceil(scaling_factor*MIN_SMALL_N)
-        if MIN_SMALL_N > MAX_SMALL_N:
-            MIN_SMALL_N = MAX_SMALL_N
-        MIN_BIG_N = math.ceil(scaling_factor*MIN_BIG_N)
-        if MIN_BIG_N > MAX_BIG_N:
-            MIN_BIG_N = MAX_BIG_N
+    instances['time_at_most_n_exp_2'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
 
 MAX_TIME = 2
 
 # FUNCTION TESTING ONE SINGLE TESTCASE: 
 def test(instance):
-    small_triangle = instance['small_triangle']
+    small_triangle = instance['triangle']
     big_triangle = instance['big_triangle']
     small = tl.cast_to_array(small_triangle)
     big = tl.cast_to_array(big_triangle)

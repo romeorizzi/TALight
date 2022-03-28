@@ -25,51 +25,43 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 LANG.print_opening_msg()
 goals = ['correct']
-instances = { 'correct' : [] }
+instances = {}
+MIN_N = 2
+MAX_N = 7
 MIN_VAL = 10
 MAX_VAL = 99
-NUM_INSTANCES = 3
-for n in range(2, 7):
-    for _ in range(NUM_INSTANCES):
-        seed = random.randint(100000,999999)
-        instances['correct'].append({'triangle' : tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n' : n, 'MIN_VAL' : MIN_VAL, 'MAX_VAL' : MAX_VAL, 'seed' : seed, 'measured_time' : None, 'answer_is_correct' : None})
+NUM_INSTANCES = 6
+scaling_factor = 1.1
+instances['correct'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N)
         
 # INSTANCES FOR GOAL = 2^n o n^2      
   
 if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2':
     goals.append('time_at_most_2_exp_n')
-    instances['time_at_most_2_exp_n'] = []
     MIN_N = 8  # could still be 2^{\choose(n,2)}
     MAX_N = 15  # we intend to evaluate positively solutions as bad as O(2^n)
     if ENV["code_lang"] == "compiled":
         MAX_N = 18
-    NUM_INSTANCES = 1
-    for n in range(MIN_N, MAX_N):
-        seed = random.randint(100000,999999)
-        instances['time_at_most_2_exp_n'].append({'triangle' : tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n' : n, 'MIN_VAL' : MIN_VAL, 'MAX_VAL' : MAX_VAL, 'seed' : seed, 'measured_time' : None, 'answer_is_correct' : None})
+    NUM_INSTANCES = 10
+    scaling_factor = 1.2
+    instances['time_at_most_2_exp_n'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N)
 
 # INSTANCES FOR GOAL = n^2
 
 if ENV["goal"] == 'time_at_most_n_exp_2':
     goals.append('time_at_most_n_exp_2')
-    instances['time_at_most_n_exp_2'] = []
+    
     MIN_N = 16  # could still be 2^n
     if ENV["code_lang"] == "compiled":
         MIN_N = 19  # could still be 2^n
     MAX_N = 50  # we intend to evaluate positively only the linear O(n^2) solutions
     if ENV["code_lang"] == "compiled":
         MAX_N = 100
-    NUM_INSTANCES = 1
+    NUM_INSTANCES = 20
     scaling_factor = 1.1
-    n = MIN_N
-    while n < MAX_N:
-        seed = random.randint(100000,999999)
-        instances['time_at_most_n_exp_2'].append({'triangle' : tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n' : n, 'MIN_VAL' : MIN_VAL, 'MAX_VAL' : MAX_VAL, 'seed' : seed, 'measured_time' : None, 'answer_is_correct' : None})
-        n = math.ceil(n*scaling_factor)
-        scaling_factor += 0.1
-        if n > MAX_N:
-           n = MAX_N
-            
+    instances['time_at_most_n_exp_2'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N)
+
+           
 def right_length(triangle,answer):
     if len(triangle) == len(answer)+1:
         return True

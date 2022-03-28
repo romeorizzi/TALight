@@ -25,54 +25,40 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # INSTANCES FOR GOAL = correct
 
 goals = ['correct']
-instances = { 'correct' : [] }
+instances = {}
 MIN_VAL = 10
 MAX_VAL = 99
 NUM_INSTANCES = 5
-for n in range(2, 7):
-    for _ in range(NUM_INSTANCES):
-        seed = random.randint(100000,999999)
-        path = "".join(random.choices(["L","R"],k=n-1))
-        instances['correct'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
+scaling_factor = 1.5
+MIN_N = 3
+MAX_N = 10
+instances['correct'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N)
 
 # INSTANCES FOR GOAL = 2^n o n^2      
   
 if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2':
     goals.append("time_at_most_2_exp_n")
-    instances['time_at_most_2_exp_n'] = []
     MIN_N = 8  # could still be 2^{\choose(n,2)}
     MAX_N = 15  # we intend to evaluate positively solutions as bad as O(2^n)
     if ENV["code_lang"] == "compiled":
         MAX_N = 18
-    NUM_INSTANCES = 1
-    for _ in range(MIN_N, MAX_N):
-        seed = random.randint(100000,999999)
-        path = "".join(random.choices(["L","R"],k=n-1))
-        instances['time_at_most_2_exp_n'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
-
+    NUM_INSTANCES = 10
+    sacling_factor = 1.2
+    instances['time_at_most_2_exp_n'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N) 
+    
 # INSTANCES FOR GOAL = n^2
 
 if ENV["goal"] == 'time_at_most_n_exp_2':
     goals.append("time_at_most_n_exp_2")
-    instances['time_at_most_n_exp_2'] = []
     MIN_N = 16  # could still be 2^n
     if ENV["code_lang"] == "compiled":
         MIN_N = 19  # could still be 2^n
     MAX_N = 50  # we intend to evaluate positively only the linear O(n^2) solutions
     if ENV["code_lang"] == "compiled":
         MAX_N = 100
-    NUM_INSTANCES = 1
+    NUM_INSTANCES = 30
     scaling_factor = 1.1
-    n = MIN_N
-    while n < MAX_N:
-        seed = random.randint(100000,999999)
-        path = "".join(random.choices(["L","R"],k=n-1))
-        instances['time_at_most_n_exp_2'].append({'triangle': tl.random_triangle(n, MIN_VAL, MAX_VAL, seed), 'n': n, 'MIN_VAL': MIN_VAL, 'MAX_VAL': MAX_VAL, 'seed': seed, 'path': path, 'measured_time' : None, 'answer_is_correct' : None})
-        n = math.ceil(n*scaling_factor)
-        scaling_factor += 0.1
-        if n > MAX_N:
-           n = MAX_N
-
+    instances['time_at_most_n_exp_2'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N) 
 
 MAX_TIME = 2
 
