@@ -4,7 +4,7 @@ from sys import stderr, exit
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 
-import model_pirellone_lib as pl
+import pirellone_lib as pl
 from services_utils import process_instance
 
 # METADATA OF THIS TAL_SERVICE:
