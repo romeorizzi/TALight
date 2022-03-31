@@ -85,7 +85,7 @@ def TALinput(token_type, num_tokens=None, sep=None, exceptions = set({}), commen
                     TAc.print(f"\nI am dropping the communication because of violation of the intended protocol between problem solver and problem maker.", "yellow", file=out)
             else:
                 for out in [stdout, stderr]:
-                    TAc.print("Input error from the problem-solver on the inut line:", "red", file=out)
+                    TAc.print("Input error from the problem-solver on the input line:", "red", file=out)
                     TAc.print(input_line, "red", ["bold"], file=out)
                     TAc.print(f"The problem is with the {i}-th token of your line:", "red", file=out)
                     TAc.print(token, "red", ["bold"], file=out)
