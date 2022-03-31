@@ -62,3 +62,37 @@ class Token(object):
                             line = e.token + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "\n"
 
         return ''.join(str(i) for i in lines)
+
+    def countTokenTries(self):
+        l = list()
+
+        for e in self.tokens:
+            total_tries = 0
+
+            for x in e.problem:
+                for y in x.services:
+                    for z in y.goals:
+                        total_tries += 1
+
+            l.append((e.token, total_tries))
+
+        return l
+
+    def countResolvedProblem(self):
+        l = list()
+
+        for e in self.token:
+            for x in e.problem:
+                ok_goals = 0
+                no_goals = 0
+
+                for y in x.services:
+                    for z in y.goals:
+                        if z.getStatusContent():
+                            ok_goals += 1
+                        else:
+                            no_goals += 1
+
+                l.append((e.token, x.problem, ok_goals, no_goals))
+
+        return l
