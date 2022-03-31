@@ -15,34 +15,50 @@ class Token(object):
         s.addFile(filedata)
         self.tokens.append(s)
         
-    def printToConsole(self):
+    def printToConsole(self, printAll : bool = False):
         for e in self.tokens:
             print("Student: " + e.token)
             print("========================")
 
             for x in e.problem:
-                print(x.problem)
-
                 for y in x.services:
-                    print('\t' + y.service)
+                    print(x.problem, y.service, sep=': ')
 
                     for z in y.goals:
-                        print('\t' + '\t' + z.goal)
+                        print(z.goal, sep=': ', end = '')
 
-                        for o in z.content:
-                            print('\t' + '\t' + '\t' + ' -> ' + o.toString())
+                        if printAll:
+                            for o in z.content:
+                                print('->', o.toString())
+                        else:
+                            value = ""
+                            if z.getStatusContent():
+                                value = "OK"
+                            else:
+                                value = "NO"
 
-                        print('\n')
+                            print('->', value)
 
-    def instanceToString(self):
+            print()
+
+    def instanceToString(self, printAll : bool = False):
         lines = list()
 
         for e in self.tokens:
             for x in e.problem:
                 for y in x.services:
                     for z in y.goals:
-                        for o in z.content: 
-                            line = e.token + "," + x.problem + "," + y.service + "," + z.goal + "," + o.toString(',') + '\n'
-                            lines.append(line)
+                        if printAll:                       
+                            for o in z.content: 
+                                line = e.token + "," + x.problem + "," + y.service + "," + z.goal + "," + o.toString(',') + '\n'
+                                lines.append(line)
+                        else:
+                            value = ""
+                            if z.getStatusContent():
+                                value = "OK"
+                            else:
+                                value = "NO"
+
+                            line = e.token + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "\n"
 
         return ''.join(str(i) for i in lines)

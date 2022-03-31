@@ -14,3 +14,6 @@ class FileData(object):
         self.content = file_descriptor.read()
 
         self.folderdata = folderdata
+
+    def isDone(self):
+        return self.result == "OK"

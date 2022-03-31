@@ -1,3 +1,4 @@
+from re import L
 from FileData import FileData
 from Goal import Goal
 
@@ -15,3 +16,4 @@ class Service(object):
         g = Goal(filedata.goal)
         g.addContent(filedata)
         self.goals.append(g)
+        

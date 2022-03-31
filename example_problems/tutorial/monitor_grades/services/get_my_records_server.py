@@ -63,11 +63,8 @@ def main(problem : str, service : str, token : str, path : str):
 
 # Student Token
 # ----------------------
-# Problem
-#   Service
-#       Goal1: 
-#           {date}-{content1}
-#           {date}-{content2}
+# Problem: Service
+# Goal1 -> OK or NO
 
 if __name__ == "__main__":
     if DEBUG:
