@@ -59,7 +59,7 @@ def main(problem : str, service : str, token : str, path : str):
 
     if not DEBUG:
         if ENV['download'] == 1:
-            TALf.str2output_file(problemlist.createFile(), "result.csv")
+            TALf.str2output_file(problemlist.instanceToString(), "result.csv")
 
 # Student Token
 # ----------------------

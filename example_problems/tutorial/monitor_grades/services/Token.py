@@ -34,7 +34,7 @@ class Token(object):
 
                         print('\n')
 
-    def instanceToFile(self):
+    def instanceToString(self):
         lines = list()
 
         for e in self.tokens:
@@ -42,7 +42,7 @@ class Token(object):
                 for y in x.services:
                     for z in y.goals:
                         for o in z.content: 
-                            line = e.token + "," + x.problem + "," + y.service + "," + z.goal + "," + o.data + "," + o.content
+                            line = e.token + "," + x.problem + "," + y.service + "," + z.goal + "," + o.toString(',') + '\n'
                             lines.append(line)
 
         return ''.join(str(i) for i in lines)

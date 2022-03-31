@@ -5,6 +5,6 @@ class Content(object):
         self.data = data
         self.content = content
         
-    def toString(self):
+    def toString(self, sep=' '):
         datestr = time.strftime('%Y-%m-%d %H-%M-%S', self.data)
-        return datestr + " " + self.content
+        return datestr + sep + self.content
