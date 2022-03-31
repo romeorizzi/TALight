@@ -8,10 +8,10 @@ class Structure(object):
 
     def addFile(self, filedata : FileData):
         for x in self.problem:
-            if x.problem == filedata.problem:
+            if x.problem == filedata.folderdata.problem:
                 x.addService(filedata)
                 return
 
-        p = Problem(filedata.problem)
+        p = Problem(filedata.folderdata.problem)
         p.addService(filedata)
         self.problem.append(p)

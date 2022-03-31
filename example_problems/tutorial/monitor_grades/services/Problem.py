@@ -8,10 +8,10 @@ class Problem(object):
 
     def addService(self, filedata : FileData):
         for x in self.services:
-            if x.service == filedata.service:
+            if x.service == filedata.folderdata.service:
                 x.addGoal(filedata)
                 return
 
-        t = Service(filedata.service)
+        t = Service(filedata.folderdata.service)
         t.addGoal(filedata)
         self.services.append(t)

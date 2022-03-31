@@ -51,8 +51,8 @@ def main(problem : str, service : str, token : str, path : str):
                 for y in listdir(fullpath):
                     filedata = FileData(y, os.path.join(fullpath, y), folderdata)
                         
-                    if (filedata.problem == problem or problem == ALLPROBLEM):
-                        if (filedata.service == service or service == ALLSERVICE):
+                    if (filedata.folderdata.problem == problem or problem == ALLPROBLEM):
+                        if (filedata.folderdata.service == service or service == ALLSERVICE):
                             problemlist.addToken(filedata)
 
     problemlist.printToConsole()
@@ -71,7 +71,7 @@ def main(problem : str, service : str, token : str, path : str):
 
 if __name__ == "__main__":
     if DEBUG:
-        main(ALLPROBLEM, ALLSERVICE, "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"))
+        main(ALLPROBLEM, ALLSERVICE, "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"))
     else:
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
 
