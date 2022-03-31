@@ -168,14 +168,29 @@ def get_instance_from_dat(instance_as_str, format_name=''):
 
 
 # INSTANCE GENERATOR FUNCTIONS:
-def instance_randgen_1(m:int,n:int,alphabet:str,seed:int):
+def shuffle(a:list,b:list):
+    pattern = random.shuffle(['a']*len(a)+['b']*len(b))
+    outcome = []
+    for p in pattern:
+        if p=='a':
+            outcome.append(a.pop(0))
+        else:
+            outcome.append(b.pop(0))
+    return outcome
+    
+def instance_randgen_1(m:int,n:int,alphabet:str,seed:int, opt_val=None):
     assert m >= 0
     assert n >= 0
     instance_alphabet = get_alphabet(alphabet)
     random.seed(seed)
     instance = []
-    instance.append([random.choice(instance_alphabet) for i in range(m)])
-    instance.append([random.choice(instance_alphabet) for i in range(n)])
+    if opt_val == None:
+        instance.append([random.choice(instance_alphabet) for i in range(m)])
+        instance.append([random.choice(instance_alphabet) for i in range(n)])
+    else:
+        opt = [random.choice(instance_alphabet[1:-1]) for i in range(opt_val)]
+        instance.append(shuffle(opt, [instance_alphabet[0]] * (m-opt_val)))
+        instance.append(shuffle(opt, [instance_alphabet[0]] * (n-opt_val)))
     return instance
 
 

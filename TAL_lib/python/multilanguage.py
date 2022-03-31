@@ -204,10 +204,8 @@ class TALcolors:
           
                 
 # The following last methods should next be moved to the TAL_lib bot_lib.py
-# and also be expanded in order to easily support for more or less advanced accountings on the correct/out-of-time/non correct in several possible ways answers of a bot on several questions (usually in a service eval_*)!
-# take as example:
+# At the same time, the part concerning accountings on the correct/out-of-time/non correct answers of an evaluated bot (usually in a service eval_*) has been expanded whithin the library TAL_DAGs, taking as example:
 #   triangle/services/eval_feasible_solution_server.py
-#   for an accounting mechanism.
     def NO(self, goal = None):
         if goal == None:
             self.numNO += 1
