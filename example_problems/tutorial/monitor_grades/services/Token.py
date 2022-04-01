@@ -78,7 +78,26 @@ class Token(object):
 
         return l
 
-    def countResolvedProblem(self):
+    def countTokenOkAndNoGoals(self):
+        l = list()
+
+        for e in self.token:
+            ok_goals = 0
+            no_goals = 0
+
+            for x in e.problem:
+                for y in x.services:
+                    for z in y.goals:
+                        if z.getStatusContent():
+                            ok_goals += 1
+                        else:
+                            no_goals += 1
+
+                l.append((e.token, ok_goals, no_goals))
+
+        return l
+
+    def countProblemOkAndNoGoals(self):
         l = list()
 
         for e in self.token:
@@ -94,5 +113,24 @@ class Token(object):
                             no_goals += 1
 
                 l.append((e.token, x.problem, ok_goals, no_goals))
+
+        return l
+
+    def countServiceOkAndNoGoals(self):
+        l = list()
+
+        for e in self.token:
+            for x in e.problem:
+                for y in x.services:
+                    ok_goals = 0
+                    no_goals = 0
+
+                    for z in y.goals:
+                        if z.getStatusContent():
+                            ok_goals += 1
+                        else:
+                            no_goals += 1
+
+                    l.append((e.token, x.problem, e.service, ok_goals, no_goals))
 
         return l

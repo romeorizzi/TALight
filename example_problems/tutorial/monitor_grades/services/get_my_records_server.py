@@ -55,6 +55,8 @@ def main(problem : str, service : str, token : str, path : str):
                         if (filedata.folderdata.service == service or service == ALLSERVICE):
                             problemlist.addToken(filedata)
 
+    for x in problemlist.countTokenTries():
+        print("Total tries [", x[1], ']:', x[1])
     problemlist.printToConsole()
 
     if not DEBUG:
