@@ -36,19 +36,19 @@ def instances(goal):
     if goal.name == 'm_and_n_up_to_10':
         for i in range(2):
             for alphabet in ["DNA", "uppercase"]:
-                yield {'generator':ll.instance_randgen_1, 'descriptor': {'m':10,'n':10,'alphabet':alphabet,'seed':random.randrange(100000,1000000),'opt_val':None}, 'time_allowance':1}
+                yield {'generator':ll.instance_randgen_1, 'descriptor': {'m':10,'n':10,'alphabet':alphabet,'seed':random.randrange(100000,1000000)}, 'time_allowance':1}
     if goal.name == 'm_and_n_up_to_100':
         for i in range(2):
             for alphabet in ["DNA", "uppercase"]:
-                yield {'generator':ll.instance_randgen_1, 'descriptor': {'m':100,'n':100,'alphabet':alphabet,'seed':random.randrange(100000,1000000),'opt_val':None}, 'time_allowance':1}
+                yield {'generator':ll.instance_randgen_1, 'descriptor': {'m':100,'n':100,'alphabet':alphabet,'seed':random.randrange(100000,1000000)}, 'time_allowance':1}
     if goal.name == 'm_up_to_10_n_up_to_5000':
         for i in range(2):
             for alphabet in ["DNA", "uppercase"]:
-                yield {'generator':ll.instance_randgen_1, 'descriptor': {'m':10,'n':5000,'alphabet':alphabet,'seed':random.randrange(100000,1000000),'opt_val':None}, 'time_allowance':1}
+                yield {'generator':ll.instance_randgen_1, 'descriptor': {'m':10,'n':5000,'alphabet':alphabet,'seed':random.randrange(100000,1000000)}, 'time_allowance':1}
     if goal.name == 'm_up_to_n_n_5000_opt_val_at_least_4980':
         for i in range(2):
             for alphabet in ["DNA", "uppercase"]:
-                yield {'generator':ll.instance_randgen_1, 'descriptor': {'m':10,'n':5000,'alphabet':alphabet,'seed':random.randrange(100000,1000000),'opt_val':4980}, 'time_allowance':1}
+                yield {'generator':ll.instance_randgen_2, 'descriptor': {'m':10,'n':5000,'opt_val':4980,'alphabet':alphabet,'seed':random.randrange(100000,1000000)}, 'time_allowance':1}
                 
 
 # FUNCTION TESTING ONE SINGLE TESTCASE: 
