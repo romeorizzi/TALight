@@ -16,6 +16,7 @@ args_list = [
     ('m',int),
     ('n',int),
     ('alphabet', str),
+    ('opt_val',int),
     ('instance_format',str),
     ('silent',bool),
     ('display',bool),
@@ -36,6 +37,8 @@ if ENV['source'] != 'catalogue':
     # Get random instance
     if ENV['source'] == 'randgen_1':
         instance = ll.instance_randgen_1(ENV['m'], ENV['n'], ENV['alphabet'], ENV['seed'])
+    elif ENV['source'] == 'randgen_2':
+        instance = ll.instance_randgen_2(ENV['m'], ENV['n'], ENV['opt_val'], ENV['alphabet'], ENV['seed'])
     else:
         assert False
     instance_str = ll.instance_to_str(instance, format_name=ENV['instance_format'])

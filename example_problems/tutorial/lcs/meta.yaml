@@ -7,9 +7,9 @@ services:
     description: 'An instance of the Longest Subsequence (LCS) Problem is essentially a pair of strings, s and t. (You are then asked to find a longest possible string that is both a subsequence of s and a subsequence of t.) Call this service (`gimme_instance`) to get an instance of your likings in one of the supported formats. The instances may come from different sources (randomly generated, hardcoded, taken from a collection) and the server maintains a certain set of them within a catalogue. This catalogue is organized in collections of instances with common features, like e.g. their origin. The service can be used to get either a random instance or an instance from the catalogue.\n   The two strings s and t comprising the instance are returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. For your convenience, the precise format of this stream can be regulated through the argument `instance_format`.'
     args:
       source:
-        regex: ^(catalogue|randgen_1)$
+        regex: ^(catalogue|randgen_1|randgen_2)$
         default: randgen_1
-        explain: 'Instances might either come from the catalogue or be generated on the spot. Choose an option among:\n     [catalogue] the service will return an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument `instance_id` to specify the instance you are interested into. Calling this service might not be the most convenient way to get an instance from the catalogue: the whole catalogue is public, that is, it is contained in the file \''lcs.tar\'' you get downloaded on your machine by issuing `rtal get lcs`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on your machine (this is a necessary step when setting up the problem on a server).\n     [random_generator_name] the service delivers you the pseudo-random instance produced by the named pseudo-random generator. Every generator requires the user to specify a set of values for the needed parameters (like e.g. the `seed`) in order to univokely obtain the resulting instance. This set depends on the generator. Valid values for this set of parameters (called the "instance descriptor") offer an "instance description" that univokely specifies the instance w.r.t. that generator. Make then sure to pass the desired values for all the service arguments corresponding to the parameters needed by the selected generator. Notice that passing the very same configuration of values you get the very same instance. This is helpful since it guarantees the reproducibility of any experiment and the possibility to use and explore a same instance with different services of this problem.\n    [randgen_1] to get the instance produced by the pseudo-random generator `randgen_1`. The "instance descriptor"  for this generator comprises 4 required parameters: `m`, `n`, `alphabet`, `seed`. The service then generates and returns the pseudo-random instance randgen_1<m,n,alphabet,seed>.'
+        explain: 'Instances might either come from the catalogue or be generated on the spot. Choose an option among:\n     [catalogue] the service will return an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument `instance_id` to specify the instance you are interested into. Calling this service might not be the most convenient way to get an instance from the catalogue: the whole catalogue is public, that is, it is contained in the file \''lcs.tar\'' you get downloaded on your machine by issuing `rtal get lcs`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on your machine (this is a necessary step when setting up the problem on a server).\n     [random_generator_name] the service delivers you the pseudo-random instance produced by the named pseudo-random generator. Every generator requires the user to specify a set of values for the needed parameters (like e.g. the `seed`) in order to univokely obtain the resulting instance. This set depends on the generator. Valid values for this set of parameters (called the "instance descriptor") offer an "instance description" that univokely specifies the instance w.r.t. that generator. Make then sure to pass the desired values for all the service arguments corresponding to the parameters needed by the selected generator. Notice that passing the very same configuration of values you get the very same instance. This is helpful since it guarantees the reproducibility of any experiment and the possibility to use and explore a same instance with different services of this problem.\n    [randgen_1] to get the instance produced by the pseudo-random generator `randgen_1`. The "instance descriptor"  for this generator comprises 4 required parameters: `m`, `n`, `alphabet`, `seed`. The service then generates and returns the pseudo-random instance randgen_1<m,n,alphabet,seed>.\n    [randgen_2] to get the instance produced by the pseudo-random generator `randgen_2`. The "instance descriptor"  for this generator comprises 5 required parameters: `m`, `n`, `opt_val`, `alphabet`, `seed`. The service then generates and returns the pseudo-random instance randgen_2<m,n,opt_val,alphabet,seed>.'
       instance_id:
         regex: ^([1-9][0-9]*)$
         regex-explained: any positive natural (in its decimal representation)
@@ -26,6 +26,11 @@ services:
         regex-explained: a positive natural <= 1000
         default: 4
         explain: Length of the string t.
+      opt_val:
+        regex: ^([1-9][0-9]{0,1}|1000)$
+        regex-explained: a positive natural <= 1000
+        default: 0
+        explain: Maximum length of the common subsequence of the strings s and t generated by randgen_2.
       alphabet:
         regex: ^(DNA|lowercase|uppercase|lowercase_uppercase)$
         default: DNA
@@ -65,12 +70,13 @@ services:
       - instance
     args:
       source:
-        regex: ^(catalogue|terminal|randgen_1)$
+        regex: ^(catalogue|terminal|randgen_1|randgen_2)$
         default: terminal
         explain: 'To send to the service an instance contained in a file sitting on your machine, you do not need to set this argument: just call the service with:\n       rtal connect lcs solve -finstance=fullpath_of_your_instance_file\n    With this call without any further arguments, the service assumes that the first two lines of the instance file are just the two input strings. (If the format of your file differs from `only_strings` then, please, specify it via the argument `instance_format`.) The source argument is used only when you do not associate a local file to the instance filehandler. If so, it determines the way your instance is input to the service:' 
         explain1: '[terminal] you enter your instance (just two strings, one per line; no other formats supported) directly by either typing it directly or through cut and paste.'
-        explain2: '[randgen_1] the service works on the pseudo-random instance `randgen_1(<m,n,alphabet,seed>)`. In this case you should specify the values for the service arguments comprising the instance descriptor, when different from their defaul values.'
-        explain3: '[catalogue] the service works on an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument `instance_id` to specify the instance you are interested into.'
+        explain2: '[catalogue] the service works on an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument `instance_id` to specify the instance you are interested into.'
+        explain3: '[randgen_1] the service works on the pseudo-random instance `randgen_1(<m,n,alphabet,seed>)`. In this case you should specify the values for the service arguments comprising the instance descriptor, when different from their defaul values.'
+        explain4: '[randgen_2] the service works on the pseudo-random instance `randgen_2(<m,n,opt_val,alphabet,seed>)`. You should specify the values for the service arguments comprising the instance descriptor, when different from their defaul values.'
       instance_id:
         regex: ^([1-9][0-9]*)$
         regex-explained: any positive natural (in its decimal representation)
@@ -93,6 +99,11 @@ services:
         regex-explained: a positive natural <= 1000
         default: 4
         explain: Length of the string t.
+      opt_val:
+        regex: ^([1-9][0-9]{0,1}|1000)$
+        regex-explained: a positive natural <= 1000
+        default: 0
+        explain: Maximum length of the common subsequence of the strings s and t generated by randgen_2.
       alphabet:
         regex: ^(DNA|lowercase|uppercase|lowercase_uppercase)$
         default: DNA
@@ -155,32 +166,35 @@ services:
 
   eval_your_bot:
     evaluator: [python, services/eval_your_bot_server.py]
-    description: 'this service evaluates the strength of the algorithm you have conceived, designed and implemented in order to solve the LCS problem. Obtain your solver bot coding your algorithm in your preferred programming language. Then plug in your bot at the rtal call of this service (`rtal connect lcs eval_your_bot -- <YOUR EXECUTABLE COMMAND>`, where <YOUR EXECUTABLE COMMAND> might be any of `my_bots/my_best_bot.exe <POSIBLE ARGUMENTS TO YOUR BOT>` or `python bots/my_bot2.py <POSIBLE ARGUMENTS TO YOUR BOT>`). Allowing for arguments to your bot allows you to adapt it either for debugging purposes or for dealing with instances and solutions in various forms. Your bot will be involved in a dialog where the server proposes instances and the bot computes and returns solutions. The communication protocol is very basic and can be inferred by launching the service without plugging in any bot. In general, any line starting with the `#` character is considered a comment and is ignored by the two communicating automatic agents (but might facilitate the understanding of a monitoring or developing human).  We offer you a fake server for this service (rtal-fake_lcs-eval_your_bot.py) in the tools folder, which might help you to experiment in local how your bot and the server should dialogate. Keep in mind that your bot will run on your local machine, while the service will run on the server. Your bot can print out logs on stderr, these will not be sent to the server. The library xxx, which is part of the TALight open source project can facilitate your coding of the bot. Also a full installation of TALight gives you more control and awareness and facilitates the break-on-through-to-the-other-side that we advocate as a teaching/learning paradigm. We have thought of a few goals for your bot. The goals are organized in a DAG representing the acyclic "prerequisite-of" binary relation. This DAG always has a unique sink (the `all` goal).'   
+    description: 'this service evaluates the strength of the algorithm you have conceived, designed and implemented in order to solve the LCS problem. Obtain your solver bot coding your algorithm in your preferred programming language. Then plug in your bot at the rtal call of this service (`rtal connect -e lcs eval_your_bot -- <YOUR EXECUTABLE COMMAND>`, where <YOUR EXECUTABLE COMMAND> might be any of `my_bots/my_best_bot.exe <POSSIBLE ARGUMENTS TO YOUR BOT>` or `python bots/my_bot2.py <POSSIBLE ARGUMENTS TO YOUR BOT>`). Allowing for arguments to your bot allows you to adapt it either for debugging purposes or for elaborating solutions in various forms (different commitments). Your bot will be involved in a dialog where the server proposes instances and the bot computes and returns solutions. The communication protocol is very basic and can be inferred by launching the service without plugging in any bot. In general, any line starting with the `#` character is considered a comment and is ignored by the two communicating automatic agents (but might facilitate the understanding of a monitoring human, whether problem a solver or maker).  We offer you a fake server for this service (rtal-fake_lcs-eval_your_bot.py) in the tools folder, which might help you to experiment in local how your bot and the server should interact. Keep in mind that your bot will run on your local machine, while the service will run on the server. Your bot can print out logs on stderr, these will not be sent to the server. The library xxx, which is part of the TALight open source project can facilitate your coding of the bot. Also a full installation of TALight gives you more control and awareness and facilitates the break-on-through-to-the-other-side that we advocate as a teaching/learning paradigm. We have thought of a few goals for your bot. The goals are organized in a DAG representing the acyclic "prerequisite-of" binary relation. An arc g1 => g2 states that goal g1 is taken to be a prerequisite of goal g2. This DAG always has a unique sink (the `all` goal).'   
     files:
       - sourcecode
     args:
       goal:
-        explain: 'set your goal (a node of the DAG: correct => m_at_most_10, correct => n_at_most_10, m_at_most_10 => m_and_n_at_most_100, n_at_most_10 => m_and_n_at_most_100, m_at_most_10 => opt_val_at_most_20_m_an_n_at_most_500, n_at_most_10 => opt_val_at_most_20_m_an_n_at_most_500, opt_val_at_most_20_m_an_n_at_most_500 => all, m_and_n_at_most_100 => all).'
-        regex: ^(correct|m_at_most_10|n_at_most_10|opt_val_at_most_20_m_an_n_at_most_500|m_and_n_at_most_100|all)$
+        explain: 'set your goal (a node of the DAG with the following arcs: m_and_n_up_to_10 => m_and_n_up_to_100, m_and_n_up_to_10 => m_up_to_10_n_up_to_5000, m_up_to_10_n_up_to_5000 => m_up_to_n_n_5000_opt_val_at_least_4980, m_up_to_n_n_5000_opt_val_at_least_4980 => all, m_and_n_up_to_100 => all).'
+        regex: ^(m_and_n_up_to_10|m_and_n_up_to_100|m_up_to_10_n_up_to_5000|m_up_to_n_n_5000_opt_val_at_least_4980|all)$
         default: all
-      instance_format:
-        regex: ^(with_m_and_n|only_strings)$
-        default: only_strings
-        explain: Use this argument to specify the format of the instances in the stream from the service to your bot. (Examples for the supported formats of the instance file can be found in the `instances_catalogue` directory or obtained from the service `gimme_instance`.)
-        explain1: '[with_m_and_n] the first uncommented line of the stream contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
-        explain2: '[only_strings] like the above, but with the first line omitted.'
-      sol_format:
-        regex: ^(only_val|subseq|annotated_subseq)$
-        default: subseq
-        explain: 'Use this argument to specify the format of the solution in the stream from your bot to the service. With this argument you decide what is meant by a solution and how it should be encoded. Choose one among the following options:'
-        explain1: '[only_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
-        explain2: '[subseq] the solution is just a string, namely, any maximum length string which is a subsequence of both s and t.'
-        explain3: '[annotated_subseq] the solution is a maximum length string which is a subsequence of both s and t. However, this string is also annotated in that for each of its characters (each disposed on a different line, in their order) it specifies its position in s and its position in t, separated by spaces.'
-        note: 'In case you go for the `only_val` option then the goals your bot reaches are downgraded correspondingly (for example, `correct` becomes `correct_only_val`). '
+      commitment:
+        regex: ^(only_opt_val|opt_sol)$
+        default: only_opt_val
+        explain: 'Use this argument to specify whether you commit yourself (or actually your bot) to compute only the optimal solution value or an optimal solution. Choose one among the following options:'
+        explain1: '[only_opt_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
+        explain2: '[opt_sol] the solution is just a string, namely, any maximum length string which is a subsequence of both s and t.'
+        note: 'In case you go for the `only_opt_val` option then the goals your bot reaches are downgraded correspondingly (for example, `m_and_n_up_to_10` becomes `m_and_n_up_to_10_only_val`). '
+      summary:
+        regex: ^(only_recap|short|long)$
+        default: short
+        explain: 'Do you prefer a short or a long summary on the results of the evaluation? Choose one among the following options:'
+        explain1: '[only_recap] only the overview of the results over the various goals is printed.'
+        explain2: '[short] for every goal we report only the number of testcases for each possible outcomes.'
+        explain3: '[long] for each testcase that has been faced, all data are reported.'
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (`random_seed`) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed. Leave this argument to its default value when you intend to register the result of the evaluation on the server via your personal TALight token.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
 
   get_my_instances:
     evaluator: [python, services/get_my_instances_server.py]
