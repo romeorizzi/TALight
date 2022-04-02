@@ -45,13 +45,13 @@ Passo 4: servizio di try
     mph.receive_input_file() -> viene ritornata la stringa contenente gli inputs
 
 - usare i seguenti metodi per ottenere path o la stringa del contenuto dei file generati precedentemente col makefile (make gen-instances) e presenti in instances/
-    dat_file_path = mph.get_path_from_id(ENV['instance_id'], format='matrix.dat')
-    input_str = mph.get_file_str_from_id(ENV['instance_id'], format='matrix.txt')
+    dat_file_path = TALf.get_path_from_id(ENV['instance_id'], format='matrix.dat')
+    input_str = TALf.get_file_str_from_id(ENV['instance_id'], format='matrix.txt')
 
 - usare il seguente comando per eseguire GLPSOL con il modello passato col bot (e quindi presente in TMP_DIR), e l'istanza, che può essere presa dalle istanze generate (in instances/) oppure essere passata col bot (e quindi presente in TMP_DIR)
     mph.run_GLPSOL(dat_file_path)
     -> se dat_file_path == None allora il file dat è preso in TMP_DIR
-    -> se dat_file_path != None allora il file dat è preso nel path specificato (che dovrà puntare al fullpath di un dat file all'interno di instances/. Ciò sarà garantito usando mph.get_path_from_id())
+    -> se dat_file_path != None allora il file dat è preso nel path specificato (che dovrà puntare al fullpath di un dat file all'interno di instances/. Ciò sarà garantito usando TALf.get_path_from_id())
 
 - per leggere lo stdout e stderr dell'esecuzione di GLPSOL usare:
     gplsol_output = mph.get_out_str()
@@ -76,7 +76,7 @@ Passo 5: servizio di eval
     for test_dir in tests_dirname_list:
         instances_paths = mph.get_instances_paths_in(test_dir)    
         for instance_id, paths in instances_paths.items():
-            input_str = mph.get_file_str_from_path(input_file_path)
+            input_str = TALf.get_file_str_from_path(input_file_path)
             ...
     -> tests_dirname_list è l'insieme di goal. In instances/ è presente una cartella per ogni goal, al cui interno sono state generate tutte le loro istanze nei relativi formati.
     -> mph.get_instances_paths_in(test_dir) ritorna un dictionary che associa ad ogni istance_id i fullpath dei file associati a instance_id nei vari formati

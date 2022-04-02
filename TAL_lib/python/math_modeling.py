@@ -181,42 +181,7 @@ class ModellingProblemHelper():
             
 
     # MANAGE INPUTS/GENDICT FILES -------------------
-    def get_path_from_id(self, id, format_name):
-        """Returns the path to the file selected with id."""
-        # Read gen-dictionary
-        id_as_string = str(id).zfill(3)
-        try:
-            with open(self.__gendict_path, 'r') as file:
-                gendict = json.load(file)
-                info = gendict[id_as_string]
-        except IOError as ioe:
-            self.__TAc.print(f"Fail to open the gen_dictionary .yaml file in: {self.__gendict_path}", "red", ["bold"])
-            exit(0)
-        except KeyError as err:
-            self.__TAc.print(f"The id={id} is invalid.", "red", ["bold"])
-            exit(0)
-        except os.error as err:
-            self.__TAc.print(f"Fail to read/parse the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
-        # get path from gen-dictionary
-        try:
-            return os.path.join(self.__all_instances_path, info[format_name])
-        except KeyError as err:
-            self.__TAc.print(f"The format={format_name} is invalid.", "red", ["bold"])
-            exit(0)
 
-
-    def get_file_str_from_path(self, path):
-        """Returns the contents of the file as a string from the selected path."""
-        try:
-            with open(path, 'r') as file:
-                return file.read()
-        except IOError as ioe:
-            self.__TAc.print(f"Fail to open the file: {path}", "red", ["bold"])
-            exit(0)
-
-    def get_file_str_from_id(self, id, format_name):
-        """Returns the contents of the file as a string with the selected id."""
-        return self.get_file_str_from_path(self.get_path_from_id(id, format_name))
 
     def get_file_str_from_path_by_alphabet(self, alphabet, format):
         """Returns the contents of the file as a string with the selected alphabet."""

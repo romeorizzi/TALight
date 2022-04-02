@@ -2,6 +2,7 @@
 from sys import exit
 
 from multilanguage import Env, Lang, TALcolors
+import TALfiles as TALf
 
 import model_pirellone_lib as pl
 from math_modeling import ModellingProblemHelper, get_problem_path_from
@@ -41,7 +42,7 @@ if not ENV['check_solution']:
     mph.receive_mod_file()
     # Receive dat file from bot or from the archive folder
     if ENV['instance_id'] != -1: #case: use instance_id
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
+        dat_file_path = TALf.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
     else:
         mph.receive_dat_file()
         dat_file_path = None
@@ -51,8 +52,8 @@ else:
     mph.receive_mod_file()
     # Receive dat and input files from bot or from the archive folder
     if ENV['instance_id'] != -1: #case: use instance_id
-        dat_file_path = mph.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
-        input_str = mph.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
+        dat_file_path = TALf.get_path_from_id(ENV['instance_id'], format=(dat_style+'dat'))
+        input_str = TALf.get_file_str_from_id(ENV['instance_id'], format=(txt_style+'.txt'))
     else:
         mph.receive_dat_file()
         dat_file_path = None
