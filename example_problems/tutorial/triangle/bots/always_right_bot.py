@@ -85,6 +85,7 @@ def best_reward_and_path(triangle):
 
 if len(argv) != 2:
     print("# Error! Wrong number of arguments.")
+if len(argv) != 2 or argv[1]=='0':
     print(usage)
     exit(0)
 

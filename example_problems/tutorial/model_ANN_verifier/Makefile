@@ -1,33 +1,50 @@
-PROBLEM_NAME=$(notdir $(shell pwd))
-GEN_DIR = $(shell pwd)/gen/
+PROBLEM_HOME=$(shell pwd)
+PROBLEM_NAME=$(notdir $(PROBLEM_HOME))
+GEN_DIR=$(PROBLEM_HOME)/gen/
 
-gen-instances:
-	echo "Generating instances directory..."
-	./gen/TAL_make_catalogue.py $(GEN_DIR)
+.PHONY: all
+all: instances_catalogue test
 
-clean-all:
-	echo "Removing instances directory..."
-	rm -rf instances
-	echo "Removing TMP_DIR directory..."
-	rm -rf tmp97815
+instances_catalogue: $(GEN_DIR)GEN $(GEN_DIR)randgen_1_basic.py $(GEN_DIR)TAL_make_catalogue.py 
+	@echo "Generating the catalogue of the stored instances ..."
+	python $(GEN_DIR)TAL_make_catalogue.py $(GEN_DIR)
 
-deliverables: pdf-files/statement.pdf
+.PHONY: clean
+clean:
+	@if [ -e instances_catalogue ]; then \
+		echo "Removing the instances_catalogue directory ..." \
+		rm -r rm -rf instances_catalogue ; \
+	fi
+	@if [ -e services/__pycache__ ]; then \
+		echo "Cleaning the cache ..." \
+		rm -r services/__pycache__ ; \
+	fi
+	@if [ -e output ]; then echo "***THIS IS LET TO YOU: Consider removing the output folder"; fi
+	@if [ -n "$(shell find . -maxdepth 1 -name 'my_*' | head -1)" ]; then \
+		echo "***THIS IS LET TO YOU: Consider removing some or all of the following folders whose names comply the template 'my_*'"; \
+		find . -maxdepth 1 -name 'my_*' ; \
+	fi
 
-pdf-files/statement.pdf:
-	if [ -e pdf-files/statement.tex ]; then \
-		pdflatex -output-directory pdf-files pdf-files/statement.tex ; \
-		pdflatex -output-directory pdf-files pdf-files/statement.tex ; \
-		rm -rf pdf-files/statement.log pdf-files/statement.aux pdf-files/statement.out ; \
-        else echo 'No file statement.pdf generated (since no file statement.tex found)'; \
-        fi
+.PHONY: lint
+lint: $(shell find services -type f -name '*.py')
+	pylint $?
 
-test: test_ref_solutions test_services
-	echo "target testing"
-	rtalc
-	if [ $? -ne 0 ]; then echo "rtalc encounters problems with the meta.yaml file"; fi
+.PHONY: test
+test: test_metafile test_ref_solutions test_services
 
+.PHONY: test_metafile
+test_metafile: meta.yaml
+	@echo "[test_metafile: now we test the metafile meta.yaml:"
+	rtalc $(PROBLEM_HOME)
+	@if [ $$? -ne 0 ]; then echo "rtalc encounters problems with the meta.yaml file"; fi
+	@echo "OK test_metafile]\n"
+
+.PHONY: test_ref_solutions
 test_ref_solutions:
-	echo "test_ref_solutions now tests that the reference solutions work as expected"
+	@echo "[test_ref_solutions: now we test that the reference solutions work as expected"
+	@echo "OK test_ref_solutions]\n"
 
+.PHONY: test_services
 test_services:
-	echo "test_services now tests that the services work as expected"
+	@echo "[test_services: now we test that the services work as expected"
+	@echo "OK test_services]\n"

@@ -83,8 +83,9 @@ def best_reward_and_path(triangle):
             last_pos += j + 2
     return [reward,path]
 
-if len(argv) != 2 or argv[1]=='0':
+if len(argv) != 2:
     print("# Error! Wrong number of arguments.")
+if len(argv) != 2 or argv[1]=='0':
     print(usage)
     exit(0)
 
@@ -110,7 +111,6 @@ def check_and_reward_one_solution_bot():
         path = BOT.input().strip()
         print(calculate_path(t,path)+1)
 
-#  EVAL BEST SOL
 def eval_best_solution_bot():
     while True:
         check_also_sol = False
@@ -134,7 +134,6 @@ def eval_best_solution_bot():
             # reward
             print(best_reward+1)
 
-#  NUMBER OF TRIANGLES IN TRIANGLE 
 def eval_number_of_triangles_in_triangle_bot():
     while True:
         # get small triangle size:
