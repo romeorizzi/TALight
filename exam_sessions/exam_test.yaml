@@ -3,6 +3,7 @@
 tokens:
   - 123456__RomeoRizzi
   - 123456_anonymous
+  - 786897_User1
   - 134551_PincoPallo
 save_directory: log_algorithms
 ...
