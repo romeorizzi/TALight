@@ -51,27 +51,26 @@ def main(problem : str, service : str, token : str, path : str):
                 for y in listdir(fullpath):
                     filedata = FileData(y, os.path.join(fullpath, y), folderdata)
                         
-                    if (filedata.problem == problem or problem == ALLPROBLEM):
-                        if (filedata.service == service or service == ALLSERVICE):
+                    if (filedata.folderdata.problem == problem or problem == ALLPROBLEM):
+                        if (filedata.folderdata.service == service or service == ALLSERVICE):
                             problemlist.addToken(filedata)
 
+    for x in problemlist.countTokenTries():
+        print("Total tries [", x[1], ']:', x[1])
     problemlist.printToConsole()
 
     if not DEBUG:
         if ENV['download'] == 1:
-            TALf.str2output_file(problemlist.createFile(), "result.csv")
+            TALf.str2output_file(problemlist.instanceToString(), "result.csv")
 
 # Student Token
 # ----------------------
-# Problem
-#   Service
-#       Goal1: 
-#           {date}-{content1}
-#           {date}-{content2}
+# Problem: Service
+# Goal1 -> OK or NO
 
 if __name__ == "__main__":
     if DEBUG:
-        main(ALLPROBLEM, ALLSERVICE, "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"))
+        main(ALLPROBLEM, ALLSERVICE, "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"))
     else:
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
 

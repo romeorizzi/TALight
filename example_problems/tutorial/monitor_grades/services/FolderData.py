@@ -8,3 +8,5 @@ class FolderData(object):
 
         self.token = s[0]
         self.date = time.strptime(s[1], '%Y-%m-%d_%H-%M-%S_%f')
+        self.problem = s[2]
+        self.service = s[3]
