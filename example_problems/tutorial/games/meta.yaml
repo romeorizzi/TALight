@@ -4,7 +4,7 @@ public_folder: public
 services:
   game123:
     description: Which is the best move 1,2,3 ? Or you have lose from begging? 
-    evaluator: [python, services/game123_server.py]
+    evaluator: [python, services/game123_driver.py]
     args:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
@@ -15,7 +15,7 @@ services:
         default: it
   game123_interactive:
     description: Which is the best move 1,2,3 ? Or you have lose from begging? Play with a strong mate.
-    evaluator: [python, services/game123_interactive_server.py]
+    evaluator: [python, services/game123_interactive_driver.py]
     args:
       instance:
         regex: ^(my|random)$
@@ -25,7 +25,7 @@ services:
         default: it
   game2stack:
     description: Now you have two stack and you can move all pawns you want.
-    evaluator: [python, services/game2stack_server.py]
+    evaluator: [python, services/game2stack_driver.py]
     args:
       num_questions:
         regex: ^([1-9]|[1-2][0-9]|30)$
@@ -35,7 +35,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

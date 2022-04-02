@@ -3,7 +3,7 @@
 public_folder: public
 services:
   play:
-    evaluator: [python, services/play/advanced/play_server.py]
+    evaluator: [python, services/play/advanced/play_driver.py]
     args:
       num_rounds:
         regex: ^([1-9][0-9]{0,2}|100)$
@@ -15,7 +15,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   compute_hash:
-    evaluator: [python, services/compute_hash/advanced/compute_hash_server.py]
+    evaluator: [python, services/compute_hash/advanced/compute_hash_driver.py]
     args:
       white_string:
         regex: ^([[:alnum:]]|_){4,100}$
@@ -27,7 +27,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   verify_hash:
-    evaluator: [python, services/verify_hash/advanced/verify_hash_server.py]
+    evaluator: [python, services/verify_hash/advanced/verify_hash_driver.py]
     args:
       num_checks:
         regex: ^([1-9][0-9]{0,2}|100)$
@@ -45,7 +45,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

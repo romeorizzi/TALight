@@ -4,7 +4,7 @@ public_folder: public
 services:
   check_scoring_competence:
     description: Your scoring competence is assessed. You are given both the secret code and a probing code that you should score against the former according to the rules.
-    evaluator: [python3, services/check_scoring_competence_server.py]
+    evaluator: [python3, services/check_scoring_competence_driver.py]
     args:
       num_pegs:
         regex: ^([1-9])$
@@ -28,7 +28,7 @@ services:
         default: it
   tell_score:
     description: You provide both the secret code and a probing code that will be scored against the secret code according to the rules of the game.
-    evaluator: [python3, services/tell_score_server.py]
+    evaluator: [python3, services/tell_score_driver.py]
     args:
       secret_code:
         regex: ^(([0-9] *){0,9})$
@@ -38,7 +38,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   play:
-    evaluator: [python3, services/play_server.py]
+    evaluator: [python3, services/play_driver.py]
     args:
       max_num_attempts:
         regex: ^([1-9]|[1-4][0-9]|50)$
@@ -64,7 +64,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval:
-    evaluator: [python3, services/eval_server.py]
+    evaluator: [python3, services/eval_driver.py]
     args:
       max_num_attempts:
         regex: ^([1-9]|[1-4][0-9]|50)$
@@ -88,7 +88,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python3, services/synopsis/synopsis_server.py]
+    evaluator: [python3, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

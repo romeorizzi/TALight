@@ -4,7 +4,7 @@ public_folder: public
 services:
   decimal_to_binary:
     description: We give you a number (or you can choose it) in decimal form and you have to produce its binary representation.
-    evaluator: [python,services/decimal_to_binary_server.py]
+    evaluator: [python,services/decimal_to_binary_driver.py]
     args:
       number:
         regex: ^(my|any)$
@@ -19,7 +19,7 @@ services:
         default: it
   min_num_steps:
     description: "Have you conquered the puzzle? We give you a random natural number (in its binary representation) and you are asked to tranform it to number 0 using a minimum number of steps. However, by setting the argument \\'number\\' to \\'my\\' you are let to also specify the starting number. If you have conquered the puzzle you can assess your solution by passing a bot implementing it to the service. Otherwise, the service can be used to support your quest."
-    evaluator: [python, services/min_num_steps_server.py]
+    evaluator: [python, services/min_num_steps_driver.py]
     args:
       number:
         regex: ^(my|random)$
@@ -38,7 +38,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   next_step:
-    evaluator: [python, services/next_step_server.py]
+    evaluator: [python, services/next_step_driver.py]
     description: We give you a random number (in its binary representation) and you have to insert which one is the optimal first move (the one that allows to get to 0 in a minimum number of moves).
     args:
       lang:
@@ -46,7 +46,7 @@ services:
         default: it
   oracle:
     description: As a further aid for your quest, you can ask to this oracle service what is the very first step to do in order to get to zero as fast as possible, starting from the binary number offered from you to the oracle.
-    evaluator: [python, services/oracle_server.py]
+    evaluator: [python, services/oracle_driver.py]
     args:
       binary_starting_number:
         regex: ^(lazy|0|1(0|1){0,10000})$
@@ -55,7 +55,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_sol:
-    evaluator: [python, services/eval_sol_server.py]
+    evaluator: [python, services/eval_sol_driver.py]
     args:
       size:
         regex: ^(small|medium|large)$
@@ -68,7 +68,7 @@ services:
         default: it
   
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

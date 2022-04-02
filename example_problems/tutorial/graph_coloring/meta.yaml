@@ -4,7 +4,7 @@ public_folder: public
 services:
   recognize_proper_colorings:
     description: This service gives you a graph and a coloring of its nodes. You are invited to tell whether the coloring is proper (that is, any two adjacent vertices have different color) or not. The coloring is always proper (improper, resp.) when the service is called with the argument \'coloring\' set to \'proper\' (to \'improper\', resp.).
-    evaluator: [python3, services/recognize_proper_colorings_server.py]
+    evaluator: [python3, services/recognize_proper_colorings_driver.py]
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
@@ -25,7 +25,7 @@ services:
         default: it
   eval_recognize_proper_colorings:
     description: This service evaluates the correctness and efficiency of your bot for recognizing proper colorings.
-    evaluator: [python3, services/eval_recognize_proper_colorings_server.py]
+    evaluator: [python3, services/eval_recognize_proper_colorings_driver.py]
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
@@ -50,7 +50,7 @@ services:
   # TODO Wait to do this service
   check_colorings:
     description: The service checks that your coloring is a proper-coloring for your graph. You provide the service both the graph and the coloring.
-    evaluator: [python3, services/check_colorings_server.py]
+    evaluator: [python3, services/check_colorings_driver.py]
     args:
       num_nodes:
         regex: ^([1-9]|1[0-9]|20)$
@@ -71,7 +71,7 @@ services:
         default: it
   yield_proper_colorings:
     description: This service gives you a graph and asks you to tell whether it is k-colorable or not (\'yes_no\' goal). When it is k-colorable you should also attempt to support your claim with a proper coloring (\'give_coloring\' or \'give_coloring_or_minimal_uncolorable_induced_subgraph\' goal). When it is not k-colorable you should also attempt to support your claim by giving a minimal induced subgraph that is not k-colorable (\'give_minimal_uncolorable_induced_subgraph\' or \'give_coloring_or_minimal_uncolorable_induced_subgraph\' goal). In conclusion, we suggest you to go for the higher goal you can (also to reduce the load on the server).
-    evaluator: [python3, services/yield_proper_colorings_server.py]
+    evaluator: [python3, services/yield_proper_colorings_driver.py]
     args:
       num_nodes:
         regex: ^([1-9]|1[0-9]|20)$
@@ -92,7 +92,7 @@ services:
         default: it
   yield_proper_2colorings:
     description: This service gives you a graph and asks you to tell whether it is 2-colorable or not (\'yes_no\' goal). When it is 2-colorable you should also attempt to support your claim with a proper coloring (\'give_coloring\' or \'give_coloring_or_minimal_uncolorable_induced_subgraph\' goal). When it is not 2-colorable you should also attempt to support your claim by giving a minimal induced subgraph that is not 2-colorable (\'give_minimal_uncolorable_induced_subgraph\' or \'give_coloring_or_minimal_uncolorable_induced_subgraph\' goal). In conclusion, we suggest you to go for the higher goal you can (also to reduce the load on the server).
-    evaluator: [python3, services/yield_proper_2colorings_server.py]
+    evaluator: [python3, services/yield_proper_2colorings_driver.py]
     args:
       num_nodes:
         regex: ^([1-9]|1[0-9]|20)$
@@ -113,7 +113,7 @@ services:
         default: it
   eval_yield_proper_2colorings:
     description: This service evaluates the correctness and efficiency of your bot for recognizing the 2-colorability of graphs.
-    evaluator: [python3, services/eval_yield_proper_2colorings_server.py]
+    evaluator: [python3, services/eval_yield_proper_2colorings_driver.py]
     args:
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -167,7 +167,7 @@ services:
         default: it
   reduction_3col_from_gen_graph_to_4regular_graph:
     description: This service gives you a graph G. You return a 4-regular graph G\' which is meant to be 3-colorable if and only if G is 3-colorable. The service checks your graph G\' and also makes an attempt (it might give up for excessive load on the server and internal time limits) to check the intended equivalence (i.e., G is 3-colorable if and only if G\' is 3-colorable).
-    evaluator: [python3, services/reduction_3col_from_gen_graph_to_4regular_graph_server.py]
+    evaluator: [python3, services/reduction_3col_from_gen_graph_to_4regular_graph_driver.py]
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
@@ -183,7 +183,7 @@ services:
         default: it
   easy_lemma_3col_from_gen_graph_to_4regular_graph:
     description: This service gives you a graph G. You return a 4-regular graph G\' which is meant to be 3-colorable if and only if G is 3-colorable (you are meant to use the same reduction as for the service `reduction_3col_from_gen_graph_to_4regular_graph`). Then the service gives you a proper 3-coloring of G. At this point you are required to obtain a 3-coloring of G\' starting from the 3-coloring of G and give it to the service for a final check of your easy lemma proof.
-    evaluator: [python3, services/easy_lemma_3col_from_gen_graph_to_4regular_graph_server.py]
+    evaluator: [python3, services/easy_lemma_3col_from_gen_graph_to_4regular_graph_driver.py]
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
@@ -199,7 +199,7 @@ services:
         default: it
   hard_lemma_3col_from_gen_graph_to_4regular_graph:
     description: This service gives you a graph G. You return a 4-regular graph G\' which is meant to be 3-colorable if and only if G is 3-colorable (you are meant to use the same reduction as for the service `reduction_3col_from_gen_graph_to_4regular_graph`). Then, if the service can find a proper 3-coloring of G\' within a limited time bound, it hands it to you. At this point, if we arrive here, then you should obtain a 3-coloring of G starting from the 3-coloring of G\' handed to you, and return it to the service as a check of your hard lemma proof (spent on a specific instance).
-    evaluator: [python3, services/hard_lemma_3col_from_gen_graph_to_4regular_graph_server.py]
+    evaluator: [python3, services/hard_lemma_3col_from_gen_graph_to_4regular_graph_driver.py]
     args:
       num_nodes:
         regex: ^([1-9][0-9]{0,2}|1000)$
@@ -214,7 +214,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python3, services/synopsis/synopsis_server.py]
+    evaluator: [python3, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

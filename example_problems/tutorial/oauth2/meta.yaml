@@ -4,7 +4,7 @@ public_folder: public
 services:
   request_new_authorization:
     description: 'Call this service to initiate the process to build a new authorization. .'
-    evaluator: [python,services/gimme_instance_server.py]
+    evaluator: [python,services/gimme_instance_driver.py]
     args:
       matricola:
         regex: ^(VR......)$
@@ -17,7 +17,7 @@ services:
   
   check_authorization:
     description: 'Call this service to initiate the process to build a new authorization. .'
-    evaluator: [python,services/check_authorization_server.py]
+    evaluator: [python,services/check_authorization_driver.py]
     args:
       matricola:
         regex: ^(VR......)$
@@ -41,7 +41,7 @@ services:
 
 
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

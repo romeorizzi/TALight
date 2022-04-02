@@ -5,7 +5,7 @@ services:
 # controllato: ok
   check_is_eulerian:
     description: This service will check your assertion that a directed graph (that you provide us) admits an eulerian walk (of the specified type).
-    evaluator: [python, services/is_eulerian_server.py]
+    evaluator: [python, services/is_eulerian_driver.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
@@ -46,7 +46,7 @@ services:
 # controllato: ok
   check_is_not_eulerian:
     description: This service will check your assertion that a directed graph (that you provide us) does NOT admit an eulerian walk of the specified type.
-    evaluator: [python, services/is_eulerian_server.py]
+    evaluator: [python, services/is_eulerian_driver.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
@@ -87,7 +87,7 @@ services:
 # ok!
   check_eulerian_walk:
     description: (one could then remove, or just comment out, this whole service. 2021-08-06, Romeo) This service checks the validity of an eulerian walk for a graph. The service is given both the graph and the walk.
-    evaluator: [python, services/check_eulerian_walk_server.py]
+    evaluator: [python, services/check_eulerian_walk_driver.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
@@ -109,7 +109,7 @@ services:
   # controllato
   eval_eulerian_walk_checker:
     description: "Let's invert our roles! Given a directed graph and a candidate eulerian walk for it, can you check whether the given eulerian walk is valid for the given directed graph?"
-    evaluator: [python, services/eval_eulerian_walk_checker_server.py]
+    evaluator: [python, services/eval_eulerian_walk_checker_driver.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
@@ -131,7 +131,7 @@ services:
 # corretto
   eval_eulerian_recognize:
     description: "Given a directed graph, can you decide whether it contains an eulerian walk? And can you do it efficiently?"
-    evaluator: [python, services/eval_eulerian_recognize_server.py]
+    evaluator: [python, services/eval_eulerian_recognize_driver.py]
     args:
       walk_type:
         regex: ^(open|closed|any)$
@@ -164,7 +164,7 @@ services:
         default: it
 # ok
   trilly_decision:
-    evaluator: [python, services/trilly_decision_server.py]
+    evaluator: [python, services/trilly_decision_driver.py]
     description: "Trilly the fairy helps you understand whether a graph admits an eulerian walk. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly whether the graph obtained from G with the removal of such an arc would admit an eulerian walk or not. You can call trilly as many times as you want but, in the end, you must tell whether G admits an eulerian walk or not."
     args:
       n:
@@ -188,7 +188,7 @@ services:
         default: it
 # ok
   trilly_construction:
-    evaluator: [python, services/trilly_construction_server.py]
+    evaluator: [python, services/trilly_construction_driver.py]
     description: "Trilly the fairy helps you construct an Eulerian walk within a graph that admits at least one. When you call this service a dialogue is set up where, after being given a graph G, you can call trilly to get her advice as follows: you specify one single arc of G (an ordered pair of nodes) and ask trilly to return you an eulerian walk of the graph obtained from G with the removal of such an arc. Trilly will either tell you that no such a walk exists or return you one. You can call trilly as many times as you want but, in the end, you must provide an eulerian walk of G."
     args:
       n:
@@ -212,7 +212,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

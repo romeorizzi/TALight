@@ -1,7 +1,7 @@
 public_folder: public
 services:
   gimme_instance:
-    evaluator: [python, services/gimme_instance_server.py]
+    evaluator: [python, services/gimme_instance_driver.py]
     description: This service provides you with a random triangle of integer numbers. The argument n specifies the number of rows of the triangle. For i=1,...,n the i-th row of the triangle comprises i integers in the interval [MIN_VAL,MAX_VAL]. You can opt to insert the seed yourself, or ask the service to choose the seed (and hence the actual triangle <n,MIN_VAL,MAX_VAL,seed>).
     args:
       n:
@@ -37,7 +37,7 @@ services:
         default: it
 
   check_and_reward_one_sol:
-    evaluator: [python, services/check_and_reward_one_sol_server.py]
+    evaluator: [python, services/check_and_reward_one_sol_driver.py]
     description: this service checks whether a path descending from the top vertex is a feasible solution for a given triangle.
     args:
       n:
@@ -76,7 +76,7 @@ services:
         default: it
 
   check_sol_optimality:
-    evaluator: [python, services/check_best_sol_server.py]
+    evaluator: [python, services/check_best_sol_driver.py]
     description: for a given triangle of integer numbers, the problem triangle asks you to find a path descending from its top vertex while maximizing the sum of the numbers on the visited positions. If you think to know what the best value is, you can call this service for confirmation. You can also ask the service to tell you what the true optimum value is.
     args:
       n:
@@ -116,7 +116,7 @@ services:
 
   check_feasible_solution:
     description: this service asks you to check whether the path we give you is a feasible solution for a given pseudo-random triangle.
-    evaluator: [python, services/check_feasible_solution_server.py]
+    evaluator: [python, services/check_feasible_solution_driver.py]
     args:
       MIN_VAL:
         regex: ^(0|[1-9][0-9]{0,1})$
@@ -133,7 +133,7 @@ services:
 
   check_number_of_triangles_in_triangle:
     description: this service asks you to count how many times a given triangle fits inside a bigger triangle.
-    evaluator: [python, services/check_number_of_triangles_in_triangle_server.py]
+    evaluator: [python, services/check_number_of_triangles_in_triangle_driver.py]
     args:
       big_n:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -177,7 +177,7 @@ services:
         default: 0
 
   eval_feasible_sol:
-    evaluator: [python, services/eval_feasible_sol_server.py]
+    evaluator: [python, services/eval_feasible_sol_driver.py]
     description: "this service evaluates your code which has to provide a feasible solution for a given triangle of integer numbers. A feasible soluton is a descending path in the triamgle starting from the top vertex and reaching on element inthe last row. This path visits precisely one element for each of the n rows of the triangle and we assume it is encoded as a sequence in {L,R}^(n-1) (regex: (L|R){n-1,n-1}), where the i-th symbol of the sequence specifies whether the path turns Left or Right at the i-th step."
     args:
       goal:
@@ -191,7 +191,7 @@ services:
 
   eval_and_reward_one_sol:
     description: this service evaluates your code which calculates the reward for a given path in a triangle.
-    evaluator: [python, services/eval_and_reward_one_sol_server.py]
+    evaluator: [python, services/eval_and_reward_one_sol_driver.py]
     args:
       goal:
         explain: set your goal (efficient includes also correct).
@@ -204,7 +204,7 @@ services:
 
   eval_best_sol:
     description: this service evaluates your code which calculates the maximum reward collectable by a path descending in a triangle.
-    evaluator: [python, services/eval_best_sol_server.py]
+    evaluator: [python, services/eval_best_sol_driver.py]
     args:
       goal:
         explain: set your goal (efficient includes also correct).
@@ -225,7 +225,7 @@ services:
 
   eval_number_of_triangles_in_triangle:
     description: this service evaluates your code which takes in input two triangles and calculates the number of occurences of the small triangle withing the big one.
-    evaluator: [python, services/eval_number_of_triangles_in_triangle_server.py]
+    evaluator: [python, services/eval_number_of_triangles_in_triangle_driver.py]
     args:
       goal:
         explain: set your goal (efficient includes also correct).
@@ -237,7 +237,7 @@ services:
         default: python
 
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

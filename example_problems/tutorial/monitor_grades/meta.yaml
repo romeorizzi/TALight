@@ -3,7 +3,7 @@
 public_folder: public
 services:
   get_my_records:
-    evaluator: [python,services/get_my_records_server.py]
+    evaluator: [python,services/get_my_records_driver.py]
     description: To get the records of your rtal sumbissions and know your current scores for a given problem.
     args:
       problem:
@@ -23,7 +23,7 @@ services:
         default: it  
   
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

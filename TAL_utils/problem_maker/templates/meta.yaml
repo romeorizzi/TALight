@@ -28,7 +28,7 @@ services:
         regex: ^(en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

@@ -6,7 +6,7 @@ services:
 # prendere spunto da pirellone o da euler_dir per i servizio eval
   gimme_a_graph:
     description: 'This service provides you with a random undirected simple graph with n nodes and m edges. (Simple means no loops and no parallel edges.) You can ask this service to produce a graph already met with this or other services, by just providing its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random graph we mean the triple <n,m,seed>. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). In the second case you are given the possibility to specify whether the generated graph should be connected or not, or let the service decide also on this. In either case, the generated pseudo-random graph is returned in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing graphs is the following: the first line contains the two integers n and m; then follow m lines, one for each edge. Each of these lines comprises two integers (the two endonodes of the edge). It is assumed that the labels of the nodes are the integers in [0,n).'
-    evaluator: [python,services/gimme_graph_server.py]
+    evaluator: [python,services/gimme_graph_driver.py]
     args:
       n:
         regex: ^([1-9][0-9]{0,3}|1000)$
@@ -41,7 +41,7 @@ services:
   
   tell_if_graph_is_connected:
     description: This service recognizes the connectivity property for undirected graphs. Besides telling whether the given graph is connected or not, the service can also be asked to provide a certificate of connectivity (or a certificate of non-connectivity).
-    evaluator: [python, services/tell_if_graph_is_connected_server.py]
+    evaluator: [python, services/tell_if_graph_is_connected_driver.py]
     args:
       with_yes_certificate:
         explain: when the input graph is connected, please, send me a certificate in the form of a spanning tree. This tree is encoded as a routing table towards its root (node 0 of the graph).
@@ -62,7 +62,7 @@ services:
         default: it
   check_certificate_of_connectivity:
     description: this service checks the validity of your certificate of connectivity for a given graph, or your ability to yield such a certificate when a connected graph is given to you. The form of the certificate is that of a routing table where every node directs to its father (or next node) in an arborescence of paths directed towards the root node (always node 0).
-    evaluator: [python, services/check_certificate_of_connectivity_server.py]
+    evaluator: [python, services/check_certificate_of_connectivity_driver.py]
     args:
       how_to_input_the_graph:
         regex: ^(random|file|TA_send_files_bot|terminal)$
@@ -93,7 +93,7 @@ services:
         default: it
   check_certificate_of_nonconnectivity:
     description: this service checks the validity of your certificate of non-connectivity for a given graph, or your ability to yield such a certificate when a non-connected graph is given to you. The form of the certificate is that of a bipartition of the nodes with the property that both classes of the bipartition are not empty and no edge of the graph has its two endpoints belonging to different classes.
-    evaluator: [python, services/check_certificate_of_nonconnectivity_server.py]
+    evaluator: [python, services/check_certificate_of_nonconnectivity_driver.py]
     args:
       how_to_input_the_graph:
         regex: ^(random|file|TA_send_files_bot|terminal)$
@@ -125,7 +125,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_bot_deciding_connectivity:
-    evaluator: [python, services/eval_bot_deciding_connectivity_server.py]
+    evaluator: [python, services/eval_bot_deciding_connectivity_driver.py]
     args:
       goal:
         explain: set your goal (efficient includes also correct).
@@ -147,7 +147,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

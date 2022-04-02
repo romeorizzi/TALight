@@ -4,7 +4,7 @@ public_folder: public
 services:
   check_is_sc:
     description: This service checks that a user provided directed graph is strongly connected.
-    evaluator: [python,services/is_sc_server.py]
+    evaluator: [python,services/is_sc_driver.py]
     args:     
       sc_bool:
         regex: ^1$
@@ -26,7 +26,7 @@ services:
         default: it
   check_is_not_sc:
     description: This service checks that a user provided directed graph is not strongly connected.
-    evaluator: [python,services/is_sc_server.py]
+    evaluator: [python,services/is_sc_driver.py]
     args:
       sc_bool:
         regex: ^0$
@@ -48,7 +48,7 @@ services:
         default: it
   eval_recognizer_sc:
     description: Given a directed graph, can you decide whether it is strongly connected?
-    evaluator: [python,services/eval_recognizer_sc_server.py]
+    evaluator: [python,services/eval_recognizer_sc_driver.py]
     args:
       goal:
         regex: ^(yes_no)$
@@ -65,7 +65,7 @@ services:
         default: it
   gimme_scc:
     description: This service receives from you a directed graph and then separates its strongly connected components listing them out according to a topological sort
-    evaluator: [python,services/gimme_scc_server.py]
+    evaluator: [python,services/gimme_scc_driver.py]
     args:   
       n:
         regex: ^([1-9][0-9]{0,2}|1000|lazy)$
@@ -80,7 +80,7 @@ services:
         default: it
   eval_find_scc:
     description: Given a directed graph, can you find its strongly connected components?
-    evaluator: [python,services/eval_find_scc_server.py]
+    evaluator: [python,services/eval_find_scc_driver.py]
     args:
      goal:
         regex: ^(yes_no)$
@@ -96,7 +96,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

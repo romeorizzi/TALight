@@ -4,7 +4,7 @@ public_folder: public
 services:
   check_one_clause_representation:
     description: can you represent a generic clause C on a vector x of k boolean variables as an h-CNF f on the same x and on an auxiliary boolean vector y so that, for every assignment x* to x, the clause C evaluates true iff there exists an assigniment y* to y so that the CNF evaluats true for (x*,y*)?
-    evaluator: [python, services/check_one_clause_representation_server.py]
+    evaluator: [python, services/check_one_clause_representation_driver.py]
     args:
       C:
         regex: ^(\s*\(\s*(\s*!?\s*(x)[1-9])(\s*or\s*!?\s*(x)[1-9])*\s*\)\s*|lazy_input)$
@@ -24,7 +24,7 @@ services:
         default: it
   check_f_representation:
     description: can you represent a generic CNF f on a vector x of boolean variable as a 3-CNF f_3 on the same x and on an auxiliary boolan vector y such that, for every assignment x* to x, the CNF f evaluates true iff there exists an assigniment y* to y so that the 3CNF evaluats true for (x*,y*)?
-    evaluator: [python, services/check_f_representation_server.py]
+    evaluator: [python, services/check_f_representation_driver.py]
     args:
       f:
         regex: ^(\s*\(\s*(\s*!?\s*x[1-9])(\s*or\s*!?\s*x[1-9])*\s*\)(\s*and\s*\(\s*(\s*!?\s*x[1-9])(\s*or\s*!?\s*x[1-9])*\s*\))*\s*|lazy_input)$
@@ -40,7 +40,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_f_rep:
-    evaluator: [python, services/eval_f_rep_server.py]
+    evaluator: [python, services/eval_f_rep_driver.py]
     args:
       k:
         regex: ^([4-9]|10)$
@@ -52,7 +52,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

@@ -4,7 +4,7 @@ public_folder: public
 services:
   TAL_recognizes:
     description: Submit a regular expression r and a string s over the same alphabet. The service recognizes whether s belongs to the language described by r.
-    evaluator: [python,services/TAL_recognizes_server.py]
+    evaluator: [python,services/TAL_recognizes_driver.py]
     args:
       s:
         regex: ^(lazy|([a-z]|[A-Z]){0,100})$
@@ -17,7 +17,7 @@ services:
         default: it
   you_recognize:
     description: We give you a regular expression r and a string s over the same alphabet. Your aim is to recognize whether s belongs to the language described by r. You have control on the size of the instance (r,s) by means of parameters m and n. The instance is pseudo-random and fully spcifified by m,n, and the seed.
-    evaluator: [python,services/TAL_you_recognize_server.py]
+    evaluator: [python,services/TAL_you_recognize_driver.py]
     args:
       seed:
         explain: Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user). Otherwise, specify a numeric code to reproduce the very same instance as in a previous run.
@@ -39,7 +39,7 @@ services:
         default: it
   eval_recognize:
     description: This service assesses the correctness and efficiency of your machinery to recognize whether s in L_r.
-    evaluator: [python,services/eval_recognize_server.py]
+    evaluator: [python,services/eval_recognize_driver.py]
     args:
       goal:
         regex: ^(correct|efficient)$
@@ -102,7 +102,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

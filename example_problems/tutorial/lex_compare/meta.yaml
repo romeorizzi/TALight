@@ -4,7 +4,7 @@ public_folder: public
 services:
   check_one_sol:
     description: "this service checks whether an input string of \\'(\\' and \\')\\' characters is a well formed formula of parentheses."
-    evaluator: [python, services/check_one_sol_server.py]
+    evaluator: [python, services/check_one_sol_driver.py]
     args:
       input_formula:
         regex:  ^(\(|\)){0,1000}$
@@ -21,7 +21,7 @@ services:
         default: it
   check_num_sol:
     description: call this service to check that the number of well formed formulas with <n_pairs> pairs of parenthes is what you think (<risp>).
-    evaluator: [python, services/check_num_sol_server.py]
+    evaluator: [python, services/check_num_sol_driver.py]
     args:
       n_pairs:
         regex: ^(0|[1-9][0-9]{0,1}|100)$
@@ -44,7 +44,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_num_sol:
-    evaluator: [python, services/eval_num_sol_server.py]
+    evaluator: [python, services/eval_num_sol_driver.py]
     args:
       answ_modulus:
         explain: when n grows the number of solutions gets huge. Set this argument to 0 if you are ready to deal with arbitrarily large numbers. Otherwise, computing the number modulo <answ_modulus> will suffice in assessing you got the right ideas.  
@@ -63,7 +63,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_sol_set:
-    evaluator: [python, services/check_sol_set_server.py]
+    evaluator: [python, services/check_sol_set_driver.py]
     args:
       feedback:
         regex: ^(yes_no|dispell_longest_seen_prefix_of_a_missing_sol|tell_minimal_missing_prefix|give_a_missing_sol|tell_a_missing_prefix_of_len_[1-9][0-9]{0,10})$
@@ -78,7 +78,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_sol_list:
-    evaluator: [python, services/check_sol_list_server.py]
+    evaluator: [python, services/check_sol_list_driver.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -97,7 +97,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_sol_list:
-    evaluator: [python, services/eval_sol_list_server.py]
+    evaluator: [python, services/eval_sol_list_driver.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -114,7 +114,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gen_random_sol:
-    evaluator: [python, services/gen_random_sol_server.py]
+    evaluator: [python, services/gen_random_sol_driver.py]
     args:
       n_pairs:
         regex: ^(0|[1-9][0-9]{0,5}|1000000)$
@@ -134,7 +134,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_next_sol:
-    evaluator: [python, services/check_next_sol_server.py]
+    evaluator: [python, services/check_next_sol_driver.py]
     args:
       current_sol:
         regex:  ^(\(|\)){0,1000}$
@@ -154,7 +154,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_next:
-    evaluator: [python, services/eval_next_server.py]
+    evaluator: [python, services/eval_next_driver.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -175,7 +175,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_rank:
-    evaluator: [python, services/check_rank_server.py]
+    evaluator: [python, services/check_rank_driver.py]
     args:
       input_formula:
         regex:  ^(\(|\)){0,1000}$
@@ -194,7 +194,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_unrank:
-    evaluator: [python, services/check_unrank_server.py]
+    evaluator: [python, services/check_unrank_driver.py]
     args:
       input_rank:
         regex: ^(0|[1-9]|[0-9]{0,300})$
@@ -213,7 +213,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_rank:
-    evaluator: [python, services/eval_rank_server.py]
+    evaluator: [python, services/eval_rank_driver.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -234,7 +234,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_unrank:
-    evaluator: [python, services/eval_unrank_server.py]
+    evaluator: [python, services/eval_unrank_driver.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -255,7 +255,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_rank:
-    evaluator: [python, services/gimme_rank_server.py]
+    evaluator: [python, services/gimme_rank_driver.py]
     args:
       formula:
         regex:  ^(\(|\)){0,1000}$
@@ -266,7 +266,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_unrank:
-    evaluator: [python, services/gimme_unrank_server.py]
+    evaluator: [python, services/gimme_unrank_driver.py]
     args:
       n_pairs:
         regex: ^(0|[1-9][0-9]{0,1}|1000)$
@@ -279,7 +279,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_next_sol:
-    evaluator: [python, services/gimme_next_sol_server.py]
+    evaluator: [python, services/gimme_next_sol_driver.py]
     args:
       current_sol:
         regex:  ^(\(|\)){0,1000}$
@@ -290,7 +290,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

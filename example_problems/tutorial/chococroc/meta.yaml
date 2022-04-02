@@ -4,7 +4,7 @@ public_folder: public
 services:
   check_is_winning:
     description: use this service to check out your belief about a certain configuration to be a winning one.
-    evaluator: [python, services/check_game_value_server.py]
+    evaluator: [python, services/check_game_value_driver.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -27,7 +27,7 @@ services:
         default: it
   check_is_lost:
     description: use this service to check out your belief about a certain configuration to be a lost one.
-    evaluator: [python, services/check_game_value_server.py]
+    evaluator: [python, services/check_game_value_driver.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -50,7 +50,7 @@ services:
         default: it
   check_grundy_value:
     description: use this service to check out your conjectured grundy value for a certain configuration of the chococroc game.
-    evaluator: [python, services/check_game_value_server.py]
+    evaluator: [python, services/check_game_value_driver.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -73,7 +73,7 @@ services:
         default: it
   tell_me_about_config:
     description: use with caution this spoilering service in order to get more or less detailed information about a certain configuration of the chococroc game.
-    evaluator: [python, services/tell_me_about_config_server.py]
+    evaluator: [python, services/tell_me_about_config_driver.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -98,7 +98,7 @@ services:
     description: use this service if you want to play a match of the chococroc game against our player. You can choose the starting configuration and whether to be first or second to move. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
     example1: [experiment in a direct use, '\n     rtal connect chococroc play -aTALight_first_to_move=1 -am=10 -an=10 -awatch=no_watch']
     example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play -aTALight_first_to_move=1 -am=10 -an=10 -awatch=watch_winner -- bots/my_chococroc_player.py']
-    evaluator: [python, services/play_server.py]
+    evaluator: [python, services/play_driver.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -124,7 +124,7 @@ services:
     description: use this service if you want to play a match of the MeasuringGame(chococroc) against our player. You can choose the starting configuration and whether to be first or second to move. The MeasuringGame(chococroc) game is defined as the game sum of a chococroc game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a chococroc game position. You can choose whether to be first or second to move in the play. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
     example1: [experiment in a direct use, '\n     rtal connect chococroc play_val_measuring_game -aTALight_first_to_move=1 -am=10 -an=10 -anim=0 -awatch=no_watch']
     example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play_val_measuring_game -aTALight_first_to_move=1 -am=10 -an=10 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_chococroc_player.py']
-    evaluator: [python, services/play_val_measuring_game_server.py]
+    evaluator: [python, services/play_val_measuring_game_driver.py]
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -151,7 +151,7 @@ services:
         default: it
 
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

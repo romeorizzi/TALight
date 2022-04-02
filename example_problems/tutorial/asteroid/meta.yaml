@@ -4,7 +4,7 @@ public_folder: public
 services:
   gimme_instance:
     description: 'This service provides you with instances of the Asteroid problem, i.e., 0/1-matrices with the given number of rows (argument m) and columns (argument n). You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall a 0/1-matrix you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random Asteroid instance we mean the triple <m,n,seed>.\n   The 0/1-matrix comprising the instance is returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing 0/1-matrices is the following: the first line contains the two integers m and n; then follow m lines, one for each row. The i-th of these lines displays the n binary digits of the i-th row of the matrix, the j-th bit being the element in the j-th column. It is assumed that the row and column indexes start from 1.'
-    evaluator: [python,services/gimme_instance_server.py]
+    evaluator: [python,services/gimme_instance_driver.py]
     args:
       instance_spec:
         regex: ^(random|catalogue1)$
@@ -50,7 +50,7 @@ services:
 
   check_feasibiliy_of_your_laser_beams:
     description: We give you a matrix with asteroids and you have to shoot out sufficient laser beams in order to destroy all of the asteroids. In other words, your task is to identify a set of rows and columns of the matrix that cover all the asteroids. This service is meant to verify this property.
-    evaluator: [python,services/check_solution_server.py]
+    evaluator: [python,services/check_solution_driver.py]
     args:
       instance_spec:
         regex: ^(random|catalogue1|terminal)$
@@ -91,7 +91,7 @@ services:
         default: it
   check_optimality_of_your_laser_beams:
     description: We give you a matrix with asteroids and you have to return the minimum number of laser beams capable of destroying them all. You can use a laser beam to destroy all asteroids laying on a same row or column of the matix. This service checks that no solution exists using less beams.
-    evaluator: [python,services/check_solution_server.py]
+    evaluator: [python,services/check_solution_driver.py]
     args:
       input_mode:
         regex: ^(random|seed|terminal)$
@@ -129,7 +129,7 @@ services:
 
   check_feasibility_independent_asteroids_subset:
     description: You have to give us the set of indipendent asteroids.
-    evaluator: [python, services/check_dual_solution_server.py]
+    evaluator: [python, services/check_dual_solution_driver.py]
     args:
       input_mode:
         regex: ^(random|seed|terminal)$
@@ -165,7 +165,7 @@ services:
 
   check_optimality_independent_asteroids_subset:
     description: You have to give us the set of indipendent asteroids.
-    evaluator: [python, services/check_dual_solution_server.py]
+    evaluator: [python, services/check_dual_solution_driver.py]
     args:
       input_mode:
         regex: ^(random|seed|terminal)$
@@ -201,7 +201,7 @@ services:
         default: it
 
   eval_sol:
-    evaluator: [python, services/eval_sol_server.py]
+    evaluator: [python, services/eval_sol_driver.py]
     args:
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -222,7 +222,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it  
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

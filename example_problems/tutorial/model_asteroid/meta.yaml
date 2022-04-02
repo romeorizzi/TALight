@@ -4,7 +4,7 @@ public_folder: public
 services:
   gimme_instance:
     description: 'This service provides you with instances of the Asteroid problem, i.e., 0/1-matrices with the given number of rows (argument m) and columns (argument n). You have two main options when calling this service:\n    [source=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [source=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall a 0/1-matrix you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random Asteroid instance we mean the triple <m,n,seed>.\n   The 0/1-matrix comprising the instance is returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing 0/1-matrices is the following: the first line contains the two integers m and n; then follow m lines, one for each row. The i-th of these lines displays the n binary digits of the i-th row of the matrix, the j-th bit being the element in the j-th column. It is assumed that the row and column indexes start from 1.'
-    evaluator: [python,services/gimme_instance_server.py]
+    evaluator: [python,services/gimme_instance_driver.py]
     args:
       source:
         regex: ^(random|catalogue)$
@@ -50,7 +50,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   solve:
-    evaluator: [python, services/solve_server.py]
+    evaluator: [python, services/solve_driver.py]
     description: 'This service provides you with a solution for a given instance of the Asteroid problem. You can either upload the instance file on the `instance` filehandler of the service, using the `-f` option of the `connect` subcommand of `rtal`, or specify another source for the instance. In the second case, you can try to directly input your instance from the terminal (supported only in `only_matrix` format) once the service has started. You may also specify an instance from the catalogue, or a pseudo-random instance by providing its instance description for a selected generator. This last option might ease your calling this service on instances encounterd with other services.'
     files:
       - instance
@@ -107,7 +107,7 @@ services:
         default: it
 
   check_sol:
-    evaluator: [python, services/check_sol_server.py]
+    evaluator: [python, services/check_sol_driver.py]
     description: 'This service checks and validates your solution for a given instance of the Asteroid problem (input: 0/1-matrices with the given number of rows (argument m) and columns (argument n)). In case your solution is not correct then you get the needed feedback. Besides the solution you must submit also the file with the instance in one of the supported formats. Examples for the supported formats of the instance file can be found in the `instances_catalogue` directory contained in the archive downloaded with `rtal get model_asteroid`, and further examples can be obtained from the service `gimme_instance`. You have two options on how to submit an instance: either use the `instance_id` argument to specify an instance within the catalogue or upload a local file through the `instance` filehandler. When you do both then the service checks that the two files have the same content. You must specify the `instance_id` argument when you want to use your personal TALight token to make a submission. Depending on the value for the argument `sol_format`, the service only checks the optimum value for this optimization problem, or it also checks the feasibility and optimality of the solution offered by you in one of the supported formats (you can get examples of such formats through the service `solve`). When you are enrolled to a course or exam that ask for it, then you may have been assigned a personal TALight token. When calling this service using your token you submit your solution for single instances of the Asteroid problem in the sense that the system keeps track of the outcomes of your submissions to this service assigning them to you via your personal token. In order to submit, it may be required that at the service call you supply also the source code implementing your solving algorithm (if so, use the `sourcecode` filehandler). After having assessed a few solutions produced by you, use the scripts in the scripts folder in order to submit the whole of your solutions. These scripts automate for you the process of submitting your solutions one by one and may also define the dataset as a convenient subset of the catalogue. You may first have a dry run launching the script without personal token, just to check that your solutions are correct as well as your general calling to the service. In any case, be told that the positive submissions are never overwritten by the bad ones.'
     explain: 'Call the service with:\n   rtal connect model_asteroid check_sol -finstance=fullpath_of_your_instance_file -fsolution=fullpath_of_your_solution_file\nIf the format of your instance file differs from `only_matrix` then, please, specify it via the argument `instance_format`.\nIf the format of your solution file differs from `seq` then, please, specify it via the argument `sol_format`.'
     example1: [ to get assesment of a solution produced by you for a certaint instance, 'Call the service with:\n       rtal connect model_asteroid check_sol -asol_format=subset -finstance=instances_catalogue/all_instances/instance_003.only_matrix.txt -fsolution=my_sols/all_instances/solution_003.subset.txt']
@@ -145,7 +145,7 @@ services:
 
   check_feasibiliy_of_your_laser_beams:
     description: We give you a matrix with asteroids and you have to shoot out sufficient laser beams in order to destroy all of the asteroids. In other words, your task is to identify a set of rows and columns of the matrix that cover all the asteroids. This service is meant to verify this property.
-    evaluator: [python,services/check_sol_server.py]
+    evaluator: [python,services/check_sol_driver.py]
     args:
       source:
         regex: ^(random|catalogue1|terminal)$
@@ -186,7 +186,7 @@ services:
         default: it
   check_optimality_of_your_laser_beams:
     description: We give you a matrix with asteroids and you have to return the minimum number of laser beams capable of destroying them all. You can use a laser beam to destroy all asteroids laying on a same row or column of the matix. This service checks that no solution exists using less beams.
-    evaluator: [python,services/check_sol_server.py]
+    evaluator: [python,services/check_sol_driver.py]
     args:
       source:
         regex: ^(random|catalogue1|terminal)$
@@ -228,7 +228,7 @@ services:
 
   check_feasibility_independent_asteroids_subset:
     description: Given a set of asteroids within a given 0,1-matrix, this service checks their independence (i.e., that you have selected at most one asteroid on each row and on each column of the matrix).
-    evaluator: [python, services/check_dual_solution_server.py]
+    evaluator: [python, services/check_dual_solution_driver.py]
     args:
       instance_spec:
         regex: ^(seed|instance_id|terminal)$
@@ -268,7 +268,7 @@ services:
 
   check_optimality_independent_asteroids_subset:
     description: You have to give us the set of indipendent asteroids.
-    evaluator: [python, services/check_dual_solution_server.py]
+    evaluator: [python, services/check_dual_solution_driver.py]
     args:
       instance_spec:
         regex: ^(seed|instance_id|terminal)$
@@ -308,7 +308,7 @@ services:
         default: it
 
   eval_sol:
-    evaluator: [python, services/eval_sol_server.py]
+    evaluator: [python, services/eval_sol_driver.py]
     args:
       seed:
         explain: specify the numeric code (any integer in the interval [100000,999999]) to reproduce an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <m,n,seed>.
@@ -331,7 +331,7 @@ services:
   
   try_GMPL_model:
     description: 'This service allows you to validate your models for the Asteroid problem. Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service runs a `gplsol` engine on your model and instance to find out a solution following the instructions contained in your .mod file. To send your files you must use the TA_send_files_bot.py bot placed in the model_asteroid/bots/ directory. Call the service with:\n    rtal connect model_asteroid try_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py mod=path_to_model_file_dir/your_asteroid.mod dat=path_to_instance_file_dir/your_asteroid.dat input=path_to_input_file/input.txt\nHere, the `input.txt` file is required only if you want to get a validation of the solution contained in the file `solution.txt` generated by your model on the server. Examples for the format for the `input.txt` file can be found in the `examples` directory (see in the archive downloaded with `rtal get model_asteroid`).'
-    evaluator: [python, services/try_GMPL_model_server.py]
+    evaluator: [python, services/try_GMPL_model_driver.py]
     files:
       - instance
       - mod
@@ -372,7 +372,7 @@ services:
   
   try_explicit_formulation:
     description: 'This service takes in input an explicit LP or ILP instance (i.e., a system of linear constraints on a set of real or possibly integer variables (plus, possibly, an objective function) and applies a solver to it in order to obtain a solution. The service returns the outcome of the computation performed by the solver. Call the service with:\n    rtal connect model_lcs try_explicit_formulation -- path_to_bot_dir/TA_send_files_bot.py ef=path_to_your_formulation_file_dir/your_formulation_file\nHere, your formulation file should be valid for the choosen format. See the argument `format` for the currently supported formats.'
-    evaluator: [python, services/try_explicit_formulation_server.py]
+    evaluator: [python, services/try_explicit_formulation_driver.py]
     args:
       display_output:
         regex: ^(0|1)$
@@ -391,7 +391,7 @@ services:
 
   eval_GMPL_model:
     description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_style`. Examples of the supported dat styles are given in the folder `examples` where each example instance is encoded in every supported dat style (filename and extensions in the form `instance_name`.`dat_style`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance (the service stops at the first failure). You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_asteroid eval_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py path_to_model_file_dir/your_asteroid.mod'
-    evaluator: [python, services/eval_GMPL_model_server.py]
+    evaluator: [python, services/eval_GMPL_model_driver.py]
     args:
       goal:
         regex: ^(public_examples|m_and_n_at_most_5|m_and_n_at_most10|m_and_n_at_most20|m_and_n_at_most30|m_and_n_at_most50|m_and_n_at_most100|m_and_n_at_most200|m_and_n_at_most300)$
@@ -418,7 +418,7 @@ services:
         default: it
   
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

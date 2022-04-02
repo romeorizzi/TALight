@@ -4,8 +4,8 @@ public_folder: public
 services:
   free_sum:
     description: You are given a sum value and are asked to return two natural numbers having that sum. You can also pose yourself the challenge to return such a pair of numbers for which the product is largest possible.
-    evaluator: [python, services/free_sum/advanced/free_sum_server.py]
-    #evaluator: [python, services/free_sum/simple/free_sum_server.py]
+    evaluator: [python, services/free_sum/advanced/free_sum_driver.py]
+    #evaluator: [python, services/free_sum/simple/free_sum_driver.py]
     args:
       numbers:
         regex: ^(onedigit|twodigits|big)$
@@ -22,8 +22,8 @@ services:
         default: it
   sum_and_difference:
     description: You are given the sum and difference of two natural numbers and your goal is to identify the two numbers.
-    #evaluator: [python, services/sum_and_difference/simple/sum_and_difference_server.py]
-    evaluator: [python, services/sum_and_difference/advanced/sum_and_difference_server.py]
+    #evaluator: [python, services/sum_and_difference/simple/sum_and_difference_driver.py]
+    evaluator: [python, services/sum_and_difference/advanced/sum_and_difference_driver.py]
     args:
       numbers:
         regex: ^(onedigit|twodigits|big)$
@@ -37,8 +37,8 @@ services:
         default: it
   sum_and_product:
     description: You are given the sum and the product of two natural numbers and your goal is to identify the two numbers.
-    evaluator: [python, services/sum_and_product/simple/sum_and_product_server.py]
-    #evaluator: [python, services/sum_and_product/advanced/sum_and_product_server.py]
+    evaluator: [python, services/sum_and_product/simple/sum_and_product_driver.py]
+    #evaluator: [python, services/sum_and_product/advanced/sum_and_product_driver.py]
     args:
       numbers:
         regex: ^(onedigit|twodigits|big)$
@@ -51,7 +51,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   help:
-    evaluator: [python, services/help/help_server.py]
+    evaluator: [python, services/help/help_driver.py]
     args:
       page:
         regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
@@ -60,7 +60,7 @@ services:
         regex: ^(en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

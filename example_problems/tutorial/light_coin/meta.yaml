@@ -7,7 +7,7 @@ services:
     description: choose an n and specify a set of two-pan scale weighings that always allow to identify the false coin among n otherwise identical coins.
     example1: "with n=3, a correct (and optimal) static strategy would be:{chr(10)}{chr(13)}        1, 2"
     example2: "with n=4, a correct (and not optimal) static strategy would be:{chr(10)}{chr(13)}        1 2, 3 4{chr(10)}{chr(13)}        1, 2{chr(10)}{chr(13)}        3, 4"
-    evaluator: [python3, services/check_static_strategy/check_static_strategy_server.py]
+    evaluator: [python3, services/check_static_strategy/check_static_strategy_driver.py]
     args:
       n:
         regex: ^[1-9][0-9]?$|^100$
@@ -34,7 +34,7 @@ services:
         default: it
   check_dynamic_strategy:
     description: "Your goal is to identify the false coin in a set of n coins of otherwise equal weight. Choose an n and play a two-players game against nature: at every move you operate a scale to compare the weights of two disjoint subsets of the n coins and nature reports you the outcome."
-    evaluator: [python3, services/check_dynamic_strategy/check_dynamic_strategy_server.py]
+    evaluator: [python3, services/check_dynamic_strategy/check_dynamic_strategy_driver.py]
     args:
       n:
         regex: ^[1-9][0-9]?$|^100$
@@ -61,7 +61,7 @@ services:
         default: it
   empass_static_strategy_lighter_or_heavier:
     description: this service proves that, for an infinite number of n, two experiments are not enough to understand whether the false coin is heavier or lighter than the others. To do so, you provide us with a lower bound lb and we return you the smalles n >= lb such that no static strategy with only two expriments exists. You then provide us a static strategy for that n, with at most two experiments, and we explain why your static strategy fails.
-    evaluator: [python3, services/empass_static_strategy_lighter_or_heavier/empass_static_strategy_lighter_or_heavier_server.py]
+    evaluator: [python3, services/empass_static_strategy_lighter_or_heavier/empass_static_strategy_lighter_or_heavier_driver.py]
     args:
       lb:
         regex: ^[1-9][0-9]?$|^100$
@@ -71,7 +71,7 @@ services:
         default: it
   # TODO help
   # help:
-  #   evaluator: [python, services/help/help_server.py]
+  #   evaluator: [python, services/help/help_driver.py]
   #   args:
   #     page:
   #       regex: ^(sum|free_sum|sum_and_difference|sum_and_product|help|synopsis)$
@@ -80,7 +80,7 @@ services:
   #       regex: ^(en|it)$
   #       default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

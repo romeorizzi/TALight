@@ -3,7 +3,7 @@
 public_folder: public
 services:
   is_tilable:
-    evaluator: [python, services/tell_if_tilable_server.py]
+    evaluator: [python, services/tell_if_tilable_driver.py]
     description: "You assert that a certain grid is tilable to get a confirm or be contradicted."
     args:
       m:
@@ -29,7 +29,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   is_not_tilable:
-    evaluator: [python, services/tell_if_tilable_server.py]
+    evaluator: [python, services/tell_if_tilable_driver.py]
     description: You assert that a certain grid is tilable to get a confirm or be contradicted.
     args:
       m:
@@ -55,7 +55,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   gimme_hints_on_a_tiling:
-    evaluator: [python, services/gimme_hints_on_a_tiling_server.py]
+    evaluator: [python, services/gimme_hints_on_a_tiling_driver.py]
     description: We provide hints on how a tiling of the mxn grid could be.
     args:
       m:
@@ -87,7 +87,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

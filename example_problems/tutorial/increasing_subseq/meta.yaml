@@ -4,7 +4,7 @@ public_folder: public
 services:
   is_subseq:
     description: You are asked to enter two sequences S and T of positive integers. The service tells whether S is a subsquence of T.
-    evaluator: [python, services/is_subseq_server.py]
+    evaluator: [python, services/is_subseq_driver.py]
     args:
       T:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
@@ -25,7 +25,7 @@ services:
         default: it
   gen_subseq_instance:
     description: It returns an instance of the eval_is_subseq service once you provide its description. The description has the form (m,n,max_val,yes_instance,seed).
-    evaluator: [python, services/gen_subseq_instance_server.py]
+    evaluator: [python, services/gen_subseq_instance_driver.py]
     args: # m n max_val
       yes_instance:
         regex: ^(0|1)$
@@ -35,7 +35,7 @@ services:
         regex: ^(0|1)$
   check_is_subseq_YES_certificate:
     description: "Given two sequences S and T and a set of indexes of T, the service checks that S is obtained from T after removing all elements with indexes in the given set. You can for example use this service if you are sure S is a subsequence of T but this disagrees with what said by one of our services. (Besides: we are happy to receive reports soliciting corrections.)"
-    evaluator: [python, services/check_is_subseq_YES_certificate_server.py]
+    evaluator: [python, services/check_is_subseq_YES_certificate_driver.py]
     args:
       T:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
@@ -52,7 +52,7 @@ services:
         default: it
   eval_subseq:
     description: Evaluates correctness and efficiency of a program from the problem solver that, given in input two integer sequences T (on a first line) and S (on a second line), decides whether S is a subsequence of T or not (y/n). The evaluation is done on a set of pseudo-random instances (everything is fully reproducible from the seed).
-    evaluator: [python, services/eval_subseq_server.py]
+    evaluator: [python, services/eval_subseq_driver.py]
     args:
       seed:
         explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
@@ -73,7 +73,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_longest_increasing_subseq:
-    evaluator: [python, services/check_longest_increasing_subseq_server.py]
+    evaluator: [python, services/check_longest_increasing_subseq_driver.py]
     args:
       T:
         regex: ^((([1-9][0-9]{0,9} )*[1-9][0-9]{0,9})|lazy_input)$
@@ -108,7 +108,7 @@ services:
         default: it
   eval_longest_increasing_subseq:
     description: this service helps you evaluating your program for computing the maximum length of a strictly increasing subsequence of a given sequence.
-    evaluator: [python, services/eval_longest_increasing_subseq_server.py]
+    evaluator: [python, services/eval_longest_increasing_subseq_driver.py]
     args:
       seed:
         explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user for replicability purposes).
@@ -148,7 +148,7 @@ services:
         regex: ^100$
         default: 100
   check_num_occurrences_of_S_in_T:    #explain: checks the number of different ways S occurs in T
-    evaluator: [python, services/check_num_subseq_server.py]
+    evaluator: [python, services/check_num_subseq_driver.py]
     args:
       T:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
@@ -179,7 +179,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_num_occurrences_of_S_in_T:
-    evaluator: [python, services/eval_num_subseq_server.py]
+    evaluator: [python, services/eval_num_subseq_driver.py]
     args:
       goal:
         regex: ^(correct|quadratic|quasi_linear)$
@@ -202,7 +202,7 @@ services:
 # BEGIN: competenza gestione sottosequenze diverse di una stessa sequenza
 #        può avere senso come un esercizio a parte (di programmazione) 
   check_subseq_set:
-    evaluator: [python, services/check_subseq_set_server.py]
+    evaluator: [python, services/check_subseq_set_driver.py]
     args:
       feedback:
         regex: ^(yes_no|tell_a_minimal_missing_prefix|give_one_missing)$
@@ -212,7 +212,7 @@ services:
         default: it
 # può avere senso come esercizio di programmazione, può essere accoppiato al successivo 
   check_subseq_list:
-    evaluator: [python, services/check_subseq_list_server.py]
+    evaluator: [python, services/check_subseq_list_driver.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -224,7 +224,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_next_subseq_gen:
-    evaluator: [python, services/check_next_subseq_gen_server.py]
+    evaluator: [python, services/check_next_subseq_gen_driver.py]
     args:
       current_subseq:
         regex:  ^(\(|\)){0,1000}$
@@ -240,7 +240,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   eval_next_subseq_gen:
-    evaluator: [python, services/eval_next_subseq_gen_server.py]
+    evaluator: [python, services/eval_next_subseq_gen_driver.py]
     args:
       sorting_criterion:
         regex: ^(loves_opening_par|loves_closing_par)$
@@ -249,7 +249,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   check_rank_of_seq:
-    evaluator: [python, services/check_rank_of_seq_server.py]
+    evaluator: [python, services/check_rank_of_seq_driver.py]
     args:
       T:
         regex: ^((([1-9][0-9]{0,9} *)*)|lazy_input)$
@@ -261,7 +261,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it  
   eval_rank_of_seq:
-    evaluator: [python, services/eval_rank_of_seq_server.py]
+    evaluator: [python, services/eval_rank_of_seq_driver.py]
     args:
       goal:
         regex: ^(correct|efficient)$
@@ -297,7 +297,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

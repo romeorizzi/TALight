@@ -4,7 +4,7 @@ public_folder: public
 services:
   verify_tiling:
     description: Provide this service with a pair (m, n) and a labeling of the m x n grid with symbols from the alphabet [N,E,S,W,0,1,2,3,4]. The service checks that your labeling correctly encodes a packing of L-shaped trominos in the mxn grid. A tromino is any 3 adjacent squares in the plane grid (see https://en.wikipedia.org/wiki/Tromino). The 5 possible labelings for m=n=2 are contained in the files `examples/2x2_*.txt`. In particular, `2x2_empty.txt` is the empty packing placing no tile on the `2x2-board`, while each `2x2_L*.txt` file packs precisely one L-shaped tromino and corresponds to one of the 4 possible orientations of this piece.
-    evaluator: [python,services/verify_tiling_server.py]
+    evaluator: [python,services/verify_tiling_driver.py]
     args:
       m:
         regex: ^(lazy|0|[1-9][0-9]{0,1}|100)$
@@ -26,7 +26,7 @@ services:
         default: it
   gimme_tiling:
     description: given a triple (k, r, c), this service tells whether the 2^k x 2^k grid admits a tiling where no two tiles overlap and the cell (r,c) is the only cell left uncovered (row and column indexes start from 0). You can also ask the service to dispel a tiling, in part or as a whole.
-    evaluator: [python,services/gimme_tiling_server.py]
+    evaluator: [python,services/gimme_tiling_driver.py]
     args:
       k:
         regex: ^([0-9]|10)$
@@ -47,7 +47,7 @@ services:
         default: 0
         explain: the service will dispel the first <dispel_first_rows_of_a_tiling> rows of a possible tiling.
   trilly:
-    evaluator: [python, services/trilly_server.py]
+    evaluator: [python, services/trilly_driver.py]
     description: 'Trilly the fairy helps you in constructing a packing of L-shaped trominos within a square 2^kx2^k board. Packing means that all the trominos placed fall entirely within the board and no two of them occupy the same cell. Since the number of cells of the board is a power of 4, hence non-divisible by 3 (more precisely, congruous to 1 modulo 3), at least one cell must be left uncovered by the packing. Does there exists a packing leaving out one single cell? How to go about obtaining large packings? This service offers you an opportunity to move on the board and play out your way at addressing these questions.
     Every standard move lays down a tromino piece: assume that the cells (r,c),(r+1,c)(r,c+1),(r+1,c+1) are still empty, and let r0 in {{r,r+1}}, c0 in {{c,c+1}}. Writing a line in the format "0 <r> <c> <r0> <c0>" commands to place the unique tromino that would cover these 4 cells exept cell (r0,c0). After being assigned the number k (the first board), and as many times as you want, you can also call Trilly and assign her a 2^hx2^h sub-board, with h<k, and specify one single cell of such sub-board. Trilly checks that this sub-board is still empty and then details a list of standard moves for its filling (except for the specified cell that she leaves empty).
     A call to Trilly is like a macro-move and you command it writing a line in the format "<h> <r> <c> <r0> <c0>"; this asks to cover all cells in the sub-grid [r,r+2^h)x[c,c+2^h), except cell (r0,c0).
@@ -101,7 +101,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$

@@ -38,7 +38,7 @@ services:
     example1: [to directly edit or paste in your log lines into the service, '\n     rtal connect insertion_sort log_debug_your_insertion_sort_bot']
     example2: [to plug in yout bot in the service, '\n     rtal connect -e insertion_sort log_debug_your_insertion_sort_bot -- fullname_of_your_executable_Insertion_Sort_bot example_array_of_ints.txt other_arguments_to_your_bot']
     example3: [example, '\n     rtal connect insertion_sort -ainteractive log_debug_your_insertion_sort_bot -- ../bots/test_bot.py ../examples/inputs/array_of_3_ints.txt  wait_for_prompt']
-    evaluator: [python3, services/log_debug_your_insertion_sort_bot_server.py]
+    evaluator: [python3, services/log_debug_your_insertion_sort_bot_driver.py]
     args:
       interactive:
         regex: ^(0|1)$
@@ -63,7 +63,7 @@ services:
         CMD_COMPARE_ELE_IN_TMP_BUFFER_WITH_ELE_IN_POS <i> [the server answers < or >= ]
         CMD_OUTPUT_FINAL_SORTED_ARRAY
      the service will ignore all lines not beginning with the prefix "CMD_", and will ultimately tell whether the array is sorted but also confirm whether the algorithm executed was the Insertion Sort algorithm or signal the very first discrepancy in behaviour.
-    evaluator: [python3, services/remote_insertion_sort_api_server.py]
+    evaluator: [python3, services/remote_insertion_sort_api_driver.py]
     args:
       goal:
         regex: ^(just_simulate_the_process|correctly_sort_the_array)$
@@ -81,7 +81,7 @@ services:
         default: it
 
   synopsis:
-    evaluator: [python, services/synopsis/synopsis_server.py]
+    evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
       service:
         regex: ^((\S)+)$
