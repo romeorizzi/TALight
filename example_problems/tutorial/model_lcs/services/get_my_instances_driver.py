@@ -91,6 +91,6 @@ for instances_group in GEN:
       
         # instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=ENV['instance_format'])
         # instance = ll.get_instance_from_str(instance_str, instance_format_name=ENV['instance_format'])
-        # output_filename = f"instance_catalogue1_{ENV['instance_id']}.{ENV['instance_format']}"
+        # output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['instance_format']}"
 
 exit(0)

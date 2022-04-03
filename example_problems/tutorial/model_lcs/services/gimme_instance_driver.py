@@ -16,6 +16,7 @@ args_list = [
     ('m',int),
     ('n',int),
     ('alphabet', str),
+    ('opt_val',int),
     ('instance_format',str),
     ('silent',bool),
     ('display',bool),
@@ -31,15 +32,18 @@ else:
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
-extension=ll.format_name_to_file_extension(ENV['instance_format'], 'instance')
+
+outputfile_extension=ll.format_name_to_file_extension(ENV['instance_format'], 'instance')
 if ENV['source'] != 'catalogue':
     # Get random instance
     if ENV['source'] == 'randgen_1':
         instance = ll.instance_randgen_1(ENV['m'], ENV['n'], ENV['alphabet'], ENV['seed'])
+    elif ENV['source'] == 'randgen_2':
+        instance = ll.instance_randgen_2(ENV['m'], ENV['n'], ENV['opt_val'], ENV['alphabet'], ENV['seed'])
     else:
         assert False
     instance_str = ll.instance_to_str(instance, format_name=ENV['instance_format'])
-    output_filename = f"instance_{ENV['m']}_{ENV['n']}_{ENV['seed']}.{ENV['instance_format']}.{extension}"
+    output_filename = f"instance_{ENV['m']}_{ENV['n']}_{ENV['seed']}.{ENV['instance_format']}.{outputfile_extension}"
 else: # Get instance from catalogue
     mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
     if ENV['alphabet']!= 'DNA':
@@ -48,8 +52,7 @@ else: # Get instance from catalogue
     else:
         instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=ll.format_name_to_file_extension(ENV['instance_format'], 'instance'))
     instance = ll.get_instance_from_str(instance_str, instance_format_name=ENV['instance_format'])
-    output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['instance_format']}.{extension}"
-    # print('format name: ',ll.format_name_to_file_extension(ENV['instance_format'], 'instance'), 'instance format name: ',ENV['instance_format'])
+    output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['instance_format']}.{outputfile_extension}"
 
 # Print Instance
 if ENV['silent']:

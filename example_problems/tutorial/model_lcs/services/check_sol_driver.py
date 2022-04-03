@@ -47,7 +47,7 @@ if ENV.LOG_FILES != None:
     if TALf.exists_input_file('sourcecode'):
         sourcecode_as_string = TALf.input_file_as_str('sourcecode')
     else:
-        TAc.print(LANG.render_feedback("missing-sourcecode", f'When this service is used to act a submission (i.e., when you provide a valid token) then it is required that at the service call you supply also the source code implementing your solving algorithm. To associate this file to the `sourcecode` filehandler call the service as follows:\n    rtal connect -x <MY_TOKEN> lcs check_sol -fsourcecode=./my_lcs_solver.py -asol_format=annotated_subseq -ainstance_id=3 -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("missing-sourcecode", f'When this service is used to act a submission (i.e., when you provide a valid token) then it is required that at the service call you supply also the source code implementing your solving algorithm. To associate this file to the `sourcecode` filehandler, call the service as follows:\n    rtal connect -x <MY_TOKEN> lcs check_sol -fsourcecode=./my_lcs_solver.py -asol_format=annotated_subseq -ainstance_id=3 -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt'), "red", ["bold"])
         exit(0)
 if ENV["instance_id"] == 0:
     if not TALf.exists_input_file('instance'):
