@@ -202,20 +202,6 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
-  get_my_instances:
-    evaluator: [python, services/get_my_instances_driver.py]
-    description: 'SERVICE NOT OFFERED AT PRESENT. If you hold a personal token to a course or exam, and intend to collect points on this problem, you should first use this service in order to get the instances of your personal assignement, and next use the service `submit_solution` or `try_solution` to check and/or submit your model or solution on each particular instance you can manage. After calling the service `get_my_instances` you will find the instances within the subfolder `output` of your current directory. Use the rtal -o argument if you prefer a different path or folder name.' 
-    args:
-      instance_format:
-        regex: ^(only_strings|with_m_and_n)$
-        default: only_strings
-        explain: 'choose the format of the instance file.'
-      token:
-        regex: ^(anonymous|[1-9][0-9]{5,5})$
-        default: anonymous
-      lang: 
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
   
   try_GMPL_model:
     evaluator: [python, services/try_GMPL_model_driver.py]

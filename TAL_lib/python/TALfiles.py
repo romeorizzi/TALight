@@ -7,12 +7,14 @@ from subprocess import PIPE, run
 prog_lang_ext = {'Python': 'py','python': 'py'}
 
 class TALfilesHelper():
-    def __init__(self, TAc, ENV ):
+    def __init__(self, TAc, ENV, instances_dirname = 'instances_catalogue', all_instances_subfolder = 'all_instances'):
         self.__TAc = TAc
         self.__INPUT_FILES = ENV.INPUT_FILES 
         self.__OUTPUT_FILES = ENV.OUTPUT_FILES
         self.__LOG_FILES = ENV.LOG_FILES
         self.__META_DIR = ENV.META_DIR
+        self.__catalogue_path  = os.path.join(ENV.META_DIR, instances_dirname)
+        self.__all_instances_path  = os.path.join(ENV.META_DIR, instances_dirname, all_instances_subfolder)
 
 
     def input_filename(self, file_handler):
@@ -77,34 +79,6 @@ class TALfilesHelper():
         else:
             return prog_lang_ext[prog_lang]
 
-
-
-            
-    # MANAGE INPUTS/GENDICT FILES -------------------
-    def get_path_from_id(self, id, format_name):
-        """Returns the path to the file selected with id."""
-        # Read gen-dictionary
-        id_as_string = str(id).zfill(3)
-        try:
-            with open(self.__gendict_path, 'r') as file:
-                gendict = json.load(file)
-                info = gendict[id_as_string]
-        except IOError as ioe:
-            self.__TAc.print(f"Fail to open the gen_dictionary .yaml file in: {self.__gendict_path}", "red", ["bold"])
-            exit(0)
-        except KeyError as err:
-            self.__TAc.print(f"The id={id} is invalid.", "red", ["bold"])
-            exit(0)
-        except os.error as err:
-            self.__TAc.print(f"Fail to read/parse the gen_dictionary file in: {self.__gendict_path}", "red", ["bold"])
-        # get path from gen-dictionary
-        try:
-            return os.path.join(self.__all_instances_path, info[format_name])
-        except KeyError as err:
-            self.__TAc.print(f"The format={format_name} is invalid.", "red", ["bold"])
-            exit(0)
-
-
     def get_file_str_from_path(self, path):
         """Returns the contents of the file as a string from the selected path."""
         try:
@@ -114,7 +88,9 @@ class TALfilesHelper():
             self.__TAc.print(f"Fail to open the file: {path}", "red", ["bold"])
             exit(0)
 
-    def get_file_str_from_id(self, id, format_name):
-        """Returns the contents of the file as a string with the selected id."""
-        return self.get_file_str_from_path(self.get_path_from_id(id, format_name))
+    def get_catalogue_instancefile_as_str_from_id_and_ext(self, id, format_extension):
+        """Returns, in the form of a string, the contents of the instance file of a given id within the catalogue of instances stored on the server."""
+        instance_filename = f'instance_{str(id).zfill(3)}.{format_extension}'
+        fullpath = os.path.join(self.__all_instances_path, instance_filename)
+        return self.get_file_str_from_path(fullpath)
 

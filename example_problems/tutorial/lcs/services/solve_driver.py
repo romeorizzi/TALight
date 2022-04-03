@@ -5,8 +5,6 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from TALfiles import TALfilesHelper
 
-from math_modeling import ModellingProblemHelper
-
 import lcs_lib as ll
 
 # METADATA OF THIS TAL_SERVICE:
@@ -26,7 +24,6 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
-
 
 # START CODING YOUR SERVICE:
 if TALf.exists_input_file('instance'):
@@ -50,8 +47,7 @@ elif ENV["source"] != 'catalogue':
     else:
         assert False
 else: # take instance from catalogue
-    mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
-    instance_str = mph.get_file_str_from_id(ENV["instance_id"], format_name=ll.format_name_to_file_extension(ENV["instance_format"], 'instance'))
+    instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=ll.format_name_to_file_extension(ENV["instance_format"],'instance'))
     instance = ll.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
     TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
     
