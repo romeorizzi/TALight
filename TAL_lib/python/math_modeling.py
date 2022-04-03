@@ -181,26 +181,6 @@ class ModellingProblemHelper():
             
 
     # MANAGE INPUTS/GENDICT FILES -------------------
-
-
-    def get_file_str_from_path_by_alphabet(self, alphabet, format):
-        """Returns the contents of the file as a string with the selected alphabet."""
-        # read the folders in the file "instances_catalogue"
-        folders=[]
-        for filename in os.listdir(self.__catalogue_path):
-            files_path=filename
-            folders.append(files_path)
-        # choose the right instance according to the alphabet
-        for i in folders:
-            if i[10:21]==alphabet[:9]+'_s':
-                path=os.path.join(self.__catalogue_path, i)
-                instance= os.listdir(os.path.join(self.__catalogue_path, i))
-        # choose the right instance according to the format
-        for elem in range(len(instance)-1):
-            if instance[elem][13:25]==format:
-                final_path=os.path.join(path,instance[elem])
-                file=self.get_file_str_from_path(final_path)
-        return(file)
     
     def get_instances_paths_in(self, dir_name):
         """Returns the list of all file_path in the inputs directory grouped by instance"""
