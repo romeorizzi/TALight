@@ -235,3 +235,10 @@ class TALcolors:
         if not only_term_signal:
             self.print(f"\n# SUMMARY OF RESULTS\n#    Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
         self.print(f"\n# WE HAVE FINISHED", "white")
+
+    def stop_bot(self):
+        self.print(f"\n# WE HAVE FINISHED", "white")
+
+    def stop_bot_and_exit(self):
+        self.print(f"\n# WE HAVE FINISHED", "white")
+        exit(0)

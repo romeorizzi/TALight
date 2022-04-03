@@ -189,9 +189,13 @@ services:
         explain2: '[short] for every goal we report only the number of testcases for each possible outcomes.'
         explain3: '[long] for each testcase that has been faced, all data are reported.'
       seed:
-        explain: specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (`random_seed`) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed. Leave this argument to its default value when you intend to register the result of the evaluation on the server via your personal TALight token.
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (`random_seed`) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed. Leave this argument to its default value when you intend to register the result of the evaluation on the server via your personal TALight token. Note that in case you are calling this service providing your personal token in order to act a submission, then this argument must be left to its default value.
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      code_lang: 
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm. Note that in case you are calling this service providing your personal token in order to act a submission, then we will check the correctness of your auto-declaration before finalizing the storing of your submission. 
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

@@ -98,7 +98,7 @@ def yield_feasible_solution_bot():
             BOT.input() # eat the n rows of the triangle
         directions = ['L','R']
         answer = "".join(random.choices(directions,k=n-1))
-        print(answer)
+        BOT.print(answer)
         
 #  CHECK AND REWARD ONE SOL
 def check_and_reward_one_solution_bot():
@@ -109,7 +109,7 @@ def check_and_reward_one_solution_bot():
         for i in range(n):
             t.append(map(int,BOT.input().split()))
         path = BOT.input().strip()
-        print(calculate_path(t,path))
+        BOT.print(calculate_path(t,path))
 
 def eval_best_solution_bot():
     while True:
@@ -128,11 +128,11 @@ def eval_best_solution_bot():
             [best_reward,best_path] = best_reward_and_path(triangle)
             # reward
             # path
-            print(str(best_reward)+best_path)
+            BOT.print(str(best_reward)+best_path)
         else:
             [best_reward, _] = best_reward_and_path(triangle)
             # reward
-            print(best_reward)
+            BOT.print(best_reward)
 
 def eval_number_of_triangles_in_triangle_bot():
     while True:
@@ -161,7 +161,7 @@ def eval_number_of_triangles_in_triangle_bot():
                 if fits(i,livello,big_array,small_array,l)[0]:
                     indexes.append(fits(i,livello,big_array,small_array,l)[1])
                     answer += 1
-        print(answer)
+        BOT.print(answer)
         
 # MAIN:
 if argv[1] == "1":

@@ -4,7 +4,7 @@ from sys import stderr
 from datetime import datetime
 from subprocess import PIPE, run
 
-programming_languages = {'Python': 'py'}
+prog_lang_ext = {'Python': 'py','python': 'py'}
 
 class TALfilesHelper():
     def __init__(self, TAc, ENV ):
@@ -72,10 +72,10 @@ class TALfilesHelper():
         result = run(f"guesslang {sourcecode_filename}", stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
         #print(f"{result.stdout=}")
         prog_lang = result.stdout.split(':')[1].strip()
-        if prog_lang not in programming_languages:
+        if prog_lang not in prog_lang_ext:
             return prog_lang
         else:
-            return programming_languages[prog_lang]
+            return prog_lang_ext[prog_lang]
 
 
 

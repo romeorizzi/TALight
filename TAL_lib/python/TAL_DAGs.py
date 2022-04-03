@@ -125,7 +125,6 @@ class DAG_of_goals():
                 TAc.print(LANG.render_feedback('goal-passed', f'# Goal "{goal.name}": PASSED (passed instances: {goal.num_testcases_passed}/{len(goal.testcases_faced)} instances)'), 'green', ['bold'])
             else:
                 TAc.print(LANG.render_feedback('goal-NOT-passed', f'# Goal "{goal.name}": NOT passed (passed instances: {goal.num_testcases_passed}/{len(goal.testcases_faced)} instances, correct answers: {goal.num_testcases_correct_ans}/{len(goal.testcases_faced)}, wrong answers: {goal.num_testcases_wrong_ans}/{len(goal.testcases_faced)} instances), over time limit: {goal.num_testcases_over_time}/{len(goal.testcases_faced)} instances)'), 'red', ['bold'])
-        TAc.print(f"\n# WE HAVE FINISHED", "white")
 
         
         

@@ -73,6 +73,7 @@ class Bot:
         """Note 1: with skip_printing_clines=True then no line is actually printed (nor reprinted anywhere) when the bot commands to print a cline (line beginning with the '#' character, see function is_comment(line)).
            Note 2: when log_file='the_one_of_the_class' this method will print on the log file self.log_file  opened when the class what instatiated (if any). If self.log_file != None because such file has been opened, and you do not want this method to print on any log file, then you should forcibly pass the argument log_file='the_one_of_the_class'.
         """
+        line_msg = str(line_msg)
         if reprint_outputs == None:
             reprint_outputs = self.reprint_outputs
         if skip_printing_clines == None:
