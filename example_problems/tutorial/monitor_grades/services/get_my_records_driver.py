@@ -55,7 +55,7 @@ def main(problem : str, service : str, token : str, path : str):
                             problemlist.addToken(filedata)
 
     for x in problemlist.countTokenTries():
-        print("Total tries [", x[1], ']:', x[1])
+        print("Total tries [", x[0], ']:', x[1])
     problemlist.printToConsole()
 
     if not DEBUG:
