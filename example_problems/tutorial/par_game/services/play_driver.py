@@ -87,9 +87,10 @@ def watch(formula, first_to_move, second_to_move):
 
 
 if ENV["TALight_first_to_move"] == 1: # if the user plays the match as second to move
-    watch(formula, first_to_move=I_AM, second_to_move=YOU_ARE)
     if formula=='': # no valid moves on the formula ''. TALight first to move loses the match
         I_have_lost()
+    
+    watch(formula, first_to_move=I_AM, second_to_move=YOU_ARE)
         
     # TALight makes its move updating the new formula:
     new_formula=pl.computer_move(formula)
