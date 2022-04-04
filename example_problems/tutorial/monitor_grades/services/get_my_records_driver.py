@@ -11,7 +11,6 @@ DEBUG = False
 
 if not DEBUG:
     from multilanguage import Env, Lang, TALcolors
-    import monitor_grades_lib as mgl
     from TALfiles import TALfilesHelper
 
     # METADATA OF THIS SERVICE
@@ -56,7 +55,7 @@ def main(problem : str, service : str, token : str, path : str):
                             problemlist.addToken(filedata)
 
     for x in problemlist.countTokenTries():
-        print("Total tries [", x[1], ']:', x[1])
+        print("Total tries [", x[0], ']:', x[1])
     problemlist.printToConsole()
 
     if not DEBUG:
