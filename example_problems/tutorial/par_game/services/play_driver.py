@@ -32,7 +32,7 @@ if ENV['random']==1:
         TAc.print(LANG.render_feedback("par-wrong-length", f'# The length is not correct. I need an even number to generate a correct formula.'), "red", ["bold"])
         exit(0)
     else:
-        formula=pl.random_wmf(ENV['length'])
+        formula=pl.random_wff(ENV['length'])
 else:
     formula=ENV['formula']
 
