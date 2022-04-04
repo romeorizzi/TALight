@@ -61,10 +61,10 @@ def one_test(instance):
     TAc.print(s, "yellow", ["bold"])
     TAc.print(LANG.render_feedback("string-t",'# and t='), "white", ["bold"])
     TAc.print(t, "yellow", ["bold"])
-    if ENV['check_also_sol']:
+    if ENV['commitment'] == 'opt_sol':
         TAc.print(LANG.render_feedback("prompt-opt-sol", f'# Provide a longest possible common subsequence of s and t:'), "white", ["bold"])
         start = monotonic()
-        user_sol = TALinput(token_type=str, num_tokens=1, TAc=TAc, LANG=LANG)[0]
+        user_sol = TALinput(token_type=str, num_tokens=1, regex="^((\S)*)$", TAc=TAc, LANG=LANG)[0]
         end = monotonic()
         instance['user_sol'] = user_sol
         #print(f"{user_sol=}")
@@ -76,7 +76,7 @@ def one_test(instance):
     else:
         TAc.print(LANG.render_feedback("prompt-opt-sol", f'# Tell the maximum length of a common subsequence of s and t:'), "white", ["bold"])
         start = monotonic()
-        user_val = TALinput(token_type=int, num_tokens=1, TAc=TAc, LANG=LANG)[0]
+        user_val = TALinput(token_type=int, num_tokens=1, regex="^((\S)*)$", TAc=TAc, LANG=LANG)[0]
         end = monotonic()
         instance['user_val'] = user_val
         opt_val, opt_sol = ll.opt_val_and_sol(s, t)
@@ -93,7 +93,7 @@ def one_test(instance):
                 instance['subopt'] = True
                 TAc.print(LANG.render_feedback("suboptimal", f'# No! The following common subsequence of s and t has length {opt_val} > {user_val}:'), "red", ["bold"])
                 TAc.print(opt_sol, "red", ["bold"])
-        instance['time'] = end-start
+    instance['time'] = end-start
         
 # MAIN LOOP OF THE EVAL SERVICE:
 
