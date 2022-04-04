@@ -11,7 +11,6 @@ DEBUG = False
 
 if not DEBUG:
     from multilanguage import Env, Lang, TALcolors
-    import monitor_grades_lib as mgl
     from TALfiles import TALfilesHelper
 
     # METADATA OF THIS SERVICE
