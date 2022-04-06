@@ -31,6 +31,11 @@ def close_service_and_print_term_signal_for_bots():
 formula=ENV['formula']
 nim=ENV['nim']
 
+if not pl.recognize(formula, TAc, LANG):
+    exit(0)
+
+TAc.print(LANG.render_feedback("par-void-formula", f'# Remember that if you want to input a void formula, you must use the formula \')(\'. Our player will do the same.'), "yellow", ["bold"])
+
 def I_have_lost():
     TAc.print(LANG.render_feedback("par-TALight_lost", f'# It is my turn to move, on conf <par_game(\'\') + nim(0)> of the MeasuringGame(Par_game) game, that is, a void formula (plus an empty Nim tower). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("par-you-won", f'# You won!'), "green", ["bold"])
