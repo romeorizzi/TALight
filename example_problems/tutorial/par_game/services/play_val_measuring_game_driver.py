@@ -6,7 +6,7 @@ from multilanguage import Env, Lang, TALcolors
 import par_game_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="chococroc"
+problem="par_game"
 service="play_val_measuring_game"
 
 args_list = [
