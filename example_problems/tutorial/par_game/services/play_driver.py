@@ -39,7 +39,7 @@ else:
 if not pl.recognize(formula, TAc, LANG):
     exit(0)
 
-TAc.print(LANG.render_feedback("par-void-formula", f'# Remember that if you want give input a void formula, you must use the formula \')(\'.'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("par-void-formula", f'# Remember that if you want to input a void formula, you must use the formula \')(\'.'), "yellow", ["bold"])
 
 def I_have_lost():
     TAc.print(LANG.render_feedback("par-TALight_lost", f'# It is my turn to move, on a void formula. Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
