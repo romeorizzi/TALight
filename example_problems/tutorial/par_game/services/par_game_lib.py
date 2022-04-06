@@ -12,20 +12,20 @@ def recognize(formula_of_parentheses, TAc, LANG, error_feedback=True):
         else:
             if num_dangling_open == 0:
                 if error_feedback:
-                    TAc.print(LANG.render_feedback("not-well-formed-formula", "We have a problem. The following formula in not well formed:"), "red", ["bold"])
+                    TAc.print(LANG.render_feedback("par-not-well-formed-formula", '# We have a problem. The following formula in not well formed:'), "red", ["bold"])
                     TAc.print(formula_of_parentheses, "yellow", ["underline"])
-                    TAc.print(LANG.render_feedback("unfeasible", f"Indeed on position {i} there is no open parenthesis left to be closed:", {'i': i}), "red", ["bold"])
+                    TAc.print(LANG.render_feedback("par-unfeasible", f'# Indeed on position {i} there is no open parentheses left to be closed:', {'i': i}), "red", ["bold"])
                     TAc.print(formula_of_parentheses, "yellow", ["underline"])
                     print(" "*(i-1),end="")
-                    TAc.print(LANG.render_feedback("pointer", '^ unmatched ")"'), "yellow", ["underline"])
+                    TAc.print(LANG.render_feedback("pointer", '^ unmatched \')\''), "yellow", ["underline"])
                 return False
             num_dangling_open -= 1
 
     if num_dangling_open > 0:
         if error_feedback:
-            TAc.print(LANG.render_feedback("not-well-formed-formula", "We have a problem. The following formula in not well formed:"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("par-not-well-formed-formula", '# We have a problem. The following formula in not well formed:'), "red", ["bold"])
             TAc.print(formula_of_parentheses, "yellow", ["underline"])
-            TAc.print(LANG.render_feedback("unfinished", f"Indeed {num_dangling_open} open parenthesis are left unclosed. The formula contains more '(' than ')' characters.", {'num_dangling_open': num_dangling_open}), "red", ["bold"])
+            TAc.print(LANG.render_feedback("par-unfinished", f'# Indeed {num_dangling_open} open parentheses are left unclosed. The formula contains more \'(\' than \')\' characters.', {'num_dangling_open': num_dangling_open}), "red", ["bold"])
         return False
     return True
 
