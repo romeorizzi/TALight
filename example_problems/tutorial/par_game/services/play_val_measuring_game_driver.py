@@ -129,25 +129,25 @@ while True:
     new_nim=int(new_nim)
 
     if not pl.verify_char(new_formula):
-        TAc.print(LANG.render_feedback("par-stranger-char", "# We have a problem. The formula has one or more char that is not a parentheses."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-stranger-char", '# We have a problem. The formula has one or more char that is not a parentheses.'), "red", ["bold"])
         exit(0)
     if new_formula!=formula and new_nim==nim:
         if not pl.verify_moves(formula, new_formula):
-            TAc.print(LANG.render_feedback("par-illegal-move", "# We have a problem. Your move is not valid. You must remove ONE well made formula."), "red", ["bold"])
+            TAc.print(LANG.render_feedback("par-illegal-move", '# We have a problem. Your move is not valid. You must remove ONE well made formula.'), "red", ["bold"])
             if new_formula!=')(':
                 pl.recognize(new_formula, TAc, LANG)
             exit(0)
     elif new_formula!=formula and new_nim!=nim:
-        TAc.print(LANG.render_feedback("par-double-move", "# We have a problem. You can't move on both par_game and nim."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-double-move", '# We have a problem. You can\'t move on both par_game and nim.'), "red", ["bold"])
         exit(0)
     elif new_formula==formula and new_nim==nim:
-        TAc.print(LANG.render_feedback("par-dull-move", "# We have a problem. You can't pass. You must move on ONE of the two games."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-dull-move", '# We have a problem. You can\'t pass. You must move on ONE of the two games.'), "red", ["bold"])
         exit(0)
     elif new_formula==formula and new_nim>nim:
-        TAc.print(LANG.render_feedback("par-grow-nim-move", "# We have a problem. A move can not increase the height of the nim tower."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-grow-nim-move", '# We have a problem. A move can\'t increase the height of the nim tower.'), "red", ["bold"])
         exit(0)
     elif new_formula==formula and new_nim<0:
-        TAc.print(LANG.render_feedback("par-negative-nim-move", "# We have a problem. A move can not decrease the height of the nim tower under 0."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-negative-nim-move", '# We have a problem. A move can\'t decrease the height of the nim tower under 0.'), "red", ["bold"])
         exit(0)
 
     if new_formula==')(' and new_nim==0:

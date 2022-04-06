@@ -39,7 +39,7 @@ else:
 if not pl.recognize(formula, TAc, LANG):
     exit(0)
 
-TAc.print(LANG.render_feedback("par-void-formula", f'# Remember that if you want to input a void formula, you must use the formula \')(\'.'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("par-void-formula", f'# Remember that if you want give input a void formula, you must use the formula \')(\'.'), "yellow", ["bold"])
 
 def I_have_lost():
     TAc.print(LANG.render_feedback("par-TALight_lost", f'# It is my turn to move, on a void formula. Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
@@ -108,10 +108,10 @@ while True:
     new_formula, = TALinput(str, 1, TAc=TAc)
     
     if not pl.verify_char(new_formula):
-        TAc.print(LANG.render_feedback("par-stranger-char", "We have a problem. The formula has one or more char that is not a parentheses."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-stranger-char", '# We have a problem. The formula has one or more char that is not a parentheses.'), "red", ["bold"])
         exit(0)
     if not pl.verify_moves(formula, new_formula):
-        TAc.print(LANG.render_feedback("par-illegal-move", "We have a problem. Your move is not valid. You must remove ONE well made formula."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-illegal-move", '# We have a problem. Your move is not valid. You must remove ONE well made formula.'), "red", ["bold"])
         if new_formula!=')(':
             pl.recognize(new_formula, TAc, LANG)
         exit(0)
