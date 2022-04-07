@@ -1,100 +1,125 @@
 # generator parameters: 
-# m, n, alphabet, seed
-#   m (int)  number of character of the first string s
-#   n (int)  number of character of the second string t
-#   alphabet (str) the alphabet over which the two strings must be generated
-#   seed (int)
 
-add_format: only_strings.txt
-add_format: with_m_and_n.txt
+# n, m, MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG, seed, big_seed, path
+#     n (int) size of the small triangle
+#     m (int) size of the big triangle
+#     MIN_VAL (int) minimum element value in the small triangle
+#     MAX_VAL (int) maximum element value in the small triangle
+#     MIN_VAL_BIG (int) minimum element value in the big triangle
+#     MAX_VAL_BIG (int) maximum element value in the big triangle
+#     seed (int) seed generating the small triangle
+#     big_seed (int) generating the big triangle
+#     path (str) sequence of L and R encoding a path from the top to the bottom of the triangle
+    
+add_format: pyramid.txt
+add_format: in_lines.txt
 
 collection: instances_hardcoded
-COPY: instances_hardcoded/instance_001_handmade.only_strings.txt
-COPY: instances_hardcoded/instance_001_handmade.with_m_and_n.txt
-COPY: instances_hardcoded/instance_002_handmade.only_strings.txt
-COPY: instances_hardcoded/instance_002_handmade.with_m_and_n.txt
+COPY: instances_hardcoded/instance_001.pyramid.txt
+COPY: instances_hardcoded/instance_001.in_lines.txt
+COPY: instances_hardcoded/instance_002.pyramid.txt
+COPY: instances_hardcoded/instance_002.in_lines.txt
 
-collection: instances_DNA_strlen_at_most_10
-#                randgen,    m,  n, alphabet,  seed
-GEN:  randgen_1_basic.py    10  10  DNA       132411
-GEN:  randgen_1_basic.py    10  10  DNA       132412
-GEN:  randgen_1_basic.py    10  10  DNA       177413
-GEN:  randgen_1_basic.py    10  10  DNA       177414
-GEN:  randgen_1_basic.py    10  10  DNA       177415
-GEN:  randgen_1_basic.py    10  10  DNA       177416
-GEN:  randgen_1_basic.py    10  10  DNA       177417
-GEN:  randgen_1_basic.py    10  10  DNA       177418
-GEN:  randgen_1_basic.py    10  10  DNA       177419
+collection: small_instances_single
+#                randgen,    n, m,     MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG,  seed,    big_seed,  path 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            123456   478393     LLRR 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            345678   484892     LLRR 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            134259   489403     LLRR 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            743201   392029     LLRR 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            129473   126738     LLRR 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            372493   127382     RRLL 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            194372   488492     RRLL 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            329483   488292     RRLL  
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            673210   921632     RRLL 
+GEN:  randgen_1_basic.py     5  5      0        99       0            99            382910   577339     RRLL 
 
-collection: instances_DNA_strlen_at_most_20
-#                randgen,    m,  n, alphabet,  seed
-GEN:  randgen_1_basic.py    20  20  DNA       232421
-GEN:  randgen_1_basic.py    20  20  DNA       232422
-GEN:  randgen_1_basic.py    20  20  DNA       277423
-GEN:  randgen_1_basic.py    20  20  DNA       277424
-GEN:  randgen_1_basic.py    20  20  DNA       277425
-GEN:  randgen_1_basic.py    20  20  DNA       277426
-GEN:  randgen_1_basic.py    20  20  DNA       277427
-GEN:  randgen_1_basic.py    20  20  DNA       277428
-GEN:  randgen_1_basic.py    20  20  DNA       277429
+collection: medium_instances_single
+#                randgen,    n,  m,    MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG,  seed,    big_seed,  path                
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            538493   378189     LLRRLLRRLLRRLLRRLLR 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            309302   472728     LLRRLLRRLLRRLLRRLLR 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            494021   198392     LLRRLLRRLLRRLLRRLLR 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            458390   173738     LLRRLLRRLLRRLLRRLLR 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            203927   183829     LLRRLLRRLLRRLLRRLLR 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            148920   183823     LRLRLRLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            484022   137288     LRLRLRLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            329488   188832     LRLRLRLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            644884   599483     LRLRLRLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     20  20    0        99       0            99            100001   838288     LRLRLRLRLRLRLRLRLRL 
 
-collection: instances_uppercase_strlen_at_most_30
-#                randgen,    m,  n, alphabet,  seed
-GEN:  randgen_1_basic.py    30  30 uppercase 332881
-GEN:  randgen_1_basic.py    30  30 uppercase 388882
-GEN:  randgen_1_basic.py    30  30 uppercase 388453
-GEN:  randgen_1_basic.py    30  30 uppercase 332884
-GEN:  randgen_1_basic.py    30  30 uppercase 388885
-GEN:  randgen_1_basic.py    30  30 uppercase 388456
-GEN:  randgen_1_basic.py    30  30 uppercase 332887
-GEN:  randgen_1_basic.py    30  30 uppercase 388888
-GEN:  randgen_1_basic.py    30  30 uppercase 388459
+collection: big_instances_single
+#                randgen,    n,  m,     MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG,  seed,    big_seed,  path                                              
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            434355   372727     LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            556677   773728     LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            124244   717288     LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            167743   382828     LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            124124   883828     LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRL 
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            454522   888271     LRLRLRLRLRLRLRLRLRLRLRLRLRLRLLRLRLRLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            774788   893828     LRLRLRLRLRLRLRLRLRLRLRLRLRLRLLRLRLRLRLRLRLRLRLRLR    
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            456462   183827     LRLRLRLRLRLRLRLRLRLRLRLRLRLRLLRLRLRLRLRLRLRLRLRLR    
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            968444   362727     LRLRLRLRLRLRLRLRLRLRLRLRLRLRLLRLRLRLRLRLRLRLRLRLR    
+GEN:  randgen_1_basic.py     50  50     0        99       0            99            464563   761637     LRLRLRLRLRLRLRLRLRLRLRLRLRLRLLRLRLRLRLRLRLRLRLRLR    
 
-collection: instances_lowercase_strlen_at_most_40
-#                randgen,    m,  n, alphabet,  seed
-GEN:  randgen_1_basic.py    40  40 lowercase 432881
-GEN:  randgen_1_basic.py    40  40 lowercase 488882
-GEN:  randgen_1_basic.py    40  40 lowercase 488453
-GEN:  randgen_1_basic.py    40  40 lowercase 432884
-GEN:  randgen_1_basic.py    40  40 lowercase 488885
-GEN:  randgen_1_basic.py    40  40 lowercase 488456
-GEN:  randgen_1_basic.py    40  40 lowercase 432887
-GEN:  randgen_1_basic.py    40  40 lowercase 488888
-GEN:  randgen_1_basic.py    40  40 lowercase 488459
+collection: huge_instances_single
+#                randgen,    n,   m,     MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG,  seed,    big_seed,  path 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            645747   362111      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLRLLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            574453   163626      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLRLLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            256637   636277      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLRLLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            574732   726717      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLRLLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            124111   717838      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLRLLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            454363   883827      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRRRRRRLRLRLRLRLRLLLLLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            444444   737277      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRRRRRRLRLRLRLRLRLLLLLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            456567   993828      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRRRRRRLRLRLRLRLRLLLLLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            968544   717372      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRRRRRRLRLRLRLRLRLLLLLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
+GEN:  randgen_1_basic.py     100  100    0        99       0            99            747474   125251      LLRRLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRRRRRRLRLRLRLRLRLLLLLLRRLLRRLLRRLLRLLRRLLRRLLRRLLRRLLRLRLRLRLRLRLR 
 
-collection: instances_lowercase_uppercase_strlen_at_most_50
-#                randgen,    m,  n,           alphabet,  seed
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 532881
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588882
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588453
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 532884
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588885
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588456
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 532887
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588888
-GEN:  randgen_1_basic.py    50  50 lowercase_uppercase 588459
+collection: small_instances_double
+#                randgen,    n, m,     MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG,  seed,    big_seed,  path 
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              462483   156276     L    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              193829   183918     L    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              493028   174322     L    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              283920   177717     L    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              103282   483920     L    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              372892   838392     R    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              489201   261728     R    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              230986   272734     R    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              188200   194048     R    
+GEN:  randgen_1_basic.py     2  10     0        1       0            1              477774   284838     R  
 
-collection: instances_uppercase_strlen_at_most_80
-#                randgen,    m,  n, alphabet,  seed
-GEN:  randgen_1_basic.py    80  80 uppercase 632881
-GEN:  randgen_1_basic.py    80  80 uppercase 688882
-GEN:  randgen_1_basic.py    80  80 uppercase 688453
-GEN:  randgen_1_basic.py    80  80 uppercase 632884
-GEN:  randgen_1_basic.py    80  80 uppercase 688885
-GEN:  randgen_1_basic.py    80  80 uppercase 688456
-GEN:  randgen_1_basic.py    80  80 uppercase 632887
-GEN:  randgen_1_basic.py    80  80 uppercase 688888
-GEN:  randgen_1_basic.py    80  80 uppercase 688459
+collection: medium_instances_double
+#                randgen,    n, m,     MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG,  seed,    big_seed,  path 
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              462483   828283     LR   
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              193829   167177     LR       
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              493028   173728     LR       
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              283920   472828     LR   
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              103282   828281     LR   
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              372892   818388     RL   
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              489201   437291     RL   
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              230986   347337     RL   
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              188200   626636     RL   
+GEN:  randgen_1_basic.py     3  20     0        1       0            1              477774   663627     RL  
 
-collection: instances_DNA_strlen_at_most_100
-#                randgen,    m,   n,  alphabet,  seed
-GEN:  randgen_1_basic.py    100  100  DNA       732411
-GEN:  randgen_1_basic.py    100  100  DNA       732412
-GEN:  randgen_1_basic.py    100  100  DNA       777413
-GEN:  randgen_1_basic.py    100  100  DNA       777414
-GEN:  randgen_1_basic.py    100  100  DNA       777415
-GEN:  randgen_1_basic.py    100  100  DNA       777416
-GEN:  randgen_1_basic.py    100  100  DNA       777417
-GEN:  randgen_1_basic.py    100  100  DNA       777418
-GEN:  randgen_1_basic.py    100  100  DNA       777419
+collection: big_instances_double
+#                randgen,    n, m,     MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG,  seed,    big_seed,  path 
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              342522   163627     LRR  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              465447   183827     LRR  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              574577   717377     LRR  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              565654   838282     LRR  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              578833   817372     LRR  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              574745   939282     RLL  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              978797   781737     RLL  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              897653   716322     RLL  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              235333   777289     RLL  
+GEN:  randgen_1_basic.py     4  50     0        1       0            1              432523   616362     RLL  
 
+collection: huge_instances_double
+#                randgen,    n,  m,     MIN_VAL, MAX_VAL, MIN_VAL_BIG, MAX_VAL_BIG,  seed,    big_seed,  path  
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             464675   372737     LRLRL 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             646366   637727     LRLRL 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             686855   626377     LRLRL 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             243242   838276     LRLRL 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             568564   112123     LRLRL 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             446466   334242     RRLRR 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             253553   636272     RRLRR 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             346745   153676     RRLRR 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             323211   574788     RRLRR 
+GEN:  randgen_1_basic.py     6   100   0        1        0            1             256334   737277     RRLRR 

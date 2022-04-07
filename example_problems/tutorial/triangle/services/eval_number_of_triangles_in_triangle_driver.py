@@ -34,8 +34,9 @@ MIN_M = 5
 MAX_M = 10
 NUM_INSTANCES = 5
 scaling_factor = 1.5
+usage = "double"
 
-instances['correct'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
+instances['correct'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL,usage=usage)
     
 # INSTANCES FOR GOAL = 2^n o n^2      
   
@@ -50,7 +51,7 @@ if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2'
     if ENV["code_lang"] == "compiled":
         MAX_M = 18
         scaling_factor = 1.2
-    instances['time_at_most_2_exp_n'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
+    instances['time_at_most_2_exp_n'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL,usage=usage)
 
 # INSTANCES FOR GOAL = n^2
 
@@ -66,7 +67,7 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
     if ENV["code_lang"] == "compiled":
         MIN_BIG_N = 30
         MAX_BIG_N = 100
-    instances['time_at_most_n_exp_2'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
+    instances['time_at_most_n_exp_2'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL,usage=usage)
 
 MAX_TIME = 2
 
@@ -91,16 +92,7 @@ def test(instance):
     answer = int(TALinput(str, line_recognizer=lambda path,TAc,LANG:True, TAc=TAc, LANG=LANG)[0])
     end = monotonic()
     instance['measured_time'] = end-start
-    right_answer = 0
-    livello = 1
-    indexes = []
-    for i in range(int(((L-l+1)*(L-l+2))/2)):   
-        if i >= livello*(livello+1)/2:
-            livello +=1
-        if big[i] == small[0]:
-            if tl.fits(i,livello,big,small,l)[0]:
-                indexes.append(tl.fits(i,livello,big,small,l)[1])
-                right_answer += 1
+    right_answer, indexes = tl.num_of_occurrences(small,big,l,L)
     if answer == right_answer:
         instance['answer_is_correct'] = True
     else:

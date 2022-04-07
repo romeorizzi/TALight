@@ -111,10 +111,10 @@ while True:
     new_formula, = TALinput(str, 1, TAc=TAc)
     
     if not pl.verify_char(new_formula):
-        TAc.print(LANG.render_feedback("par-stranger-char", "We have a problem. The formula has one or more char that is not a parentheses."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-stranger-char", '# We have a problem. The formula has one or more char that is not a parentheses.'), "red", ["bold"])
         exit(0)
     if not pl.verify_moves(formula, new_formula):
-        TAc.print(LANG.render_feedback("par-illegal-move", "We have a problem. Your move is not valid. You must remove ONE well made formula."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-illegal-move", '# We have a problem. Your move is not valid. You must remove ONE well made formula.'), "red", ["bold"])
         if new_formula!=')(':
             pl.recognize(new_formula, TAc, LANG)
         exit(0)

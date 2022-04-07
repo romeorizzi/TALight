@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
+import random
 
-from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
+from TALinputs import TALinput
+from TALfiles import TALfilesHelper
 
 import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
+    ('source',str),
+    ('instance_id',int),
+    ('instance_format',str),
     ('n',int),
     ('MIN_VAL',int),
     ('MAX_VAL',int),
-    ('how_to_input_the_triangle',str),
+    ('seed',str),
     ('path',str),
-    ('display_triangle',bool),
-    ('reward_the_path',bool),
+    ('display',bool),
     ('silent',bool),
 ]
 
@@ -22,20 +26,9 @@ args_list = [
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+TALf = TALfilesHelper(TAc, ENV)
     
 # START CODING YOUR SERVICE: 
-
-# CHECK WHETHER THE PATH L/R ENCODING STRING HAS THE RIGHT LENGTH
-
-if len(ENV["path"]) != ENV["n"]-1:
-    TAc.NO()
-    if len(ENV["path"]) < ENV["n"]-1:
-        TAc.print(LANG.render_feedback("path-too-short", f'The string of the L/R choices encoding your path is too short for a triangle with n={ENV["n"]} rows.'), "red", ["bold"])
-    if len(ENV["path"]) > ENV["n"]-1:
-        TAc.print(LANG.render_feedback("path-too-long", f'The string of the L/R choices encoding your path is too long for a triangle with n={ENV["n"]} rows.'), "red", ["bold"])
-    TAc.print(LANG.render_feedback("wrong-path-length", f'The true number of required choices is n-1={ENV["n"]-1} instead of {len(ENV["path"].replace(" ", ""))}.'), "red", ["bold"])
-    exit(0)
-
 # CHECK MIN_VAL <= MAX_VAL
 
 if ENV['MIN_VAL'] > ENV['MAX_VAL']:
@@ -45,23 +38,71 @@ if ENV['MIN_VAL'] > ENV['MAX_VAL']:
     
 # TRIANGLE GENERATION
 
-if ENV['how_to_input_the_triangle'] == "my_own_triangle":
-    triangle = []
-    TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
-    for i in range(1,ENV["n"]+1):
-        TAc.print(LANG.render_feedback("insert-line", f'Insert line i={i}, that is, {i} integers separated by spaces:'), "yellow")
-        line = TALinput(int, i, token_recognizer=lambda val,TAc,LANG: tl.check_val_range(val,ENV['MIN_VAL'],ENV['MAX_VAL'],TAc,LANG), TAc=TAc, LANG=LANG)
-        triangle.append(line)
-    TAc.OK()
-    TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
-else:
-    triangle = tl.random_triangle(ENV["n"],ENV['MIN_VAL'],ENV['MAX_VAL'],int(ENV['how_to_input_the_triangle']))
-if not ENV['silent'] or ENV['display_triangle'] or ENV['reward_the_path'] or ENV['how_to_input_the_triangle'] == "my_own_triangle":
-    TAc.print(LANG.render_feedback("feasible-path", f'Your solution path ({ENV["path"]}) is a feasible one for this problem since it comprises {ENV["n"]-1} subsequent choices of directions (the correct number).'), "green", ["bold"])
-if ENV['display_triangle']:
-    TAc.print(LANG.render_feedback("display-triangle", f'The triangle of reference is the following:'), "green", ["bold"])
-    tl.print_triangle(triangle)
-if ENV['reward_the_path']:
-    TAc.print(LANG.render_feedback("path-reward", f'The total reward collected by your path is {tl.calculate_path(triangle,ENV["path"].replace(" ", ""))}.'), "green", ["bold"])        
-print(tl.pyramid_str(triangle))
+if TALf.exists_input_file('instance'):
+    instance = tl.get_instance_from_str(TALf.input_file_as_str('instance'), instance_format_name=ENV["instance_format"])
+    TAc.print(LANG.render_feedback("successful-load", 'The file you have associated to `instance` filehandler has been successfully loaded.'), "yellow", ["bold"])
+elif ENV["source"] == 'terminal':
+    instance = {}
+    TAc.print(LANG.render_feedback("waiting", f'#? waiting for the first string describing the triangle.\nFormat: the first line contains all the parameters to create the triangle, each character must be separated by a space.\nE.G. n MIN_VAL MAX_VAL seed\n'), "yellow")
+    TAc.print(LANG.render_feedback("first-triangle", f'Enter the string describing the triangle:'), "yellow", ["bold"]) 
+    plain_first = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)  
+    n = int(plain_first[0])
+    MIN_VAL = int(plain_first[1])
+    MAX_VAL = int(plain_first[2])
+    seed = int(plain_first[3])
+    if ENV['path'] == "my_path":
+        TAc.print(LANG.render_feedback("enter-path", f'Enter the string encoding the path. E.G. LRRLR :'), "yellow", ["bold"]) 
+        path = TALinput(str, line_recognizer=lambda val,TAc, LANG: tl.check_path(val, TAc=TAc,LANG=LANG), TAc=TAc, LANG=LANG)[0]
+    else:
+        path = ENV['path']
+    plain_first.append(path)
+    m = random.randint(1,20)
+    big_seed = random.randint(100000,999999)
+    instance = tl.instances_generator(1, 1, 0, 99, n, n, m, m, 0, 99, seed, big_seed, path)[0]
+    instance_str = tl.instance_to_str(instance, format_name=ENV['instance_format'])
+    output_filename = f"random_instance_{ENV['seed']}_{big_seed}.{ENV['instance_format']}.txt" 
+    if len(plain_first) != 5:
+        TAc.print(LANG.render_feedback("wrong-number-of-parameters", f'ERROR! Wrong number of parameters for the triangle. Expected 4, received {len(plain_first)-1}'), "red", ["bold"]) 
+        exit(0)
+        
+elif ENV["source"] != 'catalogue':
+    # Get random instance
+    m = random.randint(1,20)
+    if ENV['seed'] == "random_seed":
+        seed = random.randint(100000,999999)
+    else:
+        seed = int(ENV['seed'])
+    big_seed = random.randint(100000,999999)
+    if ENV['path'] == "my_path":
+        TAc.print(LANG.render_feedback("enter-path", f'Enter the string encoding the path. E.G. LRRLR :'), "yellow", ["bold"]) 
+        path = TALinput(str, line_recognizer=lambda val,TAc, LANG: tl.check_path(val, TAc=TAc,LANG=LANG), TAc=TAc, LANG=LANG)[0]
+    else:
+        path = ENV['path']
+    if ENV["source"] == 'randgen_1':
+        instance = tl.instances_generator(1, 1, ENV['MIN_VAL'], ENV['MAX_VAL'], ENV['n'], ENV['n'], m, m, 0, 99, seed, big_seed, path)[0]
+        TAc.print(LANG.render_feedback("instance-generation-successful", f'The instance has been successfully generated by the pseudo-random generator {ENV["source"]} called with arguments:\nn={instance["n"]},\nMIN_VAL={instance["MIN_VAL"]},\nMAX_VAL={instance["MAX_VAL"]},\nseed={instance["seed"]},\npath={instance["path"]}'), "yellow", ["bold"])
+    else:
+        assert False
+else: # take instance from catalogue
+    instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=tl.format_name_to_file_extension(ENV["instance_format"],'instance'))
+    instance = tl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
+    TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
+    path = instance['path']
+            
+if len(path) != instance["n"]-1:
+    TAc.NO()
+    if len(path) < instance["n"]-1:
+        TAc.print(LANG.render_feedback("path-too-short", f'The string of the L/R choices encoding your path is too short for a triangle with n={instance["n"]} rows.'), "red", ["bold"])
+    if len(path) > instance["n"]-1:
+        TAc.print(LANG.render_feedback("path-too-long", f'The string of the L/R choices encoding your path is too long for a triangle with n={instance["n"]} rows.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-path-length", f'The true number of required choices is n-1={instance["n"]-1} instead of {len(path)}.'), "red", ["bold"])
+    exit(0)
+
+
+if not ENV['silent']:
+    TAc.print(LANG.render_feedback("feasible-path", f'Your solution path ({path}) is a feasible one for this problem since it comprises {instance["n"]-1} subsequent choices of directions (the correct number).'), "green", ["bold"])
+if ENV['display']:
+    TAc.print(LANG.render_feedback("this-is-the-instance", 'This is the instance:'), "white", ["bold"])
+    tl.print_path(instance["triangle"],path,ENV['instance_format'])
+TAc.print(LANG.render_feedback("path-reward", f'The total reward collected by your path is {tl.calculate_path(instance["triangle"],path)}.'), "green", ["bold"])        
 exit(0)

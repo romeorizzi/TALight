@@ -184,7 +184,7 @@ services:
   play_val_measuring_game_random:
     evaluator: [python, services/play_val_measuring_game_driver.py]
     description: use this service if you want to play a match of the MeasuringGame(par_game) against our player. The starting well formed formula is generated randomly and you can choose whethe to be first or second to move. In this case the field \'formula\' is ignored. The MeasuringGame(par_game) game is defined as the game sum of a par_game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a par_game position. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect par_game play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -alength=5 -awatch=no_watch']
+    example1: [experiment in a direct use, '\n     rtal connect par_game play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -alength=5']
     example2: [test your bot that plays in your behalf, '\n     rtal connect -e par_game play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -alength=5 -awatch=watch_grundy_val -- bots/my_measuring_par_game_random_player.py']
     args:
       formula:
@@ -208,7 +208,7 @@ services:
         default: 1
         explain: The formula of the match is random.
       length:
-        regex: ^([1-9][0-9]{0,50})$
+        regex: ^([0-9][0-9]{0,50})$
         default: 2
         explain: The user has to set the length of the random generated formula. This number must be even.
       lang:

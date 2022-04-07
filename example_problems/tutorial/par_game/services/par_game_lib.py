@@ -12,22 +12,25 @@ def recognize(formula_of_parentheses, TAc, LANG, error_feedback=True):
         else:
             if num_dangling_open == 0:
                 if error_feedback:
-                    TAc.print(LANG.render_feedback("not-well-formed-formula", "We have a problem. The following formula in not well formed:"), "red", ["bold"])
+                    TAc.print(LANG.render_feedback("par-not-well-formed-formula", '# We have a problem. The following formula in not well formed:'), "red", ["bold"])
                     TAc.print(formula_of_parentheses, "yellow", ["underline"])
-                    TAc.print(LANG.render_feedback("unfeasible", f"Indeed on position {i} there is no open parenthesis left to be closed:", {'i': i}), "red", ["bold"])
+                    TAc.print(LANG.render_feedback("par-unfeasible", f'# Indeed on position {i} there is no open parentheses left to be closed:', {'i': i}), "red", ["bold"])
                     TAc.print(formula_of_parentheses, "yellow", ["underline"])
                     print(" "*(i-1),end="")
-                    TAc.print(LANG.render_feedback("pointer", '^ unmatched ")"'), "yellow", ["underline"])
+                    TAc.print(LANG.render_feedback("pointer", '^ unmatched \')\''), "yellow", ["underline"])
                 return False
             num_dangling_open -= 1
 
     if num_dangling_open > 0:
         if error_feedback:
-            TAc.print(LANG.render_feedback("not-well-formed-formula", "We have a problem. The following formula in not well formed:"), "red", ["bold"])
+            TAc.print(LANG.render_feedback("par-not-well-formed-formula", '# We have a problem. The following formula in not well formed:'), "red", ["bold"])
             TAc.print(formula_of_parentheses, "yellow", ["underline"])
-            TAc.print(LANG.render_feedback("unfinished", f"Indeed {num_dangling_open} open parenthesis are left unclosed. The formula contains more '(' than ')' characters.", {'num_dangling_open': num_dangling_open}), "red", ["bold"])
+            TAc.print(LANG.render_feedback("par-unfinished", f'# Indeed {num_dangling_open} open parentheses are left unclosed. The formula contains more \'(\' than \')\' characters.', {'num_dangling_open': num_dangling_open}), "red", ["bold"])
         return False
     return True
+
+def grundy_sum(val1:int, val2:int):
+    return val1 ^ val2
 
 def init_string(length):
     gen_s=''
@@ -102,7 +105,7 @@ def find_all(string, substring):
         indexes.append(index)
         index+=1
 
-def find_move(wff):
+def find_move(wff, nim=0):
     for index in range(len(wff)):
         if wff[index]=='(':
             index_friend=find_friend_open(wff, index)
@@ -110,10 +113,11 @@ def find_move(wff):
             wff_part_first=wff[:index]
             wff_part_second=wff[index:]
             wff_final=wff_part_first+wff_part_second.replace(wff_remove, '', 1)
-            if grundy_val(wff_final)==0:
+            if grundy_val(wff_final)^nim==0:
                 return wff_final
+    return None
 
-def find_moves(wff, rmv_dup=False):
+def find_moves(wff, rmv_dup=False, nim=0):
     moves=[]
     for index in range(len(wff)):
         if wff[index]=='(':
@@ -122,11 +126,34 @@ def find_moves(wff, rmv_dup=False):
             wff_part_first=wff[:index]
             wff_part_second=wff[index:]
             wff_final=wff_part_first+wff_part_second.replace(wff_remove, '', 1)
-            if grundy_val(wff_final)==0:
+            if grundy_sum(grundy_val(wff_final), nim)==0:
                 moves.append(wff_final)
     if rmv_dup:
         moves=list(dict.fromkeys(moves))
     return moves
+
+def count_winning_moves_nim (wff, nim):
+    if wff == ')(' or wff == '':
+        par_game_grundy_value = 0
+    else:
+        par_game_grundy_value = grundy_val(wff)
+    count=0
+    for i in range(1, nim+1):
+        if grundy_sum(par_game_grundy_value, nim-i)==0:
+            count +=1
+    return count
+
+def winning_moves_nim(wff, nim):
+    if wff == ')(' or wff == '':
+        par_game_grundy_value = 0
+    else:
+        par_game_grundy_value = grundy_val(wff)
+    win_moves={(None,None)}
+    for i in range(1, nim+1):
+        if grundy_sum(par_game_grundy_value, nim-i)==0:
+            win_moves.add((wff,nim-i))
+    win_moves.discard((None,None))
+    return win_moves
 
 def find_all_moves(wff, rmv_dup=False):
     moves=[]
@@ -156,6 +183,42 @@ def computer_move(wff):
     if grundy_val(wff)==0:
         return random.choice(find_all_moves(wff, True))
     return find_move(wff)
+
+def computer_decision_move(wff, nim):
+    if wff==')(' or wff=='':
+        wff_grundy_val=0
+    else:
+        wff_grundy_val=grundy_val(wff)
+    if grundy_sum(wff_grundy_val, nim) == 0:
+        games = []
+        if wff != ')(' and wff != '':
+            games.append('par_game')
+        if nim > 0:
+            games.append('nim')
+        selected_game = random.choice(games)
+        if selected_game == 'par_game':
+            new_wff=random.choice(find_all_moves(wff, True))
+            if new_wff=='':
+                new_wff=')('
+            return new_wff,nim
+        else:
+            if wff=='':
+                wff=')('
+            return wff,nim-random.randint(1,nim)
+    if wff!=')(' and wff!='':
+        new_wff=find_move(wff,nim)
+    else:
+        new_wff=None
+    if new_wff!=None:
+        if new_wff=='':
+            new_wff=')('
+        return new_wff,nim
+    move_on_nim=0
+    while grundy_sum(wff_grundy_val, nim-move_on_nim) !=0:
+        move_on_nim+=1
+    if wff=='':
+        wff=')('
+    return wff,nim-move_on_nim
 
 def grundy_val(wff):
     if wff=='':
