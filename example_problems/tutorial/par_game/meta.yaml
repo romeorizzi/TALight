@@ -117,35 +117,6 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  play_random:
-    evaluator: [python, services/play_driver.py]
-    description: use this service if you want to play a match of the par_game against our player. The starting well formed formula is generated randomly and you can choose whether to be first or second to move. In this case the field \'formula\' is ignored. To input the void formula at the end of the match, you have to write the formula \')(\'. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf. The bot can be the same of the service play.
-    example1: [experiment in a direct use, '\n     rtal connect par_game play -aTALight_first_to_move=1 -alength=5 -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e par_game play_random -aTALight_first_to_move=1 -alength=5 -awatch=watch_winner -- bots/my_random_par_game_player.py']
-    args:
-      formula:
-        regex: ^(\(|\)){0,1000}$
-        default: "()"
-        explain: Well formed formula insert by the user.
-      TALight_first_to_move:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
-      watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
-        explain: The user can choose which informations should be displayed about any well formed formula that will face during the match.
-      random:
-        regex: ^1$
-        default: 1
-        explain: The formula of the match is random.
-      length:
-        regex: ^([0-9][0-9]{0,50})$
-        default: 2
-        explain: The user has to set the length of the random generated formula. This number must be even.
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
   play_val_measuring_game:
     evaluator: [python, services/play_val_measuring_game_driver.py]
     description: use this service if you want to play a match of the MeasuringGame(par_game) against our player. You can choose the starting well formed formula and whether to be first or second to move. The MeasuringGame(par_game) game is defined as the game sum of a par_game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a par_game position. You can choose whether to be first or second to move in the match. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
@@ -178,39 +149,6 @@ services:
         regex: ^0$
         default: 0
         explain: The user has to set this paramether only when he want a random formula (not in this case).
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-  play_val_measuring_game_random:
-    evaluator: [python, services/play_val_measuring_game_driver.py]
-    description: use this service if you want to play a match of the MeasuringGame(par_game) against our player. The starting well formed formula is generated randomly and you can choose whethe to be first or second to move. In this case the field \'formula\' is ignored. The MeasuringGame(par_game) game is defined as the game sum of a par_game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a par_game position. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect par_game play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -alength=5']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e par_game play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -alength=5 -awatch=watch_grundy_val -- bots/my_measuring_par_game_random_player.py']
-    args:
-      formula:
-        regex: ^(\(|\)){0,1000}$
-        default: "()"
-        explain: Well formed formula insert by the user.
-      nim:
-        regex: ^([0-9][0-9]{0,50})$
-        default: 0
-        explain: The height of the pile in the nim game. This will be precisely the Nim value of the par_game formula if and only if the whole compound configuration (par_game formula + one pile Nim configuration) is a lost configuration for the first to move player. 
-      TALight_first_to_move:
-        regex: ^(0|1)$
-        default: 0
-        explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
-      watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
-        explain: The user can choose which informations should be displayed about any well formed formula that will face during the match.
-      random:
-        regex: ^1$
-        default: 1
-        explain: The formula of the match is random.
-      length:
-        regex: ^([0-9][0-9]{0,50})$
-        default: 2
-        explain: The user has to set the length of the random generated formula. This number must be even.
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

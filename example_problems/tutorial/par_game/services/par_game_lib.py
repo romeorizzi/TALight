@@ -169,7 +169,7 @@ def find_all_moves(wff, rmv_dup=False):
         moves=list(dict.fromkeys(moves))
     return moves
 
-def verify_moves(wff, new_wff):
+def verify_move(wff, new_wff):
     moves=find_all_moves(wff)
     for index,move in enumerate(moves):
         if move=='':

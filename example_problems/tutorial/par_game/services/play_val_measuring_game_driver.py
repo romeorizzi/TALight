@@ -46,7 +46,6 @@ env_formula=formula
 if formula=='':
     formula=')('
 
-TAc.print(LANG.render_feedback("par-void-formula", f'# Remember that if you want to input a void formula, you must use the formula \')(\'. Our player will do the same.'), "yellow", ["bold"])
 
 def I_have_lost(env_formula):
     TAc.print(LANG.render_feedback("par-TALight_lost", f'# It is my turn to move, on conf <par_game(\'\') + nim(0)> of the MeasuringGame(Par_game) game, that is, a void formula (plus an empty Nim tower). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
@@ -135,7 +134,10 @@ while True:
         you_have_lost(env_formula)    
     watch(formula, nim, first_to_move=YOU_ARE, second_to_move=I_AM)    
     TAc.print(LANG.render_feedback("par-your-turn-play-val", f'# It is your turn to move from conf <par_game(formula=\'{formula}\') + nim(height={nim})> of the MeasuringGame(Par_game) game to a new conf of the MeasuringGame(Par_game) game <par_game(formula\') + nim(height\')>. You should move either on the par_game component or on the nim component of the game.'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("par-user-move-play-val", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current position we put you into: '), "yellow", ["bold"])
+    if pl.verify_move(formula, ")("):
+        TAc.print(LANG.render_feedback("par-user-move-play-val-if-can-terminate", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current configuration. NOTE: As for the formula component, write just the two characters string ")(" if you intend to represent the empty formula.'), "yellow", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("par-user-move-play-val", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current configuration as reported here: '), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("par-prompt_nim", f'{formula} {nim}'), "yellow", ["bold"])
     new_formula,new_nim = TALinput(str, 2, TAc=TAc)
 
@@ -148,7 +150,7 @@ while True:
     new_nim=int(new_nim)
     if new_formula!=formula and new_nim==nim:
         if formula!=')(':
-            if not pl.verify_moves(formula, new_formula):
+            if not pl.verify_move(formula, new_formula):
                 TAc.print(LANG.render_feedback("par-illegal-move", '# We have a problem. Your move is not valid. You must remove ONE well made formula.'), "red", ["bold"])
                 if new_formula!=')(':
                     pl.recognize(new_formula, TAc, LANG)
