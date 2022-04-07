@@ -29,7 +29,7 @@ def close_service_and_print_term_signal_for_bots():
 
 if ENV['random']==1:
     if ENV['length']%2!=0:
-        TAc.print(LANG.render_feedback("par-wrong-length", f'# The length is not correct. I need an even number to generate a correct formula.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-wrong-length", f'# The value for the length argument (ENV["length"]) is not correct. I need an even number to generate a well-formed formula of parenthesis af a starting configuration for our match.'), "red", ["bold"])
         exit(0)
     else:
         formula=pl.random_wff(ENV['length'])
@@ -39,7 +39,6 @@ else:
 if not pl.recognize(formula, TAc, LANG):
     exit(0)
 
-TAc.print(LANG.render_feedback("par-void-formula", f'# Remember that if you want give input a void formula, you must use the formula \')(\'.'), "yellow", ["bold"])
 
 def I_have_lost():
     TAc.print(LANG.render_feedback("par-TALight_lost", f'# It is my turn to move, on a void formula. Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
@@ -47,7 +46,7 @@ def I_have_lost():
     close_service_and_print_term_signal_for_bots()
     
 def you_have_lost():
-    TAc.print(LANG.render_feedback("par-you-have-lost", f'# It is your turn to move, on a void formula. Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("par-you-have-lost", f'# It is your turn to move, on the void formula configuration. Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("par-you-lost", f'# You lost!'), "green", ["bold"])
     close_service_and_print_term_signal_for_bots()
 
@@ -102,8 +101,12 @@ while True:
         you_have_lost()
     
     watch(formula, first_to_move=YOU_ARE, second_to_move=I_AM)    
-    TAc.print(LANG.render_feedback("par-your-turn", f'# It is your turn to move from formula \'{formula}\' to a new formula.'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("par-user-move", f'# Please, insert the new formula just underneath the current formula we put you into: '), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("par-your-turn", f'# It is your turn to move from configuration/formula \'{formula}\' to a new configuration of the game. The new configuration must be a well-formed subformula of the current formula.'), "yellow", ["bold"])
+    if pl.verify_moves(formula, ")("):
+        TAc.print(LANG.render_feedback("par-user-move-if-can-terminate", f'# Please, insert the new formula you intend to move to just underneath the current formula. NOTE: Write just the two characters string ")(" if you intend to move to the empty formula.'), "yellow", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("par-user-move", f'# Please, insert the new formula just underneath the current formula as reported here: '), "yellow", ["bold"])
+
     TAc.print(LANG.render_feedback("par-prompt", f'{formula}'), "yellow", ["bold"])
     new_formula, = TALinput(str, 1, TAc=TAc)
     
