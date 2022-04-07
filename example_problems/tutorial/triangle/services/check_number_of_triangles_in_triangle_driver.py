@@ -1,22 +1,28 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
 import random
-from TALinputs import TALinput
+
 from multilanguage import Env, Lang, TALcolors
+from TALinputs import TALinput
+from TALfiles import TALfilesHelper
 
 import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('big_n',int),
-    ('small_n',int),
+    ('source',str),
+    ('instance_id',int),
+    ('instance_format',str),
+    ('seed',str),
+    ('big_seed',str),
+    ('n',int),
+    ('m',int),
     ('MIN_VAL',int),
     ('MAX_VAL',int),
-    ('display_big',bool),
-    ('display_small',bool),
+    ('MIN_VAL_BIG',int),
+    ('MAX_VAL_BIG',int),
+    ('display',bool),
     ('display_sol',bool),
-    ('how_to_input_the_big_triangle',str),
-    ('how_to_input_the_small_triangle',str),
     ('silent',bool),
 ]
 
@@ -24,6 +30,7 @@ args_list = [
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
@@ -34,55 +41,55 @@ if ENV['MIN_VAL'] > ENV['MAX_VAL']:
     exit(0)
     
 # CHECK SIZES
-if ENV["big_n"] < ENV["small_n"]:
-    TAc.print(LANG.render_feedback("wrong-triangles-sizes", f'Error: the size of the bigger triangle ({ENV["big_n"]}) is smaller than the size of the smaller triangle ({ENV["small_n"]}).'), "red", ["bold"])
+if ENV["m"] < ENV["n"]:
+    TAc.print(LANG.render_feedback("wrong-triangles-sizes", f'Error: the size of the bigger triangle ({ENV["n"]}) is smaller than the size of the smaller triangle ({ENV["n"]}).'), "red", ["bold"])
     exit(0)
     
-# BIG TRIANGLE GENERATION
-if ENV["how_to_input_the_big_triangle"] == "my_own_triangle":
-    big_triangle = []
-    TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["big_n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
-    for i in range(1,ENV["big_n"]+1):
-        TAc.print(LANG.render_feedback("insert-line", f'Insert line i={i}, that is, {i} integers separated by spaces:'), "yellow")
-        line = TALinput(int, i, token_recognizer=lambda val,TAc,LANG: tl.check_val_range(val,ENV["MIN_VAL"],ENV["MAX_VAL"],TAc,LANG), TAc=TAc, LANG=LANG)
-        big_triangle.append(line)
-    TAc.OK()
-    TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
-elif ENV["how_to_input_the_big_triangle"] == "random":
-    seed = random.randint(100000,999999)
-    big_triangle = tl.random_triangle(ENV["big_n"], ENV["MIN_VAL"], ENV["MAX_VAL"], seed)
-else:
-    big_triangle = tl.random_triangle(ENV["big_n"],ENV["MIN_VAL"],ENV["MAX_VAL"],int(ENV["how_to_input_the_big_triangle"]))
-       
-# SMALL TRIANGLE GENERATION
-if ENV["how_to_input_the_small_triangle"] == "my_own_triangle":
-    small_triangle = []
-    TAc.print(LANG.render_feedback("insert-triangle", f'Please, insert your triangle, line by line. For every i in [1,{ENV["small_n"]}], line i comprises i integers separated by spaces.'), "yellow", ["bold"])
-    for i in range(1,ENV["small_n"]+1):
-        TAc.print(LANG.render_feedback("insert-line", f'Insert line i={i}, that is, {i} integers separated by spaces:'), "yellow")
-        line = TALinput(int, i, token_recognizer=lambda val,TAc,LANG: tl.check_val_range(val,ENV["MIN_VAL"],ENV["MAX_VAL"],TAc,LANG), TAc=TAc, LANG=LANG)
-        small_triangle.append(line)
-    TAc.OK()
-    TAc.print(LANG.render_feedback("triangle-insertion-completed", f'Insertion complete. Your triangle has been successfully inserted.'), "green")
-elif ENV["how_to_input_the_small_triangle"] == "random":
-    seed = random.randint(100000,999999)
-    small_triangle = tl.random_triangle(ENV["small_n"], ENV["MIN_VAL"], ENV["MAX_VAL"], seed)
-else:
-    small_triangle = tl.random_triangle(ENV["small_n"],ENV["MIN_VAL"],ENV["MAX_VAL"],int(ENV["how_to_input_the_small_triangle"]))
+if TALf.exists_input_file('instance'):
+    instance = tl.get_instance_from_str(TALf.input_file_as_str('instance'), instance_format_name=ENV["instance_format"])
+    TAc.print(LANG.render_feedback("successful-load", 'The file you have associated to `instance` filehandler has been successfully loaded.'), "yellow", ["bold"])
+elif ENV["source"] == 'terminal':
+    instance = {}
+    TAc.print(LANG.render_feedback("waiting", f'#? waiting for the first string describing the first (small) triangle.\nFormat: the first line contains all the parameters to create the small triangle, each character must be separated by a space.\nE.G. n MIN_VAL MAX_VAL seed\nAny line beggining with the "#" character is ignored.\n'), "yellow")
+    TAc.print(LANG.render_feedback("first-triangle", f'Enter the string describing the first (small) triangle:'), "yellow", ["bold"]) 
+    plain_first = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)  
+    path = tl.random_path(int(plain_first[0]),int(plain_first[0]))
+    plain_first.append(path)
+    TAc.print(LANG.render_feedback("second-triangle", f'Enter the string describing the second (big) triangle:'), "yellow", ["bold"]) 
+    plain_second = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
+    if len(plain_first) != 5:
+        TAc.print(LANG.render_feedback("wrong-number-of-parameters-1", f'ERROR! Wrong number of parameters for the small triangle. Expected 4, received {len(plain_first)-1}'), "red", ["bold"]) 
+        exit(0)
+    if len(plain_second) != 4:
+        TAc.print(LANG.render_feedback("wrong-number-of-parameters-2", f'ERROR! Wrong number of parameters for the big triangle. Expected 4, received {len(plain_second)}'), "red", ["bold"]) 
+        exit(0)
+    instance = tl.get_instance_from_terminal(plain_first,plain_second)
+        
+elif ENV["source"] != 'catalogue':
+    # Get random instance
+    if ENV["source"] == 'randgen_1':
+        instance = tl.instances_generator(1, 1, ENV['MIN_VAL'], ENV['MAX_VAL'], ENV['n'], ENV['n'], ENV['m'], ENV['m'], ENV['MIN_VAL_BIG'], ENV['MAX_VAL_BIG'], ENV['seed'], ENV['big_seed'],tl.random_path(ENV['n'],ENV['n']))[0]
+        TAc.print(LANG.render_feedback("instance-generation-successful", f'The instance has been successfully generated by the pseudo-random generator {ENV["source"]} called with arguments:\nn={instance["n"]},\nm={instance["m"]},\nMIN_VAL={instance["MIN_VAL"]},\nMAX_VAL={instance["MAX_VAL"]},\nMIN_VAL_BIG={instance["MIN_VAL_BIG"]},\nMAX_VAL_BIG={instance["MAX_VAL_BIG"]},\nseed={instance["seed"]},\nbig_seed={instance["big_seed"]},\npath={instance["path"]}'), "yellow", ["bold"])
+    else:
+        assert False
+else: # take instance from catalogue
+    instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=tl.format_name_to_file_extension(ENV["instance_format"],'instance'))
+    instance = tl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
+    TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
+    
+big = tl.cast_to_array(instance['big_triangle'])
+small = tl.cast_to_array(instance['triangle'])
+L = len(instance['big_triangle'])
+l = len(instance['triangle'])
 
-big = tl.cast_to_array(big_triangle)
-small = tl.cast_to_array(small_triangle)
-L = len(big_triangle)
-l = len(small_triangle)
-
-right_answer, indexes = tl.num_of_occurencies(small,big,l,L)
+right_answer, indexes = tl.num_of_occurrences(small,big,l,L)
             
-if ENV["display_big"]:
-    TAc.print(LANG.render_feedback("display-big",f'The big triangle is displayed here:\n'), "green")
-    tl.print_triangle(big_triangle)
-if ENV["display_small"]:    
+if ENV["display"]:
     TAc.print(LANG.render_feedback("display-small",f'\nThe small triangle is displayed here:\n'), "green")
-    tl.print_triangle(small_triangle)
+    tl.print_triangle(instance['triangle'],ENV['instance_format'])
+    TAc.print(LANG.render_feedback("display-big",f'The big triangle is displayed here:\n'), "green")
+    tl.print_triangle(instance['big_triangle'],ENV['instance_format'])
+    
     
 TAc.print(LANG.render_feedback("fit-question", f'\nGiven these triangles, how many times does the smaller one fit inside the bigger one?\nYour answer shall be a positive integer'), "green")
 answer = TALinput(int, token_recognizer=lambda val,TAc,LANG: True, TAc=TAc, LANG=LANG)[0]
@@ -91,7 +98,7 @@ if answer == right_answer:
         TAc.OK()
         if ENV["display_sol"]:
             TAc.print(LANG.render_feedback("right-answer-display", f'We agree, the answer is {right_answer}, as you can see below.\n'), "green", ["bold"])
-            tl.print_triangle_occurencies(big_triangle,sum(indexes,[]))
+            tl.print_triangle_occurencies(instance['big_triangle'],sum(indexes,[]),ENV['instance_format'])
         else:
             TAc.print(LANG.render_feedback("right-answer", f'We agree, the answer is {right_answer}.\n'), "green", ["bold"])
 else:

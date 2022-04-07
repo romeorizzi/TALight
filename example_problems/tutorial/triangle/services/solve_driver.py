@@ -5,8 +5,6 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from TALfiles import TALfilesHelper
 
-from math_modeling import ModellingProblemHelper
-
 import triangle_lib as tl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -39,48 +37,32 @@ if TALf.exists_input_file('instance'):
     TAc.print(LANG.render_feedback("successful-load", 'The file you have associated to `instance` filehandler has been successfully loaded.'), "yellow", ["bold"])
 elif ENV["source"] == 'terminal':
     instance = {}
-    if ENV['instance_format'][:6] == "single":
-        TAc.print(LANG.render_feedback("waiting", f'#? waiting for the first string describing the triangle.\nFormat: the first line contains all the parameters to create the triangle, each character must be separated by a space.\nE.G. n MIN_VAL MAX_VAL seed\nAny line beggining with the "#" character is ignored.\n'), "yellow")
-        TAc.print(LANG.render_feedback("first-triangle", f'Enter the string describing the triangle:'), "yellow", ["bold"]) 
-        plain_first = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
-        TAc.print(LANG.render_feedback("enter-path", f'Enter the string encoding the path. E.G. LRRLR :'), "yellow", ["bold"]) 
-        path = TALinput(str, line_recognizer=lambda val,TAc, LANG: tl.check_path(val, TAc=TAc,LANG=LANG), TAc=TAc, LANG=LANG) 
-        plain_second = []
-    else:
-        TAc.print(LANG.render_feedback("waiting", f'#? waiting for the first string describing the first (small) triangle.\nFormat: the first line contains all the parameters to create the small triangle, each character must be separated by a space.\nE.G. n MIN_VAL MAX_VAL seed\nAny line beggining with the "#" character is ignored.\n'), "yellow")
-        TAc.print(LANG.render_feedback("first-triangle", f'Enter the string describing the first (small) triangle:'), "yellow", ["bold"]) 
-        plain_first = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)  # we don't need the path
-        TAc.print(LANG.render_feedback("enter-path", f'Enter the string encoding the path. E.G. LRRLR :'), "yellow", ["bold"]) 
-        path = TALinput(str, line_recognizer=lambda val,TAc, LANG: tl.check_path(val, TAc=TAc,LANG=LANG), TAc=TAc, LANG=LANG) 
-        TAc.print(LANG.render_feedback("second-triangle", f'Enter the string describing the second (big) triangle:'), "yellow", ["bold"]) 
-        plain_second = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
-        if len(plain_second) != 4:
-            TAc.print(LANG.render_feedback("wrong-number-of-parameters-2", f'ERROR! Wrong number of parameters for the big triangle. Expected 4, received {len(plain_second)}'), "red", ["bold"]) 
-            exit(0)
-    if len(plain_first) != 4:
-        TAc.print(LANG.render_feedback("wrong-number-of-parameters-1", f'ERROR! Wrong number of parameters for the small triangle. Expected 4, received {len(plain_first)}'), "red", ["bold"]) 
+    TAc.print(LANG.render_feedback("waiting", f'#? waiting for the first string describing the first (small) triangle.\nFormat: the first line contains all the parameters to create the small triangle, each character must be separated by a space.\nE.G. n MIN_VAL MAX_VAL seed\nAny line beggining with the "#" character is ignored.\n'), "yellow")
+    TAc.print(LANG.render_feedback("first-triangle", f'Enter the string describing the first (small) triangle:'), "yellow", ["bold"]) 
+    plain_first = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)  
+    TAc.print(LANG.render_feedback("enter-path", f'Enter the string encoding the path. E.G. LRRLR :'), "yellow", ["bold"]) 
+    path = TALinput(str, line_recognizer=lambda val,TAc, LANG: tl.check_path(val, TAc=TAc,LANG=LANG), TAc=TAc, LANG=LANG)[0]
+    plain_first.append(path)
+    TAc.print(LANG.render_feedback("second-triangle", f'Enter the string describing the second (big) triangle:'), "yellow", ["bold"]) 
+    plain_second = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
+    if len(plain_first) != 5:
+        TAc.print(LANG.render_feedback("wrong-number-of-parameters-1", f'ERROR! Wrong number of parameters for the small triangle. Expected 4, received {len(plain_first)-1}'), "red", ["bold"]) 
+        exit(0)
+    if len(plain_second) != 4:
+        TAc.print(LANG.render_feedback("wrong-number-of-parameters-2", f'ERROR! Wrong number of parameters for the big triangle. Expected 4, received {len(plain_second)}'), "red", ["bold"]) 
         exit(0)
     instance = tl.get_instance_from_terminal(plain_first,plain_second)
         
 elif ENV["source"] != 'catalogue':
     # Get random instance
     if ENV["source"] == 'randgen_1':
-        if ENV['instance_format'][:6] == "single":
-            usage = "single"
-        else:
-            usage = "double"
-        instance = tl.instances_generator(1, 1, ENV['MIN_VAL'], ENV['MAX_VAL'], ENV['n'], ENV['n'], ENV['m'], ENV['m'], ENV['MIN_VAL_BIG'], ENV['MAX_VAL_BIG'], ENV['seed'], ENV['big_seed'],ENV['path'],usage)[0]
-        if ENV['instance_format'][:6] == "single":
-            TAc.print(LANG.render_feedback("instance-generation-successful", f'The instance has been successfully generated by the pseudo-random generator {ENV["source"]} called with arguments:\nn={instance["n"]},\nMIN_VAL={instance["MIN_VAL"]},\nMAX_VAL={instance["MAX_VAL"]},\nseed={instance["seed"]},\npath={instance["path"]}'), "yellow", ["bold"])
-        else:
-            TAc.print(LANG.render_feedback("instance-generation-successful", f'The instance has been successfully generated by the pseudo-random generator {ENV["source"]} called with arguments:\nn={instance["n"]},\nm={instance["m"]},\nMIN_VAL={instance["MIN_VAL"]},\nMAX_VAL={instance["MAX_VAL"]},\nMIN_VAL_BIG={instance["MIN_VAL_BIG"]},\nMAX_VAL_BIG={instance["MAX_VAL_BIG"]},\nseed={instance["seed"]},\nbig_seed={instance["big_seed"]},\npath={instance["path"]}'), "yellow", ["bold"])
+        instance = tl.instances_generator(1, 1, ENV['MIN_VAL'], ENV['MAX_VAL'], ENV['n'], ENV['n'], ENV['m'], ENV['m'], ENV['MIN_VAL_BIG'], ENV['MAX_VAL_BIG'], ENV['seed'], ENV['big_seed'],ENV['path'])[0]
+        TAc.print(LANG.render_feedback("instance-generation-successful", f'The instance has been successfully generated by the pseudo-random generator {ENV["source"]} called with arguments:\nn={instance["n"]},\nm={instance["m"]},\nMIN_VAL={instance["MIN_VAL"]},\nMAX_VAL={instance["MAX_VAL"]},\nMIN_VAL_BIG={instance["MIN_VAL_BIG"]},\nMAX_VAL_BIG={instance["MAX_VAL_BIG"]},\nseed={instance["seed"]},\nbig_seed={instance["big_seed"]},\npath={instance["path"]}'), "yellow", ["bold"])
     else:
         assert False
 else: # take instance from catalogue
     instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=tl.format_name_to_file_extension(ENV["instance_format"],'instance'))
     instance = tl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
-    if 'm' not in instance.keys():
-        TAc.print(LANG.render_feedback("warning-single-instance-from-catalogue", f'WARNING! The instance with instance_id={ENV["instance_id"]} is a single instance, so errors may occur in case you call the "number_of_triangles_in_triangle" service applied to this instance.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
     
 
