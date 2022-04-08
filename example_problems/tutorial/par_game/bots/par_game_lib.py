@@ -95,7 +95,7 @@ def find_friend_close(wff, base=0):
         elif wff[index]=='(' and level<0:
             level+=1
 
-def find_all(string, substring):
+def find_all_indexes(string, substring):
     index=0
     indexes=[]
     while True:
@@ -105,7 +105,7 @@ def find_all(string, substring):
         indexes.append(index)
         index+=1
 
-def find_move(wff, nim=0):
+def find_move_par_game(wff, nim=0):
     for index in range(len(wff)):
         if wff[index]=='(':
             index_friend=find_friend_open(wff, index)
@@ -113,11 +113,11 @@ def find_move(wff, nim=0):
             wff_part_first=wff[:index]
             wff_part_second=wff[index:]
             wff_final=wff_part_first+wff_part_second.replace(wff_remove, '', 1)
-            if grundy_val(wff_final)^nim==0:
+            if grundy_sum(grundy_val(wff_final),nim)==0:
                 return wff_final
     return None
 
-def find_moves(wff, rmv_dup=False, nim=0):
+def find_moves_par_game(wff, rmv_dup=False, nim=0):
     moves=[]
     for index in range(len(wff)):
         if wff[index]=='(':
@@ -132,7 +132,7 @@ def find_moves(wff, rmv_dup=False, nim=0):
         moves=list(dict.fromkeys(moves))
     return moves
 
-def count_winning_moves_nim (wff, nim):
+def count_winning_moves_nim(wff, nim):
     if wff == ')(' or wff == '':
         par_game_grundy_value = 0
     else:
@@ -155,7 +155,7 @@ def winning_moves_nim(wff, nim):
     win_moves.discard((None,None))
     return win_moves
 
-def find_all_moves(wff, rmv_dup=False):
+def find_all_moves_par_game(wff, rmv_dup=False):
     moves=[]
     for index in range(len(wff)):
         if wff[index]=='(':
@@ -169,8 +169,8 @@ def find_all_moves(wff, rmv_dup=False):
         moves=list(dict.fromkeys(moves))
     return moves
 
-def verify_moves(wff, new_wff):
-    moves=find_all_moves(wff)
+def verify_move_par_game(wff, new_wff):
+    moves=find_all_moves_par_game(wff)
     for index,move in enumerate(moves):
         if move=='':
             moves[index]=')('
@@ -181,8 +181,8 @@ def verify_moves(wff, new_wff):
 
 def computer_move(wff):
     if grundy_val(wff)==0:
-        return random.choice(find_all_moves(wff, True))
-    return find_move(wff)
+        return random.choice(find_all_moves_par_game(wff, True))
+    return find_move_par_game(wff)
 
 def computer_decision_move(wff, nim):
     if wff==')(' or wff=='':
@@ -197,7 +197,7 @@ def computer_decision_move(wff, nim):
             games.append('nim')
         selected_game = random.choice(games)
         if selected_game == 'par_game':
-            new_wff=random.choice(find_all_moves(wff, True))
+            new_wff=random.choice(find_all_moves_par_game(wff, True))
             if new_wff=='':
                 new_wff=')('
             return new_wff,nim
@@ -206,7 +206,7 @@ def computer_decision_move(wff, nim):
                 wff=')('
             return wff,nim-random.randint(1,nim)
     if wff!=')(' and wff!='':
-        new_wff=find_move(wff,nim)
+        new_wff=find_move_par_game(wff,nim)
     else:
         new_wff=None
     if new_wff!=None:
@@ -248,11 +248,7 @@ if __name__ == "__main__":
     print('Test: grundy_val(wff)')
     wffs = ['()','(())','()(())','((()))','()((()))','()()','(()()(()))','()()()(())','(()()()()(()))','(()(())())', '((())()(()))','(())(()())','(()(())((())))','(()(())((())))(()(()))','(())()()(())(()())','(((((((((())))))))))','(((((())))))()','((((((())))))())','(())()((((((())))))())','()()(())()((((((())))))())()','(())()()(())()()(())','(())()()((())()()(())())','((())()()((())()()(())()))','(((((())))))(())','((((((())))))(()))']
     ref_values = [1,2,3,3,2,0,3,3,3,3,2,3,1,5,1,10,7,8,11,10,2,0,1,4,5]
-    index=0
-    for wff in wffs:
-        #print(wff)
-        #print(grundy_val(wff))
+    for index,wff in enumerate(wffs):
         assert recognize(wff,None,None,False)
         assert grundy_val(wff) == ref_values[index]
-        index+=1
     print('==> OK')
