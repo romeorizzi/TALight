@@ -37,13 +37,13 @@ elif(info_requested=="grundy_val"):
 
 elif(info_requested=="gimme_a_winning_move"):
     if (grundy_val>0):
-        TAc.print(LANG.render_feedback("one-winning-move-form", f'One of the possible winning moves for your formula \'{ENV["formula"]}\' is \'{pl.find_move(ENV["formula"])}\''), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("one-winning-move-form", f'One of the possible winning moves for your formula \'{ENV["formula"]}\' is \'{pl.find_move_par_game(ENV["formula"])}\''), "yellow", ["bold"])
     else:
         TAc.print(LANG.render_feedback("no-winning-move-form", f'Your formula \'{ENV["formula"]}\' is a lost one. As such, I can not provide you with a winning move in this situation since no such move exists.'), "yellow", ["bold"])
         
 elif(info_requested=="gimme_all_winning_moves"):
     if (grundy_val>0):
-        TAc.print(LANG.render_feedback("all-winning-moves-form", f'The possible winning moves for your formula \'{ENV["formula"]}\' are {pl.find_moves(ENV["formula"], True)}'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("all-winning-moves-form", f'The possible winning moves for your formula \'{ENV["formula"]}\' are {pl.find_moves_par_game(ENV["formula"], True)}'), "yellow", ["bold"])
     else:
         TAc.print(LANG.render_feedback("no-winning-move-form", f'Your formula \'{ENV["formula"]}\' is a lost one. As such, I can not provide you with a winning move in this situation since no such move exists.'), "yellow", ["bold"])
 

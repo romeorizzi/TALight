@@ -85,7 +85,7 @@ def watch(formula,nim, first_to_move, second_to_move):
             TAc.print(LANG.render_feedback("par-watch-winner-who-moves-wins", f'{first_to_move} ahead, since <par_game(\'{formula}\') + nim({nim})> is a who-moves-wins configuration.'), "blue")
     elif ENV['watch'] == 'num_winning_moves' :
         if formula != '' and formula != ')(':
-            win_moves = pl.find_moves(formula, False, nim)
+            win_moves = pl.find_moves_par_game(formula, False, nim)
         else:
             win_moves = []
         count_win_moves=pl.count_winning_moves_nim(formula, nim)
@@ -95,7 +95,7 @@ def watch(formula,nim, first_to_move, second_to_move):
             TAc.print(LANG.render_feedback("par-num-winning-moves-0", f'the current configuration <par_game(\'{formula}\') + nim({nim})> admits no winning move'), "blue")
     elif ENV['watch'] == 'list_winning_moves':
         if formula != '' and formula != ')(':
-            win_moves = pl.find_moves(formula, True, nim)
+            win_moves = pl.find_moves_par_game(formula, True, nim)
         else:
             win_moves = []
         win_moves_with_nim={(None,None)}
@@ -134,10 +134,13 @@ while True:
         you_have_lost(env_formula)    
     watch(formula, nim, first_to_move=YOU_ARE, second_to_move=I_AM)    
     TAc.print(LANG.render_feedback("par-your-turn-play-val", f'# It is your turn to move from conf <par_game(formula=\'{formula}\') + nim(height={nim})> of the MeasuringGame(Par_game) game to a new conf of the MeasuringGame(Par_game) game <par_game(formula\') + nim(height\')>. You should move either on the par_game component or on the nim component of the game.'), "yellow", ["bold"])
-    if pl.verify_move(formula, ")("):
-        TAc.print(LANG.render_feedback("par-user-move-play-val-if-can-terminate", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current configuration. NOTE: As for the formula component, write just the two characters string ")(" if you intend to represent the empty formula.'), "yellow", ["bold"])
+    if formula!=')(':
+        if pl.verify_move_par_game(formula, ")("):
+            TAc.print(LANG.render_feedback("par-user-move-play-val-if-can-terminate", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current configuration. NOTE: As for the formula component, write just the two characters string ")(" if you intend to represent the empty formula.'), "yellow", ["bold"])
+        else:
+            TAc.print(LANG.render_feedback("par-user-move-play-val", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current configuration as reported here: '), "yellow", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("par-user-move-play-val", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current configuration as reported here: '), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("par-user-move-play-val-if-can-terminate", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current configuration. NOTE: As for the formula component, write just the two characters string ")(" if you intend to represent the empty formula.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("par-prompt_nim", f'{formula} {nim}'), "yellow", ["bold"])
     new_formula,new_nim = TALinput(str, 2, TAc=TAc)
 
@@ -150,7 +153,7 @@ while True:
     new_nim=int(new_nim)
     if new_formula!=formula and new_nim==nim:
         if formula!=')(':
-            if not pl.verify_move(formula, new_formula):
+            if not pl.verify_move_par_game(formula, new_formula):
                 TAc.print(LANG.render_feedback("par-illegal-move", '# We have a problem. Your move is not valid. You must remove ONE well made formula.'), "red", ["bold"])
                 if new_formula!=')(':
                     pl.recognize(new_formula, TAc, LANG)
@@ -162,7 +165,7 @@ while True:
         TAc.print(LANG.render_feedback("par-double-move", '# We have a problem. You can\'t move on both par_game and nim.'), "red", ["bold"])
         exit(0)
     elif new_formula==formula and new_nim==nim:
-        TAc.print(LANG.render_feedback("par-dull-move", '# We have a problem. You can\'t pass. You must move on ONE of the two games.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("par-dull-move", '# We have a problem. You can\'t pass. You must move at least on ONE of the two games.'), "red", ["bold"])
         exit(0)
     elif new_formula==formula and new_nim>nim:
         TAc.print(LANG.render_feedback("par-grow-nim-move", '# We have a problem. A move can\'t increase the height of the nim tower.'), "red", ["bold"])
