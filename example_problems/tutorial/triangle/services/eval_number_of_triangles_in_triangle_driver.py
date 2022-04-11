@@ -34,9 +34,8 @@ MIN_M = 5
 MAX_M = 10
 NUM_INSTANCES = 5
 scaling_factor = 1.5
-usage = "double"
 
-instances['correct'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL,usage=usage)
+instances['correct'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
     
 # INSTANCES FOR GOAL = 2^n o n^2      
   
@@ -51,7 +50,7 @@ if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2'
     if ENV["code_lang"] == "compiled":
         MAX_M = 18
         scaling_factor = 1.2
-    instances['time_at_most_2_exp_n'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL,usage=usage)
+    instances['time_at_most_2_exp_n'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
 
 # INSTANCES FOR GOAL = n^2
 
@@ -67,7 +66,7 @@ if ENV["goal"] == 'time_at_most_n_exp_2':
     if ENV["code_lang"] == "compiled":
         MIN_BIG_N = 30
         MAX_BIG_N = 100
-    instances['time_at_most_n_exp_2'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL,usage=usage)
+    instances['time_at_most_n_exp_2'] = tl.instances_generator(NUM_INSTANCES, scaling_factor, MIN_VAL, MAX_VAL, MIN_N, MAX_N, MIN_M, MAX_M, MIN_VAL, MAX_VAL)
 
 MAX_TIME = 2
 
@@ -94,9 +93,9 @@ def test(instance):
     instance['measured_time'] = end-start
     right_answer, indexes = tl.num_of_occurrences(small,big,l,L)
     if answer == right_answer:
-        instance['answer_is_correct'] = True
+        instance['answer_correct'] = True
     else:
-        instance['answer_is_correct'] = False
+        instance['answer_correct'] = False
         
 # MAIN: TEST ALL TESTCASES: 
 

@@ -13,6 +13,7 @@ args_list = [
     ('source',str),
     ('instance_id',int),
     ('instance_format',str),
+    ('n',int),
     ('silent',bool),
     ('display',bool),
     ('lang',str),
@@ -32,10 +33,9 @@ big_seed = random.randint(100000,999999)
     
 if ENV['source'] != 'catalogue':
     # Get random instance
-    n = random.randint(1,20)
     m = random.randint(1,20)
-    path = tl.random_path(n,n)
-    instance = tl.instances_generator(1, 1, 0, 99, n, n, m, m, 0, 99, seed, big_seed, path)[0]
+    path = tl.random_path(ENV['n'],ENV['n'])
+    instance = tl.instances_generator(1, 1, 0, 99, ENV['n'], ENV['n'], m, m, 0, 99, seed, big_seed, path)[0]
     instance_str = tl.instance_to_str(instance, format_name=ENV['instance_format'])
     output_filename = f"random_instance_{ENV['seed']}_{big_seed}.{ENV['instance_format']}.txt" 
 else: # Get instance from catalogue

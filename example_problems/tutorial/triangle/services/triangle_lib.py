@@ -537,9 +537,9 @@ def get_instance_from_terminal(p1,p2):
 def print_goal_summary(goal,testcases,num_testcases_passed,num_testcases_correct_ans,num_testcases_wrong_ans,out_of_time, TAc,LANG):
     TAc.print(LANG.render_feedback("summary", f'\n# SUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'), "white", ["bold"])
     for t,i in zip(testcases,range(1,1+len(testcases))):
-        if t['answer_is_correct'] == True:
+        if t['answer_correct'] == True:
             TAc.print(LANG.render_feedback("right-ans", f'# TestCase {i}: Correct answer! Took time {t["measured_time"]} on your machine.\n'), "green")
-        elif t['answer_is_correct'] == False:
+        elif t['answer_correct'] == False:
             if 'path' in t.keys():
                 TAc.print(LANG.render_feedback("wrong-ans-with-path-in-instance", f'# NO! You gave the wrong solution for the instance with this parameters:\n#n = {t["n"]}, MIN_VAL = {t["MIN_VAL"]}, MAX_VAL = {t["MAX_VAL"]}, seed = {t["seed"]}, path = {t["path"]}.\n'), "yellow")
             elif 'MIN_SMALL_N' in t.keys():
@@ -574,9 +574,9 @@ def print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG):
         num_instances_correct_ans[goal] = 0
         num_instances_wrong_ans[goal] = 0
         for instance in instances[goal]:
-            if instance['answer_is_correct'] == False:
+            if instance['answer_correct'] == False:
                 num_instances_wrong_ans[goal] += 1
-            elif instance['answer_is_correct'] == True:
+            elif instance['answer_correct'] == True:
                 num_instances_correct_ans[goal] += 1
                 if instance['measured_time'] <= MAX_TIME:
                     num_instances_passed[goal] += 1

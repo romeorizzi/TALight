@@ -79,9 +79,9 @@ def test(instance):
     end = monotonic()
     instance['measured_time'] = end-start
     if answer == tl.calculate_path(triangle,path):
-        instance['answer_is_correct'] = True
+        instance['answer_correct'] = True
     else:
-        instance['answer_is_correct'] = False
+        instance['answer_correct'] = False
     
 
 # MAIN: TEST ALL TESTCASES: 

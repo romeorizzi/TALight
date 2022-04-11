@@ -50,7 +50,6 @@ if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2'
 
 if ENV["goal"] == 'time_at_most_n_exp_2':
     goals.append('time_at_most_n_exp_2')
-    
     MIN_N = 16  # could still be 2^n
     if ENV["code_lang"] == "compiled":
         MIN_N = 19  # could still be 2^n
@@ -89,9 +88,9 @@ def test(instance):
     end = monotonic()
     instance['measured_time'] = end-start
     if right_length(triangle,answer) and is_feasible_solution(answer):
-        instance['answer_is_correct'] = True
+        instance['answer_correct'] = True
     else:
-        instance['answer_is_correct'] = False
+        instance['answer_correct'] = False
 
 # MAIN: TEST ALL TESTCASES: 
 

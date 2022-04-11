@@ -65,11 +65,12 @@ services:
         default: random_path
         explain: "a solution for a given triangle instance is a path from the top vertex of the triangle to an element of its last (bottom) row. The path always has two options when moving from one row to the next: either go left (L) or right (R). Hence feasible paths are encoded as sequence in {{L,R}}^(n-1))."
       instance_format:
-        regex: ^(pyramid|in_lines)$
+        regex: ^(pyramid|in_lines|triangle_dat)$
         default: in_lines
         explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
         explain1: '[pyramid] contains the representation of the triangles in a pyramidal shape'
         explain2: '[in_lines] contains the representation of the triangles line by line.'
+        explain3: '[triangle_dat] contains the triangle in dat format'
       silent:
         regex: ^(0|1)$
         default: 0

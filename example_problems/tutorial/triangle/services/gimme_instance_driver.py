@@ -5,7 +5,6 @@ import os.path
 from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
-from math_modeling import ModellingProblemHelper
 
 import triangle_lib as tl
 
@@ -28,8 +27,11 @@ args_list = [
     ('download',bool),
 ]
 
-ENV = Env(args_list)
-TAc = TALcolors(ENV)
+ENV =Env(args_list)
+TAc =TALcolors(ENV)
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
+TALf = TALfilesHelper(TAc, ENV)
+
 if ENV['silent']:
     LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
 else:
@@ -58,9 +60,7 @@ else:
         TAc.print(instance_str, "white", ["bold"])
         if ENV['source'] != 'catalogue': # display random instance
             output = ""
-            output += f'\nThe parameters encoding this instance are:\nn: {ENV["n"]}\nMIN_VAL: {ENV["MIN_VAL"]}\nMAX_VAL: {ENV["MAX_VAL"]}\nseed: {ENV["seed"]}\npath: {instance["path"]}'
-            if use == "double": # adding instance descriptors if the instance is double
-                output += f'\nm: {ENV["m"]}\nMIN_VAL_BIG: {ENV["MIN_VAL_BIG"]}\nMAX_VAL_BIG: {ENV["MAX_VAL_BIG"]}\nbig_seed: {instance["big_seed"]}'
+            output += f'\nThe parameters encoding this instance are:\nn: {ENV["n"]}\nMIN_VAL: {ENV["MIN_VAL"]}\nMAX_VAL: {ENV["MAX_VAL"]}\nseed: {ENV["seed"]}\nm: {ENV["m"]}\nMIN_VAL_BIG: {ENV["MIN_VAL_BIG"]}\nMAX_VAL_BIG: {ENV["MAX_VAL_BIG"]}\nbig_seed: {instance["big_seed"]}\npath: {instance["path"]}'            
             TAc.print(LANG.render_feedback("output-instance", output), "yellow", ["bold"])
 if ENV['download']:
     TALf.str2output_file(instance_str,output_filename)

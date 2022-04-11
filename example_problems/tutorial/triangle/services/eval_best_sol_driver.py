@@ -84,9 +84,9 @@ def test(instance):
         instance['measured_time'] = end1-start1
         best_reward,best_path = tl.best_reward_and_path(triangle)
         if answer_reward == best_reward and answer_path == best_path:
-            instance['answer_is_correct'] = True
+            instance['answer_correct'] = True
         else:
-            instance['answer_is_correct'] = False
+            instance['answer_correct'] = False
     else:
         TAc.print(LANG.render_feedback("best-reward-question", f'# Which is the best collectable reward in this triangle?'), "white")
         start = monotonic()
@@ -95,9 +95,9 @@ def test(instance):
         instance['measured_time'] = end-start
         best_reward,_ = tl.best_reward_and_path(triangle)
         if answer_reward == best_reward:
-            instance['answer_is_correct'] = True
+            instance['answer_correct'] = True
         else:
-            instance['answer_is_correct'] = False
+            instance['answer_correct'] = False
 
 # MAIN: TEST ALL TESTCASES: 
 
