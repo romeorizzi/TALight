@@ -50,7 +50,7 @@ elif ENV["source"] != 'catalogue':
 else: # take instance from catalogue
     # Initialize ModellingProblemHelper
     mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
-    instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=al.format_name_to_file_extension(ENV['instance_format'], 'instance'))
+    instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=al.format_name_to_file_extension(ENV["instance_format"],'instance'))
     instance = al.get_instance_from_str(instance_str, instance_format=ENV["instance_format"])
     TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
     output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['sol_format']}.txt"

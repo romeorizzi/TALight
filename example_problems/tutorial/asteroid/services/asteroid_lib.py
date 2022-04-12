@@ -453,10 +453,34 @@ def min_cover(m:int,n:int,matrix):
     G.add_edges_from([(f'r{i+1}',f'c{j+1}') for i in range(m) for j in range(n) if matrix[i][j]==1])
     # print('\nNODI: ', G.nodes)
     # print('\nARCHI: ', G.edges, '\n')
-    # print('G: ',G)
-    matching = nx.bipartite.maximum_matching(G)
-    # print('\nnx.bipartite.to_vertex_cover: ',nx.bipartite.to_vertex_cover(G, matching, col_nodes))
-    return nx.bipartite.to_vertex_cover(G, matching, col_nodes)
+    if nx.number_connected_components(G)!=1:
+        G.add_node('A', bipartite=0)
+        G.add_node('B', bipartite=1)
+        G.add_edge('A','B')
+        components=[list(c) for c in nx.connected_components(G)]
+        rows=[]
+        columns=[]
+        for component in components:
+            if component[0][0]=='r':
+                rows.append(component[0])
+            elif component[0][0]=='c':
+                columns.append(component[0])
+        for nodes in rows:
+            G.add_edge('A', nodes)
+        for nodes in columns:
+            G.add_edge('B', nodes)
+        # print(rows,columns)
+    # print('\nNODI: ', G.nodes, '\n\nARCHI: ', G.edges, '\n')
+    matching = nx.bipartite.maximum_matching(G, col_nodes)
+    if 'B' in matching.keys():
+        del matching['B']
+    for key in matching.keys():
+        if matching[key]=='B':
+            del matching[key]
+            break
+    min_vertex_cover=nx.bipartite.to_vertex_cover(G, matching, col_nodes)
+    min_vertex_cover.discard('B')
+    return min_vertex_cover
 
 def max_independent_set(m:int,n:int,matrix):
     max_ind_set = []
