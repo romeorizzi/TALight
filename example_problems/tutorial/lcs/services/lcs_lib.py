@@ -3,7 +3,7 @@
 
 import random
 import string
-
+from numpy import append, where,array
 ### CONSTANTS #########################################
 AVAILABLE_FORMATS = {'instance':{'only_strings':'only_strings.txt', 'with_m_and_n':'with_m_and_n.txt', 'gmpl_dat':'dat'},'solution':{'subseq':'subseq.txt', 'annotated_subseq':'annotated_subseq.txt'}}
 DEFAULT_INSTANCE_FORMAT='only_strings'
@@ -195,9 +195,43 @@ def instance_randgen_2(m:int,n:int,opt_val:int,alphabet:str,seed:int):
     instance_alphabet = get_alphabet(alphabet)
     random.seed(seed)
     instance = []
-    opt = [random.choice(instance_alphabet[1:-1]) for i in range(opt_val)]
-    instance.append(shuffle(opt, [instance_alphabet[0]] * (m-opt_val)))
-    instance.append(shuffle(opt, [instance_alphabet[-1]] * (n-opt_val)))
+    opt = sorted([random.choice(instance_alphabet[1:-1]) for i in range(opt_val)])
+    opt_str=''.join(opt)
+    instance.append(random.sample(opt_str+instance_alphabet[0]*(m-opt_val),len(opt_str)+m-opt_val))
+    instance.append(random.sample(opt_str+instance_alphabet[-1]*(n-opt_val),len(opt_str)+n-opt_val))
+    # instance.append(shuffle(opt, [instance_alphabet[0]] * (m-opt_val)))
+    # print(opt)
+    # instance.append(shuffle(opt, [instance_alphabet[-1]] * (n-opt_val)))
+    index_1=[]
+    index_2=[]
+    for elem in range(0,len(sorted(list(set(opt))))):
+        first=where(array(instance[0])==sorted(list(set(opt)))[elem])[0]
+        for i in range(0,len(first)):
+            index_1.append(first[i])
+        second=where(array(instance[1])==sorted(list(set(opt)))[elem])[0]
+        for i in range(0,len(second)):
+            index_2.append(second[i])    
+    ii1=[]
+    ii2=[]
+    posiz_1=0
+    posiz_2=0
+    for i in range (0,m):
+        if i in index_1:
+            ii1.insert(index_1.index(i),posiz_1)
+            posiz_1+=1
+    for j in range(0,n):
+        if j in index_2:
+            ii2.insert(index_2.index(j),posiz_2)
+            posiz_2+=1
+    switch=[]
+    new_second_string=instance[1][:]
+    for i in range(0,len(ii1)):
+        if ii1[i]!=ii2[i]:
+            switch.append(index_2[ii1.index(ii2[i])])  
+            switch.append(index_2[i])          
+    for i in range(0,len(switch)-1,2):
+        new_second_string[switch[i+1]]=instance[1][switch[i]]
+    instance[1]=new_second_string
     return instance
 
 
