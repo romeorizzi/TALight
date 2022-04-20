@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  gen_RO_exercise:
+    evaluator: [python, services/gen_RO_exercise_driver.py]
+    files:
+      - optional_filehandler1
+    args:
+      instance_string:
+        regex: ^(.*)$
+      solution_string:
+        regex: ^(.*)$
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+...

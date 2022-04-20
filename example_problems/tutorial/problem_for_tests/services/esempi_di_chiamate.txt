@@ -1,0 +1,7 @@
+rtal connect problem_for_tests gen_RO_exercise -a instance_string="[1, 2, 3]" -asolution_string=42
+
+rtal connect problem_for_tests gen_RO_exercise -a instance_string="[1, 2, 3]" -asolution_string=42  -awith_output_files
+
+rtal connect problem_for_tests gen_RO_exercise -a instance_string="[1, 2, 3]" -asolution_string=42  -foptional_filehandler1=prova.txt
+
+rtal connect problem_for_tests gen_RO_exercise -a instance_string="[1, 2, 3]" -asolution_string=42  -foptional_filehandler1=prova.txt -awith_output_files
