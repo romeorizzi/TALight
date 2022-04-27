@@ -32,6 +32,12 @@ services:
       with_output_files:
         regex: ^(0|1)$
         default: 0
+      caller:
+        regex: ^(CLI|jupyter)$
+        default: CLI
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 1
   oracle:
     evaluator: [python, services/oracle_driver.py]
     args:
@@ -50,4 +56,10 @@ services:
       sol_type:
         regex: ^(sol|val|val_and_sol|DPtable)$
         default: sol
+      caller:
+        regex: ^(CLI|jupyter)$
+        default: CLI
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 1
 ...
