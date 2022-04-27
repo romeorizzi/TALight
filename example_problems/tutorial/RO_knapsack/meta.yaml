@@ -1,0 +1,53 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  checker:
+    evaluator: [python, services/checker_driver.py]
+    args:
+      elementi:
+        regex: ^(.*)$
+        default: "['A', 'B', 'C']"
+      pesi:
+        regex: ^(.*)$
+        default: "[2, 3, 4]"
+      valori:
+        regex: ^(.*)$
+        default: "[13, 17, 19]"
+      Knapsack_Capacity:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 5
+      sol_type:
+        regex: ^(sol|val|val_and_sol|DPtable)$
+        default: sol
+      sol:
+        regex: ^(.*)$
+        default: "['A', 'B']"
+      val:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 30
+      DPtable:
+        regex: ^(.*)$
+        default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+  oracle:
+    evaluator: [python, services/oracle_driver.py]
+    args:
+      elementi:
+        regex: ^(.*)$
+        default: "['A', 'B', 'C']"
+      pesi:
+        regex: ^(.*)$
+        default: "[2, 3, 4]"
+      valori:
+        regex: ^(.*)$
+        default: "[13, 17, 19]"
+      Knapsack_Capacity:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 5
+      sol_type:
+        regex: ^(sol|val|val_and_sol|DPtable)$
+        default: sol
+...

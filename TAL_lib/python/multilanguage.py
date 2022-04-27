@@ -3,6 +3,7 @@
 from sys import stdout, stderr, exit, argv
 from os import environ, path
 import random
+import yaml
 
 termcolor_is_installed = True
 try:
@@ -21,7 +22,7 @@ except Exception as e:
     yaml_is_installed = False
     err_ruamel = e
 
-            
+    
 class Env:
     def __getitem__(self, key):
         return self.arg.get(key)
@@ -50,7 +51,7 @@ class Env:
         self.service = environ["TAL_META_SERVICE"]
         self.problem = path.split(environ["TAL_META_DIR"])[-1]
         assert(self.problem == self.CODENAME)
-        
+                
         for name, val_type in args_list:
             if not f"TAL_{name}" in environ:
                 for out in [stdout, stderr]:
@@ -66,6 +67,32 @@ class Env:
                 self.arg[name] = int(environ[f"TAL_{name}"])
             elif val_type == float:
                 self.arg[name] = float(environ[f"TAL_{name}"])
+            elif val_type in ['yaml', 'list_of_int', 'list_of_str', 'matrix_of_int']:
+                try:
+                    self.arg[name] = yaml.safe_load(environ[f"TAL_{name}"])
+                except Exception as e:
+                    print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}')
+                    print(e)
+                    exit(1)
+                if val_type[0:len('list_of_')] == 'list_of_':
+                    if type(self.arg[name]) != list:
+                        print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}')
+                        exit(1)
+                    items_type = int if val_type=='list_of_int' else str
+                    for item in self.arg[name]:
+                        if type(item) != items_type:
+                            print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}\nThe problem is with the following item:\n{item}\nwhich was expected to be of type {items_type}')
+                            exit(1)
+                elif val_type[0:len('matrix_of_')] == 'matrix_of_':
+                    for row in self.arg[name]:
+                        if type(row) != list:
+                            print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}\nThe problem is with the following row:\n{row}')
+                            exit(1)
+                        items_type = int if val_type=='matrix_of_int' else str
+                        for item in row:
+                            if type(item) != items_type:
+                                print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}\nThe problem is with the following item:\n{item}\nwhich was expected to be of type {items_type}')
+                                exit(1)
             else:
                 for out in [stdout, stderr]:
                     print(f"# Unrecoverable Error: type {val_type} not yet supported in args list (the set of supported types can be extended by communities of problem makers adding further elif clauses here above). Used to interpret arg {name}.", file=out)
