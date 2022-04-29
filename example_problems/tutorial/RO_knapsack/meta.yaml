@@ -18,13 +18,13 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
       sol_type:
-        regex: ^(sol|val|val_and_sol|DPtable)$
-        default: sol
+        regex: ^(opt_sol|opt_val|opt_val_and_sol|DPtable|all)$
+        default: opt_sol
       sol:
         regex: ^(.*)$
         default: "['A', 'B']"
       val:
-        regex: ^(0|[1-9][0-9]*)$
+        regex: ^(.*)$
         default: 30
       DPtable:
         regex: ^(.*)$
@@ -32,12 +32,12 @@ services:
       with_output_files:
         regex: ^(0|1)$
         default: 0
-      caller:
-        regex: ^(CLI|jupyter)$
-        default: CLI
+      color_implementation:
+        regex: ^(ANSI|html)$
+        default: ANSI
       with_opening_message:
         regex: ^(0|1)$
-        default: 1
+        default: 0
   oracle:
     evaluator: [python, services/oracle_driver.py]
     args:
@@ -54,12 +54,15 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
       sol_type:
-        regex: ^(sol|val|val_and_sol|DPtable)$
-        default: sol
-      caller:
-        regex: ^(CLI|jupyter)$
-        default: CLI
+        regex: ^(opt_sol|opt_val|opt_val_and_sol|DPtable|all)$
+        default: all
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      color_implementation:
+        regex: ^(ANSI|html)$
+        default: ANSI
       with_opening_message:
         regex: ^(0|1)$
-        default: 1
+        default: 0
 ...

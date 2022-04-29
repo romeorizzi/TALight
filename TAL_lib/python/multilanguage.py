@@ -1,18 +1,10 @@
 #!/usr/bin/env python3
 
-from sys import stdout, stderr, exit, argv
+import sys
+from sys import stdout, stderr, exit
+from importlib import import_module
 from os import environ, path
 import random
-import yaml
-
-termcolor_is_installed = True
-try:
-    from termcolor import colored, cprint
-except Exception as e:
-    termcolor_is_installed = False
-    print("# Recoverable Error: ", end="", file=stderr)
-    print(e, file=stderr)
-    print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on your local machine.)", file=stderr)
 
 err_ruamel = None
 yaml_is_installed = True
@@ -21,6 +13,94 @@ try:
 except Exception as e:
     yaml_is_installed = False
     err_ruamel = e
+
+class TALcolors:
+    def __init__(self, ENV, color_implementation ="ANSI"):
+        if environ["TAL_META_TTY"] or color_implementation=="html":
+            try:
+                self.termcolor = import_module('termcolor')
+            except Exception as e:
+                print(f"# Recoverable Error: {e}", file=stderr)
+                print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on the machine where rtald is running.)", file=stderr)
+        if 'termcolor' in sys.modules:
+            if color_implementation=="ANSI":
+                self.color_implementation = 'ANSI'
+            elif color_implementation=="html":
+                self.color_implementation = 'html'
+                try:
+                    from ansi2html import Ansi2HTMLConverter
+                    self.ansi2html = Ansi2HTMLConverter()
+                except Exception as e:
+                    self.color_implementation = None
+                    print(f"# Recoverable Error: {e}", file=stderr)
+                    print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package ansi2html on the machine where rtald is running.)", file=stderr)
+            else:
+                print(f"# Unrecoverable Error: no implementation is currently offered for managing colors as {color_implementation}.)", file=stderr)
+        else:
+            self.color_implementation = None
+
+        self.numNO = 0
+        self.numOK = 0
+        self.goals = {}
+
+    def colored(self, msg_text, *msg_rendering):
+        if self.color_implementation == None:
+            return msg_text
+        if type(msg_rendering[-1]) == list:
+            msg_style = msg_rendering[-1]
+            msg_colors = msg_rendering[:-1]
+        else:
+            msg_style = []
+            msg_colors = msg_rendering
+        if self.color_implementation == 'ANSI':
+            return self.termcolor.colored(msg_text, *msg_colors, attrs=msg_style)
+        else:
+            assert self.color_implementation == 'html'
+            return self.ansi2html.convert(self.termcolor.colored(msg_text, *msg_colors, attrs=msg_style))
+
+    def print(self, msg_text, *msg_rendering, **kwargs):
+        print(self.colored(msg_text, *msg_rendering), **kwargs)
+          
+                
+# The following last methods should next be moved to the TAL_lib bot_lib.py
+# At the same time, the part concerning accountings on the correct/out-of-time/non correct answers of an evaluated bot (usually in a service eval_*) has been expanded whithin the library TAL_DAGs, taking as example:
+#   triangle/services/eval_feasible_solution_server.py
+    def NO(self, goal = None):
+        if goal == None:
+            self.numNO += 1
+        else:
+            if goal not in self.goals:
+                self.goals[goal] = {'numNo': 1, 'numOK': 0}
+            else:
+                self.goals[goal]['numNo'] += 1
+        self.print("# ", "yellow", end="")
+        self.print("No! ", "red", ["bold"], end="")
+
+    def OK(self, goal = None):
+        if goal == None:
+            self.numOK += 1
+        else:
+            if goal not in self.goals:
+                self.goals[goal] = {'numNo': 0, 'numOK': 1}
+            else:
+                self.goals[goal]['numOK'] += 1
+        self.print("# ", "yellow", end="")
+        self.print("OK! ", "green", ["bold"], end="")
+
+    def GotBored(self):
+        self.print("# I got bored (too much load on the server)", "white")
+
+    def Finished(self,only_term_signal=False):
+        if not only_term_signal:
+            self.print(f"\n# SUMMARY OF RESULTS\n#    Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
+        self.print(f"\n# WE HAVE FINISHED", "white")
+
+    def stop_bot(self):
+        self.print(f"\n# WE HAVE FINISHED", "white")
+
+    def stop_bot_and_exit(self):
+        self.print(f"\n# WE HAVE FINISHED", "white")
+        exit(0)
 
     
 class Env:
@@ -40,7 +120,7 @@ class Env:
             else:
                 self.arg["seed"] = int(environ["TAL_seed"])
         self.args_list = args_list
-        self.exe_fullname = argv[0]
+        self.exe_fullname = sys.argv[0]
         self.exe_path_from_META_DIR = path.split(self.exe_fullname)[0]
         self.exe_name = path.split(self.exe_fullname)[-1]
         self.META_DIR = environ["TAL_META_DIR"]
@@ -69,7 +149,7 @@ class Env:
                 self.arg[name] = float(environ[f"TAL_{name}"])
             elif val_type in ['yaml', 'list_of_int', 'list_of_str', 'matrix_of_int']:
                 try:
-                    self.arg[name] = yaml.safe_load(environ[f"TAL_{name}"])
+                    self.arg[name] = ruamel.yaml.safe_load(environ[f"TAL_{name}"])
                 except Exception as e:
                     print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}')
                     print(e)
@@ -198,74 +278,3 @@ class Lang:
         self.to_be_printed_opening_msg = False
 
 
-class TALcolors:
-    def __init__(self, ENV):
-        self.numNO = 0
-        self.numOK = 0
-        self.colored_print = ENV["META_TTY"] and termcolor_is_installed
-        self.goals = {}
-
-    def print(self, msg_text, *msg_rendering, **kwargs):
-      if type(msg_rendering[-1]) == list:
-          msg_style = msg_rendering[-1]
-          msg_colors = msg_rendering[:-1]
-      else:
-          msg_style = []
-          msg_colors = msg_rendering
-      if self.colored_print:
-          print(colored(msg_text, *msg_colors, attrs=msg_style), **kwargs)
-      else:
-          print(msg_text, **kwargs)
-
-    def colored(self, msg_text, *msg_rendering):
-      if type(msg_rendering[-1]) == list:
-          msg_style = msg_rendering[-1]
-          msg_colors = msg_rendering[:-1]
-      else:
-          msg_style = []
-          msg_colors = msg_rendering
-      if self.colored_print:
-          return colored(msg_text, *msg_colors, attrs=msg_style)
-      else:
-          return msg_text
-          
-                
-# The following last methods should next be moved to the TAL_lib bot_lib.py
-# At the same time, the part concerning accountings on the correct/out-of-time/non correct answers of an evaluated bot (usually in a service eval_*) has been expanded whithin the library TAL_DAGs, taking as example:
-#   triangle/services/eval_feasible_solution_server.py
-    def NO(self, goal = None):
-        if goal == None:
-            self.numNO += 1
-        else:
-            if goal not in self.goals:
-                self.goals[goal] = {'numNo': 1, 'numOK': 0}
-            else:
-                self.goals[goal]['numNo'] += 1
-        self.print("# ", "yellow", end="")
-        self.print("No! ", "red", ["bold"], end="")
-
-    def OK(self, goal = None):
-        if goal == None:
-            self.numOK += 1
-        else:
-            if goal not in self.goals:
-                self.goals[goal] = {'numNo': 0, 'numOK': 1}
-            else:
-                self.goals[goal]['numOK'] += 1
-        self.print("# ", "yellow", end="")
-        self.print("OK! ", "green", ["bold"], end="")
-
-    def GotBored(self):
-        self.print("# I got bored (too much load on the server)", "white")
-
-    def Finished(self,only_term_signal=False):
-        if not only_term_signal:
-            self.print(f"\n# SUMMARY OF RESULTS\n#    Correct answers: {self.numOK}/{self.numOK+self.numNO}", "white")
-        self.print(f"\n# WE HAVE FINISHED", "white")
-
-    def stop_bot(self):
-        self.print(f"\n# WE HAVE FINISHED", "white")
-
-    def stop_bot_and_exit(self):
-        self.print(f"\n# WE HAVE FINISHED", "white")
-        exit(0)
