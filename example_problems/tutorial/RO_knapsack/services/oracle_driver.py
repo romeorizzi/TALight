@@ -14,9 +14,10 @@ args_list = [
     ('pesi','list_of_int'),
     ('valori','list_of_int'),
     ('Knapsack_Capacity',int),
+    ('elementi_proibiti','list_of_str'),
     ('sol_type',str),
-    ('with_output_files',bool),
     ('color_implementation',str),
+    ('with_output_files',bool),
     ('with_opening_message',bool),
 ]
 
@@ -25,9 +26,24 @@ TAc =TALcolors(ENV, ENV["color_implementation"])
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
-# START CODING YOUR SERVICE: 
+# START CODING YOUR SERVICE:
 
-opt_val, opt_sol, DPtable = knapsack_lib.solver(ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"])
+if len(ENV["elementi"])!=len(ENV["pesi"]):
+    print(f'Errore: {len(ENV["elementi"])=} != {len(ENV["pesi"])}=len(ENV["pesi"])')    
+    exit(0)
+if len(ENV["elementi"])!=len(ENV["valori"]):
+    print(f'Errore: {len(ENV["elementi"])=} != {len(ENV["valori"])}=len(ENV["valori"])')    
+    exit(0)
+    
+elementi=[]
+pesi=[]
+valori=[]
+for ele,peso,val in zip(ENV["elementi"],ENV["pesi"],ENV["valori"]):
+    if ele not in ENV["elementi_proibiti"]:
+        elementi.append(ele)
+        pesi.append(peso)
+        valori.append(val)
+opt_val, opt_sol, DPtable = knapsack_lib.solver(elementi,pesi,valori,ENV["Knapsack_Capacity"])
 if ENV['sol_type'] in ['opt_sol','opt_val_and_sol','all']:
     print(f"opt_sol: {opt_sol}")
 if ENV['sol_type'] in ['opt_val','opt_val_and_sol','all']:
@@ -37,6 +53,9 @@ if ENV['sol_type'] in ['DPtable','all']:
     
 print(f"\nSUMMARY OF THIS SERVICE CALL:")    
 print(f'elementi: {ENV["elementi"]}')
+if len(ENV["elementi_proibiti"]) > 0:
+    print(f'elementi_proibiti: {ENV["elementi_proibiti"]}')
+    print(f'elementi_effettivi: {elementi}')
 print(f'pesi: {ENV["pesi"]}')
 print(f'valori: {ENV["valori"]}')
 print(f'Knapsack_Capacity: {ENV["Knapsack_Capacity"]}')

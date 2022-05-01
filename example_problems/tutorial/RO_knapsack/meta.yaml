@@ -7,16 +7,19 @@ services:
     args:
       elementi:
         regex: ^(.*)$
-        default: "['A', 'B', 'C']"
+        default: "['A', 'B', 'C', 'D', 'E']"
       pesi:
         regex: ^(.*)$
-        default: "[2, 3, 4]"
+        default: "[2, 3, 4, 29, 50]"
       valori:
         regex: ^(.*)$
-        default: "[13, 17, 19]"
+        default: "[13, 17, 19, 11, 15]"
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
+      elementi_proibiti:
+        regex: ^(.*)$
+        default: "['D', 'E']"
       sol_type:
         regex: ^(opt_sol|opt_val|opt_sol_and_val|DPtable)$
         default: opt_sol
@@ -80,6 +83,9 @@ services:
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
+      elementi_proibiti:
+        regex: ^(.*)$
+        default: "['D', 'E']"
       sol_type:
         regex: ^(opt_sol|opt_val|opt_val_and_sol|DPtable|all)$
         default: all

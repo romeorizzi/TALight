@@ -14,6 +14,7 @@ args_list = [
     ('pesi','list_of_int'),
     ('valori','list_of_int'),
     ('Knapsack_Capacity',int),
+    ('elementi_proibiti','list_of_str'),
     ('sol_type',str),
     ('opt_sol','yaml'),
     ('opt_val','yaml'),
@@ -62,7 +63,7 @@ def verif_knapsack(elementi,pesi,valori,Capacity, answer, pt_formato_OK,pt_feasi
             return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso `{answer['opt_val']}` dove era invece richiesto di immettere un intero.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
         if answer['sol_type'] == "opt_val":
             feedback_summary += f"formato di {ENV['var_name_of_answ_opt_val']}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]\n", "green", ["bold"])
-            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso un intero come richiesto."+TAc.colored(" Nota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0, index_pt=index_pt)
+            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso un intero come richiesto."+TAc.colored("\nNota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0, index_pt=index_pt)
         else:
             feedback_summary += f"formato di {ENV['var_name_of_answ_opt_val']}: "+TAc.colored("OK\n", "green", ["bold"])
 
@@ -86,7 +87,7 @@ def verif_knapsack(elementi,pesi,valori,Capacity, answer, pt_formato_OK,pt_feasi
                 return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
             feedback_summary += f"ammissibilità della soluzione in {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"OK [{pt_feasibility_OK} safe pt]\n", "green", ["bold"])
             if answer['sol_type'] == "opt_sol":
-                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in {ENV['var_name_of_answ_opt_sol']} è ammissibile."+TAc.colored(" Nota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=index_pt)
+                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in {ENV['var_name_of_answ_opt_sol']} è ammissibile."+TAc.colored("\nNota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=index_pt)
             assert answer['sol_type'] == "opt_sol_and_val"
             if sum_valori > answer['opt_val']:
                 feedback_summary += f"{ENV['var_name_of_answ_opt_val']}={answer['opt_val']}<{sum_valori}, che è la somma dei valori su {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"NO\n", "red", ["bold"])
@@ -96,16 +97,34 @@ def verif_knapsack(elementi,pesi,valori,Capacity, answer, pt_formato_OK,pt_feasi
                 return evaluation_format(feedback_summary, f"Il valore della soluzione immessa è {sum_valori} e non {answer['opt_val']} come hai immesso in `{ENV['var_name_of_answ_opt_val']}`. A mè risulta che la soluzione (ammissibile) che hai immesso sia {answer['opt_sol']}.", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK, index_pt=index_pt)
             else:
                 feedback_summary += f"{ENV['var_name_of_answ_opt_val']}={answer['opt_val']} = somma dei valori su {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"OK\n", "green", ["bold"])
-                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in `{ENV['var_name_of_answ_opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{ENV['var_name_of_answ_opt_val']}`."+TAc.colored(" Nota: ", "cyan", ["bold"])+"Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=index_pt)
+                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in `{ENV['var_name_of_answ_opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{ENV['var_name_of_answ_opt_val']}`."+TAc.colored("\nNota: ", "cyan", ["bold"])+"Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=index_pt)
 
+            
+if len(ENV["elementi"])!=len(ENV["pesi"]):
+    print(f'Errore: {len(ENV["elementi"])=} != {len(ENV["pesi"])}=len(ENV["pesi"])')    
+    exit(0)
+if len(ENV["elementi"])!=len(ENV["valori"]):
+    print(f'Errore: {len(ENV["elementi"])=} != {len(ENV["valori"])}=len(ENV["valori"])')    
+    exit(0)
+elementi=[]
+pesi=[]
+valori=[]
+for ele,peso,val in zip(ENV["elementi"],ENV["pesi"],ENV["valori"]):
+    if ele not in ENV["elementi_proibiti"]:
+        elementi.append(ele)
+        pesi.append(peso)
+        valori.append(val)
 
-answer = {'sol_type':ENV["sol_type"],'opt_sol':ENV["opt_sol"],'opt_val':ENV["opt_val"],'DPtable':ENV["DPtable"] }
-feedback_string = verif_knapsack(ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"], answer, ENV["pt_formato_OK"],ENV["pt_feasibility_OK"],ENV["pt_tot"], index_pt=None)
+student_answer = {'sol_type':ENV["sol_type"],'opt_sol':ENV["opt_sol"],'opt_val':ENV["opt_val"],'DPtable':ENV["DPtable"] }
+feedback_string = verif_knapsack(elementi,pesi,valori,ENV["Knapsack_Capacity"], student_answer, ENV["pt_formato_OK"],ENV["pt_feasibility_OK"],ENV["pt_tot"], index_pt=None)
 print(feedback_string)
 
 summary=f"""
 SUMMARY OF THIS SERVICE CALL: 
 elementi: {ENV["elementi"]}
+if len(ENV["elementi_proibiti"]) > 0:
+    print(f'elementi_proibiti: {ENV["elementi_proibiti"]}')
+    print(f'elementi_effettivi: {elementi}')
 pesi: {ENV["pesi"]}
 valori: {ENV["valori"]}
 Knapsack_Capacity: {ENV["Knapsack_Capacity"]}
