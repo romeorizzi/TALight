@@ -28,4 +28,3 @@ class LibGrades(object):
                         if (filedata.folderdata.problem == problem or problem == ALLPROBLEM):
                             if (filedata.folderdata.service == service or service == ALLSERVICE):
                                 self.problemlist.addToken(filedata)
-
