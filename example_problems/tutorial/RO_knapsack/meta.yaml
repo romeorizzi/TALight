@@ -32,15 +32,6 @@ services:
       DPtable:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-      var_name_of_answ_opt_val:
-        regex: ^(.*)$
-        default: opt_val
-      var_name_of_answ_opt_sol:
-        regex: ^(.*)$
-        default: opt_sol
-      var_name_of_answ_DPtable:
-        regex: ^(.*)$
-        default: DPtable
       pt_formato_OK:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
@@ -56,6 +47,15 @@ services:
       task:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
+      var_name_of_answ_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      var_name_of_answ_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      var_name_of_answ_DPtable:
+        regex: ^(.*)$
+        default: DPtable
       with_output_files:
         regex: ^(0|1)$
         default: 0
@@ -89,6 +89,21 @@ services:
       sol_type:
         regex: ^(opt_sol|opt_val|opt_val_and_sol|DPtable|all)$
         default: all
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      var_name_of_answ_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      var_name_of_answ_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      var_name_of_answ_DPtable:
+        regex: ^(.*)$
+        default: DPtable
       with_output_files:
         regex: ^(0|1)$
         default: 0

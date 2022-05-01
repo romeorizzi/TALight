@@ -22,6 +22,8 @@ args_list = [
     ('pt_formato_OK',int),
     ('pt_feasibility_OK',int),
     ('pt_tot',int),
+    ('esercizio',int),
+    ('task',int),
     ('var_name_of_answ_opt_val',str),
     ('var_name_of_answ_opt_sol',str),
     ('var_name_of_answ_DPtable',str),
@@ -55,49 +57,58 @@ def evaluation_format(feedback_summary,feedback_message, pt_tot,pt_safe,pt_out, 
     return ret_str
 
 
-def verif_knapsack(elementi,pesi,valori,Capacity, answer, pt_formato_OK,pt_feasibility_OK,pt_tot, index_pt):
+def verif_knapsack(elements,weights,vals,elementi_proibiti,Capacity, answer, pt_formato_OK,pt_feasibility_OK,pt_tot, task):
+    global elementi
     feedback_summary = ""
+    elementi=[]
+    pesi=[]
+    valori=[]
+    for ele,peso,val in zip(elements,weights,vals):
+        if ele not in elementi_proibiti:
+            elementi.append(ele)
+            pesi.append(peso)
+            valori.append(val)
     if answer['sol_type'] in ["opt_val","opt_sol_and_val"]:
         if type(answer['opt_val']) != int:
             feedback_summary += f"formato di {ENV['var_name_of_answ_opt_val']}: "+TAc.colored("NO\n", "red", ["bold"])
-            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso `{answer['opt_val']}` dove era invece richiesto di immettere un intero.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
+            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso `{answer['opt_val']}` dove era invece richiesto di immettere un intero.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=task)
         if answer['sol_type'] == "opt_val":
             feedback_summary += f"formato di {ENV['var_name_of_answ_opt_val']}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]\n", "green", ["bold"])
-            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso un intero come richiesto."+TAc.colored("\nNota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0, index_pt=index_pt)
+            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso un intero come richiesto."+TAc.colored("\nNota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0, index_pt=task)
         else:
             feedback_summary += f"formato di {ENV['var_name_of_answ_opt_val']}: "+TAc.colored("OK\n", "green", ["bold"])
 
     if answer['sol_type'] in ["opt_sol","opt_sol_and_val"]:
         if type(answer['opt_sol']) != list:
             feedback_summary += f"formato di {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored("NO\n", "red", ["bold"])
-            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_sol']}` è richiesto si inserisca una lista di oggetti (esempio ['{elementi[0]}','{elementi[2]}']). Hai invece immesso `{answer['opt_sol']}`.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
+            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_sol']}` è richiesto si inserisca una lista di oggetti (esempio ['{elementi[0]}','{elementi[2]}']). Hai invece immesso `{answer['opt_sol']}`.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=task)
         else:
             sum_valori=0
             sum_pesi=0
             for ele in answer['opt_sol']:
                 if ele not in elementi:
                     feedback_summary += f"formato di {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored("NO\n", "red", ["bold"])
-                    return evaluation_format(feedback_summary, f"Ogni elemento che collochi nella lista `{ENV['var_name_of_answ_opt_sol']}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {elementi}.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
+                    return evaluation_format(feedback_summary, f"Ogni elemento che collochi nella lista `{ENV['var_name_of_answ_opt_sol']}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {elementi}.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=task)
                 index_of_ele = elementi.index(ele)
                 sum_valori += valori[index_of_ele]
                 sum_pesi += pesi[index_of_ele]
             feedback_summary += f"formato di {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]\n", "green", ["bold"])
             if sum_pesi > Capacity:
                 feedback_summary += f"ammissibilità della soluzione in {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored("NO\n", "red", ["bold"])
-                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
+                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=task)
             feedback_summary += f"ammissibilità della soluzione in {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"OK [{pt_feasibility_OK} safe pt]\n", "green", ["bold"])
             if answer['sol_type'] == "opt_sol":
-                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in {ENV['var_name_of_answ_opt_sol']} è ammissibile."+TAc.colored("\nNota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=index_pt)
+                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in {ENV['var_name_of_answ_opt_sol']} è ammissibile."+TAc.colored("\nNota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=task)
             assert answer['sol_type'] == "opt_sol_and_val"
             if sum_valori > answer['opt_val']:
                 feedback_summary += f"{ENV['var_name_of_answ_opt_val']}={answer['opt_val']}<{sum_valori}, che è la somma dei valori su {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"NO\n", "red", ["bold"])
             if sum_valori < answer['opt_val']:
                 feedback_summary += f"{ENV['var_name_of_answ_opt_val']}={answer['opt_val']}>{sum_valori}, che è la somma dei valori su {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"NO\n", "red", ["bold"])
             if sum_valori != answer['opt_val']:
-                return evaluation_format(feedback_summary, f"Il valore della soluzione immessa è {sum_valori} e non {answer['opt_val']} come hai immesso in `{ENV['var_name_of_answ_opt_val']}`. A mè risulta che la soluzione (ammissibile) che hai immesso sia {answer['opt_sol']}.", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK, index_pt=index_pt)
+                return evaluation_format(feedback_summary, f"Il valore della soluzione immessa è {sum_valori} e non {answer['opt_val']} come hai immesso in `{ENV['var_name_of_answ_opt_val']}`. A mè risulta che la soluzione (ammissibile) che hai immesso sia {answer['opt_sol']}.", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK, index_pt=task)
             else:
                 feedback_summary += f"{ENV['var_name_of_answ_opt_val']}={answer['opt_val']} = somma dei valori su {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"OK\n", "green", ["bold"])
-                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in `{ENV['var_name_of_answ_opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{ENV['var_name_of_answ_opt_val']}`."+TAc.colored("\nNota: ", "cyan", ["bold"])+"Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=index_pt)
+                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in `{ENV['var_name_of_answ_opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{ENV['var_name_of_answ_opt_val']}`."+TAc.colored("\nNota: ", "cyan", ["bold"])+"Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=task)
 
             
 if len(ENV["elementi"])!=len(ENV["pesi"]):
@@ -106,17 +117,9 @@ if len(ENV["elementi"])!=len(ENV["pesi"]):
 if len(ENV["elementi"])!=len(ENV["valori"]):
     print(f'Errore: {len(ENV["elementi"])=} != {len(ENV["valori"])}=len(ENV["valori"])')    
     exit(0)
-elementi=[]
-pesi=[]
-valori=[]
-for ele,peso,val in zip(ENV["elementi"],ENV["pesi"],ENV["valori"]):
-    if ele not in ENV["elementi_proibiti"]:
-        elementi.append(ele)
-        pesi.append(peso)
-        valori.append(val)
 
 student_answer = {'sol_type':ENV["sol_type"],'opt_sol':ENV["opt_sol"],'opt_val':ENV["opt_val"],'DPtable':ENV["DPtable"] }
-feedback_string = verif_knapsack(elementi,pesi,valori,ENV["Knapsack_Capacity"], student_answer, ENV["pt_formato_OK"],ENV["pt_feasibility_OK"],ENV["pt_tot"], index_pt=None)
+feedback_string = verif_knapsack(ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["elementi_proibiti"],ENV["Knapsack_Capacity"], student_answer, ENV["pt_formato_OK"],ENV["pt_feasibility_OK"],ENV["pt_tot"], ENV["task"])
 print(feedback_string)
 
 summary=f"""
@@ -153,10 +156,10 @@ else:
     summary += 'Al servizio non è stato richiesto di generare files nel folder di output\n'
 
 if ENV.LOG_FILES != None:
-    TALf.str2log_file(content=feedback_string+summary, filename=f'problem_{ENV["problem"]}_task_{ENV["task"]}_safe_{safe_points}_maybe_{maybe_points}', timestamped = False)
+    TALf.str2log_file(content=feedback_string+summary, filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{safe_points}_maybe_{maybe_points}', timestamped = False)
 
 if ENV["with_output_files"]:    
-    TALf.str2output_file(content=feedback_string+summary, filename=f'problem_{ENV["problem"]}_task_{ENV["task"]}_safe_{safe_points}_maybe_{maybe_points}', timestamped = False)
+    TALf.str2output_file(content=feedback_string+summary, filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{safe_points}_maybe_{maybe_points}', timestamped = False)
 
 if ENV["with_summary"]:
     print(summary)
