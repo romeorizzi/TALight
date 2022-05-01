@@ -1,4 +1,5 @@
-from re import L
+#!/usr/bin/env python3
+
 from FileData import FileData
 from Goal import Goal
 

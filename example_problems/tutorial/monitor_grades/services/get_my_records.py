@@ -6,7 +6,7 @@ import os
 from FolderData import FolderData
 from FileData import FileData
 from Token import Token
-from lib_grades import lib_grades
+from LibGrades import LibGrades
 
 DEBUG = False
 
@@ -36,11 +36,7 @@ if not DEBUG:
 #print([ (var_name, environ[var_name]) for var_name in environ if var_name[:4] == "TAL_"])
 
 def main(problem : str, service : str, token : str, path : str): 
-    s = lib_grades.getStudentList()
-    
-    if not DEBUG:
-        if ENV['download'] == 1:
-            TALf.str2output_file(, "result.csv")
+    pass
 
 
 # Student Token
@@ -50,7 +46,7 @@ def main(problem : str, service : str, token : str, path : str):
 
 if __name__ == "__main__":
     if DEBUG:
-        main(ALLPROBLEM, ALLSERVICE, "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"))
+        main("all_problems", "all_service", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"))
     else:
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
 

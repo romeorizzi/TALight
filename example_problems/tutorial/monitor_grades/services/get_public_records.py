@@ -6,7 +6,7 @@ import os
 from FolderData import FolderData
 from FileData import FileData
 from Token import Token
-from lib_grades import lib_grades
+from LibGrades import LibGrades
 
 DEBUG = False
 

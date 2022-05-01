@@ -1,14 +1,21 @@
-import constant from constant
+#!/usr/bin/env python3
+
+from Token import Token
+from FolderData import FolderData
+from FileData import FileData
+
+from os import listdir, isdir
+import os
 
 ALLPROBLEM = "all_problems"
 ALLSERVICE = "all_services"
 OKCONSTANT = "OK"
 
-class lib_grades(object):
+class LibGrades(object):
     def __init__(self) -> None:
-        self.problemlist = Token
+        self.problemlist = Token()
 
-    def loadFile(self, problem : str, service : str, token : str):
+    def loadFile(self, problem : str, service : str, token : str, path : str):
         for x in listdir(path):
             fullpath = os.path.join(path, x)
             if (isdir(fullpath)):
@@ -22,8 +29,3 @@ class lib_grades(object):
                             if (filedata.folderdata.service == service or service == ALLSERVICE):
                                 self.problemlist.addToken(filedata)
 
-    def getStudentList():
-        return self.problemlist.
-
-    def getStat(problem : str, service : str, path : str):
-        pass
