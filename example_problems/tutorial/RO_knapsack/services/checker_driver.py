@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from sys import exit
 
-import copy
 from tabulate import tabulate
 
 from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
+
+import knapsack_lib
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -14,106 +15,130 @@ args_list = [
     ('valori','list_of_int'),
     ('Knapsack_Capacity',int),
     ('sol_type',str),
-    ('sol','list_of_str'),
-    ('val',int),
-    ('DPtable','matrix_of_int'),
-    ('caller',str),
+    ('opt_sol','yaml'),
+    ('opt_val','yaml'),
+    ('DPtable','yaml'),
+    ('pt_formato_OK',int),
+    ('pt_feasibility_OK',int),
+    ('pt_tot',int),
+    ('var_name_of_answ_opt_val',str),
+    ('var_name_of_answ_opt_sol',str),
+    ('var_name_of_answ_DPtable',str),
+    ('color_implementation',str),
     ('with_output_files',bool),
     ('with_opening_message',bool),
+    ('with_summary',bool),
 ]
 
 ENV =Env(args_list)
-TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+TAc =TALcolors(ENV, ENV["color_implementation"])
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE: 
 
-def evaluation_format(answ, pt_green,pt_red, index_pt):
-    pt_blue=0
-    if pt_green!=0:
-        pt_blue=pt_red-pt_green
-        pt_red=0
-    # arr_point[index_pt]=pt_green
-    # file = open("points.txt", "w")
-    # file.write(str(arr_point))
-    # file.close()
-    return f"{answ}. Totalizzeresti <span style='color:green'>[{pt_green} safe pt]</span>, \
-                                    <span style='color:blue'>[{pt_blue} possible pt]</span>, \
-                                    <span style='color:red'>[{pt_red} out of reach pt]</span>.<br>"
+def evaluation_format(feedback_summary,feedback_message, pt_tot,pt_safe,pt_out, index_pt=None):
+    global safe_points
+    global maybe_points
+    pt_maybe = pt_tot-pt_out-(pt_safe if pt_safe != None else 0)
+    safe_points = pt_safe
+    maybe_points = pt_maybe
+    code_for_jupyter_commented = """
+    if TAc.color_implementation == 'html':
+        return f"{feedback_summary}<br>Totalizzi <span style='color:green'>[punti sicuri: {pt_safe}]</span>, <span style='color:blue'>[punti aggiuntivi possibili: {pt_maybe}]</span>, <span style='color:red'>[punti fuori portata: {pt_out}]</span>.<br><span style='color:cyan'>Spiegazione: </span>{feedback_message}<br>"
+    """
+    ret_str = feedback_summary + "Totalizzi "
+    ret_str += TAc.colored(f"[punti sicuri: {pt_safe}]", "green", ["bold"]) + ", "
+    ret_str += TAc.colored(f"[punti aggiuntivi possibili: {pt_maybe}]", "blue", ["bold"]) + ", " 
+    ret_str += TAc.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + TAc.colored("\nSpiegazione: ", "cyan", ["bold"]) + feedback_message + TAc.colored("\n")    
+    return ret_str
 
-def verif_knapsack(elementi,pesi, valori, Capacity,answer,pt_green,pt_red, index_pt, sol_type="sol",edr=False):
-    elementi2=copy.deepcopy(elementi)
-    pesi2=copy.deepcopy(pesi)
-    valori2=copy.deepcopy(valori)
-    if edr!=False:
-        for elemento in edr:
-            i=elementi2.index(elemento)
-            elementi2.pop(i)
-            pesi2.pop(i)
-            valori2.pop(i)
-        
-    n = len(pesi2)
-    S = [[0 for j in range(Capacity+1)] for i in range(n)] 
-    for i in range(1,n):
-        for j in range(Capacity+1):
-            S[i][j] = S[i-1][j]
-            if pesi2[i] <= j and S[i-1][j-pesi2[i]] + valori2[i] > S[i][j]:
-                S[i][j] = S[i-1][j-pesi2[i]] + valori2[i]
-    max_val=S[-1][-1]
-    if sol_type=="val":
-        if type(answer)==int:
-            return evaluation_format("Si", 1,pt_red,index_pt)+"Hai immesso un intero come richiesto. (Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.)"
+
+def verif_knapsack(elementi,pesi,valori,Capacity, answer, pt_formato_OK,pt_feasibility_OK,pt_tot, index_pt):
+    feedback_summary = ""
+    if answer['sol_type'] in ["opt_val","opt_sol_and_val"]:
+        if type(answer['opt_val']) != int:
+            feedback_summary += f"formato di {ENV['var_name_of_answ_opt_val']}: "+TAc.colored("NO\n", "red", ["bold"])
+            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso `{answer['opt_val']}` dove era invece richiesto di immettere un intero.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
+        if answer['sol_type'] == "opt_val":
+            feedback_summary += f"formato di {ENV['var_name_of_answ_opt_val']}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]\n", "green", ["bold"])
+            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_val']}` hai immesso un intero come richiesto."+TAc.colored(" Nota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0, index_pt=index_pt)
         else:
-            return evaluation_format("No", 0,pt_red,index_pt)+"A questa domanda è richiesto si risponda con un intero."
-    if sol_type=="sol":
-        if type(answer)==list:
+            feedback_summary += f"formato di {ENV['var_name_of_answ_opt_val']}: "+TAc.colored("OK\n", "green", ["bold"])
+
+    if answer['sol_type'] in ["opt_sol","opt_sol_and_val"]:
+        if type(answer['opt_sol']) != list:
+            feedback_summary += f"formato di {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored("NO\n", "red", ["bold"])
+            return evaluation_format(feedback_summary, f"Come `{ENV['var_name_of_answ_opt_sol']}` è richiesto si inserisca una lista di oggetti (esempio ['{elementi[0]}','{elementi[2]}']). Hai invece immesso `{answer['opt_sol']}`.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
+        else:
             sum_valori=0
             sum_pesi=0
-            for i in range(len(answer)):
-                sum_valori+=valori2[elementi.index(answer[i])]
-                sum_pesi+=pesi2[elementi.index(answer[i])]
-            if sum_pesi<=Capacity:
-                return evaluation_format("Si", 1,pt_red,index_pt)+"Il sottoinsieme di elementi è ammissibile. (Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo.)"
+            for ele in answer['opt_sol']:
+                if ele not in elementi:
+                    feedback_summary += f"formato di {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored("NO\n", "red", ["bold"])
+                    return evaluation_format(feedback_summary, f"Ogni elemento che collochi nella lista `{ENV['var_name_of_answ_opt_sol']}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {elementi}.", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
+                index_of_ele = elementi.index(ele)
+                sum_valori += valori[index_of_ele]
+                sum_pesi += pesi[index_of_ele]
+            feedback_summary += f"formato di {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]\n", "green", ["bold"])
+            if sum_pesi > Capacity:
+                feedback_summary += f"ammissibilità della soluzione in {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored("NO\n", "red", ["bold"])
+                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot, index_pt=index_pt)
+            feedback_summary += f"ammissibilità della soluzione in {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"OK [{pt_feasibility_OK} safe pt]\n", "green", ["bold"])
+            if answer['sol_type'] == "opt_sol":
+                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in {ENV['var_name_of_answ_opt_sol']} è ammissibile."+TAc.colored(" Nota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=index_pt)
+            assert answer['sol_type'] == "opt_sol_and_val"
+            if sum_valori > answer['opt_val']:
+                feedback_summary += f"{ENV['var_name_of_answ_opt_val']}={answer['opt_val']}<{sum_valori}, che è la somma dei valori su {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"NO\n", "red", ["bold"])
+            if sum_valori < answer['opt_val']:
+                feedback_summary += f"{ENV['var_name_of_answ_opt_val']}={answer['opt_val']}>{sum_valori}, che è la somma dei valori su {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"NO\n", "red", ["bold"])
+            if sum_valori != answer['opt_val']:
+                return evaluation_format(feedback_summary, f"Il valore della soluzione immessa è {sum_valori} e non {answer['opt_val']} come hai immesso in `{ENV['var_name_of_answ_opt_val']}`. A mè risulta che la soluzione (ammissibile) che hai immesso sia {answer['opt_sol']}.", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK, index_pt=index_pt)
             else:
-                return evaluation_format("No", 0,pt_red,index_pt)+f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda)."
-        else:
-            return evaluation_format("No", 0,pt_red,index_pt)+"A questa domanda è richiesto si risponda con una lista di oggetti (esempio ['B','D'])."    
+                feedback_summary += f"{ENV['var_name_of_answ_opt_val']}={answer['opt_val']} = somma dei valori su {ENV['var_name_of_answ_opt_sol']}: "+TAc.colored(f"OK\n", "green", ["bold"])
+                return evaluation_format(feedback_summary, f"Il sottoinsieme di elementi specificato in `{ENV['var_name_of_answ_opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{ENV['var_name_of_answ_opt_val']}`."+TAc.colored(" Nota: ", "cyan", ["bold"])+"Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0, index_pt=index_pt)
 
-if ENV["with_opening_message"]:
-    TAc.print(LANG.render_feedback("ciao", 'Ciao.'), "yellow", ["bold"])
-    print(f'{ENV["elementi"]=}')
-    print(f'{ENV["pesi"]=}')
-    print(f'{ENV["valori"]=}')
-    print(f'{ENV["Knapsack_Capacity"]=}')
-    print(f'{ENV["sol_type"]=}')
-    if ENV["sol_type"] in ['sol', 'val_and_sol']:
-        print(f'{ENV["sol"]=}')
-    if ENV["sol_type"] in ['val', 'val_and_sol']:
-        print(f'{ENV["val"]=}')
-    if ENV["sol_type"] in ['DPtable']:
-        print(f'{ENV["DPtable"]=}')
-    print(f'{ENV["caller"]=}')
-    print(f'{ENV["with_opening_message"]=}')
+
+answer = {'sol_type':ENV["sol_type"],'opt_sol':ENV["opt_sol"],'opt_val':ENV["opt_val"],'DPtable':ENV["DPtable"] }
+feedback_string = verif_knapsack(ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"], answer, ENV["pt_formato_OK"],ENV["pt_feasibility_OK"],ENV["pt_tot"], index_pt=None)
+print(feedback_string)
+
+summary=f"""
+SUMMARY OF THIS SERVICE CALL: 
+elementi: {ENV["elementi"]}
+pesi: {ENV["pesi"]}
+valori: {ENV["valori"]}
+Knapsack_Capacity: {ENV["Knapsack_Capacity"]}
+sol_type: {ENV["sol_type"]}
+"""
+if ENV["sol_type"] in ['opt_sol', 'opt_val_and_sol']:
+    summary += f'opt_sol: {ENV["opt_sol"]}\n'
+    summary += f'var_name_of_answ_opt_sol: {ENV["var_name_of_answ_opt_sol"]}\n'
+if ENV["sol_type"] in ['opt_val', 'opt_val_and_sol']:
+    summary += f'opt_val: {ENV["opt_val"]}\n'
+    summary += f'var_name_of_answ_opt_val: {ENV["var_name_of_answ_opt_val"]}\n'
+if ENV["sol_type"] in ['DPtable']:
+    summary += f'DPtable: {ENV["DPtable"]}\n'
+    summary += f'var_name_of_answ_DPtable: {ENV["var_name_of_answ_DPtable"]}\n'
+summary += f'color_implementation: {ENV["color_implementation"]}\n'
+summary += f'with_opening_message: {ENV["with_opening_message"]}\n'
 
 if ENV.LOG_FILES == None:
-    print("Servizio chiamato senza access token")
+    summary += 'Servizio chiamato senza access token\n'
 else:
-    print("Servizio chiamato con access token")
-    TALf.str2log_file(content='Scrivo questo in un file di log.', filename=f'LOG_filename', timestamped = False)
+    summary += 'Servizio chiamato con access token\n'
 
 if ENV["with_output_files"]:    
-    print("Al servizio è stato richiesto di generare files nel folder di output")
-    TALf.str2output_file(content='Scrivo questo in un output file.', filename=f'OK_{ENV["instance_id"]}', timestamped = False)
+    summary += 'Al servizio è stato richiesto di generare files nel folder di output\n'
 else:
-    print("Al servizio non è stato richiesto di generare files nel folder di output")
+    summary += 'Al servizio non è stato richiesto di generare files nel folder di output\n'
 
-if TALf.exists_input_file('optional_filehandler1'):
-    file1_content_as_string = TALf.input_file_as_str('optional_filehandler1')
-    print(f"You passed a file on `optional_filehandler1` and here is its content:\nBEGIN\n{file1_content_as_string}END")
-else:
-    print(f"You passed no file on `optional_filehandler1`")
+if ENV.LOG_FILES != None:
+    TALf.str2log_file(content=feedback_string+summary, filename=f'problem_{ENV["problem"]}_task_{ENV["task"]}_safe_{safe_points}_maybe_{maybe_points}', timestamped = False)
 
+if ENV["with_output_files"]:    
+    TALf.str2output_file(content=feedback_string+summary, filename=f'problem_{ENV["problem"]}_task_{ENV["task"]}_safe_{safe_points}_maybe_{maybe_points}', timestamped = False)
 
-if ENV["sol_type"] in ['sol', 'val_and_sol']:
-    print(verif_knapsack(ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"],ENV["sol"], pt_green=1, pt_red=5, index_pt=0, sol_type=ENV["sol_type"]))
+if ENV["with_summary"]:
+    print(summary)
+

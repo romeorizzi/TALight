@@ -29,7 +29,7 @@ class TALcolors:
                 self.color_implementation = 'html'
                 try:
                     from ansi2html import Ansi2HTMLConverter
-                    self.ansi2html = Ansi2HTMLConverter()
+                    self.ansi2html = Ansi2HTMLConverter(inline = True)
                 except Exception as e:
                     self.color_implementation = None
                     print(f"# Recoverable Error: {e}", file=stderr)
@@ -46,17 +46,21 @@ class TALcolors:
     def colored(self, msg_text, *msg_rendering):
         if self.color_implementation == None:
             return msg_text
-        if type(msg_rendering[-1]) == list:
-            msg_style = msg_rendering[-1]
-            msg_colors = msg_rendering[:-1]
+        if len(msg_rendering) == 0:
+            ANSI_msg = msg_text
         else:
-            msg_style = []
-            msg_colors = msg_rendering
+            if type(msg_rendering[-1]) == list:
+                msg_style = msg_rendering[-1]
+                msg_colors = msg_rendering[:-1]
+            else:
+                msg_style = []
+                msg_colors = msg_rendering
+            ANSI_msg = self.termcolor.colored(msg_text, *msg_colors, attrs=msg_style)
         if self.color_implementation == 'ANSI':
-            return self.termcolor.colored(msg_text, *msg_colors, attrs=msg_style)
+            return ANSI_msg
         else:
             assert self.color_implementation == 'html'
-            return self.ansi2html.convert(self.termcolor.colored(msg_text, *msg_colors, attrs=msg_style))
+            return self.ansi2html.convert(ANSI_msg.replace(">", "&gt;").replace("<", "&lt;"), full=False).replace("&", "&amp;").replace("\n", "<br/>")
 
     def print(self, msg_text, *msg_rendering, **kwargs):
         print(self.colored(msg_text, *msg_rendering), **kwargs)

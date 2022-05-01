@@ -18,17 +18,41 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
       sol_type:
-        regex: ^(opt_sol|opt_val|opt_val_and_sol|DPtable|all)$
+        regex: ^(opt_sol|opt_val|opt_sol_and_val|DPtable)$
         default: opt_sol
-      sol:
+      opt_sol:
         regex: ^(.*)$
         default: "['A', 'B']"
-      val:
+      opt_val:
         regex: ^(.*)$
         default: 30
       DPtable:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+      var_name_of_answ_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      var_name_of_answ_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      var_name_of_answ_DPtable:
+        regex: ^(.*)$
+        default: DPtable
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
       with_output_files:
         regex: ^(0|1)$
         default: 0
@@ -36,6 +60,9 @@ services:
         regex: ^(ANSI|html)$
         default: ANSI
       with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      with_summary:
         regex: ^(0|1)$
         default: 0
   oracle:
