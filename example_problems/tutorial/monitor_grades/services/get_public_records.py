@@ -6,6 +6,7 @@ import os
 from FolderData import FolderData
 from FileData import FileData
 from Token import Token
+from lib_grades import lib_grades
 
 DEBUG = False
 
@@ -17,7 +18,8 @@ if not DEBUG:
     args_list = [
         ('problem', str),
         ('service', str),
-        ('download', int)
+        ('download', int),
+        ('token', str)
     ]
 
     ENV = Env(args_list)
