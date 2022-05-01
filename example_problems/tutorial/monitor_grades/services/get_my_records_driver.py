@@ -74,7 +74,7 @@ if __name__ == "__main__":
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
 
 # formato della cartella:
-# 123456_RomeoRizzi+2022-02-24_20-56-54_425
+# 123456_RomeoRizzi+Problem+Service+2022-02-24_20-56-54_425
 
 # formato del file contenuto nella cartella:
 # OK_nomeproblema_nomeservizio_goal
