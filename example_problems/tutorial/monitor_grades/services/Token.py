@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from FileData import FileData
 from Structure import Structure
 

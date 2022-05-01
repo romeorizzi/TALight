@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from FolderData import FolderData
 
 class FileData(object):  
