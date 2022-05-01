@@ -4,7 +4,7 @@ public_folder: public
 description: This problem is meant as a container of services that yield summaries on your submissions or on the submissions of your students. You can ask a whole report on all the problems or filter on a single problem, or on a single service of a single problem. As a teacher, you can also independently filter on the students (based on their personal tokens, the knowledge of a substring of the token will be enough). The report will mention only those goals/services/problems that were positively achieved by at least one complete submission of pertinence.
 services:
   get_my_records:
-    evaluator: [python,services/get_my_records_driver.py]
+    evaluator: [python,services/get_my_records.py]
     description: 'Use this service to get a summary of your positive submissions to rtal evaluating services. You can ask a whole report on all the problems or filter on a single problem, or on a single service of a single problem. The report will mention only those goals/services/problems that were positively achieved by at least one complete submission of pertinence. You can also ask the time and date of you last submission where you achieved every reported goal, or even to list the times/dates of all positive submissions.\n\n   ***A NOTE ON SUMBISSIONS: You can act a submission if your teacher or instructor who deployed the problem as a web service has provided you with a personal token. Some rtal services offering evaluations of your answers, solutions, or solving algorithms, allow you to also act a submission. Usually, such services remain available and responsive also to anonymous calls, where no log is mantained. When however you intend to act a submission then you should provide your personal token when calling the service (use the -x option of the connect rtal subcommand). When acting a submission, the service might require you to supply also further arguments or files, like e.g. the source code of your bot subject to evaluation. If you omit providing all the required elements the service drops before creating any log file, which means that the submission has not taken place. On the contrary, the service communicates you when all the log files have been successfully created and the submission is complete.' 
     args:
       problem:
@@ -28,7 +28,61 @@ services:
         explain3: '[all_positive_submissions] report the time and date of every submission where a specific goal (as falling within the active filters) was achieved.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it  
+        default: it
+        
+  get_public_records:
+    evaluator: [python,services/get_public_records.py]
+    description: 'Use this service to get a summary of your positive submissions to rtal evaluating services. You can ask a whole report on all the problems or filter on a single problem, or on a single service of a single problem. The report will mention only those goals/services/problems that were positively achieved by at least one complete submission of pertinence. You can also ask the time and date of you last submission where you achieved every reported goal, or even to list the times/dates of all positive submissions.\n\n   ***A NOTE ON SUMBISSIONS: You can act a submission if your teacher or instructor who deployed the problem as a web service has provided you with a personal token. Some rtal services offering evaluations of your answers, solutions, or solving algorithms, allow you to also act a submission. Usually, such services remain available and responsive also to anonymous calls, where no log is mantained. When however you intend to act a submission then you should provide your personal token when calling the service (use the -x option of the connect rtal subcommand). When acting a submission, the service might require you to supply also further arguments or files, like e.g. the source code of your bot subject to evaluation. If you omit providing all the required elements the service drops before creating any log file, which means that the submission has not taken place. On the contrary, the service communicates you when all the log files have been successfully created and the submission is complete.' 
+    args:
+      problem:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_problems
+        explain: 'Select the problem for which to ask a report of your submissions. Use `all_problems` to get a global report of your submissions on all problems.'
+      service:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_services
+        explain: 'Specify the service the submission to which you want to get a report about. Use `all_services` to get a global report of your submissions on all services of the problem `problem`.'
+      other:
+      	regex: ^(([a-z]|[A-Z]|_)*)$
+      	default: None
+      	explain: 'Specifiy the name of the student'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
+      chrono:
+        regex: ^(none|last_positive_submission|all_positive_submissions)$
+        default: none
+        explain: Use this argument to require chronological information about your positive submissions.
+        explain1: '[none] omit any chronological information for a cleanest possible summary.'
+        explain2: '[last_positive_submission] for every achieved goal as resulting from your filtering options, report the time and date of you last submission where the goal was achieved.'
+        explain3: '[all_positive_submissions] report the time and date of every submission where a specific goal (as falling within the active filters) was achieved.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  get_teacher:
+    evaluator: [python,services/get_teacher_records.py]
+    description: '' 
+    args:
+      problem:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_problems
+        explain: 'Select the problem for which to ask a report of your submissions. Use `all_problems` to get a global report of your submissions on all problems.'
+      service:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_services
+      groupProblem:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Count the ok on every problem'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
   
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
