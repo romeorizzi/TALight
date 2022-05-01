@@ -16,7 +16,7 @@ except Exception as e:
 
 class TALcolors:
     def __init__(self, ENV, color_implementation ="ANSI"):
-        if environ["TAL_META_TTY"] or color_implementation=="html":
+        if color_implementation=="html" or (color_implementation != None and (environ["TAL_META_TTY"]=='1')):
             try:
                 self.termcolor = import_module('termcolor')
             except Exception as e:
@@ -58,9 +58,10 @@ class TALcolors:
             ANSI_msg = self.termcolor.colored(msg_text, *msg_colors, attrs=msg_style)
         if self.color_implementation == 'ANSI':
             return ANSI_msg
-        else:
-            assert self.color_implementation == 'html'
+        elif self.color_implementation == 'html':
             return self.ansi2html.convert(ANSI_msg.replace(">", "&gt;").replace("<", "&lt;"), full=False).replace("&", "&amp;").replace("\n", "<br/>")
+        else:
+            assert self.color_implementation == None
 
     def print(self, msg_text, *msg_rendering, **kwargs):
         print(self.colored(msg_text, *msg_rendering), **kwargs)

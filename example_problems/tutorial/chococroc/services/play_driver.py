@@ -14,7 +14,7 @@ args_list = [
     ('m',int),
     ('n',int),
     ('TALight_first_to_move',int),
-    ('watch',str)
+    ('watch',str),
 ]
 
 ENV =Env(args_list)
