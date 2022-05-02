@@ -18,9 +18,9 @@ args_list = [
     ('sol_type',str),
     ('esercizio',int),
     ('task',int),
-    ('var_name_of_answ_opt_val',str),
-    ('var_name_of_answ_opt_sol',str),
-    ('var_name_of_answ_DPtable',str),
+    ('name_of_opt_val',str),
+    ('name_of_opt_sol',str),
+    ('name_of_DPtable',str),
     ('color_implementation',str),
     ('with_output_files',bool),
     ('with_opening_message',bool),
@@ -49,9 +49,9 @@ for ele,peso,val in zip(ENV["elementi"],ENV["pesi"],ENV["valori"]):
         pesi.append(peso)
         valori.append(val)
 opt_val, opt_sol, DPtable = knapsack_lib.solver(elementi,pesi,valori,ENV["Knapsack_Capacity"])
-if ENV['sol_type'] in ['opt_sol','opt_val_and_sol','all']:
+if ENV['sol_type'] in ['opt_sol','opt_sol_with_val','all']:
     print(f"opt_sol: {opt_sol}")
-if ENV['sol_type'] in ['opt_val','opt_val_and_sol','all']:
+if ENV['sol_type'] in ['opt_val','opt_sol_with_val','all']:
     print(f"opt_val: {opt_val}")
 if ENV['sol_type'] in ['DPtable','all']:
     print(f"DPtable: {DPtable}")

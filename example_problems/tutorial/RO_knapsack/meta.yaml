@@ -21,7 +21,7 @@ services:
         regex: ^(.*)$
         default: "['D', 'E']"
       sol_type:
-        regex: ^(opt_sol|opt_val|opt_sol_and_val|DPtable)$
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
         default: opt_sol
       opt_sol:
         regex: ^(.*)$
@@ -47,13 +47,13 @@ services:
       task:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-      var_name_of_answ_opt_val:
+      name_of_opt_val:
         regex: ^(.*)$
         default: opt_val
-      var_name_of_answ_opt_sol:
+      name_of_opt_sol:
         regex: ^(.*)$
         default: opt_sol
-      var_name_of_answ_DPtable:
+      name_of_DPtable:
         regex: ^(.*)$
         default: DPtable
       with_output_files:
@@ -87,7 +87,7 @@ services:
         regex: ^(.*)$
         default: "['D', 'E']"
       sol_type:
-        regex: ^(opt_sol|opt_val|opt_val_and_sol|DPtable|all)$
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
         default: all
       esercizio:
         regex: ^(0|[1-9][0-9]*)$
@@ -95,13 +95,13 @@ services:
       task:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-      var_name_of_answ_opt_val:
+      name_of_opt_val:
         regex: ^(.*)$
         default: opt_val
-      var_name_of_answ_opt_sol:
+      name_of_opt_sol:
         regex: ^(.*)$
         default: opt_sol
-      var_name_of_answ_DPtable:
+      name_of_DPtable:
         regex: ^(.*)$
         default: DPtable
       with_output_files:
