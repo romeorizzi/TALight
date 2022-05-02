@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys
+import random
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
@@ -15,6 +15,7 @@ args_list = [
     ('n',int),
     ('TALight_first_to_move',int),
     ('watch',str),
+    ('random',int),
 ]
 
 ENV =Env(args_list)
@@ -27,9 +28,13 @@ def close_service_and_print_term_signal_for_bots():
     TAc.Finished(only_term_signal=True)
     exit(0)
 
-m=ENV['m']
-n=ENV['n']
-
+if ENV['random']== 1:
+    m=random.randint(1, 1000)
+    n=random.randint(1, 1000)
+else:
+    m=ENV['m']
+    n=ENV['n']
+        
 def I_have_lost():
     TAc.print(LANG.render_feedback("TALight_lost", f'# It is my turn to move, on conf (1,1). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("you-won", f'# You won!'), "green", ["bold"])
@@ -48,8 +53,8 @@ def watch(m,n, first_to_move, second_to_move):
     assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS]
     if ENV["watch"] == 'no_watch':
         return
-    TAc.print('# watch={ENV["watch"]}: ', "blue", end='')
-    if ENV["watch"] == 'watch_winner':
+    TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
+    if ENV['watch'] == 'watch_winner':
         if(cl.grundy_val(m,n) == 0):
             TAc.print(LANG.render_feedback("watch-winner-who-moves-loses", f'{second_to_move} ahead, since ({m}, {n}) is a who-moves-loses configuration.'), "blue")
         else:

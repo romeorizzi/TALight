@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys
+import random
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
@@ -15,7 +15,8 @@ args_list = [
     ('n',int),
     ('nim',int),
     ('TALight_first_to_move',int),
-    ('watch',str)
+    ('watch',str),
+    ('random', int)
 ]
 
 ENV =Env(args_list)
@@ -27,9 +28,14 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 def close_service_and_print_term_signal_for_bots():
     TAc.Finished(only_term_signal=True)
     exit(0)
-
-m=ENV['m']
-n=ENV['n']
+    
+if ENV['random']== 1:
+    m= random.randint(1, 1000)
+    n= random.randint(1, 1000)
+else:
+    m=ENV['m']
+    n=ENV['n']
+    
 nim=ENV['nim']
 
 def I_have_lost():
@@ -58,7 +64,7 @@ def watch(m,n,nim, first_to_move, second_to_move):
     assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS]
     if ENV["watch"] == 'no_watch':
         return
-    TAc.print('# watch={ENV["watch"]}: ', "blue", end='')
+    TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
     if ENV["watch"] == 'watch_winner':
         if(cl.grundy_sum(cl.grundy_val(m, n), nim) == 0):
             TAc.print(LANG.render_feedback("watch-winner-who-moves-loses", f'{second_to_move} ahead, since <chococroc({m},{n}) + nim({nim})> is a who-moves-loses configuration.'), "blue")
