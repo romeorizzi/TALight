@@ -58,7 +58,7 @@ def evaluation_format(task_number, feedback_summary,feedback_message, pt_tot:int
     ret_str += TAc.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + TAc.colored("\nSpiegazione: ", "cyan", ["bold"]) + feedback_message + TAc.colored("\n")    
     return ret_str
 
-def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str]=None, \
+def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str]=[], \
                    pt_tot=None,pt_formato_OK=None,pt_feasibility_OK=None, \
                    sol_type='opt_sol_with_val', opt_sol=None, opt_val=None, DPtable=None, \
                    name_of_opt_sol=None, name_of_opt_val=None, name_of_DPtable=None):

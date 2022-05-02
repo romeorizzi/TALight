@@ -19,7 +19,7 @@ services:
         default: 5
       elementi_proibiti:
         regex: ^(.*)$
-        default: "['D', 'E']"
+        default: "[]"
       sol_type:
         regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
         default: opt_sol
@@ -85,7 +85,7 @@ services:
         default: 5
       elementi_proibiti:
         regex: ^(.*)$
-        default: "['D', 'E']"
+        default: "[]"
       sol_type:
         regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
         default: all
