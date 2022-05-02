@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import sys
-
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
