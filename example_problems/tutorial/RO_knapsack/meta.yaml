@@ -113,4 +113,18 @@ services:
       with_opening_message:
         regex: ^(0|1)$
         default: 0
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
 ...
