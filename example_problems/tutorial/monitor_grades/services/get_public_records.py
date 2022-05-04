@@ -1,11 +1,7 @@
 #!/usr/bin/env pyhton3
 
-from os import environ, listdir
-from os.path import isfile, isdir, join
+from os import environ
 import os
-from FolderData import FolderData
-from FileData import FileData
-from Token import Token
 from LibGrades import LibGrades
 
 DEBUG = False
@@ -32,6 +28,8 @@ if not DEBUG:
 def main(problem : str, service : str, token : str, path : str): 
     l = LibGrades()
     l.loadFile(problem, service, token, path)
+
+    l.getProblemList().printToConsole()
 
     if not DEBUG:
             if ENV['download'] == 1:

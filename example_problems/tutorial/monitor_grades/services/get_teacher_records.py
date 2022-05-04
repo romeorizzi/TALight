@@ -1,11 +1,7 @@
 #!/usr/bin/env pyhton3
 
-from os import environ, listdir
-from os.path import isfile, isdir, join
+from os import environ
 import os
-from FolderData import FolderData
-from FileData import FileData
-from Token import Token
 from LibGrades import LibGrades
 
 DEBUG = False
@@ -18,11 +14,10 @@ if not DEBUG:
     args_list = [
         ('problem', str),
         ('service', str),
-        ('download', int),
-        ('countTotalTries', int),
-        ('countTotalOkAndNo', int),
-        ('countProblem', int),
-        ('countService', int),
+        ('countStudentTries', int),
+        ('countProblemOk', int),
+        ('countServiceOk', int),
+        ('countGoalOk', int),
     ]
 
     ENV = Env(args_list)
@@ -36,28 +31,32 @@ def main(problem : str, service : str, token : str, path : str):
     l = LibGrades()
     l.loadFile(problem, service, token, path)
 
-    if ENV['countTotalTries'] == 1:
+    if ENV['countStudentTries'] == 1:
         a = l.getProblemList().countTokenTries()
 
+        print('Token', 'Total tries', sep='\t')
         for i in a:
-            print(i[0], i[1])
-    elif ENV['countTotalOkAndNo'] == 1:
+            print(i[0], i[1], sep='\t')
+    elif ENV['countProblemOk'] == 1:
         a = l.getProblemList().countTokenOkAndNoGoals()
 
+        print('Token', 'OK', sep='\t')
         for i in a:
-            print(i[0], i[1])
-    elif ENV['countProblem'] == 1:
+            print(i[0], i[1], sep='\t')
+    elif ENV['countServiceOk'] == 1:
         a = l.getProblemList().countProblemOkAndNoGoals()
 
+        print('Token', 'Problem', 'OK', sep='\t')
         for i in a:
-            print(i[0], i[1], i[2])
-    elif ENV['countService'] == 1:
+            print(i[0], i[1], i[2], sep='\t')
+    elif ENV['countGoalOk'] == 1:
         a = l.getProblemList().countServiceOkAndNoGoals()
 
+        print('Token', 'Problem', 'Service', sep='\t')
         for i in a:
-            print(i[0], i[1], i[2], i[3])
+            print(i[0], i[1], i[2], i[3], '\t')
     else:
-        raise
+        print('Invalid choice')
 
 if __name__ == "__main__":
     if DEBUG:

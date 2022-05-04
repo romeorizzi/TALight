@@ -4,7 +4,7 @@ from Token import Token
 from FolderData import FolderData
 from FileData import FileData
 
-from os import listdir, isdir
+from os import listdir
 import os
 
 ALLPROBLEM = "all_problems"
@@ -18,7 +18,7 @@ class LibGrades(object):
     def loadFile(self, problem : str, service : str, token : str, path : str):
         for x in listdir(path):
             fullpath = os.path.join(path, x)
-            if (isdir(fullpath)):
+            if (os.path.isdir(fullpath)):
                 folderdata = FolderData(x, fullpath)
 
                 if (folderdata.token == token or ("__" in token)):

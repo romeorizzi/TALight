@@ -83,7 +83,7 @@ class Token(object):
     def countTokenOkAndNoGoals(self):
         l = list()
 
-        for e in self.token:
+        for e in self.tokens:
             ok_goals = 0
             no_goals = 0
 
@@ -95,14 +95,14 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                l.append((e.token, ok_goals, no_goals))
+            l.append((e.token, ok_goals, no_goals))
 
         return l
 
     def countProblemOkAndNoGoals(self):
         l = list()
 
-        for e in self.token:
+        for e in self.tokens:
             for x in e.problem:
                 ok_goals = 0
                 no_goals = 0
@@ -121,7 +121,7 @@ class Token(object):
     def countServiceOkAndNoGoals(self):
         l = list()
 
-        for e in self.token:
+        for e in self.tokens:
             for x in e.problem:
                 for y in x.services:
                     ok_goals = 0
@@ -133,6 +133,6 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                    l.append((e.token, x.problem, e.service, ok_goals, no_goals))
+                    l.append((e.token, x.problem, y.service, ok_goals, no_goals))
 
         return l
