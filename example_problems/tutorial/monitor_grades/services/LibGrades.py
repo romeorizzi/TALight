@@ -21,7 +21,8 @@ class LibGrades(object):
             if (os.path.isdir(fullpath)):
                 folderdata = FolderData(x, fullpath)
 
-                if (folderdata.token == token or ("__" in token)):
+                # TODO Fix this
+                if (folderdata.token == token or ("__" in token) or folderdata.token.split('_')[1] == token):
                     for y in listdir(fullpath):
                         filedata = FileData(y, os.path.join(fullpath, y), folderdata)
                         

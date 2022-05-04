@@ -39,4 +39,4 @@ if __name__ == "__main__":
     if DEBUG:
         main("all_problems", "all_service", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"))
     else:
-        main(ENV['problem'], ENV['service'], environ['token'], environ['TAL_META_EXP_LOG_DIR'])
+        main(ENV['problem'], ENV['service'], ENV['token'], environ['TAL_META_EXP_LOG_DIR'])
