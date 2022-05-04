@@ -19,7 +19,9 @@ class Token(object):
         
     def printToConsole(self, printAll : bool = False):
         for e in self.tokens:
-            print("Student: " + e.token)
+            struser = Token.hideToken(e.token)
+
+            print("Student: " + struser)
             print("========================")
 
             for x in e.problem:
@@ -43,6 +45,12 @@ class Token(object):
 
             print()
 
+    def hideToken(s : str) -> str:
+        if "__" in s:
+            return s.split('__')[1]
+        else:
+            return s.split('_')[1]
+
     def instanceToString(self, printAll : bool = False):
         lines = list()
 
@@ -61,7 +69,7 @@ class Token(object):
                             else:
                                 value = "NO"
 
-                            line = e.token + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "\n"
+                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "\n"
 
         return ''.join(str(i) for i in lines)
 
@@ -76,7 +84,7 @@ class Token(object):
                     for z in y.goals:
                         total_tries += 1
 
-            l.append((e.token, total_tries))
+            l.append((Token.hideToken(e.token), total_tries))
 
         return l
 
@@ -95,7 +103,7 @@ class Token(object):
                         else:
                             no_goals += 1
 
-            l.append((e.token, ok_goals, no_goals))
+            l.append((Token.hideToken(e.token), ok_goals, no_goals))
 
         return l
 
@@ -114,7 +122,7 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                l.append((e.token, x.problem, ok_goals, no_goals))
+                l.append((Token.hideToken(e.token), x.problem, ok_goals, no_goals))
 
         return l
 
@@ -133,6 +141,6 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                    l.append((e.token, x.problem, y.service, ok_goals, no_goals))
+                    l.append((Token.hideToken(e.token), x.problem, y.service, ok_goals, no_goals))
 
         return l
