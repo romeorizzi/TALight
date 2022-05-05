@@ -63,13 +63,13 @@ class Token(object):
                                 line = e.token + "," + x.problem + "," + y.service + "," + z.goal + "," + o.toString(',') + '\n'
                                 lines.append(line)
                         else:
-                            value = ""
                             if z.getStatusContent():
                                 value = "OK"
                             else:
                                 value = "NO"
 
                             line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "\n"
+                            lines.append(line)
 
         return ''.join(str(i) for i in lines)
 
@@ -93,6 +93,9 @@ class Token(object):
         elif n == 4:
             for x in t:
                 print("{:<14}{:<14}{:<14}{}".format(x[0], x[1], x[2], x[3]))
+        elif n == 5:
+            for x in t:
+                print("{:<14}{:<14}{:<14}{:<14}{}".format(x[0], x[1], x[2], x[3], x[4]))
         else:
             raise
 
@@ -100,7 +103,7 @@ class Token(object):
         lines = list()
 
         for i in t:
-            s = "\n".join(str(el) for el in i)
+            s = ";".join(str(el) for el in i)
             lines.append(s)
 
         return '\n'.join(str(i) for i in lines)
@@ -114,7 +117,8 @@ class Token(object):
             for x in e.problem:
                 for y in x.services:
                     for z in y.goals:
-                        total_tries += 1
+                        for c in z.content:
+                            total_tries += 1
 
             l.append((Token.hideToken(e.token), total_tries))
 
@@ -143,6 +147,8 @@ class Token(object):
         l = list()
 
         for e in self.tokens:
+            resolvedproblem = 0
+
             for x in e.problem:
                 ok_goals = 0
                 no_goals = 0
@@ -154,7 +160,10 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                l.append((Token.hideToken(e.token), x.problem, ok_goals, no_goals))
+                if (no_goals == 0):
+                    resolvedproblem += 1
+
+            l.append((Token.hideToken(e.token), resolvedproblem))
 
         return l
 
@@ -163,16 +172,45 @@ class Token(object):
 
         for e in self.tokens:
             for x in e.problem:
+                resolvedservice = 0
+
                 for y in x.services:
                     ok_goals = 0
                     no_goals = 0
-
+                
                     for z in y.goals:
                         if z.getStatusContent():
                             ok_goals += 1
                         else:
                             no_goals += 1
 
-                    l.append((Token.hideToken(e.token), x.problem, y.service, ok_goals, no_goals))
+                    if no_goals == 0:
+                        resolvedservice += 1
+                
+                l.append((Token.hideToken(e.token), x.problem, resolvedservice))
+
+        return l
+
+    def countGoalsOkAndNoGoals(self):
+        l = list()
+
+        for e in self.tokens:
+            for x in e.problem:
+                for y in x.services:                
+                    resolvedgoal = 0
+
+                    ok_goals = 0
+                    no_goals = 0
+                
+                    for z in y.goals:
+                        if z.getStatusContent():
+                            ok_goals += 1
+                        else:
+                            no_goals += 1
+
+                    if no_goals == 0:
+                        resolvedgoal += 1
+                
+                    l.append((Token.hideToken(e.token), x.problem, y.service, resolvedgoal))
 
         return l

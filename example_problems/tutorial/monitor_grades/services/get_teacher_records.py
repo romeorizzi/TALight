@@ -36,32 +36,40 @@ def main(problem : str, service : str, token : str, path : str):
     if ENV['countStudentTries'] == 1:
         a = l.getProblemList().countTokenTries()
 
-        Token.tupleToTable(("Token", "Course"))
-        Token.tupleToTable(a, 2)
+        Token.tupleToTable(("Token", "#Tries"))
+        Token.tupleToTable(a)
+
+        if ENV['download'] == 1:
+            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
+    elif ENV['countStudentOkAndNo'] == 1:
+        a = l.getProblemList().countTokenOkAndNoGoals()
+
+        Token.tupleToTable(('Token', '#OK', '#NO'))
+        Token.tupleToTable(a)
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     elif ENV['countProblemOk'] == 1:
-        a = l.getProblemList().countTokenOkAndNoGoals()
-
-        Token.tupleToTable(('Token', 'OK'))
-        Token.tupleToTable(a, 2)
-
-        if ENV['download'] == 1:
-            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
-    elif ENV['countServiceOk'] == 1:
         a = l.getProblemList().countProblemOkAndNoGoals()
 
-        Token.tupleToTable(("Token", "Problem", "OK"))
-        Token.tupleToTable(a, 3)
+        Token.tupleToTable(("Token", "#OK"))
+        Token.tupleToTable(a)
         
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
-    elif ENV['countGoalOk'] == 1:
+    elif ENV['countServiceOk'] == 1:
         a = l.getProblemList().countServiceOkAndNoGoals()
 
-        Token.tupleToTable(("Token", "Problem", "Service", "OK"))
-        Token.tupleToTable(a, 4)
+        Token.tupleToTable(("Token", "Problem", "#Service"))
+        Token.tupleToTable(a)
+
+        if ENV['download'] == 1:
+            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
+    elif ENV['countGoalOk'] == 1:
+        a = l.getProblemList().countGoalsOkAndNoGoals()
+
+        Token.tupleToTable(('Token', 'Problem', 'Service', '#Goal'))
+        Token.tupleToTable(a)
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
