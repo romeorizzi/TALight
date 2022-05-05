@@ -3,6 +3,7 @@
 from os import environ
 import os
 from LibGrades import LibGrades
+from Token import Token
 
 DEBUG = False
 
@@ -34,27 +35,23 @@ def main(problem : str, service : str, token : str, path : str):
     if ENV['countStudentTries'] == 1:
         a = l.getProblemList().countTokenTries()
 
-        print('Token', 'Total tries', sep='\t')
-        for i in a:
-            print(i[0], i[1], sep='\t')
+        Token.tupleToTable(("Token", "Course"))
+        Token.tupleToTable(a, 2)
     elif ENV['countProblemOk'] == 1:
         a = l.getProblemList().countTokenOkAndNoGoals()
 
-        print('Token', 'OK', sep='\t')
-        for i in a:
-            print(i[0], i[1], sep='\t')
+        Token.tupleToTable(('Token', 'OK'))
+        Token.tupleToTable(a, 2)
     elif ENV['countServiceOk'] == 1:
         a = l.getProblemList().countProblemOkAndNoGoals()
 
-        print('Token', 'Problem', 'OK', sep='\t')
-        for i in a:
-            print(i[0], i[1], i[2], sep='\t')
+        Token.tupleToTable(("Token", "Problem", "OK"))
+        Token.tupleToTable(a, 3)
     elif ENV['countGoalOk'] == 1:
         a = l.getProblemList().countServiceOkAndNoGoals()
 
-        print('Token', 'Problem', 'Service', sep='\t')
-        for i in a:
-            print(i[0], i[1], i[2], i[3], '\t')
+        Token.tupleToTable(("Token", "Problem", "Service", "OK"))
+        Token.tupleToTable(a, 4)
     else:
         print('Invalid choice')
 

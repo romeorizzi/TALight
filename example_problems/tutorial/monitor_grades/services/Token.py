@@ -73,6 +73,38 @@ class Token(object):
 
         return ''.join(str(i) for i in lines)
 
+    def tupleToTable(t, m = -1):
+        if type(t) == tuple:
+            l = list()
+            l.append(t)
+            return Token.tupleToTable(l, m)
+        else:
+            if m == -1:
+                n = len(t[0])
+            else:
+                n = m
+
+        if n == 2:
+            for x in t:
+                print("{:<14}{}".format(x[0], x[1]))
+        elif n == 3:
+            for x in t:
+                print("{:<14}{:<14}{}".format(x[0], x[1], x[2]))
+        elif n == 4:
+            for x in t:
+                print("{:<14}{:<14}{:<14}{}".format(x[0], x[1], x[2], x[3]))
+        else:
+            raise
+
+    def tupleToFile(t):
+        lines = list()
+
+        for i in t:
+            s = "\n".join(str(el) for el in i)
+            lines.append(s)
+
+        return '\n'.join(str(i) for i in lines)
+
     def countTokenTries(self):
         l = list()
 
