@@ -58,6 +58,10 @@ services:
       service:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
       countStudentTries:
         regex: ^(0|1)$
         default: 1

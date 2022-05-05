@@ -15,6 +15,7 @@ if not DEBUG:
     args_list = [
         ('problem', str),
         ('service', str),
+        ('download', int),
         ('countStudentTries', int),
         ('countProblemOk', int),
         ('countServiceOk', int),
@@ -37,21 +38,33 @@ def main(problem : str, service : str, token : str, path : str):
 
         Token.tupleToTable(("Token", "Course"))
         Token.tupleToTable(a, 2)
+
+        if ENV['download'] == 1:
+            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     elif ENV['countProblemOk'] == 1:
         a = l.getProblemList().countTokenOkAndNoGoals()
 
         Token.tupleToTable(('Token', 'OK'))
         Token.tupleToTable(a, 2)
+
+        if ENV['download'] == 1:
+            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     elif ENV['countServiceOk'] == 1:
         a = l.getProblemList().countProblemOkAndNoGoals()
 
         Token.tupleToTable(("Token", "Problem", "OK"))
         Token.tupleToTable(a, 3)
+        
+        if ENV['download'] == 1:
+            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     elif ENV['countGoalOk'] == 1:
         a = l.getProblemList().countServiceOkAndNoGoals()
 
         Token.tupleToTable(("Token", "Problem", "Service", "OK"))
         Token.tupleToTable(a, 4)
+
+        if ENV['download'] == 1:
+            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     else:
         print('Invalid choice')
 
