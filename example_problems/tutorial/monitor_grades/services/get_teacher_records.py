@@ -17,6 +17,7 @@ if not DEBUG:
         ('service', str),
         ('download', int),
         ('countStudentTries', int),
+        ('countStudentOkAndNo', int),
         ('countProblemOk', int),
         ('countServiceOk', int),
         ('countGoalOk', int),
@@ -52,7 +53,7 @@ def main(problem : str, service : str, token : str, path : str):
     elif ENV['countProblemOk'] == 1:
         a = l.getProblemList().countProblemOkAndNoGoals()
 
-        Token.tupleToTable(("Token", "#OK"))
+        Token.tupleToTable(("Token", "#Problem"))
         Token.tupleToTable(a)
         
         if ENV['download'] == 1:

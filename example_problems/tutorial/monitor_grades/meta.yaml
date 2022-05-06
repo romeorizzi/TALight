@@ -72,7 +72,7 @@ services:
         explain: 'Count the Ok and No of a given student'
       countProblemOk:
         regex: ^(0|1)$
-        default: 1
+        default: 0
         explain: 'Count the resolved problem for the given student'
       countServiceOk:
         regex: ^(0|1)$
