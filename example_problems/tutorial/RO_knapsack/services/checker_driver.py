@@ -78,7 +78,7 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
             return evaluation_format(task_number, feedback_summary, f"Come `{name_of_opt_val}` hai immesso `{opt_val}` dove era invece richiesto di immettere un intero.", pt_tot,pt_safe=None,pt_out=pt_tot)
         if sol_type == "opt_val":
             feedback_summary += f"formato di {name_of_opt_val}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]\n", "green", ["bold"])
-            return evaluation_format(task_number, feedback_summary, f"Come `{name_of_opt_val}` hai immesso un intero come richiesto."+TAc.colored("\nNota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0)
+            return evaluation_format(task_number, feedback_summary, f"Come `{name_of_opt_val}` hai immesso un intero come richiesto."+TAc.colored("\nNota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0)
         else:
             feedback_summary += f"formato di {name_of_opt_val}: "+TAc.colored("OK\n", "green", ["bold"])
 
@@ -102,7 +102,7 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
                 return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot)
             feedback_summary += f"ammissibilità della soluzione in {name_of_opt_sol}: "+TAc.colored(f"OK [{pt_feasibility_OK} safe pt]\n", "green", ["bold"])
             if sol_type == "opt_sol":
-                return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in {name_of_opt_sol} è ammissibile."+TAc.colored("\nNota:", "cyan", ["bold"])+"Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
+                return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in {name_of_opt_sol} è ammissibile."+TAc.colored("\nNota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
             assert sol_type == "opt_sol_with_val"
             if sum_valori > opt_val:
                 feedback_summary += f"{name_of_opt_val}={opt_val}<{sum_valori}, che è la somma dei valori su {name_of_opt_sol}: "+TAc.colored(f"NO\n", "red", ["bold"])
@@ -112,7 +112,7 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
                 return evaluation_format(task_number, feedback_summary, f"Il valore della soluzione immessa è {sum_valori} e non {opt_val} come hai immesso in `{name_of_opt_val}`. A mè risulta che la soluzione (ammissibile) che hai immesso sia {opt_sol}.", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK)
             else:
                 feedback_summary += f"{name_of_opt_val}={opt_val} = somma dei valori su {name_of_opt_sol}: "+TAc.colored(f"OK\n", "green", ["bold"])
-                return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{name_of_opt_sol}` è ammissibile ed il suo valore corrisponde a quanto in `{name_of_opt_val}`."+TAc.colored("\nNota: ", "cyan", ["bold"])+"Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
+                return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{name_of_opt_sol}` è ammissibile ed il suo valore corrisponde a quanto in `{name_of_opt_val}`."+TAc.colored("\nNota:", "cyan", ["bold"])+" Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
 
             
 if len(ENV["elementi"])!=len(ENV["pesi"]):
