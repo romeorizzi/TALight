@@ -48,14 +48,11 @@ def evaluation_format(task_number, feedback_summary,feedback_message, pt_tot:int
     safe_points = pt_safe
     maybe_points = pt_maybe
     index_pt=task_number-1
-    code_for_jupyter_commented = """
-    if TAc.color_implementation == 'html':
-        return f"{feedback_summary}<br>Totalizzi <span style='color:green'>[punti sicuri: {pt_safe}]</span>, <span style='color:blue'>[punti aggiuntivi possibili: {pt_maybe}]</span>, <span style='color:red'>[punti fuori portata: {pt_out}]</span>.<br><span style='color:cyan'>Spiegazione: </span>{feedback_message}<br>"
-    """
+    new_line = '\n'
     ret_str = feedback_summary + "Totalizzi "
     ret_str += TAc.colored(f"[punti sicuri: {pt_safe}]", "green", ["bold"]) + ", "
     ret_str += TAc.colored(f"[punti aggiuntivi possibili: {pt_maybe}]", "blue", ["bold"]) + ", " 
-    ret_str += TAc.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + TAc.colored("\nSpiegazione: ", "cyan", ["bold"]) + feedback_message + TAc.colored("\n")    
+    ret_str += TAc.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + TAc.colored(f"{new_line}Spiegazione: ", "cyan", ["bold"]) + feedback_message + TAc.colored(f"{new_line}")    
     return ret_str
 
 def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str]=[], \
@@ -63,6 +60,7 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
                    sol_type='opt_sol_with_val', opt_sol=None, opt_val=None, DPtable=None, \
                    name_of_opt_sol=None, name_of_opt_val=None, name_of_DPtable=None):
     global elementi
+    new_line = '\n'
     feedback_summary = ""
     elementi=[]
     pesi=[]
@@ -74,45 +72,45 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
             valori.append(val)
     if sol_type in ["opt_val","opt_sol_with_val"]:
         if type(opt_val) != int:
-            feedback_summary += f"formato di {name_of_opt_val}: "+TAc.colored("NO\n", "red", ["bold"])
+            feedback_summary += f"formato di {name_of_opt_val}: "+TAc.colored(f"NO{new_line}", "red", ["bold"])
             return evaluation_format(task_number, feedback_summary, f"Come `{name_of_opt_val}` hai immesso `{opt_val}` dove era invece richiesto di immettere un intero.", pt_tot,pt_safe=None,pt_out=pt_tot)
         if sol_type == "opt_val":
-            feedback_summary += f"formato di {name_of_opt_val}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]\n", "green", ["bold"])
-            return evaluation_format(task_number, feedback_summary, f"Come `{name_of_opt_val}` hai immesso un intero come richiesto."+TAc.colored("\nNota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0)
+            feedback_summary += f"formato di {name_of_opt_val}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]{new_line}", "green", ["bold"])
+            return evaluation_format(task_number, feedback_summary, f"Come `{name_of_opt_val}` hai immesso un intero come richiesto."+TAc.colored(f"{new_line}Nota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0)
         else:
-            feedback_summary += f"formato di {name_of_opt_val}: "+TAc.colored("OK\n", "green", ["bold"])
+            feedback_summary += f"formato di {name_of_opt_val}: "+TAc.colored(f"OK{new_line}", "green", ["bold"])
 
     if sol_type in ["opt_sol","opt_sol_with_val"]:
         if type(opt_sol) != list:
-            feedback_summary += f"formato di {name_of_opt_sol}: "+TAc.colored("NO\n", "red", ["bold"])
+            feedback_summary += f"formato di {name_of_opt_sol}: "+TAc.colored(f"NO{new_line}", "red", ["bold"])
             return evaluation_format(task_number, feedback_summary, f"Come `{name_of_opt_sol}` è richiesto si inserisca una lista di oggetti (esempio ['{elementi[0]}','{elementi[2]}']). Hai invece immesso `{opt_sol}`.", pt_tot,pt_safe=None,pt_out=pt_tot)
         else:
             sum_valori=0
             sum_pesi=0
             for ele in opt_sol:
                 if ele not in elementi:
-                    feedback_summary += f"formato di {name_of_opt_sol}: "+TAc.colored("NO\n", "red", ["bold"])
+                    feedback_summary += f"formato di {name_of_opt_sol}: "+TAc.colored(f"NO{new_line}", "red", ["bold"])
                     return evaluation_format(task_number, feedback_summary, f"Ogni elemento che collochi nella lista `{name_of_opt_sol}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {elementi}.", pt_tot,pt_safe=None,pt_out=pt_tot)
                 index_of_ele = elementi.index(ele)
                 sum_valori += valori[index_of_ele]
                 sum_pesi += pesi[index_of_ele]
-            feedback_summary += f"formato di {name_of_opt_sol}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]\n", "green", ["bold"])
+            feedback_summary += f"formato di {name_of_opt_sol}: "+TAc.colored(f"OK [{pt_formato_OK} safe pt]{new_line}", "green", ["bold"])
             if sum_pesi > Capacity:
-                feedback_summary += f"ammissibilità della soluzione in {name_of_opt_sol}: "+TAc.colored("NO\n", "red", ["bold"])
+                feedback_summary += f"ammissibilità della soluzione in {name_of_opt_sol}: "+TAc.colored(f"NO{new_line}", "red", ["bold"])
                 return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot)
-            feedback_summary += f"ammissibilità della soluzione in {name_of_opt_sol}: "+TAc.colored(f"OK [{pt_feasibility_OK} safe pt]\n", "green", ["bold"])
+            feedback_summary += f"ammissibilità della soluzione in {name_of_opt_sol}: "+TAc.colored(f"OK [{pt_feasibility_OK} safe pt]{new_line}", "green", ["bold"])
             if sol_type == "opt_sol":
-                return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in {name_of_opt_sol} è ammissibile."+TAc.colored("\nNota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
+                return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in {name_of_opt_sol} è ammissibile."+TAc.colored(f"{new_line}Nota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
             assert sol_type == "opt_sol_with_val"
             if sum_valori > opt_val:
-                feedback_summary += f"{name_of_opt_val}={opt_val}<{sum_valori}, che è la somma dei valori su {name_of_opt_sol}: "+TAc.colored(f"NO\n", "red", ["bold"])
+                feedback_summary += f"{name_of_opt_val}={opt_val}<{sum_valori}, che è la somma dei valori su {name_of_opt_sol}: "+TAc.colored(f"NO{new_line}", "red", ["bold"])
             if sum_valori < opt_val:
-                feedback_summary += f"{name_of_opt_val}={opt_val}>{sum_valori}, che è la somma dei valori su {name_of_opt_sol}: "+TAc.colored(f"NO\n", "red", ["bold"])
+                feedback_summary += f"{name_of_opt_val}={opt_val}>{sum_valori}, che è la somma dei valori su {name_of_opt_sol}: "+TAc.colored(f"NO{new_line}", "red", ["bold"])
             if sum_valori != opt_val:
                 return evaluation_format(task_number, feedback_summary, f"Il valore della soluzione immessa è {sum_valori} e non {opt_val} come hai immesso in `{name_of_opt_val}`. A mè risulta che la soluzione (ammissibile) che hai immesso sia {opt_sol}.", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK)
             else:
-                feedback_summary += f"{name_of_opt_val}={opt_val} = somma dei valori su {name_of_opt_sol}: "+TAc.colored(f"OK\n", "green", ["bold"])
-                return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{name_of_opt_sol}` è ammissibile ed il suo valore corrisponde a quanto in `{name_of_opt_val}`."+TAc.colored("\nNota:", "cyan", ["bold"])+" Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
+                feedback_summary += f"{name_of_opt_val}={opt_val} = somma dei valori su {name_of_opt_sol}: "+TAc.colored(f"OK{new_line}", "green", ["bold"])
+                return evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{name_of_opt_sol}` è ammissibile ed il suo valore corrisponde a quanto in `{name_of_opt_val}`."+TAc.colored(f"{new_line}Nota:", "cyan", ["bold"])+" Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
 
             
 if len(ENV["elementi"])!=len(ENV["pesi"]):

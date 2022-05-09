@@ -59,7 +59,7 @@ class TALcolors:
         if self.color_implementation == 'ANSI':
             return ANSI_msg
         elif self.color_implementation == 'html':
-            return self.ansi2html.convert(ANSI_msg.replace(">", "&gt;").replace("<", "&lt;"), full=False).replace("\n", "<br/>")
+            return self.ansi2html.convert(ANSI_msg.replace(">", "&gt;").replace("<", "&lt;"), full=False).replace("\n", "\n<br/>")
         else:
             assert self.color_implementation == None
 
