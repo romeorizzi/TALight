@@ -2,7 +2,6 @@
 import os
 import random
 import math
-import json
 from datetime import datetime
 
 from termcolor import colored
@@ -66,22 +65,13 @@ def instance_to_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
     if format_primary == 'txt':
         return instance_to_txt_str(instance, format_name)
 
-def instance_to_txt_str(instance, format_name):
+def instance_to_txt_str(instance, format_name="pyramid"):
     """Of the given <instance>, this function returns the .txt string in format <format_name>"""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
     triangle = instance['triangle']
-    n = instance['n']
-    MIN_VAL = instance['MIN_VAL']
-    MAX_VAL = instance['MAX_VAL']
-    seed = instance['seed']
-    m = instance['m']
     big_triangle = instance['big_triangle']
-    MIN_VAL_BIG = instance['MIN_VAL_BIG']
-    MAX_VAL_BIG = instance['MAX_VAL_BIG']
-    big_seed = instance['big_seed']
-    measured_time = None
-    answer_correct = None
-    path = instance['path']
+    n = instance['n']
+    m = instance['m']    
     output= f''
     if format_name == 'pyramid':
         for num_linea in range(n):
@@ -94,7 +84,8 @@ def instance_to_txt_str(instance, format_name):
                 else:
                     output += el + "  "
             output += " "*2*(n-num_linea) + "\n"
-        output += f"\n{n}\n{MIN_VAL}\n{MAX_VAL}\n{seed}\n\n#\n\n"
+        if m!= 0:
+            output += "\n#\n\n"
         for num_linea in range(m):
             output+=f" "*2*(m-1-num_linea)
             array = big_triangle[num_linea]
@@ -105,7 +96,6 @@ def instance_to_txt_str(instance, format_name):
                 else:
                     output += el + "  "
             output += " "*2*(m-num_linea) + "\n"
-        output += f"\n{m}\n{MIN_VAL_BIG}\n{MAX_VAL_BIG}\n{big_seed}\n"
     else:   
         output += f'{n}\n'
         for num_linea in range(n):
@@ -113,59 +103,35 @@ def instance_to_txt_str(instance, format_name):
             for el in array:
                 output += str(el) + " "
             output += "\n"
-        output += f"\n{MIN_VAL}\n{MAX_VAL}\n{seed}\n\n#\n\n{m}\n"
-        for num_linea in range(m):
-            array = big_triangle[num_linea]
-            for el in array:
-                output += str(el) + " "
-            output += "\n"
-        output += f"\n{MIN_VAL_BIG}\n{MAX_VAL_BIG}\n{big_seed}\n"
-    output += f"\n{path}\n{measured_time}\n{answer_correct}"
+        if m!= 0:
+            output += "\n#\n\n"
+            output += f'{m}\n'
+            for num_linea in range(m):
+                array = big_triangle[num_linea]
+                for el in array:
+                    output += str(el) + " "
+                output += "\n"
     return output
     
-def instance_to_dat_str(instance,format_name=''):
+def instance_to_dat_str(instance,format_name='triangle_dat'):
     """Of the given <instance>, this function returns the .dat string in format <format_name>"""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
     triangle = instance['triangle']
-    n = instance['n']
-    MIN_VAL = instance['MIN_VAL']
-    MAX_VAL = instance['MAX_VAL']
-    seed = instance['seed']
     big_triangle = instance['big_triangle']
-    m = instance['m']
-    MIN_VAL_BIG = instance['MIN_VAL_BIG']
-    MAX_VAL_BIG = instance['MAX_VAL_BIG']
-    big_seed = instance['big_seed']
-    path = instance['path']
-    measured_time = None
-    answer_correct = None
+    n = instance['n']        
+    m = instance['m']    
     output = f"param n := {n};                  # Number of lines of the triangle\n"
-    output += f"param MIN_VAL := {MIN_VAL};            # Minimum element value of the small triangle\n"
-    output += f"param MAX_VAL:= {MAX_VAL};            # Maximum element value of the small triangle\n"
-    output += f"param seed := {seed};          # Seed generating the  small triangle\n"
-    output += f"param m := {m};                  # Number of lines of the triangle\n"
-    output += f"param MIN_VAL_BIG := {MIN_VAL_BIG};        # Minimum element value of the big triangle\n"
-    output += f"param MAX_VAL_BIG := {MAX_VAL_BIG};       # Maximum element value of the big triangle\n"
-    output += f"param big_seed := {big_seed};      # Seed generating the big triangle\n"
-    output += f"param path := {path};              # Path along the given triangle\n"
-    output += f"param measured_time := {None};   # Instance solving time\n"
-    output += f"param answer_correct := {None};  # Solution to instance is correct\n"
-    output += "param: SMALL_STRINGS "
-    for i in range(n):
-        output += "  "*i
-        output += f"LINE_{i+1}"
-    output += f":=\n                       {triangle[0]}  "
+    if m!= 0:
+        output += f"param m := {m};                  # Number of lines of the triangle\n"
+    output += "param: SMALL_TRIANGLE "    
+    output += f":= {triangle[0]} "
     for i in range(1,n):
-        output += f" {triangle[i]}"
-        output += " "*2
-    output += ";\nparam: BIG_STRINGS "
-    for i in range(m):
-        output += "  "*i
-        output += f"LINE_{i+1} "
-    output += f":=\n                      {big_triangle[0]}  "
-    for i in range(1,m):
-        output += f" {big_triangle[i]}"
-        output += " "*2
+        output += f"{triangle[i]} "
+    if m!= 0:
+        output += ";\nparam: BIG_TRIANGLE "
+        output += f":= {big_triangle[0]} "
+        for i in range(1,m):
+            output += f"{big_triangle[i]} "
     output += ";\nend;"
     return output
 
@@ -184,26 +150,15 @@ def get_instance_from_txt(instance_as_str, format_name):
     instance = {}
     str_to_arr = instance_as_str.split()
     delim = "#"
-    del_index = str_to_arr.index(delim)
-    if format_name == "pyramid":
-        instance['n'] = int(str_to_arr[del_index-4])
+    if delim in str_to_arr:
+        del_index = str_to_arr.index(delim)        
+        instance['triangle'] = triangle_from_array([int(x) for x in str_to_arr[:del_index]])
+        instance['big_triangle'] = triangle_from_array([int(x) for x in str_to_arr[del_index+1:]])
+        instance['n'] = len(instance['triangle'])        
+        instance['m'] = len(instance['big_triangle'])        
     else:
-        instance['n'] = int(str_to_arr[0])
-    if format_name == "pyramid":
-        instance['m'] = int(str_to_arr[len(str_to_arr)-7])
-    else:
-        instance['m'] =  int(str_to_arr[del_index+1])
-    instance['MIN_VAL'] = int(str_to_arr[del_index-3])
-    instance['MAX_VAL'] = int(str_to_arr[del_index-2])
-    instance['seed'] = int(str_to_arr[del_index-1])
-    instance['triangle'] = random_triangle(instance['n'],instance['MIN_VAL'],instance['MAX_VAL'],instance['seed'])    
-    instance['MIN_VAL_BIG'] = int(str_to_arr[len(str_to_arr)-6])
-    instance['MAX_VAL_BIG'] = int(str_to_arr[len(str_to_arr)-5])
-    instance['big_seed'] = int(str_to_arr[len(str_to_arr)-4])
-    instance['big_triangle'] = random_triangle(instance['m'],instance['MIN_VAL_BIG'],instance['MAX_VAL_BIG'],instance['big_seed'])
-    instance['path'] = str_to_arr[-3].replace(" ","") # assign path
-    instance['measured_time'] = None # assign measured_time
-    instance['answer_correct'] = None # assign answer_correct 
+        instance['triangle'] = triangle_from_array([int(x) for x in str_to_arr])
+        instance['n'] = len(instance['triangle'])        
     return instance
     
 def get_instance_from_dat(instance_as_str, format_name):
@@ -211,25 +166,20 @@ def get_instance_from_dat(instance_as_str, format_name):
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{instance_format_name}` unsupported for objects of category `instance`.'
     split_instance = instance_as_str.split(";")
     instance = {}
-    instance['n'] = int(get_param(split_instance[0])) # assign n
-    instance['MIN_VAL'] = int(get_param(split_instance[1])) # assign MIN_VAL_SMALL
-    instance['MAX_VAL'] = int(get_param(split_instance[2])) # assign MAX_VAL_SMALL
-    instance['seed'] = int(get_param(split_instance[3])) # assign small_seed
-    instance['triangle'] = random_triangle(instance['n'],instance['MIN_VAL'],instance['MAX_VAL'],instance['seed'])
-    instance['m'] = int(get_param(split_instance[4])) # assign m
-    instance['MIN_VAL_BIG'] = int(get_param(split_instance[5])) # assign MIN_VAL_BIG
-    instance['MAX_VAL_BIG'] = int(get_param(split_instance[6])) # assign MAX_VAL_BIG
-    instance['big_seed'] = int(get_param(split_instance[7])) # assign big_seed
-    instance['big_triangle'] = random_triangle(instance['m'],instance['MIN_VAL_BIG'],instance['MAX_VAL_BIG'],instance['big_seed'])
-    instance['path'] = get_param(split_instance[8]).replace(" ","") # assign path
-    instance['measured_time'] = None # assign measured_time
-    instance['answer_correct'] = None # assign answer_correct
+    if len(split_instance) != 4:
+        instance['n'] = int(get_param(split_instance[0])) # assign n
+        instance['m'] = int(get_param(split_instance[1])) # assign m
+        instance['triangle'] = list(ast.literal_eval(get_param(split_instance[2]).replace("] [","],[").replace(" ",""))) # assign triangle
+        instance['big_triangle'] = list(ast.literal_eval(get_param(split_instance[3]).replace("] [","],[").replace(" ",""))) # assign big triangle
+    else:
+        instance['n'] = int(get_param(split_instance[0])) # assign n
+        instance['triangle'] = list(ast.literal_eval(get_param(split_instance[1]).replace("] [","],[").replace(" ","")))
     return instance
 
 
 # SUPPORT METHODS
 
-def instances_generator(num_instances, scaling_factor: float, MIN_VAL: int, MAX_VAL: int, MIN_N: int, MAX_N: int, MIN_M = 0, MAX_M = 0, MIN_VAL_BIG = 0, MAX_VAL_BIG = 0, seed = "random_seed", big_seed = "random_seed", path = "random_path"):
+def instances_generator(num_instances, scaling_factor: float, MIN_VAL: int, MAX_VAL: int, MIN_N: int, MAX_N: int, MIN_M = 0, MAX_M = 0, seed = "random_seed", big_seed = "random_seed"):
     instances = [] 
     n = MIN_N
     m = MIN_M
@@ -243,10 +193,6 @@ def instances_generator(num_instances, scaling_factor: float, MIN_VAL: int, MAX_
         instance['MIN_VAL'] = MIN_VAL
         instance['MAX_VAL'] = MAX_VAL
         instance['seed'] = seed
-        if path == "random_path":
-            instance['path'] = random_path(n,n)
-        else:
-            instance['path'] = path
         n = math.ceil(scaling_factor*n)
         if n > MAX_N:
             n = MAX_N
@@ -254,9 +200,7 @@ def instances_generator(num_instances, scaling_factor: float, MIN_VAL: int, MAX_
         if big_seed == "random_seed":
             big_seed = random.randint(100000,999999)
         instance['m'] = m
-        instance['big_triangle'] = random_triangle(m,MIN_VAL_BIG,MAX_VAL_BIG,big_seed)
-        instance['MIN_VAL_BIG'] = MIN_VAL_BIG
-        instance['MAX_VAL_BIG'] = MAX_VAL_BIG
+        instance['big_triangle'] = random_triangle(m,MIN_VAL,MAX_VAL,big_seed)
         instance['big_seed'] = big_seed
         m = math.ceil(scaling_factor*m)
         if m > MAX_M:
@@ -591,24 +535,4 @@ def print_summaries(goals,instances,MAX_TIME,out_of_time,TAc,LANG):
         else:
             TAc.print(LANG.render_feedback('goal-NOT-passed', f'# Goal {goal}: NOT passed (passed instances: {num_instances_passed[goal]}/{num_instances[goal]} instances, correct answers: {num_instances_correct_ans[goal]}/{num_instances[goal]}, wrong answers: {num_instances_wrong_ans[goal]}/{num_instances[goal]} instances)'), 'red', ['bold'])
     TAc.print(f"\n# WE HAVE FINISHED", "white")
-
-
-       
-       
-
-        
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+  

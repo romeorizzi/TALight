@@ -17,9 +17,9 @@ services:
         default: 1
         explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''triangle.tar\'' you get downloaded on your machine by issuing `rtal get triangle`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
       m:
-        regex: ^([1-9][0-9]{0,1}|100)$
+        regex: ^(0|[1-9][0-9]{0,1}|100)$
         regex-explained: a positive natural <= 100
-        default: 10
+        default: 0
         explain: Number of lines of the big triangle.
       n:
         regex: ^([1-9][0-9]{0,1}|100)$
@@ -48,12 +48,6 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
-      path:
-        regex: ^(random_path|(L|R){0,99})$
-        regex-explained: 'either the string "random_path" or a path encoded in {{L,R}}^(n-1))'
-        regex-URL: 'https://extendsclass.com/regex/90e74ec'
-        default: random_path
-        explain: "a solution for a given triangle instance is a path from the top vertex of the triangle to an element of its last (bottom) row. The path always has two options when moving from one row to the next: either go left (L) or right (R). Hence feasible paths are encoded as sequence in {{L,R}}^(n-1))."
       instance_format:
         regex: ^(pyramid|in_lines|triangle_dat)$
         default: in_lines

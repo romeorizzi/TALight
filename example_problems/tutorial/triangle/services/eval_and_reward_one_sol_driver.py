@@ -66,7 +66,7 @@ MAX_TIME = 2
 def test(instance):
     triangle = instance['triangle']
     n = instance['n']
-    path = instance['path']
+    path = tl.random_path(n,n)
     TAc.print(LANG.render_feedback("triangle-size",'# We have a triangle whose number of rows is:'), "white", ["bold"])
     TAc.print(n, "yellow", ["bold"])
     TAc.print(LANG.render_feedback("print-triangle", f'# The triangle of reference is:'), "white", ["bold"])

@@ -17,11 +17,8 @@ args_list = [
     ('n',int),
     ('MIN_VAL',int),
     ('MAX_VAL',int),
-    ('MIN_VAL_BIG',int),
-    ('MAX_VAL_BIG',int),
     ('seed',str),
     ('big_seed',str),
-    ('path',str),
     ('silent',bool),
     ('display',bool),
     ('download',bool),
@@ -42,7 +39,7 @@ TALf = TALfilesHelper(TAc, ENV)
 
 if ENV['source'] != 'catalogue':
     # Get random instance
-    instance = tl.instances_generator(1, 1, ENV['MIN_VAL'], ENV['MAX_VAL'], ENV['n'], ENV['n'], ENV['m'], ENV['m'], ENV['MIN_VAL_BIG'], ENV['MAX_VAL_BIG'], ENV['seed'], ENV['big_seed'], ENV['path'])[0]
+    instance = tl.instances_generator(1, 1, ENV['MIN_VAL'], ENV['MAX_VAL'], ENV['n'], ENV['n'], ENV['m'], ENV['m'], ENV['seed'], ENV['big_seed'])[0]
     instance_str = tl.instance_to_str(instance, format_name=ENV['instance_format'])
     output_filename = f"random_instance_{ENV['seed']}_{ENV['big_seed']}.{ENV['instance_format']}.txt" 
 else: # Get instance from catalogue
@@ -55,12 +52,15 @@ if ENV['silent']:
     if ENV['display']:
         print(instance_str)
 else:
-    TAc.print(LANG.render_feedback("instance-title", f'This is the instance:'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance-title", f'This is the instance:\n'), "yellow", ["bold"])
     if ENV['display']:
         TAc.print(instance_str, "white", ["bold"])
         if ENV['source'] != 'catalogue': # display random instance
             output = ""
-            output += f'\nThe parameters encoding this instance are:\nn: {ENV["n"]}\nMIN_VAL: {ENV["MIN_VAL"]}\nMAX_VAL: {ENV["MAX_VAL"]}\nseed: {ENV["seed"]}\nm: {ENV["m"]}\nMIN_VAL_BIG: {ENV["MIN_VAL_BIG"]}\nMAX_VAL_BIG: {ENV["MAX_VAL_BIG"]}\nbig_seed: {instance["big_seed"]}\npath: {instance["path"]}'            
+            if ENV['m'] != 0:
+                output += f'The parameters encoding this instance are:\nn: {ENV["n"]}\nseed: {ENV["seed"]}\nm: {ENV["m"]}\nbig_seed: {instance["big_seed"]}\nMIN_VAL: {ENV["MIN_VAL"]}\nMAX_VAL: {ENV["MAX_VAL"]}'  
+            else:
+                output += f'\nThe parameters encoding this instance are:\nn: {ENV["n"]}\nseed: {ENV["seed"]}\nMIN_VAL: {ENV["MIN_VAL"]}\nMAX_VAL: {ENV["MAX_VAL"]}'          
             TAc.print(LANG.render_feedback("output-instance", output), "yellow", ["bold"])
 if ENV['download']:
     TALf.str2output_file(instance_str,output_filename)
