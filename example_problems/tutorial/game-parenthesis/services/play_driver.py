@@ -3,18 +3,19 @@
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-import par_game_lib as pl
+import random
+import game_parenthesis_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="par_game"
+problem="game-parenthesis"
 service="play"
 
 args_list = [
     ('formula',str),
     ('TALight_first_to_move',int),
     ('watch',str),
-    ('random',int),
-    ('length',int)
+    ('seed',int),
+    ('opponent',str)
 ]
 
 ENV =Env(args_list)
@@ -27,12 +28,15 @@ def close_service_and_print_term_signal_for_bots():
     TAc.Finished(only_term_signal=True)
     exit(0)
 
-if ENV['random']==1:
-    if ENV['length']%2!=0:
-        TAc.print(LANG.render_feedback("par-wrong-length", f'# The value for the length argument (ENV["length"]) is not correct. I need an even number to generate a well-formed formula of parenthesis af a starting configuration for our match.'), "red", ["bold"])
-        exit(0)
-    else:
-        formula=pl.random_wff(ENV['length'])
+if ENV['seed']>0:
+    random.seed(ENV['seed'])
+    length=int(round((random.random())*100,0))
+    if length%2!=0:
+        if random.choice([True, False]):
+            length+=1
+        else:
+            length-=1
+    formula=pl.random_wff(length)
 else:
     formula=ENV['formula']
 
@@ -40,9 +44,13 @@ if not pl.recognize(formula, TAc, LANG):
     exit(0)
 
 
-def I_have_lost():
-    TAc.print(LANG.render_feedback("par-TALight_lost", f'# It is my turn to move, on a void formula. Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("par-you-won", f'# You won!'), "green", ["bold"])
+def I_have_lost(n_player_winner):
+    if ENV['opponent'] == 'computer':
+        TAc.print(LANG.render_feedback("par-TALight_lost", f'# It is my turn to move, on a void formula. Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("par-you-won", f'# You won!'), "green", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("par-player-lost-msg", f'# It is the turn of player {pl.player_flip(n_player_winner)} to move, on a void formula. Since this configuration admits no valid move, then player {pl.player_flip(n_player_winner)} has lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("par-player-won", f'# Player {n_player_winner} won!'), "green", ["bold"])
     close_service_and_print_term_signal_for_bots()
     
 def you_have_lost():
@@ -53,9 +61,11 @@ def you_have_lost():
 I_AM = LANG.render_feedback("I-am", 'I am')
 YOU_ARE = LANG.render_feedback("you-are", 'you are')
 TALIGHT_IS = LANG.render_feedback("TALight-is", 'TALight is')
+PLAYER_1_IS = LANG.render_feedback("Player-1-is", 'Player 1 is')
+PLAYER_2_IS = LANG.render_feedback("Player-2-is", 'Player 2 is')
 def watch(formula, first_to_move, second_to_move):
-    assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS] 
-    assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS]
+    assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS] 
+    assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS]
     if ENV["watch"] == 'no_watch':
         return
     TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
@@ -65,13 +75,13 @@ def watch(formula, first_to_move, second_to_move):
         else:
             TAc.print(LANG.render_feedback("par-watch-winner-who-moves-wins", f'{first_to_move} ahead, since \'{formula}\' is a who-moves-wins configuration.'), "blue")
     elif ENV['watch'] == 'num_winning_moves' :
-        win_moves = pl.find_moves_par_game(formula)
+        win_moves = pl.find_moves_game_parenthesis(formula)
         if len(win_moves) > 0:
             TAc.print(LANG.render_feedback("par-num-winning-moves-n", f'the current formula \'{formula}\' admits {len(win_moves)} winning moves'), "blue")
         else:
             TAc.print(LANG.render_feedback("par-num-winning-moves-0", f'the current formula \'{formula}\' admits no winning move'), "blue")
     elif ENV['watch'] == 'list_winning_moves':
-        win_moves = pl.find_moves_par_game(formula, True)
+        win_moves = pl.find_moves_game_parenthesis(formula, True)
         if len(win_moves) > 1:
             TAc.print(LANG.render_feedback("par-list-multiple-winning-moves", f'for the current formula \'{formula}\' the winning moves are {win_moves}'), "blue")
             TAc.print('# The duplicates are removed, if the result formula is the same', "blue")
@@ -85,7 +95,7 @@ def watch(formula, first_to_move, second_to_move):
 
 
 
-if ENV["TALight_first_to_move"] == 1: # if the user plays the match as second to move
+if ENV["TALight_first_to_move"] == 1 and ENV['opponent'] == 'computer': # if the user plays the match as second to move
     if formula=='': # no valid moves on the formula ''. TALight first to move loses the match
         I_have_lost()
     
@@ -96,13 +106,23 @@ if ENV["TALight_first_to_move"] == 1: # if the user plays the match as second to
     TAc.print(LANG.render_feedback("par-server-move", f'# My move is from formula \'{formula}\' to new formula \'{new_formula}\'.'), "green", ["bold"])
     formula=new_formula
 
+n_player=1
+
 while True:
     if formula=='': # the formula '' admits no valid move. The turn is to the user who has no move available and loses the match. TALight wins.
         you_have_lost()
-    
-    watch(formula, first_to_move=YOU_ARE, second_to_move=I_AM)    
-    TAc.print(LANG.render_feedback("par-your-turn", f'# It is your turn to move from configuration/formula \'{formula}\' to a new configuration of the game. The new configuration must be a well-formed subformula of the current formula.'), "yellow", ["bold"])
-    if pl.verify_move_par_game(formula, ")("):
+    if ENV['opponent'] == 'computer':
+        watch(formula, first_to_move=YOU_ARE, second_to_move=I_AM)
+    else:
+        if n_player==1:
+            watch(formula, first_to_move=PLAYER_1_IS, second_to_move=PLAYER_2_IS)
+        else:
+            watch(formula, first_to_move=PLAYER_2_IS, second_to_move=PLAYER_1_IS)
+    if ENV['opponent'] == 'computer':  
+        TAc.print(LANG.render_feedback("par-your-turn", f'# It is your turn to move from configuration/formula \'{formula}\' to a new configuration of the game. The new configuration must be a well-formed subformula of the current formula.'), "yellow", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("par-player-turn", f'# It is the turn of player {n_player} to move from configuration/formula \'{formula}\' to a new configuration of the game. The new configuration must be a well-formed subformula of the current formula.'), "yellow", ["bold"])
+    if pl.verify_move_game_parenthesis(formula, ")("):
         TAc.print(LANG.render_feedback("par-user-move-if-can-terminate", f'# Please, insert the new formula you intend to move to just underneath the current formula. NOTE: Write just the two characters string ")(" if you intend to move to the empty formula.'), "yellow", ["bold"])
     else:
         TAc.print(LANG.render_feedback("par-user-move", f'# Please, insert the new formula just underneath the current formula as reported here: '), "yellow", ["bold"])
@@ -116,14 +136,19 @@ while True:
     if new_formula==formula:
         TAc.print(LANG.render_feedback("par-dull-move", '# We have a problem. You can\'t pass. You must move on the game.'), "red", ["bold"])
         exit(0)
-    if not pl.verify_move_par_game(formula, new_formula):
+    if not pl.verify_move_game_parenthesis(formula, new_formula):
         TAc.print(LANG.render_feedback("par-illegal-move", '# We have a problem. Your move is not valid. You must remove ONE well made formula.'), "red", ["bold"])
         if new_formula!=')(':
             pl.recognize(new_formula, TAc, LANG)
         exit(0)
+
     if new_formula==')(': # TALight has no valid move available and loses the match. The user wins.
-        I_have_lost()
-    
-    watch(new_formula, first_to_move=I_AM, second_to_move=YOU_ARE)    
-    formula=pl.computer_move(new_formula) # TALight makes its move
-    TAc.print(LANG.render_feedback("par-server-move", f'# My move is from formula \'{new_formula}\' to new formula \'{formula}\'.'), "green", ["bold"])
+        I_have_lost(n_player)
+
+    if ENV['opponent'] == 'computer':
+        watch(new_formula, first_to_move=I_AM, second_to_move=YOU_ARE)
+        formula=pl.computer_move(new_formula) # TALight makes its move
+        TAc.print(LANG.render_feedback("par-server-move", f'# My move is from formula \'{new_formula}\' to new formula \'{formula}\'.'), "green", ["bold"])
+    else:
+        n_player=pl.player_flip(n_player)
+        formula=new_formula
