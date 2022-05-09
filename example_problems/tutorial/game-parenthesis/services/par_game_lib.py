@@ -29,6 +29,13 @@ def recognize(formula_of_parentheses, TAc, LANG, error_feedback=True):
         return False
     return True
 
+def player_flip(n_player):
+    if n_player==1:
+        n_player=2
+    else:
+        n_player=1
+    return n_player
+
 def grundy_sum(val1:int, val2:int):
     return val1 ^ val2
 
