@@ -3,10 +3,10 @@
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-import par_game_lib as pl
+import game_parenthesis_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="par_game"
+problem="game-parenthesis"
 service="check_game_value"
 
 args_list = [

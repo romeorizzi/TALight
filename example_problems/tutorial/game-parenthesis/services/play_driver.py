@@ -4,10 +4,10 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 import random
-import par_game_lib as pl
+import game_parenthesis_lib as pl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="par_game"
+problem="game-parenthesis"
 service="play"
 
 args_list = [
@@ -75,13 +75,13 @@ def watch(formula, first_to_move, second_to_move):
         else:
             TAc.print(LANG.render_feedback("par-watch-winner-who-moves-wins", f'{first_to_move} ahead, since \'{formula}\' is a who-moves-wins configuration.'), "blue")
     elif ENV['watch'] == 'num_winning_moves' :
-        win_moves = pl.find_moves_par_game(formula)
+        win_moves = pl.find_moves_game_parenthesis(formula)
         if len(win_moves) > 0:
             TAc.print(LANG.render_feedback("par-num-winning-moves-n", f'the current formula \'{formula}\' admits {len(win_moves)} winning moves'), "blue")
         else:
             TAc.print(LANG.render_feedback("par-num-winning-moves-0", f'the current formula \'{formula}\' admits no winning move'), "blue")
     elif ENV['watch'] == 'list_winning_moves':
-        win_moves = pl.find_moves_par_game(formula, True)
+        win_moves = pl.find_moves_game_parenthesis(formula, True)
         if len(win_moves) > 1:
             TAc.print(LANG.render_feedback("par-list-multiple-winning-moves", f'for the current formula \'{formula}\' the winning moves are {win_moves}'), "blue")
             TAc.print('# The duplicates are removed, if the result formula is the same', "blue")
@@ -122,7 +122,7 @@ while True:
         TAc.print(LANG.render_feedback("par-your-turn", f'# It is your turn to move from configuration/formula \'{formula}\' to a new configuration of the game. The new configuration must be a well-formed subformula of the current formula.'), "yellow", ["bold"])
     else:
         TAc.print(LANG.render_feedback("par-player-turn", f'# It is the turn of player {n_player} to move from configuration/formula \'{formula}\' to a new configuration of the game. The new configuration must be a well-formed subformula of the current formula.'), "yellow", ["bold"])
-    if pl.verify_move_par_game(formula, ")("):
+    if pl.verify_move_game_parenthesis(formula, ")("):
         TAc.print(LANG.render_feedback("par-user-move-if-can-terminate", f'# Please, insert the new formula you intend to move to just underneath the current formula. NOTE: Write just the two characters string ")(" if you intend to move to the empty formula.'), "yellow", ["bold"])
     else:
         TAc.print(LANG.render_feedback("par-user-move", f'# Please, insert the new formula just underneath the current formula as reported here: '), "yellow", ["bold"])
@@ -136,7 +136,7 @@ while True:
     if new_formula==formula:
         TAc.print(LANG.render_feedback("par-dull-move", '# We have a problem. You can\'t pass. You must move on the game.'), "red", ["bold"])
         exit(0)
-    if not pl.verify_move_par_game(formula, new_formula):
+    if not pl.verify_move_game_parenthesis(formula, new_formula):
         TAc.print(LANG.render_feedback("par-illegal-move", '# We have a problem. Your move is not valid. You must remove ONE well made formula.'), "red", ["bold"])
         if new_formula!=')(':
             pl.recognize(new_formula, TAc, LANG)
