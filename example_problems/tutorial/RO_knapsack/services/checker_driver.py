@@ -29,6 +29,7 @@ args_list = [
     ('name_of_opt_sol',str),
     ('name_of_DPtable',str),
     ('color_implementation',str),
+    ('get_yaml',bool),
     ('with_output_files',bool),
     ('with_opening_message',bool),
     ('with_summary',bool),
@@ -53,7 +54,7 @@ def evaluation_format(task_number, feedback_summary,feedback_message, pt_tot:int
     ret_str += TAc.colored(f"[punti sicuri: {pt_safe}]", "green", ["bold"]) + ", "
     ret_str += TAc.colored(f"[punti aggiuntivi possibili: {pt_maybe}]", "blue", ["bold"]) + ", " 
     ret_str += TAc.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + TAc.colored(f"{new_line}Spiegazione: ", "cyan", ["bold"]) + feedback_message + TAc.colored(f"{new_line}")    
-    return ret_str
+    return ret_str, pt_safe,pt_maybe,pt_out
 
 def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str]=[], \
                    pt_tot=None,pt_formato_OK=None,pt_feasibility_OK=None, \
@@ -120,11 +121,14 @@ if len(ENV["elementi"])!=len(ENV["valori"]):
     print(f'Errore: {len(ENV["elementi"])=} != {len(ENV["valori"])}=len(ENV["valori"])')    
     exit(0)
 
-feedback_string = verif_knapsack(ENV["task"],ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"],ENV["elementi_proibiti"], \
+feedback_string, pt_safe,pt_maybe,pt_out = verif_knapsack(ENV["task"],ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"],ENV["elementi_proibiti"], \
                                  ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"], \
                                  ENV["sol_type"],ENV["opt_sol"],ENV["opt_val"],ENV["DPtable"], \
                    ENV["name_of_opt_sol"], ENV["name_of_opt_val"], ENV["name_of_DPtable"])
-print(feedback_string)
+if ENV['get_yaml']:
+    print({'pt_safe':pt_safe,'pt_maybe':pt_maybe,'pt_out':pt_out,'feedback_string':feedback_string})
+else:
+    print(feedback_string)
 
 summary=f"""
 SUMMARY OF THIS SERVICE CALL: 

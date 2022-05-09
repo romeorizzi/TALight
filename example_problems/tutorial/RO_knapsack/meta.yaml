@@ -62,6 +62,9 @@ services:
       color_implementation:
         regex: ^(ANSI|html)$
         default: ANSI
+      get_yaml:
+        regex: ^(0|1)$
+        default: 0
       with_opening_message:
         regex: ^(0|1)$
         default: 0
@@ -110,6 +113,9 @@ services:
       color_implementation:
         regex: ^(ANSI|html)$
         default: ANSI
+      get_yaml:
+        regex: ^(0|1)$
+        default: 0
       with_opening_message:
         regex: ^(0|1)$
         default: 0

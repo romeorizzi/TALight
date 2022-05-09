@@ -22,6 +22,7 @@ args_list = [
     ('name_of_opt_sol',str),
     ('name_of_DPtable',str),
     ('color_implementation',str),
+    ('get_yaml',bool),
     ('with_output_files',bool),
     ('with_opening_message',bool),
 ]
@@ -49,24 +50,30 @@ for ele,peso,val in zip(ENV["elementi"],ENV["pesi"],ENV["valori"]):
         pesi.append(peso)
         valori.append(val)
 opt_val, opt_sol, DPtable = knapsack_lib.solver(elementi,pesi,valori,ENV["Knapsack_Capacity"])
-if ENV['sol_type'] in ['opt_sol','opt_sol_with_val','all']:
-    print(f"opt_sol: {opt_sol}")
-if ENV['sol_type'] in ['opt_val','opt_sol_with_val','all']:
-    print(f"opt_val: {opt_val}")
-if ENV['sol_type'] in ['DPtable','all']:
-    print(f"DPtable: {DPtable}")
-    
-print(f"\nSUMMARY OF THIS SERVICE CALL:")    
-print(f'elementi: {ENV["elementi"]}')
-if len(ENV["elementi_proibiti"]) > 0:
-    print(f'elementi_proibiti: {ENV["elementi_proibiti"]}')
-    print(f'elementi_effettivi: {elementi}')
-print(f'pesi: {ENV["pesi"]}')
-print(f'valori: {ENV["valori"]}')
-print(f'Knapsack_Capacity: {ENV["Knapsack_Capacity"]}')
-print(f'sol_type: {ENV["sol_type"]}')
-print(f'color_implementation: {ENV["color_implementation"]}')
-print(f'with_opening_message: {ENV["with_opening_message"]}')
+
+if ENV['get_yaml']:
+    summary_of_service_call = {'elementi':ENV["elementi"],'elementi_proibiliti':ENV["elementi_proibiliti"],'pesi':ENV["pesi"],'valori':ENV["valori"],'Knapsack_Capacity':ENV["Knapsack_Capacity"]}
+    print({'opt_val':opt_val, 'opt_sol':opt_sol, 'DPtable':DPtable,
+           'input': summary_of_service_call })
+else:
+    if ENV['sol_type'] in ['opt_sol','opt_sol_with_val','all']:
+        print(f"opt_sol: {opt_sol}")
+    if ENV['sol_type'] in ['opt_val','opt_sol_with_val','all']:
+        print(f"opt_val: {opt_val}")
+    if ENV['sol_type'] in ['DPtable','all']:
+        print(f"DPtable: {DPtable}")
+
+    print(f"\nSUMMARY OF THIS SERVICE CALL:")    
+    print(f'elementi: {ENV["elementi"]}')
+    if len(ENV["elementi_proibiti"]) > 0:
+        print(f'elementi_proibiti: {ENV["elementi_proibiti"]}')
+        print(f'elementi_effettivi: {elementi}')
+    print(f'pesi: {ENV["pesi"]}')
+    print(f'valori: {ENV["valori"]}')
+    print(f'Knapsack_Capacity: {ENV["Knapsack_Capacity"]}')
+    print(f'sol_type: {ENV["sol_type"]}')
+    print(f'color_implementation: {ENV["color_implementation"]}')
+    print(f'with_opening_message: {ENV["with_opening_message"]}')
 
 if ENV.LOG_FILES == None:
     print("Servizio chiamato senza access token")
