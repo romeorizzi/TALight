@@ -156,7 +156,7 @@ while True:
     if ENV['opponent'] == 'computer':  
         TAc.print(LANG.render_feedback("par-your-turn-play-val", f'# It is your turn to move from conf <par_game(formula=\'{formula}\') + nim(height={nim})> of the MeasuringGame(Par_game) game to a new conf of the MeasuringGame(Par_game) game <par_game(formula\') + nim(height\')>. You should move either on the par_game component or on the nim component of the game.'), "yellow", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("par-player-turn-play-val", f'# It the turn of player {n_player} to move from conf <par_game(formula=\'{formula}\') + nim(height={nim})> of the MeasuringGame(Par_game) game to a new conf of the MeasuringGame(Par_game) game <par_game(formula\') + nim(height\')>. Player {n_player} should move either on the par_game component or on the nim component of the game.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("par-player-turn-play-val", f'# It is the turn of player {n_player} to move from conf <par_game(formula=\'{formula}\') + nim(height={nim})> of the MeasuringGame(Par_game) game to a new conf of the MeasuringGame(Par_game) game <par_game(formula\') + nim(height\')>. Player {n_player} should move either on the par_game component or on the nim component of the game.'), "yellow", ["bold"])
     if formula!=')(':
         if pl.verify_move_par_game(formula, ")("):
             TAc.print(LANG.render_feedback("par-user-move-play-val-if-can-terminate", f'# Please, insert the formula\' and height\' encoding the new configuration produced by your move just underneath the current configuration. NOTE: As for the formula component, write just the two characters string ")(" if you intend to represent the empty formula.'), "yellow", ["bold"])
