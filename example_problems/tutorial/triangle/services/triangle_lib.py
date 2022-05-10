@@ -38,15 +38,15 @@ def format_name_expand(format_name, format_gender):
     
 # MANAGING REPRESENTATIONS OF SOLUTIONS:
 
-def solutions(instance,instance_format=DEFAULT_INSTANCE_FORMAT):
+def solutions(instance,path,instance_format=DEFAULT_INSTANCE_FORMAT):
     sols = {}
-    sols['check_feasible_sol'] = len(instance['path']) == instance['n'] -1 # the given path is a feasible solution
+    sols['check_feasible_sol'] = len(path) == instance['n'] -1 # the given path is a feasible solution
     if sols['check_feasible_sol']:
-        sols['check_and_reward_one_sol'] = calculate_path(instance['triangle'],instance['path'])
+        sols['check_and_reward_one_sol'] = f"{calculate_path(instance['triangle'],path)} (path = {path})"
     else:
-        sols['check_and_reward_one_sol'] = f"None # expected path length = {instance['n']-1}, but received a path whose length is {len(instance['path'])}"
-    value,  path = best_reward_and_path(instance['triangle'])
-    sols['check_best_sol'] = f"best reward: {value}, best_path: {path}"
+        sols['check_and_reward_one_sol'] = f"None # expected path length = {instance['n']-1}, but received a path whose length is {len(path)}"
+    value, best_path = best_reward_and_path(instance['triangle'])
+    sols['check_best_sol'] = f"best reward: {value}, best_path: {best_path}"
     if instance['n'] <= instance['m']:
         sols['check_number_of_triangles_in_triangle'] = num_of_occurrences(cast_to_array(instance['triangle']),cast_to_array(instance['big_triangle']),instance['n'],instance['m'])[0]
     else:
@@ -69,9 +69,12 @@ def instance_to_txt_str(instance, format_name="pyramid"):
     """Of the given <instance>, this function returns the .txt string in format <format_name>"""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
     triangle = instance['triangle']
-    big_triangle = instance['big_triangle']
     n = instance['n']
-    m = instance['m']    
+    if 'm' in instance.keys():
+        big_triangle = instance['big_triangle']    
+        m = instance['m']
+    else:
+        m = 0    
     output= f''
     if format_name == 'pyramid':
         for num_linea in range(n):
@@ -117,9 +120,12 @@ def instance_to_dat_str(instance,format_name='triangle_dat'):
     """Of the given <instance>, this function returns the .dat string in format <format_name>"""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
     triangle = instance['triangle']
-    big_triangle = instance['big_triangle']
-    n = instance['n']        
-    m = instance['m']    
+    n = instance['n']
+    if 'm' in instance.keys():
+        big_triangle = instance['big_triangle']    
+        m = instance['m']
+    else:
+        m = 0   
     output = f"param n := {n};                  # Number of lines of the triangle\n"
     if m!= 0:
         output += f"param m := {m};                  # Number of lines of the triangle\n"
@@ -217,6 +223,7 @@ def check_yes_or_no_answer(val:str, TAc, LANG):
     return True
 
 def check_val_range(val:int, MIN_VAL:int, MAX_VAL:int, TAc, LANG):
+    print(type(val))
     if val < MIN_VAL or val > MAX_VAL:
         TAc.print(LANG.render_feedback("val-out-of-range", f"The value {val} falls outside the valid range [{MIN_VAL},{MAX_VAL}].", {"MIN_VAL":MIN_VAL, "MAX_VAL":MAX_VAL}), "red", ["bold"])
         return False
@@ -248,6 +255,7 @@ def print_triangle(triangle,instance_format=DEFAULT_INSTANCE_FORMAT):
                  print(str(ele).ljust(2), end='  ')
             print()
     else:
+        print(n)
         for line in triangle:
             l = ""
             for el in line:

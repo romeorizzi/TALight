@@ -120,7 +120,7 @@ services:
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
       path:
-        regex: ^(random_path|(L|R){0,99})$
+        regex: ^(my_path|random_path|(L|R){0,99})$
         regex-explained: 'either the string "random_path" or a path encoded in {{L,R}}^(n-1))'
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_path
@@ -172,20 +172,6 @@ services:
         regex-explained: a positive natural <= 100
         default: 5
         explain: Number of lines of the small triangle.
-      MIN_VAL:
-        regex: ^(0|[1-9][0-9]{0,1})$
-        explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
-        default: 0
-      MAX_VAL:
-        regex: ^(0|[1-9][0-9]{0,1})$
-        explain: all numbers of the triangle are integers in the interval [MIN_VAL,MAX_VAL]
-        default: 99
-      seed:
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
-        regex-URL: 'https://extendsclass.com/regex/90e74ec'
-        default: random_seed
-        explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
       silent:  
         explain: if nothing is wrong with your answer then the service runs silently; otherwise it explains what is the problem in clear.
         regex: ^(0|1)$
@@ -231,7 +217,7 @@ services:
         default: 5
         explain: Number of lines of the small triangle.
       MIN_VAL:
-        regex: ^([1-9][0-9]{0,1}|100)$
+        regex: ^(0|[1-9][0-9]{0,1}|100)$
         regex-explained: a positive natural <= 100
         default: 0
         explain: All numbers of the small triangle are integers in the interval [MIN_VAL,MAX_VAL]
