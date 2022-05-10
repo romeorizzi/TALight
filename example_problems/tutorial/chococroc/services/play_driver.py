@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import random
 
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
+import random
 import chococroc_lib as cl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -15,7 +15,8 @@ args_list = [
     ('n',int),
     ('TALight_first_to_move',int),
     ('watch',str),
-    ('random',int),
+    ('seed',int),
+    ('opponent',str)
 ]
 
 ENV =Env(args_list)
@@ -28,16 +29,21 @@ def close_service_and_print_term_signal_for_bots():
     TAc.Finished(only_term_signal=True)
     exit(0)
 
-if ENV['random']== 1:
-    m=random.randint(1, 1000)
-    n=random.randint(1, 1000)
+if ENV['seed']> 0:
+    random.seed(ENV['seed'])
+    m=int(round((random.random())*100,0))
+    n=int(round((random.random())*100,0))
 else:
     m=ENV['m']
     n=ENV['n']
         
-def I_have_lost():
-    TAc.print(LANG.render_feedback("TALight_lost", f'# It is my turn to move, on conf (1,1). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("you-won", f'# You won!'), "green", ["bold"])
+def I_have_lost(n_player_winner):
+    if ENV['opponent'] == 'computer':
+        TAc.print(LANG.render_feedback("TALight_lost", f'# It is my turn to move, on conf (1,1). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("you-won", f'# You won!'), "green", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("choco-player-lost-msg", f'# It is the turn of player {cl.player_flip(n_player_winner)} to move, on a void configuration. Since this configuration admits no valid move, then player {cl.player_flip(n_player_winner)} has lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("choco-player-won", f'# Player {n_player_winner} won!'), "green", ["bold"])
     close_service_and_print_term_signal_for_bots()
     
 def you_have_lost():
@@ -48,13 +54,15 @@ def you_have_lost():
 I_AM = LANG.render_feedback("I-am", 'I am')
 YOU_ARE = LANG.render_feedback("you-are", 'you are')
 TALIGHT_IS = LANG.render_feedback("TALight-is", 'TALight is')
+PLAYER_1_IS = LANG.render_feedback("Player-1-is", 'Player 1 is')
+PLAYER_2_IS = LANG.render_feedback("Player-2-is", 'Player 2 is')
 def watch(m,n, first_to_move, second_to_move):
-    assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS] 
-    assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS]
+    assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS] 
+    assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS]
     if ENV["watch"] == 'no_watch':
         return
     TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
-    if ENV['watch'] == 'watch_winner':
+    if ENV["watch"] == 'watch_winner':
         if(cl.grundy_val(m,n) == 0):
             TAc.print(LANG.render_feedback("watch-winner-who-moves-loses", f'{second_to_move} ahead, since ({m}, {n}) is a who-moves-loses configuration.'), "blue")
         else:
@@ -80,25 +88,37 @@ def watch(m,n, first_to_move, second_to_move):
 
 
 
-if ENV["TALight_first_to_move"] == 1: # if the user plays the match as second to move
-    watch(m,n, first_to_move=I_AM, second_to_move=YOU_ARE)
+if ENV["TALight_first_to_move"] == 1 and ENV['opponent'] == 'computer': # if the user plays the match as second to move
     if m==1 and n==1: # no valid moves on the configuration (1,1). TALight first to move loses the match
         I_have_lost()
+    watch(m,n, first_to_move=I_AM, second_to_move=YOU_ARE)
         
     # TALight makes its move updating the configuration (m,n):
     new_m,new_n=cl.computer_move(m,n)
     TAc.print(LANG.render_feedback("server-move", f'# My move is from conf ({m},{n}) to conf ({new_m},{new_n}).'), "green", ["bold"])
     m,n=new_m,new_n
+    
+n_player = 1
 
 while True:
     if m==1 and n==1: # the configuraion (1,1) admits no valid move. The turn is to the user who has no move available and loses the match. TALight wins.
         you_have_lost()
-    
-    watch(m,n, first_to_move=YOU_ARE, second_to_move=I_AM)    
-    TAc.print(LANG.render_feedback("your-turn", f'# It is your turn to move from conf ({m},{n}) to a new conf (m,n).'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("user-move", f'# Please, insert the two integers m and n encoding the new configuration produced by your move just underneath the current position we put you into: '), "yellow", ["bold"])
+    if ENV['opponent'] == 'computer':
+        watch(m,n, first_to_move=YOU_ARE, second_to_move=I_AM)
+    else:
+        if n_player == 1:
+            watch(m,n, first_to_move=PLAYER_1_IS, second_to_move=PLAYER_2_IS)
+        else:
+            watch(m,n, first_to_move=PLAYER_2_IS, second_to_move=PLAYER_1_IS)
+    if ENV['opponent'] == 'computer':
+        TAc.print(LANG.render_feedback("your-turn", f'# It is your turn to move from conf ({m},{n}) to a new conf (m,n).'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("user-move", f'# Please, insert the two integers m and n encoding the new configuration produced by your move just underneath the current position we put you into: '), "yellow", ["bold"])
+    else:
+        TAc.print(LANG.render_feedback("choco-player-turn", f'# It is the turn of player {n_player} to move from configuration \'({m},{n})\' to a new configuration (m,n) of the game.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("user-move", f'# Please, insert the two integers m and n encoding the new configuration produced by your move just underneath the current position we put you into: '), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("prompt", f'{m} {n}'), "yellow", ["bold"])
     new_m,new_n = TALinput(int, 2, TAc=TAc)
+        
     if new_m != m and new_n != n: # invalid move: at most one of the two coordinates can be changed
         TAc.print(LANG.render_feedback("not-valid", f'# No! Your move from conf ({m},{n}) to conf ({new_m},{new_n}) is not valid.'), "red", ["bold"])
         TAc.print(LANG.render_feedback("double-move", f'# You are cheating. A move can not alter both the number of rows (from {m} to {new_m}) and the number of columns (from {n} to {new_n})).'), "red", ["bold"])
@@ -123,8 +143,12 @@ while True:
         exit(0)
 
     if new_m==1 and new_n==1: # TALight has no valid move available and loses the match. The user wins.
-        I_have_lost()
-    
-    watch(new_m,new_n, first_to_move=I_AM, second_to_move=YOU_ARE)    
-    m,n=cl.computer_move(new_m,new_n) # TALight makes its move
-    TAc.print(LANG.render_feedback("server-move", f'# My move is from conf ({new_m},{new_n}) to conf ({m},{n}).'), "green", ["bold"])
+        I_have_lost(n_player)
+    if ENV['opponent'] == 'computer':
+        watch(new_m,new_n, first_to_move=I_AM, second_to_move=YOU_ARE)
+        m,n=cl.computer_move(new_m,new_n) # TALight makes its move
+        TAc.print(LANG.render_feedback("server-move", f'# My move is from conf ({new_m},{new_n}) to conf ({m},{n}).'), "green", ["bold"])
+    else:
+        n_player=cl.player_flip(n_player)
+        m=new_m
+        n=new_n

@@ -117,6 +117,14 @@ def winning_moves_nim(m, n, nim):
     win_moves.discard((None,None,None))
     return win_moves
 
+def player_flip(n_player):
+    if n_player==1:
+        n_player=2
+    else:
+        n_player=1
+    return n_player
+
+
 # TESTS
 if __name__ == "__main__":
     # GRUNDY-SPRAGUE THEORY FUNCTIONS:
