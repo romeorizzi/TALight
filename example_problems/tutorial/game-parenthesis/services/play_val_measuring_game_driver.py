@@ -51,7 +51,7 @@ if formula=='':
     formula=')('
 
 
-def I_have_lost(env_formula, n_player_winner):
+def I_have_lost():
     if ENV['opponent'] == 'computer':
         TAc.print(LANG.render_feedback("par-TALight_lost-nim", f'# It is my turn to move, on conf <game-parenthesis(\'\') + nim(0)> of the MeasuringGame(Game-parenthesis) game, that is, a void formula (plus an empty Nim tower). Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
         TAc.print(LANG.render_feedback("par-you-won", f'# You won!'), "green", ["bold"])
@@ -60,11 +60,11 @@ def I_have_lost(env_formula, n_player_winner):
         else:
             TAc.print(LANG.render_feedback("par-correct-grundy-val", f'# Since we played optimally, you have successfully proven that the Grundy value of the Game-parenthesis game configuration game-parenthesis(\'{env_formula}\') is precisely {ENV["nim"]}.'), "green", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("par-player-lost-msg-nim", f'# It the turn of player {pl.player_flip(n_player_winner)} to move, on conf <game-parenthesis(\'\') + nim(0)> of the MeasuringGame(Game-parenthesis) game, that is, a void formula (plus an empty Nim tower). Since this configuration admits no valid move, then player {pl.player_flip(n_player_winner)} has lost this match.'), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("par-player-won-nim", f'# Player {n_player_winner} won!'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("par-player-lost-msg-nim", f'# It the turn of player {pl.player_flip(n_player)} to move, on conf <game-parenthesis(\'\') + nim(0)> of the MeasuringGame(Game-parenthesis) game, that is, a void formula (plus an empty Nim tower). Since this configuration admits no valid move, then player {pl.player_flip(n_player)} has lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("par-player-won-nim", f'# Player {n_player} won!'), "green", ["bold"])
     close_service_and_print_term_signal_for_bots()
     
-def you_have_lost(env_formula):
+def you_have_lost():
     TAc.print(LANG.render_feedback("par-you-have-lost-nim", f'# It is your turn to move, on conf <game-parenthesis(\'\') + nim(0)> of the MeasuringGame(Game-parenthesis) game, that is, a void formula (plus an empty Nim tower). Since this configuration admits no valid move, then you have lost this match.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("par-you-lost", f'# You lost!'), "green", ["bold"])
     if ENV["TALight_first_to_move"] == 0:
@@ -133,7 +133,7 @@ def watch(formula,nim, first_to_move, second_to_move):
         
 if ENV["TALight_first_to_move"] == 1 and ENV['opponent'] == 'computer': # if the user plays the match as second to move
     if (formula=='' or formula==')(') and nim==0: # no valid moves on the configuration '' 0. TALight first to move loses the match
-        I_have_lost(env_formula)
+        I_have_lost()
     
     watch(formula, nim, first_to_move='I am', second_to_move='you are')
     
@@ -145,7 +145,7 @@ n_player=1
 
 while True:
     if (formula==')(' or formula=='') and nim==0:
-        you_have_lost(env_formula)
+        you_have_lost()
     if ENV['opponent'] == 'computer':    
         watch(formula, nim, first_to_move=YOU_ARE, second_to_move=I_AM)
     else:
@@ -198,7 +198,7 @@ while True:
         exit(0)
 
     if new_formula==')(' and new_nim==0:
-        I_have_lost(env_formula, n_player)
+        I_have_lost()
     
     if ENV['opponent'] == 'computer':
         watch(new_formula,new_nim, first_to_move=I_AM, second_to_move=YOU_ARE)    
