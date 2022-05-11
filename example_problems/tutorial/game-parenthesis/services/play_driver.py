@@ -44,13 +44,13 @@ if not pl.recognize(formula, TAc, LANG):
     exit(0)
 
 
-def I_have_lost(n_player_winner):
+def I_have_lost():
     if ENV['opponent'] == 'computer':
         TAc.print(LANG.render_feedback("par-TALight_lost", f'# It is my turn to move, on a void formula. Since this configuration admits no valid move, then I have lost this match.'), "yellow", ["bold"])
         TAc.print(LANG.render_feedback("par-you-won", f'# You won!'), "green", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("par-player-lost-msg", f'# It is the turn of player {pl.player_flip(n_player_winner)} to move, on a void formula. Since this configuration admits no valid move, then player {pl.player_flip(n_player_winner)} has lost this match.'), "yellow", ["bold"])
-        TAc.print(LANG.render_feedback("par-player-won", f'# Player {n_player_winner} won!'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("par-player-lost-msg", f'# It is the turn of player {pl.player_flip(n_player)} to move, on a void formula. Since this configuration admits no valid move, then player {pl.player_flip(n_player)} has lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("par-player-won", f'# Player {n_player} won!'), "green", ["bold"])
     close_service_and_print_term_signal_for_bots()
     
 def you_have_lost():
@@ -143,7 +143,7 @@ while True:
         exit(0)
 
     if new_formula==')(': # TALight has no valid move available and loses the match. The user wins.
-        I_have_lost(n_player)
+        I_have_lost()
 
     if ENV['opponent'] == 'computer':
         watch(new_formula, first_to_move=I_AM, second_to_move=YOU_ARE)
