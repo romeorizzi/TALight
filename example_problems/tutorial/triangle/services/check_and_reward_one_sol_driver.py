@@ -44,7 +44,6 @@ if TALf.exists_input_file('instance'):
 elif ENV["source"] == 'terminal':
     instance = {}
     TAc.print(LANG.render_feedback("waiting-lines", f'#? waiting for the first string of the triangle.\nFormat: the i-th line contains i elements\n'), "yellow")
-    TAc.print(LANG.render_feedback("first-triangle", f'Enter the string describing the triangle:'), "yellow", ["bold"]) 
     triangle = []
     for i in range(ENV['n']):
         TAc.print(LANG.render_feedback("insert-line", f'Enter line n. {i+1} containing {i+1} elements:'), "yellow", ["bold"]) 

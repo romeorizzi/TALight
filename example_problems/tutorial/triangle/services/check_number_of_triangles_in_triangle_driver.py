@@ -51,8 +51,7 @@ elif ENV["source"] == 'terminal':
     instance['n'] = ENV['n']
     instance['m'] = ENV['m']
     #first triangle
-    TAc.print(LANG.render_feedback("waiting-lines", f'#? waiting for the first string of the triangle.\nFormat: the i-th line contains i elements\n'), "yellow")
-    TAc.print(LANG.render_feedback("first-triangle", f'Enter the string describing the triangle:'), "yellow", ["bold"]) 
+    TAc.print(LANG.render_feedback("waiting-first-line", f'#? waiting for the first string of the first triangle.\nFormat: the i-th line contains i elements\n'), "yellow")
     triangle = []
     for i in range(ENV['n']):
         TAc.print(LANG.render_feedback("insert-line", f'Enter line n. {i+1} containing {i+1} elements:'), "yellow", ["bold"]) 
@@ -70,8 +69,7 @@ elif ENV["source"] == 'terminal':
         triangle.append(l)
     instance['triangle'] = triangle
     # second triangle
-    TAc.print(LANG.render_feedback("waiting-second-lines", f'#? waiting for the first string of the second triangle.\nFormat: the i-th line contains i elements\n'), "yellow")
-    TAc.print(LANG.render_feedback("second-triangle", f'Enter the string describing the triangle:'), "yellow", ["bold"]) 
+    TAc.print(LANG.render_feedback("waiting-second-line", f'#? waiting for the first string of the second triangle.\nFormat: the i-th line contains i elements\n'), "yellow")
     big_triangle = []
     for i in range(ENV['m']):
         TAc.print(LANG.render_feedback("insert-line", f'Enter line n. {i+1} containing {i+1} elements:'), "yellow", ["bold"]) 
@@ -99,8 +97,13 @@ elif ENV["source"] == 'randgen_1':
 else: # take instance from catalogue
     instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=tl.format_name_to_file_extension(ENV["instance_format"],'instance'))
     instance = tl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
-    TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
-    
+    if "big_triangle" in instance.keys(): # check well formed instance
+        TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
+    else:
+        TAc.NO()
+        TAc.print(LANG.render_feedback("instance-from-catalogue-not-successful", f'The instance with instance_id={ENV["instance_id"]} does not suit this service, as it contains just one triangle, while this service needs two triangles. We suggest you to look for double instances inside the catalogue.'), "red", ["bold"])
+        exit(0)
+        
 big = tl.cast_to_array(instance['big_triangle'])
 small = tl.cast_to_array(instance['triangle'])
 L = len(instance['big_triangle'])

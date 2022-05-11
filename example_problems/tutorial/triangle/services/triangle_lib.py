@@ -158,13 +158,20 @@ def get_instance_from_txt(instance_as_str, format_name):
     delim = "#"
     if delim in str_to_arr:
         del_index = str_to_arr.index(delim)        
-        instance['triangle'] = triangle_from_array([int(x) for x in str_to_arr[:del_index]])
-        instance['big_triangle'] = triangle_from_array([int(x) for x in str_to_arr[del_index+1:]])
+        if format_name != "in_lines":            
+            instance['triangle'] = triangle_from_array([int(x) for x in str_to_arr[:del_index]])
+            instance['big_triangle'] = triangle_from_array([int(x) for x in str_to_arr[del_index+1:]])
+        else:
+            instance['triangle'] = triangle_from_array([int(x) for x in str_to_arr[1:del_index]])
+            instance['big_triangle'] = triangle_from_array([int(x) for x in str_to_arr[del_index+2:]])
         instance['n'] = len(instance['triangle'])        
         instance['m'] = len(instance['big_triangle'])        
     else:
-        instance['triangle'] = triangle_from_array([int(x) for x in str_to_arr])
-        instance['n'] = len(instance['triangle'])        
+        if format_name != "in_lines":      
+            instance['triangle'] = triangle_from_array([int(x) for x in str_to_arr])                       
+        else:    
+            instance['triangle'] = triangle_from_array([int(x) for x in str_to_arr[1:]])         
+        instance['n'] = len(instance['triangle'])    
     return instance
     
 def get_instance_from_dat(instance_as_str, format_name):
