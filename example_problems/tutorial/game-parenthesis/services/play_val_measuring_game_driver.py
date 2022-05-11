@@ -60,7 +60,7 @@ def I_have_lost():
         else:
             TAc.print(LANG.render_feedback("par-correct-grundy-val", f'# Since we played optimally, you have successfully proven that the Grundy value of the Game-parenthesis game configuration game-parenthesis(\'{env_formula}\') is precisely {ENV["nim"]}.'), "green", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("par-player-lost-msg-nim", f'# It the turn of player {pl.player_flip(n_player)} to move, on conf <game-parenthesis(\'\') + nim(0)> of the MeasuringGame(Game-parenthesis) game, that is, a void formula (plus an empty Nim tower). Since this configuration admits no valid move, then player {pl.player_flip(n_player)} has lost this match.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("par-player-lost-msg-nim", f'# It is the turn of player {pl.player_flip(n_player)} to move, on conf <game-parenthesis(\'\') + nim(0)> of the MeasuringGame(Game-parenthesis) game, that is, a void formula (plus an empty Nim tower). Since this configuration admits no valid move, then player {pl.player_flip(n_player)} has lost this match.'), "yellow", ["bold"])
         TAc.print(LANG.render_feedback("par-player-won-nim", f'# Player {n_player} won!'), "green", ["bold"])
     close_service_and_print_term_signal_for_bots()
     
