@@ -57,11 +57,12 @@ class TALcolors:
                 msg_colors = msg_rendering
             ANSI_msg = self.termcolor.colored(msg_text, *msg_colors, attrs=msg_style)
         if self.color_implementation == 'ANSI':
-            return ANSI_msg
+            colored_msg = ANSI_msg
         elif self.color_implementation == 'html':
-            return self.ansi2html.convert(ANSI_msg.replace(">", "&gt;").replace("<", "&lt;"), full=False).replace("\n", "\n<br/>")
+            colored_msg = self.ansi2html.convert(ANSI_msg.replace(">", "&gt;").replace("<", "&lt;"), full=False).replace("\n", "\n<br/>")
         else:
             assert self.color_implementation == None
+        return colored_msg
 
     def print(self, msg_text, *msg_rendering, **kwargs):
         print(self.colored(msg_text, *msg_rendering), **kwargs)
