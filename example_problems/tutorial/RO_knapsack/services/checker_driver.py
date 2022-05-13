@@ -80,7 +80,7 @@ def evaluation_format(task_number, feedback_summary,feedback_message, pt_tot:int
         pt_safe = 0
     if pt_out == None:
         pt_out = 0
-    return ret_str, pt_safe,pt_maybe,pt_out
+    return {'pt_safe':pt_safe,'pt_maybe':pt_maybe,'pt_out':pt_out,'feedback_string':ret_str}
 
 def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[int],Capacity:int, answ, pt_tot=None,pt_formato_OK=None,pt_feasibility_OK=None,elementi_proibiti:List[str]=[],elementi_obbligati:List[str]=[]):
     new_line = '\n'
@@ -150,14 +150,14 @@ if len(ENV["elementi"])!=len(ENV["valori"]):
     print(f'Errore: {len(ENV["elementi"])=} != {len(ENV["valori"])}=len(ENV["valori"])')    
     exit(0)
 
-feedback_string, pt_safe,pt_maybe,pt_out = verif_knapsack(ENV["task"],ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"], \
+feedback_dict = verif_knapsack(ENV["task"],ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"], \
                                 answ={"sol_type":ENV["sol_type"],"opt_sol":ENV["opt_sol"],"opt_val":ENV["opt_val"],"DPtable":ENV["DPtable"], \
                                       "name_of_opt_sol":ENV["name_of_opt_sol"], "name_of_opt_val":ENV["name_of_opt_val"], "name_of_DPtable":ENV["name_of_DPtable"]}, \
                                  pt_tot=ENV["pt_tot"],pt_formato_OK=ENV["pt_formato_OK"],pt_feasibility_OK=ENV["pt_feasibility_OK"],elementi_proibiti=ENV["elementi_proibiti"],elementi_obbligati=ENV["elementi_obbligati"])
 if ENV['as_yaml_with_points']:
-    print({'pt_safe':pt_safe,'pt_maybe':pt_maybe,'pt_out':pt_out,'feedback_string':feedback_string})
+    print(feedback_dict)
 else:
-    print(feedback_string)
+    print(feedback_dict['feedback_string'])
 
 summary=f"""
 SUMMARY OF THIS SERVICE CALL: 
@@ -193,11 +193,14 @@ if ENV["with_output_files"]:
 else:
     summary += 'Al servizio non è stato richiesto di generare files nel folder di output\n'
 
+feedback_string = feedback_dict['feedback_string']
+pt_safe = feedback_dict['pt_safe']
+pt_maybe = feedback_dict['pt_maybe']
 if ENV.LOG_FILES != None:
-    TALf.str2log_file(content=feedback_string+summary, filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{pt_safe}_maybe_{pt_maybe}', timestamped = False)
+    TALf.str2log_file(content=repr(feedback_dict)+summary, filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{pt_safe}_maybe_{pt_maybe}', timestamped = False)
 
 if ENV["with_output_files"]:    
-    TALf.str2output_file(content=feedback_string+summary, filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{pt_safe}_maybe_{pt_maybe}', timestamped = False)
+    TALf.str2output_file(content=repr(feedback_dict)+summary, filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{pt_safe}_maybe_{pt_maybe}', timestamped = False)
 
 if ENV["with_summary"]:
     print(summary)
