@@ -20,6 +20,9 @@ services:
       elementi_proibiti:
         regex: ^(.*)$
         default: "[]"
+      elementi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
       sol_type:
         regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
         default: opt_sol
@@ -87,6 +90,9 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
       elementi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+      elementi_obbligati:
         regex: ^(.*)$
         default: "[]"
       sol_type:

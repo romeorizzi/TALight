@@ -15,6 +15,7 @@ args_list = [
     ('valori','list_of_int'),
     ('Knapsack_Capacity',int),
     ('elementi_proibiti','list_of_str'),
+    ('elementi_obbligati','list_of_str'),
     ('sol_type',str),
     ('esercizio',int),
     ('task',int),
@@ -44,15 +45,23 @@ if len(ENV["elementi"])!=len(ENV["valori"]):
 elementi=[]
 pesi=[]
 valori=[]
+opt_val = 0
+opt_sol=[]
+cur_weight = 0
 for ele,peso,val in zip(ENV["elementi"],ENV["pesi"],ENV["valori"]):
-    if ele not in ENV["elementi_proibiti"]:
+    if ele in ENV["elementi_obbligati"]:
+        opt_val += peso
+        opt_sol.append(ele)
+        cur_weight += peso
+    elif ele not in ENV["elementi_proibiti"]:
         elementi.append(ele)
         pesi.append(peso)
         valori.append(val)
-opt_val, opt_sol, DPtable = knapsack_lib.solver(elementi,pesi,valori,ENV["Knapsack_Capacity"])
-
+opt_val_reduced_prob, opt_sol_reduced_prob, DPtable = knapsack_lib.solver(elementi,pesi,valori,ENV["Knapsack_Capacity"])
+opt_val += opt_val_reduced_prob
+opt_sol += opt_sol
 if ENV['as_yaml']:
-    summary_of_service_call = {'elementi':ENV["elementi"],'elementi_proibiliti':ENV["elementi_proibiliti"],'pesi':ENV["pesi"],'valori':ENV["valori"],'Knapsack_Capacity':ENV["Knapsack_Capacity"]}
+    summary_of_service_call = {'elementi':ENV["elementi"],'elementi_proibiti':ENV["elementi_proibiti"],'elementi_obbligati':ENV["elementi_obbligati"],'pesi':ENV["pesi"],'valori':ENV["valori"],'Knapsack_Capacity':ENV["Knapsack_Capacity"]}
     print({'opt_val':opt_val, 'opt_sol':opt_sol, 'DPtable':DPtable,
            'input': summary_of_service_call })
 else:
@@ -67,6 +76,9 @@ else:
     print(f'elementi: {ENV["elementi"]}')
     if len(ENV["elementi_proibiti"]) > 0:
         print(f'elementi_proibiti: {ENV["elementi_proibiti"]}')
+    if len(ENV["elementi_obbligati"]) > 0:
+        print(f'elementi_obbligati: {ENV["elementi_obbligati"]}')
+    if len(ENV["elementi_proibiti"] + ENV["elementi_proibiti"]) > 0:
         print(f'elementi_effettivi: {elementi}')
     print(f'pesi: {ENV["pesi"]}')
     print(f'valori: {ENV["valori"]}')
