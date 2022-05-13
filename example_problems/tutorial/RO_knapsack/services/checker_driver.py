@@ -30,7 +30,7 @@ args_list = [
     ('name_of_opt_sol',str),
     ('name_of_DPtable',str),
     ('color_implementation',str),
-    ('get_yaml',bool),
+    ('as_yaml_with_points',bool),
     ('with_output_files',bool),
     ('with_opening_message',bool),
     ('with_summary',bool),
@@ -146,7 +146,7 @@ feedback_string, pt_safe,pt_maybe,pt_out = verif_knapsack(ENV["task"],ENV["eleme
                                 answ={"sol_type":ENV["sol_type"],"opt_sol":ENV["opt_sol"],"opt_val":ENV["opt_val"],"DPtable":ENV["DPtable"], \
                                       "name_of_opt_sol":ENV["name_of_opt_sol"], "name_of_opt_val":ENV["name_of_opt_val"], "name_of_DPtable":ENV["name_of_DPtable"]}, \
                                  pt_tot=ENV["pt_tot"],pt_formato_OK=ENV["pt_formato_OK"],pt_feasibility_OK=ENV["pt_feasibility_OK"],elementi_proibiti=ENV["elementi_proibiti"])
-if ENV['get_yaml']:
+if ENV['as_yaml_with_points']:
     print({'pt_safe':pt_safe,'pt_maybe':pt_maybe,'pt_out':pt_out,'feedback_string':feedback_string})
 else:
     print(feedback_string)

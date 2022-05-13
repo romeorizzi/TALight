@@ -22,7 +22,7 @@ args_list = [
     ('name_of_opt_sol',str),
     ('name_of_DPtable',str),
     ('color_implementation',str),
-    ('get_yaml',bool),
+    ('as_yaml',bool),
     ('with_output_files',bool),
     ('with_opening_message',bool),
 ]
@@ -51,7 +51,7 @@ for ele,peso,val in zip(ENV["elementi"],ENV["pesi"],ENV["valori"]):
         valori.append(val)
 opt_val, opt_sol, DPtable = knapsack_lib.solver(elementi,pesi,valori,ENV["Knapsack_Capacity"])
 
-if ENV['get_yaml']:
+if ENV['as_yaml']:
     summary_of_service_call = {'elementi':ENV["elementi"],'elementi_proibiliti':ENV["elementi_proibiliti"],'pesi':ENV["pesi"],'valori':ENV["valori"],'Knapsack_Capacity':ENV["Knapsack_Capacity"]}
     print({'opt_val':opt_val, 'opt_sol':opt_sol, 'DPtable':DPtable,
            'input': summary_of_service_call })
