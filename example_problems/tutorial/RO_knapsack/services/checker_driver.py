@@ -117,12 +117,12 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
             sum_valori += valori[index_of_ele]
             sum_pesi += pesi[index_of_ele]
         feedback_summary += f"formato di `{answ['name_of_opt_sol']}`: "+colored(f"OK [{pt_formato_OK} safe pt]{new_line}", "green", ["bold"])
-        for ele in ENV["elementi_obbligati"]:
+        for ele in elementi_obbligati:
             if ele not in answ['opt_sol']:
                 feedback_summary += f"ammissibilità della soluzione in `{answ['name_of_opt_sol']}`: "+colored(f"NO{new_line}", "red", ["bold"])
                 return evaluation_format(task_number, feedback_summary, f"Nella lista `{answ['name_of_opt_sol']}` hai dimenticato di inserire l'elemento `{ele}` che è uno degli elementi_obbligati. La tua soluzione è tenuta a contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
         for ele in answ['opt_sol']:
-            if ele in ENV["elementi_proibiti"]:
+            if ele in elementi_proibiti:
                 feedback_summary += f"ammissibilità della soluzione in `{answ['name_of_opt_sol']}`: "+colored(f"NO{new_line}", "red", ["bold"])
                 return evaluation_format(task_number, feedback_summary, f"Nella lista `{answ['name_of_opt_sol']}` hai inserire l'elemento `{ele}` che è uno degli elementi proibiti. La tua soluzione non deve contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
         if sum_pesi > Capacity:
