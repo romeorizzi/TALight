@@ -16,12 +16,17 @@ except Exception as e:
 
 class TALcolors:
     def __init__(self, ENV, color_implementation ="ANSI"):
-        if color_implementation=="html" or (color_implementation != None and (environ["TAL_META_TTY"]=='1')):
+        if color_implementation=="None":
+           self.color_implementation = None
+        elif environ["TAL_META_TTY"]=='1' or color_implementation=="html":
             try:
                 self.termcolor = import_module('termcolor')
             except Exception as e:
-                print(f"# Recoverable Error: {e}", file=stderr)
-                print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on the machine where rtald is running.)", file=stderr)
+                self.color_implementation = None
+                for out in ['stderr','stdout']:
+                    print(f"# Recoverable Error: {e}", file=out)
+                    print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on the machine where rtald is running.)", file=out)
+                return
         if 'termcolor' in sys.modules:
             if color_implementation=="ANSI":
                 self.color_implementation = 'ANSI'
@@ -32,12 +37,12 @@ class TALcolors:
                     self.ansi2html = Ansi2HTMLConverter(inline = True)
                 except Exception as e:
                     self.color_implementation = None
-                    print(f"# Recoverable Error: {e}", file=stderr)
-                    print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package ansi2html on the machine where rtald is running.)", file=stderr)
+                    for out in ['stderr','stdout']:
+                        print(f"# Recoverable Error: {e}", file=out)
+                        print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package ansi2html on the machine where rtald is running.)", file=out)
             else:
                 print(f"# Unrecoverable Error: no implementation is currently offered for managing colors as {color_implementation}.)", file=stderr)
-        else:
-            self.color_implementation = None
+                exit(0)
 
         self.numNO = 0
         self.numOK = 0

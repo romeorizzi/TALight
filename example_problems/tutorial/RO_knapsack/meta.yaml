@@ -46,10 +46,10 @@ services:
         default: 10
       esercizio:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: -1
       task:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: -1
       name_of_opt_val:
         regex: ^(.*)$
         default: opt_val
@@ -59,11 +59,8 @@ services:
       name_of_DPtable:
         regex: ^(.*)$
         default: DPtable
-      with_output_files:
-        regex: ^(0|1)$
-        default: 0
       color_implementation:
-        regex: ^(ANSI|html)$
+        regex: ^(ANSI|html|None)$
         default: ANSI
       as_yaml_with_points:
         regex: ^(0|1)$
@@ -77,6 +74,8 @@ services:
   oracle:
     evaluator: [python, services/oracle_driver.py]
     args:
+      pwd:
+        regex: ^(.*)$
       elementi:
         regex: ^(.*)$
         default: "['A', 'B', 'C']"
@@ -100,10 +99,10 @@ services:
         default: all
       esercizio:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: -1
       task:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: -1
       name_of_opt_val:
         regex: ^(.*)$
         default: opt_val
@@ -113,12 +112,6 @@ services:
       name_of_DPtable:
         regex: ^(.*)$
         default: DPtable
-      with_output_files:
-        regex: ^(0|1)$
-        default: 0
-      color_implementation:
-        regex: ^(ANSI|html)$
-        default: ANSI
       as_yaml:
         regex: ^(0|1)$
         default: 0
