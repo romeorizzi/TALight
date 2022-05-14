@@ -98,8 +98,8 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
         assert answ['sol_type'] == "opt_sol_with_val"
         feedback_summary += f"ammissibilità della soluzione in {answ['name_of_opt_sol']}: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
         if sum_valori != answ['opt_val']:
-            feedback_summary += f"autoconsistenza: "+SEF.colored(f"NO", "red", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Il valore della soluzione immessa in `{answ['name_of_opt_sol']}` è {sum_valori}, non {answ['opt_val']} come hai immesso in `{answ['name_of_opt_val']}`. La soluzione (ammissibile) che hai immesso è {answ['opt_sol']}.", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK)
+            feedback_summary += f"autoconsistenza: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
+            return SEF.evaluation_format(task_number, feedback_summary, f"Il valore della soluzione immessa in `{answ['name_of_opt_sol']}` è {sum_valori}, non {answ['opt_val']} come hai immesso in `{answ['name_of_opt_val']}`. La soluzione (ammissibile) che hai immesso è {answ['opt_sol']}", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK)
         else:
             feedback_summary += f"{answ['name_of_opt_val']}={answ['opt_val']} = somma dei valori su {answ['name_of_opt_sol']}: "+SEF.colored(f"OK [{pt_feasibility_OK} safe pt]{SEF.new_line}", "green", ["bold"])
             return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{answ['name_of_opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{answ['name_of_opt_val']}`."+SEF.colored(f"{SEF.new_line}Nota:", "cyan", ["bold"])+" Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
