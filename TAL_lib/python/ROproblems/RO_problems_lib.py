@@ -37,7 +37,7 @@ class std_eval_feedback:
         if self.COLOR_IMPLEMENTATION == 'ANSI':
             colored_msg = ANSI_msg
         elif self.COLOR_IMPLEMENTATION == 'html':
-            colored_msg = ansi2html.convert(ANSI_msg.replace(">", "&gt;").replace("<", "&lt;"), full=False).replace("\n", "\n<br/>")
+            colored_msg = ansi2html.convert(ANSI_msg.replace(">", "&gt;").replace("<", "&lt;"), full=False).replace(self.new_line, "\n<br/>")
         else:
             assert self.COLOR_IMPLEMENTATION == None
         return colored_msg
@@ -45,11 +45,10 @@ class std_eval_feedback:
     def evaluation_format(self, task_number, feedback_summary,feedback_message, pt_tot:int,pt_safe:Optional[int] = None,pt_out:Optional[int] = None):
         pt_maybe = pt_tot-(pt_safe if pt_safe != None else 0)-(pt_out if pt_out != None else 0)
         index_pt=task_number-1
-        new_line = '\n'
         ret_str = feedback_summary + "Totalizzi "
         ret_str += self.colored(f"[punti sicuri: {pt_safe}]", "green", ["bold"]) + ", "
         ret_str += self.colored(f"[punti aggiuntivi possibili: {pt_maybe}]", "blue", ["bold"]) + ", " 
-        ret_str += self.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + self.colored(f"{new_line}Spiegazione: ", "cyan", ["bold"]) + feedback_message + self.colored(f"{new_line}")
+        ret_str += self.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + self.colored(f"{self.new_line}Spiegazione: ", "cyan", ["bold"]) + feedback_message + self.colored(f"{self.new_line}")
         if pt_safe == None:
             pt_safe = 0
         if pt_out == None:

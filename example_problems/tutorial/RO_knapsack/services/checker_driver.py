@@ -92,18 +92,20 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
         if sum_pesi > Capacity:
             feedback_summary += f"ammissibilità della soluzione in `{answ['name_of_opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
             return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot)
-        feedback_summary += f"ammissibilità della soluzione in {answ['name_of_opt_sol']}: "+SEF.colored(f"OK [{pt_feasibility_OK} safe pt]{SEF.new_line}", "green", ["bold"])
         if answ['sol_type'] == "opt_sol":
+            feedback_summary += f"ammissibilità della soluzione in {answ['name_of_opt_sol']}: "+SEF.colored(f"OK [{pt_feasibility_OK} safe pt]{SEF.new_line}", "green", ["bold"])
             return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{answ['name_of_opt_sol']}` è ammissibile."+SEF.colored(f"{SEF.new_line}Nota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
         assert answ['sol_type'] == "opt_sol_with_val"
-        if sum_valori > answ['opt_val']:
-            feedback_summary += f"{answ['name_of_opt_val']}={answ['opt_val']}<{sum_valori}, che è la somma dei valori su {answ['name_of_opt_sol']}: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-        if sum_valori < answ['opt_val']:
-            feedback_summary += f"{answ['name_of_opt_val']}={answ['opt_val']}>{sum_valori}, che è la somma dei valori su {answ['name_of_opt_sol']}: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
+        feedback_summary += f"ammissibilità della soluzione in {answ['name_of_opt_sol']}: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
         if sum_valori != answ['opt_val']:
+            feedback_summary += f"autoconsistenza: "+SEF.colored(f"NO ", "red", ["bold"])
+            if sum_valori > answ['opt_val']:
+                feedback_summary += f"{answ['name_of_opt_val']}={answ['opt_val']}<{sum_valori}, che è la somma dei valori su {answ['name_of_opt_sol']}"
+            if sum_valori < answ['opt_val']:
+                feedback_summary += f"{answ['name_of_opt_val']}={answ['opt_val']}>{sum_valori}, che è la somma dei valori su {answ['name_of_opt_sol']}"
             return SEF.evaluation_format(task_number, feedback_summary, f"Il valore della soluzione immessa è {sum_valori} e non {answ['opt_val']} come hai immesso in `{answ['name_of_opt_val']}`. A mè risulta che la soluzione (ammissibile) che hai immesso sia {answ['opt_sol']}.", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK)
         else:
-            feedback_summary += f"{answ['name_of_opt_val']}={answ['opt_val']} = somma dei valori su {answ['name_of_opt_sol']}: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
+            feedback_summary += f"{answ['name_of_opt_val']}={answ['opt_val']} = somma dei valori su {answ['name_of_opt_sol']}: "+SEF.colored(f"OK [{pt_feasibility_OK} safe pt]{SEF.new_line}", "green", ["bold"])
             return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{answ['name_of_opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{answ['name_of_opt_val']}`."+SEF.colored(f"{SEF.new_line}Nota:", "cyan", ["bold"])+" Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
 
             
@@ -131,10 +133,14 @@ if ENV.LOG_FILES != None:
     for key in oracle_dict:
         if ENV[key] != oracle_dict[key]:
             pt_true = pt_safe
-    TALf.str2log_file(content="FEEDBACK: "+repr(feedback_dict)+"STUDENT_SUBMISSION: "+repr(submission_dict)+"ORACLE: "+repr(oracle_dict), filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{pt_safe}_maybe_{pt_maybe}_true_{pt_true}', timestamped = False)
+    content_LOG_file = "FEEDBACK: "+repr(feedback_dict)+"\nSTUDENT_SUBMISSION: "+repr(submission_dict)+"\nORACLE: "+repr(oracle_dict)
+    #print(f"content_LOG_file =`{content_LOG_file}`")
+    TALf.str2log_file(content=content_LOG_file, filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{pt_safe}_maybe_{pt_maybe}_true_{pt_true}', timestamped = False)
 
+content_receipt_file  = "FEEDBACK: "+repr(feedback_dict)+"\nSTUDENT_SUBMISSION: "+repr(submission_dict)
+#print("content_receipt_file =`{content_receipt_file}`")
 if ENV["with_output_files"]:    
-    TALf.str2output_file(content="FEEDBACK: "+repr(feedback_dict)+"STUDENT_SUBMISSION: "+repr(submission_dict), filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{pt_safe}_maybe_{pt_maybe}', timestamped = False)
+    TALf.str2output_file(content=content_receipt_file, filename=f'problem_{ENV["esercizio"]}_task_{ENV["task"]}_safe_{pt_safe}_maybe_{pt_maybe}', timestamped = False)
 
 
 
