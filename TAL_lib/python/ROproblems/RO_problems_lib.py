@@ -17,8 +17,9 @@ def check_access_rights(ENV,TALf, ask_pwd = False, ask_token = True):
 
 
 class std_eval_feedback:
-    def __init__(self, COLOR_IMPLEMENTATION ="ANSI"):
+    def __init__(self, COLOR_IMPLEMENTATION ="ANSI", new_line='\n'):
         self.COLOR_IMPLEMENTATION = COLOR_IMPLEMENTATION
+        self.new_line = new_line
     
     def colored(self, msg_text, *msg_rendering):
         if self.COLOR_IMPLEMENTATION == None:
