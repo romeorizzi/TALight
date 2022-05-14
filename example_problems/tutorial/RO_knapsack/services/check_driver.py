@@ -23,8 +23,6 @@ args_list = [
     ('pt_formato_OK',int),
     ('pt_feasibility_OK',int),
     ('pt_tot',int),
-    ('esercizio',int),
-    ('task',int),
     ('name_of_opt_val',str),
     ('name_of_opt_sol',str),
     ('name_of_DPtable',str),
@@ -33,6 +31,8 @@ args_list = [
     ('with_output_files',bool),
     ('recall_input',bool),
     ('with_opening_message',bool),
+    ('esercizio',int),
+    ('task',int),
 ]
 
 ENV =Env(args_list)

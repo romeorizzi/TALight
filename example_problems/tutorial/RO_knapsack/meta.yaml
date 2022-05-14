@@ -2,8 +2,8 @@
 ---
 public_folder: public
 services:
-  checker:
-    evaluator: [python, services/checker_driver.py]
+  check:
+    evaluator: [python, services/check_driver.py]
     args:
       elementi:
         regex: ^(.*)$
@@ -35,21 +35,6 @@ services:
       DPtable:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-      pt_formato_OK:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
-      pt_feasibility_OK:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 1
-      pt_tot:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 10
-      esercizio:
-        regex: ^(0|[1-9][0-9]*)$
-        default: -1
-      task:
-        regex: ^(0|[1-9][0-9]*)$
-        default: -1
       name_of_opt_val:
         regex: ^(.*)$
         default: opt_val
@@ -74,6 +59,21 @@ services:
       with_opening_message:
         regex: ^(0|1)$
         default: 0
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
   oracle:
     evaluator: [python, services/oracle_driver.py]
     args:
@@ -100,12 +100,6 @@ services:
       sol_type:
         regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
         default: all
-      esercizio:
-        regex: ^(0|[1-9][0-9]*)$
-        default: -1
-      task:
-        regex: ^(0|[1-9][0-9]*)$
-        default: -1
       name_of_opt_val:
         regex: ^(.*)$
         default: opt_val
@@ -124,6 +118,12 @@ services:
       with_opening_message:
         regex: ^(0|1)$
         default: 0
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]

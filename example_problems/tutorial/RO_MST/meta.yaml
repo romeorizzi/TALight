@@ -1,0 +1,287 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check_one_MST:
+    evaluator: [python, services/check_one_MST_driver.py]
+    args:
+      nodi:
+        regex: ^(.*)$
+        default: "['A','B','C']"
+      archi:
+        regex: ^(.*)$
+        default: "[('A','B',2),('B','C',3),('A','B',4)]"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+      name_of_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      name_of_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+	
+  check_all_MSTs:
+    evaluator: [python, services/check_all_MSTs_driver.py]
+    args:
+      nodi:
+        regex: ^(.*)$
+        default: "['A','B','C']"
+      archi:
+        regex: ^(.*)$
+        default: "[('A','B',2),('B','C',3),('A','B',4)]"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+      sol_type:
+        regex: ^(num_MSTs|list_MSTs|either|both)$
+        default: num_MSTs
+      name_of_num_MSTs:
+        regex: ^(.*)$
+        default: num_MSTs
+      name_of_list_MSTs:
+        regex: ^(.*)$
+        default: list_MSTs
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+	
+  check_edge:
+    evaluator: [python, services/check_edge_driver.py]
+    args:
+      nodi:
+        regex: ^(.*)$
+        default: "['A','B','C']"
+      archi:
+        regex: ^(.*)$
+        default: "[('A','B',2),('B','C',3),('A','B',4)]"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+      type:
+        regex: ^(in_all|in_no|in_some)$
+      name_of_type:
+        regex: ^(.*)$
+        default: type
+      cyc_cert:
+        regex: ^(.*)$
+      edgecut_cert:
+        regex: ^(.*)$
+      cutshore_cert:
+        regex: ^(.*)$
+      name_of_cyc_cert:
+        regex: ^(.*)$
+        default: cyc_cert
+      name_of_edgecut_cert:
+        regex: ^(.*)$
+        default: edgecut_cert
+      name_of_cutshore_cert:
+        regex: ^(.*)$
+        default: cutshore_cert
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+	
+  oracle_MST:
+    evaluator: [python, services/oracle_MST_driver.py]
+    args:
+      pwd:
+        regex: ^(.*)$
+      nodi:
+        regex: ^(.*)$
+        default: "['A','B','C']"
+      archi:
+        regex: ^(.*)$
+        default: "[('A','B',2),('B','C',3),('A','B',4)]"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+      sol_type:
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|num_opt_sols|list_opt_sols|all)$
+        default: all
+      name_of_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      name_of_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      name_of_num_opt_sols:
+        regex: ^(.*)$
+        default: 
+      name_of_list_opt_sols:
+        regex: ^(.*)$
+        default: 
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+
+  oracle_edge:
+    evaluator: [python, services/oracle_edge_driver.py]
+    args:
+      pwd:
+        regex: ^(.*)$
+      nodi:
+        regex: ^(.*)$
+        default: "['A','B','C']"
+      archi:
+        regex: ^(.*)$
+        default: "[('A','B',2),('B','C',3),('A','B',4)]"
+      arco:
+        regex: ^(.*)$
+        default: "('A','B')]"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+      name_of_type:
+        regex: ^(.*)$
+        default: type
+      name_of_cyc_cert:
+        regex: ^(.*)$
+        default: cyc_cert
+      name_of_edgecut_cert:
+        regex: ^(.*)$
+        default: edgecut_cert
+      name_of_cutshore_cert:
+        regex: ^(.*)$
+        default: cutshore_cert
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(0|[1-9][0-9]*)$
+        default: -1
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...
