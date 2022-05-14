@@ -65,10 +65,13 @@ services:
       as_yaml_with_points:
         regex: ^(0|1)$
         default: 0
-      with_opening_message:
+      with_output_files:
         regex: ^(0|1)$
         default: 0
-      with_summary:
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
         regex: ^(0|1)$
         default: 0
   oracle:
@@ -113,6 +116,9 @@ services:
         regex: ^(.*)$
         default: DPtable
       as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
         regex: ^(0|1)$
         default: 0
       with_opening_message:
