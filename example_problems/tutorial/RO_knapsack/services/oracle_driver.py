@@ -20,14 +20,14 @@ args_list = [
     ('elementi_proibiti','list_of_str'),
     ('elementi_obbligati','list_of_str'),
     ('sol_type',str),
-    ('esercizio',int),
-    ('task',int),
     ('name_of_opt_val',str),
     ('name_of_opt_sol',str),
     ('name_of_DPtable',str),
     ('as_yaml',bool),
     ('recall_input',bool),
     ('with_opening_message',bool),
+    ('esercizio',int),
+    ('task',int),
 ]
 
 ENV =Env(args_list)

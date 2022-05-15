@@ -24,7 +24,7 @@ services:
         regex: ^(.*)$
         default: "[]"
       sol_type:
-        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable)$
         default: opt_sol
       opt_sol:
         regex: ^(.*)$

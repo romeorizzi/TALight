@@ -17,21 +17,21 @@ services:
       archi_obbligati:
         regex: ^(.*)$
         default: "[]"
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
       name_of_opt_val:
         regex: ^(.*)$
         default: opt_val
       name_of_opt_sol:
         regex: ^(.*)$
         default: opt_sol
-      pt_formato_OK:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
-      pt_feasibility_OK:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 1
-      pt_tot:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 10
       color_implementation:
         regex: ^(ANSI|html|None)$
         default: ANSI
@@ -47,6 +47,15 @@ services:
       with_opening_message:
         regex: ^(0|1)$
         default: 0
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
       esercizio:
         regex: ^(0|[1-9][0-9]*)$
         default: -1

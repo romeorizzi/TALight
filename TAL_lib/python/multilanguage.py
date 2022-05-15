@@ -18,31 +18,32 @@ class TALcolors:
     def __init__(self, ENV, color_implementation ="ANSI"):
         if color_implementation=="None":
            self.color_implementation = None
-        elif environ["TAL_META_TTY"]=='1' or color_implementation=="html":
-            try:
-                self.termcolor = import_module('termcolor')
-            except Exception as e:
-                self.color_implementation = None
-                for out in ['stderr','stdout']:
-                    print(f"# Recoverable Error: {e}", file=out)
-                    print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on the machine where rtald is running.)", file=out)
-                return
-        if 'termcolor' in sys.modules:
-            if color_implementation=="ANSI":
-                self.color_implementation = 'ANSI'
-            elif color_implementation=="html":
-                self.color_implementation = 'html'
+        else:
+            if environ["TAL_META_TTY"]=='1' or color_implementation=="html":
                 try:
-                    from ansi2html import Ansi2HTMLConverter
-                    self.ansi2html = Ansi2HTMLConverter(inline = True)
+                    self.termcolor = import_module('termcolor')
                 except Exception as e:
                     self.color_implementation = None
                     for out in ['stderr','stdout']:
                         print(f"# Recoverable Error: {e}", file=out)
-                        print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package ansi2html on the machine where rtald is running.)", file=out)
-            else:
-                print(f"# Unrecoverable Error: no implementation is currently offered for managing colors as {color_implementation}.)", file=stderr)
-                exit(0)
+                        print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on the machine where rtald is running.)", file=out)
+                    return
+            if 'termcolor' in sys.modules:
+                if color_implementation=="ANSI":
+                    self.color_implementation = 'ANSI'
+                elif color_implementation=="html":
+                    self.color_implementation = 'html'
+                    try:
+                        from ansi2html import Ansi2HTMLConverter
+                        self.ansi2html = Ansi2HTMLConverter(inline = True)
+                    except Exception as e:
+                        self.color_implementation = None
+                        for out in ['stderr','stdout']:
+                            print(f"# Recoverable Error: {e}", file=out)
+                            print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package ansi2html on the machine where rtald is running.)", file=out)
+                else:
+                    print(f"# Unrecoverable Error: no implementation is currently offered for managing colors as {color_implementation}.)", file=stderr)
+                    exit(0)
 
         self.numNO = 0
         self.numOK = 0

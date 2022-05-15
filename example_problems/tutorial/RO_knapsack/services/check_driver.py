@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from sys import exit
-from typing import Optional, List
+from typing import Optional, List, Dict, Tuple
 
 from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
@@ -20,9 +20,6 @@ args_list = [
     ('opt_sol','yaml'),
     ('opt_val','yaml'),
     ('DPtable','yaml'),
-    ('pt_formato_OK',int),
-    ('pt_feasibility_OK',int),
-    ('pt_tot',int),
     ('name_of_opt_val',str),
     ('name_of_opt_sol',str),
     ('name_of_DPtable',str),
@@ -31,6 +28,9 @@ args_list = [
     ('with_output_files',bool),
     ('recall_input',bool),
     ('with_opening_message',bool),
+    ('pt_formato_OK',int),
+    ('pt_feasibility_OK',int),
+    ('pt_tot',int),
     ('esercizio',int),
     ('task',int),
 ]
@@ -47,7 +47,7 @@ TALf = TALfilesHelper(TAc, ENV)
 RO.check_access_rights(ENV,TALf, ask_pwd = False, ask_token = False)
 knapsack_lib.check_request_consistency(ENV)
 
-def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[int],Capacity:int, answ, pt_tot=None,pt_formato_OK=None,pt_feasibility_OK=None,elementi_proibiti:List[str]=[],elementi_obbligati:List[str]=[]):
+def verif_knapsack(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str],elementi_obbligati:List[str], answ:Dict):
     feedback_summary = ""
     elementi=[]
     pesi=[]
@@ -106,10 +106,9 @@ def verif_knapsack(task_number,elements:List[str],weights:List[int],vals:List[in
 
             
 
-feedback_dict = verif_knapsack(ENV["task"],ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"], \
-                                answ={"sol_type":ENV["sol_type"],"opt_sol":ENV["opt_sol"],"opt_val":ENV["opt_val"],"DPtable":ENV["DPtable"], \
-                                      "name_of_opt_sol":ENV["name_of_opt_sol"], "name_of_opt_val":ENV["name_of_opt_val"], "name_of_DPtable":ENV["name_of_DPtable"]}, \
-                                 pt_tot=ENV["pt_tot"],pt_formato_OK=ENV["pt_formato_OK"],pt_feasibility_OK=ENV["pt_feasibility_OK"],elementi_proibiti=ENV["elementi_proibiti"],elementi_obbligati=ENV["elementi_obbligati"])
+feedback_dict = verif_knapsack(ENV["task"],ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"], ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"],ENV["elementi_proibiti"],ENV["elementi_obbligati"], \
+                answ={"sol_type":ENV["sol_type"],"opt_sol":ENV["opt_sol"],"opt_val":ENV["opt_val"],"DPtable":ENV["DPtable"], \
+                      "name_of_opt_sol":ENV["name_of_opt_sol"], "name_of_opt_val":ENV["name_of_opt_val"], "name_of_DPtable":ENV["name_of_DPtable"]} )
 if ENV['recall_input']:
     feedback_dict['input'] = knapsack_lib.dict_of_input(ENV)
 if ENV['as_yaml_with_points']:
