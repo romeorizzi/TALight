@@ -1,0 +1,98 @@
+Servizio pensato come per il problem solver/studente:
+rtal connect -x 134551_PincoPallo monitor_grades get_my_records
+rtal connect -x 134551_PincoPallo monitor_grades get_my_records -a download
+rtal connect -x 134551_PincoPallo monitor_grades get_my_records -a problem=mastermind
+rtal connect -x 134551_PincoPallo monitor_grades get_my_records -a problem=mastermind -a download
+
+Sarebbe utile:
+1. mettere la data di conseguimento
+      nel csv: in una ultima colonna, esempio:
+      PincoPallo,mastermind,third,goal1
+      -->
+      PincoPallo,mastermind,third,goal1,OK,2022-05-04_21-37-01
+      a video: a detra in parentesi tonde, esempio:
+      mastermind: third
+      goal1-> OK
+      -->
+      goal1-> OK (2022-05-04_21-37-01)
+
+      regola: se c'è un OK prende l'ultimo OK. Se ci sono solo NO prende l'ultimo NO.
+
+2. poter richiedere di visualizzare TUTTE le sottomissioni (ordinate dalla più alla meno recente):
+rtal connect -x 134551_PincoPallo monitor_grades get_my_records -a all_submissione
+
+Inoltre:
+Quando si chiama il servizio get_my_records  con una password docente non esegue il servizio come pensato per lo studente:
+rtal connect -x 123456__RomeoRizzi monitor_grades get_my_records
+
+=======================================================================
+
+Problem solver asks about other student knowing only `the name part` of the token of tha pal student
+
+rtal connect -x 134551_PincoPallo monitor_grades get_public_records -atoken=anonymous
+rtal connect -x 123456__RomeoRizzi monitor_grades get_public_records -atoken=anonymous
+
+Interessante, ma và semmai pensato che abbia un senso (l'ispirazione ideale di supportare una dimensione social è buona, ma deve stere stare in piedi in come è progettata). Cosa distingue tra informazioni private e pubbliche? Non ha spazio vero se non si prendono decisioni a questo livello.
+Una possibilità: allungare il nome del file in:
+
+NO_goal3_private  OK_goal1_public  OK_goal2_public  OK_goal3_public
+
+
+=======================================================================
+
+Teacher:
+rtal connect -x 123456__RomeoRizzi monitor_grades get_teacher -acountStudentTries=1
+rtal connect -x 123456__RomeoRizzi monitor_grades get_teacher -acountStudentOkAndNo=1
+rtal connect -x 123456__RomeoRizzi monitor_grades get_teacher -acountProblemOk=1
+rtal connect -x 123456__RomeoRizzi monitor_grades get_teacher -acountServiceOk=1
+rtal connect -x 123456__RomeoRizzi monitor_grades get_teacher -acountServiceOk=1 -aproblem=mastermind
+rtal connect -x 123456__RomeoRizzi monitor_grades get_teacher -acountGoalOk=1
+rtal connect -x 123456__RomeoRizzi monitor_grades get_teacher -acountProblemOk=1 -adownload=1
+
+Serve un servizio  get_ranking:
+   è un pò quello che hai fatto sotto  get_my_records  quando veniva chiamato con un token docente.
+   Invece get_my_records deve funzionare uguale per tutti (docenti o studenti) gestando la richiesta come fosse una richiesta di studente che vuole conoscere la propria situazione.
+
+   Rispetto a get_my_records deve:
+      1. consentire di filtrare anche sullo studente oltre che sul problema e sul servizio
+      2. consentire di filtrare sui problemai che hanno ricevuto sottomissioni
+   
+
+
+Analisi:
+1. get_teacher --> get_statistics
+Sarebbe utile:
+2. visualizzare la data di conseguimento sia nel csv che a monitor
+3. poter richiedere di vedere TUTTE le sottomissioni (ordinate dalla più alla meno recente) con l'argomento -a all_submissions  come per studente.
+   Se si vede una sola sottomissione la regola (OK/NO) deve essere come per studente
+4. poter filtrare su un singolo studente
+
+5. le sequenti opzioni vanno spiegate meglio e sviluppate maggiormente. Inoltre, sono esclusive, quindi va fatto un'unico argomento che ha una di esse per default e le altre come possibili.
+
+      countStudentTries:
+        aggiungere filtrare su studente
+        explain: 'It offers a table where, for every (possibly filtered) student, specifies the number of submissions:
+	-a mode=total_gross_number (ossia conti il numero di file nella gartella di log)
+	-a mode=number_different_submissions (either problem or service are different)   (ossia due sottomissioni contano come una sola se sone relative allo stesso servizio di uno stesso problema)
+      countStudentOkAndNo:
+         aggiungere filtrare su studente
+      countProblemOk:
+        explain: 'It offers a table where, for every (possibly filtered) student, specifies the number of problems that have received: -arequirement=at_least_one_submission, -a requirement=at_least_one_goal_achieved,  -a requirement=at_least_one_service_fullfilled , -a requirement=all_services_fullfilled 
+      countServiceOk:
+        aggiungere filtrare su studente
+        explain: 'It offers a table where, for every (possibly filtered) student and every (possibly filtered) problem, specifies the number of services that have received: -arequirement=at_least_one_submission, -a requirement=at_least_one_goal_achieved, -a requirement=all_goals_achieved   (di default requirement è settato a all_goals_achieved)
+      countGoalOk:
+        aggiungere filtrare su studente
+        explain: 'Offers a table where the number of achieved goals is given for every (possibly filtered) student, every (possibly filtered) problem and every (possibly filtered) service'
+
+FORMATI:
+
+ls log_algorithms/134551_PincoPallo+pirellone+second+2022-01-01_17-01-00_000
+NO_goal3  OK_goal1  OK_goal2  OK_goal3
+
+# Formato del nomefile contenuto nella cartella:
+   OK_goal?
+oppure:
+   NO_goal?
+
+
