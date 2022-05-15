@@ -6,16 +6,18 @@ from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
 import RO_problems_lib as RO
-import knapsack_lib
+import lcs_lib
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('elementi','list_of_str'),
-    ('pesi','list_of_int'),
-    ('valori','list_of_int'),
-    ('Knapsack_Capacity',int),
-    ('elementi_proibiti','list_of_str'),
-    ('elementi_obbligati','list_of_str'),
+    ('s','str'),
+    ('t','str'),
+    ('start_with','str'),
+    ('end_with','str'),
+    ('forbidden_s_interval_first_pos','int'),
+    ('forbidden_s_interval_last_pos','int'),
+    ('initDPtable_prefix','matrix_of_int'),
+    ('initDPtable_suffix','matrix_of_int'),
     ('sol_type',str),
     ('opt_sol','yaml'),
     ('opt_val','yaml'),
@@ -45,9 +47,9 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 RO.check_access_rights(ENV,TALf, ask_pwd = False, ask_token = False)
-knapsack_lib.check_request_consistency(ENV)
+lcs_lib.check_request_consistency(ENV)
 
-def verif_knapsack(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str],elementi_obbligati:List[str], answer:Dict):
+def verif_lcs(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, s:str,t:str,start_with:str,end_with:str,forbidden_s_interval_first_pos:int,forbidden_s_interval_last_pos:int,initDPtable_prefix:List[List[int]],initDPtable_suffix:List[List[int]], answer:Dict):
     feedback_summary = ""
     elementi=[]
     pesi=[]
@@ -106,17 +108,19 @@ def verif_knapsack(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_O
 
             
 
-feedback_dict = verif_knapsack(ENV["task"],ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"], ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"],ENV["elementi_proibiti"],ENV["elementi_obbligati"], \
-                answer={"sol_type":ENV["sol_type"],"opt_sol":ENV["opt_sol"],"opt_val":ENV["opt_val"],"DPtable":ENV["DPtable"], \
-                      "name_of_opt_sol":ENV["name_of_opt_sol"], "name_of_opt_val":ENV["name_of_opt_val"], "name_of_DPtable":ENV["name_of_DPtable"]} )
+feedback_dict = verif_lcs(ENV["task"],pt_tot=ENV["pt_tot"],pt_formato_OK=ENV["pt_formato_OK"],pt_feasibility_OK=ENV["pt_feasibility_OK"], \
+                          ENV["s"],ENV["t"],ENV["start_with"],ENV["end_with"],ENV["forbidden_s_interval_first_pos"],ENV["forbidden_s_interval_last_pos"],ENV["initDPtable_prefix"],ENV["initDPtable_suffix"], \
+                          answer={"sol_type":ENV["sol_type"],"opt_sol":ENV["opt_sol"],"opt_val":ENV["opt_val"],"DPtable_prefix":ENV["DPtable_prefix"],"DPtable_suffix":ENV["DPtable_suffix"], \
+                                "name_of_opt_sol":ENV["name_of_opt_sol"], "name_of_opt_val":ENV["name_of_opt_val"], "name_of_DPtable":ENV["name_of_DPtable"]} )
 
-submission_dict = knapsack_lib.dict_of_input(ENV)
+submission_dict = lcs_lib.dict_of_input(ENV)
 RO.checker_reply(submission_dict,feedback_dict,ENV)
 if ENV.LOG_FILES != None:
-    opt_val, opt_sol, DPtable = knapsack_lib.solver(ENV)
-    oracle_dict = knapsack_lib.dict_of_oracle(ENV, opt_val,opt_sol,DPtable)
+    opt_val, opt_sol, DPtable = lcs_lib.solver(ENV)
+    oracle_dict = lcs_lib.dict_of_oracle(ENV, opt_val,opt_sol,DPtable)
     RO.checker_logs(oracle_dict,feedback_dict,submission_dict,ENV,TALf)
 if ENV["yield_certificate_in_output_file"]:    
     RO.checker_certificates(feedback_dict,submission_dict,ENV,TALf)
+
 
 

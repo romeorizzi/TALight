@@ -5,36 +5,39 @@ services:
   check:
     evaluator: [python, services/check_driver.py]
     args:
-      elementi:
-        regex: ^(.*)$
-        default: "['A', 'B', 'C', 'D', 'E']"
-      pesi:
-        regex: ^(.*)$
-        default: "[2, 3, 4, 29, 50]"
-      valori:
-        regex: ^(.*)$
-        default: "[13, 17, 19, 11, 15]"
-      Knapsack_Capacity:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 5
-      elementi_proibiti:
-        regex: ^(.*)$
-        default: "[]"
-      elementi_obbligati:
-        regex: ^(.*)$
-        default: "[]"
+      s:
+        regex: ^([A-Z]*)$
+        default: ACCIPICCHIA
+      t:
+        regex: ^([A-Z]*)$
+        default: MAMMACHIOCCIA
+      start_with:
+        regex: ^(x|[A-Z])$
+        default: x
+      end_with:
+        regex: ^(x|[A-Z])$
+        default: x
+      forbidden_s_interval_first_pos:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      forbidden_s_interval_last_pos:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
       sol_type:
-        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable)$
-        default: opt_sol
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable_prefix|DPtable_suffix)$
+        default: opt_sol_with_val
       opt_sol:
-        regex: ^(.*)$
-        default: "['A', 'B']"
+        regex: ^([A-Z]*)$
+        default: ACCIA
       opt_val:
         regex: ^(.*)$
-        default: 30
-      DPtable:
+        default: 5
+      DPtable_prefix:
         regex: ^(.*)$
-        default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        default: "[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ]"
+      DPtable_suffix:
+        regex: ^(.*)$
+        default: "[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ]"
       name_of_opt_val:
         regex: ^(.*)$
         default: opt_val
@@ -44,13 +47,19 @@ services:
       name_of_DPtable:
         regex: ^(.*)$
         default: DPtable
+      initDPtable_prefix:
+        regex: ^(.*)$
+        default: "[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] ]"
+      initDPtable_suffix:
+        regex: ^(.*)$
+        default: "[[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] ]"
       color_implementation:
         regex: ^(ANSI|html|None)$
         default: ANSI
       as_yaml_with_points:
         regex: ^(0|1)$
         default: 0
-      yield_certificate_in_output_file:
+      with_output_files:
         regex: ^(0|1)$
         default: 0
       recall_input:
@@ -79,26 +88,26 @@ services:
     args:
       pwd:
         regex: ^(.*)$
-      elementi:
-        regex: ^(.*)$
-        default: "['A', 'B', 'C']"
-      pesi:
-        regex: ^(.*)$
-        default: "[2, 3, 4]"
-      valori:
-        regex: ^(.*)$
-        default: "[13, 17, 19]"
-      Knapsack_Capacity:
+      s:
+        regex: ^([A-Z]*)$
+        default: ACCIPICCHIA
+      t:
+        regex: ^([A-Z]*)$
+        default: MAMMACHIOCCIA
+      start_with:
+        regex: ^(x|[A-Z])$
+        default: x
+      end_with:
+        regex: ^(x|[A-Z])$
+        default: x
+      forbidden_s_interval_first_pos:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      forbidden_s_interval_last_pos:
         regex: ^(0|[1-9][0-9]*)$
-        default: 5
-      elementi_proibiti:
-        regex: ^(.*)$
-        default: "[]"
-      elementi_obbligati:
-        regex: ^(.*)$
-        default: "[]"
+        default: -1
       sol_type:
-        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable_prefix|DPtable_suffix|all)$
         default: all
       name_of_opt_val:
         regex: ^(.*)$

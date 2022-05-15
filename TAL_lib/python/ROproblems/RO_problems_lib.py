@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from typing import Optional, List
+from typing import Optional, List, Dict, Callable
 import termcolor 
 from ansi2html import Ansi2HTMLConverter
 ansi2html = Ansi2HTMLConverter(inline = True)
@@ -55,12 +55,25 @@ class std_eval_feedback:
             pt_out = 0
         return {'pt_safe':pt_safe,'pt_maybe':pt_maybe,'pt_out':pt_out,'feedback_string':ret_str}
 
+    
+def add_ENV_var(var_name:str, d:Dict, ENV, condition:Callable[[str], bool] = lambda x : True):
+    if condition(ENV[var_name]):
+        d[var_name] = ENV[var_name]
 
+def add_ENV_vars(var_names:List[str], d:Dict, ENV, condition:Callable[[str], bool] = lambda x : True):
+    for var_name in var_names:
+        if condition(ENV[var_name]):
+            d[var_name] = ENV[var_name]
+
+def add_named_ENV_var(var_name:str, d:Dict, ENV, condition:Callable[[str], bool] = lambda x : True):
+    if condition(ENV[var_name]):
+        d[ENV['name_of_'+var_name]] = ENV[var_name]
+    
 def display_dict(dict):
     for key,val in dict.items():
         print(f"{key}: {val}")
         
-def oracle_output(ENV, call_data):
+def oracle_outputs(ENV, call_data):
     if not ENV['recall_input']:
         call_data = call_data['oracle']
     if ENV['as_yaml']:
@@ -73,4 +86,39 @@ def oracle_output(ENV, call_data):
         else:
             display_dict(call_data)
 
+def checker_reply(input_dict,feedback_dict,ENV):
+    if ENV['recall_input']:
+        feedback_dict['input'] = input_dict
+    if ENV['as_yaml_with_points']:
+        print(feedback_dict)
+    else:
+        print(feedback_dict['feedback_string'])
+    feedback_dict['input'] = input_dict
     
+def checker_logs(oracle_dict,feedback_dict,submission_dict,ENV,TALf):
+    pt_safe = feedback_dict['pt_safe']
+    pt_maybe = feedback_dict['pt_maybe']
+    pt_true = ENV['pt_tot']
+    for key in oracle_dict:
+        if ENV[key] != oracle_dict[key]:
+            pt_true = pt_safe
+    content_LOG_file = "FEEDBACK: "+repr(feedback_dict)+"\nSTUDENT_SUBMISSION: "+repr(submission_dict)+"\nORACLE: "+repr(oracle_dict)
+    #print(f"content_LOG_file =`{content_LOG_file}`")
+    filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
+    if ENV["task"] != -1:
+        filename_spec += f'task_{ENV["task"]}_'
+    filename_spec += f'safe_{pt_safe}_maybe_{pt_maybe}_true_{pt_true}'
+    TALf.str2log_file(content=content_LOG_file, filename=filename_spec, timestamped = False)
+    
+def checker_certificates(feedback_dict,submission_dict,ENV,TALf):
+    pt_safe = feedback_dict['pt_safe']
+    pt_maybe = feedback_dict['pt_maybe']
+    content_receipt_file  = "FEEDBACK: "+repr(feedback_dict)+"\nSTUDENT_SUBMISSION: "+repr(submission_dict)
+    #print("content_receipt_file =`{content_receipt_file}`")
+    filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
+    if ENV["task"] != -1:
+        filename_spec += f'task_{ENV["task"]}_'
+    filename_spec += f'safe_{pt_safe}_maybe_{pt_maybe}'
+    TALf.str2output_file(content=content_receipt_file, filename=filename_spec, timestamped = False)
+
+        

@@ -1,25 +1,11 @@
 #!/usr/bin/env python3
+import RO_problems_lib as RO
       
 def sum_of_pesi_over(ENV, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(ENV["pesi"], ENV["elementi"]) if ele in ordered_list_of_elems])
 
 def sum_of_valori_over(ENV, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(ENV["valori"], ENV["elementi"]) if ele in ordered_list_of_elems])
-
-def dict_of_input(ENV):
-    dict_input = { 'elementi':ENV["elementi"],'pesi':ENV["pesi"],'valori':ENV["valori"],'Knapsack_Capacity':ENV["Knapsack_Capacity"], 'sol_type':ENV['sol_type'] }
-    if len(ENV["elementi_proibiti"]) != 0:
-        dict_input["elementi_proibiti"] = ENV["elementi_proibiti"]
-    if len(ENV["elementi_obbligati"]) != 0:
-        dict_input["elementi_obbligati"] = ENV["elementi_obbligati"]
-    if ENV['opt_val'] is not None:
-        if ENV['sol_type'] in ['opt_sol','opt_sol_with_val','all']:
-            dict_input[ENV['name_of_opt_sol']] = ENV['opt_sol'] 
-        if ENV['sol_type'] in ['opt_val','opt_sol_with_val','all']:
-            dict_input[ENV['name_of_opt_val']] = ENV['opt_val']
-        if ENV['sol_type'] in ['DPtable','all']:
-            dict_input[ENV['name_of_DPtable']] = ENV['DPtable']       
-    return dict_input
 
 def dict_of_oracle(ENV,opt_val, opt_sol, DPtable):
     oracle_dict = {}
@@ -30,6 +16,18 @@ def dict_of_oracle(ENV,opt_val, opt_sol, DPtable):
     if ENV['sol_type'] in ['DPtable','all']:
         oracle_dict['DPtable'] = DPtable
     return oracle_dict
+
+def dict_of_input(ENV):
+    dict_input = {}
+    RO.add_ENV_vars(["elementi","pesi","valori","Knapsack_Capacity","sol_type"], dict_input, ENV)
+    RO.add_ENV_vars(["elementi_proibiti","elementi_obbligati"], dict_input, ENV, lambda x : len(x) > 0)
+    if ENV['sol_type'] in ['opt_sol','opt_sol_with_val','all']:
+        RO.add_named_ENV_var('opt_sol', dict_input, ENV, lambda x : x is not None)
+    if ENV['sol_type'] in ['opt_val','opt_sol_with_val','all']:
+        RO.add_named_ENV_var('opt_val', dict_input, ENV, lambda x : x is not None)
+    if ENV['sol_type'] in ['DPtable','all']:
+        RO.add_named_ENV_var('DPtable', dict_input, ENV, lambda x : x is not None)
+    return dict_input
 
 def check_request_consistency(ENV):
     if len(ENV["elementi"])!=len(ENV["pesi"]):

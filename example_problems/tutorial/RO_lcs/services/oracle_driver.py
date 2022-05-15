@@ -8,17 +8,17 @@ from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
 import RO_problems_lib as RO
-import knapsack_lib
+import lcs_lib
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('pwd',str),
-    ('elementi','list_of_str'),
-    ('pesi','list_of_int'),
-    ('valori','list_of_int'),
-    ('Knapsack_Capacity',int),
-    ('elementi_proibiti','list_of_str'),
-    ('elementi_obbligati','list_of_str'),
+    ('s','str'),
+    ('t','str'),
+    ('start_with','str'),
+    ('end_with','str'),
+    ('forbidden_s_interval_first_pos','int'),
+    ('forbidden_s_interval_last_pos','int'),
     ('sol_type',str),
     ('name_of_opt_val',str),
     ('name_of_opt_sol',str),
@@ -38,11 +38,11 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 RO.check_access_rights(ENV,TALf, ask_pwd = True, ask_token = True)
-knapsack_lib.check_request_consistency(ENV)
+lcs_lib.check_request_consistency(ENV)
                     
-opt_val, opt_sol, DPtable = knapsack_lib.solver(ENV)
+opt_val, opt_sol, DPtable = lcs_lib.solver(ENV)
 
-call_data = {'oracle': knapsack_lib.dict_of_oracle(ENV, opt_val,opt_sol,DPtable), 'input': knapsack_lib.dict_of_input(ENV) }
+call_data = {'oracle': lcs_lib.dict_of_oracle(ENV, opt_val,opt_sol,DPtable), 'input': lcs_lib.dict_of_input(ENV) }
 
 RO.oracle_outputs(ENV, call_data)
 
