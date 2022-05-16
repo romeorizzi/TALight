@@ -18,7 +18,7 @@ services:
       all_submission:
         regex: ^(0|1)$
         default: 0
-        explain: 'TODO'
+        explain: 'Show all the submission for each service'
       download:
         regex: ^(0|1)$
         default: 0
@@ -38,9 +38,11 @@ services:
       service:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
+        explain: 'Select the service for which to ask a report of your submissions. Use `all_services` to get a global report of your submissions on all services.'
       student:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_students
+        explain: 'Select the service for which to ask a report of your students. Use `all_students` to get a global report of your submissions on all students.'
       download:
         regex: ^(0|1)$
         default: 0
@@ -60,21 +62,23 @@ services:
       service:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
+        explain: 'Select the service for which to ask a report of your submissions. Use `all_services` to get a global report of your submissions on all service.'
       student:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_students
+        explain: 'Select the student for which to ask a report of your submissions. Use `all_students` to get a global report of your submissions on all students.'
       count_type: 
         regex: ^(student_tries|student_ok_and_no|problem|service|goal)$
         default: problem
-        explain: 'TODO'
+        explain: 'Select the type of count. Student_tries count the total number of file in the directory. student_ok_and_no show how many oks and nos the student recived. problem group the report by problem. service group the report by service. goal group the report by service.'
       mode: 
         regex: ^(total_gross_number|number_different_submissions)$
         default: total_gross_number
-        explain: 'TODO'
+        explain: 'Select the mode for student_tries. total_gross_number count the files in each folder. number_different_submissions either problem or service are different.'
       requirement:
-        regex: ^(at_least_one_submission|at_least_one_goal_achieved|all_services_fullfilled|at_least_one_submission|at_least_one_goal_achieved|all_goals_achieved)$
+        regex: ^(at_least_one_submission|at_least_one_goal_achieved|all_services_fullfilled|all_goals_achieved)$
         default: all_services_fullfilled
-        explain: 'TODO'
+        explain: 'Select the mode for count_type=problem and count_type=service. at_least_one_submission at least one submission (either a no goal or a ok goal). at_least_one_goal_achieved at least a ok goal recived. all_services_fullfilled every service as to be ok goal. all_goals_achieved all the goal are achived.'
       download:
         regex: ^(0|1)$
         default: 0
