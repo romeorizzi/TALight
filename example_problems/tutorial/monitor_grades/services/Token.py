@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import re
 from FileData import FileData
 from Structure import Structure
 
@@ -163,14 +162,14 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                if (requirement == "at_least_one_submission"):
-                    if (ok_goals > 0 or no_goals > 0):
+                if requirement == "at_least_one_submission":
+                    if ok_goals > 0 or no_goals > 0:
                         resolvedproblem += 1
-                elif (requirement == "at_least_one_goal_achieved"):
-                    if (ok_goals > 0):
+                elif requirement == "at_least_one_goal_achieved":
+                    if ok_goals > 0:
                         resolvedproblem += 1
-                elif (requirement == "at_least_one_service_fullfilled"):                    
-                    if (no_goals == 0):
+                elif requirement == "at_least_one_service_fullfilled":
+                    if no_goals == 0:
                         resolvedproblem += 1
                 else:
                     raise
@@ -196,15 +195,17 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                    if (requirement == "at_least_one_submission"):
-                        if (ok_goals > 0 or no_goals > 0):
+                    if requirement == "at_least_one_submission":
+                        if ok_goals > 0 or no_goals > 0:
                             resolvedservice += 1
-                    if (requirement == "at_least_one_goal_achieved"):
-                        if (ok_goals > 0):
+                    elif requirement == "at_least_one_goal_achieved":
+                        if ok_goals > 0:
                             resolvedservice += 1
-                    if (requirement == "all_goals_achieved"):
+                    elif requirement == "all_goals_achieved":
                         if no_goals == 0:
                             resolvedservice += 1
+                    else:
+                        raise
                 
                 l.append((Token.hideToken(e.token), x.problem, resolvedservice))
 
