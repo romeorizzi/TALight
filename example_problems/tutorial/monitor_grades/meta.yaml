@@ -23,6 +23,28 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
+  get_ranking:
+    evaluator: [python,services/get_ranking.py]
+    description: '' 
+    args:
+      problem:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_problems
+        explain: 'Select the problem for which to ask a report of your submissions. Use `all_problems` to get a global report of your submissions on all problems.'
+      service:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_services
+      student:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_students
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   get_statistics:
     evaluator: [python,services/get_statistics.py]
     description: '' 
@@ -40,10 +62,14 @@ services:
       count_type: ^(student_tries|student_ok_and_no|problem|service|goal)$
         default: problem
         explain: 'TODO'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  
+
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
