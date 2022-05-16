@@ -35,13 +35,7 @@ class Token(object):
                             for o in z.content:
                                 print('->', o.toString())
                         else:
-                            value = ""
-                            if z.getStatusContent():
-                                value = "OK"
-                            else:
-                                value = "NO"
-
-                            print('->', value)
+                            print('->', z.getLastContent().toString())
 
             print()
 
@@ -68,7 +62,7 @@ class Token(object):
                             else:
                                 value = "NO"
 
-                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "\n"
+                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "," + z.toStringDate() + "\n"
                             lines.append(line)
 
         return ''.join(str(i) for i in lines)

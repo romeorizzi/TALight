@@ -13,10 +13,15 @@ class Goal(object):
         self.content.append(c)
         
     def getStatusContent(self):
-        done = False
         for x in self.content:
             if x.result:
-                done = True
+                return True
 
-        return done
+        return False
+
+    def getLastContent(self):
+        if len(self.content) > 0:
+            return self.content[0]
+        else:
+            return None
         
