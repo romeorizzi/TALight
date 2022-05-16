@@ -71,6 +71,10 @@ services:
         regex: ^(total_gross_number|number_different_submissions)$
         default: total_gross_number
         explain: 'TODO'
+      requirement:
+        regex: ^(at_least_one_submission|at_least_one_goal_achieved|all_services_fullfilled|at_least_one_submission|at_least_one_goal_achieved|all_goals_achieved)$
+        default: all_services_fullfilled
+        explain: 'TODO'
       download:
         regex: ^(0|1)$
         default: 0

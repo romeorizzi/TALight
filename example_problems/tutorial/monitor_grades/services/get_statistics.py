@@ -19,7 +19,8 @@ if not DEBUG:
         ('download', int),
         ('count_type', str),
         ('student', int),
-        ('mode', str)
+        ('mode', str),
+        ('requirement', str)
     ]
 
     ENV = Env(args_list)
@@ -54,7 +55,7 @@ def main(problem : str, service : str, token : str, path : str, counttype : str,
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "problem":
-        table = lg.getProblemList().countProblemOkAndNoGoals()
+        table = lg.getProblemList().countProblemOkAndNoGoals(ENV['requirement'])
 
         Token.tupleToTable(("Token", "#Problem"))
         Token.tupleToTable(table)

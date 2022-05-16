@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 from FileData import FileData
 from Structure import Structure
 
@@ -145,7 +146,7 @@ class Token(object):
 
         return l
 
-    def countProblemOkAndNoGoals(self):
+    def countProblemOkAndNoGoals(self, requirement : str):
         l = list()
 
         for e in self.tokens:
@@ -162,8 +163,17 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                if (no_goals == 0):
-                    resolvedproblem += 1
+                if (requirement == "at_least_one_submission"):
+                    if (ok_goals > 0 or no_goals > 0):
+                        resolvedproblem += 1
+                elif (requirement == "at_least_one_goal_achieved"):
+                    if (ok_goals > 0):
+                        resolvedproblem += 1
+                elif (requirement == "at_least_one_service_fullfilled"):                    
+                    if (no_goals == 0):
+                        resolvedproblem += 1
+                else:
+                    raise
 
             l.append((Token.hideToken(e.token), resolvedproblem))
 
