@@ -22,7 +22,7 @@ class LibGrades(object):
                 folderdata = FolderData(x, fullpath)
 
                 # TODO Fix this
-                if (folderdata.token == token or ("__" in token) or folderdata.token.split('_')[1] == token):
+                if (folderdata.token == token or token == "all"):
                     for y in listdir(fullpath):
                         filedata = FileData(y, os.path.join(fullpath, y), folderdata)
                         

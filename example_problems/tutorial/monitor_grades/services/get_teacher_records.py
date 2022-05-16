@@ -30,9 +30,13 @@ if not DEBUG:
 
 # START CODING YOUR SERVICE:
 
-def main(problem : str, service : str, token : str, path : str): 
+def main(problem : str, service : str, token : str, path : str):
+    if (("__" in token) == False):
+        print('Unauthorized')
+        return
+
     l = LibGrades()
-    l.loadFile(problem, service, token, path)
+    l.loadFile(problem, service, "all", path)
 
     if ENV['countStudentTries'] == 1:
         a = l.getProblemList().countTokenTries()
