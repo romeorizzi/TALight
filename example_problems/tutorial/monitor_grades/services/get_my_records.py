@@ -15,6 +15,7 @@ if not DEBUG:
     args_list = [
         ('problem', str),
         ('service', str),
+        ('all_submission', str),
         ('download', int)
     ]
 
@@ -29,11 +30,11 @@ def main(problem : str, service : str, token : str, path : str):
     lg = lib_grades()
     lg.loadFile(problem, service, token, path)
 
-    lg.getProblemList().printToConsole()
+    lg.getProblemList().printToConsole(True)
     
     if not DEBUG:
         if ENV['download'] == 1:
-            TALf.str2output_file(lg.getProblemList().instanceToString(), "result.csv")
+            TALf.str2output_file(lg.getProblemList().instanceToString(True), "result.csv")
 
 if __name__ == "__main__":
     if DEBUG:

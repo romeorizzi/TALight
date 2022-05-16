@@ -14,7 +14,11 @@ class Content(object):
             resultstr = "OK"
         else:
             resultstr = "NO"
-        return resultstr + " (" + self.toStringDate() + ")"
+        
+        if (sep == ''):
+            return resultstr + " (" + self.toStringDate() + ")"
+        else:
+            return resultstr + sep + self.toStringDate()
 
     def toStringDate(self):
         return time.strftime('%Y-%m-%d %H-%M-%S', self.data)

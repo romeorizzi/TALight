@@ -32,8 +32,9 @@ class Token(object):
                         print(z.goal, sep=': ', end = '')
 
                         if printAll:
+                            print('->')
                             for o in z.content:
-                                print('->', o.toString())
+                                print('\t', o.toString(), sep='')
                         else:
                             print('->', z.getLastContent().toString())
 
