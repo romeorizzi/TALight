@@ -2,7 +2,7 @@
 
 from os import environ
 import os
-from LibGrades import LibGrades
+from lib_grades import lib_grades
 
 DEBUG = False
 #DEBUG = True
@@ -26,7 +26,7 @@ if not DEBUG:
 # START CODING YOUR SERVICE:
 
 def main(problem : str, service : str, token : str, path : str): 
-    lg = LibGrades()
+    lg = lib_grades()
     lg.loadFile(problem, service, token, path)
 
     lg.getProblemList().printToConsole()

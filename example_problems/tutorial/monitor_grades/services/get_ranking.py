@@ -2,7 +2,7 @@
 
 from os import environ
 import os
-from LibGrades import LibGrades
+from lib_grades import lib_grades
 
 DEBUG = False
 
@@ -31,7 +31,7 @@ def main(problem : str, service : str, token : str, path : str, student : str):
         print('Unauthorized')
         return
 
-    lg = LibGrades()
+    lg = lib_grades()
     lg.loadFile(problem, service, student, path)
 
     lg.getProblemList().printToConsole()

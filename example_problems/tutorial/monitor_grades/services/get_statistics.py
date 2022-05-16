@@ -3,7 +3,7 @@
 from os import environ
 import os
 
-from LibGrades import LibGrades
+from lib_grades import lib_grades
 from Token import Token
 
 DEBUG = False
@@ -37,7 +37,7 @@ def main(problem : str, service : str, token : str, path : str, counttype : str,
         print('Unauthorized')
         return
 
-    lg = LibGrades()
+    lg = lib_grades()
     lg.loadFile(problem, service, student, path)
 
     if counttype == "student_tries":
