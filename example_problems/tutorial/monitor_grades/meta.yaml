@@ -24,7 +24,7 @@ services:
         default: it
 
   get_teacher:
-    evaluator: [python,services/get_teacher_records.py]
+    evaluator: [python,services/get_statistics.py]
     description: '' 
     args:
       problem:

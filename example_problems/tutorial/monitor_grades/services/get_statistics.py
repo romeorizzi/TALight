@@ -5,7 +5,7 @@ import os
 from LibGrades import LibGrades
 from Token import Token
 
-DEBUG = False
+DEBUG = True
 
 if not DEBUG:
     from multilanguage import Env, Lang, TALcolors
