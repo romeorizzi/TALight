@@ -41,45 +41,45 @@ def main(problem : str, service : str, token : str, path : str, counttype : str,
     lg.loadFile(problem, service, student, path)
 
     if counttype == "student_tries":
-        a = lg.getProblemList().countTokenTries()
+        table = lg.getProblemList().countTokenTries()
 
         Token.tupleToTable(("Token", "#Tries"))
-        Token.tupleToTable(a)
+        Token.tupleToTable(table)
 
         if ENV['download'] == 1:
-            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
+            TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "student_ok_and_no":
-        a = lg.getProblemList().countTokenOkAndNoGoals()
+        table = lg.getProblemList().countTokenOkAndNoGoals()
 
         Token.tupleToTable(('Token', '#OK', '#NO'))
-        Token.tupleToTable(a)
+        Token.tupleToTable(table)
 
         if ENV['download'] == 1:
-            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
+            TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "problem":
-        a = lg.getProblemList().countProblemOkAndNoGoals()
+        table = lg.getProblemList().countProblemOkAndNoGoals()
 
         Token.tupleToTable(("Token", "#Problem"))
-        Token.tupleToTable(a)
+        Token.tupleToTable(table)
         
         if ENV['download'] == 1:
-            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
+            TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "service":
-        a = lg.getProblemList().countServiceOkAndNoGoals()
+        table = lg.getProblemList().countServiceOkAndNoGoals()
 
         Token.tupleToTable(("Token", "Problem", "#Service"))
-        Token.tupleToTable(a)
+        Token.tupleToTable(table)
 
         if ENV['download'] == 1:
-            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
+            TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "goal":
-        a = lg.getProblemList().countGoalsOkAndNoGoals()
+        table = lg.getProblemList().countGoalsOkAndNoGoals()
 
         Token.tupleToTable(('Token', 'Problem', 'Service', '#Goal'))
-        Token.tupleToTable(a)
+        Token.tupleToTable(table)
 
         if ENV['download'] == 1:
-            TALf.str2output_file(Token.tupleToFile(a), "result.csv")
+            TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     else:
         print('Invalid choice')
 
@@ -87,4 +87,4 @@ if __name__ == "__main__":
     if DEBUG:
         main("all_problems", "all_services", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"), "problem", "all_students")
     else:
-        main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'], ENV['count_type']. ENV['student'])
+        main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'], ENV['count_type'], ENV['student'])
