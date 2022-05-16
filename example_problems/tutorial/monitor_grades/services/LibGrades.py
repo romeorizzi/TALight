@@ -11,6 +11,7 @@ ALLPROBLEM = "all_problems"
 ALLSERVICE = "all_services"
 ALLSTUDENT = "all_students"
 OKCONSTANT = "OK"
+NOCONSTANT = "NO"
 
 class LibGrades(object):
     def __init__(self) -> None:
