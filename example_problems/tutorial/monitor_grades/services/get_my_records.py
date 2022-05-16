@@ -26,14 +26,14 @@ if not DEBUG:
 # START CODING YOUR SERVICE:
 
 def main(problem : str, service : str, token : str, path : str): 
-    l = LibGrades()
-    l.loadFile(problem, service, token, path)
+    lg = LibGrades()
+    lg.loadFile(problem, service, token, path)
 
-    l.getProblemList().printToConsole()
+    lg.getProblemList().printToConsole()
     
     if not DEBUG:
         if ENV['download'] == 1:
-            TALf.str2output_file(l.getProblemList().instanceToString(), "result.csv")
+            TALf.str2output_file(lg.getProblemList().instanceToString(), "result.csv")
 
 if __name__ == "__main__":
     if DEBUG:

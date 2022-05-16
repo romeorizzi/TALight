@@ -36,11 +36,11 @@ def main(problem : str, service : str, token : str, path : str):
         print('Unauthorized')
         return
 
-    l = LibGrades()
-    l.loadFile(problem, service, ENV['student'], path)
+    lg = LibGrades()
+    lg.loadFile(problem, service, ENV['student'], path)
 
     if ENV['countStudentTries'] == 1:
-        a = l.getProblemList().countTokenTries()
+        a = lg.getProblemList().countTokenTries()
 
         Token.tupleToTable(("Token", "#Tries"))
         Token.tupleToTable(a)
@@ -48,7 +48,7 @@ def main(problem : str, service : str, token : str, path : str):
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     elif ENV['countStudentOkAndNo'] == 1:
-        a = l.getProblemList().countTokenOkAndNoGoals()
+        a = lg.getProblemList().countTokenOkAndNoGoals()
 
         Token.tupleToTable(('Token', '#OK', '#NO'))
         Token.tupleToTable(a)
@@ -56,7 +56,7 @@ def main(problem : str, service : str, token : str, path : str):
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     elif ENV['countProblemOk'] == 1:
-        a = l.getProblemList().countProblemOkAndNoGoals()
+        a = lg.getProblemList().countProblemOkAndNoGoals()
 
         Token.tupleToTable(("Token", "#Problem"))
         Token.tupleToTable(a)
@@ -64,7 +64,7 @@ def main(problem : str, service : str, token : str, path : str):
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     elif ENV['countServiceOk'] == 1:
-        a = l.getProblemList().countServiceOkAndNoGoals()
+        a = lg.getProblemList().countServiceOkAndNoGoals()
 
         Token.tupleToTable(("Token", "Problem", "#Service"))
         Token.tupleToTable(a)
@@ -72,7 +72,7 @@ def main(problem : str, service : str, token : str, path : str):
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
     elif ENV['countGoalOk'] == 1:
-        a = l.getProblemList().countGoalsOkAndNoGoals()
+        a = lg.getProblemList().countGoalsOkAndNoGoals()
 
         Token.tupleToTable(('Token', 'Problem', 'Service', '#Goal'))
         Token.tupleToTable(a)
