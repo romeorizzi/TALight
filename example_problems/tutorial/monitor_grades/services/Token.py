@@ -179,7 +179,7 @@ class Token(object):
 
         return l
 
-    def countServiceOkAndNoGoals(self):
+    def countServiceOkAndNoGoals(self, requirement : str):
         l = list()
 
         for e in self.tokens:
@@ -196,8 +196,15 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                    if no_goals == 0:
-                        resolvedservice += 1
+                    if (requirement == "at_least_one_submission"):
+                        if (ok_goals > 0 or no_goals > 0):
+                            resolvedservice += 1
+                    if (requirement == "at_least_one_goal_achieved"):
+                        if (ok_goals > 0):
+                            resolvedservice += 1
+                    if (requirement == "all_goals_achieved"):
+                        if no_goals == 0:
+                            resolvedservice += 1
                 
                 l.append((Token.hideToken(e.token), x.problem, resolvedservice))
 

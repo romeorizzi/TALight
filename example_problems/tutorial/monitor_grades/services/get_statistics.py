@@ -63,7 +63,7 @@ def main(problem : str, service : str, token : str, path : str, counttype : str,
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "service":
-        table = lg.getProblemList().countServiceOkAndNoGoals()
+        table = lg.getProblemList().countServiceOkAndNoGoals(ENV['requirement'])
 
         Token.tupleToTable(("Token", "Problem", "#Service"))
         Token.tupleToTable(table)
