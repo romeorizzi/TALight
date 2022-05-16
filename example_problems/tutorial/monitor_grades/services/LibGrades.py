@@ -9,6 +9,7 @@ import os
 
 ALLPROBLEM = "all_problems"
 ALLSERVICE = "all_services"
+ALLSTUDENT = "all_students"
 OKCONSTANT = "OK"
 
 class LibGrades(object):
@@ -22,7 +23,7 @@ class LibGrades(object):
                 folderdata = FolderData(x, fullpath)
 
                 # TODO Fix this
-                if (folderdata.token == token or token == "all"):
+                if (folderdata.token == token or token == ALLSTUDENT):
                     for y in listdir(fullpath):
                         filedata = FileData(y, os.path.join(fullpath, y), folderdata)
                         

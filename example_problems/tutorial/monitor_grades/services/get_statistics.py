@@ -16,6 +16,7 @@ if not DEBUG:
         ('problem', str),
         ('service', str),
         ('download', int),
+        ('student', int),
         ('countStudentTries', int),
         ('countStudentOkAndNo', int),
         ('countProblemOk', int),
@@ -36,7 +37,7 @@ def main(problem : str, service : str, token : str, path : str):
         return
 
     l = LibGrades()
-    l.loadFile(problem, service, "all", path)
+    l.loadFile(problem, service, ENV['student'], path)
 
     if ENV['countStudentTries'] == 1:
         a = l.getProblemList().countTokenTries()

@@ -34,6 +34,9 @@ services:
       service:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
+      student:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_students
       download:
         regex: ^(0|1)$
         default: 0
