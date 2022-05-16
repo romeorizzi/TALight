@@ -85,6 +85,6 @@ def main(problem : str, service : str, token : str, path : str, counttype : str,
 
 if __name__ == "__main__":
     if DEBUG:
-        main("all_problems", "all_service", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"), "problem", "all_students")
+        main("all_problems", "all_services", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"), "problem", "all_students")
     else:
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'], ENV['count_type']. ENV['student'])
