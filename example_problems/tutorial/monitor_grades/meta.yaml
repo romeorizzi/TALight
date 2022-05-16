@@ -23,7 +23,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
-  get_teacher:
+  get_statistics:
     evaluator: [python,services/get_statistics.py]
     description: '' 
     args:
