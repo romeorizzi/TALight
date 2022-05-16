@@ -2,6 +2,7 @@
 
 from os import environ
 import os
+
 from LibGrades import LibGrades
 from Token import Token
 
@@ -31,15 +32,15 @@ if not DEBUG:
 
 # START CODING YOUR SERVICE:
 
-def main(problem : str, service : str, token : str, path : str):
+def main(problem : str, service : str, token : str, path : str, counttype : str, student : str):
     if (("__" in token) == False):
         print('Unauthorized')
         return
 
     lg = LibGrades()
-    lg.loadFile(problem, service, ENV['student'], path)
+    lg.loadFile(problem, service, student, path)
 
-    if ENV['countStudentTries'] == 1:
+    if counttype == "student_tries":
         a = lg.getProblemList().countTokenTries()
 
         Token.tupleToTable(("Token", "#Tries"))
@@ -47,7 +48,7 @@ def main(problem : str, service : str, token : str, path : str):
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
-    elif ENV['countStudentOkAndNo'] == 1:
+    elif counttype == "student_ok_and_no":
         a = lg.getProblemList().countTokenOkAndNoGoals()
 
         Token.tupleToTable(('Token', '#OK', '#NO'))
@@ -55,7 +56,7 @@ def main(problem : str, service : str, token : str, path : str):
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
-    elif ENV['countProblemOk'] == 1:
+    elif counttype == "problem":
         a = lg.getProblemList().countProblemOkAndNoGoals()
 
         Token.tupleToTable(("Token", "#Problem"))
@@ -63,7 +64,7 @@ def main(problem : str, service : str, token : str, path : str):
         
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
-    elif ENV['countServiceOk'] == 1:
+    elif counttype == "service":
         a = lg.getProblemList().countServiceOkAndNoGoals()
 
         Token.tupleToTable(("Token", "Problem", "#Service"))
@@ -71,7 +72,7 @@ def main(problem : str, service : str, token : str, path : str):
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(a), "result.csv")
-    elif ENV['countGoalOk'] == 1:
+    elif counttype == "goal":
         a = lg.getProblemList().countGoalsOkAndNoGoals()
 
         Token.tupleToTable(('Token', 'Problem', 'Service', '#Goal'))
@@ -84,6 +85,6 @@ def main(problem : str, service : str, token : str, path : str):
 
 if __name__ == "__main__":
     if DEBUG:
-        main("all_problems", "all_service", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"))
+        main("all_problems", "all_service", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"), "problem", "all_students")
     else:
-        main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])
+        main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'], ENV['count_type']. ENV['student'])

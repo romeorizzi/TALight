@@ -37,30 +37,9 @@ services:
       student:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_students
-      download:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
-      countStudentTries:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the total tries of a given student'
-      countStudentOkAndNo:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the Ok and No of a given student'
-      countProblemOk:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the resolved problem for the given student'
-      countServiceOk:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the resolved services for the given student'
-      countGoalOk:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the resolved goal for the given'
+      count_type: ^(student_tries|student_ok_and_no|problem|service|goal)$
+        default: problem
+        explain: 'TODO'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
