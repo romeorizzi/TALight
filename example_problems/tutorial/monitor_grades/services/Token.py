@@ -103,17 +103,24 @@ class Token(object):
 
         return '\n'.join(str(i) for i in lines)
 
-    def countTokenTries(self):
+    def countTokenTries(self, mode : str):
         l = list()
 
         for e in self.tokens:
             total_tries = 0
 
-            for x in e.problem:
-                for y in x.services:
-                    for z in y.goals:
-                        for c in z.content:
-                            total_tries += 1
+            if (mode == "total_gross_number"):
+                for x in e.problem:
+                    for y in x.services:
+                        for z in y.goals:
+                            for c in z.content:
+                                total_tries += 1
+            elif (mode == "number_different_submissions"):
+                for x in e.problem:
+                    for y in x.services:
+                        total_tries += 1
+            else:
+                raise
 
             l.append((Token.hideToken(e.token), total_tries))
 

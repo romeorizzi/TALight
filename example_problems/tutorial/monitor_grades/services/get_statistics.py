@@ -17,12 +17,9 @@ if not DEBUG:
         ('problem', str),
         ('service', str),
         ('download', int),
+        ('count_type', str),
         ('student', int),
-        ('countStudentTries', int),
-        ('countStudentOkAndNo', int),
-        ('countProblemOk', int),
-        ('countServiceOk', int),
-        ('countGoalOk', int),
+        ('mode', str)
     ]
 
     ENV = Env(args_list)
@@ -41,7 +38,7 @@ def main(problem : str, service : str, token : str, path : str, counttype : str,
     lg.loadFile(problem, service, student, path)
 
     if counttype == "student_tries":
-        table = lg.getProblemList().countTokenTries()
+        table = lg.getProblemList().countTokenTries(ENV['mode'])
 
         Token.tupleToTable(("Token", "#Tries"))
         Token.tupleToTable(table)

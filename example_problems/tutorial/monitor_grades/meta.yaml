@@ -63,8 +63,13 @@ services:
       student:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_students
-      count_type: ^(student_tries|student_ok_and_no|problem|service|goal)$
+      count_type: 
+        regex: ^(student_tries|student_ok_and_no|problem|service|goal)$
         default: problem
+        explain: 'TODO'
+      mode: 
+        regex: ^(total_gross_number|number_different_submissions)$
+        default: total_gross_number
         explain: 'TODO'
       download:
         regex: ^(0|1)$
