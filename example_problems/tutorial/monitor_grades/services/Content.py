@@ -9,5 +9,12 @@ class Content(object):
         self.result = result
         
     def toString(self, sep=''):
-        datestr = time.strftime('%Y-%m-%d %H-%M-%S', self.data)
-        return datestr + sep + self.content
+        resultstr = "OK"
+        if (self.result):
+            resultstr = "OK"
+        else:
+            resultstr = "NO"
+        return resultstr + " (" + self.toStringDate() + ")"
+
+    def toStringDate(self):
+        return time.strftime('%Y-%m-%d %H-%M-%S', self.data)
