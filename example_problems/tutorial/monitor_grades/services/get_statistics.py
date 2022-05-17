@@ -18,7 +18,7 @@ if not DEBUG:
         ('service', str),
         ('download', int),
         ('count_type', str),
-        ('student', int),
+        ('student', str),
         ('mode', str),
         ('requirement', str)
     ]

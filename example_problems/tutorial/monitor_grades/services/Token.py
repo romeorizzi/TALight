@@ -72,7 +72,7 @@ class Token(object):
                             else:
                                 value = "NO"
 
-                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "," + z.toStringDate() + "\n"
+                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "," + z.getLastContent().toStringDate() + "\n"
                             lines.append(line)
 
         return ''.join(str(i) for i in lines)
@@ -181,7 +181,8 @@ class Token(object):
                     if no_goals == 0:
                         resolvedproblem += 1
                 else:
-                    raise
+                    if no_goals == 0:
+                        resolvedproblem += 1
 
             l.append((Token.hideToken(e.token), resolvedproblem))
 
@@ -214,7 +215,8 @@ class Token(object):
                         if no_goals == 0:
                             resolvedservice += 1
                     else:
-                        raise
+                        if no_goals == 0:
+                            resolvedservice += 1
                 
                 l.append((Token.hideToken(e.token), x.problem, resolvedservice))
 

@@ -15,8 +15,7 @@ if not DEBUG:
         ('problem', str),
         ('service', str),
         ('student', str),
-        ('download', int),
-        ('token', str)
+        ('download', int)
     ]
 
     ENV = Env(args_list)
@@ -44,4 +43,4 @@ if __name__ == "__main__":
     if DEBUG:
         main("all_problems", "all_services", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"), "PincoPallo")
     else:
-        main(ENV['problem'], ENV['service'], ENV['token'], environ['TAL_META_EXP_LOG_DIR'], ENV['student'])
+        main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'], ENV['student'])
