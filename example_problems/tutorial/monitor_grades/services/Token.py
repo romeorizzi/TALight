@@ -40,6 +40,15 @@ class Token(object):
 
             print()
 
+    def listSort(self):
+        self.tokens.sort(key=Token.sortFunction)
+
+        for x in self.tokens:
+            x.listSort()
+
+    def sortFunction(v : Structure):
+        return v.token
+        
     def hideToken(s : str) -> str:
         if "__" in s:
             return s.split('__')[1]

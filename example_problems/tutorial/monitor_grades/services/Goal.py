@@ -24,4 +24,10 @@ class Goal(object):
             return self.content[0]
         else:
             return None
+
+    def listSort(self):
+        self.content.sort(key=Goal.sortFunction)
+
+    def sortFunction(v : Content):
+        return v.data
         

@@ -17,3 +17,13 @@ class Problem(object):
         t = Service(filedata.folderdata.service)
         t.addGoal(filedata)
         self.services.append(t)
+
+    def listSort(self):
+        self.services.sort(key=Problem.sortFunction)
+
+        for x in self.services:
+            x.listSort()
+
+    def sortFunction(v : Service):
+        return v.service
+        

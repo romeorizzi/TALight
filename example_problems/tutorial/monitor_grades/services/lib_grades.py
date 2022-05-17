@@ -35,6 +35,8 @@ class lib_grades(object):
                             if (filedata.folderdata.service == service or service == ALLSERVICE):
                                 self.problemlist.addToken(filedata)
 
+        self.problemlist.listSort()        
+
     def getProblemList(self):
         return self.problemlist
 

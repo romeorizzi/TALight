@@ -17,3 +17,13 @@ class Structure(object):
         p = Problem(filedata.folderdata.problem)
         p.addService(filedata)
         self.problem.append(p)
+
+    def listSort(self):
+        self.problem.sort(key=Structure.sortFunction)
+
+        for x in self.problem:
+            x.listSort()
+
+    def sortFunction(v : Problem):
+        return v.problem
+        

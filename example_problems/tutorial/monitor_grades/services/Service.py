@@ -17,4 +17,12 @@ class Service(object):
         g = Goal(filedata.goal)
         g.addContent(filedata)
         self.goals.append(g)
+    
+    def listSort(self):
+        self.goals.sort(key=Service.sortFunction)
         
+        for x in self.goals:
+            x.listSort()
+
+    def sortFunction(v : Goal):
+        return v.goal
