@@ -15,6 +15,10 @@ services:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
         explain: 'Specify the service the submission to which you want to get a report about. Use `all_services` to get a global report of your submissions on all services of the problem `problem`.'
+      all_submission:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Show all the submission for each service'
       download:
         regex: ^(0|1)$
         default: 0
@@ -23,32 +27,8 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
-  get_public_records:
-    evaluator: [python,services/get_public_records.py]
-    description: 'Use this service to get a summary of your positive submissions to rtal evaluating services. You can ask a whole report on all the problems or filter on a single problem, or on a single service of a single problem. The report will mention only those goals/services/problems that were positively achieved by at least one complete submission of pertinence. You can also ask the time and date of you last submission where you achieved every reported goal, or even to list the times/dates of all positive submissions.\n\n   ***A NOTE ON SUMBISSIONS: You can act a submission if your teacher or instructor who deployed the problem as a web service has provided you with a personal token. Some rtal services offering evaluations of your answers, solutions, or solving algorithms, allow you to also act a submission. Usually, such services remain available and responsive also to anonymous calls, where no log is mantained. When however you intend to act a submission then you should provide your personal token when calling the service (use the -x option of the connect rtal subcommand). When acting a submission, the service might require you to supply also further arguments or files, like e.g. the source code of your bot subject to evaluation. If you omit providing all the required elements the service drops before creating any log file, which means that the submission has not taken place. On the contrary, the service communicates you when all the log files have been successfully created and the submission is complete.' 
-    args:
-      problem:
-        regex: ^(([a-z]|[A-Z]|_)*)$
-        default: all_problems
-        explain: 'Select the problem for which to ask a report of your submissions. Use `all_problems` to get a global report of your submissions on all problems.'
-      service:
-        regex: ^(([a-z]|[A-Z]|_)*)$
-        default: all_services
-        explain: 'Specify the service the submission to which you want to get a report about. Use `all_services` to get a global report of your submissions on all services of the problem `problem`.'
-      token:
-        regex: ^(([a-z]|[A-Z]|_)*)$
-        default: None
-        explain: 'Specifiy the name of the student'
-      download:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-
-  get_teacher:
-    evaluator: [python,services/get_teacher_records.py]
+  get_ranking:
+    evaluator: [python,services/get_ranking.py]
     description: '' 
     args:
       problem:
@@ -58,34 +38,55 @@ services:
       service:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
+        explain: 'Select the service for which to ask a report of your submissions. Use `all_services` to get a global report of your submissions on all services.'
+      student:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_students
+        explain: 'Select the service for which to ask a report of your students. Use `all_students` to get a global report of your submissions on all students.'
       download:
         regex: ^(0|1)$
         default: 0
         explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
-      countStudentTries:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the total tries of a given student'
-      countStudentOkAndNo:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the Ok and No of a given student'
-      countProblemOk:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the resolved problem for the given student'
-      countServiceOk:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the resolved services for the given student'
-      countGoalOk:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Count the resolved goal for the given'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  
+
+  get_statistics:
+    evaluator: [python,services/get_statistics.py]
+    description: '' 
+    args:
+      problem:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_problems
+        explain: 'Select the problem for which to ask a report of your submissions. Use `all_problems` to get a global report of your submissions on all problems.'
+      service:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_services
+        explain: 'Select the service for which to ask a report of your submissions. Use `all_services` to get a global report of your submissions on all service.'
+      student:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_students
+        explain: 'Select the student for which to ask a report of your submissions. Use `all_students` to get a global report of your submissions on all students.'
+      count_type: 
+        regex: ^(student_tries|student_ok_and_no|problem|service|goal)$
+        default: problem
+        explain: 'Select the type of count. Student_tries count the total number of file in the directory. student_ok_and_no show how many oks and nos the student recived. problem group the report by problem. service group the report by service. goal group the report by service.'
+      mode: 
+        regex: ^(total_gross_number|number_different_submissions)$
+        default: total_gross_number
+        explain: 'Select the mode for student_tries. total_gross_number count the files in each folder. number_different_submissions either problem or service are different.'
+      requirement:
+        regex: ^(at_least_one_submission|at_least_one_goal_achieved|all_services_fullfilled|all_goals_achieved)$
+        default: all_services_fullfilled
+        explain: 'Select the mode for count_type=problem and count_type=service. at_least_one_submission at least one submission (either a no goal or a ok goal). at_least_one_goal_achieved at least a ok goal recived. all_services_fullfilled every service as to be ok goal. all_goals_achieved all the goal are achived.'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:

@@ -24,27 +24,19 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 TALf = TALfilesHelper(TAc, ENV)
 
-#CHECK MIN_VAL <= MAX_VAL
-
-
 seed = random.randint(100000,999999)
-big_seed = random.randint(100000,999999)
-
     
 if ENV['source'] != 'catalogue':
     # Get random instance
-    m = random.randint(1,20)
-    path = tl.random_path(ENV['n'],ENV['n'])
-    instance = tl.instances_generator(1, 1, 0, 99, ENV['n'], ENV['n'], m, m, 0, 99, seed, big_seed, path)[0]
+    instance = tl.instances_generator(1, 1, 0, 99, ENV['n'], ENV['n'])[0]
     instance_str = tl.instance_to_str(instance, format_name=ENV['instance_format'])
-    output_filename = f"random_instance_{ENV['seed']}_{big_seed}.{ENV['instance_format']}.txt" 
+    output_filename = f"random_instance.{ENV['instance_format']}.txt" 
 else: # Get instance from catalogue
     instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=tl.format_name_to_file_extension(ENV["instance_format"],'instance'))
     instance = tl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
     output_filename = f"instance_{ENV['instance_id']}.{ENV['instance_format']}.txt"
-    path = tl.random_path(instance['n'],instance['n'])
-    print(path)
 
+path = tl.random_path(instance['n'],instance['n'])
 right_answer = "yes"
 if random.randint(0,1):
     path += "L"

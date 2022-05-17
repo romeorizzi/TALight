@@ -2,9 +2,10 @@
 
 from os import environ
 import os
-from LibGrades import LibGrades
+from lib_grades import lib_grades
 
 DEBUG = False
+#DEBUG = True
 
 if not DEBUG:
     from multilanguage import Env, Lang, TALcolors
@@ -14,6 +15,7 @@ if not DEBUG:
     args_list = [
         ('problem', str),
         ('service', str),
+        ('all_submission', int),
         ('download', int)
     ]
 
@@ -25,17 +27,17 @@ if not DEBUG:
 # START CODING YOUR SERVICE:
 
 def main(problem : str, service : str, token : str, path : str): 
-    l = LibGrades()
-    l.loadFile(problem, service, token, path)
+    lg = lib_grades()
+    lg.loadFile(problem, service, token, path)
 
-    l.getProblemList().printToConsole()
+    lg.getProblemList().printToConsole(ENV['all_submission'] == 1)
     
     if not DEBUG:
         if ENV['download'] == 1:
-            TALf.str2output_file(l.getProblemList().instanceToString(), "result.csv")
+            TALf.str2output_file(lg.getProblemList().instanceToString(True), "result.csv")
 
 if __name__ == "__main__":
     if DEBUG:
-        main("all_problems", "all_service", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log"))
+        main("all_problems", "all_services", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"))
     else:
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'])

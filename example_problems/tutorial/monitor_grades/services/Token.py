@@ -32,19 +32,23 @@ class Token(object):
                         print(z.goal, sep=': ', end = '')
 
                         if printAll:
+                            print('->')
                             for o in z.content:
-                                print('->', o.toString())
+                                print('\t', o.toString(), sep='')
                         else:
-                            value = ""
-                            if z.getStatusContent():
-                                value = "OK"
-                            else:
-                                value = "NO"
-
-                            print('->', value)
+                            print('->', z.getLastContent().toString())
 
             print()
 
+    def listSort(self):
+        self.tokens.sort(key=Token.sortFunction)
+
+        for x in self.tokens:
+            x.listSort()
+
+    def sortFunction(v : Structure):
+        return v.token
+        
     def hideToken(s : str) -> str:
         if "__" in s:
             return s.split('__')[1]
@@ -68,7 +72,7 @@ class Token(object):
                             else:
                                 value = "NO"
 
-                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "\n"
+                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "," + z.getLastContent().toStringDate() + "\n"
                             lines.append(line)
 
         return ''.join(str(i) for i in lines)
@@ -108,17 +112,24 @@ class Token(object):
 
         return '\n'.join(str(i) for i in lines)
 
-    def countTokenTries(self):
+    def countTokenTries(self, mode : str):
         l = list()
 
         for e in self.tokens:
             total_tries = 0
 
-            for x in e.problem:
-                for y in x.services:
-                    for z in y.goals:
-                        for c in z.content:
-                            total_tries += 1
+            if (mode == "total_gross_number"):
+                for x in e.problem:
+                    for y in x.services:
+                        for z in y.goals:
+                            for c in z.content:
+                                total_tries += 1
+            elif (mode == "number_different_submissions"):
+                for x in e.problem:
+                    for y in x.services:
+                        total_tries += 1
+            else:
+                raise
 
             l.append((Token.hideToken(e.token), total_tries))
 
@@ -143,7 +154,7 @@ class Token(object):
 
         return l
 
-    def countProblemOkAndNoGoals(self):
+    def countProblemOkAndNoGoals(self, requirement : str):
         l = list()
 
         for e in self.tokens:
@@ -160,14 +171,24 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                if (no_goals == 0):
-                    resolvedproblem += 1
+                if requirement == "at_least_one_submission":
+                    if ok_goals > 0 or no_goals > 0:
+                        resolvedproblem += 1
+                elif requirement == "at_least_one_goal_achieved":
+                    if ok_goals > 0:
+                        resolvedproblem += 1
+                elif requirement == "at_least_one_service_fullfilled":
+                    if no_goals == 0:
+                        resolvedproblem += 1
+                else:
+                    if no_goals == 0:
+                        resolvedproblem += 1
 
             l.append((Token.hideToken(e.token), resolvedproblem))
 
         return l
 
-    def countServiceOkAndNoGoals(self):
+    def countServiceOkAndNoGoals(self, requirement : str):
         l = list()
 
         for e in self.tokens:
@@ -184,8 +205,18 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                    if no_goals == 0:
-                        resolvedservice += 1
+                    if requirement == "at_least_one_submission":
+                        if ok_goals > 0 or no_goals > 0:
+                            resolvedservice += 1
+                    elif requirement == "at_least_one_goal_achieved":
+                        if ok_goals > 0:
+                            resolvedservice += 1
+                    elif requirement == "all_goals_achieved":
+                        if no_goals == 0:
+                            resolvedservice += 1
+                    else:
+                        if no_goals == 0:
+                            resolvedservice += 1
                 
                 l.append((Token.hideToken(e.token), x.problem, resolvedservice))
 

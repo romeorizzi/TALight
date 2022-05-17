@@ -98,7 +98,7 @@ services:
     evaluator: [python, services/play_driver.py]
     description: use this service if you want to play a match of the chococroc game against our player. You can choose the starting configuration or ask for a raondom configuration and whether to be first or second to move. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
     example1: [experiment in a direct use, '\n     rtal connect chococroc play -aTALight_first_to_move=1 -am=10 -an=10 -awatch=no_watch -arandom=0']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play -aTALight_first_to_move=1 -am=10 -an=10 -awatch=watch_winner  -arandom=0 -- bots/my_chococroc_player.py']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play -aTALight_first_to_move=1 -am=10 -an=10 -awatch=watch_winner -- bots/my_chococroc_player.py']
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -116,19 +116,57 @@ services:
         regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
         default: no_watch
         explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
-      random:
-        regex: ^(0|1)$
+      seed:
+        regex: ^0$
         default: 0
-        explain: If this flag is set to 1 TAlight provide a random configuration. The fields m and n are ignored.
+        explain: This argument means that the starting formula is not random
+      opponent:
+        regex: ^(computer|person)$
+        default: computer
+        explain: This argument is used to decide if you want to play a match against the computer or another player. In the second case, on each turn a player move on the current configuration and the other on the next. 
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-
+  play_random:
+    evaluator: [python, services/play_driver.py]
+    description: use this service if you want to play a match of the chococroc game against our player. The starting configuration is random. You can choose whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
+    example1: [experiment in a direct use, '\n     rtal connect chococroc play_random -aTALight_first_to_move=1 -awatch=no_watch']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play_random -aTALight_first_to_move=1 -awatch=watch_winner -- bots/my_chococroc_player.py']
+    args:
+      m:
+        regex: ^0$
+        default: 0
+        explain: This argument is void because the number of rows is random.
+      n:
+        regex: ^0$
+        default: 0
+        explain: This argument is void because the number of columns is random.
+      TALight_first_to_move:
+        regex: ^(0|1)$
+        default: 0
+        explain: Set this flag to 1 if you want TAlight to take the first move in the match. When this flag is set to 0 you go first.
+      watch:
+        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
+        default: no_watch
+        explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
+      opponent:
+        regex: ^(computer|person)$
+        default: computer
+        explain: This argument is used to decide if you want to play a match against the computer or another player. In the second case, on each turn a player move on the current configuration and the other on the next. 
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
   play_val_measuring_game:
     evaluator: [python, services/play_val_measuring_game_driver.py]
     description: use this service if you want to play a match of the MeasuringGame(chococroc) against our player. You can choose the starting configuration or ask for a raondom configuration and whether to be first or second to move. The MeasuringGame(chococroc) game is defined as the game sum of a chococroc game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a chococroc game position. You can choose whether to be first or second to move in the match. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect chococroc play_val_measuring_game -aTALight_first_to_move=1 -am=10 -an=10 -anim=0 -arandom=1']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play_val_measuring_game -aTALight_first_to_move=1 -am=10 -an=10 -anim=0 -awatch=watch_grundy_val -arandom=1 -- bots/my_measuring_chococroc_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect chococroc play_val_measuring_game -aTALight_first_to_move=1 -am=10 -an=10 -anim=0']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play_val_measuring_game -aTALight_first_to_move=1 -am=10 -an=10 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_chococroc_player.py']
     args:
       m:
         regex: ^([1-9][0-9]{0,50})$
@@ -150,14 +188,56 @@ services:
         regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
         default: no_watch
         explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
-      random:
-        regex: ^(0|1)$
+      seed:
+        regex: ^0$
         default: 0
-        explain: If this flag is set to 1 TAlight provide a random configuration. The fields m and n are ignored.
+        explain: This argument means that the starting formula is not random
+      opponent:
+        regex: ^(computer|person)$
+        default: computer
+        explain: This argument is used to decide if you want to play a match against the computer or another player. In the second case, on each turn a player move on the current configuration and the other on the next. 
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-
+  play_val_measuring_game_random:
+    evaluator: [python, services/play_val_measuring_game_driver.py]
+    description: use this service if you want to play a match of the MeasuringGame(chococroc) against our player. The starting configuration is random. You can choose whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
+    example1: [experiment in a direct use, '\n     rtal connect chococroc play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e chococroc play_val_measuring_game -aTALight_first_to_move=1 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_chococroc_player.py']
+    args:
+      m:
+        regex: ^0$
+        default: 0
+        explain: This argument is void because the number of rows is random.
+      n:
+        regex: ^0$
+        default: 0
+        explain: This argument is void because the number of columns is random.
+      nim:
+        regex: ^([0-9][0-9]{0,50})$
+        default: 0
+        explain: The height of the pile in the nim game. This will be precisely the Nim value of the sole chococroc configuration if and only if the whole compound configuration (chococroc configuration + one pile Nim configuration) is a lost configuration for the first to move player. 
+      TALight_first_to_move:
+        regex: ^(0|1)$
+        default: 0
+        explain: Set this flag to 1 if you want TAlight to take the first move in the match. When this flag is set to 0 you go first.
+      watch:
+        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
+        default: no_watch
+        explain: With this flag you set which informations should be displayed about any configuration that you will face during your match.
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
+      opponent:
+        regex: ^(computer|person)$
+        default: computer
+        explain: This argument is used to decide if you want to play a match against the computer or another player. In the second case, on each turn a player move on the current configuration and the other on the next. 
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
