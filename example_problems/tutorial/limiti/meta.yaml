@@ -1,0 +1,286 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  gimme_instance:
+    evaluator: [python,services/gimme_instance_driver.py]
+    description: 'An instance of the Longest Subsequence (LCS) Problem is essentially a pair of strings, s and t. (You are then asked to find a longest possible string that is both a subsequence of s and a subsequence of t.) Call this service (`gimme_instance`) to get an instance of your likings in one of the supported formats. The instances may come from different sources (randomly generated, hardcoded, taken from a collection) and the server maintains a certain set of them within a catalogue. This catalogue is organized in collections of instances with common features, like e.g. their origin. The service can be used to get either a random instance or an instance from the catalogue.\n   The two strings s and t comprising the instance are returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. For your convenience, the precise format of this stream can be regulated through the argument `instance_format`.'
+    args:
+      source:
+        regex: ^(catalogue|randgen_1|randgen_2)$
+        default: randgen_1
+        explain: 'Instances might either come from the catalogue or be generated on the spot. Choose an option among:\n     [catalogue] the service will return an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument `instance_id` to specify the instance you are interested into. Calling this service might not be the most convenient way to get an instance from the catalogue: the whole catalogue is public, that is, it is contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing `rtal get model_lcs`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on your machine (this is a necessary step when setting up the problem on a server).\n     [random_generator_name] the service delivers you the pseudo-random instance produced by the named pseudo-random generator. Every generator requires the user to specify a set of values for the needed parameters (like e.g. the `seed`) in order to univokely obtain the resulting instance. This set depends on the generator. Valid values for this set of parameters (called the "instance descriptor") offer an "instance description" that univokely specifies the instance w.r.t. that generator. Make then sure to pass the desired values for all the service arguments corresponding to the parameters needed by the selected generator. Notice that passing the very same configuration of values you get the very same instance. This is helpful since it guarantees the reproducibility of any experiment and the possibility to use and explore a same instance with different services of this problem.\n    [randgen_1] to get the instance produced by the pseudo-random generator `randgen_1`. The "instance descriptor"  for this generator comprises 4 required parameters: `m`, `n`, `alphabet`, `seed`. The service then generates and returns the pseudo-random instance randgen_1<m,n,alphabet,seed>.\n    [randgen_2] to get the instance produced by the pseudo-random generator `randgen_2`. The "instance descriptor"  for this generator comprises 5 required parameters: `m`, `n`, `opt_val`, `alphabet`, `seed`. The service then generates and returns the pseudo-random instance randgen_2<m,n,opt_val,alphabet,seed>.'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: any positive natural (in its decimal representation)
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 1
+        explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing `rtal get model_lcs`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
+      m:
+        regex: ^([1-9][0-9]{0,2}|1000)$
+        regex-explained: a positive natural <= 1000
+        default: 4
+        explain: Length of the string s.
+      n:
+        regex: ^([1-9][0-9]{0,1}|1000)$
+        regex-explained: a positive natural <= 1000
+        default: 4
+        explain: Length of the string t.
+      opt_val:
+        regex: ^(0|[1-9][0-9]{0,1}|1000)$
+        regex-explained: a positive natural <= 1000
+        default: 0
+        explain: Maximum length of the common subsequence of the strings s and t generated by randgen_2.
+      alphabet:
+        regex: ^(DNA|lowercase|uppercase|lowercase_uppercase)$
+        default: DNA
+        explain: The alphabet over which the two strings will be created. DNA stand for the alphabet on the 4 letters A, C, G, T. The other options should be self-explanatory.
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
+      instance_format:
+        regex: ^(with_m_and_n|only_strings|gmpl_dat)$
+        default: only_strings
+        explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
+        explain1: '[with_m_and_n] a stream of three lines: the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t. The second line contains the string s and the third contains the string t.'
+        explain2: '[only_strings] like the above, but with the first line omitted.'
+        explain3: '[gmpl_dat] a possible datafile format for AMPL/GMPL use that we have decided to support.'
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output to file (>) you will get a valid instance file for the other services.'
+      display:
+        regex: ^(0|1)$
+        default: 1
+        explain: If this flag is set to 1 then the instance file is listed by the service.
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then the instance file is downloaded into the folder whose fullpath is specified by means of the -o flag (if this path is relative it homes from where the service call has been issued).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  solve:
+    evaluator: [python, services/solve_driver.py]
+    description: 'This service provides you with a solution for a given instance of the LCS problem. You can either upload the instance file on the `instance` filehandler of the service, using the `-f` option of the `connect` subcommand of `rtal`, or try to input your instance directly from the terminal (supported only in `only_strings` format) once the service has started. You may also specify a pseudo-random instance by providing its instance description for a selected generator. This last option might ease your calling this service on instances encounterd with other services.'
+    files:
+      - instance
+    args:
+      source:
+        regex: ^(catalogue|terminal|randgen_1|randgen_2)$
+        default: catalogue
+        explain: 'To send to the service an instance contained in a file sitting on your machine, you do not need to set this argument: just call the service with:\n       rtal connect model_lcs solve -finstance=fullpath_of_your_instance_file\n    With this call without any further arguments, the service assumes that the first two lines of the instance file are just the two input strings. (If the format of your file differs from `only_strings` then, please, specify it via the argument `instance_format`.) The source argument is used only when you do not associate a local file to the instance filehandler. If so, it determines the way your instance is input to the service:' 
+        explain1: '[terminal] you enter your instance (just two strings, one per line; no other formats supported) directly by either typing it directly or through cut and paste.'
+        explain2: '[catalogue] the service works on an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument `instance_id` to specify the instance you are interested into.'
+        explain3: '[randgen_1] the service works on the pseudo-random instance `randgen_1(<m,n,alphabet,seed>)`. In this case you should specify the values for the service arguments comprising the instance descriptor, when different from their defaul values.'
+        explain4: '[randgen_2] the service works on the pseudo-random instance `randgen_2(<m,n,opt_val,alphabet,seed>)`. You should specify the values for the service arguments comprising the instance descriptor, when different from their defaul values.'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: any positive natural (in its decimal representation)
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 001
+        explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing `rtal get model_lcs`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
+      instance_format:
+        regex: ^(with_m_and_n|only_strings|dat)$
+        default: only_strings
+        explain: Use this argument to specify the format of the .txt file containing the instance.
+        explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
+        explain2: '[only_strings] like the above, but with the first line omitted.'
+        dat: a possible datafile format for AMPL/GMPL use that we have decided to support.
+      sol_format:
+        regex: ^(only_val|subseq|annotated_subseq)$
+        default: subseq
+        explain: 'specify what meant by a solution and how it should be encoded. Choose one among the following options:'
+        explain1: '[only_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
+        explain2: '[subseq] the solution is just a string, namely, any maximum length string which is a subsequence of both s and t.'
+        explain3: '[annotated_subseq] the solution is a maximum length string which is a subsequence of both s and t. However, this string is also annotated in that for each of its characters (each disposed on a different line, in their order) it specifies its position in s and its position in t, separated by spaces.'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then the solution is downloaded as a file into the folder whose fullpath is specified by means of the -o flag (if this path is relative it moves from where the service call has been issued).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  check_sol:
+    evaluator: [python, services/check_sol_driver.py]
+    description: 'This service checks and validates your solution for a given instance of the LCS problem (input: two strings; output: a longest common subsequence). In case your solution is not correct then you get the needed feedback. Besides the solution you must submit also the file with the instance in one of the supported formats. Examples for the supported formats of the instance file can be found in the `instances_catalogue` directory contained in the archive downloaded with `rtal get model_lcs`, and further examples can be obtained from the service `gimme_instance`. You have two options on how to submit an instance: either use the `instance_id` argument to specify an instance within the catalogue or upload a local file through the `instance` filehandler. When you do both then the service checks that the two files have the same content. You must specify the `instance_id` argument when you want to use your personal TALight token to make a submission. Depending on the value for the argument `sol_format`, the service only checks the optimum value for this optimization problem, or it also checks the feasibility and optimality of the solution offered by you in one of the supported formats (you can get examples of such formats through the service `solve`). When you are enrolled to a course or exam that ask for it, then you may have been assigned a personal TALight token. When calling this service using your token you submit your solution for single instances of the LCS problem in the sense that the system keeps track of the outcomes of your submissions to this service assigning them to you via your personal token. In order to submit, it may be required that at the service call you supply also the source code implementing your solving algorithm (if so, use the `sourcecode` filehandler). After having assessed a few solutions produced by you, use the scripts in the scripts folder in order to submit the whole of your solutions. These scripts automate for you the process of submitting your solutions one by one and may also define the dataset as a convenient subset of the catalogue. You may first have a dry run launching the script without personal token, just to check that your solutions are correct as well as your general calling to the service. In any case, be told that the positive submissions are never overwritten by the bad ones.'
+    explain: 'Call the service with:\n   rtal connect model_lcs check_sol -finstance=fullpath_of_your_instance_file -fsolution=fullpath_of_your_solution_file\nIf the format of your instance file differs from `only_strings` then, please, specify it via the argument `instance_format`.\nIf the format of your solution file differs from `subseq` then, please, specify it via the argument `sol_format`.'
+    example1: [ to get assesment of a solution produced by you for a certaint instance, 'Call the service with:\n       rtal connect model_lcs check_sol -asol_format=annotated_subseq -finstance=instances_catalogue/all_instances/instance_003.only_strings.txt -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt']
+    example2: [ 'to get credits for this instance in case of feasibility/optimality of the solution submitted', 'Call the service with:\n       rtal connect -x <MY_TOKEN> model_lcs check_sol -fsourcecode=./my_model_lcs_solver.py -asol_format=annotated_subseq -ainstance_id=3 -fsolution=my_sols/all_instances/solution_003.annotated_subseq.txt']
+    files:
+      - instance
+      - solution
+      - sourcecode
+    args: 
+      instance_id:
+        regex: ^([1-9][0-9]*|0)$
+        regex-explained: any positive natural (in its decimal representation). The default value of 0 can be used only when a local file is associated to the `instance` filehandler. 
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 0
+        explain: 'This argument is taken into account when other than 0. In this case, the instance is taken from the catalogue and, if a local file has been associated to the `instance` filehandler, then the service checks that the two files have the very same content. In case not, the service stops with a warning. We reacall that the whole catalogue is public, that is, it is contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing `rtal get model_lcs`.'
+      instance_format:
+        regex: ^(with_m_and_n|only_strings)$
+        default: only_strings
+        explain: Use this argument to specify the format of the .txt file containing the instance of reference. (Examples for the supported formats of the instance file can be found in the `instances_catalogue` directory or obtained from the service `gimme_instance`.)
+        explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
+        explain2: '[only_strings] like the above, but with the first line omitted.'
+      sol_format:
+        regex: ^(only_val|subseq|annotated_subseq)$
+        default: subseq
+        explain: 'specify what meant by a solution and how it is encoded. Choose one among the following options:'
+        explain1: '[only_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
+        explain2: '[subseq] the solution is just a string, namely, any maximum length string which is a subsequence of both s and t.'
+        explain3: '[annotated_subseq] the solution is a maximum length string which is a subsequence of both s and t. However, this string is also annotated in that for each of its characters (each disposed on a different line, in their order) it specifies its position in s and its position in t, separated by spaces.'
+        note: In case you are registering the results of the service call on the server via your TALight token, then the value of this argument is also stored as the `only_val` option is clearly the weakest one.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  eval_your_bot:
+    evaluator: [python, services/eval_your_bot_driver.py]
+    description: 'this service evaluates the strength of the algorithm you have conceived, designed and implemented in order to solve the LCS problem. Obtain your solver bot coding your algorithm in your preferred programming language. Then plug in your bot at the rtal call of this service (`rtal connect -e lcs eval_your_bot -- <YOUR EXECUTABLE COMMAND>`, where <YOUR EXECUTABLE COMMAND> might be any of `my_bots/my_best_bot.exe <POSSIBLE ARGUMENTS TO YOUR BOT>` or `python bots/my_bot2.py <POSSIBLE ARGUMENTS TO YOUR BOT>`). Allowing for arguments to your bot allows you to adapt it either for debugging purposes or for elaborating solutions in various forms (different commitments). Your bot will be involved in a dialog where the server proposes instances and the bot computes and returns solutions. The communication protocol is very basic and can be inferred by launching the service without plugging in any bot. In general, any line starting with the `#` character is considered a comment and is ignored by the two communicating automatic agents (but might facilitate the understanding of a monitoring human, whether problem a solver or maker).  We offer you a fake server for this service (rtal-fake_lcs-eval_your_bot.py) in the tools folder, which might help you to experiment in local how your bot and the server should interact. Keep in mind that your bot will run on your local machine, while the service will run on the server. Your bot can print out logs on stderr, these will not be sent to the server. The library xxx, which is part of the TALight open source project can facilitate your coding of the bot. Also a full installation of TALight gives you more control and awareness and facilitates the break-on-through-to-the-other-side that we advocate as a teaching/learning paradigm. We have thought of a few goals for your bot. The goals are organized in a DAG representing the acyclic "prerequisite-of" binary relation. An arc g1 => g2 states that goal g1 is taken to be a prerequisite of goal g2. This DAG always has a unique sink (the `all` goal).'   
+    files:
+      - sourcecode
+    args:
+      goal:
+        explain: 'set your goal (a node of the DAG with the following arcs: m_and_n_up_to_10 => m_and_n_up_to_100, m_and_n_up_to_10 => m_up_to_10_n_up_to_5000, m_up_to_10_n_up_to_5000 => m_up_to_n_n_5000_opt_val_at_least_4980, m_up_to_n_n_5000_opt_val_at_least_4980 => all, m_and_n_up_to_100 => all).'
+        regex: ^(m_and_n_up_to_10|m_and_n_up_to_100|m_up_to_10_n_up_to_5000|m_up_to_n_n_5000_opt_val_at_least_4980|all)$
+        default: all
+      commitment:
+        regex: ^(only_opt_val|opt_sol)$
+        default: only_opt_val
+        explain: 'Use this argument to specify whether you commit yourself (or actually your bot) to compute only the optimal solution value or an optimal solution. Choose one among the following options:'
+        explain1: '[only_opt_val] the solution is just a number: the maximum length of a string which is both a subsequence of s and a subsequence of t'
+        explain2: '[opt_sol] the solution is just a string, namely, any maximum length string which is a subsequence of both s and t.'
+        note: 'In case you go for the `only_opt_val` option then the goals your bot reaches are downgraded correspondingly (for example, `m_and_n_up_to_10` becomes `m_and_n_up_to_10_only_val`). '
+      summary:
+        regex: ^(only_recap|short|long)$
+        default: short
+        explain: 'Do you prefer a short or a long summary on the results of the evaluation? Choose one among the following options:'
+        explain1: '[only_recap] only the overview of the results over the various goals is printed.'
+        explain2: '[short] for every goal we report only the number of testcases for each possible outcomes.'
+        explain3: '[long] for each testcase that has been faced, all data are reported.'
+      seed:
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (`random_seed`) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed. Leave this argument to its default value when you intend to register the result of the evaluation on the server via your personal TALight token. Note that in case you are calling this service providing your personal token in order to act a submission, then this argument must be left to its default value.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      code_lang: 
+        explain: the more we know about your bot the better we can estimate the efficiency of your algorithm. Note that in case you are calling this service providing your personal token in order to act a submission, then we will check the correctness of your auto-declaration before finalizing the storing of your submission. 
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  
+  try_GMPL_model:
+    evaluator: [python, services/try_GMPL_model_driver.py]
+    description: 'This service allows you to validate (or also submit) your GMPL models for single instances of the LCS problem (input: two strings; output: a longest common subsequence). Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service runs a `glpsol` engine on your .mod and .dat files to build an explicit LP or ILP formulation of the instance and possibly solve it. If the flag `display_output` is set to 1, the output of `glpsol` will be echoed on your screen (on your local machine). We advocate that your model writes down on a file `solution.txt` the solution it finds. If the flag `display_solution` is set to 1, this file will be listed on your screen. If the flag `check_solution` is set to 1 then the service also checks the feasibility and optimality of the solution produced by your model for that instance. However, for these checks to take place two conditions must be met. First, the file `solution.txt` should strictly adhere to one of our supported formats (you can find examples in the `examples` folder in the archive downloaded with `rtal get model_lcs`, and you can get further examples through the service `solve`). Second, you must submit also the .instance file besides the .dat file and .mod file. Examples for the supported formats of the .instance file can be found in the `examples` directory or obtained from the service `solve`. When you have a personal TALight token (assigned to you for an exam or with the enrollment to a course), and you want that a positive evaluation gets accounted to you, then just supply your token to the service. Only the positive submissions are taken in considerations and are never overwritten by the bad ones.' 
+    example1: [when the model does not write on a file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat']
+    example2: [to visualize the solution written in the file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -adisplay_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat']
+    example3: [to ask validation of the solution written in the file `solution.txt`, '\n     rtal connect model_lcs try_GMPL_model -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
+    example4: [to get credits for this instance in case of feasibility/optimality of the solution written in the file `solution.txt` by your model, '\n     rtal connect -x token <YOUR_TOKEN> model_lcs try_GMPL_model -adisplay_solution=1 -acheck_solution=1 -fmod=path_to_your_model_file_dir/your_lcs.mod -fdat=path_to_instance_file_dir/your_lcs.dat -finstance=path_to_input_file/input.txt']
+    example5: [a concrete example, '\n     rtal connect model_lcs try_GMPL_model -fmod=models/lcs_ILP-model-gmpl.mod -fdat=instances_catalogue/all_instances/instance_003.dat -adisplay_solution=1 -acheck_solution=1 -finstance=instances_catalogue/all_instances/instance_003.only_strings.txt -adisplay_raw_solution']
+    files:
+      - instance
+      - mod
+      - dat
+    args:
+      display_output:
+        regex: ^(0|1)$
+        default: 1
+        explain: If this flag is set to 1 then the service displays the output of the `glpsol` engine when running your model and instance.
+      display_error:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the log of the `glpsol` engine when running your model and instance.
+      display_raw_solution:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the content of the solution.txt file created by your model. This display is a raw listing of the file as it is (might help your debugging from remote).
+      display_explicit_formulation:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the explicit formulation obtained from your abstract model applied to the specific instance.
+      explicit_formulation_format:
+        regex: ^(mps|freemps|lp|glp)$
+        default: glp
+      check_solution:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, the solution obtained from GLPSOL will be checked. In order to perform this check, it is mandatory that also the input.txt file is also uploaded on the `instance` handler of the service, using the `-f` option of `rtal`.
+      instance_format:
+        regex: ^(only_strings|with_m_and_n)$
+        default: only_strings
+        explain: 'choose the format of the instance file.'
+      sol_format:
+        regex: ^(subseq|annotated_subseq)$
+        default: annotated_subseq
+        explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
+      lang: 
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  try_explicit_formulation:
+    evaluator: [python, services/try_explicit_formulation_driver.py]
+    description: 'This service takes in input an explicit LP or ILP instance (i.e., a system of linear constraints on a set of real or possibly integer variables (plus, possibly, an objective function) and applies a solver to it in order to obtain a solution. The service returns the outcome of the computation performed by the solver. Call the service with:\n    rtal connect -fexp_form=path_to_your_formulation_file_dir/your_formulation_file model_lcs try_explicit_formulation\nHere, your formulation file should be valid for the choosen format. See the argument `format` for the currently supported formats.'
+    files:
+      - exp_form
+    args:
+      display_output:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the output of the `glpsol` engine when running your model and instance.
+      display_error:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the log of the `glpsol` engine when running your model and instance.
+      format:
+        regex: ^(mps|freemps|lp|glp|math)$
+        default: glp
+      lang: 
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  eval_GMPL_model:
+    evaluator: [python, services/eval_GMPL_model_driver.py]
+    description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_format`. Examples of the supported dat formats are given in the folder `examples` where each example instance is encoded in every supported dat format (filename and extensions in the form `instance_name`.`dat_format`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance. You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_lcs eval_GMPL_model -fmod=path_to_model_file_dir/your_lcs.mod'
+    example1: [a concrete example for a call, '\n     rtal connect model_lcs eval_GMPL_model -fmod=models/lcs_ILP-model-gmpl.mod -asol_format=annotated_subseq']
+    files:
+      - mod
+    args:
+      goal:
+        regex: ^(hardcoded|DNA_strlen_at_most_10|DNA_strlen_at_most_20|uppercase_strlen_at_most_30|lowercase_strlen_at_most_40|lowercase_uppercase_strlen_at_most_50|suppercase_strlen_at_most_80|DNA_strlen_at_most_100)$
+        default: DNA_strlen_at_most_10
+        explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
+      dat_format:
+        regex: ^(gmpl_dat1)$
+        default: gmpl_dat1
+        explain: 'choose how to encode the dat file. For now there is only one format'
+      sol_format:
+        regex: ^(subseq|annotated_subseq)$
+        default: annotated_subseq
+        explain: 'choose how to encode the solution. Either just as a string which is a subsequence of both s and t, or also annotating each of its characters (each disposed on a different line) with its position in s and its position in t, separated by spaces.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...

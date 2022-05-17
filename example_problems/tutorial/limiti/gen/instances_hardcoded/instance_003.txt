@@ -1,0 +1,3 @@
+sqrt(1-x)
+-inf
++inf
