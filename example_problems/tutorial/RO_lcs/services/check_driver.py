@@ -47,7 +47,8 @@ TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
-RO.check_access_rights(ENV,TALf, ask_pwd = False, ask_token = False)
+TOKEN_REQUIRED = False
+RO.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_REQUIRED)
 lcs_lib.check_request_consistency(ENV)
 
 def verif_lcs(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, s:str,t:str,start_with:str,end_with:str,forbidden_s_interval_first_pos:int,forbidden_s_interval_last_pos:int,initDPtable_prefix:List[List[int]],initDPtable_suffix:List[List[int]], answer:Dict):

@@ -44,7 +44,8 @@ TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
-RO.check_access_rights(ENV,TALf, ask_pwd = False, ask_token = False)
+TOKEN_REQUIRED = False
+RO.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_REQUIRED)
 knapsack_lib.check_request_consistency(ENV)
 
 def verif_knapsack(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str],elementi_obbligati:List[str], answer:Dict):

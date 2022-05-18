@@ -4,16 +4,13 @@ import termcolor
 from ansi2html import Ansi2HTMLConverter
 ansi2html = Ansi2HTMLConverter(inline = True)
   
-def check_access_rights(ENV,TALf, ask_pwd = False, ask_token = True):
-    if ask_pwd and ENV["pwd"] != 'tmppwd':
+def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
+    if require_pwd and ENV["pwd"] != 'tmppwd':
         print(f'Password di accesso non corretta (password immessa: `{ENV["pwd"]}`)')
         exit(0)    
-
-    if ask_token and ENV.LOG_FILES == None:
+    if TOKEN_REQUIRED and ENV.LOG_FILES == None:
         print("Il servizio è stato chiamato senza access token. Modalità attualmente non consentita.")
         exit(0)    
-    else:
-        TALf.str2log_file(content="Questo log file intende consentire il tracciamento dell'utente che ha chiamato il servizio.", filename='ORACLE_CALL', timestamped = False)
 
 
 class std_eval_feedback:
@@ -73,7 +70,7 @@ def display_dict(dict):
     for key,val in dict.items():
         print(f"{key}: {val}")
         
-def oracle_outputs(ENV, call_data):
+def oracle_outputs(call_data,ENV):
     if not ENV['recall_input']:
         call_data = call_data['oracle']
     if ENV['as_yaml']:
@@ -85,6 +82,14 @@ def oracle_outputs(ENV, call_data):
             display_dict(call_data['input'])
         else:
             display_dict(call_data)
+
+def oracle_logs(call_data,ENV,TALf):
+    content_LOG_file = "STUDENT_QUESTION: "+repr(call_data['input'])+"\nORACLE_ANSWER: "+repr(call_data['oracle'])
+    #print(f"content_LOG_file =`{content_LOG_file}`")
+    filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
+    filename_spec += f'task_{ENV["task"]}' if ENV["task"] != -1 else 'unspecified'
+    TALf.str2log_file(content=content_LOG_file, filename=filename_spec, timestamped = False)
+
 
 def checker_reply(input_dict,feedback_dict,ENV):
     if ENV['recall_input']:

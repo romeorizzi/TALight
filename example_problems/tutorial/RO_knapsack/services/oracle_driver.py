@@ -37,12 +37,15 @@ TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
-RO.check_access_rights(ENV,TALf, ask_pwd = True, ask_token = True)
+TOKEN_REQUIRED = True
+RO.check_access_rights(ENV,TALf, require_pwd = True, TOKEN_REQUIRED = TOKEN_REQUIRED)
 knapsack_lib.check_request_consistency(ENV)
                     
 opt_val, opt_sol, DPtable = knapsack_lib.solver(ENV)
 
 call_data = {'oracle': knapsack_lib.dict_of_oracle(ENV, opt_val,opt_sol,DPtable), 'input': knapsack_lib.dict_of_input(ENV) }
 
-RO.oracle_outputs(ENV, call_data)
+RO.oracle_outputs(call_data,ENV)
+if ENV.LOG_FILES != None:
+    RO.oracle_logs(call_data,ENV,TALf)
 
