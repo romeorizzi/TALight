@@ -11,7 +11,11 @@ class Token(object):
     @staticmethod
     def takeName(s : str) -> str:
         if ("_" in s):
-            return s.split('_')[len(s.split('_')) - 1] 
+            res = s.split('_')
+            if (res[len(res) - 2].isdigit()):
+                return res[len(res) - 1]
+            else:
+                return res[len(res) - 1 - 1] + "_" + res[len(res) - 1]
         else:
             return s
 
@@ -20,7 +24,15 @@ class Token(object):
         if (token == ALLSTUDENT):
             return True
 
+        if (not Token.isTeacher(token) and not Token.isTeacher(tokenfolder)) and not "_" in token:
+            if Token.takeNumberVR(tokenfolder) == Token.takeNumberVR(token):
+                return True            
+
         return Token.takeName(tokenfolder) == Token.takeName(token)
+
+    @staticmethod
+    def takeNumberVR(token : str):
+        return token.split('_')[0]
     
     def __init__(self):
         self.tokens = list()
