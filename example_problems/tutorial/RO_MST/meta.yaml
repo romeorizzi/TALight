@@ -10,11 +10,11 @@ services:
       n:
         regex: ^(0|[1-9][0-9]*)$
         default: 3
-#        default: ['A','B','C']
         explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: None
+        default: '[]'
+#        default: ['A','B','C']
         explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
@@ -89,7 +89,7 @@ services:
         explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: None
+        default: '[]'
 #        default: ['A','B','C']
         explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
@@ -161,7 +161,7 @@ services:
         explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: None
+        default: '[]'
 #        default: ['A','B','C']
         explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
@@ -259,7 +259,7 @@ services:
         explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: None
+        default: '[]'
 #        default: ['A','B','C']
         explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
@@ -320,7 +320,7 @@ services:
         explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: None
+        default: '[]'
 #        default: ['A','B','C']
         explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
