@@ -7,18 +7,22 @@ services:
     description: "given a graph with weighs on its edges, together with an alleged minimum spanning tree (MST) in the form of a subset of its edges, this service checks it and gives feedback about its feasibility, possibly subject to further constraints. The service can also check its optimality but this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server."
     args:
       # section with the instance assigned to the problem-solver/student:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+#        default: ['A','B','C']
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: "['A','B','C']"
-        explain: etichette dei nodi
+        default: None
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
-        default: "[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]"
-        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro."
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
       archi_proibiti:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad evitare questi archi
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
       archi_obbligati:
         regex: ^(.*)$
         default: "[]"
@@ -79,18 +83,22 @@ services:
     evaluator: [python, services/check_all_MSTs_driver.py]
     description: "given a graph with weighs on its edges, together with the alleged number of minimum spanning tree (MSTs) or a list of them all, this service checks it and gives feedback about the format and consistency of the student answer. The service can also check whether the answer is truly correct but this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server."
     args:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: "['A','B','C']"
-        explain: etichette dei nodi
+        default: None
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
-        default: "[('A','B',2),('B','C',3),('A','B',4)]"
-        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro."
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
       archi_proibiti:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad evitare questi archi
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
       archi_obbligati:
         regex: ^(.*)$
         default: "[]"
@@ -147,26 +155,31 @@ services:
     description: "given a graph with weighs on its edges, plus a specified edge, together with an alleged classification of that edge as contained in_no/in_all/in_some_but_not_in_all minimum spanning trees (MSTs), this service checks and gives feedback about the format of the assertion and the validity of the certificate. The service can also checks the truth value of the assertion but, unless the student does not provide a valid certificate, this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server."
     args:
       # section with the instance assigned to the problem-solver/student:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: "['A','B','C']"
-        explain: etichette dei nodi
+        default: None
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
-        default: "[('A','B',2),('B','C',3),('A','B',4)]"
-        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro."
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
       archi_proibiti:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad evitare questi archi
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
       archi_obbligati:
         regex: ^(.*)$
         default: "[]"
         explain: ci interessano gli MST tenuti ad includere questi archi
       arco_query:
         regex: ^(.*)$
-        default: in_some_but_not_in_all
-        explain: "specifica l'arco da catalogare in base alla sua appartenenza a tutte (in_all), alcune (in_some_but_not_in_all), o nessuna (in_no) soluzione ottima. La terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro."
+        default: "(0,1,4)"
+#        default: "('A','B',4)"
+        explain: "specifica l'arco da catalogare in base alla sua appartenenza a tutte, alcune, o nessuna soluzione ottima. La terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Nel caso di etichette sui nodi è consentita la doppia notazione ossia, proseguendo nell'esempio, potrebbe essere specificato ('A','B',4) al posto di (0,1,4)."
       # section with the answer of the student to be evaluated and provided a feedback with
       sol_type:
         regex: ^(edgecut|cutshore|both_forms|any)$
@@ -240,18 +253,22 @@ services:
         regex: ^(.*)$
         explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
       # section with a possible instance to the problem:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: "['A','B','C']"
-        explain: etichette dei nodi
+        default: None
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
-        default: "[('A','B',2),('B','C',3),('A','B',4)]"
-        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro."
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
       archi_proibiti:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad evitare questi archi
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
       archi_obbligati:
         regex: ^(.*)$
         default: "[]"
@@ -297,26 +314,31 @@ services:
         regex: ^(.*)$
         explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
       # section with a possible instance to the problem:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
       nodi:
         regex: ^(.*)$
-        default: "['A','B','C']"
-        explain: etichette dei nodi
+        default: None
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
-        default: "[('A','B',2),('B','C',3),('A','B',4)]"
-        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro."
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
       archi_proibiti:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad evitare questi archi
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
       archi_obbligati:
         regex: ^(.*)$
         default: "[]"
         explain: ci interessano gli MST tenuti ad includere questi archi
       arco_query:
         regex: ^(.*)$
-        default: "('A','B',4)"
-        explain: "specifica l'arco da catalogare in base alla sua appartenenza a tutte, alcune, o nessuna soluzione ottima. La terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro."
+        default: "(0,1,4)"
+#        default: "('A','B',4)"
+        explain: "specifica l'arco da catalogare in base alla sua appartenenza a tutte, alcune, o nessuna soluzione ottima. La terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Nel caso di etichette sui nodi è consentita la doppia notazione ossia, proseguendo nell'esempio, potrebbe essere specificato ('A','B',4) al posto di (0,1,4)."
       # section characterizing the naming for the variables in the seeked for answer:
       name_of_edge_profile:
         regex: ^(.*)$
