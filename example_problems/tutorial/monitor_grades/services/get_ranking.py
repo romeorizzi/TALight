@@ -3,6 +3,7 @@
 from os import environ
 import os
 from lib_grades import lib_grades
+from Token import Token
 
 DEBUG = False
 
@@ -26,7 +27,7 @@ if not DEBUG:
 # START CODING YOUR SERVICE:
 
 def main(problem : str, service : str, token : str, path : str, student : str):
-    if lib_grades.isTeacher(token):
+    if not Token.isTeacher(token):
         print('Unauthorized')
         return
 

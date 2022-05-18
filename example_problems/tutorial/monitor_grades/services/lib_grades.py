@@ -18,16 +18,12 @@ class lib_grades(object):
         self.problemlist = Token()
 
     def loadFile(self, problem : str, service : str, token : str, path : str):
-        token = lib_grades.getTokenUser(token)
-
         for x in listdir(path):
             fullpath = os.path.join(path, x)
             if (os.path.isdir(fullpath)):
                 folderdata = FolderData(x, fullpath)
 
-                nametoken = lib_grades.getTokenUser(folderdata.token)
-
-                if (nametoken == token or token == ALLSTUDENT):
+                if Token.getTokenUser(folderdata.token, token, ALLSTUDENT):
                     for y in listdir(fullpath):
                         filedata = FileData(y, os.path.join(fullpath, y), folderdata)
                         
@@ -39,26 +35,3 @@ class lib_grades(object):
 
     def getProblemList(self):
         return self.problemlist
-
-    @staticmethod
-    def hideToken(s : str) -> str:
-        if "__" in s:
-            return s.split('__')[1]
-        else:
-            return s.split('_')[1]
-
-    @staticmethod
-    def isTeacher(s : str) -> str:
-        return "__" in s
-
-    @staticmethod
-    def getTokenUser(token) -> str:
-        if (token == ALLSTUDENT):
-            return token
-
-        if ("__" in token):
-            return token.split('__')[1]
-        elif ("_" in token):
-            return token.split('_')[1]
-        else:
-            return token
