@@ -2,6 +2,7 @@
 
 from FileData import FileData
 from Structure import Structure
+from lib_grades import lib_grades
 
 class Token(object):
     def __init__(self):
@@ -19,7 +20,7 @@ class Token(object):
         
     def printToConsole(self, printAll : bool = False):
         for e in self.tokens:
-            struser = Token.hideToken(e.token)
+            struser = lib_grades.hideToken(e.token)
 
             print("Student: " + struser)
             print("========================")
@@ -48,12 +49,6 @@ class Token(object):
 
     def sortFunction(v : Structure):
         return v.token
-        
-    def hideToken(s : str) -> str:
-        if "__" in s:
-            return s.split('__')[1]
-        else:
-            return s.split('_')[1]
 
     def instanceToString(self, printAll : bool = False):
         lines = list()
@@ -72,7 +67,7 @@ class Token(object):
                             else:
                                 value = "NO"
 
-                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "," + z.getLastContent().toStringDate() + "\n"
+                            line = lib_grades.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "," + z.getLastContent().toStringDate() + "\n"
                             lines.append(line)
 
         return ''.join(str(i) for i in lines)
@@ -131,7 +126,7 @@ class Token(object):
             else:
                 raise
 
-            l.append((Token.hideToken(e.token), total_tries))
+            l.append((lib_grades.hideToken(e.token), total_tries))
 
         return l
 
@@ -150,7 +145,7 @@ class Token(object):
                         else:
                             no_goals += 1
 
-            l.append((Token.hideToken(e.token), ok_goals, no_goals))
+            l.append((lib_grades.hideToken(e.token), ok_goals, no_goals))
 
         return l
 
@@ -184,7 +179,7 @@ class Token(object):
                     if no_goals == 0:
                         resolvedproblem += 1
 
-            l.append((Token.hideToken(e.token), resolvedproblem))
+            l.append((lib_grades.hideToken(e.token), resolvedproblem))
 
         return l
 
@@ -218,7 +213,7 @@ class Token(object):
                         if no_goals == 0:
                             resolvedservice += 1
                 
-                l.append((Token.hideToken(e.token), x.problem, resolvedservice))
+                l.append((lib_grades.hideToken(e.token), x.problem, resolvedservice))
 
         return l
 
@@ -242,6 +237,6 @@ class Token(object):
                     if no_goals == 0:
                         resolvedgoal += 1
                 
-                    l.append((Token.hideToken(e.token), x.problem, y.service, resolvedgoal))
+                    l.append((lib_grades.hideToken(e.token), x.problem, y.service, resolvedgoal))
 
         return l

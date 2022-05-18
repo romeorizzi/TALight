@@ -41,6 +41,17 @@ class lib_grades(object):
         return self.problemlist
 
     @staticmethod
+    def hideToken(s : str) -> str:
+        if "__" in s:
+            return s.split('__')[1]
+        else:
+            return s.split('_')[1]
+
+    @staticmethod
+    def isTeacher(s : str) -> str:
+        return "__" in s
+
+    @staticmethod
     def getTokenUser(token) -> str:
         if (token == ALLSTUDENT):
             return token

@@ -31,7 +31,7 @@ if not DEBUG:
 # START CODING YOUR SERVICE:
 
 def main(problem : str, service : str, token : str, path : str, counttype : str, student : str):
-    if (("__" in token) == False):
+    if lib_grades.isTeacher(token):
         print('Unauthorized')
         return
 
