@@ -121,29 +121,38 @@ class Token(object):
 
         return ''.join(str(i) for i in lines)
 
-    def tupleToTable(t, m = -1):
+    def tupleToTable(header, t, m = -1):
         if type(t) == tuple:
             l = list()
             l.append(t)
-            return Token.tupleToTable(l, m)
+            return Token.tupleToTable(header, l, m)
         else:
             if m == -1:
                 n = len(t[0])
             else:
                 n = m
 
+        t.insert(0, header)
+
+        max = 0
+        for x in t:
+            for j in x:
+                if len(str(j)) > max:
+                    max = len(j) + 1
+
+        max = str(max)
         if n == 2:
             for x in t:
-                print("{:<19}{}".format(x[0], x[1]))
+                print(("{:<" + max + "}{}").format(x[0], x[1]))
         elif n == 3:
             for x in t:
-                print("{:<19}{:<19}{}".format(x[0], x[1], x[2]))
+                print(("{:<" + max + "}{:<" + max + "}{}").format(x[0], x[1], x[2]))
         elif n == 4:
             for x in t:
-                print("{:<19}{:<19}{:<19}{}".format(x[0], x[1], x[2], x[3]))
+                print(("{:<" + max + "}{:<" + max + "}{:<" + max + "}{}").format(x[0], x[1], x[2], x[3]))
         elif n == 5:
             for x in t:
-                print("{:<19}{:<19}{:<19}{:<19}{}".format(x[0], x[1], x[2], x[3], x[4]))
+                print(("{:<" + max + "}{:<" + max + "}{:<" + max + "}{:<" + max + "}{}").format(x[0], x[1], x[2], x[3], x[4]))
         else:
             raise
 
