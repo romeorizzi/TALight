@@ -6,21 +6,31 @@ from Structure import Structure
 class Token(object):
     @staticmethod
     def isTeacher(s : str) -> str:
-        return "__" in s or not ("VR" in s)
+        return (s[0] == "_")
 
     @staticmethod
     def takeName(s : str) -> str:
         if ("_" in s):
-            res = s.split('_')
-            if (res[len(res) - 2].isdigit()):
-                return res[len(res) - 1]
+            if (Token.isTeacher(s)):
+                return Token.takeUserName(s)
             else:
-                return res[len(res) - 1 - 1] + "_" + res[len(res) - 1]
+                return Token.takeNumberVR(s) + "_" + Token.takeGIAUsername(s)
         else:
             return s
 
     @staticmethod
-    def getTokenUser(tokenfolder : str, token : str, ALLSTUDENT) -> bool:
+    def takeUserName(s : str) -> str:
+        if ("_" in s):
+            res = s.split('_')
+            if (len(res[len(res) - 2]) == 10):
+                return res[len(res) - 1]
+            else:
+                return res[len(res) - 1 - 1] + "_" + res[len(res) - 1]
+        else:
+            return ""
+
+    @staticmethod
+    def isSameToken(tokenfolder : str, token : str, ALLSTUDENT) -> bool:
         if (token == ALLSTUDENT):
             return True
 
@@ -32,7 +42,17 @@ class Token(object):
 
     @staticmethod
     def takeNumberVR(token : str):
-        return token.split('_')[0]
+        if (Token.isTeacher(token)):
+            return ""
+        else:
+            return token.split('_')[0]
+
+    @staticmethod
+    def takeGIAUsername(token : str):
+        if (Token.isTeacher(token)):
+            return ""
+        else:
+            return token.split('_')[1]
     
     def __init__(self):
         self.tokens = list()
@@ -114,16 +134,16 @@ class Token(object):
 
         if n == 2:
             for x in t:
-                print("{:<14}{}".format(x[0], x[1]))
+                print("{:<19}{}".format(x[0], x[1]))
         elif n == 3:
             for x in t:
-                print("{:<14}{:<14}{}".format(x[0], x[1], x[2]))
+                print("{:<19}{:<19}{}".format(x[0], x[1], x[2]))
         elif n == 4:
             for x in t:
-                print("{:<14}{:<14}{:<14}{}".format(x[0], x[1], x[2], x[3]))
+                print("{:<19}{:<19}{:<19}{}".format(x[0], x[1], x[2], x[3]))
         elif n == 5:
             for x in t:
-                print("{:<14}{:<14}{:<14}{:<14}{}".format(x[0], x[1], x[2], x[3], x[4]))
+                print("{:<19}{:<19}{:<19}{:<19}{}".format(x[0], x[1], x[2], x[3], x[4]))
         else:
             raise
 

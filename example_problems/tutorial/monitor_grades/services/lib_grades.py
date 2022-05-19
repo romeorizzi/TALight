@@ -23,7 +23,7 @@ class lib_grades(object):
             if (os.path.isdir(fullpath)):
                 folderdata = FolderData(x, fullpath)
 
-                if Token.getTokenUser(folderdata.token, token, ALLSTUDENT):
+                if Token.isSameToken(folderdata.token, token, ALLSTUDENT):
                     for y in listdir(fullpath):
                         filedata = FileData(y, os.path.join(fullpath, y), folderdata)
                         
