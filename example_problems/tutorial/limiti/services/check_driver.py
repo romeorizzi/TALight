@@ -14,7 +14,6 @@ args_list = [
     ('source',str),
     ('instance_id',int),
     ('instance_format',str),
-    ('sol_format',str),
     ('download',bool),
 ]
 
