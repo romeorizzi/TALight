@@ -1,0 +1,9 @@
+lcs (longest common subsequence)
+
+When you remove some of the characters in a string s, you obtain a new string which is called a subsequence of s.
+For example, there are two possible ways to obtain subsequence "MAMA" out from the sequence "MAMMA".
+
+In this problem, you are given two strings s and t and are asked to find a longest string which is both a subsequence of s and a subsequence of t. 
+
+The problem offers several services that, even before submitting your solutions, can help you verify your procedures or your understanding.
+For example, if you are left in doubt as to what a subsequence of a string is, you will find services that already allow you to play with this concept.
