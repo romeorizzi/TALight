@@ -15,7 +15,7 @@ services:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
         explain: 'Specify the service the submission to which you want to get a report about. Use `all_services` to get a global report of your submissions on all services of the problem `problem`.'
-      all_submission:
+      all_submissions:
         regex: ^(0|1)$
         default: 0
         explain: 'Show all the submission for each service'

@@ -15,7 +15,7 @@ if not DEBUG:
     args_list = [
         ('problem', str),
         ('service', str),
-        ('all_submission', int),
+        ('all_submissions', int),
         ('download', int)
     ]
 
@@ -30,7 +30,7 @@ def main(problem : str, service : str, token : str, path : str):
     lg = lib_grades()
     lg.loadFile(problem, service, token, path)
 
-    lg.getProblemList().printToConsole(ENV['all_submission'] == 1)
+    lg.getProblemList().printToConsole(ENV['all_submissions'] == 1)
     
     if not DEBUG:
         if ENV['download'] == 1:
