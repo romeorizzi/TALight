@@ -1,10 +1,9 @@
 %YAML 1.2
 ---
 tokens:
-  - id123456_VR123456      
-  - 123456__RomeoRizzi
-  - 123456_anonymous
-  - 786897_User1
-  - 134551_PincoPallo
+  - _0123456789_RomeoRizzi      
+  - VR123456_id123456_0155356111_anonymous
+  - VR227222_id122236_1111111111_User1
+  - VR323124_id123446_0222111234_Pinco_Pallo
 save_directory: log_algorithms
 ...

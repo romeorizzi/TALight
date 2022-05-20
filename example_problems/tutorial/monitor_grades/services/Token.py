@@ -4,6 +4,56 @@ from FileData import FileData
 from Structure import Structure
 
 class Token(object):
+    @staticmethod
+    def isTeacher(s : str) -> str:
+        return (s[0] == "_")
+
+    @staticmethod
+    def takeName(s : str) -> str:
+        if ("_" in s):
+            if (Token.isTeacher(s)):
+                return Token.takeUserName(s)
+            else:
+                return Token.takeNumberVR(s) + "_" + Token.takeGIAUsername(s)
+        else:
+            return s
+
+    @staticmethod
+    def takeUserName(s : str) -> str:
+        if ("_" in s):
+            res = s.split('_')
+            if (len(res[len(res) - 2]) == 10):
+                return res[len(res) - 1]
+            else:
+                return res[len(res) - 1 - 1] + "_" + res[len(res) - 1]
+        else:
+            return ""
+
+    @staticmethod
+    def isSameToken(tokenfolder : str, token : str, ALLSTUDENT) -> bool:
+        if (token == ALLSTUDENT):
+            return True
+
+        if (not Token.isTeacher(token) and not Token.isTeacher(tokenfolder)) and not "_" in token:
+            if Token.takeNumberVR(tokenfolder) == Token.takeNumberVR(token):
+                return True            
+
+        return Token.takeName(tokenfolder) == Token.takeName(token)
+
+    @staticmethod
+    def takeNumberVR(token : str):
+        if (Token.isTeacher(token)):
+            return ""
+        else:
+            return token.split('_')[0]
+
+    @staticmethod
+    def takeGIAUsername(token : str):
+        if (Token.isTeacher(token)):
+            return ""
+        else:
+            return token.split('_')[1]
+    
     def __init__(self):
         self.tokens = list()
 
@@ -19,7 +69,7 @@ class Token(object):
         
     def printToConsole(self, printAll : bool = False):
         for e in self.tokens:
-            struser = Token.hideToken(e.token)
+            struser = Token.takeName(e.token)
 
             print("Student: " + struser)
             print("========================")
@@ -48,12 +98,6 @@ class Token(object):
 
     def sortFunction(v : Structure):
         return v.token
-        
-    def hideToken(s : str) -> str:
-        if "__" in s:
-            return s.split('__')[1]
-        else:
-            return s.split('_')[1]
 
     def instanceToString(self, printAll : bool = False):
         lines = list()
@@ -72,34 +116,43 @@ class Token(object):
                             else:
                                 value = "NO"
 
-                            line = Token.hideToken(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "," + z.getLastContent().toStringDate() + "\n"
+                            line = Token.takeName(e.token) + "," + x.problem + "," + y.service + "," + z.goal + "," + value + "," + z.getLastContent().toStringDate() + "\n"
                             lines.append(line)
 
         return ''.join(str(i) for i in lines)
 
-    def tupleToTable(t, m = -1):
+    def tupleToTable(header, t, m = -1):
         if type(t) == tuple:
             l = list()
             l.append(t)
-            return Token.tupleToTable(l, m)
+            return Token.tupleToTable(header, l, m)
         else:
             if m == -1:
                 n = len(t[0])
             else:
                 n = m
 
+        t.insert(0, header)
+
+        max = 0
+        for x in t:
+            for j in x:
+                if len(str(j)) > max:
+                    max = len(j) + 1
+
+        max = str(max)
         if n == 2:
             for x in t:
-                print("{:<14}{}".format(x[0], x[1]))
+                print(("{:<" + max + "}{}").format(x[0], x[1]))
         elif n == 3:
             for x in t:
-                print("{:<14}{:<14}{}".format(x[0], x[1], x[2]))
+                print(("{:<" + max + "}{:<" + max + "}{}").format(x[0], x[1], x[2]))
         elif n == 4:
             for x in t:
-                print("{:<14}{:<14}{:<14}{}".format(x[0], x[1], x[2], x[3]))
+                print(("{:<" + max + "}{:<" + max + "}{:<" + max + "}{}").format(x[0], x[1], x[2], x[3]))
         elif n == 5:
             for x in t:
-                print("{:<14}{:<14}{:<14}{:<14}{}".format(x[0], x[1], x[2], x[3], x[4]))
+                print(("{:<" + max + "}{:<" + max + "}{:<" + max + "}{:<" + max + "}{}").format(x[0], x[1], x[2], x[3], x[4]))
         else:
             raise
 
@@ -131,7 +184,7 @@ class Token(object):
             else:
                 raise
 
-            l.append((Token.hideToken(e.token), total_tries))
+            l.append((Token.takeName(e.token), total_tries))
 
         return l
 
@@ -150,7 +203,7 @@ class Token(object):
                         else:
                             no_goals += 1
 
-            l.append((Token.hideToken(e.token), ok_goals, no_goals))
+            l.append((Token.takeName(e.token), ok_goals, no_goals))
 
         return l
 
@@ -184,7 +237,7 @@ class Token(object):
                     if no_goals == 0:
                         resolvedproblem += 1
 
-            l.append((Token.hideToken(e.token), resolvedproblem))
+            l.append((Token.takeName(e.token), resolvedproblem))
 
         return l
 
@@ -218,7 +271,7 @@ class Token(object):
                         if no_goals == 0:
                             resolvedservice += 1
                 
-                l.append((Token.hideToken(e.token), x.problem, resolvedservice))
+                l.append((Token.takeName(e.token), x.problem, resolvedservice))
 
         return l
 
@@ -242,6 +295,6 @@ class Token(object):
                     if no_goals == 0:
                         resolvedgoal += 1
                 
-                    l.append((Token.hideToken(e.token), x.problem, y.service, resolvedgoal))
+                    l.append((Token.takeName(e.token), x.problem, y.service, resolvedgoal))
 
         return l

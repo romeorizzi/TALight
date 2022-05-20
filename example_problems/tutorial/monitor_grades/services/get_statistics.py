@@ -31,7 +31,7 @@ if not DEBUG:
 # START CODING YOUR SERVICE:
 
 def main(problem : str, service : str, token : str, path : str, counttype : str, student : str):
-    if (("__" in token) == False):
+    if not Token.isTeacher(token):
         print('Unauthorized')
         return
 
@@ -41,40 +41,35 @@ def main(problem : str, service : str, token : str, path : str, counttype : str,
     if counttype == "student_tries":
         table = lg.getProblemList().countTokenTries(ENV['mode'])
 
-        Token.tupleToTable(("Token", "#Tries"))
-        Token.tupleToTable(table)
+        Token.tupleToTable(("Token", "#Tries"), table)
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "student_ok_and_no":
         table = lg.getProblemList().countTokenOkAndNoGoals()
 
-        Token.tupleToTable(('Token', '#OK', '#NO'))
-        Token.tupleToTable(table)
+        Token.tupleToTable(('Token', '#OK', '#NO'), table)
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "problem":
         table = lg.getProblemList().countProblemOkAndNoGoals(ENV['requirement'])
 
-        Token.tupleToTable(("Token", "#Problem"))
-        Token.tupleToTable(table)
+        Token.tupleToTable(("Token", "#Problem"), table)
         
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "service":
         table = lg.getProblemList().countServiceOkAndNoGoals(ENV['requirement'])
 
-        Token.tupleToTable(("Token", "Problem", "#Service"))
-        Token.tupleToTable(table)
+        Token.tupleToTable(("Token", "Problem", "#Service"), table)
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "goal":
         table = lg.getProblemList().countGoalsOkAndNoGoals()
 
-        Token.tupleToTable(('Token', 'Problem', 'Service', '#Goal'))
-        Token.tupleToTable(table)
+        Token.tupleToTable(('Token', 'Problem', 'Service', '#Goal'), table)
 
         if ENV['download'] == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
@@ -83,6 +78,6 @@ def main(problem : str, service : str, token : str, path : str, counttype : str,
 
 if __name__ == "__main__":
     if DEBUG:
-        main("all_problems", "all_services", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"), "problem", "all_students")
+        main("all_problems", "all_services", "_0123456789_RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"), "problem", "all_students")
     else:
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'], ENV['count_type'], ENV['student'])

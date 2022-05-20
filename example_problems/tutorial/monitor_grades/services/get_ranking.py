@@ -3,6 +3,7 @@
 from os import environ
 import os
 from lib_grades import lib_grades
+from Token import Token
 
 DEBUG = False
 
@@ -26,7 +27,7 @@ if not DEBUG:
 # START CODING YOUR SERVICE:
 
 def main(problem : str, service : str, token : str, path : str, student : str):
-    if (("__" in token) == False):
+    if not Token.isTeacher(token):
         print('Unauthorized')
         return
 
@@ -41,6 +42,6 @@ def main(problem : str, service : str, token : str, path : str, student : str):
         
 if __name__ == "__main__":
     if DEBUG:
-        main("all_problems", "all_services", "123456__RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"), "PincoPallo")
+        main("all_problems", "all_services", "_0123456789_RomeoRizzi", os.path.join(os.getcwd(), "log_algorithms"), "PincoPallo")
     else:
         main(ENV['problem'], ENV['service'], environ['TAL_META_EXP_TOKEN'], environ['TAL_META_EXP_LOG_DIR'], ENV['student'])
