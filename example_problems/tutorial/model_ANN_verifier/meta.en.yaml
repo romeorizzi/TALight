@@ -1,0 +1,204 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  gimme_instance:
+    description: 'This service provides you with instances of weighted neural networks (ANNs). A neural network is characterized by the number of its layers, and the type and number of nodes in each layer. The ANN is weighted when for every two nodes a and b contained in subsequent and consecutive layers the weight associated to the (a,b) synapse is also specified. You have two main options when calling this service:\n    [instance_spec=catalogue_name] to get the instance with a specific id out from the named catalogue of hardcoded instances.\n    [instance_spec=random] to get the pseudo-random instance for a given seed. As seed, you can use any integer from 100000 to 999999 or let the service choose the seed at random (seed=random_seed). When you want to recall an ANN you have already met with this or other services, you only need to recall its seed and the other details in its instance descriptor. By the \''instance descriptor\'' of a pseudo-random ANN we mean the tuple <n_1,n_2, ..., n_nl,seed> where nl denotes the number of its layers and, for i=1,...,nl, layer i has n_i nodes. Level 0 is the input layer, level n_l is the output layer. The number of hidden layers is nl - 2.\n   The ANN requested is returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. Our format for streams storing ANNs is the following: the first line contains the integer nl; the second line contains the integers n_1,n_2, ..., n_nl in this order and separated by spaces, then follow nl-1 lines, one for each consecutive pair of layers. The i-th of these lines displays the n_i x n_(i+1) weights for synapses between layer i and layer i+1. Here, the weight between the p-th node of layer i and the q-th node of layer i+1 is in position q+(p-1)n_(i+1). It is assumed that all indexes start from 1.'
+    evaluator: [python,services/gimme_instance_driver.py]
+    args:
+      instance_spec:
+        regex: ^(random|catalogue1)$
+        default: random
+        explain: 'choose an option among:' 
+        explain1: '[random] the service uses the specificated seed to generate and return the pseudo-random instance <n_1,n_2, ..., n_nl,seed>. Here, nl denotes the number of layers and the generated ANN has n_i nodes in layer i, for i=1,...,nl. Level 0 is the input layer, level n_l is the output layer. The number of hidden layers is nl - 2.'
+        explain2: '[catalogue1] the service will return an instance taken from a catalogue of hardcoded instances (the catalogue named \''catalogue1\''). More precisely, the instance returned is the one with the given instance_id.'
+      n_nodes:
+        regex: ^\s*(([1-9](\s)*){2,6})$
+        default: "3 4 1"
+        explain: through this argument you can specify the number of nodes in each layer of the ANN. Just input a sequence n_1 n_2  ...  n_nl of positive natural numbers in the interval [1,9] and separated by spaces. Here, the integer nl should fall in the interval [2,6] and denotes the number of layers of the ANN. For every i=1,...,nl, the ANN will contain n_i nodes in layer i. Level 0 is the input layer, level n_l is the output layer.
+        example: with n_nodes= 5 3 2 1 you are asking for an ANN with an input layer of 5 nodes, an output layer of 1 node, and two hidden layers (the first one composed by 3 nodes the second one of 2 nodes)
+      seed:
+        explain: 'Set up this argument when you hold the seed and the instance descriptor of the specific instance that you want to be produced by the service (whether downloaded in local as a file or displayed on your terminal screen). By an \''instance descriptor\'' we mean a tuple <n_1,n_2, ..., n_nl,seed> that you may have got from previous calls to this or other services for this problem. When this argument is left to its default value (random_seed) then the service first chooses a seed at random (and communicates it to the user) and then produces the pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        default: 1
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
+      format:
+        regex: ^(plain.txt|dat)$
+        default: plain.txt
+        explain: choose the encoding for the txt input file.
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then only the bare instance will be printed. In this way, if you redirect the output to file ('>') you will get a valid instance file for the other services.
+      display:
+        regex: ^(0|1)$
+        default: 1
+        explain: If this flag is set to 1 then the instance file is listed by the service.
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then the instance file named "instance_seed.txt" (where seed is the seed chosen) is downloaded in the \''download\'' sub-folder of the folder from which this TALight service call has been issued.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  simulate_forward_prop:
+    description: 'This service emulates a forward propagation process in a weighted ANN (either provided by you, or from a catalogue, or generated at random). You can provide the service with the values for the input layer, or ask the service to generate them at random. The service will return the output values for all the nodes in each layer specified in the argument \''watch_layers\''.'
+    evaluator: [python, services/simulate_forward_prop_driver.py]
+    args:
+      instance_spec:
+        regex: ^(random|catalogue1|terminal)$
+        default: catalogue1
+        explain: 'choose the way to input your ANN among the following:' 
+        explain1: '[random] the service uses the pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
+        explain2: '[catalogue1] the service uses the hardcoded instance of the given instance_id as taken from the catalogue of hardcoded instances named catalogue1.'
+        explain3: '[terminal] you enter your instance (ANN) directly by either typing it line after line or through cut and paste operations.'
+        # explain4: '[TA_send_files_bot] with this, you can send to the service an instance (pirellone) encoded in a file sitting in your machine. To send the file you must use the TA_send_files_bot.py bot placed in the model_pirellone/bots/ directory. Call the service with: rtal connect model_pirellone compact_sol -ainstance_spec=TA_send_files_bot -- path_to_bot_dir/TA_send_files_bot.py path_to_instance_file_dir/your_pirellone.txt.'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        default: 1
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
+      n_nodes:
+        regex: ^\s*(([1-9](\s)*){2,6})$
+        default: "3 4 1"
+        explain: through this argument you can specify the number of nodes in each layer of the ANN. Just input a sequence n_1 n_2  ...  n_nl of positive natural numbers in the interval [1,9] and separated by spaces. Here, the integer nl should fall in the interval [2,6] and denotes the number of layers of the ANN. For every i=1,...,nl, the ANN will contain n_i nodes in layer i. Level 0 is the input layer, level n_l is the output layer.
+        example: with n_nodes= 5 3 2 1 you are asking for an ANN with an input layer of 5 nodes, an output layer of 1 node, and two hidden layers (the first one composed by 3 nodes the second one of 2 nodes)
+      seed:
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n_1,n_2, ..., n_nl,seed>.
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      input_values:
+        regex: ^(random|\s*((-|.|[0-9](\s)*){2,36}))$
+        explain: through this argument you can specify the input values used in the input layer to compute the forward propagation. 
+        example: with input_values= 5 3 2 you are saying that for an ANN with first node of the input layer you passed 5, for the second 3 and for the last node 2.
+        default: random
+      activation:
+        explain: specify the type of activation of each node in the ANN instance.
+        regex: ^(linear|ReLU)$
+        default: linear
+      watch_layers:
+        regex: ^(all|last|\s*(([1-6](\s)*){1,6}))$
+        default: last
+      decimal_digits:
+        regex: ^[0-5]$
+        explain: used to specify the tolerance/precision required for the output values.
+        default: 2
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_forward_prop:
+    description: 'This service checks your ability to perform a single forward propagation process in a weighted ANN which can be either provided by you, or taken from a catalogue of the problem (specify the catalogue and the instance_id), or a fully specified pseudo-random instance (provide the random instance descriptor <n_1,n_2, ..., n_nl,seed>). Besides pointing the instance, the user provides also the values for the input and the output layer. The service simulates the forward propagation starting from the values in the input layer and warns the reader if the values obtained for the output layer are not equal (within the specified precision) to the values provided by the user.'
+    evaluator: [python, services/check_forward_prop_driver.py]
+    args:
+      instance_spec:
+        regex: ^(random|catalogue1|terminal)$
+        default: catalogue1
+        explain: 'choose the way to input your ANN among the following:' 
+        explain1: '[random] the service uses the pseudo-random instance <n_1,n_2, ..., n_nl,seed>.'
+        explain2: '[catalogue1] the service uses the hardcoded instance of the given instance_id as taken from the catalogue of hardcoded instances named catalogue1.'
+        explain3: '[terminal] you enter your instance (ANN) directly by either typing it line after line or through cut and paste operations.'
+      n_nodes:
+        regex: ^\s*(([1-9](\s)*){2,6})$
+        default: "3 4 1"
+        explain: through this argument you can specify the number of nodes in each layer of the ANN. Just input a sequence n_1 n_2  ...  n_nl of positive natural numbers in the interval [1,9] and separated by spaces. Here, the integer nl should fall in the interval [2,6] and denotes the number of layers of the ANN. For every i=1,...,nl, the ANN will contain n_i nodes in layer i. Level 0 is the input layer, level n_l is the output layer.
+        example: with n_nodes= 5 3 2 1 you are asking for an ANN with an input layer of 5 nodes, an output layer of 1 node, and two hidden layers (the first one composed by 3 nodes the second one of 2 nodes)
+      seed:
+        explain: specify the numeric code (any integer in the interval [100000,999999]) to work with an already met pseudo-random instance. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and works on the unique pseudo-random instance <n_1,n_2, ..., n_nl,seed>.
+        regex: ^([1-9][0-9]{5,5})$
+        default: 777321
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        default: 1
+        explain: 'This argument is taken into account when the name of a catalogue of hardcoded instances is passed as argument instance_spec=instance_id. It is used to identify a particular instance within the named catalogue of hardcoded instances. If you hold the whole problem in local (all sources) then the catalogues of hardcoded instances are automatically set up by the make command when setting up the server.'
+      input_values:
+        regex: ^\s*((-|.|[0-9](\s)*){2,36})$
+        explain: through this argument you can specify the input values used in the input layer to compute the forward propagation. 
+        example: with input_values= 5 3 2 you are saying that for an ANN with first node of the input layer you passed 5, for the second 3 and for the last node 2.
+      output_values:
+        regex: ^\s*(([-|.|0-9](\s)*){1,36})$
+        explain: through this argument you can specify the output value/s obtained at the end of a single forward propagation. 
+        example: with output_values= 0.9 2 you are saying that the output obtained for the first output_node is 0.9 and for the last one 2.
+      decimal_digits:
+        regex: ^[0-5]$
+        explain: used to specify the tolerance/precision required for the output values.
+        default: 2
+      activation:
+        explain: specify the type of activation of each node in the ANN instance.
+        regex: ^(linear|ReLU)$
+        default: linear
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  try_GMPL_model:
+    description: 'Even if you do not have `glpsol` installed on your machine, still with this service you can send to our server the .mod file containing your GMPL model and a .dat file containing an instance of the problem. The service runs a `gplsol` engine on your model and instance to find out a solution following the instructions contained in your .mod file. To send your files you must use the TA_send_files_bot.py bot placed in the model_asteroid/bots/ directory. Call the service with:\n    rtal connect model_asteroid try_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py mod=path_to_model_file_dir/your_asteroid.mod dat=path_to_instance_file_dir/your_asteroid.dat input=path_to_input_file/input.txt\nHere, the `input.txt` file is required only if you want to get a validation of the solution contained in the file `solution.txt` generated by your model on the server. Examples for the format for the `input.txt` file can be found in the `examples` directory (see in the archive downloaded with `rtal get model_asteroid`).'
+    evaluator: [python, services/try_GMPL_model_driver.py]
+    args:
+      display_output:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the output of the `gplsol` engine when running your model and instance.
+      display_error:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the log of the `gplsol` engine when running your model and instance.
+      display_solution:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then the service displays the content of the solution.txt file created by your model. This display is a raw listing of the file as it is (might help your debugging from remote).
+      check_solution:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 then, the solution obtained from GPLSOL will be checked. In order to perform this check, it is mandatory that also the input.txt file is sent to the sever via the TA_send_files_bot.py
+      instance_id:
+        regex: ^(-1|[1-9][0-9]*)$
+        default: -1
+        explain: 'If different from -1 then the dat file and the input.txt files are those for the hardcoded instance with id <instance_id> from the catalogue of hardcoded instances automatically set up with make when setting up the server.'
+      lang: 
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  eval_GMPL_model:
+    description: 'use this service to evaluate a GMPL model of yours. It is assumed that this model is compliant with the .dat file format specifyied by the parameter `dat_style`. Examples of the supported dat styles are given in the folder `examples` where each example instance is encoded in every supported dat style (filename and extensions in the form `instance_name`.`dat_style`.dat) as well as in other formats. These instances comprise the set of public examples. For each tested instance, the service displays its instance_id so that if your model fails you have this handle on an invalidating instance (the service stops at the first failure). You can then use the service `gimme_instance` to download this instance in local and/or the service `try_GMPL_model` (even directly) to get more detailed feedback. Call the service with:\n    rtal connect model_asteroid eval_GMPL_model -- path_to_bot_dir/TA_send_files_bot.py path_to_model_file_dir/your_asteroid.mod'
+    evaluator: [python, services/eval_GMPL_model_driver.py]
+    args:
+      goal:
+        regex: ^(public_examples|m_and_n_at_most_5|m_and_n_at_most10|m_and_n_at_most20|m_and_n_at_most30|m_and_n_at_most50|m_and_n_at_most100|m_and_n_at_most200|m_and_n_at_most300)$
+        default: m_and_n_at_most_5
+        explain: To solve bigger instances you might need smarter models, either using some tricks or, even more powerful, a better understanding of the structural properties of the problem.
+      type_of_check:
+        regex: ^(no|yes|min)$
+        default: no
+        explain: 'choose among the following options:' 
+        explain1: '[no] the `solution.txt` file written by your model is considered ok if it begins with the string \''NO SOLUTION\'' if and only if the testcase asteroid instance has no solution.'
+        explain2: '[yes] beyond the above requirement, for all solvable instances, the `solution.txt` file should contain a valid solution which will be checked by the service.'
+        explain3: '[min] beyond the above requirement, for all solvable instances, the `solution.txt` should contain the minimum solution.'
+      dat_style:
+        regex: ^(default)$
+        default: default
+        explain: 'choose how to encode the dat file. For now there is only one format'
+      sol_style:
+        regex: ^(seq|subset)$
+        default: subset
+        explain: 'choose how to encode the solution[seq]. Either as a list of commands, or as a subset of the row and column switches (i.e., as two incidence 0/1-vectors of length m and n, respectively.'
+        example: '[seq] r2 c4 r3 r1, [subset]: 1 0 1\n0 1 1 if the matrix is 3x3'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...
+

@@ -1,0 +1,19 @@
+il comando help è troppo povero e di fatto dà informazioni proprio sbabliate:
+
+rtal 0.2.1
+
+USAGE:
+    rtal [OPTIONS] <SUBCOMMAND>
+
+OPTIONS:
+    -h, --help                       Print help information
+
+
+Invece se una fà:
+
+rtal --help list
+
+rtal --help connect
+
+non è questo il comèportameno che si osserva, è come avere scritto solo help.
+

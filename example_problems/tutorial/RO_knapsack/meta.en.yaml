@@ -1,0 +1,157 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check:
+    evaluator: [python, services/check_driver.py]
+    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service checks and gives feedback for an alleged optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to check the correctness of dynamic programming (DP) tables."
+    args:
+      # section with the instance assigned to the problem-solver/student:
+      elementi:
+        regex: ^(.*)$
+        default: "['A', 'B', 'C', 'D', 'E']"
+        explain: nomi degli oggetti
+      pesi:
+        regex: ^(.*)$
+        default: "[2, 3, 4, 29, 50]"
+        explain: pesi degli oggetti
+      valori:
+        regex: ^(.*)$
+        default: "[13, 17, 19, 11, 15]"
+        explain: valori degli oggetti
+      Knapsack_Capacity:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 5
+        explain: una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei pesi non eccede Knapsack_Capacity
+      elementi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+        explain: la soluzione è tenuta ad evitare questi oggetti
+      elementi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+        explain: la soluzione è tenuta ad includere questi oggetti
+      # section with the answer of the student to be evaluated and provided a feedback with
+      sol_type:
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable)$
+        default: opt_sol
+      opt_sol:
+        regex: ^(.*)$
+        default: "['A', 'B']"
+      opt_val:
+        regex: ^(.*)$
+        default: 30
+      DPtable:
+        regex: ^(.*)$
+        default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+      name_of_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      name_of_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      name_of_DPtable:
+        regex: ^(.*)$
+        default: DPtable
+      # section with the arguments that specify the format of the feedback string and the forms of the outputs, either direct, or on output file (certificates sent to the local machine), or on logs (on the server for full evaluation)
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      # section with the points assigned to a single task of an exercise in the context of an exam or exam simulation:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+  oracle:
+    evaluator: [python, services/oracle_driver.py]
+    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to return a dynamic programming (DP)."
+    args:
+      pwd:
+        regex: ^(.*)$
+        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+      # section with a possible instance to the problem:
+      elementi:
+        regex: ^(.*)$
+        default: "['A', 'B', 'C']"
+      pesi:
+        regex: ^(.*)$
+        default: "[2, 3, 4]"
+      valori:
+        regex: ^(.*)$
+        default: "[13, 17, 19]"
+      Knapsack_Capacity:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 5
+      elementi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+      elementi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+      # section characterizing the seeked for answer and the naming for its variables:
+      sol_type:
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
+        default: all
+      name_of_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      name_of_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      name_of_DPtable:
+        regex: ^(.*)$
+        default: DPtable
+      # section with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...

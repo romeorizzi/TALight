@@ -1,0 +1,16 @@
+Nei servizi un argomento TALight può essere taggato non solo coi tipi elementari di Python ma anche con tipi quali list_of_str o anche (list_of_)*int (con cui fare matrici di ogni dimensione) ed il tipo generalists  yaml.
+Sarebbe bello usare il type annotation system di Python (esempio: List[int]) ma sospetto che per poterlo usare a questo livello occorra saper come fare ad usare il modulo ast di Python che offrirebbe Abstract Syntax Trees.
+
+Comunque yaml lo si usa per accogliere un utente scimmia, quindi con quello l'idea è che il parsing ce lo facciamo noi ad un livello anche molto basso.
+A livello di meta.yaml andiamo infatti a scrivere una regex del tipo:
+
+   regex: ^(.*)$
+
+Resta comunque possibile mettere più restrizioni nel meta.yaml, ad esempio, per un list_of_int. Ecco alcune alternative:
+
+   regex: ^(((0|[1-9][0-9]{0,1}|100),\s{0,}){0,})(0|[1-9][0-9]{0,1}|100)$
+
+   regex: ^(((0|[1-9][0-9]{0,1}|100)\s{1,}){0,})(0|[1-9][0-9]{0,1}|100)$
+
+   regex: ^[(((0|[1-9][0-9]{0,1}|100),\s{0,}){0,})(0|[1-9][0-9]{0,1}|100)]$
+
