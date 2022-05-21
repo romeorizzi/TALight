@@ -1,0 +1,16 @@
+Dentro la cartella problema, oltre al file meta.yaml che verrà però assemblato condizionalmente da pezzi (che possono essere scritti in lingue diverse), ci sono:
+
+0. in realtà il file meta.yaml sarà un symlink che potrebbe puntare a meta.it.yam oppure a meta.en.yaml oppure ...
+1. la cartella filemeta
+   che contiene appunto i pezzi da assemblare, dove si è spezzettato non solo per le varie lingue, ma anche sui vari servizi, separando anche la parte di intestazione.
+
+2. il symlink ad una o più applicazioni per la gestione del file meta.yaml:
+      metafile_editor    un editor dedicato agli yaml in generale ed a quelli dei nostri meta.yaml in particolare:
+         esso potrebbe aiutare espandendo le voci ad albero mentre si edita (come prese da file diversi (purtroppo il formato yaml non consente di fare include) e si occupi lui di segnalare se un file non esiste ancora, di crearlo quando si chiede di espandere, di segnalare se nel suo sottoalbero ci siano cose language dependant che richiedono traduzione.
+	 Ovviamente servono pezzi diversi per lingue diverse, ma sarebbe bello averne un affiancamento gestito autonomamente a supporto di chi stà traducendo.
+	 Anche servizi diversi conviene metterli in file diversi.
+	 Anche pezzi che sono comuni a più servizi, di libreria, converrà metterli a fattore comune. Per altro il formato yaml consente l'utilizzo delle ancore che potremmo comunque utilizzare per tenere bassa la lunghezza del file meta.yaml generato, da valutare, il rischio è che qualcuno potrebbe fare più fatica a leggerlo, ma ci sono dei visualizzatori anche nel cloud. Pertano io sarei per visualizzare anche le ancore ed uscire puliti (ovviamente dopo aver fatto presente dove si possa trovare questi visualizzatori comodi, annunci che potrebbero essere scritti una volta per tutte per tutti i problemi e linkati (quelli che si crede) nella cartella help/it/ (nella sottocartella generic), a sua volta linkata dentro la cartella public).
+	 Nella cartella help/it/ (nella sottocartella specific) si offrono esempi di chiamate.
+
+
+	 

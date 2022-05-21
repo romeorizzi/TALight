@@ -1,0 +1,81 @@
+con:
+   rtal connect monitor_grades synopsis
+oppure con:
+   rtal list monitor_grades
+
+scopro che i servizi sono:
+1. get_my_records, pensato per gli studenti
+2. get_ranking, pensato per il docente
+3. get_statistics, pensato principalmente per il docente
+4. synopsis, il sevizio universale che facilita l'esplorazione dei servizi
+
+...
+
+1. get_my_records
+  * get_my_records
+    # all_submission [0]
+    # download [0]
+    # lang [it]
+    # problem [all_problems]
+    # service [all_services]
+
+per ottenere maggiori informazioni:
+   rtal connect monitor_grades synopsis -aservice=get_my_records
+
+esempi di chiamate:
+rtal connect -x VR323124_id123446_0222111234_Pinco_Pallo monitor_grades get_my_records
+rtal connect -x VR323124_id123446_0222111234_Pinco_Pallo monitor_grades get_my_records -a problem=mastermind
+rtal connect -x VR323124_id123446_0222111234_Pinco_Pallo monitor_grades get_my_records -a problem=mastermind -a service=first
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking -a all_submission=1
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking -a all_submission=1 -a download=1
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking -a all_submission=1 -a download=1 -a problem=mastermind
+
+...
+
+2. get_ranking, pensato per il docente
+per ottenere maggiori informazioni:
+  * get_ranking
+    # download [0]
+    # lang [it]
+    # problem [all_problems]
+    # service [all_services]
+    # student [all_students]
+
+per ottenere maggiori informazioni:
+   rtal connect monitor_grades synopsis -aservice=get_ranking
+
+esempi di chiamate:
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking -a student=VR123456
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking -a problem=mastermind
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking -a problem=mastermind -a service=first
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking -a problem=mastermind -a service=first -a student=VR123456
+
+...
+
+3. get_statistics, pensato principalmente per il docente
+per ottenere maggiori informazioni:
+  * get_statistics
+    # count_type [problem]
+    # download [0]
+    # lang [it]
+    # mode [total_gross_number]
+    # problem [all_problems]
+    # requirement [all_services_fullfilled]
+    # service [all_services]
+    # student [all_students]
+
+per ottenere maggiori informazioni:
+   rtal connect monitor_grades synopsis -aservice=get_statistics
+
+esempi di chiamate:
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a download=1
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a student=VR123456
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a student=VR123456 -a download=1
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a count_type=problem
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a count_type=service
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a count_type=goal
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a count_type=problem -a requirement=at_least_one_submission
+
+...

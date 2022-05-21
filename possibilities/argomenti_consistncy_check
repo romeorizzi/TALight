@@ -1,0 +1,31 @@
+Dove tra gli argomenti TALight (definiti del meta,yaml) sia naturale che valga una relazione preferisco introdurre il check molto a monte, che suoni sintattico al problem solver e venga economico al problm maker.
+
+
+L'approccio giusto dovrebbe essere il segunte ():
+
+args_list = [
+    ('num_pairs',int),
+    ('num_dogs',int),
+    ('num_boys',int),
+    ...
+]
+
+args_checks = [
+    'num_pairs >= num_dogs',
+    'num_pairs >= num_boys',
+]
+
+...
+ENV =Env(problem, service, args_list, args_checks)
+
+In caso di violazione di una delle condizioni in args_checks semplicemente si stampa la stringa introdotta in args_checks (quella che definiva la condizione violata), con un'intestazione riconoscibile di errore unrecoverable per la singla esecuzione (ove così il feedback possa riuscire già sufficientemente chiaro al problem solver).
+
+Questo tipo di controolo (da affiancare ad altri) lo vedo bene quando sia necessario mettere in relazione tra loro i valori di argomenti diversi.
+
+Per il controllo si introduce quel tanto di parsing che serve per riconoscere gli argomenti ed altrimenti deve essere un'espressione semplice a forma chiusa. Per controlli di tipo procedurale è giusto sia il problem maker a condurli anche per dare un messaggio d'errore e fedback di stretta possimità al problem solver.
+
+
+Service Usage Error
+Problem Maker Error (Recoverable)
+Problem Maker Error (Unrecoverable)
+TALight Internal Error

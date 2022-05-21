@@ -1,0 +1,385 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check_one_MST:
+    evaluator: [python, services/check_one_MST_driver.py]
+    description: "given a tree with costs on its nodes, together with an alleged minimum cost node cover (NC) in the form of a subset of its nodes, this service checks it and gives feedback about its feasibility, possibly subject to further constraints. The service can also check its optimality but this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server."
+    args:
+      # section with the instance assigned to the problem-solver/student:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
+      nodi:
+        regex: ^(.*)$
+        default: '[]'
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+      archi:
+        regex: ^(.*)$
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad includere questi archi
+      # section with the answer of the student to be evaluated and provided a feedback with
+      sol_type:
+        regex: ^(opt_sol|opt_val|opt_sol_with_val)$
+        default: opt_sol
+      opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      name_of_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      name_of_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      # section with the arguments that specify the format of the feedback string and the forms of the outputs, either direct, or on output file (certificates sent to the local machine), or on logs (on the server for full evaluation)
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      # section with the points assigned to a single task of an exercise in the context of an exam or exam simulation:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  check_all_MSTs:
+    evaluator: [python, services/check_all_MSTs_driver.py]
+    description: "given a graph with weighs on its edges, together with the alleged number of minimum spanning tree (MSTs) or a list of them all, this service checks it and gives feedback about the format and consistency of the student answer. The service can also check whether the answer is truly correct but this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server."
+    args:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
+      nodi:
+        regex: ^(.*)$
+        default: '[]'
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+      archi:
+        regex: ^(.*)$
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad includere questi archi
+      # section with the answer of the student to be evaluated and provided a feedback with
+      sol_type:
+        regex: ^(num_MSTs|list_MSTs|either|both)$
+        default: num_MSTs
+      name_of_num_MSTs:
+        regex: ^(.*)$
+        default: num_MSTs
+        explain: the alleged number of minimum spanning trees
+      name_of_list_MSTs:
+        regex: ^(.*)$
+        default: list_MSTs
+      # section with the arguments that specify the format of the feedback string and the forms of the outputs, either direct, or on output file (certificates sent to the local machine), or on logs (on the server for full evaluation)
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      # section with the points assigned to a single task of an exercise in the context of an exam or exam simulation:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  check_edge:
+    evaluator: [python, services/check_edge_driver.py]
+    description: "given a graph with weighs on its edges, plus a specified edge, together with an alleged classification of that edge as contained in_no/in_all/in_some_but_not_in_all minimum spanning trees (MSTs), this service checks and gives feedback about the format of the assertion and the validity of the certificate. The service can also checks the truth value of the assertion but, unless the student does not provide a valid certificate, this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server."
+    args:
+      # section with the instance assigned to the problem-solver/student:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
+      nodi:
+        regex: ^(.*)$
+        default: '[]'
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+      archi:
+        regex: ^(.*)$
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad includere questi archi
+      arco_query:
+        regex: ^(.*)$
+        default: "(0,1,4)"
+#        default: "('A','B',4)"
+        explain: "specifica l'arco da catalogare in base alla sua appartenenza a tutte, alcune, o nessuna soluzione ottima. La terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Nel caso di etichette sui nodi è consentita la doppia notazione ossia, proseguendo nell'esempio, potrebbe essere specificato ('A','B',4) al posto di (0,1,4)."
+      # section with the answer of the student to be evaluated and provided a feedback with
+      sol_type:
+        regex: ^(edgecut|cutshore|both_forms|any)$
+        default: cutshore
+      edge_profile:
+        regex: ^(.*)$
+        explain: expected one string among:\n     [in_all] if the query arc belongs to all MSTs.\n     [in_no] if the query arc belongs to no MSTs.\n     [in_some_but_not_in_all] if the query arc belongs to some MST but there also exist MSTs that do not use the query arc."
+      name_of_edge_profile:
+        regex: ^(.*)$
+        default: edge_profile
+      cyc_cert:
+        regex: ^(.*)$
+        explain: expected a cyclic sequence of nodes, or `None` in case no certificating cycle is present in the given graph
+        example: ['A','B','C']
+      edgecut_cert:
+        regex: ^(.*)$
+        explain: expected a cut of the graph in the form of a list of edges
+      cutshore_cert:
+        regex: ^(.*)$
+        explain: expected a cut of the graph in the form of a non-empty list of nodes leaving out at least one node
+      name_of_cyc_cert:
+        regex: ^(.*)$
+        default: cyc_cert
+      name_of_edgecut_cert:
+        regex: ^(.*)$
+        default: edgecut_cert
+      name_of_cutshore_cert:
+        regex: ^(.*)$
+        default: cutshore_cert
+      # section with the arguments that specify the format of the feedback string and the forms of the outputs, either direct, or on output file (certificates sent to the local machine), or on logs (on the server for full evaluation)
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      # section with the points assigned to a single task of an exercise in the context of an exam or exam simulation:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  oracle_MST:
+    evaluator: [python, services/oracle_MST_driver.py]
+    description: "given a graph with weighs on its edges, this services computes and returns a subset of edges that form a minimum weight spanning tree (MSTs), possibly subject to further constraints. The service also returns the number of all such MSTs, and their list. This service is not accessible to the student during an exam or exam simulation; besides, the logs of all calls are stored on the server."
+    args:
+      pwd:
+        regex: ^(.*)$
+        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+      # section with a possible instance to the problem:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
+      nodi:
+        regex: ^(.*)$
+        default: '[]'
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+      archi:
+        regex: ^(.*)$
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad includere questi archi
+      # section characterizing the seeked for answer and the naming for its variables:
+      sol_type:
+        regex: ^(opt_sol|opt_val|opt_sol_with_val|num_opt_sols|list_opt_sols|all)$
+        default: all
+      name_of_opt_val:
+        regex: ^(.*)$
+        default: opt_val
+      name_of_opt_sol:
+        regex: ^(.*)$
+        default: opt_sol
+      name_of_num_opt_sols:
+        regex: ^(.*)$
+        default: 
+      name_of_list_opt_sols:
+        regex: ^(.*)$
+        default: 
+      # section with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  oracle_edge:
+    evaluator: [python, services/oracle_edge_driver.py]
+    description: "given a graph with weighs on its edges, this services computes and returns the number of minimum spanning tree (MSTs) or a list of them all. This service is not accessible to the student during an exam or exam simulation; besides, the logs of all calls are stored on the server."
+    args:
+      pwd:
+        regex: ^(.*)$
+        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+      # section with a possible instance to the problem:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1 
+      nodi:
+        regex: ^(.*)$
+        default: '[]'
+#        default: ['A','B','C']
+        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+      archi:
+        regex: ^(.*)$
+        explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
+      archi_proibiti:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad evitare questi archi. Come sopra, se ai nodi hai assegnato etichette, hai due modi per specificare gli archi
+      archi_obbligati:
+        regex: ^(.*)$
+        default: "[]"
+        explain: ci interessano gli MST tenuti ad includere questi archi
+      arco_query:
+        regex: ^(.*)$
+        default: "(0,1,4)"
+#        default: "('A','B',4)"
+        explain: "specifica l'arco da catalogare in base alla sua appartenenza a tutte, alcune, o nessuna soluzione ottima. La terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Nel caso di etichette sui nodi è consentita la doppia notazione ossia, proseguendo nell'esempio, potrebbe essere specificato ('A','B',4) al posto di (0,1,4)."
+      # section characterizing the naming for the variables in the seeked for answer:
+      name_of_edge_profile:
+        regex: ^(.*)$
+        default: edge_profile
+      name_of_cyc_cert:
+        regex: ^(.*)$
+        default: cyc_cert
+      name_of_edgecut_cert:
+        regex: ^(.*)$
+        default: edgecut_cert
+      name_of_cutshore_cert:
+        regex: ^(.*)$
+        default: cutshore_cert
+      # section with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_input:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...
