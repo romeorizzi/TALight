@@ -66,39 +66,45 @@ services:
   
   check:
     evaluator: [python, services/check_driver.py]
-    description: 'Questo servizio ti chiede di verificare la correttezza di un certo limite. Le istanze consistono in:
-    \n- limite finito per x finito
-    \n- limite infinito per x finito
-    \n- limite finito per x infinito
-    \n- limite infinito per x infinito
-    \nPuoi caricare il file contenente una tua istanza usando l'opzione `-f` del sottocomando `connect` di `rtal`, o provare a inserire la tua istanza direttamente dal terminale una volta avviato il servizio.'
+    description: 'Questo servizio ti chiede di verificare la correttezza o meno di un certo limite. Le istanze consistono in: \n- limite finito per x finito \n- limite infinito per x finito \n- limite finito per x infinito \n- limite infinito per x infinito. \nPuoi caricare il file contenente una tua istanza usando l\''opzione \''-f\'' del sottocomando `connect` di `rtal`, o provare a inserire la tua istanza direttamente dal terminale una volta avviato il servizio.'
     files:
       - instance
     args:
       source:
         regex: ^(catalogue|terminal|randgen)$
         default: catalogue
-        explain: 'Per inviare al servizio un`istanza contenuta in un file presente sulla tua macchina, non è necessario impostare questo argomento: basta chiamare il servizio con:\n rtal connect limiti check -finstance=percorso_del_file_istanza\n Con questa chiamata senza ulteriori argomenti , il servizio presuppone che il file di istanza consista in 3 righe: una per la funzione, una per il valore `x_0` a cui tende la variabile x e una per il risultato del limite `c`. L'argomento source viene usato solo quando non associ un file locale al gestore del file dell'istanza. In tal caso, determina il modo in cui l'istanza viene immessa nel servizio:' 
-        explain1: '[terminal] inserisci la tua istanza direttamente digitandola direttamente o tramite taglia e incolla. Il formato supportato consiste in 3 righe come spiegato sopra. Ad esempio: \n   x^2+5 \n   1	\n   6'
-        explain2: '[catalogue] il servizio funziona su un'istanza prelevata dal catalogo delle istanze memorizzate sul server. Le istanze nel catalogo sono numerate progressivamente a partire da 1. Usa l'argomento `instance_id` per specificare l'istanza che ti interessa.'
-        explain3: '[randgen] il servizio funziona sull'istanza pseudo-casuale `randgen(<m,n,alphabet,seed>)`. In questo caso è necessario specificare i valori per gli argomenti di servizio che comprendono il descrittore di istanza, quando diversi dai loro valori predefiniti.' # ---DA RIVEDERE GLI ARGOMENTI DEL randgen---
+        explain: 'Per inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina, non è necessario impostare questo argomento, basta chiamare il servizio con:\n rtal connect limiti check -finstance=percorso_del_file_istanza \nCon questa chiamata senza ulteriori argomenti , il servizio presuppone che il file di istanza consista in 3 righe, rispettivamente per: \n- la funzione, \n- il valore `x_0` a cui tende la variabile x \n- il risultato del limite `c`. \nL\''argomento `source` viene usato solo quando non associ un file locale al gestore del file dell\''istanza. In tal caso, determina il modo in cui l\''istanza viene immessa nel servizio:' 
+        explain1: '[terminal] inserisci la tua istanza digitandola direttamente sul terminale o tramite copia e incolla. Il formato supportato consiste in 3 righe come spiegato sopra. Ad esempio: \n   x^2+5 \n   1	\n   6'
+        explain2: '[catalogue] il servizio si basa su un catalogo di istanze memorizzate sul server. Esse sono numerate progressivamente a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza che ti interessa.'
+        explain3: '[randgen] il servizio funziona sull\''istanza pseudo-casuale `randgen(<m,n,alphabet,seed>)`. In questo caso è necessario specificare i valori per gli argomenti di servizio che comprendono il descrittore di istanza, quando diversi dai loro valori predefiniti.' # ---DA RIVEDERE GLI ARGOMENTI DEL RANDGEN---
       instance_id:
         regex: ^([1-9][0-9]*)$
         regex-explained: qualsiasi naturale positivo (nella sua rappresentazione decimale)
         regex-URL: 'https://extendsclass.com/regex/a55297b'
         default: 001
-        explain: 'Questo argomento viene preso in considerazione quando `source=catalogue`. Viene utilizzato per identificare una particolare istanza all'interno del catalogo delle istanze archiviate sul server. L'intero catalogo è pubblico, cioè è contenuto nel file \''limiti.tar\'' che viene scaricato sulla tua macchina emettendo `rtal get limiti`. Inoltre, se si tiene l'intero repository con il problema in locale, questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.' # ---DA RIVEDERE---
-      instance_format: # ---DA CAPIRE SE CI POSSONO ESSERE ALTRI FORMATI---
-        regex: ^(with_m_and_n|only_strings|dat)$
-        default: only_strings
-        explain: Use this argument to specify the format of the .txt file containing the instance.
-        explain1: '[with_m_and_n] the first line contains the two integers m and n separated by spaces, where m is the length of the string s and n is the lenght of t; then follow 2 lines, the first contains the string s and the second contains the string t.'
-        explain2: '[only_strings] like the above, but with the first line omitted.'
-        dat: a possible datafile format for AMPL/GMPL use that we have decided to support.
+        explain: 'Questo argomento viene preso in considerazione quando `source=catalogue`. Viene utilizzato per identificare una particolare istanza all\''interno del catalogo delle istanze archiviate sul server. L\''intero catalogo è pubblico, cioè è contenuto nel file \''limiti.tar\'' che viene scaricato sulla tua macchina attraverso il comando `rtal get limiti`. Inoltre, se si tiene l\''intero repository con il problema in locale, questo catalogo viene creato automaticamente emettendo `make`. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.' # ---DA RIVEDERE---
+      instance_format: # limite di cui verificare la correttezza o non
+        regex: ^(correct|not_correct)$
+        default: correct
+        explain: Usa questo argomento per specificare se del limite contenuto nel tuo file .txt vuoi verificarne la correttezza oppure no.
+        explain1: '[correct] il file conterrà 3 righe come spiegato sopra e si vorrà verificare che quel limite sia corretto'
+        explain2: '[not_correct] il file conterrà sempre 3 righe ma si vorrà verificare che quel limite non è corretto'
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già soddisfatta. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso, lo comunica all\''utente e lavora sull\''istanza pseudo-casuale univoca <m,n,seed>.' # ---DA RIVEDERE I PARAMETRI---
+      sol_format: # valore numerico o espressione
+        regex: ^(num_val|expr)$
+        default: num_val
+        explain: 'specificare quale tipo di soluzione si vuole dare. Scegli una tra le seguenti opzioni:'
+        explain1: '[num_val] la soluzione consiste in un numero: deciamle (massimo 15 cifre dopo la virgola) o intero'
+        explain2: '[expr] la soluzione consiste in un\''espressione' # ---DA SPECIFICARE SINTASSI DELLE ESPRESSIONI PROBABILMENTE---
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-
+  
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
