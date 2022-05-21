@@ -50,7 +50,7 @@ extension=pl.format_name_to_file_extension(ENV['instance_format'], 'instance')
 if TALf.exists_input_file('instance'):
     instance = pl.get_instance_from_str(TALf.input_file_as_str('instance'), instance_format=ENV["instance_format"])
     TAc.print(LANG.render_feedback("instance-successfully-loaded", 'The file you have associated to `instance` filehandler has been successfully loaded.'), "yellow", ["bold"])
-    solution=get_opt_sol(instance)
+    solution=pl.get_opt_sol(instance)
     # print(instance)
 elif ENV["source"] == 'terminal':
     TAc.print(LANG.render_feedback("waiting", f'#? waiting for the {ENV["m"]} lines of {ENV["n"]} elements (0 or 1).\nFormat: you have to enter the {ENV["m"]} lines (corresponding to the {ENV["m"]} rows of the Pirellone), where each of the {ENV["n"]} elements (0 or 1) must be separated by a space.\nAny line beggining with the "#" character is ignored.\nIf you prefer, you can use the "TA_send_txt_file.py" util here to send us the raw_instance of a file. Just plug in the util at the "rtal connect" command like you do with any other bot and let the util feed in the file for you rather than acting by copy and paste yourself.'), "yellow")
@@ -58,7 +58,7 @@ elif ENV["source"] == 'terminal':
     for row in range (ENV['m']):
         TAc.print(LANG.render_feedback("new-row", f'Enter the row {row+1} of your Pirellone (given by {ENV["n"]} elements (0 or 1) separated by a space):'), "yellow", ["bold"])
         instance.append([int(e) for e in TALinput(str, regex=f"^(([a-zA-Z0-9])*)$", sep=' ', TAc=TAc)])
-    solution=get_opt_sol(instance)
+    solution=pl.get_opt_sol(instance)
 elif ENV["source"] != 'catalogue':
     # Get random instance
     assert ENV["source"] == 'random'
@@ -77,7 +77,7 @@ else: # take instance from catalogue
     mph = ModellingProblemHelper(TAc, ENV.INPUT_FILES, ENV.META_DIR)
     instance_str = mph.get_file_str_from_id(ENV['instance_id'], format_name=extension)
     instance = pl.get_instance_from_str(instance_str, instance_format=ENV['instance_format'])
-    solution=get_opt_sol(instance)
+    solution=pl.get_opt_sol(instance)
     TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
     output_filename = f"instance_catalogue_{ENV['instance_id']}.{ENV['sol_format']}.txt"
 

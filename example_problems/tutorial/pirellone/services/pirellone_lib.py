@@ -377,7 +377,7 @@ def is_solvable(pirellone, with_yes_certificate=False):
 
 def get_opt_sol(pirellone):
     """Returns NO_SOL if the instance is unsolvable, otherwise the optimal solution."""
-    is_solv, opt_sol = is_solvable(pirellone, with_yes_certificate=True)
+    is_solv, opt_sol = is_solvable(pirellone, True)
     if is_solv:
         return opt_sol
     return NO_SOL
