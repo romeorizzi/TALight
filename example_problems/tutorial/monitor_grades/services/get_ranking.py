@@ -1,7 +1,6 @@
 #!/usr/bin/env pyhton3
 
 from os import environ
-import os
 from lib_grades import lib_grades
 from Token import Token
 
@@ -24,7 +23,9 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 
-def main(problem: str, service: str, token: str, path: str, student: str):
+def main(
+    problem: str, service: str, token: str, path: str, student: str, download: int
+):
     if not Token.isTeacher(token):
         print("Unauthorized")
         return
@@ -34,7 +35,7 @@ def main(problem: str, service: str, token: str, path: str, student: str):
 
     lg.getProblemList().printToConsole()
 
-    if ENV["download"] == 1:
+    if download == 1:
         TALf.str2output_file(lg.getProblemList().instanceToString(), "result.csv")
 
 
@@ -45,4 +46,5 @@ if __name__ == "__main__":
         environ["TAL_META_EXP_TOKEN"],
         environ["TAL_META_EXP_LOG_DIR"],
         ENV["student"],
+        ENV["download"],
     )

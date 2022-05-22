@@ -1,7 +1,6 @@
 #!/usr/bin/env pyhton3
 
 from os import environ
-import os
 
 from lib_grades import lib_grades
 from Token import Token
@@ -30,7 +29,15 @@ TALf = TALfilesHelper(TAc, ENV)
 
 
 def main(
-    problem: str, service: str, token: str, path: str, counttype: str, student: str
+    problem: str,
+    service: str,
+    token: str,
+    path: str,
+    counttype: str,
+    student: str,
+    download: int,
+    requirement: str,
+    mode: str,
 ):
     if not Token.isTeacher(token):
         print("Unauthorized")
@@ -40,39 +47,39 @@ def main(
     lg.loadFile(problem, service, student, path)
 
     if counttype == "student_tries":
-        table = lg.getProblemList().countTokenTries(ENV["mode"])
+        table = lg.getProblemList().countTokenTries(mode)
 
         Token.tupleToTable(("Token", "#Tries"), table)
 
-        if ENV["download"] == 1:
+        if download == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "student_ok_and_no":
         table = lg.getProblemList().countTokenOkAndNoGoals()
 
         Token.tupleToTable(("Token", "#OK", "#NO"), table)
 
-        if ENV["download"] == 1:
+        if download == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "problem":
-        table = lg.getProblemList().countProblemOkAndNoGoals(ENV["requirement"])
+        table = lg.getProblemList().countProblemOkAndNoGoals(requirement)
 
         Token.tupleToTable(("Token", "#Problem"), table)
 
-        if ENV["download"] == 1:
+        if download == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "service":
-        table = lg.getProblemList().countServiceOkAndNoGoals(ENV["requirement"])
+        table = lg.getProblemList().countServiceOkAndNoGoals(requirement)
 
         Token.tupleToTable(("Token", "Problem", "#Service"), table)
 
-        if ENV["download"] == 1:
+        if download == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     elif counttype == "goal":
         table = lg.getProblemList().countGoalsOkAndNoGoals()
 
         Token.tupleToTable(("Token", "Problem", "Service", "#Goal"), table)
 
-        if ENV["download"] == 1:
+        if download == 1:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
     else:
         print("Invalid choice")
@@ -86,4 +93,7 @@ if __name__ == "__main__":
         environ["TAL_META_EXP_LOG_DIR"],
         ENV["count_type"],
         ENV["student"],
+        ENV["download"],
+        ENV["requirement"],
+        ENV["mode"],
     )
