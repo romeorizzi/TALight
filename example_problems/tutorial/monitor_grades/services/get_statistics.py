@@ -6,29 +6,25 @@ import os
 from lib_grades import lib_grades
 from Token import Token
 
-DEBUG = False
 
-if not DEBUG:
-    from multilanguage import Env, Lang, TALcolors
-    from TALfiles import TALfilesHelper
+from multilanguage import Env, Lang, TALcolors
+from TALfiles import TALfilesHelper
 
-    # METADATA OF THIS SERVICE
-    args_list = [
-        ("problem", str),
-        ("service", str),
-        ("download", int),
-        ("count_type", str),
-        ("student", str),
-        ("mode", str),
-        ("requirement", str),
-    ]
+# METADATA OF THIS SERVICE
+args_list = [
+    ("problem", str),
+    ("service", str),
+    ("download", int),
+    ("count_type", str),
+    ("student", str),
+    ("mode", str),
+    ("requirement", str),
+]
 
-    ENV = Env(args_list)
-    TAc = TALcolors(ENV)
-    LANG = Lang(
-        ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg="now"
-    )
-    TALf = TALfilesHelper(TAc, ENV)
+ENV = Env(args_list)
+TAc = TALcolors(ENV)
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg="now")
+TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
@@ -83,21 +79,11 @@ def main(
 
 
 if __name__ == "__main__":
-    if DEBUG:
-        main(
-            "all_problems",
-            "all_services",
-            "_0123456789_RomeoRizzi",
-            os.path.join(os.getcwd(), "log_algorithms"),
-            "problem",
-            "all_students",
-        )
-    else:
-        main(
-            ENV["problem"],
-            ENV["service"],
-            environ["TAL_META_EXP_TOKEN"],
-            environ["TAL_META_EXP_LOG_DIR"],
-            ENV["count_type"],
-            ENV["student"],
-        )
+    main(
+        ENV["problem"],
+        ENV["service"],
+        environ["TAL_META_EXP_TOKEN"],
+        environ["TAL_META_EXP_LOG_DIR"],
+        ENV["count_type"],
+        ENV["student"],
+    )
