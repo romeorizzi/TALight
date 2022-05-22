@@ -13,25 +13,32 @@ ALLSTUDENT = "all_students"
 OKCONSTANT = "OK"
 NOCONSTANT = "NO"
 
+
 class lib_grades(object):
     def __init__(self) -> None:
         self.problemlist = Token()
 
-    def loadFile(self, problem : str, service : str, token : str, path : str):
+    def loadFile(self, problem: str, service: str, token: str, path: str):
         for x in listdir(path):
             fullpath = os.path.join(path, x)
-            if (os.path.isdir(fullpath)):
+            if os.path.isdir(fullpath):
                 folderdata = FolderData(x, fullpath)
 
                 if Token.isSameToken(folderdata.token, token, ALLSTUDENT):
                     for y in listdir(fullpath):
                         filedata = FileData(y, os.path.join(fullpath, y), folderdata)
-                        
-                        if (filedata.folderdata.problem == problem or problem == ALLPROBLEM):
-                            if (filedata.folderdata.service == service or service == ALLSERVICE):
+
+                        if (
+                            filedata.folderdata.problem == problem
+                            or problem == ALLPROBLEM
+                        ):
+                            if (
+                                filedata.folderdata.service == service
+                                or service == ALLSERVICE
+                            ):
                                 self.problemlist.addToken(filedata)
 
-        self.problemlist.listSort()        
+        self.problemlist.listSort()
 
     def getProblemList(self):
         return self.problemlist

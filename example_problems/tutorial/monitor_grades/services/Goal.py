@@ -3,15 +3,16 @@
 from FileData import FileData
 from Content import Content
 
+
 class Goal(object):
-    def __init__(self, goal : str):
+    def __init__(self, goal: str):
         self.content = list()
         self.goal = goal
 
-    def addContent(self, filedata : FileData):
+    def addContent(self, filedata: FileData):
         c = Content(filedata.folderdata.date, filedata.content, filedata.isDone())
         self.content.append(c)
-        
+
     def getStatusContent(self):
         for x in self.content:
             if x.result:
@@ -28,6 +29,5 @@ class Goal(object):
     def listSort(self):
         self.content.sort(key=Goal.sortFunction)
 
-    def sortFunction(v : Content):
+    def sortFunction(v: Content):
         return v.data
-        

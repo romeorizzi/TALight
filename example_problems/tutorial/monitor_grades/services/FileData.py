@@ -2,12 +2,13 @@
 
 from FolderData import FolderData
 
-class FileData(object):  
-    def __init__(self, filename : str, fullpath : str, folderdata : FolderData):
+
+class FileData(object):
+    def __init__(self, filename: str, fullpath: str, folderdata: FolderData):
         self.fullpath = fullpath
 
-        s = str(filename).split('_')
-        goal = s[1].split('.')[0]
+        s = str(filename).split("_")
+        goal = s[1].split(".")[0]
 
         self.result = s[0]
         self.goal = goal

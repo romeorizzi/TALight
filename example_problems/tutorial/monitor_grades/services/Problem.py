@@ -3,12 +3,13 @@
 from FileData import FileData
 from Service import Service
 
+
 class Problem(object):
-    def __init__(self, problem : str):
+    def __init__(self, problem: str):
         self.services = list()
         self.problem = problem
 
-    def addService(self, filedata : FileData):
+    def addService(self, filedata: FileData):
         for x in self.services:
             if x.service == filedata.folderdata.service:
                 x.addGoal(filedata)
@@ -24,6 +25,5 @@ class Problem(object):
         for x in self.services:
             x.listSort()
 
-    def sortFunction(v : Service):
+    def sortFunction(v: Service):
         return v.service
-        
