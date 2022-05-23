@@ -4,18 +4,18 @@ public_folder: public
 services:
   gimme_instance:
     evaluator: [python,services/gimme_instance_driver.py]
-    description: 'An instance of the Longest Subsequence (LCS) Problem is essentially a pair of strings, s and t. (You are then asked to find a longest possible string that is both a subsequence of s and a subsequence of t.) Call this service (`gimme_instance`) to get an instance of your likings in one of the supported formats. The instances may come from different sources (randomly generated, hardcoded, taken from a collection) and the server maintains a certain set of them within a catalogue. This catalogue is organized in collections of instances with common features, like e.g. their origin. The service can be used to get either a random instance or an instance from the catalogue.\n   The two strings s and t comprising the instance are returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. For your convenience, the precise format of this stream can be regulated through the argument `instance_format`.'
+    description: 'An instance of the Longest Subsequence (LCS) Problem is essentially a pair of strings, s and t. (You are then asked to find a longest possible string that is both a subsequence of s and a subsequence of t.) Call this service (\''gimme_instance\'') to get an instance of your likings in one of the supported formats. The instances may come from different sources (randomly generated, hardcoded, taken from a collection) and the server maintains a certain set of them within a catalogue. This catalogue is organized in collections of instances with common features, like e.g. their origin. The service can be used to get either a random instance or an instance from the catalogue.\n   The two strings s and t comprising the instance are returned by the service in the form of a stream. You may ask for this stream to get downloaded in a file on your local machine and/or displayed on the screen. For your convenience, the precise format of this stream can be regulated through the argument \''instance_format\''.'
     args:
       source:
         regex: ^(catalogue|randgen_1|randgen_2)$
         default: randgen_1
-        explain: 'Instances might either come from the catalogue or be generated on the spot. Choose an option among:\n     [catalogue] the service will return an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument `instance_id` to specify the instance you are interested into. Calling this service might not be the most convenient way to get an instance from the catalogue: the whole catalogue is public, that is, it is contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing `rtal get model_lcs`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on your machine (this is a necessary step when setting up the problem on a server).\n     [random_generator_name] the service delivers you the pseudo-random instance produced by the named pseudo-random generator. Every generator requires the user to specify a set of values for the needed parameters (like e.g. the `seed`) in order to univokely obtain the resulting instance. This set depends on the generator. Valid values for this set of parameters (called the "instance descriptor") offer an "instance description" that univokely specifies the instance w.r.t. that generator. Make then sure to pass the desired values for all the service arguments corresponding to the parameters needed by the selected generator. Notice that passing the very same configuration of values you get the very same instance. This is helpful since it guarantees the reproducibility of any experiment and the possibility to use and explore a same instance with different services of this problem.\n    [randgen_1] to get the instance produced by the pseudo-random generator `randgen_1`. The "instance descriptor"  for this generator comprises 4 required parameters: `m`, `n`, `alphabet`, `seed`. The service then generates and returns the pseudo-random instance randgen_1<m,n,alphabet,seed>.\n    [randgen_2] to get the instance produced by the pseudo-random generator `randgen_2`. The "instance descriptor"  for this generator comprises 5 required parameters: `m`, `n`, `opt_val`, `alphabet`, `seed`. The service then generates and returns the pseudo-random instance randgen_2<m,n,opt_val,alphabet,seed>.'
+        explain: 'Instances might either come from the catalogue or be generated on the spot. Choose an option among:\n     [catalogue] the service will return an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument \''instance_id\'' to specify the instance you are interested into. Calling this service might not be the most convenient way to get an instance from the catalogue: the whole catalogue is public, that is, it is contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing \''rtal get model_lcs\''. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing \''make\'' for a complete set up of the problem on your machine (this is a necessary step when setting up the problem on a server).\n     [random_generator_name] the service delivers you the pseudo-random instance produced by the named pseudo-random generator. Every generator requires the user to specify a set of values for the needed parameters (like e.g. the \''seed\'') in order to univokely obtain the resulting instance. This set depends on the generator. Valid values for this set of parameters (called the "instance descriptor") offer an "instance description" that univokely specifies the instance w.r.t. that generator. Make then sure to pass the desired values for all the service arguments corresponding to the parameters needed by the selected generator. Notice that passing the very same configuration of values you get the very same instance. This is helpful since it guarantees the reproducibility of any experiment and the possibility to use and explore a same instance with different services of this problem.\n    [randgen_1] to get the instance produced by the pseudo-random generator \''randgen_1\''. The "instance descriptor"  for this generator comprises 4 required parameters: \''m\'', \''n\'', \''alphabet\'', \''seed\''. The service then generates and returns the pseudo-random instance randgen_1<m,n,alphabet,seed>.\n    [randgen_2] to get the instance produced by the pseudo-random generator \''randgen_2\''. The "instance descriptor"  for this generator comprises 5 required parameters: \''m\'', \''n\'', \''opt_val\'', \''alphabet\'', \''seed\''. The service then generates and returns the pseudo-random instance randgen_2<m,n,opt_val,alphabet,seed>.'
       instance_id:
         regex: ^([1-9][0-9]*)$
         regex-explained: any positive natural (in its decimal representation)
         regex-URL: 'https://extendsclass.com/regex/a55297b'
         default: 1
-        explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing `rtal get model_lcs`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
+        explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''model_lcs.tar\'' you get downloaded on your machine by issuing \''rtal get model_lcs\''. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing \''make\'' for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
       m:
         regex: ^([1-9][0-9]{0,2}|1000)$
         regex-explained: a positive natural <= 1000
@@ -66,27 +66,27 @@ services:
   
   check:
     evaluator: [python, services/check_driver.py]
-    description: 'Questo servizio ti chiede di verificare la correttezza o meno di un certo limite. Le istanze consistono in: \n- limite finito per x finito \n- limite infinito per x finito \n- limite finito per x infinito \n- limite infinito per x infinito. \nPuoi caricare il file contenente una tua istanza usando l\''opzione \''-f\'' del sottocomando `connect` di `rtal`, o provare a inserire la tua istanza direttamente dal terminale una volta avviato il servizio.'
+    description: 'Questo servizio ti chiede di verificare la correttezza o meno di un certo limite. Le istanze consistono in: \n- limite finito per x finito \n- limite infinito per x finito \n- limite finito per x infinito \n- limite infinito per x infinito. \nPuoi caricare il file contenente una tua istanza usando l\''opzione \''-f\'' del sottocomando \''connect\'' di \''rtal\'', o provare a inserire la tua istanza direttamente dal terminale una volta avviato il servizio.'
     files:
       - instance
     args:
       source:
         regex: ^(catalogue|terminal|randgen)$
         default: catalogue
-        explain: 'Per inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina, non è necessario impostare questo argomento, basta chiamare il servizio con:\n rtal connect limiti check -finstance=percorso_del_file_istanza \nCon questa chiamata senza ulteriori argomenti , il servizio presuppone che il file di istanza consista in 3 righe, rispettivamente per: \n- la funzione, \n- il valore `x_0` a cui tende la variabile x \n- il risultato del limite `c`. \nL\''argomento `source` viene usato solo quando non associ un file locale al gestore del file dell\''istanza. In tal caso, determina il modo in cui l\''istanza viene immessa nel servizio:' 
+        explain: 'Per inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina, non è necessario impostare questo argomento, basta chiamare il servizio con:\n rtal connect limiti check -finstance=percorso_del_file_istanza \nCon questa chiamata senza ulteriori argomenti, il servizio presuppone che il file di istanza consista in 3 righe, rispettivamente per: \n- la funzione, \n- il valore \''x_0\'' a cui tende la variabile x \n- il risultato del limite \''c\''. \nNel caso in cui x_0 o c fossero infinito si accetta la scrittura \''+inf\'' o \''-inf\''. \nL\''argomento \''source\'' viene usato solo quando non associ un file locale al gestore del file dell\''istanza. In tal caso, determina il modo in cui l\''istanza viene immessa nel servizio:' 
         explain1: '[terminal] inserisci la tua istanza digitandola direttamente sul terminale o tramite copia e incolla. Il formato supportato consiste in 3 righe come spiegato sopra. Ad esempio: \n   x^2+5 \n   1	\n   6'
-        explain2: '[catalogue] il servizio si basa su un catalogo di istanze memorizzate sul server. Esse sono numerate progressivamente a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza che ti interessa.'
-        explain3: '[randgen] il servizio funziona sull\''istanza pseudo-casuale `randgen(<m,n,alphabet,seed>)`. In questo caso è necessario specificare i valori per gli argomenti di servizio che comprendono il descrittore di istanza, quando diversi dai loro valori predefiniti.' # ---DA RIVEDERE GLI ARGOMENTI DEL RANDGEN---
+        explain2: '[catalogue] il servizio si basa su un catalogo di istanze memorizzate sul server. Esse sono numerate progressivamente a partire da 1. Usa l\''argomento \''instance_id\'' per specificare l\''istanza che ti interessa.'
+        explain3: '[randgen] il servizio funziona sull\''istanza pseudo-casuale \''randgen(<m,n,alphabet,seed>)\''. In questo caso è necessario specificare i valori per gli argomenti di servizio che comprendono il descrittore di istanza, quando diversi dai loro valori predefiniti. ---DA RIVEDERE GLI ARGOMENTI DEL RANDGEN IN BASE A COME VERRANNO GENERATE LE ISTANZE---' #---RIVEDERE---
       instance_id:
         regex: ^([1-9][0-9]*)$
         regex-explained: qualsiasi naturale positivo (nella sua rappresentazione decimale)
         regex-URL: 'https://extendsclass.com/regex/a55297b'
         default: 001
-        explain: 'Questo argomento viene preso in considerazione quando `source=catalogue`. Viene utilizzato per identificare una particolare istanza all\''interno del catalogo delle istanze archiviate sul server. L\''intero catalogo è pubblico, cioè è contenuto nel file \''limiti.tar\'' che viene scaricato sulla tua macchina attraverso il comando `rtal get limiti`. Inoltre, se si tiene l\''intero repository con il problema in locale, questo catalogo viene creato automaticamente emettendo `make`. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.' # ---DA RIVEDERE---
+        explain: 'Questo argomento viene preso in considerazione quando \''source=catalogue\''. Viene utilizzato per identificare una particolare istanza all\''interno del catalogo delle istanze archiviate sul server. L\''intero catalogo è pubblico, cioè è contenuto nel file \''limiti.tar\'' che viene scaricato sulla tua macchina attraverso il comando \''rtal get limiti\''. Inoltre, se si tiene l\''intero repository con il problema in locale, questo catalogo viene creato automaticamente emettendo \''make\''. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.' # ---RIVEDERE---
       instance_format: # limite di cui verificare la correttezza o non
         regex: ^(correct|not_correct)$
         default: correct
-        explain: Usa questo argomento per specificare se del limite contenuto nel tuo file .txt vuoi verificarne la correttezza oppure no.
+        explain: Usa questo argomento per specificare se vuoi verificare la correttezza oppure no del limite contenuto nel tuo file .txt.
         explain1: '[correct] il file conterrà 3 righe come spiegato sopra e si vorrà verificare che quel limite sia corretto'
         explain2: '[not_correct] il file conterrà sempre 3 righe ma si vorrà verificare che quel limite non è corretto'
       seed:
@@ -94,17 +94,87 @@ services:
         regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
-        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già soddisfatta. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso, lo comunica all\''utente e lavora sull\''istanza pseudo-casuale univoca <m,n,seed>.' # ---DA RIVEDERE I PARAMETRI---
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già soddisfatta. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso, lo comunica all\''utente e lavora sull\''istanza pseudo-casuale univoca <m,n,seed>. ---DA RIVEDERE I PARAMETRI---' # ---RIVEDERE---
       sol_format: # valore numerico o espressione
         regex: ^(num_val|expr)$
         default: num_val
         explain: 'specificare quale tipo di soluzione si vuole dare. Scegli una tra le seguenti opzioni:'
         explain1: '[num_val] la soluzione consiste in un numero: deciamle (massimo 15 cifre dopo la virgola) o intero'
-        explain2: '[expr] la soluzione consiste in un\''espressione' # ---DA SPECIFICARE SINTASSI DELLE ESPRESSIONI PROBABILMENTE---
+        explain2: '[expr] la soluzione consiste in un\''espressione ---DA SPECIFICARE SINTASSI DELLE ESPRESSIONI PROBABILMENTE---' # ---RIVEDERE---
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  
+
+  sum:
+    evaluator: [python, services/sum_driver.py]
+    description: 'Questo servizio ti chiede di verificare che il limite della somma di due funzione equivale alla somma dei limiti delle due funzioni singole. \nPuoi caricare il file contenente una tua istanza usando l\''opzione \''-f\'' del sottocomando \''connect\'' di \''rtal\'', o provare a inserire la tua istanza direttamente dal terminale una volta avviato il servizio.'
+    files:
+      - instance
+    args:
+      source:
+        regex: ^(catalogue|terminal|randgen)$
+        default: catalogue
+        explain: 'Per inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina, non è necessario impostare questo argomento, basta chiamare il servizio con:\n rtal connect limiti sum -finstance=percorso_del_file_istanza \nCon questa chiamata senza ulteriori argomenti, il servizio presuppone che il file di istanza consista in 5 righe, rispettivamente: \n1- la prima funzione, \n2- la seconda funzione \n3- il valore \''x_0\'' a cui tende la variabile x \n4- il risultato del limite \''c_1\'' per la prima funzione \n5- il risultato del limite \''c_2\'' per la seconda funzione. \nNel caso in cui x_0 fosse infinito si accetta la scrittura \''+inf\'' o \''-inf\''. \nL\''argomento \''source\'' viene usato solo quando non associ un file locale al gestore del file dell\''istanza. In tal caso, determina il modo in cui l\''istanza viene immessa nel servizio:' 
+        explain1: '[terminal] inserisci la tua istanza digitandola direttamente sul terminale o tramite copia e incolla. Il formato supportato consiste in 5 righe come spiegato sopra. Ad esempio: \n   x+2 \n   2x+3 \n   2	\n   4 \n   7'
+        explain2: '[catalogue] il servizio si basa su un catalogo di istanze memorizzate sul server. Esse sono numerate progressivamente a partire da 1. Usa l\''argomento \''instance_id\'' per specificare l\''istanza che ti interessa.'
+        explain3: '[randgen] il servizio funziona sull\''istanza pseudo-casuale \''randgen(<m,n,alphabet,seed>)\''. In questo caso è necessario specificare i valori per gli argomenti di servizio che comprendono il descrittore di istanza, quando diversi dai loro valori predefiniti. ---DA RIVEDERE GLI ARGOMENTI DEL RANDGEN IN BASE A COME VERRANNO GENERATE LE ISTANZE---' #---RIVEDERE---
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: qualsiasi naturale positivo (nella sua rappresentazione decimale)
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 001
+        explain: 'Questo argomento viene preso in considerazione quando \''source=catalogue\''. Viene utilizzato per identificare una particolare istanza all\''interno del catalogo delle istanze archiviate sul server. L\''intero catalogo è pubblico, cioè è contenuto nel file \''limiti.tar\'' che viene scaricato sulla tua macchina attraverso il comando \''rtal get limiti\''. Inoltre, se si tiene l\''intero repository con il problema in locale, questo catalogo viene creato automaticamente emettendo \''make\''. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.' # ---RIVEDERE---
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già soddisfatta. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso, lo comunica all\''utente e lavora sull\''istanza pseudo-casuale univoca <m,n,seed>. ---DA RIVEDERE I PARAMETRI---' # ---RIVEDERE---
+      sol_format: # valore numerico o espressione
+        regex: ^(num_val|expr)$
+        default: num_val
+        explain: 'specificare quale tipo di soluzione si vuole dare. Scegli una tra le seguenti opzioni:'
+        explain1: '[num_val] la soluzione consiste in un numero: deciamle (massimo 15 cifre dopo la virgola) o intero'
+        explain2: '[expr] la soluzione consiste in un\''espressione ---DA SPECIFICARE SINTASSI DELLE ESPRESSIONI PROBABILMENTE---' # ---RIVEDERE---
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  comparison:
+    evaluator: [python, services/comparison_driver.py]
+    description: 'Questo servizio ti chiede di verificare che date tre funzioni tali che f(x)<g(x)<h(x), se f(x) e h(x) per x -> x_0 tendono allo stesso limite \''c\'', allora anche g(x) tenderà a quella \''c\'' per x -> x_0. \nPuoi caricare il file contenente una tua istanza usando l\''opzione \''-f\'' del sottocomando \''connect\'' di \''rtal\'', o provare a inserire la tua istanza direttamente dal terminale una volta avviato il servizio.'
+    files:
+      - instance
+    args:
+      source:
+        regex: ^(catalogue|terminal|randgen)$
+        default: catalogue
+        explain: 'Per inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina, non è necessario impostare questo argomento, basta chiamare il servizio con:\n rtal connect limiti sum -finstance=percorso_del_file_istanza \nCon questa chiamata senza ulteriori argomenti, il servizio presuppone che il file di istanza consista in 5 righe, rispettivamente: \n1- f(x), \n2- g(x) \n3- h(x) \n4- il valore \''x_0\'' a cui tende la variabile x \n5- il risultato del limite \''c\'' per f(x) e h(x). \nNel caso in cui x_0 fosse infinito si accetta la scrittura \''+inf\'' o \''-inf\''. \nL\''argomento \''source\'' viene usato solo quando non associ un file locale al gestore del file dell\''istanza. In tal caso, determina il modo in cui l\''istanza viene immessa nel servizio:' 
+        explain1: '[terminal] inserisci la tua istanza digitandola direttamente sul terminale o tramite copia e incolla. Il formato supportato consiste in 5 righe come spiegato sopra. Ad esempio: \n   x+2 \n   2x+3 \n   2	\n   4 \n   7'
+        explain2: '[catalogue] il servizio si basa su un catalogo di istanze memorizzate sul server. Esse sono numerate progressivamente a partire da 1. Usa l\''argomento \''instance_id\'' per specificare l\''istanza che ti interessa.'
+        explain3: '[randgen] il servizio funziona sull\''istanza pseudo-casuale \''randgen(<m,n,alphabet,seed>)\''. In questo caso è necessario specificare i valori per gli argomenti di servizio che comprendono il descrittore di istanza, quando diversi dai loro valori predefiniti. ---DA RIVEDERE GLI ARGOMENTI DEL RANDGEN IN BASE A COME VERRANNO GENERATE LE ISTANZE---' #---RIVEDERE---
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: qualsiasi naturale positivo (nella sua rappresentazione decimale)
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 001
+        explain: 'Questo argomento viene preso in considerazione quando \''source=catalogue\''. Viene utilizzato per identificare una particolare istanza all\''interno del catalogo delle istanze archiviate sul server. L\''intero catalogo è pubblico, cioè è contenuto nel file \''limiti.tar\'' che viene scaricato sulla tua macchina attraverso il comando \''rtal get limiti\''. Inoltre, se si tiene l\''intero repository con il problema in locale, questo catalogo viene creato automaticamente emettendo \''make\''. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.' # ---RIVEDERE---
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già soddisfatta. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso, lo comunica all\''utente e lavora sull\''istanza pseudo-casuale univoca <m,n,seed>. ---DA RIVEDERE I PARAMETRI---' # ---RIVEDERE---
+      sol_format: # valore numerico o espressione
+        regex: ^(num_val|expr)$
+        default: num_val
+        explain: 'specificare quale tipo di soluzione si vuole dare. Scegli una tra le seguenti opzioni:'
+        explain1: '[num_val] la soluzione consiste in un numero: deciamle (massimo 15 cifre dopo la virgola) o intero'
+        explain2: '[expr] la soluzione consiste in un\''espressione ---DA SPECIFICARE SINTASSI DELLE ESPRESSIONI PROBABILMENTE---' # ---RIVEDERE---
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
