@@ -40,7 +40,7 @@ services:
         default: all_services
         explain: 'Select the service for which to ask a report of your submissions. Use `all_services` to get a global report of your submissions on all services.'
       student:
-        regex: ^(([a-z]|[A-Z]|_)*)$
+        regex: ^(([a-z]|[A-Z]|_|[0-9])*)$
         default: all_students
         explain: 'Select the service for which to ask a report of your students. Use `all_students` to get a global report of your submissions on all students.'
       download:
@@ -64,7 +64,7 @@ services:
         default: all_services
         explain: 'Select the service for which to ask a report of your submissions. Use `all_services` to get a global report of your submissions on all service.'
       student:
-        regex: ^(([a-z]|[A-Z]|_)*)$
+        regex: ^(([a-z]|[A-Z]|_|[0-9])*)$
         default: all_students
         explain: 'Select the student for which to ask a report of your submissions. Use `all_students` to get a global report of your submissions on all students.'
       count_type: 
