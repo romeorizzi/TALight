@@ -18,7 +18,7 @@ services:
       all_submissions:
         regex: ^(0|1)$
         default: 0
-        explain: 'Show all the submission for each service'
+        explain: 'Show all the submission for each service, instead of just the last result (OK if the service has been solved one more time, or NO if all the sumbission were wrong)'
       download:
         regex: ^(0|1)$
         default: 0
@@ -29,7 +29,7 @@ services:
 
   get_ranking:
     evaluator: [python,services/get_ranking.py]
-    description: '' 
+    description: 'This service is intended to be used by only the teacher. It provide the ability to get the submission of all the student or just one (using the student argument). You can filter by problem (by using the problem argument)service (by using the service argument). This service have the possibility to download the result show in your terminal (by set the flag of the argument download to 1).' 
     args:
       problem:
         regex: ^(([a-z]|[A-Z]|_)*)$
@@ -53,7 +53,7 @@ services:
 
   get_statistics:
     evaluator: [python,services/get_statistics.py]
-    description: '' 
+    description: 'This service is intended to be used by only the teacher. This service provides an overview of the situation by aggregating the data (by using the count_type argument). You can filter the data by using this arguments: problem (filter by name of the problem), service (filter by name of the service) and student (filter by the student). If you want to you can set to 1 the flag of the downalod argument, and get a csv file of the table.'
     args:
       problem:
         regex: ^(([a-z]|[A-Z]|_)*)$
