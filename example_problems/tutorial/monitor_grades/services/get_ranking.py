@@ -11,6 +11,7 @@ from TALfiles import TALfilesHelper
 args_list = [
     ("problem", str),
     ("service", str),
+    ("all_submissions", bool),
     ("student", str),
     ("download", bool),
 ]
@@ -28,8 +29,6 @@ if not Token.isTeacher(environ["TAL_META_EXP_TOKEN"]):
 else:
     lg = lib_grades()
     lg.loadFile(ENV["problem"], ENV["service"], ENV["student"], environ["TAL_META_EXP_LOG_DIR"])
-
-    lg.getProblemList().printToConsole()
-
+    lg.getProblemList().printToConsole(ENV["all_submissions"])
     if ENV["download"]:
-        TALf.str2output_file(lg.getProblemList().instanceToString(), "result.csv")
+        TALf.str2output_file(lg.getProblemList().instanceToString(ENV["all_submissions"]), "result.csv")

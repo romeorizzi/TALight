@@ -39,6 +39,10 @@ services:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
         explain: 'Select the service for which to ask a report of your submissions. Use `all_services` to get a global report of your submissions on all services.'
+      all_submissions:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Show all the submission for each service, instead of just the last result (OK if the service has been solved one more time, or NO if all the sumbission were wrong)'
       student:
         regex: ^(([a-z]|[A-Z]|_|[0-9])*)$
         default: all_students
