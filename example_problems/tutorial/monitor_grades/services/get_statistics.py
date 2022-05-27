@@ -14,10 +14,9 @@ args_list = [
     ("problem", str),
     ("service", str),
     ("download", bool),
-    ("count_type", str),
+    ("watch", str),
     ("student", str),
     ("mode", str),
-    ("requirement", str),
 ]
 
 ENV = Env(args_list)
@@ -34,35 +33,35 @@ else:
     lg = lib_grades()
     lg.loadFile(ENV["problem"], ENV["service"], ENV["student"], environ["TAL_META_EXP_LOG_DIR"])
 
-    if ENV["count_type"] == "tokened_submissions":
+    if ENV["watch"] == "num_tokened_submissions":
         table = lg.getProblemList().countTokenTries(ENV["mode"])
 
         Token.tupleToTable(("Token", "#Tries"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
-    elif ENV["count_type"] == "student_ok_and_no":
+    elif ENV["watch"] == "num_ok_and_no":
         table = lg.getProblemList().countTokenOkAndNoGoals()
 
         Token.tupleToTable(("Token", "#OK", "#NO"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
-    elif ENV["count_type"] == "problem":
-        table = lg.getProblemList().countProblemOkAndNoGoals(ENV["requirement"])
+    elif str(ENV["watch"]).startswith("num_problems_"):
+        table = lg.getProblemList().countProblemOkAndNoGoals(ENV["watch"])
 
         Token.tupleToTable(("Token", "#Problem"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
-    elif ENV["count_type"] == "service":
-        table = lg.getProblemList().countServiceOkAndNoGoals(ENV["requirement"])
+    elif str(ENV["watch"]).startswith("num_services_"):
+        table = lg.getProblemList().countServiceOkAndNoGoals(ENV["watch"])
 
         Token.tupleToTable(("Token", "Problem", "#Service"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), "result.csv")
-    elif ENV["count_type"] == "goal":
+    elif str(ENV["watch"]).startswith("num_goals_"):
         table = lg.getProblemList().countGoalsOkAndNoGoals()
 
         Token.tupleToTable(("Token", "Problem", "Service", "#Goal"), table)

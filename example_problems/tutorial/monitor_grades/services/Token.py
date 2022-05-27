@@ -262,13 +262,13 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                if requirement == "at_least_one_submission":
+                if requirement == "num_problems_touched":
                     if ok_goals > 0 or no_goals > 0:
                         resolvedproblem += 1
-                elif requirement == "at_least_one_goal_achieved":
+                elif requirement == "num_problems_partial":
                     if ok_goals > 0:
                         resolvedproblem += 1
-                elif requirement == "at_least_one_service_fullfilled":
+                elif requirement == "num_problems_full":
                     if no_goals == 0:
                         resolvedproblem += 1
                 else:
@@ -296,13 +296,13 @@ class Token(object):
                         else:
                             no_goals += 1
 
-                    if requirement == "at_least_one_submission":
+                    if requirement == "num_services_touched":
                         if ok_goals > 0 or no_goals > 0:
                             resolvedservice += 1
-                    elif requirement == "at_least_one_goal_achieved":
+                    elif requirement == "num_services_partial":
                         if ok_goals > 0:
                             resolvedservice += 1
-                    elif requirement == "all_goals_achieved":
+                    elif requirement == "num_services_full":
                         if no_goals == 0:
                             resolvedservice += 1
                     else:
