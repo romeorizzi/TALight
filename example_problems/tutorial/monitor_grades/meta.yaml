@@ -58,19 +58,24 @@ services:
       problem:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_problems
-        explain: 'Select the problem for which to ask a report of your submissions. Use `all_problems` to get a global report of your submissions on all problems.'
+        explain: 'Select the problem for which to ask a report on the submissions. Use `all_problems` to get a global report of the submissions on all problems.'
       service:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
-        explain: 'Select the service for which to ask a report of your submissions. Use `all_services` to get a global report of your submissions on all service.'
+        explain: 'Select the service for which to ask a report on the submissions. Use `all_services` to get a global report of the submissions on all service.'
       student:
         regex: ^(([a-z]|[A-Z]|_|[0-9])*)$
         default: all_students
-        explain: 'Select the student for which to ask a report of your submissions. Use `all_students` to get a global report of your submissions on all students.'
-      count_type: 
-        regex: ^(student_tries|student_ok_and_no|problem|service|goal)$
+        explain: 'Select the student for which to ask a report on the submissions. Use `all_students` to get a global report of the submissions on all students.'
+      watch: 
+        regex: ^(num_tokened_submissions|num_ok_and_no|num_problems_touched|num_problems_partial|num_problems_full|num_services_touched|num_services_partial|num_services_full|num_goals_achieved)$
         default: problem
-        explain: 'Select the type of count. Student_tries count the total number of file in the directory. student_ok_and_no show how many oks and nos the student recived. problem group the report by problem. service group the report by service. goal group the report by service.'
+        explain: 'Select the type of statistc you want displayed:'
+        explain1: '[num_tokened_submissions] prints the total number of log folders (in the log directory on the server) compliant with the filters imposed.'
+        explain2: '[student_ok_and_no] shows how many OKs and NOs over submissions that are compliant with the filters imposed.'
+        explain3: '[problem] group the report by problem.'
+        explain4: '[service] group the report by service.'
+        explain5: '[goal] group the report by service.'
       mode: 
         regex: ^(total_gross_number|number_different_submissions)$
         default: total_gross_number

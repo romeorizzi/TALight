@@ -46,7 +46,7 @@ def main(
     lg = lib_grades()
     lg.loadFile(problem, service, student, path)
 
-    if counttype == "student_tries":
+    if counttype == "tokened_submissions":
         table = lg.getProblemList().countTokenTries(mode)
 
         Token.tupleToTable(("Token", "#Tries"), table)

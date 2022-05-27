@@ -12,5 +12,16 @@ Dentro la cartella problema, oltre al file meta.yaml che verrà però assemblato
 	 Anche pezzi che sono comuni a più servizi, di libreria, converrà metterli a fattore comune. Per altro il formato yaml consente l'utilizzo delle ancore che potremmo comunque utilizzare per tenere bassa la lunghezza del file meta.yaml generato, da valutare, il rischio è che qualcuno potrebbe fare più fatica a leggerlo, ma ci sono dei visualizzatori anche nel cloud. Pertano io sarei per visualizzare anche le ancore ed uscire puliti (ovviamente dopo aver fatto presente dove si possa trovare questi visualizzatori comodi, annunci che potrebbero essere scritti una volta per tutte per tutti i problemi e linkati (quelli che si crede) nella cartella help/it/ (nella sottocartella generic), a sua volta linkata dentro la cartella public).
 	 Nella cartella help/it/ (nella sottocartella specific) si offrono esempi di chiamate.
 
+References:
+    un tutoria di avvio leggere ma significatico ai yaml file:
+        https://blog.codemagic.io/what-you-can-do-with-yaml/
+    e questo sheet è anche ottimo come introduzione a YAML:
+        https://learnxinyminutes.com/docs/yaml/
+    suggerimenti per includere yaml in yaml e soluzioni che già lo fanno:
+        https://stackoverflow.com/questions/528281/how-can-i-include-a-yaml-file-inside-another
+    uno yaml editor online:
+        https://codebeautify.org/yaml-editor-online
+    YAML multiline made clear with tool to experiment:
+        https://yaml-multiline.info/
 
 	 

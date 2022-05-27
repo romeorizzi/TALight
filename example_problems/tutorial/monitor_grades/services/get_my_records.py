@@ -10,8 +10,8 @@ from TALfiles import TALfilesHelper
 args_list = [
     ("problem", str),
     ("service", str),
-    ("all_submissions", int),
-    ("download", int),
+    ("all_submissions", bool),
+    ("download", bool),
 ]
 
 ENV = Env(args_list)
@@ -21,30 +21,8 @@ TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
-
-def main(
-    problem: str,
-    service: str,
-    token: str,
-    path: str,
-    all_submissions: str,
-    download: int,
-):
-    lg = lib_grades()
-    lg.loadFile(problem, service, token, path)
-
-    lg.getProblemList().printToConsole(all_submissions == 1)
-
-    if download == 1:
-        TALf.str2output_file(lg.getProblemList().instanceToString(True), "result.csv")
-
-
-if __name__ == "__main__":
-    main(
-        ENV["problem"],
-        ENV["service"],
-        environ["TAL_META_EXP_TOKEN"],
-        environ["TAL_META_EXP_LOG_DIR"],
-        ENV["all_submissions"],
-        ENV["download"],
-    )
+lg = lib_grades()
+lg.loadFile(ENV["problem"], ENV["service"], environ["TAL_META_EXP_TOKEN"], environ["TAL_META_EXP_LOG_DIR"])
+lg.getProblemList().printToConsole(ENV["all_submissions"] == 1)
+if ENV["download"]:
+    TALf.str2output_file(lg.getProblemList().instanceToString(ENV["all_submissions"]), "result.csv")
