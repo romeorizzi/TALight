@@ -69,21 +69,21 @@ services:
         explain: 'Select the student for which to ask a report on the submissions. Use `all_students` to get a global report of the submissions on all students.'
       watch: 
         regex: ^(num_tokened_submissions|num_ok_and_no|num_problems_touched|num_problems_partial|num_problems_full|num_services_touched|num_services_partial|num_services_full|num_goals_achieved)$
-        default: problem
+        default: num_problems_full
         explain: 'Select the type of statistc you want displayed:'
         explain1: '[num_tokened_submissions] prints the total number of log folders (in the log directory on the server) compliant with the filters imposed.'
-        explain2: '[student_ok_and_no] shows how many OKs and NOs over submissions that are compliant with the filters imposed.'
-        explain3: '[problem] group the report by problem.'
-        explain4: '[service] group the report by service.'
-        explain5: '[goal] group the report by service.'
+        explain2: '[num_ok_and_no] shows how many OKs and NOs over submissions that are compliant with the filters imposed.'
+        explain3: '[num_problems_touched] group the report by problem, count if at least one service has a submission sended.'
+        explain4: '[num_problems_partial] group the report by problem, count if at least one service is completed.'
+        explain5: '[num_problems_full] group the report by problem, count if all the services are completed.'
+        explain6: '[num_services_touched] group the report by service, count if at least one goal has a sumbmission sended.'
+        explain7: '[num_services_partial] group the report by service, count if at least one goal is completed.'
+        explain8: '[num_services_full] group the report by service, count if all the goals are completed.'
+        explain9: '[num_goals_achieved] group the report by goals.'
       mode: 
         regex: ^(total_gross_number|number_different_submissions)$
         default: total_gross_number
         explain: 'Select the mode for student_tries. total_gross_number count the files in each folder. number_different_submissions either problem or service are different.'
-      requirement:
-        regex: ^(at_least_one_submission|at_least_one_goal_achieved|all_services_fullfilled|all_goals_achieved)$
-        default: all_services_fullfilled
-        explain: 'Select the mode for count_type=problem and count_type=service. at_least_one_submission at least one submission (either a no goal or a ok goal). at_least_one_goal_achieved at least a ok goal recived. all_services_fullfilled every service as to be ok goal. all_goals_achieved all the goal are achived.'
       download:
         regex: ^(0|1)$
         default: 0
