@@ -83,7 +83,9 @@ services:
       mode: 
         regex: ^(total_gross_number|number_different_submissions)$
         default: total_gross_number
-        explain: 'Select the mode for student_tries. total_gross_number count the files in each folder. number_different_submissions either problem or service are different.'
+        explain: 'Select the mode for student_tries.'
+        explain1: '[total_gross_number] count the files in each folder.'
+        explain2: '[number_different_submissions] either problem or service are different.'
       download:
         regex: ^(0|1)$
         default: 0
