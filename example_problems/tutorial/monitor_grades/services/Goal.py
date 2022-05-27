@@ -21,6 +21,10 @@ class Goal(object):
         return False
 
     def getLastContent(self):
+        for x in self.content:
+            if x.result:
+                return x
+
         if len(self.content) > 0:
             return self.content[0]
         else:
