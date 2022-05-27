@@ -73,9 +73,9 @@ rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics
 rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a download=1
 rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a student=VR123456
 rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a student=VR123456 -a download=1
-rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a count_type=problem
-rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a count_type=service
-rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a count_type=goal
-rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a count_type=problem -a requirement=at_least_one_submission
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a watch=num_problems_full
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a watch=num_problems_touched
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a watch=num_services_full
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a watch=num_goals_achieved
 
 ...
