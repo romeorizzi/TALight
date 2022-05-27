@@ -12,7 +12,7 @@ args_list = [
     ("problem", str),
     ("service", str),
     ("student", str),
-    ("download", int),
+    ("download", bool),
 ]
 
 ENV = Env(args_list)
@@ -23,28 +23,13 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 
-def main(
-    problem: str, service: str, token: str, path: str, student: str, download: int
-):
-    if not Token.isTeacher(token):
-        print("Unauthorized")
-        return
-
+if not Token.isTeacher(environ["TAL_META_EXP_TOKEN"]):
+    print("Unauthorized")
+else:
     lg = lib_grades()
-    lg.loadFile(problem, service, student, path)
+    lg.loadFile(ENV["problem"], ENV["service"], ENV["student"], environ["TAL_META_EXP_LOG_DIR"])
 
     lg.getProblemList().printToConsole()
 
-    if download == 1:
+    if ENV["download"]:
         TALf.str2output_file(lg.getProblemList().instanceToString(), "result.csv")
-
-
-if __name__ == "__main__":
-    main(
-        ENV["problem"],
-        ENV["service"],
-        environ["TAL_META_EXP_TOKEN"],
-        environ["TAL_META_EXP_LOG_DIR"],
-        ENV["student"],
-        ENV["download"],
-    )
