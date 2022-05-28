@@ -57,39 +57,36 @@ services:
 
   get_statistics:
     evaluator: [python,services/get_statistics.py]
-    description: 'This service is intended to be used by only the teacher. This service provides an overview of the situation by aggregating the data (by using the count_type argument). You can filter the data by using this arguments: problem (filter by name of the problem), service (filter by name of the service) and student (filter by the student). If you want to you can set to 1 the flag of the downalod argument, and get a csv file of the table.'
+    description: 'This service is accessible only to users with teacher credentials. It offers customizable views on the current situation with the submissions received, whose outcomes have been stored in a log folder on the server. The log folders taken into account can be filtered setting these arguments: problem (filter by name of the problem), service (filter by name of the service) and student (filter by the student). Setting the watch argument, you select the statistic you are interested into. By setting the download argument a .csv file is stored in local on your computer. This file is a report offereng the same data visualized on the screen.'
     args:
       problem:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_problems
-        explain: 'Select the problem for which to ask a report on the submissions. Use `all_problems` to get a global report of the submissions on all problems.'
+        explain: 'Select the problem for which to ask a report on the submissions. Leave the default value `all_problems` to get a global report of the submissions on all problems.'
       service:
         regex: ^(([a-z]|[A-Z]|_)*)$
         default: all_services
-        explain: 'Select the service for which to ask a report on the submissions. Use `all_services` to get a global report of the submissions on all service.'
+        explain: 'Select the service for which to ask a report on the submissions. Leave the default value `all_services` to get a global report of the submissions on all service.'
       student:
         regex: ^(([a-z]|[A-Z]|_|[0-9])*)$
         default: all_students
-        explain: 'Select the student for which to ask a report on the submissions. Use `all_students` to get a global report of the submissions on all students.'
+        explain: 'Select the student for which to ask a report on the submissions. Leave the default value `all_students` to get a global report of the submissions on all students.'
       watch: 
         regex: ^(num_tokened_submissions|num_ok_and_no|num_problems_touched|num_problems_partial|num_problems_full|num_services_touched|num_services_partial|num_services_full|num_goals_achieved)$
         default: num_problems_full
-        explain: 'Select the type of statistc you want displayed:'
-        explain1: '[num_tokened_submissions] prints the total number of log folders (in the log directory on the server) compliant with the filters imposed.'
+        explain: 'Select the statistic you want displayed:'
+        explain1: '[num_tokened_submissions] prints the total number of log folders compliant with the filters imposed.'
         explain2: '[num_ok_and_no] shows how many OKs and NOs over submissions that are compliant with the filters imposed.'
-        explain3: '[num_problems_touched] group the report by problem, count if at least one service has a submission sended.'
-        explain4: '[num_problems_partial] group the report by problem, count if at least one service is completed.'
-        explain5: '[num_problems_full] group the report by problem, count if all the services are completed.'
-        explain6: '[num_services_touched] group the report by service, count if at least one goal has a sumbmission sended.'
-        explain7: '[num_services_partial] group the report by service, count if at least one goal is completed.'
-        explain8: '[num_services_full] group the report by service, count if all the goals are completed.'
-        explain9: '[num_goals_achieved] group the report by goals.'
+        explain3: '[num_problems_touched] group the report by student, prints the number of problems for which the student has made at least one submission.'
+        explain4: "[num_problems_partial] group the report by student, prints the number of problems for which the student has fullfilled (aka, all services' goals achieved) at least one whole service."
+        explain5: '[num_problems_full] group the report by student, prints the number of problems which have been completely fullfilled (aka,  all services fullfilled) by the student.'
+        explain6: '[num_services_touched] group the report first by student, then by problem. Prints the number of services for which the student has sent at least one sumbmission.'
+        explain7: '[num_services_partial] group the report first by student, then by problem. Prints the number of services for which the student has achieved at least one goal.'
+        explain8: '[num_services_full] group the report first by student, then by problem. Prints the number of services fullfilled by the student.'
+        explain9: '[num_goals_achieved] group the report first by student, then by problem, then by service. Counts the number of goals achieved.'
       mode: 
-        regex: ^(total_gross_number|number_different_submissions)$
+        regex: ^total_gross_number$
         default: total_gross_number
-        explain: 'Select the mode for student_tries.'
-        explain1: '[total_gross_number] count the files in each folder.'
-        explain2: '[number_different_submissions] either problem or service are different.'
       download:
         regex: ^(0|1)$
         default: 0
@@ -97,6 +94,66 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+
+  get_submissions_counts:
+    evaluator: [python,services/get_statistics.py]
+    description: 'This service is accessible only to users with teacher credentials. It offers a syntetic view on the number of submissions. To do so, it takes as reference the log folders on the server. The log folders taken into account can be filtered setting these arguments: problem (filter by name of the problem), service (filter by name of the service) and student (filter by the student). For each enrolled student, the service prints the total gross number of submissions (always among the filtered ones), or the number of different problems for which a submission has bens sent, or the number of different problem services for which a submission has been sent. By setting the download argument a .csv file is stored in local on your computer. This file is a report offering the same data visualized on the screen.'
+    args:
+      problem:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_problems
+        explain: 'Select the problem for which to ask a report on the submissions. Leave the default value `all_problems` to get a global report of the submissions on all problems.'
+      service:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_services
+        explain: 'Select the service for which to ask a report on the submissions. Leave the default value `all_services` to get a global report of the submissions on all service.'
+      student:
+        regex: ^(([a-z]|[A-Z]|_|[0-9])*)$
+        default: all_students
+        explain: 'Select the student for which to ask a report on the submissions. Leave the default value `all_students` to get a global report of the submissions on all students.'
+      watch: 
+        regex: ^num_tokened_submissions$
+        default: num_tokened_submissions
+      mode: 
+        regex: ^(total_gross_number|number_different_submissions)$
+        default: total_gross_number
+        explain: 'Select the mode for student_tries.'
+        explain1: '[total_gross_number] prints the total number of submissions of the student (i.e., the total number of log folders).'
+        explain2: '[number_probl_services] prints the number of different submissions (either problem or service are different) of the student.'
+        explain3: '[number_problems] prints the number of different problems faced by the student.'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  get_submissions_raw:
+    evaluator: [python,services/get_statistics.py]
+    description: 'This service is accessible only to users with teacher credentials. It offers the whole raw data about submissions as stored in the log folders on the server, reporting the names of all files stored in each log folder but avoiding to read their content. The log folders taken into account can be filtered setting these arguments: problem (filter by name of the problem), service (filter by name of the service) and student (filter by the student). Using the argument regex_filename you can also filter on those filenames that match a regex of oyur choice. The data is stored on a .csv file placed in local on your computer, use the argument csv_filename to specify the name of this argument.'
+    args:
+      problem:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_problems
+        explain: 'Select the problem for which to ask a report on the submissions. Leave the default value `all_problems` to get a global report of the submissions on all problems.'
+      service:
+        regex: ^(([a-z]|[A-Z]|_)*)$
+        default: all_services
+        explain: 'Select the service for which to ask a report on the submissions. Leave the default value `all_services` to get a global report of the submissions on all service.'
+      student:
+        regex: ^(([a-z]|[A-Z]|_|[0-9])*)$
+        default: all_students
+        explain: 'Select the student for which to ask a report on the submissions. Leave the default value `all_students` to get a global report of the submissions on all students.'
+      regex_filename:
+        regex: ^(.*)$
+        default: '^(.*)$'
+        explain: 'Report only those filenames that match the given regex.'
+      csv_filename:
+        regex: ^(.*)$
+        default: '^un alfanumerico + underscores e punti$'
+        explain: 'name of the csv file.'
+
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
