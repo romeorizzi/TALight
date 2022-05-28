@@ -31,7 +31,9 @@ if not Token.isTeacher(environ["TAL_META_EXP_TOKEN"]):
     print("Unauthorized")
 else:
     lg = lib_grades()
-    lg.loadFile(ENV["problem"], ENV["service"], ENV["student"], environ["TAL_META_EXP_LOG_DIR"])
+    lg.loadFile(
+        ENV["problem"], ENV["service"], ENV["student"], environ["TAL_META_EXP_LOG_DIR"]
+    )
 
     if ENV["watch"] == "num_tokened_submissions":
         table = lg.getProblemList().countTokenTries(ENV["mode"])
