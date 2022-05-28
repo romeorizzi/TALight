@@ -151,8 +151,9 @@ services:
         explain: 'Report only those filenames that match the given regex.'
       csv_filename:
         regex: ^(.*)$
-        default: '^un alfanumerico + underscores e punti$'
-        explain: 'name of the csv file.'
+        default: submissions.csv
+        #        default: '^un alfanumerico + underscores e punti$'
+        explain: 'name of the csv file (an alphanumeric string where also underscores and full dots are allowed)'
 
 
   synopsis:
