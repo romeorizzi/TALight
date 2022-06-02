@@ -19,7 +19,9 @@ class lib_grades(object):
     def __init__(self) -> None:
         self.problemlist = Token()
 
-    def loadFile(self, problem: str, service: str, token: str, path: str, regex_filename : str):
+    def loadFile(
+        self, problem: str, service: str, token: str, path: str, regex_filename: str
+    ):
         for x in listdir(path):
             fullpath = os.path.join(path, x)
             if os.path.isdir(fullpath):
@@ -31,7 +33,7 @@ class lib_grades(object):
 
                         if os.path.isfile(fullfilename) and re.match(regex_filename, y):
                             filedata = FileData(y, fullfilename, folderdata)
-                            
+
                             if (
                                 filedata.folderdata.problem == problem
                                 or problem == ALLPROBLEM

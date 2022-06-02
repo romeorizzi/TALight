@@ -29,10 +29,11 @@ lg.loadFile(
     ENV["service"],
     environ["TAL_META_EXP_TOKEN"],
     environ["TAL_META_EXP_LOG_DIR"],
-    ENV["regex_filename"]
+    ENV["regex_filename"],
 )
 lg.getProblemList().printToConsole(ENV["all_submissions"])
 if ENV["download"]:
     TALf.str2output_file(
-        lg.getProblemList().instanceToString(ENV["all_submissions"]), ENV["csv_filename"]
+        lg.getProblemList().instanceToString(ENV["all_submissions"]),
+        ENV["csv_filename"],
     )

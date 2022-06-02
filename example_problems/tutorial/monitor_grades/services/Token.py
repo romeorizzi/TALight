@@ -364,7 +364,7 @@ class Token(object):
 
     def countTokenOkAndNoGoalsWithoutStudent(self):
         l = list()
-        
+
         ok_goals = 0
         no_goals = 0
 
@@ -376,7 +376,7 @@ class Token(object):
                             ok_goals += 1
                         else:
                             no_goals += 1
-                        
+
         l.append((ok_goals, no_goals))
 
         return l
@@ -421,10 +421,10 @@ class Token(object):
         for oute in self.token:
             for outx in oute.problem:
                 resolvedservice = 0
-                
-                for e in self.tokens:                    
+
+                for e in self.tokens:
                     for x in e.problem:
-                        if (x.problem == outx.problem):
+                        if x.problem == outx.problem:
                             for y in x.services:
                                 ok_goals = 0
                                 no_goals = 0
@@ -459,12 +459,12 @@ class Token(object):
             for outx in oute.problem:
                 for outy in outx.services:
                     resolvedgoal = 0
-                    
+
                     for e in self.tokens:
                         for x in e.problem:
-                            if (x.problem == outx.problem):
+                            if x.problem == outx.problem:
                                 for y in x.services:
-                                    if (y.service == outy.service):
+                                    if y.service == outy.service:
                                         ok_goals = 0
                                         no_goals = 0
 
@@ -477,8 +477,6 @@ class Token(object):
                                         if no_goals == 0:
                                             resolvedgoal += 1
 
-                    l.append(
-                        (x.problem, y.service, resolvedgoal)
-                    )
+                    l.append((x.problem, y.service, resolvedgoal))
 
         return l
