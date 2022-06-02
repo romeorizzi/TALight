@@ -12,6 +12,7 @@ args_list = [
     ("service", str),
     ("all_submissions", bool),
     ("download", bool),
+    ("csv_filename", str),
 ]
 
 ENV = Env(args_list)
@@ -31,5 +32,5 @@ lg.loadFile(
 lg.getProblemList().printToConsole(ENV["all_submissions"])
 if ENV["download"]:
     TALf.str2output_file(
-        lg.getProblemList().instanceToString(ENV["all_submissions"]), "result.csv"
+        lg.getProblemList().instanceToString(ENV["all_submissions"]), ENV["csv_filename"]
     )

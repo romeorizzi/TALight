@@ -23,6 +23,10 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
+      csv_filename:
+        regex: ^(.*)$
+        default: submissions.csv
+        explain: 'name of the csv file (an alphanumeric string where also underscores and full dots are allowed)'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -51,6 +55,10 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
+      csv_filename:
+        regex: ^(.*)$
+        default: submissions.csv
+        explain: 'name of the csv file (an alphanumeric string where also underscores and full dots are allowed)'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -91,6 +99,10 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
+      csv_filename:
+        regex: ^(.*)$
+        default: submissions.csv
+        explain: 'name of the csv file (an alphanumeric string where also underscores and full dots are allowed)'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -125,36 +137,13 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'If this flag is set to 1 then a .csv file with the view required is downloaded on your local machine, within the subfolder `output` of your current directory. Use the -o option of the connect rtal subcommand if you prefer a different path or folder name (if this path is relative it homes from where the service call has been issued).'
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-
-  get_submissions_raw:
-    evaluator: [python,services/get_statistics.py]
-    description: 'This service is accessible only to users with teacher credentials. It offers the whole raw data about submissions as stored in the log folders on the server, reporting the names of all files stored in each log folder but avoiding to read their content. The log folders taken into account can be filtered setting these arguments: problem (filter by name of the problem), service (filter by name of the service) and student (filter by the student). Using the argument regex_filename you can also filter on those filenames that match a regex of oyur choice. The data is stored on a .csv file placed in local on your computer, use the argument csv_filename to specify the name of this argument.'
-    args:
-      problem:
-        regex: ^(([a-z]|[A-Z]|_)*)$
-        default: all_problems
-        explain: 'Select the problem for which to ask a report on the submissions. Leave the default value `all_problems` to get a global report of the submissions on all problems.'
-      service:
-        regex: ^(([a-z]|[A-Z]|_)*)$
-        default: all_services
-        explain: 'Select the service for which to ask a report on the submissions. Leave the default value `all_services` to get a global report of the submissions on all service.'
-      student:
-        regex: ^(([a-z]|[A-Z]|_|[0-9])*)$
-        default: all_students
-        explain: 'Select the student for which to ask a report on the submissions. Leave the default value `all_students` to get a global report of the submissions on all students.'
-      regex_filename:
-        regex: ^(.*)$
-        default: '^(.*)$'
-        explain: 'Report only those filenames that match the given regex.'
       csv_filename:
         regex: ^(.*)$
         default: submissions.csv
-        #        default: '^un alfanumerico + underscores e punti$'
         explain: 'name of the csv file (an alphanumeric string where also underscores and full dots are allowed)'
-
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
