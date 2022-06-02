@@ -29,7 +29,7 @@ class lib_grades(object):
                     for y in listdir(fullpath):
                         fullfilename = os.path.join(fullpath, y)
 
-                        if os.path.isfile(fullfilename) and re.search(regex_filename, y):
+                        if os.path.isfile(fullfilename) and re.match(regex_filename, y):
                             filedata = FileData(y, fullfilename, folderdata)
                             
                             if (

@@ -120,7 +120,7 @@ services:
         default: it
 
   get_submissions_counts:
-    evaluator: [python,services/get_statistics.py]
+    evaluator: [python,services/get_statistics_counts.py]
     description: 'This service is accessible only to users with teacher credentials. It offers a syntetic view on the number of submissions. To do so, it takes as reference the log folders on the server. The log folders taken into account can be filtered setting these arguments: problem (filter by name of the problem), service (filter by name of the service) and student (filter by the student). For each enrolled student, the service prints the total gross number of submissions (always among the filtered ones), or the number of different problems for which a submission has bens sent, or the number of different problem services for which a submission has been sent. By setting the download argument a .csv file is stored in local on your computer. This file is a report offering the same data visualized on the screen.'
     args:
       problem:
@@ -136,15 +136,18 @@ services:
         default: all_students
         explain: 'Select the student for which to ask a report on the submissions. Leave the default value `all_students` to get a global report of the submissions on all students.'
       watch: 
-        regex: ^num_tokened_submissions$
-        default: num_tokened_submissions
-      mode: 
-        regex: ^(total_gross_number|number_different_submissions)$
-        default: total_gross_number
-        explain: 'Select the mode for student_tries.'
-        explain1: '[total_gross_number] prints the total number of submissions of the student (i.e., the total number of log folders).'
-        explain2: '[number_probl_services] prints the number of different submissions (either problem or service are different) of the student.'
-        explain3: '[number_problems] prints the number of different problems faced by the student.'
+        regex: ^(num_tokened_submissions|num_ok_and_no|num_problems_touched|num_problems_partial|num_problems_full|num_services_touched|num_services_partial|num_services_full|num_goals_achieved)$
+        default: num_problems_full
+        explain: 'Select the statistic you want displayed:'
+        explain1: '[num_tokened_submissions] prints the total number of log folders compliant with the filters imposed.'
+        explain2: '[num_ok_and_no] shows how many OKs and NOs over submissions that are compliant with the filters imposed.'
+        explain3: '[num_problems_touched] group the report by student, prints the number of problems for which the student has made at least one submission.'
+        explain4: "[num_problems_partial] group the report by student, prints the number of problems for which the student has fullfilled (aka, all services' goals achieved) at least one whole service."
+        explain5: '[num_problems_full] group the report by student, prints the number of problems which have been completely fullfilled (aka,  all services fullfilled) by the student.'
+        explain6: '[num_services_touched] group the report first by student, then by problem. Prints the number of services for which the student has sent at least one sumbmission.'
+        explain7: '[num_services_partial] group the report first by student, then by problem. Prints the number of services for which the student has achieved at least one goal.'
+        explain8: '[num_services_full] group the report first by student, then by problem. Prints the number of services fullfilled by the student.'
+        explain9: '[num_goals_achieved] group the report first by student, then by problem, then by service. Counts the number of goals achieved.'
       download:
         regex: ^(0|1)$
         default: 0
