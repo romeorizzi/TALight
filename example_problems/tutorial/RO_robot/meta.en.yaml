@@ -6,7 +6,7 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "the input to the problem solver is an mxn grid some of whose cells are forbidden, while the others may have a gain value associated. This service provides feedback on the answer of the problem solver to one question out of many possible ones. The question could be the number of feasible paths between two cells of the grid, where a path is feasible if it traverses no forbidden cell and always move from one cell to the one just below or on its immediata right (diagonal moves might also be allowed setting the argument `diag`). Other questions currently served: the maximum value collected by a feasible path, the number of optimal paths. The service can also be asked to check the correctness of dynamic programming (DP) tables. In particular, the problem solver might have received a partial DP table and her task was to to complete it."
     args:
-      # section with the instance assigned to the problem-solver/student:
+      # section with the instance data assigned to the problem-solver/student:
       field:
         regex: ^(.*)$
         default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
@@ -35,10 +35,23 @@ services:
         regex: ^(.*)$
         default: "(C,3)"
         explain: "only the paths that start from cell (C, 3) are feasible. Row A is the one at the top, column 1 is the leftmost one."
+      # section with the request that was made to the problem-solver/student:
       request_dict:
         regex: ^(.*)$
-        explain: "this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution of the problem solver. The possible keys are the following:\n    [num_paths] the number of feasible paths\n    [num_opt_paths] the number of paths of maximum value\n    [opt_val] the maximum value of a feasible path\n    [opt_path] a path of maximum value\n    [list_opt_paths] the list of all optimum paths\n    [DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell\n    [DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell.\n    [DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell\n    [DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell.\n    [DPtable_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell\n    [DPtable_num_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.\nThe values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different."
+        explain: 'this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution of the problem solver. The possible keys are the following:'
+        explain1: '[num_paths] the number of feasible paths'
+        explain2: '[num_opt_paths] the number of paths of maximum value'
+        explain3: '[opt_val] the maximum value of a feasible path'
+        explain4: '[opt_path] a path of maximum value'
+        explain5: '[list_opt_paths] the list of all optimum paths'
+        explain6: '[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell'
+        explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
+        explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell'
+        explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
+        explain10: '[DPtable_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
+        explain11: '[DPtable_num_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell. The values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
         default: "{'num_paths': 'num_paths1'}"
+      # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       answer:
         regex: ^(.*)$
         explain: "this argument (a string to be read as yaml) contains the answer of the student. It is a dictionary whose keys are precisely the all-different values stored in the dictionary `request_dict` and where the value associated to each key is an object of the kind indicated by the corresponding key in `request_dict`"
@@ -113,7 +126,18 @@ services:
       # section characterizing the seeked for answer and the naming for its variables:
       request_dict:
         regex: ^(.*)$
-        explain: "this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution of the problem solver. The possible keys are the following:\n    [num_paths] the number of feasible paths\n    [num_opt_paths] the number of paths of maximum value\n    [opt_val] the maximum value of a feasible path\n    [opt_path] a path of maximum value\n    [list_opt_paths] the list of all optimum paths\n    [DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell\n    [DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell.\n    [DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell\n    [DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell.\n    [DPtable_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell\n    [DPtable_num_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.\nThe values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different."
+        explain: 'this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution of the problem solver. The possible keys are the following:'
+        explain1: '[num_paths] the number of feasible paths'
+        explain2: '[num_opt_paths] the number of paths of maximum value'
+        explain3: '[opt_val] the maximum value of a feasible path'
+        explain4: '[opt_path] a path of maximum value'
+        explain5: '[list_opt_paths] the list of all optimum paths'
+        explain6: '[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell'
+        explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
+        explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell'
+        explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
+        explain10: '[DPtable_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
+        explain11: '[DPtable_num_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell. The values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
         default: "{'num_paths': 'num_paths1'}"
       # section with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
       as_yaml:

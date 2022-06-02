@@ -22,7 +22,7 @@ def die_or_overcome(succeed_or_die):
         exit(1)
     else:
         for out in [stdout, stderr]:
-            print(LANG.render_feedback("operation-not-necessary", ' We overcome this problem by resorting on the information hardcoded within the meta.yaml file of the problem. Hope that getting this information in English is good enough for you (usually the hardcoded messages are not less updated than their translations in other languages).'), file=out)
+            print(LANG.render_feedback("operation-not-necessary", ' We overcome this problem by resorting on the information hardcoded within the meta.yaml file set as default by whom has deployed the problem on the server you are receiving this information from. Hope that getting the problem specific information from this file is good enough for you (it is reasonable to expect that the metafile set as default is the most updated one).'), file=out)
         return None
 
 def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
@@ -52,15 +52,15 @@ def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
 
 
 meta_yaml_book = None
-if environ["TAL_metafile"] != "main":
-    meta_yaml_file = os.path.join(environ["TAL_META_DIR"],"lang",environ["TAL_lang"],"meta","meta_"+ENV["service"]+"_"+environ["TAL_metafile"]+".yaml")
+if environ["TAL_metafile"] not in ["main","default"]:
+    meta_yaml_file = os.path.join(environ["TAL_META_DIR"],f'meta.{environ["TAL_metafile"]}.yaml')
     meta_yaml_book = load_meta_yaml_file(meta_yaml_file, succeed_or_die = False)
 if meta_yaml_book == None:
     meta_yaml_file = os.path.join(environ["TAL_META_DIR"],"meta.yaml")
     meta_yaml_book = load_meta_yaml_file(meta_yaml_file, succeed_or_die = True)
     
 if ENV['service'] not in meta_yaml_book['services'].keys():
-    TAc.print(LANG.render_feedback("wrong-service-name", f'\nSorry, you asked information about {ENV["service"]} which however does not appear among the services currently supported for problem "{problem}".'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-service-name", f'\nSorry, you asked information about service "{ENV["service"]}" which however does not appear among the services currently offered for problem "{problem}".'), "red", ["bold"])
     TAc.print('\n\nList of all Services:', "red", ["bold", "underline"], end="  ")
     print(", ".join(meta_yaml_book['services'].keys()),end="\n\n")
     exit(0)
