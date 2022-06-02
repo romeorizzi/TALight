@@ -6,6 +6,7 @@ from FileData import FileData
 
 from os import listdir
 import os
+import re
 
 ALLPROBLEM = "all_problems"
 ALLSERVICE = "all_services"
@@ -18,7 +19,7 @@ class lib_grades(object):
     def __init__(self) -> None:
         self.problemlist = Token()
 
-    def loadFile(self, problem: str, service: str, token: str, path: str):
+    def loadFile(self, problem: str, service: str, token: str, path: str, regex_filename : str):
         for x in listdir(path):
             fullpath = os.path.join(path, x)
             if os.path.isdir(fullpath):
@@ -26,17 +27,20 @@ class lib_grades(object):
 
                 if Token.isSameToken(folderdata.token, token, ALLSTUDENT):
                     for y in listdir(fullpath):
-                        filedata = FileData(y, os.path.join(fullpath, y), folderdata)
+                        fullfilename = os.path.join(fullpath, y)
 
-                        if (
-                            filedata.folderdata.problem == problem
-                            or problem == ALLPROBLEM
-                        ):
+                        if os.path.isfile(fullfilename) and re.search(regex_filename, y):
+                            filedata = FileData(y, fullfilename, folderdata)
+                            
                             if (
-                                filedata.folderdata.service == service
-                                or service == ALLSERVICE
+                                filedata.folderdata.problem == problem
+                                or problem == ALLPROBLEM
                             ):
-                                self.problemlist.addToken(filedata)
+                                if (
+                                    filedata.folderdata.service == service
+                                    or service == ALLSERVICE
+                                ):
+                                    self.problemlist.addToken(filedata)
 
         self.problemlist.listSort()
 

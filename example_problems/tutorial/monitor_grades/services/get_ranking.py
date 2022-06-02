@@ -15,6 +15,7 @@ args_list = [
     ("student", str),
     ("download", bool),
     ("csv_filename", str),
+    ("regex_filename", str),
 ]
 
 ENV = Env(args_list)
@@ -30,7 +31,7 @@ if not Token.isTeacher(environ["TAL_META_EXP_TOKEN"]):
 else:
     lg = lib_grades()
     lg.loadFile(
-        ENV["problem"], ENV["service"], ENV["student"], environ["TAL_META_EXP_LOG_DIR"]
+        ENV["problem"], ENV["service"], ENV["student"], environ["TAL_META_EXP_LOG_DIR"], ENV["regex_filename"]
     )
     lg.getProblemList().printToConsole(ENV["all_submissions"])
     if ENV["download"]:

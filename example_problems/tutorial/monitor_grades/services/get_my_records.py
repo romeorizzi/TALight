@@ -13,6 +13,7 @@ args_list = [
     ("all_submissions", bool),
     ("download", bool),
     ("csv_filename", str),
+    ("regex_filename", str),
 ]
 
 ENV = Env(args_list)
@@ -28,6 +29,7 @@ lg.loadFile(
     ENV["service"],
     environ["TAL_META_EXP_TOKEN"],
     environ["TAL_META_EXP_LOG_DIR"],
+    ENV["regex_filename"]
 )
 lg.getProblemList().printToConsole(ENV["all_submissions"])
 if ENV["download"]:
