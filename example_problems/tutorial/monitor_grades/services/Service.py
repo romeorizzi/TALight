@@ -25,5 +25,5 @@ class Service(object):
         for x in self.goals:
             x.listSort()
 
-    def sortFunction(v: Goal):
-        return v.goal
+    def sortFunction(g: Goal):
+        return g.goal

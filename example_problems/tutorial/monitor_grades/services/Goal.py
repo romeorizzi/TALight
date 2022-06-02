@@ -33,5 +33,5 @@ class Goal(object):
     def listSort(self):
         self.content.sort(key=Goal.sortFunction)
 
-    def sortFunction(v: Content):
-        return v.data
+    def sortFunction(c: Content):
+        return c.data

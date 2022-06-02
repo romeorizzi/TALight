@@ -25,5 +25,5 @@ class Structure(object):
         for x in self.problem:
             x.listSort()
 
-    def sortFunction(v: Problem):
-        return v.problem
+    def sortFunction(p: Problem):
+        return p.problem

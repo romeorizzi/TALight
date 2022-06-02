@@ -25,5 +25,5 @@ class Problem(object):
         for x in self.services:
             x.listSort()
 
-    def sortFunction(v: Service):
-        return v.service
+    def sortFunction(s: Service):
+        return s.service
