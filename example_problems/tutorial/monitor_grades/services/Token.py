@@ -338,3 +338,147 @@ class Token(object):
                     )
 
         return l
+
+    def countTokenTriesWithoutStudent(self, mode: str):
+        l = list()
+
+        total_tries = 0
+
+        for e in self.tokens:
+            if mode == "total_gross_number":
+                for x in e.problem:
+                    for y in x.services:
+                        for z in y.goals:
+                            for c in z.content:
+                                total_tries += 1
+            elif mode == "number_different_submissions":
+                for x in e.problem:
+                    for y in x.services:
+                        total_tries += 1
+            else:
+                raise
+
+        l.append((total_tries))
+
+        return l
+
+    def countTokenOkAndNoGoalsWithoutStudent(self):
+        l = list()
+        
+        ok_goals = 0
+        no_goals = 0
+
+        for e in self.tokens:
+            for x in e.problem:
+                for y in x.services:
+                    for z in y.goals:
+                        if z.getStatusContent():
+                            ok_goals += 1
+                        else:
+                            no_goals += 1
+                        
+        l.append((ok_goals, no_goals))
+
+        return l
+
+    def countProblemOkAndNoGoalsWithoutStudent(self, requirement: str):
+        l = list()
+
+        resolvedproblem = 0
+
+        for e in self.tokens:
+            for x in e.problem:
+                ok_goals = 0
+                no_goals = 0
+
+                for y in x.services:
+                    for z in y.goals:
+                        if z.getStatusContent():
+                            ok_goals += 1
+                        else:
+                            no_goals += 1
+
+                if requirement == "num_problems_touched":
+                    if ok_goals > 0 or no_goals > 0:
+                        resolvedproblem += 1
+                elif requirement == "num_problems_partial":
+                    if ok_goals > 0:
+                        resolvedproblem += 1
+                elif requirement == "num_problems_full":
+                    if no_goals == 0:
+                        resolvedproblem += 1
+                else:
+                    if no_goals == 0:
+                        resolvedproblem += 1
+
+        l.append((resolvedproblem))
+
+        return l
+
+    def countServiceOkAndNoGoalsWithoutStudent(self, requirement: str):
+        l = list()
+
+        for oute in self.token:
+            for outx in oute.problem:
+                resolvedservice = 0
+                
+                for e in self.tokens:                    
+                    for x in e.problem:
+                        if (x.problem == outx.problem):
+                            for y in x.services:
+                                ok_goals = 0
+                                no_goals = 0
+
+                                for z in y.goals:
+                                    if z.getStatusContent():
+                                        ok_goals += 1
+                                    else:
+                                        no_goals += 1
+
+                                if requirement == "num_services_touched":
+                                    if ok_goals > 0 or no_goals > 0:
+                                        resolvedservice += 1
+                                elif requirement == "num_services_partial":
+                                    if ok_goals > 0:
+                                        resolvedservice += 1
+                                elif requirement == "num_services_full":
+                                    if no_goals == 0:
+                                        resolvedservice += 1
+                                else:
+                                    if no_goals == 0:
+                                        resolvedservice += 1
+
+                l.append((x.problem, resolvedservice))
+
+        return l
+
+    def countGoalsOkAndNoGoalsWithoutStudent(self):
+        l = list()
+
+        for oute in self.token:
+            for outx in oute.problem:
+                for outy in outx.services:
+                    resolvedgoal = 0
+                    
+                    for e in self.tokens:
+                        for x in e.problem:
+                            if (x.problem == outx.problem):
+                                for y in x.services:
+                                    if (y.service == outy.service):
+                                        ok_goals = 0
+                                        no_goals = 0
+
+                                        for z in y.goals:
+                                            if z.getStatusContent():
+                                                ok_goals += 1
+                                            else:
+                                                no_goals += 1
+
+                                        if no_goals == 0:
+                                            resolvedgoal += 1
+
+                    l.append(
+                        (x.problem, y.service, resolvedgoal)
+                    )
+
+        return l

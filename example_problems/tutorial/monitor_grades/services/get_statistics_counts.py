@@ -38,37 +38,37 @@ else:
     )
 
     if ENV["watch"] == "num_tokened_submissions":
-        table = lg.getProblemList().countTokenTries(ENV["mode"])
+        table = lg.getProblemList().countTokenTriesWithoutStudent(ENV["mode"])
 
-        Token.tupleToTable(("Token", "#Tries"), table)
+        Token.tupleToTable(("#Tries"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), ENV["csv_filename"])
     elif ENV["watch"] == "num_ok_and_no":
-        table = lg.getProblemList().countTokenOkAndNoGoals()
+        table = lg.getProblemList().countTokenOkAndNoGoalsWithoutStudent()
 
-        Token.tupleToTable(("Token", "#OK", "#NO"), table)
+        Token.tupleToTable(("#OK", "#NO"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), ENV["csv_filename"])
     elif str(ENV["watch"]).startswith("num_problems_"):
-        table = lg.getProblemList().countProblemOkAndNoGoals(ENV["watch"])
+        table = lg.getProblemList().countProblemOkAndNoGoalsWithoutStudent(ENV["watch"])
 
-        Token.tupleToTable(("Token", "#Problem"), table)
+        Token.tupleToTable(("#Problem"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), ENV["csv_filename"])
     elif str(ENV["watch"]).startswith("num_services_"):
-        table = lg.getProblemList().countServiceOkAndNoGoals(ENV["watch"])
+        table = lg.getProblemList().countServiceOkAndNoGoalsWithoutStudent(ENV["watch"])
 
-        Token.tupleToTable(("Token", "Problem", "#Service"), table)
+        Token.tupleToTable(("Problem", "#Service"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), ENV["csv_filename"])
     elif str(ENV["watch"]).startswith("num_goals_"):
-        table = lg.getProblemList().countGoalsOkAndNoGoals()
+        table = lg.getProblemList().countGoalsOkAndNoGoalsWithoutStudent()
 
-        Token.tupleToTable(("Token", "Problem", "Service", "#Goal"), table)
+        Token.tupleToTable(("Problem", "Service", "#Goal"), table)
 
         if ENV["download"]:
             TALf.str2output_file(Token.tupleToFile(table), ENV["csv_filename"])
