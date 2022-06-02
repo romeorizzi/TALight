@@ -48,8 +48,10 @@ services:
         explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
         explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell'
         explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
-        explain10: '[DPtable_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
-        explain11: '[DPtable_num_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell. The values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
+        explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
+        explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+        explain12: ''
+        explain13: 'Note: the values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
         default: "{'num_paths': 'num_paths1'}"
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       answer:
@@ -136,8 +138,10 @@ services:
         explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
         explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell'
         explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
-        explain10: '[DPtable_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
-        explain11: '[DPtable_num_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell. The values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
+        explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
+        explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+        explain12: ''
+        explain13: 'Note: the values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
         default: "{'num_paths': 'num_paths1'}"
       # section with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
       as_yaml:
