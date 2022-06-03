@@ -153,25 +153,35 @@ class Token(object):
             l = list()
             l.append(t)
             return Token.tupleToTable(header, l, m)
+        elif type(t) == int:
+            l = list()
+            l.append(t)
+            return Token.tupleToTable(header, l, m)
         else:
             if m == -1:
-                if len(t) != 0:
+                if len(t) != 0 and type(t[0]) != int:
                     n = len(t[0])
                 else:
-                    n = len(header)
+                    n = 1
             else:
                 n = m
 
         t.insert(0, header)
 
         max = 0
-        for x in t:
-            for j in x:
-                if len(str(j)) > max:
-                    max = len(j) + 1
+        if n > 1:
+            for x in t:
+                for j in x:
+                    if len(str(j)) > max:
+                        max = len(j) + 1
+        else:
+            max = 20
 
         max = str(max)
-        if n == 2:
+        if n == 1:
+            for x in t:
+                print(x)
+        elif n == 2:
             for x in t:
                 print(("{:<" + max + "}{}").format(x[0], x[1]))
         elif n == 3:
@@ -210,13 +220,13 @@ class Token(object):
         for for_token in self.tokens:
             total_tries = 0
 
-            if mode == "total_gross_number":
+            if mode == "num_total_gross_number":
                 for for_problem in for_token.problem:
                     for for_service in for_problem.services:
                         for for_goal in for_service.goals:
                             for for_content in for_goal.content:
                                 total_tries += 1
-            elif mode == "number_different_submissions":
+            elif mode == "num_total_different_submissions":
                 for for_problem in for_token.problem:
                     for for_service in for_problem.services:
                         total_tries += 1
@@ -357,13 +367,13 @@ class Token(object):
         total_tries = 0
 
         for for_token in self.tokens:
-            if mode == "total_gross_number":
+            if mode == "num_total_gross_number":
                 for for_problem in for_token.problem:
                     for for_service in for_problem.services:
                         for for_goal in for_service.goals:
                             for for_content in for_goal.content:
                                 total_tries += 1
-            elif mode == "number_different_submissions":
+            elif mode == "num_total_different_submissions":
                 for for_problem in for_token.problem:
                     for for_service in for_problem.services:
                         total_tries += 1
@@ -430,7 +440,7 @@ class Token(object):
     def countServiceOkAndNoGoalsWithoutStudent(self, requirement: str):
         l = list()
 
-        for out_for_token in self.token:
+        for out_for_token in self.tokens:
             for out_for_problem in out_for_token.problem:
                 resolvedservice = 0
 
@@ -460,14 +470,14 @@ class Token(object):
                                     if no_goals == 0:
                                         resolvedservice += 1
 
-                l.append((for_problem.problem, resolvedservice))
+                l.append((out_for_problem.problem, resolvedservice))
 
-        return l
+            return l
 
     def countGoalsOkAndNoGoalsWithoutStudent(self):
         l = list()
 
-        for out_for_token in self.token:
+        for out_for_token in self.tokens:
             for out_for_problem in out_for_token.problem:
                 for out_for_service in out_for_problem.services:
                     resolvedgoal = 0
@@ -489,6 +499,8 @@ class Token(object):
                                         if no_goals == 0:
                                             resolvedgoal += 1
 
-                    l.append((for_problem.problem, for_service.service, resolvedgoal))
+                    l.append(
+                        (out_for_problem.problem, out_for_service.service, resolvedgoal)
+                    )
 
-        return l
+            return l
