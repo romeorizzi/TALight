@@ -16,7 +16,6 @@ args_list = [
     ("download", bool),
     ("watch", str),
     ("student", str),
-    ("mode", str),
     ("csv_filename", str),
     ("regex_filename", str),
 ]
@@ -41,8 +40,8 @@ else:
         ENV["regex_filename"],
     )
 
-    if ENV["watch"] == "num_tokened_submissions":
-        table = lg.getProblemList().countTokenTriesWithoutStudent(ENV["mode"])
+    if str(ENV["watch"]).startswith("num_total_"):
+        table = lg.getProblemList().countTokenTriesWithoutStudent(ENV["watch"])
 
         Token.tupleToTable(("#Tries"), table)
 
