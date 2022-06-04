@@ -18,6 +18,8 @@ scopro che i servizi sono:
     # lang [it]
     # problem [all_problems]
     # service [all_services]
+    # csv_filename [sumbissions.csv]
+    # regex_filename [*]
 
 per ottenere maggiori informazioni:
    rtal connect monitor_grades synopsis -aservice=get_my_records
@@ -40,6 +42,8 @@ per ottenere maggiori informazioni:
     # problem [all_problems]
     # service [all_services]
     # student [all_students]
+    # csv_filename [sumbissions.csv]
+    # regex_filename [*]
 
 per ottenere maggiori informazioni:
    rtal connect monitor_grades synopsis -aservice=get_ranking
@@ -56,14 +60,14 @@ rtal connect -x _0123456789_RomeoRizzi monitor_grades get_ranking -a problem=mas
 3. get_statistics, pensato principalmente per il docente
 per ottenere maggiori informazioni:
   * get_statistics
-    # count_type [problem]
+    # watch [problem]
     # download [0]
     # lang [it]
-    # mode [total_gross_number]
-    # problem [all_problems]
-    # requirement [all_services_fullfilled]
+    # problem [num_problems_full]
     # service [all_services]
     # student [all_students]
+    # csv_filename [sumbissions.csv]
+    # regex_filename [*]
 
 per ottenere maggiori informazioni:
    rtal connect monitor_grades synopsis -aservice=get_statistics
@@ -79,3 +83,28 @@ rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a watch=nu
 rtal connect -x _0123456789_RomeoRizzi monitor_grades get_statistics -a watch=num_goals_achieved
 
 ...
+
+4. get_submissions_counts, pensato principalmente per il docente
+per ottenere maggiori informazioni
+   * get_submissions_counts
+      # count_type [problem]
+      # download [0]
+      # lang [it]
+      # problem [num_problems_full]
+      # service [all_services]
+      # student [all_students]
+      # csv_filename [sumbissions.csv]
+      # regex_filename [*]
+
+per ottenere maggiori informazioni:
+   rtal connect monitor_grades synopsis -aservice=get_statistics
+
+esempi di chiamate:
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_submissions_counts
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_submissions_counts -a download=1
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_submissions_counts -a student=VR123456
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_submissions_counts -a student=VR123456 -a download=1
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_submissions_counts -a watch=num_problems_full
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_submissions_counts -a watch=num_problems_touched
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_submissions_counts -a watch=num_services_full
+rtal connect -x _0123456789_RomeoRizzi monitor_grades get_submissions_counts -a watch=num_goals_achieved
