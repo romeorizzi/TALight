@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+from sys import stderr
 from typing import Optional, List, Dict, Callable
 import termcolor 
 from ansi2html import Ansi2HTMLConverter
 ansi2html = Ansi2HTMLConverter(inline = True)
-  
+
+from multilanguage import enforce_type_of_yaml_var
+
 def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
     if require_pwd and ENV["pwd"] != 'tmppwd':
         print(f'Password di accesso non corretta (password immessa: `{ENV["pwd"]}`)')
@@ -50,9 +53,59 @@ class std_eval_feedback:
             pt_safe = 0
         if pt_out == None:
             pt_out = 0
-        return {'pt_safe':pt_safe,'pt_maybe':pt_maybe,'pt_out':pt_out,'feedback_string':ret_str}
+        return {'pt_safe':pt_safe,'pt_maybe':pt_maybe,'pt_out':pt_out,'pt_available':pt_tot,'feedback_string':ret_str}
+
 
     
+def check_request(request_dict, implemented):
+    for std_name, ad_hoc_name in request_dict.items():
+        if std_name not in implemented:
+            print(f'Error: the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `request_dict` dictionary passed as argument to the TALight service.')    
+            exit(0)
+        
+
+def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, names_dict:dict, answer_object_type_spec:Dict, implemented:List[str]):
+    """
+    arguments:
+      answer_dict               ad-hoc name --> answ_obj
+      names_dict                ad-hoc name --> std_name
+      answer_object_type_spec   answer object type --> its type as python data-structure
+      implemented  contains the std_names of available answer object types
+    returns:
+       request_dict             ad-hoc name --> std_name
+       answ_dict                ad-hoc name --> answ_obj
+       name_of                  std_name --> ad-hoc name
+       answ_obj                 std_name --> answ_obj
+       long_answer_dict         std_name --> (answ_obj, ad-hoc name)
+       goals  is the list of the std_names of the answ_objects that have been submitted by the student/problem solver (they are precisely those requested by the exercise evaluated)
+    """
+    for std_name in names_dict.values():
+        if std_name not in implemented:
+            print(f'Error: the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `names_dict` dictionary passed as argument to the TALight service.')    
+            exit(0)
+    request_dict = {}
+    answ_dict = {}    
+    name_of = {}    
+    answ_obj = {}    
+    long_answer_dict = {}
+    for ad_hoc_name in answer_dict:
+        if ad_hoc_name in names_dict:
+            std_name = names_dict[ad_hoc_name]
+        else:
+            std_name = ad_hoc_name
+            if std_name not in implemented:
+                print(f'Error: the key `{ad_hoc_name}` in the `answer_dict` dictionary passed as argument to the service is neither a standard name nor has been remapped through the `names_dict` dictionary.')    
+                exit(0)
+        #print(f"now checking variable of ad_hoc_name={ad_hoc_name} and value={answer_dict[ad_hoc_name]}. Its std_name={std_name} deserves a format {answer_object_type_spec[std_name]}, while it actually is {type(answer_dict[ad_hoc_name])}",file=stderr)
+        answer_dict[ad_hoc_name] = enforce_type_of_yaml_var(answer_dict[ad_hoc_name],answer_object_type_spec[std_name], varname=ad_hoc_name)
+        request_dict[ad_hoc_name] = std_name 
+        answ_dict[ad_hoc_name] = answer_dict[ad_hoc_name]
+        name_of[std_name] = ad_hoc_name    
+        answ_obj[std_name] = answer_dict[ad_hoc_name]    
+        long_answer_dict[std_name] = (answer_dict[ad_hoc_name], ad_hoc_name)
+    return request_dict, answ_dict, name_of, answ_obj, long_answer_dict, answ_obj.keys()
+
+
 def add_ENV_var(var_name:str, d:Dict, ENV, condition:Callable[[str], bool] = lambda x : True):
     if condition(ENV[var_name]):
         d[var_name] = ENV[var_name]
@@ -71,55 +124,91 @@ def display_dict(dict):
         print(f"{key}: {val}")
         
 def oracle_outputs(call_data,ENV):
-    if not ENV['recall_input']:
-        call_data = call_data['oracle']
     if ENV['as_yaml']:
-        print(call_data)
-    else:
-        if ENV['recall_input']:
-            display_dict(call_data['oracle'])
-            print()
-            display_dict(call_data['input'])
+        if not (ENV["recall_instance"] or ENV["recall_request"]):
+            print(call_data['oracle'])
         else:
-            display_dict(call_data)
+            if not ENV["recall_instance"]:
+                call_data.pop("instance", None)
+            if not ENV["recall_request"]:
+                call_data.pop("request", None)
+            print(call_data)
+    else:
+        display_dict(call_data['oracle'])
+        if ENV['recall_request']:
+            print()
+            display_dict(call_data['request'])
+        if ENV['recall_instance']:
+            print()
+            display_dict(call_data['instance'])
+
+def oracle_output_files(call_data,ENV,TALf):
+    filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
+    if ENV["task"] != -1:
+        filename_spec += f'task_{ENV["task"]}_'
+    filename_spec += f'oracle_answer'
+    TALf.str2output_file(content=repr(call_data), filename=filename_spec, timestamped = False)
+    
+    if ENV['as_yaml']:
+        if not (ENV["recall_instance"] or ENV["recall_request"]):
+            print(call_data['oracle'])
+        else:
+            if not ENV["recall_instance"]:
+                call_data.pop("instance", None)
+            if not ENV["recall_request"]:
+                call_data.pop("request", None)
+            print(call_data)
+    else:
+        display_dict(call_data['oracle'])
+        if ENV['recall_request']:
+            print()
+            display_dict(call_data['request'])
+        if ENV['recall_instance']:
+            print()
+            display_dict(call_data['instance'])
 
 def oracle_logs(call_data,ENV,TALf):
-    content_LOG_file = "STUDENT_QUESTION: "+repr(call_data['input'])+"\nORACLE_ANSWER: "+repr(call_data['oracle'])
-    #print(f"content_LOG_file =`{content_LOG_file}`")
+    content_LOG_file = "INSTANCE: "+repr(call_data['instance'])+"\n\nREQUEST: "+repr(call_data['request'])+"\n\nORACLE_ANSWER: "+repr(call_data['oracle'])
+    #print(f"content_LOG_file =`{content_LOG_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
     filename_spec += f'task_{ENV["task"]}' if ENV["task"] != -1 else 'unspecified'
     TALf.str2log_file(content=content_LOG_file, filename=filename_spec, timestamped = False)
 
 
-def checker_reply(input_dict,feedback_dict,ENV):
-    if ENV['recall_input']:
-        feedback_dict['input'] = input_dict
-    if ENV['as_yaml_with_points']:
+def checker_reply(all_data,ENV):
+    feedback_dict = all_data["feedback"]
+    #print(f"feedback_dict={feedback_dict}", file=stderr)
+    if ENV["recall_instance"]:
+        feedback_dict["instance"] = all_data["instance"]
+    feedback_dict["answer"] = all_data["long_answer"]
+    if ENV["as_yaml_with_points"]:
         print(feedback_dict)
     else:
-        print(feedback_dict['feedback_string'])
-    feedback_dict['input'] = input_dict
+        print(feedback_dict["feedback_string"])
     
-def checker_logs(oracle_dict,feedback_dict,submission_dict,ENV,TALf):
+def checker_logs(all_data,ENV,TALf):
+    feedback_dict = all_data["feedback"]
+    oracle_dict = all_data["oracle"]
     pt_safe = feedback_dict['pt_safe']
     pt_maybe = feedback_dict['pt_maybe']
-    pt_true = ENV['pt_tot']
+    pt_available = feedback_dict['pt_available']
     for key in oracle_dict:
         if ENV[key] != oracle_dict[key]:
-            pt_true = pt_safe
-    content_LOG_file = "FEEDBACK: "+repr(feedback_dict)+"\nSTUDENT_SUBMISSION: "+repr(submission_dict)+"\nORACLE: "+repr(oracle_dict)
-    #print(f"content_LOG_file =`{content_LOG_file}`")
+            pt_available = pt_safe
+    content_LOG_file = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nORACLE: "+repr(oracle_dict)+"\n\nINSTANCE: "+repr(all_data["instance"])
+    #print(f"content_LOG_file =`{content_LOG_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
     if ENV["task"] != -1:
         filename_spec += f'task_{ENV["task"]}_'
-    filename_spec += f'safe_{pt_safe}_maybe_{pt_maybe}_true_{pt_true}'
+    filename_spec += f'safe_{pt_safe}_maybe_{pt_maybe}_true_{pt_available}'
     TALf.str2log_file(content=content_LOG_file, filename=filename_spec, timestamped = False)
     
-def checker_certificates(feedback_dict,submission_dict,ENV,TALf):
+def checker_certificates(all_data,ENV,TALf):
+    feedback_dict = all_data["feedback"]
     pt_safe = feedback_dict['pt_safe']
     pt_maybe = feedback_dict['pt_maybe']
-    content_receipt_file  = "FEEDBACK: "+repr(feedback_dict)+"\nSTUDENT_SUBMISSION: "+repr(submission_dict)
-    #print("content_receipt_file =`{content_receipt_file}`")
+    content_receipt_file  = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nINSTANCE: "+repr(all_data["instance"])
+    #print("content_receipt_file =`{content_receipt_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
     if ENV["task"] != -1:
         filename_spec += f'task_{ENV["task"]}_'

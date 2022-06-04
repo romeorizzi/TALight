@@ -114,6 +114,45 @@ class TALcolors:
         self.print(f"\n# WE HAVE FINISHED", "white")
         exit(0)
 
+        
+def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
+    """When calling this recursive function from the outside, leave the argument original_typestr to its defaul value of None"""
+    if original_typestr is None:
+        original_typestr = typestr
+        varname = f"{varname} was meant to be of type {typestr}. Now, {typestr}"
+    if typestr == 'yaml':
+        return yaml_var
+    if typestr == 'str':
+        return repr(yaml_var)
+    if typestr[:len('matrix_of_')] == 'matrix_of_':
+        typestr = 'list_of_list_of_'+typestr[len('matrix_of_'):]
+    if typestr == 'int':
+        try:
+            return int(yaml_var)
+        except:
+            print(f"# Unrecoverable Error: {varname} is not of type int. On the next line is its actual raw content as a string:")
+            print(yaml_var)
+            exit(0)
+    if typestr == 'bool':
+        try:
+            yaml_var = int(yaml_var)
+            return bool(yaml_var)
+        except:
+            print(f"# Unrecoverable Error: {varname} is not of type bool. On the next line is its actual raw content as a string:")
+            print(yaml_var)
+            exit(0)
+    if typestr[:len('list_of_')] == 'list_of_':
+        if type(yaml_var) != list:
+            print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. On the next line is its actual raw content as a string:")
+            print(yaml_var)
+            exit(0)
+        enforced_list = []
+        for item, i in zip(yaml_var,range(1,1+len(yaml_var))):
+            enforced_list.append(enforce_type_of_yaml_var(yaml_var=item,typestr=typestr[len('list_of_'):], varname=varname + f" is indeed a list. Its {i}-th item", original_typestr=original_typestr))
+        return enforced_list
+    else:
+        print(f"I can not parse the typestring {typestr}")
+        assert False
     
 class Env:
     def __getitem__(self, key):
@@ -166,25 +205,7 @@ class Env:
                     print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}')
                     print(e)
                     exit(1)
-                if val_type[0:len('list_of_')] == 'list_of_':
-                    if type(self.arg[name]) != list:
-                        print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}')
-                        exit(1)
-                    items_type = int if val_type=='list_of_int' else str
-                    for item in self.arg[name]:
-                        if type(item) != items_type:
-                            print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}\nThe problem is with the following item:\n{item}\nwhich was expected to be of type {items_type}')
-                            exit(1)
-                elif val_type[0:len('matrix_of_')] == 'matrix_of_':
-                    for row in self.arg[name]:
-                        if type(row) != list:
-                            print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}\nThe problem is with the following row:\n{row}')
-                            exit(1)
-                        items_type = int if val_type=='matrix_of_int' else str
-                        for item in row:
-                            if type(item) != items_type:
-                                print(f'# Unrecoverable Error: error when parsing the service argument `{name}` as a {val_type}. On the next line is the row string content of the environment variable TAL_{name}:\n{environ[f"TAL_{name}"]}\nThe problem is with the following item:\n{item}\nwhich was expected to be of type {items_type}')
-                                exit(1)
+                self.arg[name] = enforce_type_of_yaml_var(yaml_var=self.arg[name], typestr=val_type, varname=name)
             else:
                 for out in [stdout, stderr]:
                     print(f"# Unrecoverable Error: type {val_type} not yet supported in args list (the set of supported types can be extended by communities of problem makers adding further elif clauses here above). Used to interpret arg {name}.", file=out)
