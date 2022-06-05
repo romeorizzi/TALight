@@ -9,11 +9,13 @@ Note:
 - invio di file (submission_filehandler) attualmente non supportato nè da Jupyter
 
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a names_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B']}"
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B']}"
 
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a names_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B'], 'opt_val':'-1'}" -awith_opening_message -aas_yaml_with_points=1
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B'], 'opt_val':'-1'}" -awith_opening_message  -a instance_dict="{'Knapsack_Capacity': 5, 'elementi': ['A', 'B', 'C'], 'pesi': [2, 3, 4], 'valori': [13, 17, 19]}"
 
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a names_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B']}"  -a color_implementation='html'
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B'], 'opt_val':'-1'}" -aas_yaml_with_points=1
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B']}"  -a color_implementation='html'
 
 
 Esempio di chiamate al servizio dal long file yaml:
@@ -29,13 +31,13 @@ enti_obbligati:List[str],partialDPtable:List[List[int]], long_answer_dict:Dict):
     "\n",
     "    print(\"Here is what the TALight checker thinks (and has stored on the server) about your submission:\")\n",
     "    answer_dict = { val[1]:val[0] for val in long_answer_dict.values() }\n",
-    "    names_dict = { val[1]:key for key, val in long_answer_dict.items() }\n",
-    "    feedback_dict_TAL = rtal_connect(RTAL_URL, 'RO_knapsack', 'check', rtalargs_dict={'elementi':elements, 'pesi':weights, 'valori':vals, 'Knapsack_Capacity':Capacity, 'elementi_proibiti':elementi_proibiti, 'elementi_obbligati':elementi_obbligati,'partialDPtable':partialDPtable, 'names_dict':names_dict, 'answer_dict':answer_dict, 'as_yaml_with_points':'1', 'color_implementation':'html', 'with_output_files':'0', 'pt_tot':pt_tot,'pt_formato_OK':pt_formato_OK,'pt_feasibility_OK':pt_feasibility_OK, 'task':task_number}, output_files_local_folder='output_files_TALight', rtaltoken=RTAL_PRIVATE_ACCESS_TOKEN)\n",
+    "    alias_dict = { val[1]:key for key, val in long_answer_dict.items() }\n",
+    "    feedback_dict_TAL = rtal_connect(RTAL_URL, 'RO_knapsack', 'check', rtalargs_dict={'elementi':elements, 'pesi':weights, 'valori':vals, 'Knapsack_Capacity':Capacity, 'elementi_proibiti':elementi_proibiti, 'elementi_obbligati':elementi_obbligati,'partialDPtable':partialDPtable, 'alias_dict':alias_dict, 'answer_dict':answer_dict, 'as_yaml_with_points':'1', 'color_implementation':'html', 'with_output_files':'0', 'pt_tot':pt_tot,'pt_formato_OK':pt_formato_OK,'pt_feasibility_OK':pt_feasibility_OK, 'task':task_number}, output_files_local_folder='output_files_TALight', rtaltoken=RTAL_PRIVATE_ACCESS_TOKEN)\n",
     "    if feedback_dict_TAL != None:\n",
     "        display(feedback_dict_TAL['feedback_string'])\n",
 
 Esempio concreto da foglio Jupyther:
-rtal_connect(RTAL_URL, 'RO_knapsack', 'check', {'elementi':['A', 'B', 'C'], 'pesi':[2, 3 ,4], 'valori':[13, 17, 19], 'Knapsack_Capacity':5, 'names_dict':names_dict={'opt_sol1':'opt_sol','opt_val1':'opt_val'}, 'answer_dict'={'opt_sol1':{'A','B'},'17'}:, 'color_implementation':'html', 'with_output_files':'0'}, rtaltoken=RTAL_PRIVATE_ACCESS_TOKEN)
+rtal_connect(RTAL_URL, 'RO_knapsack', 'check', {'elementi':['A', 'B', 'C'], 'pesi':[2, 3 ,4], 'valori':[13, 17, 19], 'Knapsack_Capacity':5, 'alias_dict':alias_dict={'opt_sol1':'opt_sol','opt_val1':'opt_val'}, 'answer_dict'={'opt_sol1':{'A','B'},'17'}:, 'color_implementation':'html', 'with_output_files':'0'}, rtaltoken=RTAL_PRIVATE_ACCESS_TOKEN)
 
 
 # Con richiesta di ottenimento di un certificato di soluzione su un file in locale:
@@ -55,8 +57,14 @@ Jupyter: adapt correspondingly the above
 
 # SERVIZIO ORACLE
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a request_dict="{'opt_sol': 'opt_sol_MIA', 'opt_val': 'opt_val_TUO'}"
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a instance_dict="{'Knapsack_Capacity': 5, 'elementi': ['A', 'B', 'C'], 'pesi': [2, 3, 4], 'valori': [13, 17, 19]}"
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5
 Jupyter: adapt correspondingly the above 
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a request_dict="{'opt_sol': 'opt_sol_MIA', 'opt_val': 'opt_val_TUO'}" -awith_opening_message
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a instance_dict="{'Knapsack_Capacity': 5, 'elementi': ['A', 'B', 'C'], 'pesi': [2, 3, 4], 'valori': [13, 17, 19]}"
 
 CLI:
 rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a request_dict="{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}"

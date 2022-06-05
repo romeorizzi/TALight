@@ -117,28 +117,27 @@ class TALcolors:
         
 def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
     """When calling this recursive function from the outside, leave the argument original_typestr to its defaul value of None"""
+    #print(f"{varname=}, {yaml_var=}, {type(yaml_var)=}, {original_typestr=}", file=stderr)
     if original_typestr is None:
         original_typestr = typestr
         varname = f"{varname} was meant to be of type {typestr}. Now, {typestr}"
-    if typestr == 'yaml':
+    if typestr in ['yaml','str',str]:
         return yaml_var
-    if typestr == 'str':
-        return repr(yaml_var)
-    if typestr[:len('matrix_of_')] == 'matrix_of_':
-        typestr = 'list_of_list_of_'+typestr[len('matrix_of_'):]
-    if typestr == 'int':
+    if typestr in ['int',int]:
         try:
             return int(yaml_var)
         except:
             print(f"# Unrecoverable Error: {varname} is not of type int. Here is its actual raw content as a string: {repr(yaml_var)}")
             exit(0)
-    if typestr == 'bool':
+    if typestr in ['bool',bool]:
         try:
             yaml_var = int(yaml_var)
             return bool(yaml_var)
         except:
             print(f"# Unrecoverable Error: {varname} is not of type bool. Here is its actual raw content as a string: {repr(yaml_var)}")
             exit(0)
+    if typestr[:len('matrix_of_')] == 'matrix_of_':
+        typestr = 'list_of_list_of_'+typestr[len('matrix_of_'):]
     if typestr[:len('list_of_')] == 'list_of_':
         if type(yaml_var) != list:
             print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. Here is its actual raw content as a string: {repr(yaml_var)}")
@@ -195,7 +194,7 @@ class Env:
                 self.arg[name] = int(environ[f"TAL_{name}"])
             elif val_type == float:
                 self.arg[name] = float(environ[f"TAL_{name}"])
-            elif val_type in ['yaml', 'list_of_int', 'list_of_str', 'matrix_of_int']:
+            elif val_type == 'yaml' or val_type[:len('list_of_')] == 'list_of_' or val_type[:len('matrix_of_')] == 'matrix_of_':
                 try:
                     self.arg[name] = ruamel.yaml.safe_load(environ[f"TAL_{name}"])
                 except Exception as e:

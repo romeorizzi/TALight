@@ -2,11 +2,6 @@
 from sys import stderr
 import RO_problems_lib as RO
       
-def dict_of_instance(ENV):
-    dict_input = {}
-    RO.add_ENV_vars(["elementi","pesi","valori","Knapsack_Capacity","elementi_proibiti","elementi_obbligati","partialDPtable"], dict_input, ENV)
-    return dict_input
-
 def sum_of_pesi_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["pesi"], instance["elementi"]) if ele in ordered_list_of_elems])
 
@@ -40,6 +35,7 @@ def check_instance_consistency(instance):
         
 def solver(input_to_oracle):
     inst = input_to_oracle["instance"]
+    print(f"{inst['elementi']=}")
     # the idea is to work over a reduced instance, where both the forced and the forbidden elements have been taken away from the table.
     Capacity=inst["Knapsack_Capacity"] - sum_of_pesi_over(inst,inst["elementi_obbligati"])    
     elementi=[]

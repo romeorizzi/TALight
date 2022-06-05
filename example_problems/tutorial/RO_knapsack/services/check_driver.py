@@ -6,7 +6,7 @@ from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
 import RO_problems_lib as RO
-import knapsack_lib
+from knapsack_lib import solver, check_instance_consistency
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -17,7 +17,14 @@ args_list = [
     ('elementi_proibiti','list_of_str'),
     ('elementi_obbligati','list_of_str'),
     ('partialDPtable','matrix_of_int'),
-    ('names_dict','yaml'),
+    ('instance_dict','yaml'),
+    ('opt_sol','yaml'),
+    ('opt_val','yaml'),
+    ('num_opt_sols','yaml'),
+    ('list_opt_sols','yaml'),
+    ('DPtable_opt_val','yaml'),
+    ('DPtable_num_opts','yaml'),
+    ('alias_dict','yaml'),
     ('answer_dict','yaml'),
     ('color_implementation',str),
     ('as_yaml_with_points',bool),
@@ -30,6 +37,7 @@ args_list = [
     ('esercizio',int),
     ('task',int),
 ]
+instance_objects = ['elementi','pesi','valori','Knapsack_Capacity','elementi_proibiti','elementi_obbligati','partialDPtable']
 answer_object_type_spec = {
     'opt_sol':'list_of_str',
     'opt_val':'int',
@@ -38,7 +46,7 @@ answer_object_type_spec = {
     'DPtable_opt_val':'matrix_of_int',
     'DPtable_num_opts':'matrix_of_int',
 }
-implemented = ['opt_sol','opt_val','DPtable_opt_val']
+sol_objects_implemented = ['opt_sol','opt_val','DPtable_opt_val']
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV, ENV["color_implementation"])
@@ -51,9 +59,9 @@ TALf = TALfilesHelper(TAc, ENV)
 
 TOKEN_REQUIRED = False
 RO.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_REQUIRED)
-instance_dict = knapsack_lib.dict_of_instance(ENV)
-knapsack_lib.check_instance_consistency(instance_dict)
-request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['names_dict'], answer_object_type_spec, implemented)
+instance_dict = RO.dict_of_instance(instance_objects,args_list,ENV)
+check_instance_consistency(instance_dict)
+request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['alias_dict'], answer_object_type_spec, sol_objects_implemented)
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
 
@@ -130,7 +138,7 @@ all_data = {"instance":instance_dict,"long_answer":long_answer_dict,"feedback":f
 #print(f"all_data={all_data}", file=stderr)
 RO.checker_reply(all_data,ENV)
 if ENV.LOG_FILES != None:
-    all_data["oracle"] = knapsack_lib.solver(all_data)
+    all_data["oracle"] = solver(all_data)
     RO.checker_logs(all_data,ENV,TALf)
 if ENV["yield_certificate_in_output_file"]:    
     RO.checker_certificates(all_data,ENV,TALf)

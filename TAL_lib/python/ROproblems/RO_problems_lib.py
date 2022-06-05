@@ -57,6 +57,26 @@ class std_eval_feedback:
 
 
     
+def dict_of_instance(instance_objects,args_list,ENV):
+    if len(ENV["instance_dict"]) == 0:
+        return {var_name:ENV[var_name] for var_name in instance_objects}
+    #print("CASE: the instance objects have been passed one by one, NOT through the `instance_dict` dictionary"):
+    instance_dict = {}
+    args_dict = { obj_name:obj_type  for obj_name,obj_type in args_list }
+    for obj_name in instance_objects:
+        obj_type = args_dict[obj_name] 
+        if obj_name in ENV["instance_dict"]:
+            obj_val = ENV["instance_dict"][obj_name]
+        elif obj_type == str:
+            obj_val = ""
+        elif obj_type[:len('matrix_of_')] == 'matrix_of_' or obj_type[:len('list_of_')] == 'list_of_':
+            obj_val = []
+        elif obj_type in [bool, int]:
+            obj_val = 0
+        instance_dict[obj_name] = enforce_type_of_yaml_var(obj_val,obj_type, varname=obj_name)
+    return instance_dict
+
+
 def check_request(request_dict, implemented):
     for std_name, ad_hoc_name in request_dict.items():
         if std_name not in implemented:
