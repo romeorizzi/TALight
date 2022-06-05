@@ -2,11 +2,6 @@
 from sys import stderr
 import RO_problems_lib as RO
       
-def dict_of_instance(ENV):
-    dict_input = {}
-    RO.add_ENV_vars(["elementi","pesi","valori","Knapsack_Capacity","elementi_proibiti","elementi_obbligati","partialDPtable"], dict_input, ENV)
-    return dict_input
-
 def sum_of_pesi_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["pesi"], instance["elementi"]) if ele in ordered_list_of_elems])
 
@@ -39,14 +34,14 @@ def check_instance_consistency(instance):
 
         
 def solver(input_to_oracle):
-    inst = input_to_oracle["instance"]
+    I = input_to_oracle["instance"]
     # the idea is to work over a reduced instance, where both the forced and the forbidden elements have been taken away from the table.
-    Capacity=inst["Knapsack_Capacity"] - sum_of_pesi_over(inst,inst["elementi_obbligati"])    
+    Capacity=I["Knapsack_Capacity"] - sum_of_pesi_over(I,I["elementi_obbligati"])    
     elementi=[]
     pesi=[]
     valori=[]
-    for ele,peso,val in zip(inst["elementi"],inst["pesi"],inst["valori"]):
-        if ele not in inst["elementi_proibiti"] and ele not in inst["elementi_obbligati"]:
+    for ele,peso,val in zip(I["elementi"],I["pesi"],I["valori"]):
+        if ele not in I["elementi_proibiti"] and ele not in I["elementi_obbligati"]:
             elementi.append(ele)
             pesi.append(peso)
             valori.append(val)
@@ -70,8 +65,8 @@ def solver(input_to_oracle):
             promise -= valori[i-1]
         i -= 1
     #print(f"opt_sol={opt_sol}\nopt_val={opt_val}\nDPtable_opt_val={DPtable_opt_val}", file=stderr)
-    opt_val += sum_of_valori_over(inst,inst["elementi_obbligati"])
-    opt_sol += inst["elementi_obbligati"]
+    opt_val += sum_of_valori_over(I,I["elementi_obbligati"])
+    opt_sol += I["elementi_obbligati"]
     oracle_answers = {}
     for std_name, ad_hoc_name in input_to_oracle["request"].items():
         oracle_answers[ad_hoc_name] = locals()[std_name]

@@ -45,21 +45,27 @@ services:
       opt_sol:
         regex: ^(.*)$
         default: "['A', 'B']"
+        explain: 'an optimal solution, i.e., a subset of objects of maximum total value among those whose total weight does not exceed `Knapsack_Capacity`'
       opt_val:
         regex: ^(0|[1-9][0-9]*)$
         default: 30
+        explain: 'the maximum total value of a feasible solution (set of objects whose total weight does not exceed `Knapsack_Capacity`)'
       num_opt_sols:
         regex: ^(0|[1-9][0-9]*)$
         default: 30
+        explain: the number of different optimal solutions
       list_opt_sols:
         regex: ^(.*)$
         default: "[ ['A', 'B'], ['A', 'C']]"
+        explain: the list of all optimal solutions
       DPtable_opt_val:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        explain: 'the DP table meant to tell the optimal value for any prefix of the available objects and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
       DPtable_num_opts:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        explain: 'the DP table meant to tell the number of optimal solutions for any prefix of the available objects and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
       answer_dict:
         regex: ^(.*)$
         default: ""

@@ -6,7 +6,7 @@ from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
 import RO_problems_lib as RO
-import robot_lib
+from knapsack_lib import solver, check_instance_consistency
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -17,7 +17,14 @@ args_list = [
     ('elementi_proibiti','list_of_str'),
     ('elementi_obbligati','list_of_str'),
     ('partialDPtable','matrix_of_int'),
-    ('names_dict','yaml'),
+    ('instance_dict','yaml'),
+    ('opt_sol','yaml'),
+    ('opt_val','yaml'),
+    ('num_opt_sols','yaml'),
+    ('list_opt_sols','yaml'),
+    ('DPtable_opt_val','yaml'),
+    ('DPtable_num_opts','yaml'),
+    ('alias_dict','yaml'),
     ('answer_dict','yaml'),
     ('color_implementation',str),
     ('as_yaml_with_points',bool),
@@ -30,6 +37,7 @@ args_list = [
     ('esercizio',int),
     ('task',int),
 ]
+instance_objects = ['elementi','pesi','valori','Knapsack_Capacity','elementi_proibiti','elementi_obbligati','partialDPtable']
 answer_object_type_spec = {
     'opt_sol':'list_of_str',
     'opt_val':'int',
@@ -38,7 +46,7 @@ answer_object_type_spec = {
     'DPtable_opt_val':'matrix_of_int',
     'DPtable_num_opts':'matrix_of_int',
 }
-implemented = ['opt_sol','opt_val','DPtable_opt_val']
+sol_objects_implemented = ['opt_sol','opt_val','DPtable_opt_val']
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV, ENV["color_implementation"])
@@ -51,13 +59,15 @@ TALf = TALfilesHelper(TAc, ENV)
 
 TOKEN_REQUIRED = False
 RO.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_REQUIRED)
-instance_dict = robot_lib.dict_of_instance(ENV)
-robot_lib.check_instance_consistency(instance_dict)
-request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['names_dict'], answer_object_type_spec, implemented)
+instance_dict = RO.dict_of_instance(instance_objects,args_list,ENV)
+check_instance_consistency(instance_dict)
+request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['alias_dict'], answer_object_type_spec, sol_objects_implemented)
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
 
-def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str],elementi_obbligati:List[str],partialDPtable:List[List[int]], long_answer_dict:Dict):
+def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, instance_dict:Dict, long_answer_dict:Dict):
+    I = instance_dict
+    Capacity = I["Knapsack_Capacity"]
     goals = long_answer_dict.keys()
     answ = { key:val[0] for key,val in long_answer_dict.items() }
     name = { key:val[1] for key,val in long_answer_dict.items() }
@@ -65,8 +75,8 @@ def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility
     elementi=[]
     pesi=[]
     valori=[]
-    for ele,peso,val in zip(elements,weights,vals):
-        if ele not in elementi_proibiti:
+    for ele,peso,val in zip(I["elementi"],I["pesi"],I["valori"]):
+        if ele not in I["elementi_proibiti"]:
             elementi.append(ele)
             pesi.append(peso)
             valori.append(val)
@@ -98,12 +108,12 @@ def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility
             feedback_summary += f"formato di `{name['opt_sol']}`: "+SEF.colored(f"OK [{pt_formato_OK} safe pt]{SEF.new_line}", "green", ["bold"])
         else:
             feedback_summary += f"formato di `{name['opt_sol']}`: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
-        for ele in elementi_obbligati:
+        for ele in I["elementi_obbligati"]:
             if ele not in answ['opt_sol']:
                 feedback_summary += f"ammissibilità della soluzione in `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
                 return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{name['opt_sol']}` hai dimenticato di inserire l'elemento `{ele}` che è uno degli elementi_obbligati. La tua soluzione è tenuta a contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
         for ele in answ['opt_sol']:
-            if ele in elementi_proibiti:
+            if ele in I["elementi_proibiti"]:
                 feedback_summary += f"ammissibilità della soluzione in `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
                 return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{name['opt_sol']}` hai inserire l'elemento `{ele}` che è uno degli elementi proibiti. La tua soluzione non deve contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
         if sum_pesi > Capacity:
@@ -123,14 +133,14 @@ def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility
 
 
             
-feedback_dict = verif_submission(ENV["task"],ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"], ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"],ENV["elementi_proibiti"],ENV["elementi_obbligati"],ENV["partialDPtable"], long_answer_dict=long_answer_dict )
+feedback_dict = verif_submission(ENV["task"],ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"], instance_dict, long_answer_dict=long_answer_dict )
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
 all_data = {"instance":instance_dict,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
 #print(f"all_data={all_data}", file=stderr)
 RO.checker_reply(all_data,ENV)
 if ENV.LOG_FILES != None:
-    all_data["oracle"] = robot_lib.solver(all_data)
+    all_data["oracle"] = solver(all_data)
     RO.checker_logs(all_data,ENV,TALf)
 if ENV["yield_certificate_in_output_file"]:    
     RO.checker_certificates(all_data,ENV,TALf)

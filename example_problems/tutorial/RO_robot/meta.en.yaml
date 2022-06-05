@@ -35,9 +35,66 @@ services:
         regex: ^(.*)$
         default: "(C,3)"
         explain: "only the paths that start from cell (C, 3) are feasible. Row A is the one at the top, column 1 is the leftmost one."
+      instance_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a instance_dict=\"{'field':[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ],'diag':1}\""
+        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`instance_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `cell_to` or `partialDP_to`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
+
+      # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
+      num_paths:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: the number of feasible paths
+      num_opt_paths:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: the number of paths of maximum value
+      opt_val:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: the maximum value of a feasible path
+      opt_path:
+        regex: ^(.*)$
+        default: "[]"
+        explain: a path of maximum value
+      list_opt_paths:
+        regex: ^(.*)$
+        default: "[]"
+        explain: the list of all optimum paths
+      DPtable_num_to:
+        regex: ^(.*)$
+        default: "[]"
+        example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        explain: the DP table meant to tell the number of paths from top-left cell to the generic cell
+      DPtable_num_from:
+        regex: ^(.*)$
+        default: "[]"
+        example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        explain: the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
+      DPtable_opt_to:
+        regex: ^(.*)$
+        default: "[]"
+        explain: the DP table meant to tell the maximum value of a path from top-left cell to the generic cell
+      DPtable_opt_from:
+        regex: ^(.*)$
+        default: "[]"
+        explain: the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell
+      DPtable_num_opt_to:
+        regex: ^(.*)$
+        default: "[]"
+        explain: the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
+      DPtable_num_opt_from:
+        regex: ^(.*)$
+        default: "[]"
+        explain: the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.
+      answer_dict:
+        regex: ^(.*)$
+        example1: "-a answer_dict=\"{'num_paths1':28, 'num_opt_paths1':4}\""
+        explain: "this argument (a string to be read as yaml) takes in the dictionary containing the answer of the student. This answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type and a standard name attached to it (e.g., like `num_paths` or `opt_val`). In principle, these names are used as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows to attach non-standard names to the objects, so that the feedback will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`"
 
       # section with the request that was posed to the problem-solver/student:
-      names_dict:
+      alias_dict:
         regex: ^(.*)$
         default: "{}"
         explain: 'this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution of the problem solver. The possible keys are the following:'
@@ -54,12 +111,6 @@ services:
         explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
         explain12: ''
         explain13: 'Note: the values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
-
-      # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
-      answer_dict:
-        regex: ^(.*)$
-        example1: "-a answer_dict=\"{'num_paths1':28, 'num_opt_paths1':4}\""
-        explain: "this argument (a string to be read as yaml) takes in the dictionary containing the answer of the student. This answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type and a standard name attached to it (e.g., like `num_paths` or `opt_val`). In principle, these names are used as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `names_dict` allows to attach non-standard names to the objects, so that the feedback will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `names_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `names_dict`"
 
       # section with the arguments that specify the format of the feedback string and the forms of the outputs, either direct, or on output file (certificates sent to the local machine), or on logs (on the server for full evaluation)
       color_implementation:

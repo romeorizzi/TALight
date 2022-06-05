@@ -4,55 +4,114 @@ public_folder: public
 services:
   check:
     evaluator: [python, services/check_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service checks and gives feedback for an alleged optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to check the correctness of dynamic programming (DP) tables."
+    description: "the input to the problem solver is an mxn grid some of whose cells are forbidden, while the others may have a gain value associated. This service provides feedback on the answer of the problem solver to one question out of many possible ones. The question could be the number of feasible paths between two cells of the grid, where a path is feasible if it traverses no forbidden cell and always move from one cell to the one just below or on its immediata right (diagonal moves might also be allowed setting the argument `diag`). Other questions currently served: the maximum value collected by a feasible path, the number of optimal paths. The service can also be asked to check the correctness of dynamic programming (DP) tables. In particular, the problem solver might have received a partial DP table and her task was to to complete it."
     args:
       # section with the instance assigned to the problem-solver/student:
-      elementi:
+      field:
         regex: ^(.*)$
-        default: "['A', 'B', 'C', 'D', 'E']"
-        explain: nomi degli oggetti
-      pesi:
+        default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
+        explain: the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value.
+      diag:
+        regex: ^(0|1)$
+        default: 0
+        explain: set this flag to 1 if the robot can move also to the cell of the next col and row
+      partialDP_to:
         regex: ^(.*)$
-        default: "[2, 3, 4, 29, 50]"
-        explain: pesi degli oggetti
-      valori:
+        default: "[]"
+        explain: "a partial DP table where some entries have been concealed (overwriting a -1 on top of them). For example: [ [ -1, 1, -1, 1, 1], [ 1, 2, 3, 0, 1], [ 0, 2, 5, -1, 6], [ 0, 0, 5, -1, -1] ]."
+      partialDP_from:
         regex: ^(.*)$
-        default: "[13, 17, 19, 11, 15]"
-        explain: valori degli oggetti
-      Knapsack_Capacity:
+        default: "[]"
+        explain: "a partial DP table where some entries have been concealed (overwriting a -1 on top of them). For example: [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3, -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
+      cell_from:
+        regex: ^(.*)$
+        default: "(C,3)"
+        explain: "only the paths that start from cell (C, 3) are feasible. Row A is the one at the top, column 1 is the leftmost one."
+      cell_to:
+        regex: ^(.*)$
+        default: "(C,3)"
+        explain: "only the paths that start from cell (C, 3) are feasible. Row A is the one at the top, column 1 is the leftmost one."
+      cell_through:
+        regex: ^(.*)$
+        default: "(C,3)"
+        explain: "only the paths that start from cell (C, 3) are feasible. Row A is the one at the top, column 1 is the leftmost one."
+      instance_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a instance_dict=\"{'field':[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ],'diag':1}\""
+        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`instance_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `cell_to` or `partialDP_to`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
+
+      # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
+      num_paths:
         regex: ^(0|[1-9][0-9]*)$
-        default: 5
-        explain: una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei pesi non eccede Knapsack_Capacity
-      elementi_proibiti:
-        regex: ^(.*)$
-        default: "[]"
-        explain: la soluzione è tenuta ad evitare questi oggetti
-      elementi_obbligati:
-        regex: ^(.*)$
-        default: "[]"
-        explain: la soluzione è tenuta ad includere questi oggetti
-      # section with the answer of the student to be evaluated and provided a feedback with
-      sol_type:
-        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable)$
-        default: opt_sol
-      opt_sol:
-        regex: ^(.*)$
-        default: "['A', 'B']"
+        default: 0
+        explain: the number of feasible paths
+      num_opt_paths:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: the number of paths of maximum value
       opt_val:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: the maximum value of a feasible path
+      opt_path:
         regex: ^(.*)$
-        default: 30
-      DPtable:
+        default: "[]"
+        explain: a path of maximum value
+      list_opt_paths:
         regex: ^(.*)$
-        default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-      name_of_opt_val:
+        default: "[]"
+        explain: the list of all optimum paths
+      DPtable_num_to:
         regex: ^(.*)$
-        default: opt_val
-      name_of_opt_sol:
+        default: "[]"
+        example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        explain: the DP table meant to tell the number of paths from top-left cell to the generic cell
+      DPtable_num_from:
         regex: ^(.*)$
-        default: opt_sol
-      name_of_DPtable:
+        default: "[]"
+        example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        explain: the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
+      DPtable_opt_to:
         regex: ^(.*)$
-        default: DPtable
+        default: "[]"
+        explain: the DP table meant to tell the maximum value of a path from top-left cell to the generic cell
+      DPtable_opt_from:
+        regex: ^(.*)$
+        default: "[]"
+        explain: the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell
+      DPtable_num_opt_to:
+        regex: ^(.*)$
+        default: "[]"
+        explain: the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
+      DPtable_num_opt_from:
+        regex: ^(.*)$
+        default: "[]"
+        explain: the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.
+      answer_dict:
+        regex: ^(.*)$
+        example1: "-a answer_dict=\"{'num_paths1':28, 'num_opt_paths1':4}\""
+        explain: "this argument (a string to be read as yaml) takes in the dictionary containing the answer of the student. This answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type and a standard name attached to it (e.g., like `num_paths` or `opt_val`). In principle, these names are used as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows to attach non-standard names to the objects, so that the feedback will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`"
+
+      # section with the request that was posed to the problem-solver/student:
+      alias_dict:
+        regex: ^(.*)$
+        default: "{}"
+        explain: 'this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution of the problem solver. The possible keys are the following:'
+        explain1: '[num_paths] the number of feasible paths'
+        explain2: '[num_opt_paths] the number of paths of maximum value'
+        explain3: '[opt_val] the maximum value of a feasible path'
+        explain4: '[opt_path] a path of maximum value'
+        explain5: '[list_opt_paths] the list of all optimum paths'
+        explain6: '[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell'
+        explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
+        explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell'
+        explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
+        explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
+        explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+        explain12: ''
+        explain13: 'Note: the values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
+
       # section with the arguments that specify the format of the feedback string and the forms of the outputs, either direct, or on output file (certificates sent to the local machine), or on logs (on the server for full evaluation)
       color_implementation:
         regex: ^(ANSI|html|None)$
@@ -69,6 +128,7 @@ services:
       with_opening_message:
         regex: ^(0|1)$
         default: 0
+
       # section with the points assigned to a single task of an exercise in the context of an exam or exam simulation:
       pt_formato_OK:
         regex: ^(0|[1-9][0-9]*)$
@@ -85,45 +145,64 @@ services:
       task:
         regex: ^(-1|0|[1-9][0-9]*)$
         default: -1
+
   oracle:
     evaluator: [python, services/oracle_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to return a dynamic programming (DP)."
+    description: "given an mxn grid some of whose cells are forbidden, while the others may have a gain value associated, this service computes and returns correct answers to a set of possible questions specified, out of a finite supported set, through variable an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to return a dynamic programming (DP)."
     args:
       pwd:
         regex: ^(.*)$
         explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+
       # section with a possible instance to the problem:
-      elementi:
+      field:
         regex: ^(.*)$
-        default: "['A', 'B', 'C']"
-      pesi:
-        regex: ^(.*)$
-        default: "[2, 3, 4]"
-      valori:
-        regex: ^(.*)$
-        default: "[13, 17, 19]"
-      Knapsack_Capacity:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 5
-      elementi_proibiti:
+        default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
+        explain: the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value.
+      diag:
+        regex: ^(0|1)$
+        default: 0
+        explain: set this flag to 1 if the robot can move also to the cell of the next col and row
+      partialDP_to:
         regex: ^(.*)$
         default: "[]"
-      elementi_obbligati:
+        explain: "a partial DP table where some entries have been concealed (overwriting a -1 on top of them). For example: [ [ -1, 1, -1, 1, 1], [ 1, 2, 3, 0, 1], [ 0, 2, 5, -1, 6], [ 0, 0, 5, -1, -1] ]."
+      partialDP_from:
         regex: ^(.*)$
         default: "[]"
+        explain: "a partial DP table where some entries have been concealed (overwriting a -1 on top of them). For example: [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3, -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
+      cell_from:
+        regex: ^(.*)$
+        default: "(C,3)"
+        explain: "only the paths that start from cell (C, 3) are feasible. Row A is the one at the top, column 1 is the leftmost one."
+      cell_to:
+        regex: ^(.*)$
+        default: "(C,3)"
+        explain: "only the paths that start from cell (C, 3) are feasible. Row A is the one at the top, column 1 is the leftmost one."
+      cell_through:
+        regex: ^(.*)$
+        default: "(C,3)"
+        explain: "only the paths that start from cell (C, 3) are feasible. Row A is the one at the top, column 1 is the leftmost one."
+
       # section characterizing the seeked for answer and the naming for its variables:
-      sol_type:
-        regex: ^(opt_sol|opt_val|opt_sol_with_val|DPtable|all)$
-        default: all
-      name_of_opt_val:
+      request_dict:
         regex: ^(.*)$
-        default: opt_val
-      name_of_opt_sol:
-        regex: ^(.*)$
-        default: opt_sol
-      name_of_DPtable:
-        regex: ^(.*)$
-        default: DPtable
+        default: "{}"
+        explain: 'this argument (a string to be read as yaml) is a dictionary describing the solution requested to the oracle. For every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., "opt_sol") and refer to it by the name `key` as prescribed by the caller. The possible `vlues` are the following:'
+        explain1: '[num_paths] the number of feasible paths'
+        explain2: '[num_opt_paths] the number of paths of maximum value'
+        explain3: '[opt_val] the maximum value of a feasible path'
+        explain4: '[opt_path] a path of maximum value'
+        explain5: '[list_opt_paths] the list of all optimum paths'
+        explain6: '[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell'
+        explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
+        explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell'
+        explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
+        explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
+        explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+        explain12: ''
+        explain13: 'Note: the values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
+
       # section with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
       as_yaml:
         regex: ^(0|1)$
