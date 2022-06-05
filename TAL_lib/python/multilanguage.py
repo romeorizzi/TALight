@@ -131,7 +131,7 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             return int(yaml_var)
         except:
             print(f"# Unrecoverable Error: {varname} is not of type int. On the next line is its actual raw content as a string:")
-            print(yaml_var)
+            print(f"# Raw content: {repr(yaml_var)}")
             exit(0)
     if typestr == 'bool':
         try:
@@ -139,12 +139,12 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             return bool(yaml_var)
         except:
             print(f"# Unrecoverable Error: {varname} is not of type bool. On the next line is its actual raw content as a string:")
-            print(yaml_var)
+            print(f"# Raw content: {repr(yaml_var)}")
             exit(0)
     if typestr[:len('list_of_')] == 'list_of_':
         if type(yaml_var) != list:
             print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. On the next line is its actual raw content as a string:")
-            print(yaml_var)
+            print(f"# Raw content: {repr(yaml_var)}")
             exit(0)
         enforced_list = []
         for item, i in zip(yaml_var,range(1,1+len(yaml_var))):
