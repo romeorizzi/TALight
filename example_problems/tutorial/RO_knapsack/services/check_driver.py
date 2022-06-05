@@ -65,7 +65,9 @@ request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO.check
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
 
-def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str],elementi_obbligati:List[str],partialDPtable:List[List[int]], long_answer_dict:Dict):
+def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, instance_dict:Dict, long_answer_dict:Dict):
+    I = instance_dict
+    Capacity = I["Knapsack_Capacity"]
     goals = long_answer_dict.keys()
     answ = { key:val[0] for key,val in long_answer_dict.items() }
     name = { key:val[1] for key,val in long_answer_dict.items() }
@@ -73,8 +75,8 @@ def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility
     elementi=[]
     pesi=[]
     valori=[]
-    for ele,peso,val in zip(elements,weights,vals):
-        if ele not in elementi_proibiti:
+    for ele,peso,val in zip(I["elementi"],I["pesi"],I["valori"]):
+        if ele not in I["elementi_proibiti"]:
             elementi.append(ele)
             pesi.append(peso)
             valori.append(val)
@@ -106,12 +108,12 @@ def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility
             feedback_summary += f"formato di `{name['opt_sol']}`: "+SEF.colored(f"OK [{pt_formato_OK} safe pt]{SEF.new_line}", "green", ["bold"])
         else:
             feedback_summary += f"formato di `{name['opt_sol']}`: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
-        for ele in elementi_obbligati:
+        for ele in I["elementi_obbligati"]:
             if ele not in answ['opt_sol']:
                 feedback_summary += f"ammissibilità della soluzione in `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
                 return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{name['opt_sol']}` hai dimenticato di inserire l'elemento `{ele}` che è uno degli elementi_obbligati. La tua soluzione è tenuta a contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
         for ele in answ['opt_sol']:
-            if ele in elementi_proibiti:
+            if ele in I["elementi_proibiti"]:
                 feedback_summary += f"ammissibilità della soluzione in `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
                 return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{name['opt_sol']}` hai inserire l'elemento `{ele}` che è uno degli elementi proibiti. La tua soluzione non deve contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
         if sum_pesi > Capacity:
@@ -131,7 +133,7 @@ def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility
 
 
             
-feedback_dict = verif_submission(ENV["task"],ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"], ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"],ENV["elementi_proibiti"],ENV["elementi_obbligati"],ENV["partialDPtable"], long_answer_dict=long_answer_dict )
+feedback_dict = verif_submission(ENV["task"],ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"], instance_dict, long_answer_dict=long_answer_dict )
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
 all_data = {"instance":instance_dict,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
