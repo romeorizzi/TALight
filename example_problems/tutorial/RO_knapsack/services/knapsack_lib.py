@@ -35,6 +35,7 @@ def check_instance_consistency(instance):
         
 def solver(input_to_oracle):
     I = input_to_oracle["instance"]
+    print(f"Instance={I}")
     # the idea is to work over a reduced instance, where both the forced and the forbidden elements have been taken away from the table.
     Capacity=I["Knapsack_Capacity"] - sum_of_costs_over(I,I["forced_in"])    
     labels=[]
@@ -46,14 +47,17 @@ def solver(input_to_oracle):
             costs.append(peso)
             vals.append(val)
 
-    n = len(labels)    
-    DPtable_opt_val = [[0 for j in range(Capacity+1)] for i in range(n+1)] 
+    n = len(labels)
+    DPtable_opt_val = [[0 for j in range(Capacity+1)] for i in range(n+1)]
     for i in range(1,1+n):
         for j in range(Capacity+1):
             DPtable_opt_val[i][j] = DPtable_opt_val[i-1][j]
             if costs[i-1] <= j and DPtable_opt_val[i-1][j-costs[i-1]] + vals[i-1] > DPtable_opt_val[i][j]:
                 DPtable_opt_val[i][j] = DPtable_opt_val[i-1][j-costs[i-1]] + vals[i-1]
-    opt_val=DPtable_opt_val[i][j]
+    if n == 0:
+        opt_val = 0
+    else:
+        opt_val=DPtable_opt_val[i][j]
     promise = opt_val
     opt_sol = []
     while promise > 0:

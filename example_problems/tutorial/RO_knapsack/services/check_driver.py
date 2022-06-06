@@ -68,9 +68,11 @@ request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO.check
 def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, instance_dict:Dict, long_answer_dict:Dict):
     I = instance_dict
     Capacity = I["Knapsack_Capacity"]
-    goals = long_answer_dict.keys()
-    answ = { key:val[0] for key,val in long_answer_dict.items() }
-    name = { key:val[1] for key,val in long_answer_dict.items() }
+    answ = {}; name = {}; goals = []
+    for std_name,obj_pair in long_answer_dict.items():
+        goals.append(std_name)
+        answ[std_name] = obj_pair[0]
+        name[std_name] = obj_pair[1]
     feedback_summary = ""
     labels=[]
     costs=[]
