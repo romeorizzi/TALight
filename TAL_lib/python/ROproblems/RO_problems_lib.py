@@ -84,11 +84,11 @@ def check_request(request_dict, implemented):
             exit(0)
         
 
-def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, names_dict:dict, answer_object_type_spec:Dict, implemented:List[str]):
+def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, alias_dict:dict, answer_object_type_spec:Dict, implemented:List[str]):
     """
     arguments:
       answer_dict               ad-hoc name --> answ_obj
-      names_dict                ad-hoc name --> std_name
+      alias_dict                ad-hoc name --> std_name
       answer_object_type_spec   answer object type --> its type as python data-structure
       implemented  contains the std_names of available answer object types
     returns:
@@ -99,9 +99,9 @@ def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, na
        long_answer_dict         std_name --> (answ_obj, ad-hoc name)
        goals  is the list of the std_names of the answ_objects that have been submitted by the student/problem solver (they are precisely those requested by the exercise evaluated)
     """
-    for std_name in names_dict.values():
+    for std_name in alias_dict.values():
         if std_name not in implemented:
-            print(f'Error: the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `names_dict` dictionary passed as argument to the TALight service.')    
+            print(f'Error: the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `alias_dict` dictionary passed as argument to the TALight service.')    
             exit(0)
     request_dict = {}
     answ_dict = {}    
@@ -109,12 +109,12 @@ def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, na
     answ_obj = {}    
     long_answer_dict = {}
     for ad_hoc_name in answer_dict:
-        if ad_hoc_name in names_dict:
-            std_name = names_dict[ad_hoc_name]
+        if ad_hoc_name in alias_dict:
+            std_name = alias_dict[ad_hoc_name]
         else:
             std_name = ad_hoc_name
             if std_name not in implemented:
-                print(f'Error: the key `{ad_hoc_name}` in the `answer_dict` dictionary passed as argument to the service is neither a standard name nor has been remapped through the `names_dict` dictionary.')    
+                print(f'Error: the key `{ad_hoc_name}` in the `answer_dict` dictionary passed as argument to the service is neither a standard name nor has been remapped through the `alias_dict` dictionary.')    
                 exit(0)
         #print(f"now checking variable of ad_hoc_name={ad_hoc_name} and value={answer_dict[ad_hoc_name]}. Its std_name={std_name} deserves a format {answer_object_type_spec[std_name]}, while it actually is {type(answer_dict[ad_hoc_name])}",file=stderr)
         answer_dict[ad_hoc_name] = enforce_type_of_yaml_var(answer_dict[ad_hoc_name],answer_object_type_spec[std_name], varname=ad_hoc_name)

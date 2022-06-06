@@ -4,9 +4,9 @@ public_folder: public
 services:
   check:
     evaluator: [python, services/check_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service checks and gives feedback for an alleged optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to check the correctness of dynamic programming (DP) tables."
+    description: "dato un insieme di oggetti, ciascuno col suo valore e peso, e una soglia sul massimo peso consentito (Knapsack_Capacity), il Problema dello Zaino (Knapsack Problem) chiede di trovare un sottoinsieme di oggetti il cui peso complessivo non superi la soglia, e che massimizzi il valore totale raccolto. Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnate del Problema dello Zaino. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze; se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere aperti e promuovere la collagorazione tra problem-makers/insegnanti. Dal sistema dove organizzi i tuoi esami/esercitazioni, in un esercizio centrato su un'istanza del Problema dello Zaino, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Solo per dare una prima idea, potrai imporre vincoli aggiuntivi su singoli elementi che ridefiniscano l'ammissibilità delle soluzioni e puoi controllare/validare tabelle di programmazione dinamica sottomesse dallo studente  (anche per varianti della domanda standard che mettano in gioco la competenza della programmazione dinamica). Con queste, il servizio può inoltre fornire feedback contestuale in caso si sia deciso di fornire allo studente/trainee delle tabelle parzialmente precompialte per evitargli di rimanere soverchiato dalle dimensioni della tabella (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti)."    
     args:
-      # section with the instance data assigned to the problem-solver/student:
+      # sezione con i dati dell'istanza assegnati al problem-solver/studente:
       elementi:
         regex: ^(.*)$
         default: "['A', 'B', 'C', 'D', 'E']"
@@ -22,7 +22,7 @@ services:
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
-        explain: una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei pesi non eccede Knapsack_Capacity
+        explain: la capacità dello zaino. Una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei pesi non eccede Knapsack_Capacity
       elementi_proibiti:
         regex: ^(.*)$
         default: "[]"
@@ -34,63 +34,53 @@ services:
       partialDPtable:
         regex: ^(.*)$
         default: "[]"
-        explain: "a partial DP table where some entries have been concealed (overwriting a -1 on top of them). For example: [ [ 0, 0, 0, 0, 0], [ 0, 0, 13, 13, 13], [ 0, 0, 13, 17, 17], [ 0, 0, 13, 17, -1] ]."
+        explain: "una tabella di programmazione dinamica solo parzialmente riempita (gli elementi nascosti sono stati sovrascritti da dei -1).
+        example: [ [ 0, 0, 0, 0, 0], [ 0, 0, 13, 13, 13], [ 0, 0, 13, 17, 17], [ 0, 0, 13, 17, -1] ]."
       instance_dict:
         regex: ^(.*)$
         default: "{}"
         example: "-a instance_dict=\"{'elementi':['A','B','C'],'pesi':[3,5,7],'valori':[2,4,5], 'Knapsack_Capacity':30}\""
-        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`instance_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `pesi` o `valori`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
-      # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
+      # sezione risposte del problem-solver/studente che is servizio è chiamato a valutare e/o fornire di feedback:
       opt_sol:
         regex: ^(.*)$
         default: "['A', 'B']"
-        explain: 'an optimal solution, i.e., a subset of objects of maximum total value among those whose total weight does not exceed `Knapsack_Capacity`'
+        explain: 'una soluzione ottima, ossia un sottoinsieme di oggetti a massimo valore totale, tra quelli il cui peso totale non ecceda la soglia `Knapsack_Capacity`'
       opt_val:
         regex: ^(0|[1-9][0-9]*)$
         default: 30
-        explain: 'the maximum total value of a feasible solution (set of objects whose total weight does not exceed `Knapsack_Capacity`)'
+        explain: 'il massimo valore totale di una soluzione ammissibile (=insieme di oggetti il cui peso totale non ecceda `Knapsack_Capacity`)'
       num_opt_sols:
         regex: ^(0|[1-9][0-9]*)$
         default: 30
-        explain: the number of different optimal solutions
+        explain: il numero di soluzioni ottime differenti
       list_opt_sols:
         regex: ^(.*)$
         default: "[ ['A', 'B'], ['A', 'C']]"
-        explain: the list of all optimal solutions
+        explain: "la lista di tutte le soluzioni ottime (in qualsiasi ordine)"
       DPtable_opt_val:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        explain: 'the DP table meant to tell the optimal value for any prefix of the available objects and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
+        explain: "la tabella di programmazione dinamica che dice il valore ottimo per ogni prefisso degli oggetti assegnati (nota: in questo caso l'ordine deve essere quello che hanno quando li assegniamo allo studente) e per ogni possibile valore di capacità dello zaino fino a `Knapsack_Capacity`"
       DPtable_num_opts:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        explain: 'the DP table meant to tell the number of optimal solutions for any prefix of the available objects and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
+        explain: "la tabella di programmazione dinamica che dice il numero di soluzioni ottime per ogni prefisso degli oggetti assegnati (nota: in questo caso l'ordine deve essere quello che hanno quando li assegniamo allo studente) e per ogni possibile valore di capacità dello zaino fino a `Knapsack_Capacity`"
       answer_dict:
         regex: ^(.*)$
         default: ""
         example1: "-a answer_dict=\"{'opt_sol':['A', 'B'], 'opt_val':30}\""
         example2: "-a answer_dict=\"{'opt_sol1':['A', 'B'], 'opt_val1':30}\""
-        explain: "There are two options for passing to this TALight service the anwer to be evaluated and provided a feedback with. Either you use a separate argument for each possible object type comprising your answer, or you callect them all within one single dictionary that you pass through this one argument (`answer_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty string) then the first option is assumed, which may be better when experiencing the service from the CLI. Otherwise, the string passed through `answer_dict` is read as yaml to obtain the dictionary containing the answer of the student. An answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type represented by the standard name attached to it (e.g., like `opt_sol` or `opt_val`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible answer objects, and their names, by inspecting the complete list of arguments to this service). You can use these standard names as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows for more freedom: it allows you to introduce custom names, defined in terms of the standard ones (just an aliasing) and to attach them to the objects comprising your answer, using them as keys in your `answer_dict` dictionary. In this way the feedback provided by the service will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`"
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della conegna del task/richiesta di esercizio, (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`answer_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict`viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
 
-      # section with the request that was posed to the problem-solver/student:
+      # sezione con la richiesta/task posto al problem-solver/student nel contesto di un esercizio sul Problema dello Zaino:
       alias_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: 'this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution that the instructor has asked from the problem solver on a given exercise/task/request. The keys are the names that the instructor has assigned to the standard object types involved in the request, the corresponding values should be among the following:'
-        explain1: '[opt_sol] an optimal solution, i.e., a subset of objects of maximum total value among those whose total weight does not exceed `Knapsack_Capacity`'
-        explain2: '[opt_val] the maximum total value of a feasible solution (set of objects whose total weight does not exceed `Knapsack_Capacity`)'
-        explain3: '[num_opt_sols] the number of different optimal solutions'
-        explain4: '[list_opt_sols] the list of all optimal solutions'
-        explain5: '[DPtable_opt_val] the DP table meant to tell the optimal value for any prefix of the available objects and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
-        explain6: '[DPtable_num_opts] the DP table meant to tell the number of optimal solutions for any prefix of the available objects and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
-        explain7: ''
-        note: 'the values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.\nIf the name you are attaching to an object is the standard one, then you do not need to report its name in the `alias_dict` dictionary (but of course, your `alias_dict` dictionary can not then attach that very same same to another object).\n'
-        example1: "-a alias_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
-        example2: "-a alias_dict=\"{'opt_sol1': 'opt_sol', 'opt_val1': 'opt_val'}\""
-        example3: "In particular, you can leave the default value (the empty dictionary {}) is you stick to the original keys for all possible objects in the answer/solution, like in Example 1\n"
+        explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
 
-      # section with the arguments that specify the format of the feedback string and the forms of the outputs, either direct, or on output file (certificates sent to the local machine), or on logs (on the server for full evaluation)
+      # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
       color_implementation:
         regex: ^(ANSI|html|None)$
         default: ANSI
@@ -107,7 +97,7 @@ services:
         regex: ^(0|1)$
         default: 0
 
-      # section with the points assigned to a single task of an exercise in the context of an exam or exam simulation:
+      # sezione coi punti da assegnare al singolo task/richiesta da assegnarsi al singolo task/richiesta (tra quelli proposti da un singolo esercizio) che ha comportato la chiamata a questo servizio dal contesto di una prova, esame, o simulazione di esame:
       pt_formato_OK:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
@@ -126,13 +116,13 @@ services:
 
   oracle:
     evaluator: [python, services/oracle_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to return a dynamic programming (DP)."
+    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
     args:
       pwd:
         regex: ^(.*)$
         explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
 
-      # section with a possible instance to the problem:
+      # sezione with a possible instance to the problem:
       elementi:
         regex: ^(.*)$
         default: "['A', 'B', 'C']"
@@ -155,26 +145,24 @@ services:
         regex: ^(.*)$
         default: "{}"
         example: "-a instance_dict=\"{'elementi':['A','B','C'],'pesi':[3,5,7],'valori':[2,4,5], 'Knapsack_Capacity':30}\""
-        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`instance_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
+        explain: "Vi sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) è più indicata quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (la stringa vuota) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `pesi` o `valori`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
-      # section characterizing the seeked for answer and the naming for its variables:
+      # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare ad ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: 'this argument (a string to be read as yaml) is a dictionary describing the solution requested to the oracle. For every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., "opt_sol") and refer to it by the name `key` as prescribed by the caller. The possible `vlues` are the following:'
-        explain1: '[opt_sol] an optimal solution, i.e., a subset of objects of maximum total value among those whose total weight does not exceed the knapsack capacity'
-        explain2: '[opt_val] the maximum total value of a feasible solution (set of objects whose total weight does not exceed the knapsack capacity)'
-        explain3: '[num_opt_sols] the number of different optimal solutions'
-        explain4: '[list_opt_sols] the list of all optimal solutions'
-        explain5: '[DPtable_opt_val] the DP table meant to tell the optimal value for any prefix of the available objects and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
-        explain6: '[DPtable_num_opts] the DP table meant to tell the number of optimal solutions for any prefix of the available objects and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
-        explain7: ''
-        note: 'the values associated to the keys are the names that have been attached to these objects. It is assumed that not only the keys but also the values of this dictionary are all different.'
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'orcolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è specificato dal `value` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamata `value` (ad esempio 'opt_sol1') nei riferimenti ad essa. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `value` sono i seguenti:"
+        explain1: '[opt_sol] una soluzione ottima, ossia un sottoinsieme di oggetti a massimo valore totale, tra quelli il cui peso totale non ecceda la soglia `Knapsack_Capacity`'
+        explain2: '[opt_val] il massimo valore totale di una soluzione ammissibile (=insieme di oggetti il cui peso totale non ecceda `Knapsack_Capacity`)'
+        explain3: '[num_opt_sols] il numero di soluzioni ottime differenti'
+        explain4: '[list_opt_sols] la lista di tutte le soluzioni ottime (in qualsiasi ordine)'
+        explain5: "[DPtable_opt_val] la tabella di programmazione dinamica che dice il valore ottimo per ogni prefisso degli oggetti assegnati (nota: in questo caso l'ordine deve essere quello che hanno quando li assegniamo allo studente) e per ogni possibile valore di capacità dello zaino fino a `Knapsack_Capacity`"
+        explain6: "[DPtable_num_opts] la tabella di programmazione dinamica che dice il numero di soluzioni ottime per ogni prefisso degli oggetti assegnati (nota: in questo caso l'ordine deve essere quello che hanno quando li assegniamo allo studente) e per ogni possibile valore di capacità dello zaino fino a `Knapsack_Capacity`"
         example1: "-a request_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
         example2: "-a request_dict=\"{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}\""
-        example3: "if you can leave the default value (the empty dictionary {}) then you get the answers to all possible questions. In this case the keys for each object are the original keys like those in Example 1\n"
+        example3: "se lasci il valore di default (il dizionario vuoto {}) allora ottieni risposta a tutte le possibili domande per cui un solutore è già stato implementato. In tale caso i nomi impiegati nel responso dell'oracolo saranno quelli standard, come quelli nell'Esempio 1"
 
-      # section with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
+      # sezione with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
       as_yaml:
         regex: ^(0|1)$
         default: 0
