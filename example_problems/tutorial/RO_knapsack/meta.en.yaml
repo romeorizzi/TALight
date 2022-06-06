@@ -4,7 +4,7 @@ public_folder: public
 services:
   check:
     evaluator: [python, services/check_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service checks and gives feedback for an alleged optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to check the correctness of dynamic programming (DP) tables."
+    description: "given a set of objects, each one with its value and weight, and a total budget (Knapsack_Capacity), the Knapsack Problem asks to find a maximum value subset of the objects not exceeding the budget. This service checks and gives full (or partial, during exams or training for non-superusers) feedback to answers of the problem solver/trainee/student to alleged solutions to the knapsack problem and possible variations of the original questions. These didactic variations also suitable for exams or a test, to assess the competences, are triggered by resorting on the arguments exposed by the API of this TALight service. For example, it is possible to impose further constraints on the feasible solutions. It is also possible to check/validate the correctness of dynamic programming tables. In this case, the service also supports giving contextual feedback in case partially pre-filled DP tables were supplied to the student/trainee to avoid him being overwhelmed by their size (expecially useful to realistically allow a compilation by hand of the tables on interesting enough instances)."
     args:
       # section with the instance data assigned to the problem-solver/student:
       elementi:
@@ -126,7 +126,7 @@ services:
 
   oracle:
     evaluator: [python, services/oracle_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to return a dynamic programming (DP)."
+    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
     args:
       pwd:
         regex: ^(.*)$
