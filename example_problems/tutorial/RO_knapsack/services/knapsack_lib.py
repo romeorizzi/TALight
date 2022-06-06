@@ -35,7 +35,7 @@ def check_instance_consistency(instance):
         
 def solver(input_to_oracle):
     I = input_to_oracle["instance"]
-    print(f"Instance={I}")
+    #print(f"Instance={I}")
     # the idea is to work over a reduced instance, where both the forced and the forbidden elements have been taken away from the table.
     Capacity=I["Knapsack_Capacity"] - sum_of_costs_over(I,I["forced_in"])    
     labels=[]
