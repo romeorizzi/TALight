@@ -10,12 +10,12 @@ from knapsack_lib import solver, check_instance_consistency
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('elementi','list_of_str'),
-    ('pesi','list_of_int'),
-    ('valori','list_of_int'),
+    ('labels','list_of_str'),
+    ('costs','list_of_int'),
+    ('vals','list_of_int'),
     ('Knapsack_Capacity',int),
-    ('elementi_proibiti','list_of_str'),
-    ('elementi_obbligati','list_of_str'),
+    ('forced_out','list_of_str'),
+    ('forced_in','list_of_str'),
     ('partialDPtable','matrix_of_int'),
     ('instance_dict','yaml'),
     ('opt_sol','yaml'),
@@ -37,7 +37,7 @@ args_list = [
     ('esercizio',int),
     ('task',int),
 ]
-instance_objects = ['elementi','pesi','valori','Knapsack_Capacity','elementi_proibiti','elementi_obbligati','partialDPtable']
+instance_objects = ['labels','costs','vals','Knapsack_Capacity','forced_out','forced_in','partialDPtable']
 answer_object_type_spec = {
     'opt_sol':'list_of_str',
     'opt_val':'int',
@@ -72,14 +72,14 @@ def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility
     answ = { key:val[0] for key,val in long_answer_dict.items() }
     name = { key:val[1] for key,val in long_answer_dict.items() }
     feedback_summary = ""
-    elementi=[]
-    pesi=[]
-    valori=[]
-    for ele,peso,val in zip(I["elementi"],I["pesi"],I["valori"]):
-        if ele not in I["elementi_proibiti"]:
-            elementi.append(ele)
-            pesi.append(peso)
-            valori.append(val)
+    labels=[]
+    costs=[]
+    vals=[]
+    for ele,peso,val in zip(I["labels"],I["costs"],I["vals"]):
+        if ele not in I["forced_out"]:
+            labels.append(ele)
+            costs.append(peso)
+            vals.append(val)
     num_formats_OK = 0
     if 'opt_val' in goals:
         if type(answ['opt_val']) != int:
@@ -93,40 +93,40 @@ def verif_submission(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility
     if 'opt_sol' in goals:
         if type(answ['opt_sol']) != list:
             feedback_summary += f"formato di `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Come `{name['opt_sol']}` è richiesto si inserisca una lista di oggetti (esempio ['{elementi[0]}','{elementi[2]}']). Hai invece immesso `{answ['opt_sol']}`.", pt_tot,pt_safe=None,pt_out=pt_tot)
-        sum_valori=0
-        sum_pesi=0
+            return SEF.evaluation_format(task_number, feedback_summary, f"Come `{name['opt_sol']}` è richiesto si inserisca una lista di oggetti (esempio ['{labels[0]}','{labels[2]}']). Hai invece immesso `{answ['opt_sol']}`.", pt_tot,pt_safe=None,pt_out=pt_tot)
+        sum_vals=0
+        sum_costs=0
         for ele in answ['opt_sol']:
-            if ele not in elementi:
+            if ele not in labels:
                 feedback_summary += f"formato di `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-                return SEF.evaluation_format(task_number, feedback_summary, f"Ogni elemento che collochi nella lista `{name['opt_sol']}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {elementi}.", pt_tot,pt_safe=None,pt_out=pt_tot)
-            index_of_ele = elementi.index(ele)
-            sum_valori += valori[index_of_ele]
-            sum_pesi += pesi[index_of_ele]
+                return SEF.evaluation_format(task_number, feedback_summary, f"Ogni elemento che collochi nella lista `{name['opt_sol']}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {labels}.", pt_tot,pt_safe=None,pt_out=pt_tot)
+            index_of_ele = labels.index(ele)
+            sum_vals += vals[index_of_ele]
+            sum_costs += costs[index_of_ele]
         num_formats_OK += 1
         if num_formats_OK >= len(goals):
             feedback_summary += f"formato di `{name['opt_sol']}`: "+SEF.colored(f"OK [{pt_formato_OK} safe pt]{SEF.new_line}", "green", ["bold"])
         else:
             feedback_summary += f"formato di `{name['opt_sol']}`: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
-        for ele in I["elementi_obbligati"]:
+        for ele in I["forced_in"]:
             if ele not in answ['opt_sol']:
                 feedback_summary += f"ammissibilità della soluzione in `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-                return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{name['opt_sol']}` hai dimenticato di inserire l'elemento `{ele}` che è uno degli elementi_obbligati. La tua soluzione è tenuta a contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
+                return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{name['opt_sol']}` hai dimenticato di inserire l'elemento `{ele}` che è uno degli forced_in. La tua soluzione è tenuta a contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
         for ele in answ['opt_sol']:
-            if ele in I["elementi_proibiti"]:
+            if ele in I["forced_out"]:
                 feedback_summary += f"ammissibilità della soluzione in `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
                 return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{name['opt_sol']}` hai inserire l'elemento `{ele}` che è uno degli elementi proibiti. La tua soluzione non deve contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
-        if sum_pesi > Capacity:
+        if sum_costs > Capacity:
             feedback_summary += f"ammissibilità della soluzione in `{name['opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot)
+            return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro costi è {sum_costs}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot)
         if len(goals) == 1:
             feedback_summary += f"ammissibilità della soluzione in {name['opt_sol']}: "+SEF.colored(f"OK [{pt_feasibility_OK} safe pt]{SEF.new_line}", "green", ["bold"])
             return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{name['opt_sol']}` è ammissibile."+SEF.colored(f"{SEF.new_line}Nota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
         feedback_summary += f"ammissibilità della soluzione in {name['opt_sol']}: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
         if 'opt_val' in goals:
-            if sum_valori != answ['opt_val']:
+            if sum_vals != answ['opt_val']:
                 feedback_summary += f"autoconsistenza: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-                return SEF.evaluation_format(task_number, feedback_summary, f"Il valore della soluzione immessa in `{name['opt_sol']}` è {sum_valori}, non {answ['opt_val']} come hai immesso in `{name['opt_val']}`. La soluzione (ammissibile) che hai immesso è {answ['opt_sol']}", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK)
+                return SEF.evaluation_format(task_number, feedback_summary, f"Il valore della soluzione immessa in `{name['opt_sol']}` è {sum_vals}, non {answ['opt_val']} come hai immesso in `{name['opt_val']}`. La soluzione (ammissibile) che hai immesso è {answ['opt_sol']}", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK)
             feedback_summary += f"{name['opt_val']}={answ['opt_val']} = somma dei valori su {name['opt_sol']}: "+SEF.colored(f"OK [{pt_feasibility_OK} safe pt]{SEF.new_line}", "green", ["bold"])
             if len(goals) <= 2:
                 return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{name['opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{name['opt_val']}`."+SEF.colored(f"{SEF.new_line}Nota:", "cyan", ["bold"])+" Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)

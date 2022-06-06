@@ -7,27 +7,27 @@ services:
     description: "dato un insieme di oggetti, ciascuno col suo valore e peso, e una soglia sul massimo peso consentito (Knapsack_Capacity), il Problema dello Zaino (Knapsack Problem) chiede di trovare un sottoinsieme di oggetti il cui peso complessivo non superi la soglia, e che massimizzi il valore totale raccolto. Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnate del Problema dello Zaino. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze; se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere aperti e promuovere la collagorazione tra problem-makers/insegnanti. Dal sistema dove organizzi i tuoi esami/esercitazioni, in un esercizio centrato su un'istanza del Problema dello Zaino, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Solo per dare una prima idea, potrai imporre vincoli aggiuntivi su singoli elementi che ridefiniscano l'ammissibilità delle soluzioni e puoi controllare/validare tabelle di programmazione dinamica sottomesse dallo studente  (anche per varianti della domanda standard che mettano in gioco la competenza della programmazione dinamica). Con queste, il servizio può inoltre fornire feedback contestuale in caso si sia deciso di fornire allo studente/trainee delle tabelle parzialmente precompialte per evitargli di rimanere soverchiato dalle dimensioni della tabella (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti)."    
     args:
       # sezione con i dati dell'istanza assegnati al problem-solver/studente:
-      elementi:
+      labels:
         regex: ^(.*)$
         default: "['A', 'B', 'C', 'D', 'E']"
         explain: nomi degli oggetti
-      pesi:
+      costs:
         regex: ^(.*)$
         default: "[2, 3, 4, 29, 50]"
-        explain: pesi degli oggetti
-      valori:
+        explain: costi degli oggetti
+      vals:
         regex: ^(.*)$
         default: "[13, 17, 19, 11, 15]"
         explain: valori degli oggetti
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
-        explain: la capacità dello zaino. Una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei pesi non eccede Knapsack_Capacity
-      elementi_proibiti:
+        explain: la capacità dello zaino. Una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei costi non eccede Knapsack_Capacity
+      forced_out:
         regex: ^(.*)$
         default: "[]"
         explain: la soluzione è tenuta ad evitare questi oggetti
-      elementi_obbligati:
+      forced_in:
         regex: ^(.*)$
         default: "[]"
         explain: la soluzione è tenuta ad includere questi oggetti
@@ -39,8 +39,8 @@ services:
       instance_dict:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'elementi':['A','B','C'],'pesi':[3,5,7],'valori':[2,4,5], 'Knapsack_Capacity':30}\""
-        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `pesi` o `valori`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+        example: "-a instance_dict=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # sezione risposte del problem-solver/studente che is servizio è chiamato a valutare e/o fornire di feedback:
       opt_sol:
@@ -123,29 +123,29 @@ services:
         explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
 
       # sezione with a possible instance to the problem:
-      elementi:
+      labels:
         regex: ^(.*)$
         default: "['A', 'B', 'C']"
-      pesi:
+      costs:
         regex: ^(.*)$
         default: "[2, 3, 4]"
-      valori:
+      vals:
         regex: ^(.*)$
         default: "[13, 17, 19]"
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
-      elementi_proibiti:
+      forced_out:
         regex: ^(.*)$
         default: "[]"
-      elementi_obbligati:
+      forced_in:
         regex: ^(.*)$
         default: "[]"
       instance_dict:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'elementi':['A','B','C'],'pesi':[3,5,7],'valori':[2,4,5], 'Knapsack_Capacity':30}\""
-        explain: "Vi sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) è più indicata quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (la stringa vuota) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `pesi` o `valori`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+        example: "-a instance_dict=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
+        explain: "Vi sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) è più indicata quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (la stringa vuota) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare ad ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
       request_dict:

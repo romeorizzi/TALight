@@ -7,15 +7,15 @@ services:
     description: "given a set of objects, each one with its value and weight, and a total budget (Knapsack_Capacity), the Knapsack Problem asks to find a maximum value subset of the objects not exceeding the budget. This service checks and gives full (or partial, during exams or training and for non-superusers) feedback to answers of the problem solver/trainee/student to requests of several kinds all concerning a given Knapsack Problem instance. These didactic variants are suitable for exams but also to more generally assess the competences and comprehension; if these variants do not cover your needs keep in mind the TALight problems aim at being open and foster collaboration among problem makers and instructors. From the system implementing your exams/exercitations, in an exercize centered on an instance of the Knapsack Problem, compose each single request to the student, whose evaluation and feedback contextual and/or posticipated you intend to demand to this TALight service, simply combining its various arguments listed here below. Just to give a first idea, it is possible to impose further constraints on single element to redefine the notion of a feasible solution, and it is also possible to check/validate the correctness of dynamic programming (DP) tables submitted by the student (even for variants of the standard questions that call for mastering competence in DP). With these, the service also supports giving contextual feedback in case partially pre-filled DP tables were supplied to the student/trainee to avoid him being overwhelmed by their size (expecially useful to realistically allow a compilation by hand of the tables on interesting enough instances)."
     args:
       # section with the instance data assigned to the problem-solver/student:
-      elementi:
+      labels:
         regex: ^(.*)$
         default: "['A', 'B', 'C', 'D', 'E']"
         explain: the names of the objects
-      pesi:
+      costs:
         regex: ^(.*)$
         default: "[2, 3, 4, 29, 50]"
         explain: the weights of the objects
-      valori:
+      vals:
         regex: ^(.*)$
         default: "[13, 17, 19, 11, 15]"
         explain: the values of the objects
@@ -23,11 +23,11 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
         explain: the capacity of the knapsack. A subset of the objects is a feasible solution to the Knapsack problem it its total weight sum does not exceed Knapsack_Capacity
-      elementi_proibiti:
+      forced_out:
         regex: ^(.*)$
         default: "[]"
         explain: in order to be feasible, the solution must include no one of these elements
-      elementi_obbligati:
+      forced_in:
         regex: ^(.*)$
         default: "[]"
         explain: in order to be feasible, the solution must include all of these elements
@@ -39,8 +39,8 @@ services:
       instance_dict:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'elementi':['A','B','C'],'pesi':[3,5,7],'valori':[2,4,5], 'Knapsack_Capacity':30}\""
-        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`instance_dict`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite sat designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service."
+        example: "-a instance_dict=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`instance_dict`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite sat designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `costs` or `vals`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service."
 
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       opt_sol:
@@ -134,35 +134,35 @@ services:
         explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
 
       # section with a possible instance to the problem:
-      elementi:
+      labels:
         regex: ^(.*)$
         default: "['A', 'B', 'C', 'D', 'E']"
         explain: nomi degli oggetti
-      pesi:
+      costs:
         regex: ^(.*)$
         default: "[2, 3, 4, 29, 50]"
-        explain: pesi degli oggetti
-      valori:
+        explain: costi degli oggetti
+      vals:
         regex: ^(.*)$
         default: "[13, 17, 19, 11, 15]"
         explain: valori degli oggetti
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
         default: 5
-        explain: una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei pesi non eccede Knapsack_Capacity
-      elementi_proibiti:
+        explain: una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei costi non eccede Knapsack_Capacity
+      forced_out:
         regex: ^(.*)$
         default: "[]"
         explain: la soluzione è tenuta ad evitare questi oggetti
-      elementi_obbligati:
+      forced_in:
         regex: ^(.*)$
         default: "[]"
         explain: la soluzione è tenuta ad includere questi oggetti
       instance_dict:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'elementi':['A','B','C'],'pesi':[3,5,7],'valori':[2,4,5], 'Knapsack_Capacity':30}\""
-        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`instance_dict`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite sat designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service."
+        example: "-a instance_dict=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`instance_dict`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite sat designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `costs` or `vals`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service."
 
       # section characterizing the answer requested to the oracle and the ad-hoc naming for the objects comprising it (the standard names can of course be used):
       request_dict:

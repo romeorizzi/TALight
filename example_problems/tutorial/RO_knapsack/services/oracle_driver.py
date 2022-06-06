@@ -13,12 +13,12 @@ from knapsack_lib import solver, check_instance_consistency
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('pwd',str),
-    ('elementi','list_of_str'),
-    ('pesi','list_of_int'),
-    ('valori','list_of_int'),
+    ('labels','list_of_str'),
+    ('costs','list_of_int'),
+    ('vals','list_of_int'),
     ('Knapsack_Capacity',int),
-    ('elementi_proibiti','list_of_str'),
-    ('elementi_obbligati','list_of_str'),
+    ('forced_out','list_of_str'),
+    ('forced_in','list_of_str'),
     ('instance_dict','yaml'),
     ('request_dict','yaml'),
     ('as_yaml',bool),
@@ -29,7 +29,7 @@ args_list = [
     ('esercizio',int),
     ('task',int),
 ]
-instance_objects = ['elementi','pesi','valori','Knapsack_Capacity','elementi_proibiti','elementi_obbligati']
+instance_objects = ['labels','costs','vals','Knapsack_Capacity','forced_out','forced_in']
 sol_objects_implemented = ['opt_sol','opt_val','DPtable_opt_val']
 
 ENV =Env(args_list)
