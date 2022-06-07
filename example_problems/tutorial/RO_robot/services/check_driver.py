@@ -6,7 +6,7 @@ from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
 import RO_problems_lib as RO
-from knapsack_lib import solver, check_instance_consistency
+from robot_lib import solver, check_instance_consistency
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
