@@ -8,10 +8,10 @@ Note:
 - chiamate con DPtable hanno output None (ATTUALMENTE NON IMPLEMENTATO)
 - invio di file (submission_filehandler) attualmente non supportato nè da Jupyter
 
-CLI:
+CLI examples:
 rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a labels="['A', 'B', 'C']" -a costs="[2, 3, 4]" -a vals="[13, 17, 19]" -a Knapsack_Capacity=5 -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B']}"
 
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B'], 'opt_val':'-1'}" -awith_opening_message  -a instance_dict="{'Knapsack_Capacity': 5, 'labels': ['A', 'B', 'C'], 'costs': [2, 3, 4], 'vals': [13, 17, 19]}"
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -atask=3 -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B'], 'opt_val':'-1'}" -awith_opening_message  -a instance_dict="{'Knapsack_Capacity': 5, 'labels': ['A', 'B', 'C'], 'costs': [2, 3, 4], 'vals': [13, 17, 19]}"
 
 rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a labels="['A', 'B', 'C']" -a costs="[2, 3, 4]" -a vals="[13, 17, 19]" -a Knapsack_Capacity=5 -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B'], 'opt_val':'-1'}" -aas_yaml_with_points=1
 

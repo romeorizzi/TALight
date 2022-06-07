@@ -115,6 +115,9 @@ services:
       pt_feasibility_OK:
         regex: ^(0|[1-9][0-9]*)$
         default: 1
+      pt_consistency_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
       pt_tot:
         regex: ^(0|[1-9][0-9]*)$
         default: 10
