@@ -8,28 +8,26 @@ from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
 import RO_problems_lib as RO
-from knapsack_lib import solver, check_instance_consistency
+from robot_lib import solver, check_instance_consistency
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('pwd',str),
-    ('elementi','list_of_str'),
-    ('pesi','list_of_int'),
-    ('valori','list_of_int'),
-    ('Knapsack_Capacity',int),
-    ('elementi_proibiti','list_of_str'),
-    ('elementi_obbligati','list_of_str'),
-    ('instance_dict','yaml'),
+    ('field','matrix_of_int'),
+    ('diag',bool),
+    ('partialDP_to','list_of_str'),
+    ('partialDP_from','list_of_str'),
+    ('cell_from',str),
+    ('cell_to',str),
+    ('cell_through',str),
     ('request_dict','yaml'),
     ('as_yaml',bool),
-    ('recall_instance',bool),
-    ('recall_request',bool),
+    ('recall_input',bool),
     ('with_opening_message',bool),
-    ('with_output_files',bool),
     ('esercizio',int),
     ('task',int),
 ]
-instance_objects = ['elementi','pesi','valori','Knapsack_Capacity','elementi_proibiti','elementi_obbligati']
+instance_objects = ['field','diag','partialDP_to','partialDP_from','cell_from','cell_to','cell_through']
 sol_objects_implemented = ['opt_sol','opt_val','DPtable_opt_val']
 
 ENV =Env(args_list)
