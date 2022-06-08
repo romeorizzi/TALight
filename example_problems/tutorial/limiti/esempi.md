@@ -91,7 +91,9 @@ Lo stesso esercizio si potrebbe fare in modo meno guidato, ovvero chiedendo se i
 - uno tra i limiti destro e sinistro è infinito o non esiste (discontinuità seconda specie)
 - i limiti destro e sinistro esistono finiti e sono uguali tra loro ma non coincidono con la valutazione della funzione in x0 (discontinuità terza specie)
 - i limiti destro e sinistro sono infiniti ma hanno segno opposto 
+
 E poi continuare come visto sopra.
+
 
 
 ## Esempio SOMMA di successioni:
