@@ -1,4 +1,4 @@
-## Esempio ESISTENZA E CORRETTEZZA DI UN LIMITE:
+<details><summary> **Esempio ESISTENZA E CORRETTEZZA DI UN LIMITE:** </summary>
 
     rtal connect limiti exist_prover (istanza da catalogo)
     dimostra che il limite lim_{x --> 1} x^2+5
@@ -27,8 +27,10 @@
     > # lo vedi? Sei convinto che il limite esista e valga 6? (y/n)
     > y
     > # Oh beh, contento te... Alla prossima!
+</details>
 
-## Esempio ESISTENZA MA NON CORRETTEZZA DI UN LIMITE:
+<details><summary> **Esempio ESISTENZA MA NON CORRETTEZZA DI UN LIMITE:** </summary>
+
     rtal connect limiti exist_prover (istanza da catalogo)
     dimostra se il limite lim_{x --> 1} x^2+5
     > # esiste e vale
@@ -61,9 +63,10 @@
     < 0.1
     > # Wow mi hai convinto! Vale |f(x)-6| < epsilon per tutti i valori di x compresi nell'intervallo (x0-delta , x0+delta)=(0.9 , 1.1) che ho utilizzato per verificare il tuo risultato. 
     > # Ben fatto!
+</details>
 
+<details><summary> **Esempio di NON ESISTENZA DI UN LIMITE: (guidato)** </summary>
 
-## Esempio di NON ESISTENZA DI UN LIMITE: (guidato)
     rtal connect limiti exist_prover  (istanza da catalogo)
     dimostra se il limite lim_{x --> 0} 1/x
     > # esiste e vale
@@ -85,18 +88,19 @@
     > # Oh no! f(-0.15) = -0.6666 e -0.6666 < N 
     > # Mi hai smentito! Non è vero che il limite esiste e vale +inf.
     > # Questo limite non esiste proprio, ben fatto!
+</details>
 
-Lo stesso esercizio si potrebbe fare in modo meno guidato, ovvero chiedendo se il limite non esiste proprio o se è sbagliato solo il risultato, nel primo caso poi si potrebbe chiedere se il problema sia che:
+Lo stesso esercizio appena visto si potrebbe fare in modo meno guidato, ovvero chiedendo se il limite non esiste proprio o se è sbagliato solo il risultato, nel primo caso poi si potrebbe chiedere se il problema sia che:
 - i limiti destro e sinistro esistono finiti ma sono diversi (discontinuità prima specie)
 - uno tra i limiti destro e sinistro è infinito o non esiste (discontinuità seconda specie)
 - i limiti destro e sinistro esistono finiti e sono uguali tra loro ma non coincidono con la valutazione della funzione in x0 (discontinuità terza specie)
 - i limiti destro e sinistro sono infiniti ma hanno segno opposto 
-
 E poi continuare come visto sopra.
 
 
 
-## Esempio SOMMA di successioni:
+<details><summary> **Esempio SOMMA di successioni:** </summary>
+
     rtal connect limiti sum_prover (istanza da catalogo)
     > # dimostra che se lim_{x --> inf} (x-1)/x = 1 e lim_{x --> inf} x/(2x+3) = 1/2 
     > # allora lim_{x --> inf} (x-1)/x + x/(2x+5)
@@ -130,5 +134,88 @@ E poi continuare come visto sopra.
     > # vedi: f+g (9) = 1.3175, e 1.3175 in [1.2 , 1.8]=[l-epsilon,l+epsilon], quindi non sei riuscito a confutare la mia affermazione che  lim_{x --> inf} (x-1)/x + x/(2x+5) esiste e vale 3/2.
     > # lo vedi? Sei convinto che il limite esista e valga 6? (y/n)
     < y
-    > # Oh beh, contento te... Alla prossima!
-  
+    > # Perfetto, alla prossima!
+
+</details>
+
+## ARCHIMEDE
+#### Enunciato:
+Per ogni numero reale positivo a,b, esiste un numero naturale N tale che na > b (ovvero a > b/N).
+(Per ogni epsilon reale positivo esiste un numero naturale N tale che 1/N < epsilon (equivale all' enunciato precedente con b=1 e a=epsilon ) )
+
+- Una successione {a_n} di termini positivi convergente deve avere un limite strettamente positivo, è vero?
+No, basta prendere la successione 1/n costituita di termini positivi ma convergente a 0
+- Dimostra che la successione 1/n, n=1,2,3,... tende a zero:
+usare il fatto che per Archimede preso a piacere epsilon > 0 esiste n \in N per il quale n*epsilon > 1. Dunque, 1/n < epsilon.
+
+<details><summary>**Esempio (dimostrazione enunciato Archimede senza epsilon, più immediata... giocando solo con a, b, e n):** </summary>
+
+    > # è vero che per ogni numero reale positivo a,b, esiste un numero naturale N tale che na > b (ovvero a > b/N)? (y/n)
+    < n
+    > # allora mi stai dicendo che esistono due numeri reali a,b tali che per ogni naturale n abbiamo che an <= b, ovvero n < b/a... vediamo se hai ragione tu
+    > # dammi un valore per a (diverso da 0):
+    < 3.1
+    > # ora dammene uno per b:
+    < 8.06
+    > # proviamo allora a calcolare b/a = 8.06/3.1 = 2.6
+    > # secondo te è vero che i numeri naturali sono tutti <= 2.6? (y/n)
+    < n
+    > # beh, basta prendere 3 per verificare che 3 > 2.6
+    > # sei convinto ora? (y/n)
+    < y
+    > Meno male, alla prossima!
+</details>
+
+<details><summary>**Esempio:**</summary>
+
+    > # Una successione {a_n} di termini positivi convergente non deve avere per forza un limite strettamente positivo
+    > # sei d'accordo con me? (y/n)
+    < n
+    > # Allora consideriamo la successione 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
+    < y
+    > # ma non converge ad un numero strettamente positivo... converge a 0!
+    > # ti ho convinto? (y/n)
+    < n
+    > # Stabilisci un numero reale epsilon > 0:
+    < 0.3
+    > # se ti propongo n=4, si ha che 1/n=1/4=0.25 < 0.3 = epsilon
+    > # proponimi un altro valore per epsilon > 0:
+    < 0.2
+    > # per n=6, si ha che 1/n = 1/6 = 0.166666 < 0.2 = epsilon
+    > # vedi, per qualsiasi epsilon tu scelga, troverò sempre una n tale che 1/n < epsilon e più le epsilon sono piccole, più le n sono grandi
+    > # ci credi ora che per n -> infinito il la successione 1/n converge a 0? (y/n)
+    < y
+    > # Molto bene!
+</details>
+
+<details><summary>**Esempio come sopra ma usando la definizione standard di limite:**</summary>
+
+    > # Non è vero che una successione {a_n} di termini positivi convergente ha un limite strettamente positivo
+    > # sei d'accordo con me? (y/n)
+    < n
+    > # Allora consideriamo la successione a_n = 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
+    < y
+    > # ma non converge ad un numero strettamente positivo... converge a 0!
+    > # ti ho convinto? (y/n)
+    < n
+    > # Stabilisci un numero reale epsilon > 0:
+    < 0.4
+    > # ecco il mio N:
+    > # 2.5
+    > # proponi una tua x > 2.5:
+    < 2.6
+    > # vedi: a_n(2.6) =0.38, e 0.38 \in [-0.4 , 0.4]=[l-e,l+e], quindi non sei riuscito a confutare la mia affermazione.
+    > # Sei convinto ora che la successione converga a 0? (y/n)
+    > y
+    > # Bene, alla prossima!
+</details>
+
+
+
+
+
+
+
+
+
+
