@@ -56,27 +56,28 @@ def dptable_num_to_cell(f: Field, diag: bool = False) -> Field:
         f:    game field table
         diag: allow diagonal moves
     """
-
+    # NOTE: assume f is a matrix shaped jagged array
+    rows, cols = len(f), len(f[0])
+    t = [[0 for _ in range(cols)] for _ in range(rows)]
     # NOTE: cells default to zero, in some cases there is no need to assing values
-    t = [[0 for _ in range(len(f[0]))] for _ in range(len(f))]
     t[0][0] = 1
-    for i in range(1, len(t[0])):
+    for i in range(1, cols):
         if free(f, 0, i):
             t[0][i] = t[0][i - 1]
 
-    for i in range(1, len(t)):
+    for i in range(1, rows):
         if free(f, i, 0):
             t[i][0] = t[i - 1][0]
 
     if diag:
-        for i in range(1, len(t)):
-            for j in range(1, len(t[i])):
+        for i in range(1, rows):
+            for j in range(1, cols):
                 if free(f, i, j):
                     t[i][j] = t[i][j - 1] + t[i - 1][j] + t[i - 1][j - 1]
 
     else:
-        for i in range(1, len(t)):
-            for j in range(1, len(t[i])):
+        for i in range(1, rows):
+            for j in range(1, cols):
                 if free(f, i, j):
                     t[i][j] = t[i][j - 1] + t[i - 1][j]
 
@@ -92,7 +93,33 @@ def dptable_num_from_cell(f: Field, diag: bool = False) -> Field:
         f:    game field table
         diag: allow diagonal moves
     """
-    pass
+    # NOTE: assume f is a matrix shaped jagged array
+    rows, cols = len(f), len(f[0])
+    t = [[0 for _ in range(cols)] for _ in range(rows)]
+
+    # NOTE: cells default to zero, in some cases there is no need to assing values
+    t[-1][-1] = 1
+    for i in reversed(range(cols - 1)):
+        if free(f, -1, i):
+            t[-1][i] = t[-1][i + 1]
+
+    for i in reversed(range(rows - 1)):
+        if free(f, i, -1):
+            t[i][-1] = t[i + 1][-1]
+
+    if diag:
+        for i in reversed(range(rows - 1)):
+            for j in reversed(range(cols - 1)):
+                if free(f, i, j):
+                    t[i][j] = t[i][j + 1] + t[i + 1][j] + t[i + 1][j + 1]
+
+    else:
+        for i in reversed(range(rows - 1)):
+            for j in reversed(range(cols - 1)):
+                if free(f, i, j):
+                    t[i][j] = t[i][j + 1] + t[i + 1][j]
+
+    return t
 
 
 def dptable_opt_to_cell(f: Field, diag: bool = False) -> Field:
@@ -104,26 +131,28 @@ def dptable_opt_to_cell(f: Field, diag: bool = False) -> Field:
         f:    game field table
         diag: allow diagonal moves
     """
+    # NOTE: assume f is a matrix shaped jagged array
+    rows, cols = len(f), len(f[0])
+    t = [[0 for _ in range(cols)] for _ in range(rows)]
 
-    t = [[0 for _ in range(len(f[0]))] for _ in range(len(f))]
     t[0][0] = f[0][0]
-    for i in range(1, len(t[0])):
+    for i in range(1, cols):
         if free(f, 0, i):
             t[0][i] = f[0][i] + t[0][i - 1]
 
-    for i in range(1, len(t)):
+    for i in range(1, rows):
         if free(f, i, 0):
             t[i][0] = f[i][0] + t[i - 1][0]
 
     if diag:
-        for i in range(1, len(t)):
-            for j in range(1, len(t[i])):
+        for i in range(1, rows):
+            for j in range(1, cols):
                 if free(f, i, j):
                     t[i][j] = f[i][j] + max([t[i][j - 1], t[i - 1][j], t[i - 1][j - 1]])
 
     else:
-        for i in range(1, len(t)):
-            for j in range(1, len(t[i])):
+        for i in range(1, rows):
+            for j in range(1, cols):
                 if free(f, i, j):
                     t[i][j] = f[i][j] + max(t[i][j - 1], t[i - 1][j])
 
@@ -131,7 +160,40 @@ def dptable_opt_to_cell(f: Field, diag: bool = False) -> Field:
 
 
 def dptable_opt_from_cell(f: Field, diag: bool = False) -> Field:
-    pass
+    """
+    Build a DP table suitable for finding the maximum value.
+    Construction starts from the cell in the bottom-right corner.
+
+    Args:
+        f:    game field table
+        diag: allow diagonal moves
+    """
+    # NOTE: assume f is a matrix shaped jagged array
+    rows, cols = len(f), len(f[0])
+    t = [[0 for _ in range(cols)] for _ in range(rows)]
+
+    t[-1][-1] = f[-1][-1]
+    for i in reversed(range(cols - 1)):
+        if free(f, -1, i):
+            t[-1][i] = f[-1][i] + t[-1][i + 1]
+
+    for i in reversed(range(rows - 1)):
+        if free(f, i, -1):
+            t[i][-1] = f[i][-1] + t[i + 1][-1]
+
+    if diag:
+        for i in reversed(range(rows - 1)):
+            for j in reversed(range(cols - 1)):
+                if free(f, i, j):
+                    t[i][j] = f[i][j] + max([t[i][j + 1], t[i + 1][j], t[i + 1][j + 1]])
+
+    else:
+        for i in reversed(range(rows - 1)):
+            for j in reversed(range(cols - 1)):
+                if free(f, i, j):
+                    t[i][j] = f[i][j] + max(t[i][j + 1], t[i + 1][j])
+
+    return t
 
 
 def dptable_num_opt_to_cell(f: Field, diag: bool = False) -> Field:
@@ -167,7 +229,7 @@ def solver(input_to_oracle):
     num_opt_paths = 0
     opt_val = 0
     opt_path = []
-    list_opt_path = []
+    list_opt_path = [[]]
 
     oracle_answers = {}
     for std_name, ad_hoc_name in input_to_oracle["request"].items():
