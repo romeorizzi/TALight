@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass
 from sys import stderr
+from tkinter.tix import CELL
 
 
-Field = list[list[int]]
 Cell = tuple[int, int]
+Field = list[list[int]]
 
 
 def parse_cell(cell: str) -> Cell:
@@ -344,8 +345,57 @@ def build_opt_path(dptable: Field, diag: bool = False) -> list[Cell]:
     return path
 
 
-def build_all_opt_path(dptable: Field, diag: bool = False) -> list[list[Cell]]:
-    pass
+def build_all_opt_path(f: Field, dptable: Field, diag: bool = False) -> list[list[Cell]]:
+    rows, cols = len(f), len(f[0])
+    paths = []
+    
+    def _build_exclude_diag(path: list[Cell]):
+        if (cell:= path[-1]) != (rows - 1, cols -1): # not last cell
+            row, col = cell
+            value_on_opt_path = dptable[row][col] - f[row][col]
+            if row < (rows - 1): # check the cell in the next row
+                if dptable[row + 1][col] == value_on_opt_path:
+                    _build_exclude_diag(path + [(row + 1, col)])
+
+            if col < (cols - 1): # check the cell in the next column
+                if dptable[row][col + 1] == value_on_opt_path:
+                    _build_exclude_diag(path + [(row, col + 1)])
+        else:
+            paths.append(path)
+
+    def _build_include_diag(path: list[Cell]):
+        if (cell:= path[-1]) != (rows - 1, cols -1): # not last cell
+            row, col = cell
+            value_on_opt_path = dptable[row][col] - f[row][col]
+            if row < (rows - 1): # check the cell in the next row
+                if dptable[row + 1][col] == value_on_opt_path:
+                    _build_include_diag(path + [(row + 1, col)])
+
+            if col < (cols - 1): # check the cell in the next column
+                if dptable[row][col + 1] == value_on_opt_path:
+                    _build_include_diag(path + [(row, col + 1)])
+
+            if row < (rows - 1) and col < (cols - 1):
+                if dptable[row + 1][col + 1] == value_on_opt_path:
+                    _build_include_diag(path + [(row + 1, col + 1)])
+        else:
+            paths.append(path)
+
+    if diag:
+        _build_include_diag([(0,0)])
+    else:
+        _build_exclude_diag([(0,0)])
+    return paths
+
+
+def conceal(dptable: Field):
+    """
+    Conceals some cells of the table
+    """
+    # TODO: discuss how to select the cells to obfuscate
+    cells = []
+    for row, col in cells:
+        dptable[row][col] = -1
 
 
 def solver(input_to_oracle):
@@ -373,10 +423,8 @@ def solver(input_to_oracle):
     num_paths = DPtable_num_to[-1][-1]
     num_opt_paths = DPtable_num_opt_to[-1][-1]
     opt_val = DPtable_opt_to[-1][-1]
-    list_opt_path = [[]]
+    list_opt_path = build_all_opt_path(field, DPtable_opt_from, diag=diag)
     opt_path = list_opt_path[0]
-
-    # TODO: random obfuscation of dptables as last step
 
     oracle_answers = {}
     for std_name, ad_hoc_name in input_to_oracle["request"].items():
