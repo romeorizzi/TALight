@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import math
+from sympy import *
 
 def alfabeto(variable):
     for word in {'sqrt','log','pow','factorial','exp','cos','sin','tan','acos','asin','atan','pi','e','inf'}:
@@ -40,3 +41,46 @@ def x_0_finito(x_0,eps_N):
     assert delta > 0, "Hai inserito un delta negativo!"
     intervallo= np.linspace(x_0-delta, x_0+delta, 50)
     return delta, intervallo
+
+def disequazione():
+    a = float(input("inserire a: "))
+    b = float(input("inserire b: "))
+    c = float(input("inserire c: "))
+    if a == 0:
+        if b == 0:
+            print('no benee')
+            return('Input non valido')
+        else:
+            if c == 0:
+                if b>0:
+                    return("x > 0")
+                else:
+                    return("x < 0")
+            else:
+                if b>0:
+                    return("x > " + str(-c/b))
+                else: 
+                    return("x < " + str(-c/b))
+    else:
+        delta = b**2 - (4*a*c)
+        print("La disequazione da risolvere e': ", a, "x^2 +", b, "x +", c, "> 0")
+        if delta < 0 and a > 0:
+            return ("La soluzione e' l'insieme dei numeri R")
+        elif delta < 0 and a < 0:
+            return("La soluzione in R e' l'insieme vuoto")
+        elif delta >= 0 and a > 0:
+            x1 = ((-b) + math.sqrt(delta))/(2*a)
+            x2 = ((-b) - math.sqrt(delta))/(2*a)
+            print("La soluzione e' l'intervallo esterno delle radici\n")
+            if x1 < x2:
+                return("x < " + str(x1) + " e x > " + str(x2))
+            else:
+                return("x < " + str(x2) + " e x > " + str(x1))
+        elif delta >= 0 and a < 0:
+            print("La soluzione e' nell'intervallo interno tra le radici\n")
+            x1 = ((-b) + math.sqrt(delta))/(2*a)
+            x2 = ((-b) - math.sqrt(delta))/(2*a)
+            if x1 > x2:
+                return(" "+ str(x2) + " < x < "+str(x1))
+            else:
+                return(" "+ str(x1) + " < x < "+str(x2))
