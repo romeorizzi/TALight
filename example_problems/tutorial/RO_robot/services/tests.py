@@ -65,6 +65,64 @@ class TestDPTableGenerators(unittest.TestCase):
         self.assertEqual(exclude, dptable_opt_to_cell(field, diag=False))
         self.assertEqual(include, dptable_opt_to_cell(field, diag=True))
 
+    def test_opt_from_cell(self):
+        # TODO: change the example because diagonal moves produce the same result
+        field = [[0,  0, -1,  0, 0],
+                 [0,  2,  0,  4, 0],
+                 [3,  0,  0, -1, 0],
+                 [0, -1,  5,  0, 0]]
+        exclude = [[8, 7, 0, 4, 0],
+                   [8, 7, 5, 4, 0],
+                   [8, 5, 5, 0, 0],
+                   [0, 0, 5, 0, 0]]
+        include = [[8, 7, 0, 4, 0],
+                   [8, 7, 5, 4, 0],
+                   [8, 5, 5, 0, 0],
+                   [0, 0, 5, 0, 0]]
+        self.assertEqual(exclude, dptable_opt_from_cell(field, diag=False))
+        self.assertEqual(include, dptable_opt_from_cell(field, diag=True))
+
+    def test_num_opt_to_cell(self):
+        field = [[0,  3, -1,  0],
+                 [0,  0,  0,  4],
+                 [2, -1,  0,  0]]
+        exclude = [[(1, 0), (1, 3), (0, 0), (0, 0)],
+                   [(1, 0), (1, 3), (1, 3), (1, 7)],
+                   [(1, 2), (0, 0), (1, 3), (1, 7)]]
+        include = [[(1, 0), (1, 3), (0, 0), (0, 0)],
+                   [(1, 0), (1, 3), (2, 3), (2, 7)],
+                   [(1, 2), (0, 0), (3, 3), (2, 7)]]
+        self.assertEqual(exclude, dptable_num_opt_to_cell(field, diag=False))
+        self.assertEqual(include, dptable_num_opt_to_cell(field, diag=True))
+
+    def test_num_opt_from_cell(self):
+        field = [[0,  3, -1,  0],
+                 [0,  0,  0,  4],
+                 [2, -1,  0,  0]]
+        exclude = [[(1, 7), (1, 7), (0, 0), (1, 4)],
+                   [(1, 4), (1, 4), (1, 4), (1, 4)],
+                   [(0, 2), (0, 0), (1, 0), (1, 0)]]
+        include = [[(2, 7), (2, 7), (0, 0), (1, 4)],
+                   [(1, 4), (1, 4), (1, 4), (1, 4)],
+                   [(0, 2), (0, 0), (1, 0), (1, 0)]]
+        self.assertEqual(exclude, dptable_num_opt_from_cell(field, diag=False))
+        self.assertEqual(include, dptable_num_opt_from_cell(field, diag=True))
+
+
+class TestPathGenerators(unittest.TestCase):
+
+    def test_single_opt_path(self):
+        field = [[1, 1, 1, 0, 1],
+                 [0, 0, 1, 1, 1],
+                 [1, 0, 0, 0, 1],
+                 [1, 1, 1, 0, 1]]
+        path = [(0,0), (0,1), (0,2), (1,2), (1,3), (1,4), (2,4), (3,4)]
+        table = dptable_opt_to_cell(field, diag=False)
+        self.assertEqual(path, build_opt_path(table, diag=False))
+
+    def test_list_all_opt_paths(self):
+        assert False
+
 
 if __name__ == "__main__":
     unittest.main()
