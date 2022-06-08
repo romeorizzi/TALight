@@ -107,7 +107,7 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
             g_val = goals['opt_val']; g_sol = goals['opt_sol'];
             if sum_vals != g_val.answ:
                 return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
-            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_soll.alias}`.")
+            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.")
         return True
                 
     if not verify_format():
