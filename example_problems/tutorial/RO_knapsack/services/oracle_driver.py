@@ -48,7 +48,7 @@ RO_io.check_request(ENV['request_dict'], sol_objects_implemented)
 request_dict = ENV["request_dict"]
 if len(request_dict) == 0:
     request_dict = { key:key for key in sol_objects_implemented }
-print(f"request_dict={request_dict}", file=stderr)
+#print(f"request_dict={request_dict}", file=stderr)
     
 call_data = {"instance":instance_dict,"request":request_dict}
 call_data["oracle"] = solver(call_data)

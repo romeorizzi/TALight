@@ -17,9 +17,10 @@ def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
 
             
 def dict_of_instance(instance_objects,args_list,ENV):
+    #print("CASE: the instance objects have been passed one by one:
     if len(ENV["instance_dict"]) == 0:
         return {var_name:ENV[var_name] for var_name in instance_objects}
-    #print("CASE: the instance objects have been passed one by one, NOT through the `instance_dict` dictionary"):
+    #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["instance_dict"]` variable"):
     instance_dict = {}
     args_dict = { obj_name:obj_type  for obj_name,obj_type in args_list }
     for obj_name in instance_objects:
