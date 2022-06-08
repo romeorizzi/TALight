@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from sys import stderr
-import RO_problems_lib as RO
       
 def sum_of_costs_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["costs"], instance["labels"]) if ele in ordered_list_of_elems])
