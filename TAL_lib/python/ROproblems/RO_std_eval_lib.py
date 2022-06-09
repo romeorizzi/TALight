@@ -6,7 +6,7 @@ from ansi2html import Ansi2HTMLConverter
 ansi2html = Ansi2HTMLConverter(inline = True)
 
 class std_eval_feedback:
-    def __init__(self, task_number:int, pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int,pt_consistency_OK:int, with_positive_enforcement:bool=True,with_notes:bool=True,COLOR_IMPLEMENTATION ="ANSI", new_line='\n'):
+    def __init__(self, task_number:int, pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int,pt_consistency_OK:int, with_positive_enforcement:bool=True,with_notes:bool=True, COLOR_IMPLEMENTATION ="ANSI", new_line='\n'):
 # Note: for web renditions in the `esami-RO-private` project use:
 #       COLOR_IMPLEMENTATION ="html", new_line='\\n'
         self.COLOR_IMPLEMENTATION = COLOR_IMPLEMENTATION
@@ -89,7 +89,7 @@ class std_eval_feedback:
     def voice_OK(self, voice:str, positive_enforcement:str, note:str):
         self.feedback_append(f"• {voice}: "+self.colored(f"OK", "green", ["bold"]))
         if self.with_positive_enforcement:
-            self.feedback_append(self.colored(".", "green", ["bold"])+self.colored(f"..(nota: ", "green") + positive_enforcement + self.colored(")", "green"))
+            self.feedback_append(self.colored(".", "green", ["bold"])+self.colored(f"..(infatti: ", "green") + positive_enforcement + self.colored(")", "green"))
         if self.with_notes:
             self.feedback_append(self.colored(".", "green", ["bold"])+self.colored(f".", "green")+self.colored(f".", "cyan") + self.colored(f".(nota: ", "cyan", ["bold"]) + note + self.colored(")", "cyan", ["bold"]))
         self.feedback_append(self.colored(self.new_line))
