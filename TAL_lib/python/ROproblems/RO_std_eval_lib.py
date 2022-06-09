@@ -52,12 +52,12 @@ class std_eval_feedback:
 #        file = open("points.txt", "w")
 #        file.write(str(arr_point))
 #        file.close()
-        self.summary_of_scores = self.colored("Totalizzi ", ["bold"]) + \
+        self.summary_of_scores = self.colored(f"{self.new_line}Totalizzi ", ["bold"]) + \
                                self.colored(f"[punti sicuri: {pt_safe}]", "green", ["bold"]) + ", " + \
                                self.colored(f"[punti aggiuntivi possibili: {pt_maybe}]", "blue", ["bold"]) + ", " + \
                                self.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"])
         self.last_explanation = self.colored(f"{self.new_line}Spiegazione: ", "cyan", ["bold"]) + explanation + self.colored(f"{self.new_line}")
-        self.feedback_append(f"{self.new_line}" + self.summary_of_scores)
+        self.feedback_append(self.summary_of_scores)
         self.feedback_append(self.last_explanation)
         if pt_safe is None:
             pt_safe = 0
