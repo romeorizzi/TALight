@@ -62,7 +62,7 @@ TALf = TALfilesHelper(TAc, ENV)
 TOKEN_REQUIRED = False
 RO_io.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_REQUIRED)
 instance_dict = RO_io.dict_of_instance(instance_objects,args_list,ENV)
-print(f"instance_dict={instance_dict}", file=stderr)
+#print(f"instance_dict={instance_dict}", file=stderr)
 check_instance_consistency(instance_dict)
 request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['alias_dict'], answer_object_type_spec, sol_objects_implemented)
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)

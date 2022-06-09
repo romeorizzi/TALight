@@ -121,6 +121,5 @@ class std_eval_feedback:
             
     def feedback_when_all_checks_passed(self):
         self.evaluation_format(f"Quanto sottomesso{'' if self.task_number < 0 else ' per la Richiesta '+str(self.task_number)} ha superato tutti i miei controlli. Ovviamente in sede di esame non posso esprimermi sull'ottimalità di valori e di soluzioni immesse. Il mio controllo e supporto si è limitato alla compatibilità di formato, all'ammissibilità, e alla consistenza dei dati immessi.", pt_safe=self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK,pt_out=0)
-        print(f"self.completed_feedback={self.completed_feedback}",file=stderr)
         return self.completed_feedback
 
