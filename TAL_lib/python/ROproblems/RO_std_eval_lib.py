@@ -18,6 +18,10 @@ class std_eval_feedback:
         self.pt_consistency_OK = pt_consistency_OK
         self.feedback_so_far = ""
         self.completed_feedback = False
+
+    def feedback_append(self, last_feedback_msg:str):
+        self.feedback_so_far += last_feedback_msg
+        print(f"current feedback={self.feedback_so_far}",file=stderr)
     
     def colored(self, msg_text, *msg_rendering):
         if self.COLOR_IMPLEMENTATION == None:
@@ -48,13 +52,14 @@ class std_eval_feedback:
 #        file = open("points.txt", "w")
 #        file.write(str(arr_point))
 #        file.close()
-        self.feedback_so_far += "Totalizzi "
-        self.feedback_so_far += self.colored(f"[punti sicuri: {pt_safe}]", "green", ["bold"]) + ", "
-        self.feedback_so_far += self.colored(f"[punti aggiuntivi possibili: {pt_maybe}]", "blue", ["bold"]) + ", " 
-        self.feedback_so_far += self.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + self.colored(f"{self.new_line}Spiegazione: ", "cyan", ["bold"]) + explanation + self.colored(f"{self.new_line}")
-        if pt_safe == None:
+        self.feedback_append("Totalizzi " + \
+                               self.colored(f"[punti sicuri: {pt_safe}]", "green", ["bold"]) + ", " + \
+                               self.colored(f"[punti aggiuntivi possibili: {pt_maybe}]", "blue", ["bold"]) + ", " + \
+                               self.colored(f"[punti fuori portata: {pt_out}]", "red", ["bold"]) + \
+                             self.colored(f"{self.new_line}Spiegazione: ", "cyan", ["bold"]) + explanation + self.colored(f"{self.new_line}"))
+        if pt_safe is None:
             pt_safe = 0
-        if pt_out == None:
+        if pt_out is None:
             pt_out = 0
         self.completed_feedback = {'pt_safe':pt_safe,'pt_maybe':pt_maybe,'pt_out':pt_out,'pt_available':self.pt_tot,'feedback_string':self.feedback_so_far}
 
@@ -74,36 +79,39 @@ class std_eval_feedback:
         return goals
 
     def format_NO(self, goal, explanation):
-        self.feedback_so_far += f"formato di `{goal.std_name}`: "+self.colored(f"NO{self.new_line}", "red", ["bold"])
+        self.feedback_append(f"- Formato di `{goal.alias}`: "+self.colored(f"NO{self.new_line}", "red", ["bold"]))
+        self.feedback_append(self.colored(f"     motivo: ", "cyan", ["bold"]) + explanation + self.new_line)
         self.evaluation_format(explanation, pt_safe=None,pt_out=self.pt_tot)
         return False
         
     def format_OK(self, goal, positive_enforcement, note=None):
-        self.feedback_so_far += f"formato di `{goal.std_name}`: "+self.colored(f"OK{self.new_line}", "green", ["bold"])
+        self.feedback_append(f"- Formato di `{goal.alias}`: "+self.colored(f"OK{self.new_line}", "green", ["bold"]))
         if note != None:
-            self.feedback_so_far += self.colored(f"    {self.new_line}-nota: ", "cyan", ["bold"]) + note
+            self.feedback_append(self.colored(f"     nota: ", "cyan", ["bold"]) + note + self.new_line)
         
     def feasibility_NO(self, goal, explanation):
-        self.feedback_so_far += f"ammissibilità di `{goal.std_name}`: "+self.colored(f"NO{self.new_line}", "red", ["bold"])
+        self.feedback_append(f"- Ammissibilità di `{goal.alias}`: "+self.colored(f"NO{self.new_line}", "red", ["bold"]))
+        self.feedback_append(self.colored(f"     motivo: ", "cyan", ["bold"]) + explanation + self.new_line)
         self.evaluation_format(explanation, pt_safe=self.pt_formato_OK,pt_out=self.pt_tot-self.pt_formato_OK)
         return False
         
     def feasibility_OK(self, goal, positive_enforcement, note=None):
-        self.feedback_so_far += f"ammissibilità di `{goal.std_name}`: "+self.colored(f"OK{self.new_line}", "green", ["bold"])
+        self.feedback_append(f"- Ammissibilità di `{goal.alias}`: "+self.colored(f"OK{self.new_line}", "green", ["bold"]))
         if note != None:
-            self.feedback_so_far += self.colored(f"    {self.new_line}-nota: ", "cyan", ["bold"]) + note
+            self.feedback_append(self.colored(f"     nota: ", "cyan", ["bold"]) + note + self.new_line)
         
     def consistency_NO(self, goals, explanation):
-        self.feedback_so_far += f"consistenza tra `{'` e `'.join([goal_std_name for goal_std_name in goals])}`: "+self.colored(f"NO{self.new_line}", "red", ["bold"])
+        self.feedback_append(f"- Consistenza tra `{'` e `'.join([goal_std_name for goal_std_name in goals])}`: "+self.colored(f"NO{self.new_line}", "red", ["bold"]))
+        self.feedback_append(self.colored(f"     motivo: ", "cyan", ["bold"]) + explanation + self.new_line)
         self.evaluation_format(explanation, pt_safe=self.pt_formato_OK+self.pt_feasibility_OK,pt_out=self.pt_tot-self.pt_formato_OK-self.pt_feasibility_OK)
         return False
         
-    def consistency_OK(self, goal, positive_enforcement, note=None):
-        self.feedback_so_far += f"ammissibilità di `{goal.std_name}`: "+self.colored(f"OK{self.new_line}", "green", ["bold"])
+    def consistency_OK(self, goals, positive_enforcement, note=None):
+        self.feedback_append(f"- Consistenza tra `{'` e `'.join([goal_std_name for goal_std_name in goals])}`: "+self.colored(f"OK{self.new_line}", "green", ["bold"]))
         if note != None:
-            self.feedback_so_far += self.colored(f"    {self.new_line}-nota: ", "cyan", ["bold"]) + note
+            self.feedback_append(self.colored(f"     nota: ", "cyan", ["bold"]) + note + self.new_line)
 
-
+            
     def feedback_when_all_checks_passed(self):
         self.evaluation_format(f"Quanto sottomesso{'' if self.task_number < 0 else ' per la Richiesta '+str(self.task_number)} ha superato tutti i miei controlli. Ovviamente in sede di esame non posso esprimermi sull'ottimalità di valori e di soluzioni immesse. Il mio controllo e supporto si è limitato alla compatibilità di formato, all'ammissibilità, e alla consistenza dei dati immessi.", pt_safe=self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK,pt_out=0)
         return self.completed_feedback
