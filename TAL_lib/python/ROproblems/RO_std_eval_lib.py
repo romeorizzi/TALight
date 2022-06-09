@@ -84,7 +84,7 @@ class std_eval_feedback:
 
     
     def voice_NO(self, voice:str, explanation:str):
-        self.feedback_append(f"• {voice}: "+self.colored(f"NO.", "red", ["bold"])+self.colored(f".", "red")+self.colored(f".", "magenta") + self.colored(f".(motivo: ", "magenta", ["bold"]) + explanation + self.colored(")", "magenta", ["bold"]) + f"{self.new_line}")
+        self.feedback_append(f"• {voice}: "+self.colored(f"NO.", "red", ["bold"])+self.colored(f".", "red")+self.colored(f".", "magenta") + self.colored(f".(motivo: ", "magenta", ["bold"]) + explanation + self.colored(")", "magenta", ["bold"]) + self.colored(self.new_line))
 
     def voice_OK(self, voice:str, positive_enforcement:str, note:str):
         self.feedback_append(f"• {voice}: "+self.colored(f"OK", "green", ["bold"]))
