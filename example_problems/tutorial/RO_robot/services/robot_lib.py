@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass
 from sys import stderr
-from tkinter.tix import CELL
 
 
 Cell = tuple[int, int]
