@@ -156,8 +156,9 @@ def oracle_logs(call_data,ENV,TALf):
 
 
 def checker_reply(all_data,ENV):
+    print(f"all_data={all_data}", file=stderr)
     feedback_dict = all_data["feedback"]
-    #print(f"feedback_dict={feedback_dict}", file=stderr)
+    print(f"feedback_dict={feedback_dict}", file=stderr)
     if ENV["recall_instance"]:
         feedback_dict["instance"] = all_data["instance"]
     feedback_dict["answer"] = all_data["long_answer"]

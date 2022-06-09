@@ -77,7 +77,7 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
             g = goals['opt_val']
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", note=f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.")            
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
         if 'opt_sol' in goals:
             g = goals['opt_sol']
             if type(g.answ) != list:
@@ -85,7 +85,7 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
             for ele in g.answ:
                 if ele not in I.labels:
                     return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {I.labels}.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", note=f"resta da stabilire l'ammissibilità di `{g.alias}`.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         return True
                 
     def verify_feasibility():
@@ -99,7 +99,7 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
                     return SEF.feasibility_NO(g, f"Nella lista `{g.alias}` hai dimenticato di inserire l'oggetto `{ele}` che invece è forzato. Gli oggetti forzati per la Richiesta {str(SEF.task_number)} sono {I.forced_in}.")
             if sum_costs > I.Knapsack_Capacity:
                 return SEF.feasibility_NO(g, f"La tua soluzione in `{g.alias}` ha costo {sum_costs} > I.Knapsack_Capacity e quindi NON è ammissibile in quanto fora il budget per la Richiesta {str(SEF.task_number)}. La soluzione da tè inserita ricomprende il sottoinsieme di oggetti `{g.alias}`= {g.answ}.")
-            SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", note=f"resta da stabilire l'ammissibilità di `{g.alias}`.")
+            SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
         return True
                 
     def verify_consistency():
