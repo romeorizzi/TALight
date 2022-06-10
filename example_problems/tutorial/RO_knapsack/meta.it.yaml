@@ -87,6 +87,15 @@ services:
       as_yaml_with_points:
         regex: ^(0|1)$
         default: 0
+      with_positive_enforcement:
+        regex: ^(0|1)$
+        default: 1
+      with_notes:
+        regex: ^(0|1)$
+        default: 1
+      recall_instance:
+        regex: ^(0|1)$
+        default: 0
       yield_certificate_in_output_file:
         regex: ^(0|1)$
         default: 0

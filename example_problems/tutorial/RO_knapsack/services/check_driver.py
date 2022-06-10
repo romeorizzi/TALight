@@ -123,8 +123,8 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
 
 
             
-SEF = RO_eval.std_eval_feedback(ENV["task"],ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"],ENV["pt_consistency_OK"])
-feedback_dict = verify_RO_knapsack_submission(SEF,instance_dict, long_answer_dict=long_answer_dict )
+SEF = RO_eval.std_eval_feedback(ENV)
+feedback_dict = verify_RO_knapsack_submission(SEF,instance_dict, long_answer_dict=long_answer_dict)
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
 all_data = {"instance":instance_dict,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
