@@ -46,6 +46,8 @@ services:
         regex: ^(.*)$
         default: "[-1,1,-1,1,1]"
         explain: "a partial DP table where some entries may have been concealed overwriting a -1 on top of them. Otherwise, `partial_num_free[v]` is the number of minimum cost node covers of the subtree T[v] o T rooted at v."
+
+      # API mode section, again to send the input received from the problem-solver to the service:
       instance_dict:
         regex: ^(.*)$
         default: "{}"
@@ -96,6 +98,8 @@ services:
         default: "[-1,1,-1,1,1]"
         explain: "`num_free[v]` è il numero di node covers di minimo costo per il sottoalbero T[v] di T radicato in v."
         explain-english: "`num_free[v]` is the number of minimum cost node covers of the subtree T[v] o T rooted at v."
+
+      # API mode section, always to send the answers of the problem-solver:
       answer_dict:
         regex: ^(.*)$
         default: ""

@@ -36,6 +36,8 @@ services:
         default: "[]"
         explain: "a partial DP table where some entries have been hidden/concealed by overwriting a -1 on top of them."
         example: "[ [ 0, 0, 0, 0, 0], [ 0, 0, 13, 13, 13], [ 0, 0, 13, 17, 17], [ 0, 0, 13, 17, -1] ]."
+
+      # API mode section, again to send the input received from the problem-solver to the service:
       instance_dict:
         regex: ^(.*)$
         default: "{}"
@@ -67,6 +69,8 @@ services:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
         explain: 'the DP table meant to tell the number of optimal solutions for any prefix of the available objects (note: in this case the order must be the one they have when we assign them to student) and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
+
+      # API mode section, always to send the answers of the problem-solver:
       answer_dict:
         regex: ^(.*)$
         default: ""
@@ -74,7 +78,6 @@ services:
         example2: "-a answer_dict=\"{'opt_sol1':['A', 'B'], 'opt_val1':30}\""
         explain: "There are two options for passing to this TALight service the anwer to be evaluated and provided a feedback with. Either you use a separate argument for each possible object type comprising your answer, or you callect them all within one single dictionary that you pass through this one argument (`answer_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty string) then the first option is assumed, which may be better when experiencing the service from the CLI. Otherwise, the string passed through `answer_dict` is read as yaml to obtain the dictionary containing the answer of the student. An answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type represented by the standard name attached to it (e.g., like `opt_sol` or `opt_val`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible answer objects, and their names, by inspecting the complete list of arguments to this service). You can use these standard names as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows for more freedom: it allows you to introduce custom names, defined in terms of the standard ones (just an aliasing) and to attach them to the objects comprising your answer, using them as keys in your `answer_dict` dictionary. In this way the feedback provided by the service will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`. Put in other words, when using Option (2) you can rename the available objects (for more proximity to the problem solver in its own context) by means of the ancillary argument `alias_dict`, that makes sense only in tandem with this one."
 
-      # section with the request that was posed to the problem-solver/student:
       alias_dict:
         regex: ^(.*)$
         default: "{}"

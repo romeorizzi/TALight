@@ -45,6 +45,8 @@ services:
         regex: ^(.*)$
         default: "[-1,1,-1,1,1]"
         explain: "una tabella di programmazione dinamica (DP) solo parzialmente compilata, con dei -1 sovraimposti per nascondere alcune delle risposte. Altrimenti, `partial_num_free[v]` è il numero di node covers di minimo costo per il sottoalbero T[v] di T radicato in v."
+
+      # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
       instance_dict:
         regex: ^(.*)$
         default: "{}"
@@ -96,7 +98,7 @@ services:
         explain: "`num_free[v]` è il numero di node covers di minimo costo per il sottoalbero T[v] di T radicato in v."
         explain-english: "`num_free[v]` is the number of minimum cost node covers of the subtree T[v] o T rooted at v."
 
-      # sezione API del servizio:
+      # sezione modalità API, sempre per far pervenire le risposte del problem-solver:
       answer_dict:
         regex: ^(.*)$
         default: ""

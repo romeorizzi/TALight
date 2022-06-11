@@ -56,6 +56,8 @@ Dato un insieme di nodi S che includa s ma non t, l'insieme di quegli archi dire
         regex: ^(.*)$
         default: "[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]"
         explain: "proposto come flusso con val(xx) > val(x) per chiedere di derivarne un cammino aumentante oppure la decomposizione del flusso differenza (xx-x) in termini di flussi elementari."
+
+      # API mode section, again to send the input received from the problem-solver to the service:
       instance_dict:
         regex: ^(.*)$
         default: "{}"
@@ -146,6 +148,8 @@ Dato un insieme di nodi S che includa s ma non t, l'insieme di quegli archi dire
         default: "[]"
         explain: "un taglio che non includa l'arco in questione, corredato di un flusso dello stesso valore; consentiamo allo studente di inserire il flusso ed il taglio nella forma che preferisce"
         example: "[{0},[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]] lamenterebbe che il taglio e il flusso non hanno lo stesso valore. Invece [{0},[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]] lamenterebbe che il taglio contiene l'arco. Di fatto questo certificato non sarebbe producibile dato che supporterebbe un'affermazione falsa."
+
+      # API mode section, always to send the answers of the problem-solver:
       answer_dict:
         regex: ^(.*)$
         default: ""

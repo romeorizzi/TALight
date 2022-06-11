@@ -36,6 +36,8 @@ services:
         default: "[]"
         explain: "una tabella di programmazione dinamica solo parzialmente riempita (gli elementi nascosti sono stati sovrascritti da dei -1).
         example: [ [ 0, 0, 0, 0, 0], [ 0, 0, 13, 13, 13], [ 0, 0, 13, 17, 17], [ 0, 0, 13, 17, -1] ]."
+
+      # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
       instance_dict:
         regex: ^(.*)$
         default: "{}"
@@ -67,8 +69,8 @@ services:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
         explain: "la tabella di programmazione dinamica che dice il numero di soluzioni ottime per ogni prefisso degli oggetti assegnati (nota: in questo caso l'ordine deve essere quello che hanno quando li assegniamo allo studente) e per ogni possibile valore di capacità dello zaino fino a `Knapsack_Capacity`"
-	
-      # sezione API del servizio:
+
+      # sezione modalità API, sempre per far pervenire le risposte del problem-solver:
       answer_dict:
         regex: ^(.*)$
         default: ""
