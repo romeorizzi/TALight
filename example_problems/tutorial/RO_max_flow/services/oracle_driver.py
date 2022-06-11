@@ -8,7 +8,7 @@ from TALfiles import TALfilesHelper
 
 import RO_std_io_lib as RO_io
 
-from max_flow import solver, check_instance_consistency
+from max_flow_lib import solver, check_instance_consistency
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
