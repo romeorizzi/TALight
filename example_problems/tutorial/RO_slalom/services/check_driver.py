@@ -1,123 +1,139 @@
 #!/usr/bin/env python3
-from sys import exit
+from sys import exit, stderr
 from typing import Optional, List, Dict, Tuple
+from types import SimpleNamespace
 
 from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
-import RO_problems_lib as RO
-import knapsack_lib
+import RO_std_io_lib as RO_io
+import RO_std_eval_lib as RO_eval
+
+from slalom_lib import solver, check_instance_consistency
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('elementi','list_of_str'),
-    ('pesi','list_of_int'),
-    ('valori','list_of_int'),
+    ('labels','list_of_str'),
+    ('costs','list_of_int'),
+    ('vals','list_of_int'),
     ('Knapsack_Capacity',int),
-    ('elementi_proibiti','list_of_str'),
-    ('elementi_obbligati','list_of_str'),
-    ('sol_type',str),
+    ('forced_out','list_of_str'),
+    ('forced_in','list_of_str'),
+    ('partialDPtable','matrix_of_int'),
+    ('instance_dict','yaml'),
     ('opt_sol','yaml'),
     ('opt_val','yaml'),
-    ('DPtable','yaml'),
-    ('name_of_opt_val',str),
-    ('name_of_opt_sol',str),
-    ('name_of_DPtable',str),
+    ('num_opt_sols','yaml'),
+    ('list_opt_sols','yaml'),
+    ('DPtable_opt_val','yaml'),
+    ('DPtable_num_opts','yaml'),
+    ('alias_dict','yaml'),
+    ('answer_dict','yaml'),
     ('color_implementation',str),
     ('as_yaml_with_points',bool),
     ('yield_certificate_in_output_file',bool),
-    ('recall_input',bool),
+    ('recall_instance',bool),
     ('with_opening_message',bool),
     ('pt_formato_OK',int),
     ('pt_feasibility_OK',int),
+    ('pt_consistency_OK',int),
     ('pt_tot',int),
     ('esercizio',int),
     ('task',int),
 ]
+instance_objects = ['labels','costs','vals','Knapsack_Capacity','forced_out','forced_in','partialDPtable']
+answer_object_type_spec = {
+    'opt_sol':'list_of_str',
+    'opt_val':'int',
+    'num_opt_sols':'int',
+    'list_opt_sols':'list_of_list_of_str',
+    'DPtable_opt_val':'matrix_of_int',
+    'DPtable_num_opts':'matrix_of_int',
+}
+sol_objects_implemented = ['opt_sol','opt_val','DPtable_opt_val']
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV, ENV["color_implementation"])
-SEF = RO.std_eval_feedback(TAc.color_implementation)
-
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
 TOKEN_REQUIRED = False
-RO.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_REQUIRED)
-knapsack_lib.check_request_consistency(ENV)
+RO_io.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_REQUIRED)
+instance_dict = RO_io.dict_of_instance(instance_objects,args_list,ENV)
+#print(f"instance_dict={instance_dict}", file=stderr)
+check_instance_consistency(instance_dict)
+request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['alias_dict'], answer_object_type_spec, sol_objects_implemented)
+#print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
-def verif_knapsack(task_number:int,pt_tot:int,pt_formato_OK:int,pt_feasibility_OK:int, elements:List[str],weights:List[int],vals:List[int],Capacity:int,elementi_proibiti:List[str],elementi_obbligati:List[str], answer:Dict):
-    feedback_summary = ""
-    elementi=[]
-    pesi=[]
-    valori=[]
-    for ele,peso,val in zip(elements,weights,vals):
-        if ele not in elementi_proibiti:
-            elementi.append(ele)
-            pesi.append(peso)
-            valori.append(val)
-    if answer['sol_type'] in ["opt_val","opt_sol_with_val"]:
-        if type(answer['opt_val']) != int:
-            feedback_summary += f"formato di `{answer['name_of_opt_val']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Come `{answer['name_of_opt_val']}` hai immesso `{answer['opt_val']}` dove era invece richiesto di immettere un intero.", pt_tot,pt_safe=None,pt_out=pt_tot)
-        if answer['sol_type'] == "opt_val":
-            feedback_summary += f"formato di `{answer['name_of_opt_val']}`: "+SEF.colored(f"OK [{pt_formato_OK} safe pt]{SEF.new_line}", "green", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Come `{answer['name_of_opt_val']}` hai immesso un intero come richiesto."+SEF.colored(f"{SEF.new_line}Nota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto.", pt_tot,pt_safe=pt_formato_OK,pt_out=0)
-        else:
-            feedback_summary += f"formato di `{answer['name_of_opt_val']}`: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
 
-    if answer['sol_type'] in ["opt_sol","opt_sol_with_val"]:
-        if type(answer['opt_sol']) != list:
-            feedback_summary += f"formato di `{answer['name_of_opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Come `{answer['name_of_opt_sol']}` è richiesto si inserisca una lista di oggetti (esempio ['{elementi[0]}','{elementi[2]}']). Hai invece immesso `{answer['opt_sol']}`.", pt_tot,pt_safe=None,pt_out=pt_tot)
-        sum_valori=0
-        sum_pesi=0
-        for ele in answer['opt_sol']:
-            if ele not in elementi:
-                feedback_summary += f"formato di `{answer['name_of_opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-                return SEF.evaluation_format(task_number, feedback_summary, f"Ogni elemento che collochi nella lista `{answer['name_of_opt_sol']}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {elementi}.", pt_tot,pt_safe=None,pt_out=pt_tot)
-            index_of_ele = elementi.index(ele)
-            sum_valori += valori[index_of_ele]
-            sum_pesi += pesi[index_of_ele]
-        feedback_summary += f"formato di `{answer['name_of_opt_sol']}`: "+SEF.colored(f"OK [{pt_formato_OK} safe pt]{SEF.new_line}", "green", ["bold"])
-        for ele in elementi_obbligati:
-            if ele not in answer['opt_sol']:
-                feedback_summary += f"ammissibilità della soluzione in `{answer['name_of_opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-                return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{answer['name_of_opt_sol']}` hai dimenticato di inserire l'elemento `{ele}` che è uno degli elementi_obbligati. La tua soluzione è tenuta a contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
-        for ele in answer['opt_sol']:
-            if ele in elementi_proibiti:
-                feedback_summary += f"ammissibilità della soluzione in `{answer['name_of_opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-                return SEF.evaluation_format(task_number, feedback_summary, f"Nella lista `{answer['name_of_opt_sol']}` hai inserire l'elemento `{ele}` che è uno degli elementi proibiti. La tua soluzione non deve contenerlo!", pt_tot,pt_safe=None,pt_out=pt_tot)
-        if sum_pesi > Capacity:
-            feedback_summary += f"ammissibilità della soluzione in `{answer['name_of_opt_sol']}`: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi NON è ammissibile in quanto la somma dei loro pesi è {sum_pesi}>{Capacity} (ossia supera la capacità dello zaino per questa domanda).", pt_tot,pt_safe=None,pt_out=pt_tot)
-        if answer['sol_type'] == "opt_sol":
-            feedback_summary += f"ammissibilità della soluzione in {answer['name_of_opt_sol']}: "+SEF.colored(f"OK [{pt_feasibility_OK} safe pt]{SEF.new_line}", "green", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{answer['name_of_opt_sol']}` è ammissibile."+SEF.colored(f"{SEF.new_line}Nota:", "cyan", ["bold"])+" Ovviamente durante lo svolgimento dell'esame non posso dirti se sia anche ottimo o meno.)", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
-        assert answer['sol_type'] == "opt_sol_with_val"
-        feedback_summary += f"ammissibilità della soluzione in {answer['name_of_opt_sol']}: "+SEF.colored(f"OK{SEF.new_line}", "green", ["bold"])
-        if sum_valori != answer['opt_val']:
-            feedback_summary += f"autoconsistenza: "+SEF.colored(f"NO{SEF.new_line}", "red", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Il valore della soluzione immessa in `{answer['name_of_opt_sol']}` è {sum_valori}, non {answer['opt_val']} come hai immesso in `{answer['name_of_opt_val']}`. La soluzione (ammissibile) che hai immesso è {answer['opt_sol']}", pt_tot,pt_safe=pt_formato_OK,pt_out=pt_tot - pt_formato_OK)
-        else:
-            feedback_summary += f"{answer['name_of_opt_val']}={answer['opt_val']} = somma dei valori su {answer['name_of_opt_sol']}: "+SEF.colored(f"OK [{pt_feasibility_OK} safe pt]{SEF.new_line}", "green", ["bold"])
-            return SEF.evaluation_format(task_number, feedback_summary, f"Il sottoinsieme di elementi specificato in `{answer['name_of_opt_sol']}` è ammissibile ed il suo valore corrisponde a quanto in `{answer['name_of_opt_val']}`."+SEF.colored(f"{SEF.new_line}Nota:", "cyan", ["bold"])+" Ovviamente in sede di esame non posso dirti se sia anche ottimo o meno.", pt_tot,pt_safe=pt_formato_OK + pt_feasibility_OK,pt_out=0)
+def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict):
+    I = SimpleNamespace(**instance_dict)
+    goals = SEF.load(long_answer_dict)
+            
+    def verify_format():
+        if 'opt_val' in goals:
+            g = goals['opt_val']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
+        if 'opt_sol' in goals:
+            g = goals['opt_sol']
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di oggetti (esempio ['{I.labels[0]}','{I.labels[2]}']). Hai invece immesso `{g.answ}`.")
+            for ele in g.answ:
+                if ele not in I.labels:
+                    return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {I.labels}.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        return True
+                
+    def verify_feasibility():
+        if 'opt_sol' in goals:
+            g = goals['opt_sol']
+            for ele in g.answ:
+                if ele in I.forced_out:
+                    return SEF.feasibility_NO(g, f"L'oggetto `{ele}` da tè inserito nella lista `{g.alias}` è tra quelli proibiti. Gli oggetti proibiti per la Richiesta {str(SEF.task_number)}, sono {I.forced_out}.")
+            for ele in I.forced_in:
+                if ele not in g.answ:
+                    return SEF.feasibility_NO(g, f"Nella lista `{g.alias}` hai dimenticato di inserire l'oggetto `{ele}` che invece è forzato. Gli oggetti forzati per la Richiesta {str(SEF.task_number)} sono {I.forced_in}.")
+            if sum_costs > I.Knapsack_Capacity:
+                return SEF.feasibility_NO(g, f"La tua soluzione in `{g.alias}` ha costo {sum_costs} > I.Knapsack_Capacity e quindi NON è ammissibile in quanto fora il budget per la Richiesta {str(SEF.task_number)}. La soluzione da tè inserita ricomprende il sottoinsieme di oggetti `{g.alias}`= {g.answ}.")
+            SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
+        return True
+                
+    def verify_consistency():
+        if 'opt_val' in goals and 'opt_sol' in goals:
+            g_val = goals['opt_val']; g_sol = goals['opt_sol'];
+            if sum_vals != g_val.answ:
+                return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
+            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.")
+        return True
+                
+    if not verify_format():
+        return SEF.completed_feedback
+    if 'opt_sol' in goals:
+        sum_vals = sum([val for ele,cost,val in zip(I.labels,I.costs,I.vals) if ele in goals['opt_sol'].answ])
+        sum_costs = sum([cost for ele,cost,val in zip(I.labels,I.costs,I.vals) if ele in goals['opt_sol'].answ])
+    if not verify_feasibility():
+        return SEF.completed_feedback
+    if not verify_consistency():
+        return SEF.completed_feedback
+    return SEF.feedback_when_all_checks_passed()
+
 
             
+SEF = RO_eval.std_eval_feedback(ENV)
+feedback_dict = verify_RO_knapsack_submission(SEF,instance_dict, long_answer_dict=long_answer_dict)
+#print(f"feedback_dict={feedback_dict}", file=stderr)
 
-feedback_dict = verif_knapsack(ENV["task"],ENV["pt_tot"],ENV["pt_formato_OK"],ENV["pt_feasibility_OK"], ENV["elementi"],ENV["pesi"],ENV["valori"],ENV["Knapsack_Capacity"],ENV["elementi_proibiti"],ENV["elementi_obbligati"], \
-                answer={"sol_type":ENV["sol_type"],"opt_sol":ENV["opt_sol"],"opt_val":ENV["opt_val"],"DPtable":ENV["DPtable"], \
-                      "name_of_opt_sol":ENV["name_of_opt_sol"], "name_of_opt_val":ENV["name_of_opt_val"], "name_of_DPtable":ENV["name_of_DPtable"]} )
-
-submission_dict = knapsack_lib.dict_of_input(ENV)
-RO.checker_reply(submission_dict,feedback_dict,ENV)
+all_data = {"instance":instance_dict,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
+#print(f"all_data={all_data}", file=stderr)
+RO_io.checker_reply(all_data,ENV)
 if ENV.LOG_FILES != None:
-    opt_val, opt_sol, DPtable = knapsack_lib.solver(ENV)
-    oracle_dict = knapsack_lib.dict_of_oracle(ENV, opt_val,opt_sol,DPtable)
-    RO.checker_logs(oracle_dict,feedback_dict,submission_dict,ENV,TALf)
+    all_data["oracle"] = solver(all_data)
+    RO_io.checker_logs(all_data,ENV,TALf)
 if ENV["yield_certificate_in_output_file"]:    
-    RO.checker_certificates(feedback_dict,submission_dict,ENV,TALf)
+    RO_io.checker_certificates(all_data,ENV,TALf)
 
 

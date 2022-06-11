@@ -1,0 +1,243 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check:
+    evaluator: [python, services/check_driver.py]
+    description: "dato un albero T con costi sui nodi, un node cover è un sottoinsieme S dei nodi di T tale che ogni arco abbia almeno un estremo in S. Un semplice algoritmo greedy che guarda alle foglie di T computa un NC di cardinalità minima, mentre per tovare un NC di costo (=somma dei costi dei nodi in S) minimo occorre avvalersi della programmazione dinamica (DP), ponendosi una domanda (meglio 2) per ogni sottoalbero (spiegato sotto). Questo servizio controlla che la soluzione S sottoposta sia ben formata, ammissibile, e (non in sede d'esame) ottima. Può essere invocato direttamente come qualsiasi altro problema TALight ma, come tutti i problemi della suite RO_* è pensato per fornire supporto alla sottomissione con feedback immediato e contestuale durante esercitazioni o ad un esame benchè gestito da altra piattaforma tecnologica (come quella nel repo esami-RO-public). Il servizio di check al problema RO_knapsack è più ampio di quanto suggerito sopra, potendo essere parametrizzato tramite gli argomenti di chiamata (inoltre, ogni problema TALight è inteso per essere open ed estendibile). Ad esempio, può offre feedback su tabelle di DP sottomesse dallo studente come da specifiche dal docente. In particolare, sono previste le seguenti tabelle. Appeso l'albero al nodo 1 come sua radice, per ogni nodo v restano definiti il sottoalbero dei discendenti di v (incluso v che ne è la radice) e il minimo costo di un NC di tale sottoalbero soggetto al vincolo di contenere (forced_in[v]) il nodo v, oppure di non contenerlo (forced_out[v], come risposta alla seconda domanda). Il servizio può controllare la correttezza di una tabella di DP che offra tutte queste risposte facilmente computabili ricorsivamente. Il servizio può inoltre fornire feedback contestuale in caso si sia deciso di fornire allo studente/trainee delle tabelle parzialmente precompialte per evitargli di rimanere soverchiato dalle dimensioni della tabella (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti, e/o per assicurarsi innanzitutto che sia presente la comprensione del significato delle tabelle)."
+    args:
+      # sezione con i dati dell'istanza assegnati al problem-solver/studente:
+      n:
+        regex: ^([1-9][0-9]*)$
+        default: 5
+        explain: "numero di nodi dell'albero in input. I nodi sono etichettati coi numeri da 1 a n" 
+      cost:
+        regex: ^(.*)$
+        default: '[1,1,2,1,1]'
+        explain: "lista coi costi dei nodi. IL primo elemento è il costo del nodo 1, la radice dell'albero assegnato T"
+      dad:
+        regex: ^(.*)$
+        default: "[0,1,1,3,3]"
+        explain: "per ogni nodo viene specificato il padre"
+        nota1: "per ogni nodo i, dad[i] < i"
+        nota2: "lo 0 ad inizio lista indica che il nodo 1 non ha padre, essendo stato eletto a radice"
+      partial_forced_in:
+        regex: ^(.*)$
+        default: "[3,1,2,1,1]"
+        explain: "una tabella di programmazione dinamica (DP) solo parzialmente compilata, con dei -1 sovraimposti per nascondere alcune delle risposte. Altrimenti, `partial_forced_in[v]` è il minimo costo di un insieme di nodi che contiene v e che copra ogni arco nel sottoalbero T[v] di T radicato in v."
+      partial_forced_out:
+        regex: ^(.*)$
+        default: "[-1,-1,2,0,0]"
+        explain: "una tabella di programmazione dinamica (DP) solo parzialmente compilata, con dei -1 sovraimposti per nascondere alcune delle risposte. Altrimenti, `partial_forced_out[v]` è il minimo costo di un insieme di nodi che NON contiene v e che copra ogni arco nel sottoalbero T[v] di T radicato in v."
+      partial_free:
+        regex: ^(.*)$
+        default: "[-1,-1,-1,-1,0]"
+        explain: "una tabella di programmazione dinamica (DP) solo parzialmente compilata, con dei -1 sovraimposti per nascondere alcune delle risposte. Altrimenti, `partial_free[v]` è il minimo costo di un NC del sottoalbero T[v] di T radicato in v."
+      partial_num_forced_in:
+        regex: ^(.*)$
+        default: "[-1,-1,1,1,1]"
+        explain: "una tabella di programmazione dinamica (DP) solo parzialmente compilata, con dei -1 sovraimposti per nascondere alcune delle risposte. Altrimenti, `partial_num_forced_in[v]` è il numero di insiemi a costo minimo di nodi che contengono v e coprono ogni arco nel sottoalbero T[v] di T radicato in v."
+      partial_num_forced_out:
+        regex: ^(.*)$
+        default: "[-1,-1,-1,-1,-1]"
+        explain: "una tabella di programmazione dinamica (DP) solo parzialmente compilata, con dei -1 sovraimposti per nascondere alcune delle risposte. Altrimenti, `partial_num_forced_out[v]` è il numero di insiemi a costo minimo di nodi che NON contengono v e coprono ogni arco nel sottoalbero T[v] di T radicato in v."
+      partial_num_free:
+        regex: ^(.*)$
+        default: "[-1,1,-1,1,1]"
+        explain: "una tabella di programmazione dinamica (DP) solo parzialmente compilata, con dei -1 sovraimposti per nascondere alcune delle risposte. Altrimenti, `partial_num_free[v]` è il numero di node covers di minimo costo per il sottoalbero T[v] di T radicato in v."
+      instance_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a instance_dict=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3],'partial_forced_in':[3,1,2,1,1],'partial_forced_out':[-1,-1,-1,0,0],'partial_free':[-1,-1,-1,-1,0]}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `n` o `dad`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+
+      # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
+      opt_sol:
+        regex: ^(.*)$
+        default: "[2,3]"
+        explain: 'an optimal solution, i.e., a  minimum total cost node cover of T'
+      opt_val:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 5
+        explain: 'the minimum total cost of a feasible solution (a node cover of the tree T, i.e., a set of nodes hitting ever edge of T)'
+      num_opt_sols:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 2
+        explain: the number of different optimal solutions
+      list_opt_sols:
+        regex: ^(.*)$
+        default: "[ [2,3], [1,4,5] ]"
+        explain: the list of all optimal solutions
+      forced_in:
+        regex: ^(.*)$
+        default: "[3,1,2,1,1]"
+        explain: the DP table meant to tell the optimal value for the subtree rooted at any given node, assumed we are forced to take that node
+      forced_out:
+        regex: ^(.*)$
+        default: "[3,0,2,0,0]"
+        explain: the DP table meant to tell the optimal value for the subtree rooted at any given node, assumed we are forced NOT to take that node
+      free:
+        regex: ^(.*)$
+        default: "[3,0,2,0,0]"
+        explain: the DP table meant to tell the optimal value for the subtree rooted at any given node
+      num_forced_in:
+        regex: ^(.*)$
+        default: "[-1,-1,1,1,1]"
+        explain: "`num_forced_in[v]` è il numero di insiemi a costo minimo di nodi che contengono v e coprono ogni arco nel sottoalbero T[v] di T radicato in v."
+        explain-english: "`num_forced_in[v]` is the number of minimum cost set of nodes containing v and covering every arc of the subtree T[v] o T rooted at v."
+      num_forced_out:
+        regex: ^(.*)$
+        default: "[-1,-1,-1,-1,-1]"
+        explain: "`num_forced_out[v]` è il numero di insiemi a costo minimo di nodi che NON contengono v e coprono ogni arco nel sottoalbero T[v] di T radicato in v."
+        explain-english: "`forced_out[v]` is the number of minimum cost set of nodes NOT containing v and covering every arc of the subtree T[v] o T rooted at v."
+      num_free:
+        regex: ^(.*)$
+        default: "[-1,1,-1,1,1]"
+        explain: "`num_free[v]` è il numero di node covers di minimo costo per il sottoalbero T[v] di T radicato in v."
+        explain-english: "`num_free[v]` is the number of minimum cost node covers of the subtree T[v] o T rooted at v."
+
+      # sezione API del servizio:
+      answer_dict:
+        regex: ^(.*)$
+        default: ""
+        example1: "-a answer_dict=\"{'opt_sol':[2,3], 'opt_val':3}\""
+        example2: "-a answer_dict=\"{'opt_sol1':[1,4,5], 'opt_val1':3}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della conegna del task/richiesta di esercizio, (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`answer_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
+
+      alias_dict:
+        regex: ^(.*)$
+        default: "{}"
+        explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
+
+      # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      with_positive_enforcement:
+        regex: ^(0|1)$
+        default: 1
+      with_notes:
+        regex: ^(0|1)$
+        default: 1
+      recall_instance:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      recall_instance:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+
+      # sezione coi punti da assegnare al singolo task/richiesta da assegnarsi al singolo task/richiesta (tra quelli proposti da un singolo esercizio) che ha comportato la chiamata a questo servizio dal contesto di una prova, esame, o simulazione di esame:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_consistency_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  oracle:
+    evaluator: [python, services/oracle_driver.py]
+    description: "dato un albero T con costi sui nodi, un node cover è un sottoinsieme S dei nodi di T tale che ogni arco abbia almeno un estremo in S. Un semplice algoritmo greedy che guarda alle foglie di T computa un NC di cardinalità minima, mentre per tovare un NC di costo (=somma dei costi dei nodi in S) minimo occorre avvalersi della programmazione dinamica (DP), ponendosi una domanda (meglio 2) per ogni sottoalbero (spiegato sotto). Questo servizio computa un node cover di costo minimo come anche le risposte a molte altre domande possibili, come da argomenti con cui lo avrai chiamato. Ad esempio, al servizio può essere anche richiesto di fornire alcune tabelle di DP utili a rispondere alle domande sia per la domanda principale che per sottoproblemi associati ai sottoalberi. In particolare, sono previste le seguenti tabelle. Appeso l'albero al nodo 1 come sua radice, per ogni nodo v restano definiti il sottoalbero dei discendenti di v (incluso v che ne è la radice) e il minimo costo di un NC di tale sottoalbero soggetto al vincolo di contenere (forced_in[v]) il nodo v, oppure di non contenerlo (forced_out[v], come risposta alla seconda domanda)."
+    args:
+      pwd:
+        regex: ^(.*)$
+        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+
+      # sezione con i dati che specificano un'istanza del problema:
+      n:
+        regex: ^([1-9][0-9]*)$
+        default: 5
+        explain: "numero di nodi dell'albero in input. I nodi sono etichettati coi numeri da 1 a n" 
+      cost:
+        regex: ^(.*)$
+        default: '[1,1,2,1,1]'
+        explain: "lista coi costi dei nodi. IL primo elemento è il costo del nodo 1, la radice dell'albero assegnato T"
+      dad:
+        regex: ^(.*)$
+        default: "[0,1,1,3,3]"
+        explain: "per ogni nodo viene specificato il padre"
+        nota1: "per ogni nodo i, dad[i] < i"
+        nota2: "lo 0 ad inizio lista indica che il nodo 1 non ha padre, essendo stato eletto a radice"
+      instance_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a instance_dict=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3]}\""
+        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`instance_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
+
+      # section characterizing the seeked for answer and the naming for its variables:
+      request_dict:
+        regex: ^(.*)$
+        default: "{}"
+        explain: 'this argument (a string to be read as yaml) is a dictionary describing the solution requested to the oracle. For every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., "opt_sol") and refer to it by the name `key` as prescribed by the caller. The possible `vlues` are the following:'
+        explain1: '[opt_sol] an optimal solution, i.e., a  minimum total cost node cover of T'
+        explain2: '[opt_val] the minimum total cost of a feasible solution (a node cover of the tree T, i.e., a set of nodes hitting ever edge of T)'
+        explain3: '[num_opt_sols] the number of different optimal solutions'
+        explain4: '[list_opt_sols] the list of all optimal solutions'
+        explain5: '[forced_in] he DP table meant to tell the optimal value for the subtree rooted at any given node, assumed we are forced to take that node'
+        explain6: '[forced_out] the DP table meant to tell the optimal value for the subtree rooted at any given node, assumed we are forced NOT to take that node'
+        explain7: '[free] the DP table meant to tell the optimal value for the subtree rooted at any given node'
+        explain8: '[num_forced_in] `num_forced_in[v]` è il numero di insiemi a costo minimo di nodi che contengono v e coprono ogni arco nel sottoalbero T[v] di T radicato in v'
+        explain9: '[num_forced_out] `num_forced_out[v]` è il numero di insiemi a costo minimo di nodi che NON contengono v e coprono ogni arco nel sottoalbero T[v] di T radicato in v'
+        explain10: '[num_free] `forced_out[v]` is the number of minimum cost set of nodes NOT containing v and covering every arc of the subtree T[v] o T rooted at v'
+        example1: "-a request_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
+        example2: "-a request_dict=\"{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}\""
+        example3: "if you can leave the default value (the empty dictionary {}) then you get the answers to all possible questions. In this case the keys for each object are the original keys like those in Example 1"
+
+      # sezione with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_instance:
+        regex: ^(0|1)$
+        default: 0
+      recall_request:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, {problem}): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis." 
+    args:
+      service:
+        regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+      metafile:
+        regex: ^(default|en|it|[a-zA-Z0-9_]+)$
+        default: default
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it|[a-zA-Z0-9_]+)$
+        default: en
+...
