@@ -10,11 +10,11 @@ services:
       grid:
         regex: ^(.*)$
         default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
-        explain: the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value.
+        explain: "the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value."
       budget:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: a path is not admissible if the sum of the negative numbers encountered along the path, inverted in sign, exceeds the budget
+        explain: "a path is not admissible if the sum of the negative numbers encountered along the path, inverted in sign, exceeds the budget"
       diag:
         regex: ^(0|1)$
         default: 0
@@ -51,49 +51,49 @@ services:
       num_paths:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: the number of feasible paths, as filtered by the additional constraints (arguments that influence this, after `grid`, are `diag`, `budget`, `cell_from`, `cell_to`, `cell_through`)
+        explain: "the number of feasible paths, as filtered by the additional constraints (arguments that influence this, after `grid`, are `diag`, `budget`, `cell_from`, `cell_to`, `cell_through`)"
       num_opt_paths:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: the number of feasible paths that collect the maximum total prize possible
+        explain: "the number of feasible paths that collect the maximum total prize possible"
       opt_val:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: the maximum total prize a feasible path can collect
+        explain: "the maximum total prize a feasible path can collect"
       opt_path:
         regex: ^(.*)$
         default: "[]"
-        explain: a path collecting the maximum possible total prize
+        explain: "a path collecting the maximum possible total prize"
       list_opt_paths:
         regex: ^(.*)$
         default: "[]"
-        explain: the list of all optimum paths
+        explain: "the list of all optimum paths"
       DPtable_num_to:
         regex: ^(.*)$
         default: "[]"
         example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        explain: the DP table meant to tell the number of paths from top-left cell to the generic cell
+        explain: "the DP table meant to tell the number of paths from top-left cell to the generic cell"
       DPtable_num_from:
         regex: ^(.*)$
         default: "[]"
         example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        explain: the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
+        explain: "the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
       DPtable_opt_to:
         regex: ^(.*)$
         default: "[]"
-        explain: the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
+        explain: "the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell"
       DPtable_opt_from:
         regex: ^(.*)$
         default: "[]"
-        explain: the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
+        explain: "the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell"
       DPtable_num_opt_to:
         regex: ^(.*)$
         default: "[]"
-        explain: the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
+        explain: "the DP table meant to tell the number of optimal paths from top-left cell to the generic cell"
       DPtable_num_opt_from:
         regex: ^(.*)$
         default: "[]"
-        explain: the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.
+        explain: "the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell."
 
       # API mode section, always to send the answers of the problem-solver:
       answer_dict:
@@ -105,18 +105,18 @@ services:
       alias_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: 'this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution that the instructor has asked from the problem solver on a given exercise/task/request. The keys are the names that the instructor has assigned to the standard object types involved in the request, the corresponding values should be among the following:'
-        explain1: '[num_paths] the number of feasible paths'
-        explain2: '[num_opt_paths] the number of paths of maximum value'
-        explain3: '[opt_val] the maximum value of a feasible path'
-        explain4: '[opt_path] a path of maximum value'
-        explain5: '[list_opt_paths] the list of all optimum paths'
-        explain6: '[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell'
-        explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
-        explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a feasible path moving from top-left cell to the generic cell'
-        explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell'
-        explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
-        explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+        explain: "this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution that the instructor has asked from the problem solver on a given exercise/task/request. The keys are the names that the instructor has assigned to the standard object types involved in the request, the corresponding values should be among the following:"
+        explain1: "[num_paths] the number of feasible paths"
+        explain2: "[num_opt_paths] the number of paths of maximum value"
+        explain3: "[opt_val] the maximum value of a feasible path"
+        explain4: "[opt_path] a path of maximum value"
+        explain5: "[list_opt_paths] the list of all optimum paths"
+        explain6: "[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell"
+        explain7: "[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
+        explain8: "[DPtable_opt_to] the DP table meant to tell the maximum value of a feasible path moving from top-left cell to the generic cell"
+        explain9: "[DPtable_opt_from] the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell"
+        explain10: "[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell"
+        explain11: "[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell."
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine), (3) logs on the server that could help monitoring and grading an exam
       color_implementation:
@@ -168,17 +168,17 @@ services:
     args:
       pwd:
         regex: ^(.*)$
-        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+        explain: "this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access."
 
       # section with a possible instance to the problem:
       grid:
         regex: ^(.*)$
         default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
-        explain: the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value.
+        explain: "the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value."
       diag:
         regex: ^(0|1)$
         default: 0
-        explain: set this flag to 1 if the robot can move also to the cell of the next col and row
+        explain: "set this flag to 1 if the robot can move also to the cell of the next col and row"
       partialDP_to:
         regex: ^(.*)$
         default: "[]"
@@ -204,18 +204,18 @@ services:
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: 'this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., "opt_sol") and refer to it by the name `key` as prescribed by the caller. The possible `values` (i.e., solution object types currently supported) are the following:'
-        explain1: '[num_paths] the number of feasible paths'
-        explain2: '[num_opt_paths] the number of paths of maximum value'
-        explain3: '[opt_val] the maximum value of a feasible path'
-        explain4: '[opt_path] a path of maximum value'
-        explain5: '[list_opt_paths] the list of all optimum paths'
-        explain6: '[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell'
-        explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
-        explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell'
-        explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
-        explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
-        explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+        explain: "this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., 'opt_sol') and refer to it by the name `key` as prescribed by the caller. The possible `values` (i.e., solution object types currently supported) are the following:"
+        explain1: "[num_paths] the number of feasible paths"
+        explain2: "[num_opt_paths] the number of paths of maximum value"
+        explain3: "[opt_val] the maximum value of a feasible path"
+        explain4: "[opt_path] a path of maximum value"
+        explain5: "[list_opt_paths] the list of all optimum paths"
+        explain6: "[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell"
+        explain7: "[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
+        explain8: "[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell"
+        explain9: "[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell"
+        explain10: "[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell"
+        explain11: "[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell."
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
       as_yaml:
@@ -247,7 +247,7 @@ services:
       service:
         regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
         default: synopsis
-        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+        explain: "any string without space characters but meant to specify one of the services of the problem %(problem)s"
       metafile:
         regex: ^(default|en|it|[a-zA-Z0-9_]+)$
         default: default
