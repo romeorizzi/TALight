@@ -34,11 +34,11 @@ services:
       partialDP_to:
         regex: ^(.*)$
         default: "[]"
-        explain: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student, and this service is better to be communicated them for providing more customized feedback to the student. This argument is actually a generic DP table, with `partialDP_to[cell]` measuring some quantity relative to the paths that end into `cell`. For example, with reference to the functional `number of feasible paths`, we could have: partialDP_to = [ [ -1, 1, -1, 1, 1], [ 1, 2, 3, 0, 1], [ 0, 2, 5, -1, 6], [ 0, 0, 5, -1, -1] ]."
+        explain: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student, and this service is better to be communicated them for providing more customized feedback to the student. This argument is actually a generic DP table, with `partialDP_to[cell]` measuring some quantity relative to the paths that end into `cell`. For example, with reference to the functional `number of feasible paths`, we would have: partialDP_to = [ [ -1, 1, -1, 1, 1], [ 1, 2, 3, 0, 1], [ 0, 2, 5, -1, 6], [ 0, 0, 5, -1, -1] ]."
       partialDP_from:
         regex: ^(.*)$
         default: "[]"
-        explain: "see the above explanation for the argument `partialDP_to`. For the same functional and for the `gris` indicated above, we could have: partialDP_to = [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3, -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
+        explain: "see the above explanation for the argument `partialDP_to`. For the same functional and for the `gris` indicated above, we would have: partialDP_to = [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3, -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
 
       # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
       instance_dict:
@@ -125,9 +125,6 @@ services:
         regex: ^(0|1)$
         default: 0
       yield_certificate_in_output_file:
-        regex: ^(0|1)$
-        default: 0
-      recall_instance:
         regex: ^(0|1)$
         default: 0
       with_opening_message:
@@ -235,12 +232,12 @@ services:
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
-    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, {problem}): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis." 
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis." 
     args:
       service:
         regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
         default: synopsis
-        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
       metafile:
         regex: ^(default|en|it|[a-zA-Z0-9_]+)$
         default: default
