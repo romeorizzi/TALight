@@ -13,13 +13,14 @@ from knapsack_lib import solver, check_instance_consistency
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('field','matrix_of_int'),
+    ('grid','list_of_str'),
+    ('budget',int),
     ('diag',bool),
-    ('partialDP_to','list_of_str'),
-    ('partialDP_from','list_of_str'),
     ('cell_from',str),
     ('cell_to',str),
     ('cell_through',str),
+    ('partialDP_to','list_of_str'),
+    ('partialDP_from','list_of_str'),
     ('instance_dict','yaml'),
     ('num_paths',int),
     ('num_opt_paths',int),
@@ -36,16 +37,19 @@ args_list = [
     ('alias_dict','yaml'),
     ('color_implementation',str),
     ('as_yaml_with_points',bool),
+    ('with_positive_enforcement',bool),
+    ('with_notes',bool),
+    ('recall_instance',bool),
     ('yield_certificate_in_output_file',bool),
-    ('recall_input',bool),
     ('with_opening_message',bool),
     ('pt_formato_OK',int),
     ('pt_feasibility_OK',int),
+    ('pt_consistency_OK',int),
     ('pt_tot',int),
     ('esercizio',int),
     ('task',int),
 ]
-instance_objects = ['field','diag','partialDP_to','partialDP_from','cell_from','cell_to','cell_through']
+instance_objects = ['grid','budget','diag','cell_from','cell_to','cell_through','partialDP_to','partialDP_from']
 answer_object_type_spec = {
     'num_paths':'int',
     'num_opt_paths':'int',
@@ -59,7 +63,7 @@ answer_object_type_spec = {
     'DPtable_num_opt_to':'list_of_str',
     'DPtable_num_opt_from':'list_of_str',
 }
-sol_objects_implemented = ['num_paths','opt_val','list_opt_paths']
+sol_objects_implemented = ['opt_val','opt_path','DPtable_opt_from']
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV, ENV["color_implementation"])
@@ -87,8 +91,8 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
             SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
-        if 'opt_sol' in goals:
-            g = goals['opt_sol']
+        if 'opt_path' in goals:
+            g = goals['opt_path']
             if type(g.answ) != list:
                 return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di oggetti (esempio ['{I.labels[0]}','{I.labels[2]}']). Hai invece immesso `{g.answ}`.")
             for ele in g.answ:
@@ -98,8 +102,8 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
         return True
                 
     def verify_feasibility():
-        if 'opt_sol' in goals:
-            g = goals['opt_sol']
+        if 'opt_path' in goals:
+            g = goals['opt_path']
             for ele in g.answ:
                 if ele in I.forced_out:
                     return SEF.feasibility_NO(g, f"L'oggetto `{ele}` da tè inserito nella lista `{g.alias}` è tra quelli proibiti. Gli oggetti proibiti per la Richiesta {str(SEF.task_number)}, sono {I.forced_out}.")
@@ -112,18 +116,18 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
         return True
                 
     def verify_consistency():
-        if 'opt_val' in goals and 'opt_sol' in goals:
-            g_val = goals['opt_val']; g_sol = goals['opt_sol'];
+        if 'opt_val' in goals and 'opt_path' in goals:
+            g_val = goals['opt_val']; g_sol = goals['opt_path'];
             if sum_vals != g_val.answ:
-                return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
-            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.")
+                return SEF.consistency_NO(['opt_val','opt_path'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
+            SEF.consistency_OK(['opt_val','opt_path'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.")
         return True
                 
     if not verify_format():
         return SEF.completed_feedback
-    if 'opt_sol' in goals:
-        sum_vals = sum([val for ele,cost,val in zip(I.labels,I.costs,I.vals) if ele in goals['opt_sol'].answ])
-        sum_costs = sum([cost for ele,cost,val in zip(I.labels,I.costs,I.vals) if ele in goals['opt_sol'].answ])
+    if 'opt_path' in goals:
+        sum_vals = sum([val for ele,cost,val in zip(I.labels,I.costs,I.vals) if ele in goals['opt_path'].answ])
+        sum_costs = sum([cost for ele,cost,val in zip(I.labels,I.costs,I.vals) if ele in goals['opt_path'].answ])
     if not verify_feasibility():
         return SEF.completed_feedback
     if not verify_consistency():

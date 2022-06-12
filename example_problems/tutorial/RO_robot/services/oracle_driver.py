@@ -11,7 +11,7 @@ from robot_lib import solver, check_instance_consistency
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('pwd', str),
-    ('field', 'matrix_of_int'),
+    ('grid', 'list_of_str'),
     ('diag', bool),
     ('partialDP_to', 'list_of_str'),
     ('partialDP_from', 'list_of_str'),
@@ -20,14 +20,16 @@ args_list = [
     ('cell_through', str),
     ('request_dict', 'yaml'),
     ('as_yaml', bool),
-    ('recall_input', bool),
+    ('recall_instance', bool),
+    ('recall_request', bool),
     ('with_opening_message', bool),
+    ('with_output_files', bool),
     ('esercizio', int),
     ('task', int),
 ]
-instance_objects = ['field', 'diag', 'partialDP_to',
+instance_objects = ['grid', 'diag', 'partialDP_to',
                     'partialDP_from', 'cell_from', 'cell_to', 'cell_through']
-sol_objects_implemented = ['opt_sol', 'opt_val', 'DPtable_opt_val']
+sol_objects_implemented = ['opt_val','opt_path','DPtable_opt_from']
 
 ENV = Env(args_list)
 TAc = TALcolors(ENV, "None")
