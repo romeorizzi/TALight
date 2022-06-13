@@ -21,6 +21,8 @@ services:
         explain: "per ogni nodo viene specificato il padre"
         nota1: "per ogni nodo i, dad[i] < i"
         nota2: "lo 0 ad inizio lista indica che il nodo 1 non ha padre, essendo stato eletto a radice"
+
+      # sezione con informazioni aggiuntive fornite al trainee dal problem poser e che il presente servizio deve prendere in considerazione:
       partial_forced_in:
         regex: ^(.*)$
         default: "[3,1,2,1,1]"
@@ -47,11 +49,11 @@ services:
         explain: "una tabella di programmazione dinamica (DP) solo parzialmente compilata, con dei -1 sovraimposti per nascondere alcune delle risposte. Altrimenti, `partial_num_free[v]` è il numero di node covers di minimo costo per il sottoalbero T[v] di T radicato in v."
 
       # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
-      instance_dict:
+      input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3],'partial_forced_in':[3,1,2,1,1],'partial_forced_out':[-1,-1,-1,0,0],'partial_free':[-1,-1,-1,-1,0]}\""
-        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `n` o `dad`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+        example: "-a input_data_assigned=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3],'partial_forced_in':[3,1,2,1,1],'partial_forced_out':[-1,-1,-1,0,0],'partial_free':[-1,-1,-1,-1,0]}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `n` o `dad`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
       opt_sol:
@@ -124,7 +126,7 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       yield_certificate_in_output_file:
@@ -177,11 +179,11 @@ services:
         explain: "per ogni nodo viene specificato il padre"
         nota1: "per ogni nodo i, dad[i] < i"
         nota2: "lo 0 ad inizio lista indica che il nodo 1 non ha padre, essendo stato eletto a radice"
-      instance_dict:
+      input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3]}\""
-        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`instance_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
+        example: "-a input_data_assigned=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3]}\""
+        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`input_data_assigned`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
 
       # section characterizing the seeked for answer and the naming for its variables:
       request_dict:
@@ -203,10 +205,13 @@ services:
         example3: "if you can leave the default value (the empty dictionary {}) then you get the answers to all possible questions. In this case the keys for each object are the original keys like those in Example 1"
 
       # sezione with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
       as_yaml:
         regex: ^(0|1)$
         default: 0
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       recall_request:

@@ -9,18 +9,12 @@ from TALfiles import TALfilesHelper
 import RO_std_io_lib as RO_io
 import RO_std_eval_lib as RO_eval
 
-from max_flow_lib import solver, check_instance_consistency
+import problem_specific_lib as PSL
 
 # METADATA OF THIS TAL_SERVICE:
-args_list = [
-    ('labels','list_of_str'),
-    ('costs','list_of_int'),
-    ('vals','list_of_int'),
-    ('Knapsack_Capacity',int),
-    ('forced_out','list_of_str'),
-    ('forced_in','list_of_str'),
-    ('partialDPtable','matrix_of_int'),
-    ('instance_dict','yaml'),
+# METADATA OF THIS TAL_SERVICE:
+args_list = PSL.instance_objects_spec + PSL.additional_infos_spec + [
+    ('input_data_assigned','yaml'),
     ('opt_sol','yaml'),
     ('opt_val','yaml'),
     ('num_opt_sols','yaml'),
@@ -30,10 +24,10 @@ args_list = [
     ('alias_dict','yaml'),
     ('answer_dict','yaml'),
     ('color_implementation',str),
+    ('with_opening_message',bool),
     ('as_yaml_with_points',bool),
     ('yield_certificate_in_output_file',bool),
-    ('recall_instance',bool),
-    ('with_opening_message',bool),
+    ('recall_data_assigned',bool),
     ('pt_formato_OK',int),
     ('pt_feasibility_OK',int),
     ('pt_consistency_OK',int),
@@ -41,16 +35,6 @@ args_list = [
     ('esercizio',int),
     ('task',int),
 ]
-instance_objects = ['labels','costs','vals','Knapsack_Capacity','forced_out','forced_in','partialDPtable']
-answer_object_type_spec = {
-    'opt_sol':'list_of_str',
-    'opt_val':'int',
-    'num_opt_sols':'int',
-    'list_opt_sols':'list_of_list_of_str',
-    'DPtable_opt_val':'matrix_of_int',
-    'DPtable_num_opts':'matrix_of_int',
-}
-sol_objects_implemented = ['opt_sol','opt_val','DPtable_opt_val']
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV, ENV["color_implementation"])
@@ -61,15 +45,15 @@ TALf = TALfilesHelper(TAc, ENV)
 
 TOKEN_REQUIRED = False
 RO_io.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_REQUIRED)
-instance_dict = RO_io.dict_of_instance(instance_objects,args_list,ENV)
-#print(f"instance_dict={instance_dict}", file=stderr)
-check_instance_consistency(instance_dict)
-request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['alias_dict'], answer_object_type_spec, sol_objects_implemented)
+input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec + PSL.additional_infos_spec,args_list,ENV)
+#print(f"input_data_assigned={input_data_assigned}", file=stderr)
+PSL.check_instance_consistency(input_data_assigned)
+request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['alias_dict'], PSL.answer_objects_spec, PSL.answer_objects_implemented)
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
 
-def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict):
-    I = SimpleNamespace(**instance_dict)
+def verify_RO_knapsack_submission(SEF,input_data_assigned:Dict, long_answer_dict:Dict):
+    I = SimpleNamespace(**input_data_assigned)
     goals = SEF.load(long_answer_dict)
             
     def verify_format():
@@ -124,14 +108,14 @@ def verify_RO_knapsack_submission(SEF,instance_dict:Dict, long_answer_dict:Dict)
 
             
 SEF = RO_eval.std_eval_feedback(ENV)
-feedback_dict = verify_RO_knapsack_submission(SEF,instance_dict, long_answer_dict=long_answer_dict)
+feedback_dict = verify_RO_knapsack_submission(SEF,input_data_assigned, long_answer_dict=long_answer_dict)
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
-all_data = {"instance":instance_dict,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
+all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
 #print(f"all_data={all_data}", file=stderr)
 RO_io.checker_reply(all_data,ENV)
 if ENV.LOG_FILES != None:
-    all_data["oracle"] = solver(all_data)
+    all_data["oracle"] = PSL.solver(all_data)
     RO_io.checker_logs(all_data,ENV,TALf)
 if ENV["yield_certificate_in_output_file"]:    
     RO_io.checker_certificates(all_data,ENV,TALf)

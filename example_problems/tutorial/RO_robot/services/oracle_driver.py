@@ -8,29 +8,21 @@ from TALfiles import TALfilesHelper
 
 import RO_std_io_lib as RO_io
 
-from robot_lib import solver, check_instance_consistency
+import problem_specific_lib as PSL
 
 # METADATA OF THIS TAL_SERVICE:
-args_list = [
-    ('pwd',str),
-    ('labels','list_of_str'),
-    ('costs','list_of_int'),
-    ('vals','list_of_int'),
-    ('Knapsack_Capacity',int),
-    ('forced_out','list_of_str'),
-    ('forced_in','list_of_str'),
-    ('instance_dict','yaml'),
+args_list = [('pwd',str)] + PSL.instance_objects_spec + [
+    ('input_data_assigned','yaml'),
     ('request_dict','yaml'),
-    ('as_yaml',bool),
-    ('recall_instance',bool),
-    ('recall_request',bool),
+    ('color_implementation',str),
     ('with_opening_message',bool),
+    ('as_yaml',bool),
+    ('recall_data_assigned',bool),
+    ('recall_request',bool),
     ('with_output_files',bool),
     ('esercizio',int),
     ('task',int),
 ]
-instance_objects = ['labels','costs','vals','Knapsack_Capacity','forced_out','forced_in']
-sol_objects_implemented = ['opt_sol','opt_val','DPtable_opt_val']
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV, "None")
@@ -41,17 +33,18 @@ TALf = TALfilesHelper(TAc, ENV)
 
 TOKEN_REQUIRED = True
 RO_io.check_access_rights(ENV,TALf, require_pwd = True, TOKEN_REQUIRED = TOKEN_REQUIRED)
-instance_dict = RO_io.dict_of_instance(instance_objects,args_list,ENV)
-check_instance_consistency(instance_dict)
-RO_io.check_request(ENV['request_dict'], sol_objects_implemented)
+input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec,args_list,ENV)
+#print(f"input_data_assigned={input_data_assigned}", file=stderr)
+PSL.check_instance_consistency(input_data_assigned)
+RO_io.check_request(ENV['request_dict'], PSL.answer_objects_implemented)
 
 request_dict = ENV["request_dict"]
 if len(request_dict) == 0:
-    request_dict = { key:key for key in sol_objects_implemented }
+    request_dict = { key:key for key in PSL.answer_objects_implemented }
 #print(f"request_dict={request_dict}", file=stderr)
     
-call_data = {"instance":instance_dict,"request":request_dict}
-call_data["oracle"] = solver(call_data)
+call_data = {"input_data_assigned":input_data_assigned,"request":request_dict}
+call_data["oracle"] = PSL.solver(call_data)
 
 RO_io.oracle_outputs(call_data,ENV)
 if ENV.LOG_FILES != None:

@@ -18,23 +18,21 @@ def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
             
 def dict_of_instance(instance_objects,args_list,ENV):
     #print("CASE: the instance objects have been passed one by one:
-    if len(ENV["instance_dict"]) == 0:
-        return {var_name:ENV[var_name] for var_name in instance_objects}
-    #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["instance_dict"]` variable"):
-    instance_dict = {}
-    args_dict = { obj_name:obj_type  for obj_name,obj_type in args_list }
-    for obj_name in instance_objects:
-        obj_type = args_dict[obj_name] 
-        if obj_name in ENV["instance_dict"]:
-            obj_val = ENV["instance_dict"][obj_name]
+    if len(ENV["input_data_assigned"]) == 0:
+        return {obj_name:ENV[obj_name] for obj_name,obj_type in instance_objects}
+    #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable"):
+    input_data_assigned = {}
+    for obj_name,obj_type in instance_objects:
+        if obj_name in ENV["input_data_assigned"]:
+            obj_val = ENV["input_data_assigned"][obj_name]
         elif obj_type == str:
             obj_val = ""
         elif obj_type[:len('matrix_of_')] == 'matrix_of_' or obj_type[:len('list_of_')] == 'list_of_':
             obj_val = []
         elif obj_type in [bool, int]:
             obj_val = 0
-        instance_dict[obj_name] = enforce_type_of_yaml_var(obj_val,obj_type, varname=obj_name)
-    return instance_dict
+        input_data_assigned[obj_name] = enforce_type_of_yaml_var(obj_val,obj_type, varname=obj_name)
+    return input_data_assigned
 
 
 def check_request(request_dict, implemented):
@@ -105,11 +103,11 @@ def display_dict(dict):
         
 def oracle_outputs(call_data,ENV):
     if ENV['as_yaml']:
-        if not (ENV["recall_instance"] or ENV["recall_request"]):
+        if not (ENV["recall_data_assigned"] or ENV["recall_request"]):
             print(call_data['oracle'])
         else:
-            if not ENV["recall_instance"]:
-                call_data.pop("instance", None)
+            if not ENV["recall_data_assigned"]:
+                call_data.pop("input_data_assigned", None)
             if not ENV["recall_request"]:
                 call_data.pop("request", None)
             print(call_data)
@@ -118,9 +116,9 @@ def oracle_outputs(call_data,ENV):
         if ENV['recall_request']:
             print()
             display_dict(call_data['request'])
-        if ENV['recall_instance']:
+        if ENV['recall_data_assigned']:
             print()
-            display_dict(call_data['instance'])
+            display_dict(call_data['input_data_assigned'])
 
 def oracle_output_files(call_data,ENV,TALf):
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
@@ -130,11 +128,11 @@ def oracle_output_files(call_data,ENV,TALf):
     TALf.str2output_file(content=repr(call_data), filename=filename_spec, timestamped = False)
     
     if ENV['as_yaml']:
-        if not (ENV["recall_instance"] or ENV["recall_request"]):
+        if not (ENV["recall_data_assigned"] or ENV["recall_request"]):
             print(call_data['oracle'])
         else:
-            if not ENV["recall_instance"]:
-                call_data.pop("instance", None)
+            if not ENV["recall_data_assigned"]:
+                call_data.pop("input_data_assigned", None)
             if not ENV["recall_request"]:
                 call_data.pop("request", None)
             print(call_data)
@@ -143,12 +141,12 @@ def oracle_output_files(call_data,ENV,TALf):
         if ENV['recall_request']:
             print()
             display_dict(call_data['request'])
-        if ENV['recall_instance']:
+        if ENV['recall_data_assigned']:
             print()
-            display_dict(call_data['instance'])
+            display_dict(call_data['input_data_assigned'])
 
 def oracle_logs(call_data,ENV,TALf):
-    content_LOG_file = "INSTANCE: "+repr(call_data['instance'])+"\n\nREQUEST: "+repr(call_data['request'])+"\n\nORACLE_ANSWER: "+repr(call_data['oracle'])
+    content_LOG_file = "INSTANCE: "+repr(call_data['input_data_assigned'])+"\n\nREQUEST: "+repr(call_data['request'])+"\n\nORACLE_ANSWER: "+repr(call_data['oracle'])
     #print(f"content_LOG_file =`{content_LOG_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
     filename_spec += f'task_{ENV["task"]}' if ENV["task"] != -1 else 'unspecified'
@@ -159,8 +157,8 @@ def checker_reply(all_data,ENV):
     print(f"all_data={all_data}", file=stderr)
     feedback_dict = all_data["feedback"]
     print(f"feedback_dict={feedback_dict}", file=stderr)
-    if ENV["recall_instance"]:
-        feedback_dict["instance"] = all_data["instance"]
+    if ENV["recall_data_assigned"]:
+        feedback_dict["input_data_assigned"] = all_data["input_data_assigned"]
     feedback_dict["answer"] = all_data["long_answer"]
     if ENV["as_yaml_with_points"]:
         print(feedback_dict)
@@ -176,7 +174,7 @@ def checker_logs(all_data,ENV,TALf):
     for key in oracle_dict:
         if ENV[key] != oracle_dict[key]:
             pt_available = pt_safe
-    content_LOG_file = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nORACLE: "+repr(oracle_dict)+"\n\nINSTANCE: "+repr(all_data["instance"])
+    content_LOG_file = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nORACLE: "+repr(oracle_dict)+"\n\nINSTANCE: "+repr(all_data["input_data_assigned"])
     #print(f"content_LOG_file =`{content_LOG_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
     if ENV["task"] != -1:
@@ -188,7 +186,7 @@ def checker_certificates(all_data,ENV,TALf):
     feedback_dict = all_data["feedback"]
     pt_safe = feedback_dict['pt_safe']
     pt_maybe = feedback_dict['pt_maybe']
-    content_receipt_file  = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nINSTANCE: "+repr(all_data["instance"])
+    content_receipt_file  = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nINSTANCE: "+repr(all_data["input_data_assigned"])
     #print("content_receipt_file =`{content_receipt_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
     if ENV["task"] != -1:

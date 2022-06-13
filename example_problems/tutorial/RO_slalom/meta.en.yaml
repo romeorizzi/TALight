@@ -22,6 +22,8 @@ services:
         explain: "dad[v] is the father of v"
         nota1: "for every node i, dad[i] < i"
         nota2: "the 0 at the beginning of the list tells that node 1 has no father, having been elected as root of the tree"
+
+      # section with additional data provided to the trainee by the problem poser, that this service should take in consideration:
       partial_forced_in:
         regex: ^(.*)$
         default: "[3,1,2,1,1]"
@@ -48,11 +50,11 @@ services:
         explain: "a partial DP table where some entries may have been concealed overwriting a -1 on top of them. Otherwise, `partial_num_free[v]` is the number of minimum cost node covers of the subtree T[v] o T rooted at v."
 
       # API mode section, again to send the input received from the problem-solver to the service:
-      instance_dict:
+      input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3],'partial_forced_in':[3,1,2,1,1],'partial_forced_out':[-1,-1,-1,0,0],'partial_free':[-1,-1,-1,-1,0]}\""
-        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`instance_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
+        example: "-a input_data_assigned=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3],'partial_forced_in':[3,1,2,1,1],'partial_forced_out':[-1,-1,-1,0,0],'partial_free':[-1,-1,-1,-1,0]}\""
+        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`input_data_assigned`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
 
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       opt_sol:
@@ -139,7 +141,7 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       yield_certificate_in_output_file:
@@ -194,11 +196,11 @@ services:
         explain: "dad[v] is the father of v"
         nota1: "for every node i, dad[i] < i"
         nota2: "the 0 at the beginning of the list tells that node 1 has no father, having been elected as root of the tree"
-      instance_dict:
+      input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3]}\""
-        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`instance_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
+        example: "-a input_data_assigned=\"{'n':5, 'cost':[1,1,2,1,1],'dad':[0,1,1,3,3]}\""
+        explain: "There are two options for passing to this TALight service the assigned underlying instance for the problem. Either you use a separate argument for each possible object type comprising your instance, or you callect them all within one single dictionary that you pass through this one argument (`input_data_assigned`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty dictionary, as encoded by the string '{}') then the first option is assumed, which may be more convenient when experiencing the service from the CLI. Otherwise, the string passed through `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. The full description of the instance may comprise more parts/objects (out from a finite set designed by the problem maker) each one with its own type and standard name attached to it (e.g., like `pesi` or `valori`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible instance objects, and their names, by inspecting the complete list of arguments to this service)."
 
       # section characterizing the seeked for answer and the naming for its variables:
       request_dict:
@@ -220,10 +222,13 @@ services:
         example3: "if you can leave the default value (the empty dictionary {}) then you get the answers to all possible questions. In this case the keys for each object are the original keys like those in Example 1"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
       as_yaml:
         regex: ^(0|1)$
         default: 0
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       recall_request:

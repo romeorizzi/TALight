@@ -40,22 +40,24 @@ services:
         regex: ^(.*)$
         default: (1,2,5)
         explain: "per consegne che richiedano di focalizzare l'attenzione su un singolo arco/vincolo si specifichi l'arco in `arcs`+`arcs_added`"
+
+      # sezione con informazioni aggiuntive fornite al trainee dal problem poser e che il presente servizio deve prendere in considerazione:
       partial_to:
         regex: ^(.*)$
         default: "{}"
-        explain: "a partial DP table is one where some entries are missing. The teacher can decide to provide such tables as inputs to the student for him to either get an hint, or to have the realistic and fair possibility to fill the table by hand also on interesting enough instances. In these situations, it is better that these partial DP tables get communicated to the service, which can be done through this argument. This argument is actually a generic DP table, with `partial_to[node]` measuring some jolly quantity relative to the paths that end into `node`. For example, with reference to the functional `maximum length of a path from 0 to node`, and to the default fill of the instance data in the other arguments of the service, we would have: `partial_to` = \"{'1':0,'2':5,'3':11}\", which, with Example 2 for the argument `labels` would become \"{'A':0,'B':5,'C':11}\". (Notice that this table is actually a key-value map, essentially expressed in json)."
+        explain: "a partial DP table is one where some entries are missing. The teacher can decide to provide such tables as inputs to the student for him to either get an hint, or to have the realistic and fair possibility to fill the table by hand also on interesting enough instances. In these situations, it is better that these partial DP tables get communicated to the service, which can be done through this argument. This argument is actually a generic DP table, with `partial_to[node]` reporting some jolly measure specific to the paths that end into `node`. For example, with reference to the functional `maximum length of such a path`, and assuming the default values for the other arguments of the service that specify the instance data, we would have: `partial_to` = \"{'1':0,'2':5,'3':11}\", which, with Example 2 for the argument `labels` would become \"{'A':0,'B':5,'C':11}\". (Notice that this table is actually a key-value map, essentially expressed in json)."
       partial_from:
         regex: ^(.*)$
         default: "[]"
         explain: "see the above explanation for the argument `partialDP_to`. For the same general functional (maximum path total length) but now referring to any maximal path starting in the generic node, we would have: `partial_from` = \"{'1':11,'2':6,'3':0}\", which, with Example 2 for the argument `labels` would become \"{'A':11,'B':6,'C':0}\"."
 
       # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
-      instance_dict:
+      input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example1: "-a instance_dict=\"{'n':3,'arcs':[(1,2,5),(2,3,6),(1,3,7)]}\""
-        example2: "-a instance_dict=\"{'labels':['A','B','C'],'arcs':[('A','B',5),('B','C',6),('A','C',7)]}\""
-        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`instance_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `instance_dict` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `instance_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti/elementi che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `n`, o `arcs`, o `nodes`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+        example1: "-a input_data_assigned=\"{'n':3,'arcs':[(1,2,5),(2,3,6),(1,3,7)]}\""
+        example2: "-a input_data_assigned=\"{'labels':['A','B','C'],'arcs':[('A','B',5),('B','C',6),('A','C',7)]}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti/elementi che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `n`, o `arcs`, o `nodes`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
       is_a_DAG:
@@ -152,7 +154,7 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       yield_certificate_in_output_file:
@@ -248,10 +250,13 @@ services:
         explain16: "[sensible_to_focus_arc] the DP table that for each activity/node v tells whether the focus arc is among the critical arcs for v. For example, w.r.t. the usual reference, and assuming `focus_arc`=(1,2), then `sensible_to_focus_arc` = \"{'1':False,'2':True,'3':True}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `sensible_to_focus_arc` = \"{'1':False,'2':True,'3':False}\"."
 
       # sezione with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
-      as_yaml:
+    color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+    as_yaml:
         regex: ^(0|1)$
         default: 0
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       recall_request:

@@ -1,6 +1,30 @@
 #!/usr/bin/env python3
 from sys import stderr
       
+instance_objects_spec = [
+    ('Knapsack_Capacity',int),
+    ('labels','list_of_str'),
+    ('costs','list_of_int'),
+    ('vals','list_of_int'),
+    ('tops','list_of_int'),
+    ('forced_out','list_of_str'),
+    ('forced_in','list_of_str'),
+]
+additional_infos_spec=[
+    ('partialDPtable','matrix_of_int')
+]
+answer_objects_spec = {
+    'opt_sol':'list_of_str',
+    'opt_val':'int',
+    'num_opt_sols':'int',
+    'list_opt_sols':'list_of_list_of_str',
+    'DPtable_opt_val':'matrix_of_int',
+    'DPtable_num_opts':'matrix_of_int',
+}
+#answer_objects_implemented = ['opt_sol','opt_val','num_opt_sols','DPtable_opt_val','DPtable_num_opts']
+answer_objects_implemented = ['opt_sol','opt_val','DPtable_opt_val']
+
+
 def sum_of_costs_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["costs"], instance["labels"]) if ele in ordered_list_of_elems])
 
@@ -8,7 +32,7 @@ def sum_of_vals_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["vals"], instance["labels"]) if ele in ordered_list_of_elems])
 
 def check_instance_consistency(instance):
-    #print(f"instance={instance}", file=stderr)
+    print(f"instance={instance}", file=stderr)
     if len(instance["labels"])!=len(instance["costs"]):
         print(f'Errore: {len(instance["labels"])=} != {len(instance["costs"])}=len(instance["costs"])')    
         exit(0)
@@ -33,8 +57,9 @@ def check_instance_consistency(instance):
 
         
 def solver(input_to_oracle):
-    I = input_to_oracle["instance"]
-    #print(f"Instance={I}")
+    #print(f"input_to_oracle={input_to_oracle}",file=stderr)
+    I = input_to_oracle["input_data_assigned"]
+    #print(f"Instance={I}",file=stderr)
     # the idea is to work over a reduced instance, where both the forced and the forbidden elements have been taken away from the table.
     Capacity=I["Knapsack_Capacity"] - sum_of_costs_over(I,I["forced_in"])    
     labels=[]
