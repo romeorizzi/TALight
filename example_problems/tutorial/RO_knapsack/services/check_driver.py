@@ -22,6 +22,7 @@ args_list = PSL.instance_objects_spec + PSL.additional_infos_spec + [
     ('DPtable_opt_val','yaml'),
     ('DPtable_num_opts','yaml'),
     ('alias_dict','yaml'),
+    ('request_setups','yaml'),
     ('answer_dict','yaml'),
     ('color_implementation',str),
     ('with_opening_message',bool),
@@ -52,13 +53,18 @@ request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.ch
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
 
-def verify_RO_knapsack_submission(SEF,input_data_assigned:Dict, long_answer_dict:Dict):
+def verify_RO_knapsack_submission(SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:str):
     I = SimpleNamespace(**input_data_assigned)
     goals = SEF.load(long_answer_dict)
             
     def verify_format():
         if 'opt_val' in goals:
             g = goals['opt_val']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
+        if 'num_opt_sols' in goals:
+            g = goals['num_opt_sols']
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
             SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
@@ -108,10 +114,11 @@ def verify_RO_knapsack_submission(SEF,input_data_assigned:Dict, long_answer_dict
 
             
 SEF = RO_eval.std_eval_feedback(ENV)
-feedback_dict = verify_RO_knapsack_submission(SEF,input_data_assigned, long_answer_dict=long_answer_dict)
+request_setups = ENV["request_setups"] if len(ENV["request_setups"]) != 0 else PSL.request_setups
+feedback_dict = verify_RO_knapsack_submission(SEF,input_data_assigned, long_answer_dict=long_answer_dict,request_setups=request_setups)
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
-all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
+all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of,"request_setups":request_setups}
 #print(f"all_data={all_data}", file=stderr)
 RO_io.checker_reply(all_data,ENV)
 if ENV.LOG_FILES != None:

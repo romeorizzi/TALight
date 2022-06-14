@@ -25,11 +25,16 @@ services:
         explain: valori degli oggetti
         example1: "il valore di default [13, 17, 19, 30, 101] offre il nostro primo running example"
         example2: "[13, 17, 19, 25, 101] offre il nostro secondo running example"
-      tops:
+      UB:
         regex: ^(.*)$
         default: "[]"
-        explain: "in realtà gli oggetti sono categorie di oggetti (ad esempio: `forchette`, `coltelli`, ...) e `tops` specifica, per ogni categoria, il numero massimo di oggetti di quella categoria che possono essere inclusi nello zaino"
-        note: "the default value (the empty list, []) leads us back to the standard version of th eproblem, where we are given objects rather than object types; in other words, for 5 objects this is equivalent to [1, 1, 1, 1, 1]"
+        explain: "in realtà gli oggetti sono categorie di oggetti (ad esempio: `forchette`, `coltelli`, ...). L'argomento `UB` specifica, per ogni categoria, il numero massimo di oggetti di quella categoria che possono essere inclusi nello zaino"
+        note: "gli argomenti LB e UB devono essere lasciati entrambi al loro valore di defaul (la lista vuota [], e con ciò si ritorna alla versione base del problema dove quelli assegnati sono oggetti singoli piuttosto che non tipologie di oggetti) oppure ricevere ciascuno una lista lunga precisamente quanto il numero di oggetti"
+      LB:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "in realtà gli oggetti sono categorie di oggetti (ad esempio: `forchette`, `coltelli`, ...). L'argomento `LB` specifica, per ogni categoria, il numero minimo di oggetti di quella categoria che devono essere inclusi nello zaino"
+        note: "gli argomenti LB e UB devono essere lasciati entrambi al loro valore di defaul (la lista vuota [], e con ciò si ritorna alla versione base del problema dove quelli assegnati sono oggetti singoli piuttosto che non tipologie di oggetti) oppure ricevere ciascuno una lista lunga precisamente quanto il numero di oggetti"
       forced_out:
         regex: ^(.*)$
         default: "[]"
@@ -88,6 +93,11 @@ services:
         example1: "-a answer_dict=\"{'opt_sol':['A', 'B'], 'opt_val':30}\""
         example2: "-a answer_dict=\"{'opt_sol1':['A', 'B'], 'opt_val1':30}\""
         explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della conegna del task/richiesta di esercizio, (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`answer_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
+
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
       alias_dict:
         regex: ^(.*)$
@@ -163,11 +173,16 @@ services:
         regex: ^(.*)$
         default: "[13, 17, 19]"
         explain: i valori degli oggetti
-      tops:
+      UB:
         regex: ^(.*)$
         default: "[]"
-        explain: "in realtà gli oggetti sono categorie di oggetti (ad esempio: `forchette`, `coltelli`, ...) e `tops` specifica, per ogni categoria, il numero massimo di oggetti di quella categoria che possono essere inclusi nello zaino"
-        note: "the default value (the empty list, []) leads us back to the standard version of th eproblem, where we are given objects rather than object types; in other words, for 5 objects this is equivalent to [1, 1, 1, 1, 1]"
+        explain: "in realtà gli oggetti sono categorie di oggetti (ad esempio: `forchette`, `coltelli`, ...). L'argomento `UB` specifica, per ogni categoria, il numero massimo di oggetti di quella categoria che possono essere inclusi nello zaino"
+        note: "gli argomenti LB e UB devono essere lasciati entrambi al loro valore di defaul (la lista vuota [], e con ciò si ritorna alla versione base del problema dove quelli assegnati sono oggetti singoli piuttosto che non tipologie di oggetti) oppure ricevere ciascuno una lista lunga precisamente quanto il numero di oggetti"
+      LB:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "in realtà gli oggetti sono categorie di oggetti (ad esempio: `forchette`, `coltelli`, ...). L'argomento `LB` specifica, per ogni categoria, il numero minimo di oggetti di quella categoria che devono essere inclusi nello zaino"
+        note: "gli argomenti LB e UB devono essere lasciati entrambi al loro valore di defaul (la lista vuota [], e con ciò si ritorna alla versione base del problema dove quelli assegnati sono oggetti singoli piuttosto che non tipologie di oggetti) oppure ricevere ciascuno una lista lunga precisamente quanto il numero di oggetti"
       forced_out:
         regex: ^(.*)$
         default: "[]"
@@ -196,6 +211,10 @@ services:
         example1: "-a request_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
         example2: "-a request_dict=\"{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}\""
         example3: "se lasci il valore di default (il dizionario vuoto {}) allora ottieni risposta a tutte le possibili domande per cui un solutore è già stato implementato. In tale caso i nomi impiegati nel responso dell'oracolo saranno quelli standard, come quelli nell'Esempio 1"
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
       # sezione with arguments that specify the formats of the outputs, either direct or on logs (on the server for full evaluation) in the context of an exam or exam simulation:
       color_implementation:
