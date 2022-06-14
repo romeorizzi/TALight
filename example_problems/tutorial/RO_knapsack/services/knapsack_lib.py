@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 from sys import stderr
+from typing import Optional, List, Dict, Callable
+
+from RO_verify_submission_gen_prob_lib import verify_submission_gen
 
 instance_objects_spec = [
     ('Knapsack_Capacity',int),
@@ -158,3 +161,62 @@ def solver(input_to_oracle):
     for std_name, ad_hoc_name in input_to_oracle["request"].items():
         oracle_answers[ad_hoc_name] = locals()[std_name]
     return oracle_answers
+
+
+class verify_submission_problem_specific(verify_submission_gen):
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:str):
+        super().__init__(SEF,input_data_assigned, long_answer_dict, request_setups)
+
+    def verify_format(self, SEF):
+        if not super().verify_format(SEF):
+            return False
+        if 'opt_val' in self.goals:
+            g = self.goals['opt_val']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
+        if 'num_opt_sols' in self.goals:
+            g = self.goals['num_opt_sols']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
+        if 'opt_sol' in self.goals:
+            g = self.goals['opt_sol']
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di oggetti (esempio ['{self.I.labels[0]}','{self.I.labels[2]}']). Hai invece immesso `{g.answ}`.")
+            for ele in g.answ:
+                if ele not in self.I.labels:
+                    return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {self.I.labels}.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        return True
+                
+    def set_up_and_cash_handy_data(self):
+        if 'opt_sol' in self.goals:
+            self.sum_vals = sum([val for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
+            self.sum_costs = sum([cost for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
+            
+    def verify_feasibility(self, SEF):
+        if not super().verify_feasibility(SEF):
+            return False
+        if 'opt_sol' in self.goals:
+            g = self.goals['opt_sol']
+            for ele in g.answ:
+                if ele in self.I.forced_out:
+                    return SEF.feasibility_NO(g, f"L'oggetto `{ele}` da tè inserito nella lista `{g.alias}` è tra quelli proibiti. Gli oggetti proibiti per la Richiesta {str(SEF.task_number)}, sono {self.I.forced_out}.")
+            for ele in self.I.forced_in:
+                if ele not in g.answ:
+                    return SEF.feasibility_NO(g, f"Nella lista `{g.alias}` hai dimenticato di inserire l'oggetto `{ele}` che invece è forzato. Gli oggetti forzati per la Richiesta {str(SEF.task_number)} sono {self.I.forced_in}.")
+            if self.sum_costs > self.I.Knapsack_Capacity:
+                return SEF.feasibility_NO(g, f"La tua soluzione in `{g.alias}` ha costo {self.sum_costs} > Knapsack_Capacity e quindi NON è ammissibile in quanto fora il budget per la Richiesta {str(SEF.task_number)}. La soluzione da tè inserita ricomprende il sottoinsieme di oggetti `{g.alias}`= {g.answ}.")
+            SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
+        return True
+                
+    def verify_consistency(self, SEF):
+        if not super().verify_consistency(SEF):
+            return False
+        if 'opt_val' in self.goals and 'opt_sol' in self.goals:
+            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol'];
+            if self.sum_vals != g_val.answ:
+                return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {self.sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
+            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.", "")
+        return True

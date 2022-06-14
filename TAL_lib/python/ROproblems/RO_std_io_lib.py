@@ -47,14 +47,14 @@ def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, al
     arguments:
       answer_dict               ad-hoc name --> answ_obj
       alias_dict                ad-hoc name --> std_name
-      answer_object_type_spec   answer object type --> its type as python data-structure
+      answer_object_type_spec   std_name --> type_spec of the object (e.g., 'list_of_list_of_int')
       implemented  contains the std_names of available answer object types
     returns:
        request_dict             ad-hoc name --> std_name
        answ_dict                ad-hoc name --> answ_obj
        name_of                  std_name --> ad-hoc name
        answ_obj                 std_name --> answ_obj
-       long_answer_dict         std_name --> (answ_obj, ad-hoc name)
+       long_answer_dict         std_name --> (answ_obj, ad-hoc name, type_spec)
        goals  is the list of the std_names of the answ_objects that have been submitted by the student/problem solver (they are precisely those requested by the exercise evaluated)
     """
     for std_name in alias_dict.values():
@@ -80,7 +80,7 @@ def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, al
         answ_dict[ad_hoc_name] = answer_dict[ad_hoc_name]
         name_of[std_name] = ad_hoc_name    
         answ_obj[std_name] = answer_dict[ad_hoc_name]    
-        long_answer_dict[std_name] = (answer_dict[ad_hoc_name], ad_hoc_name)
+        long_answer_dict[std_name] = (answer_dict[ad_hoc_name], ad_hoc_name, answer_object_type_spec[std_name])
     return request_dict, answ_dict, name_of, answ_obj, long_answer_dict, answ_obj.keys()
 
 
@@ -154,9 +154,9 @@ def oracle_logs(call_data,ENV,TALf):
 
 
 def checker_reply(all_data,ENV):
-    print(f"all_data={all_data}", file=stderr)
+    #print(f"all_data={all_data}", file=stderr)
     feedback_dict = all_data["feedback"]
-    print(f"feedback_dict={feedback_dict}", file=stderr)
+    #print(f"feedback_dict={feedback_dict}", file=stderr)
     if ENV["recall_data_assigned"]:
         feedback_dict["input_data_assigned"] = all_data["input_data_assigned"]
     feedback_dict["answer"] = all_data["long_answer"]

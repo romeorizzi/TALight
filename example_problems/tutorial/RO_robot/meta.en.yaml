@@ -97,7 +97,7 @@ services:
         default: "[]"
         explain: the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.
 
-      # API mode section, always to send the answers of the problem-solver:
+      # API mode section, to send the answers of the problem-solver and how to relate with it:
       answer_dict:
         regex: ^(.*)$
         default: ""
@@ -119,6 +119,12 @@ services:
         explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell'
         explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
         explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+
+      # section with arguments that modify the setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine), (3) logs on the server that could help monitoring and grading an exam
       color_implementation:
@@ -218,6 +224,12 @@ services:
         explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
         explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
         explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+
+      # section with arguments that modify the setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
       color_implementation:

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 from sys import exit, stderr
-from typing import Optional, List, Dict, Tuple
-from types import SimpleNamespace
 
 from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
@@ -22,6 +20,7 @@ args_list = PSL.instance_objects_spec + PSL.additional_infos_spec + [
     ('DPtable_opt_val','yaml'),
     ('DPtable_num_opts','yaml'),
     ('alias_dict','yaml'),
+    ('request_setups','yaml'),
     ('answer_dict','yaml'),
     ('color_implementation',str),
     ('with_opening_message',bool),
@@ -51,67 +50,13 @@ PSL.check_instance_consistency(input_data_assigned)
 request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['alias_dict'], PSL.answer_objects_spec, PSL.answer_objects_implemented)
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
-
-def verify_RO_knapsack_submission(SEF,input_data_assigned:Dict, long_answer_dict:Dict):
-    I = SimpleNamespace(**input_data_assigned)
-    goals = SEF.load(long_answer_dict)
-            
-    def verify_format():
-        if 'opt_val' in goals:
-            g = goals['opt_val']
-            if type(g.answ) != int:
-                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
-        if 'opt_sol' in goals:
-            g = goals['opt_sol']
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di oggetti (esempio ['{I.labels[0]}','{I.labels[2]}']). Hai invece immesso `{g.answ}`.")
-            for ele in g.answ:
-                if ele not in I.labels:
-                    return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {I.labels}.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
-        return True
-                
-    def verify_feasibility():
-        if 'opt_sol' in goals:
-            g = goals['opt_sol']
-            for ele in g.answ:
-                if ele in I.forced_out:
-                    return SEF.feasibility_NO(g, f"L'oggetto `{ele}` da tè inserito nella lista `{g.alias}` è tra quelli proibiti. Gli oggetti proibiti per la Richiesta {str(SEF.task_number)}, sono {I.forced_out}.")
-            for ele in I.forced_in:
-                if ele not in g.answ:
-                    return SEF.feasibility_NO(g, f"Nella lista `{g.alias}` hai dimenticato di inserire l'oggetto `{ele}` che invece è forzato. Gli oggetti forzati per la Richiesta {str(SEF.task_number)} sono {I.forced_in}.")
-            if sum_costs > I.Knapsack_Capacity:
-                return SEF.feasibility_NO(g, f"La tua soluzione in `{g.alias}` ha costo {sum_costs} > I.Knapsack_Capacity e quindi NON è ammissibile in quanto fora il budget per la Richiesta {str(SEF.task_number)}. La soluzione da tè inserita ricomprende il sottoinsieme di oggetti `{g.alias}`= {g.answ}.")
-            SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
-        return True
-                
-    def verify_consistency():
-        if 'opt_val' in goals and 'opt_sol' in goals:
-            g_val = goals['opt_val']; g_sol = goals['opt_sol'];
-            if sum_vals != g_val.answ:
-                return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
-            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.")
-        return True
-                
-    if not verify_format():
-        return SEF.completed_feedback
-    if 'opt_sol' in goals:
-        sum_vals = sum([val for ele,cost,val in zip(I.labels,I.costs,I.vals) if ele in goals['opt_sol'].answ])
-        sum_costs = sum([cost for ele,cost,val in zip(I.labels,I.costs,I.vals) if ele in goals['opt_sol'].answ])
-    if not verify_feasibility():
-        return SEF.completed_feedback
-    if not verify_consistency():
-        return SEF.completed_feedback
-    return SEF.feedback_when_all_checks_passed()
-
-
-            
 SEF = RO_eval.std_eval_feedback(ENV)
-feedback_dict = verify_RO_knapsack_submission(SEF,input_data_assigned, long_answer_dict=long_answer_dict)
+request_setups = ENV["request_setups"] if len(ENV["request_setups"]) != 0 else PSL.request_setups
+KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict, request_setups)
+feedback_dict = KingArthur.verify_submission(SEF)
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
-all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
+all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of,"request_setups":request_setups}
 #print(f"all_data={all_data}", file=stderr)
 RO_io.checker_reply(all_data,ENV)
 if ENV.LOG_FILES != None:

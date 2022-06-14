@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from sys import exit, stderr
-from tabulate import tabulate
 
 from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
