@@ -211,7 +211,7 @@ services:
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: 'this argument (a string to be read as yaml) is a dictionary describing the solution requested to the oracle. For every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., "opt_sol") and refer to it by the name `key` as prescribed by the caller. The possible `vlues` are the following:'
+        explain: 'this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `key` (e.g., "opt_sol") and refer to it by the name `value` as prescribed by the caller. The possible `keys` (i.e., solution object types currently supported) are the following:'
         explain1: '[opt_sol] an optimal solution, i.e., a  minimum total cost node cover of T'
         explain2: '[opt_val] the minimum total cost of a feasible solution (a node cover of the tree T, i.e., a set of nodes hitting ever edge of T)'
         explain3: '[num_opt_sols] the number of different optimal solutions'

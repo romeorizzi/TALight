@@ -1,32 +1,25 @@
 #!/usr/bin/env python3
 
-from sys import exit
-
-from tabulate import tabulate
+from sys import exit, stderr
 
 from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
-import RO_problems_lib as RO
-import lcs_lib
+import RO_std_io_lib as RO_io
+
+import problem_specific_lib as PSL
 
 # METADATA OF THIS TAL_SERVICE:
-args_list = [
-    ('pwd',str),
-    ('s','str'),
-    ('t','str'),
-    ('start_with','str'),
-    ('end_with','str'),
-    ('forbidden_s_interval_first_pos','int'),
-    ('forbidden_s_interval_last_pos','int'),
-    ('sol_type',str),
-    ('name_of_opt_val',str),
-    ('name_of_opt_sol',str),
-    ('name_of_DPtable_prefix',str),
-    ('name_of_DPtable_suffix',str),
-    ('as_yaml',bool),
-    ('recall_input',bool),
+args_list = [('pwd',str)] + PSL.instance_objects_spec + [
+    ('input_data_assigned','yaml'),
+    ('request_dict','yaml'),
+    ('request_setups','yaml'),
+    ('color_implementation',str),
     ('with_opening_message',bool),
+    ('as_yaml',bool),
+    ('recall_data_assigned',bool),
+    ('recall_request',bool),
+    ('with_output_files',bool),
     ('esercizio',int),
     ('task',int),
 ]
@@ -39,14 +32,23 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 TOKEN_REQUIRED = True
-RO.check_access_rights(ENV,TALf, require_pwd = True, TOKEN_REQUIRED = TOKEN_REQUIRED)
-lcs_lib.check_request_consistency(ENV)
-                    
-opt_val, opt_sol, DPtable = lcs_lib.solver(ENV)
+RO_io.check_access_rights(ENV,TALf, require_pwd = True, TOKEN_REQUIRED = TOKEN_REQUIRED)
+input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec,args_list,ENV)
+#print(f"input_data_assigned={input_data_assigned}", file=stderr)
+PSL.check_instance_consistency(input_data_assigned)
+RO_io.check_request(ENV['request_dict'], PSL.answer_objects_implemented)
 
-call_data = {'oracle': lcs_lib.dict_of_oracle(ENV, opt_val,opt_sol,DPtable), 'input': lcs_lib.dict_of_input(ENV) }
+request_dict = ENV["request_dict"] if len(ENV["request_dict"]) != 0 else { key:key for key in PSL.answer_objects_implemented }
+request_setups = ENV["request_setups"] if len(ENV["request_setups"]) != 0 else PSL.request_setups
+#print(f"request_dict={request_dict}\nrequest_setups={request_setups}", file=stderr)
+    
+call_data = {"input_data_assigned":input_data_assigned,"request":request_dict,"request_setups":request_setups}
+print(f"call_data={call_data}", file=stderr)
+call_data["oracle"] = PSL.solver(call_data)
 
-RO.oracle_outputs(call_data,ENV,TALf)
+RO_io.oracle_outputs(call_data,ENV)
 if ENV.LOG_FILES != None:
-    RO.oracle_logs(call_data,ENV)
+    RO_io.oracle_logs(call_data,ENV,TALf)
+if ENV["with_output_files"]:    
+    RO_io.oracle_output_files(call_data,ENV,TALf)
 

@@ -9,76 +9,68 @@ Note:
 - invio di file (submission_filehandler) attualmente non supportato nè da Jupyter
 
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol -a opt_sol="['A', 'B']"
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol -a opt_sol="['A', 'B']"
 
 Jupyter direct:
-feedback_dict = rtal_connect(RTAL_URL, 'RO_knapsack', 'check', {'elementi':['A', 'B', 'C'], 'pesi':[2, 3 ,4], 'valori':[13, 17, 19], 'Knapsack_Capacity':5, 'sol_type':'opt_sol', 'opt_sol': ['A', 'B'], 'name_of_opt_sol': 'opt_sol3', 'as_yaml_with_points':'1', 'color_implementation':'html', 'with_output_files':'0', 'pt_tot':10,'pt_formato_OK':0,'pt_feasibility_OK':1, 'task':3}, output_files_local_folder='output_files_TALight', rtaltoken=RTAL_PRIVATE_ACCESS_TOKEN)
+feedback_dict = rtal_connect(RTAL_URL, 'RO_lcs', 'check', {'elementi':['A', 'B', 'C'], 'pesi':[2, 3 ,4], 'valori':[13, 17, 19], 'Knapsack_Capacity':5, 'sol_type':'opt_sol', 'opt_sol': ['A', 'B'], 'name_of_opt_sol': 'opt_sol3', 'as_yaml_with_points':'1', 'color_implementation':'html', 'with_output_files':'0', 'pt_tot':10,'pt_formato_OK':0,'pt_feasibility_OK':1, 'task':3}, output_files_local_folder='output_files_TALight', rtaltoken=RTAL_PRIVATE_ACCESS_TOKEN)
 Jupyter as in practice:
-feedback_dict_TAL = rtal_connect(RTAL_URL, 'RO_knapsack', 'check', rtalargs_dict={'elementi':elements, 'pesi':weights, 'valori':vals, 'Knapsack_Capacity':Capacity, 'elementi_proibiti':elementi_proibiti, 'elementi_obbligati':elementi_obbligati, 'sol_type':answer['sol_type'], 'opt_sol':answer['opt_sol'], 'opt_val':answer['opt_val'], 'DPtable':answer['DPtable'], 'name_of_opt_sol':answer['name_of_opt_sol'], 'name_of_opt_val':answer['name_of_opt_val'], 'name_of_DPtable':answer['name_of_DPtable'], 'as_yaml_with_points':'1', 'color_implementation':'html', 'with_output_files':'0', 'pt_tot':pt_tot,'pt_formato_OK':pt_formato_OK,'pt_feasibility_OK':pt_feasibility_OK, 'task':task_number}, output_files_local_folder='output_files_TALight', rtaltoken=RTAL_PRIVATE_ACCESS_TOKEN)
+feedback_dict_TAL = rtal_connect(RTAL_URL, 'RO_lcs', 'check', rtalargs_dict={'elementi':elements, 'pesi':weights, 'valori':vals, 'Knapsack_Capacity':Capacity, 'elementi_proibiti':elementi_proibiti, 'elementi_obbligati':elementi_obbligati, 'sol_type':answer['sol_type'], 'opt_sol':answer['opt_sol'], 'opt_val':answer['opt_val'], 'DPtable':answer['DPtable'], 'name_of_opt_sol':answer['name_of_opt_sol'], 'name_of_opt_val':answer['name_of_opt_val'], 'name_of_DPtable':answer['name_of_DPtable'], 'as_yaml_with_points':'1', 'color_implementation':'html', 'with_output_files':'0', 'pt_tot':pt_tot,'pt_formato_OK':pt_formato_OK,'pt_feasibility_OK':pt_feasibility_OK, 'task':task_number}, output_files_local_folder='output_files_TALight', rtaltoken=RTAL_PRIVATE_ACCESS_TOKEN)
 
-rtal_connect(RTAL, 'RO_knapsack', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "opt_sol", "opt_sol": "[\'A\', \'B\']"', '', '')
-
-CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_val -a opt_val=30 -a with_opening_message
-Jupyter: adapt correspondingly the above 
-
-rtal_connect(RTAL, 'RO_knapsack', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "opt_val", "opt_val": "30", "with_opening_message":"1"', '', '')
+rtal_connect(RTAL, 'RO_lcs', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "opt_sol", "opt_sol": "[\'A\', \'B\']"', '', '')
 
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol_with_val -a opt_sol="['A', 'B']" -a opt_val=30 -a color_implementation='html'
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_val -a opt_val=30 -a with_opening_message
 Jupyter: adapt correspondingly the above 
 
-rtal_connect(RTAL, 'RO_knapsack', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "opt_sol_with_val", "opt_val": "30", "opt_sol": "[\'A\', \'B\']", "color_implementation":"html"', '', '')
+rtal_connect(RTAL, 'RO_lcs', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "opt_val", "opt_val": "30", "with_opening_message":"1"', '', '')
 
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=DPtable -a DPtable="[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol_with_val -a opt_sol="['A', 'B']" -a opt_val=30 -a color_implementation='html'
 Jupyter: adapt correspondingly the above 
 
-rtal_connect(RTAL, 'RO_knapsack', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "DPtable", "DPtable": "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"', '', '')
+rtal_connect(RTAL, 'RO_lcs', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "opt_sol_with_val", "opt_val": "30", "opt_sol": "[\'A\', \'B\']", "color_implementation":"html"', '', '')
 
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=all -a opt_sol="['A', 'B']" -a opt_val=30 -a DPtable="[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=DPtable -a DPtable="[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
 Jupyter: adapt correspondingly the above 
 
-rtal_connect(RTAL, 'RO_knapsack', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "all", "opt_sol": "[\'A\', \'B\']"', "opt_val": "30", "DPtable", "DPtable": "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"', '', '')
+rtal_connect(RTAL, 'RO_lcs', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "DPtable", "DPtable": "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"', '', '')
+
+CLI:
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=all -a opt_sol="['A', 'B']" -a opt_val=30 -a DPtable="[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+Jupyter: adapt correspondingly the above 
+
+rtal_connect(RTAL, 'RO_lcs', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "all", "opt_sol": "[\'A\', \'B\']"', "opt_val": "30", "DPtable", "DPtable": "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"', '', '')
 
 # Con richiesta di ottenimento di un certificato di soluzione su un file in locale:
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol -a opt_sol="['A', 'B']"  -awith_output_files
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol -a opt_sol="['A', 'B']"  -awith_output_files
 Jupyter: adapt correspondingly the above 
 
-rtal_connect(RTAL, 'RO_knapsack', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "opt_sol", "opt_sol": "[\'A\', \'B\']", "with_output_files": "1"', '', '')
+rtal_connect(RTAL, 'RO_lcs', 'check', '"elementi": "[\'A\', \'B\', \'C\']", "pesi": "[2, 3 ,4]", "valori": "[13, 17, 19]", "Knapsack_Capacity": "5", "sol_type": "opt_sol", "opt_sol": "[\'A\', \'B\']", "with_output_files": "1"', '', '')
 
 # Lettura da file dei parametri della sottoposizione al server TALight, invece che loro trasmissione come argomenti della chiamata di servizio. Può essere impiegato per verificare la validità della sottoposizione corrente:
 ATTUALMENTE NON SUPPORTATO - ALMENO PER ORA NON SERVE
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol -a opt_sol="['A', 'B']"  -f submission_filehandler=my_answer_to_problem_knapsack_task_1.txt
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol -a opt_sol="['A', 'B']"  -f submission_filehandler=my_answer_to_problem_knapsack_task_1.txt
 Jupyter: adapt correspondingly the above 
 
 
 
 # SERVIZIO ORACLE
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol
-Jupyter: adapt correspondingly the above 
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd
 
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -a reduce_t_to_its_prefix_of_length=5 -a with_opening_message 
 
-CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_val -a with_opening_message
-Jupyter: adapt correspondingly the above 
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -a request_dict="{'opt_sol':'opt_sol_BELLA'}"
 
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -a s="girandola" -a t="mariangela"
 
-CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol_with_val
-Jupyter: adapt correspondingly the above 
-
-
-CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=DPtable
-Jupyter: adapt correspondingly the above 
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -a input_data_assigned="{'s':'girandola','t':'mariangela'}"
 
 
 # Con richiesta di ottenere il file con soluzione (ed istanza) su un file in locale:
+
 CLI:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack oracle -a pwd=tmppwd -a elementi="['A', 'B', 'C']" -a pesi="[2, 3, 4]" -a valori="[13, 17, 19]" -a Knapsack_Capacity=5 -a sol_type=opt_sol  -awith_output_files
-Jupyter: adapt correspondingly the above 
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -awith_output_files

@@ -279,7 +279,7 @@ Dato un insieme di nodi S che includa s ma non t, l'insieme di quegli archi dire
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'orcolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è specificato dal `value` (che è sempre tenuto ad essere un nome standard, ad esempio 'max_flow') e che verrà chiamata `value` (ad esempio 'max_flow1') nei riferimenti ad essa. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `value` sono i seguenti:"
+        explain: 'this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `key` (e.g., "opt_sol") and refer to it by the name `value` as prescribed by the caller. The possible `keys` (i.e., solution object types currently supported) are the following:'
         explain1: '[max_flow_val] il massimo valore di un flusso ammissibile dal nodo s al nodo t'
         explain2: '[max_flow] un massimo flusso dal nodo s al nodo t)'
         explain3: '[max_flow_as_paths] un massimo flusso dal nodo s al nodo t, decomposto in flussi elementari'

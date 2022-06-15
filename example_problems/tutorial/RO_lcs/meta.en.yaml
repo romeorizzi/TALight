@@ -8,21 +8,21 @@ services:
     args:
       # section with the instance data assigned to the problem-solver/student:
       s:
-        regex: ^([A-Z]*)$
+        regex: ^([a-zA-Z]*)$
         default: 'ACCIPICCHIA'
         explain: is the first string
         example1: "the first string is s='ACCIPICCHIA' in our running Example 1"
       t:
-        regex: ^([A-Z]*)$
+        regex: ^([a-zA-Z]*)$
         default: 'MAMMACHIOCCIA'
         explain: is the second string
         example1: "the second string is s='MAMMACHIOCCIA' in our running Example 1"
       start_with:
-        regex: ^(\*|[A-Z])$
+        regex: ^(\*|[a-zA-Z])$
         default: '*'
         explain: the common subsequence is required to start with this character. Using the mask character * vanifies this constraint
       end_with:
-        regex: ^(\*|[A-Z])$
+        regex: ^(\*|[a-zA-Z])$
         default: '*'
         explain: the common subsequence is required to end with this character. Using the mask character * vanifies this constraint
       forbidden_s_interval_first_pos:
@@ -55,12 +55,12 @@ services:
         regex: ^(.*)$
         default: "[]"
         explain: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student also in order to reduce the massive and error-prone overhead of filling a large table. When this is the case, and the service is communicated these too, then it can offer more customized feedback to the student in her attempts to get into the game. We like and support this. In the specific, `partial_max_len_on_prefixes_of_len[i][j]` reports the maximum length of a string which is a subsequence both of s_pref[i]  (the prefix of s of length i) and of t_pref[j]  (the prefix of t of length j)."
-        example: "[ [ 0, 0, 0, 0, 0], [ 0, -1, -1, -1, -1], [ 0, -1, -1, -1, -1], [ 0, -1, -1, -1, -1], [ 0, -1, -1, -1, -1] ]  is a possible continuation for our runnig Example 1, compatible with the other settings"
+        example: "[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2], [0, 0, 1, 1, 1, 1, 2, 2, -1, -1, 3, 3, -1, 3], [0, 0, 1, 1, 1, 1, -1, -1, 3, 3, -1, -1, 4, -1], [0, 0, 1, 1, 1, 1, -1, -1, 3, -1, -1, 3, 4, 4], [0, 0, 1, 1, 1, 1, -1, -1, -1, 3, -1, 3, -1, -1], [0, 0, 1, 1, 1, 1, -1, 2, 3, -1, 4, -1, 4, -1], [0, 0, 1, 1, 1, 1, -1, -1, 3, -1, 4, 5, 5, 5], [0, 0, 1, 1, 1, 1, 2, -1, 3, 3, -1, 5, 5, 5], [0, 0, 1, 1, 1, 1, -1, -1, -1, -1, -1, 5, 6, 6], [0, 0, 1, 1, 1, -1, -1, -1, -1, -1, -1, 5, 6, 7]]  is a possible continuation for our runnig Example 1, compatible with the other settings. It is obtained from the correct DPtable by overwriting some of the entries with a -1"
       partial_max_len_on_suffixes_from_pos:
         regex: ^(.*)$
         default: "[]"
         explain: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student also in order to reduce the massive and error-prone overhead of filling a large table. When this is the case, and the service is communicated these too, then it can offer more customized feedback to the student in her attempts to get into the game. We like and support this. In the specific, `partial_max_len_on_suffixes_from_pos[i][j]` reports the maximum length of a string which is a subsequence both of s_suff[i]  (the suffix of s of length i) and of t_suff[j]  (the suffix of t of length j)."
-        example: "[ [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0],  [ 0, 0, 0, 0, 0] ]  is a possible continuation for our runnig Example 1, compatible with the other settings"
+        example: "[[7, 7, 7, 7, 7, 6, 5, 5, -1, -1, 3, -1, 1, 0], [6, 6, 6, 6, 6, 6, 5, 5, -1, -1, 3, -1, 1, 0], [6, 6, 6, 6, 6, 6, 5, 5, -1, 4, 3, 2, 1, 0], [5, 5, 5, 5, 5, 5, 5, 5, -1, -1, 3, -1, 1, 0], [5, 5, 5, 5, 5, 5, 5, 5, 4, -1, 3, 2, 1, 0], [5, 5, 5, 5, 5, 5, 5, 5, -1, -1, 3, -1, 1, 0], [-1, 4, -1, -1, 4, -1, -1, 4, -1, -1, 3, -1, 1, 0], [4, -1, -1, 4, -1, -1, 3, 3, 3, 3, 3, 2, 1, 0], [3, 3, 3, 3, 3, 3, 3, -1, -1, -1, 2, 2, 1, 0], [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]  is a possible continuation for our runnig Example 1, compatible with the other settings. It is obtained from the correct DPtable by overwriting some of the entries with a -1"
 
       # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
       input_data_assigned:
@@ -72,22 +72,22 @@ services:
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       opt_val:
         regex: ^(.*)$
-        default: 4
-        example: 4 is actually the correct answer for running Example 1
+        default: 7
+        example: 7 is actually the correct answer for running Example 1
         explain: "the maximum length of a string which is a feasible solution. In order to be a feasible solution, a string must be both a subsequence of string `s` and a subsequence of string `t`, but it must also respect any other additional constraint given. (A subsequence of a string is any string that can be obtained from it by dropping off some of its characters. The additional constraints, if any, get imposed by the arguments `start_with`,`end_with`,`forbidden_s_interval_first_pos`,`forbidden_s_interval_last_pos`,`reduce_s_to_its_prefix_of_length`,`reduce_t_to_its_prefix_of_length`,`reduce_s_to_its_suffix_of_length`,`reduce_t_to_its_suffix_of_length`. These additional contraints can be combined in any way as long as the optimum solution value for the question formulated by the problem poser to the problem solver appears as one of the entries of the DP tables considered)"
       opt_sol:
         regex: ^(.*)$
-        default: ""
-        example: "the string '???' is actually the correct answer for running Example 1"
+        default: "ACICCIA"
+        example: "the string 'ACICCIA' is actually the correct answer for running Example 1"
         explain: a maximum length string which is a feasible solution. (Roughly speaking, a feasible solution is a common subsequence, but we refer to the description for argument `opt_val` to get all the details)
       max_len_on_prefixes_of_len:
         regex: ^(.*)$
-        default: "[ [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0],  [ 0, 0, 0, 0, 0] ]
+        default: "[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2], [0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3], [0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 4, -1], [0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 3, -1, 4], [0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4], [0, 0, 1, 1, 1, 1, 2, 2, 3, 3, -1, 4, -1, 4], [0, 0, 1, 1, 1, 1, 2, 2, 3, 3, -1, -1, -1, -1], [0, 0, 1, 1, 1, 1, 2, 3, 3, 3, -1, -1, -1, -1], [0, 0, 1, 1, 1, 1, 2, 3, -1, -1, -1, -1, -1, -1], [0, 0, 1, 1, 1, 2, 2, 3, -1, -1, -1, -1, -1, -1]]"
         explain: "this is a DP table that the trainee has submitted to answer a question posed by who has composed the exercise. The DP table must be compliant to the definition explicited by the problem poser. That is, `partial_max_len_on_prefixes_of_len[i][j]` is expected to report the maximum length of a string which is a subsequence both of s_pref[i]  (the prefix of s of length i) and of t_pref[j]  (the prefix of t of length j)."
         example1: the default value is the correct answer for running Example 1
       max_len_on_suffixes_from_pos:
         regex: ^(.*)$
-        default: "[ [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0],  [ 0, 0, 0, 0, 0] ]
+        default: "[[-1, -1, -1, -1, -1, -1, -1, -1, 4, 4, 3, 2, 1, 0], [-1, -1, -1, -1, -1, -1, -1, -1, 4, 4, 3, 2, 1, 0], [-1, -1, -1, -1, -1, -1, -1, -1, 4, 4, 3, 2, 1, 0], [-1, -1, -1, -1, -1, -1, -1, -1, 4, 4, 3, 2, 1, 0], [-1, -1, -1, -1, -1, -1, -1, -1, 4, 4, 3, 2, 1, 0], [-1, -1, -1, -1, -1, -1, -1, -1, 4, 4, 3, 2, 1, 0], [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 2, 1, 0], [4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 2, 1, 0], [3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 1, 0], [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]"
         explain: "this is a DP table that the trainee has submitted to answer a question posed by who has composed the exercise. The DP table must be compliant to the definition explicited by the problem poser. That is, `partial_max_len_on_suffixes_from_pos[i][j]` is expected to report the maximum length of a string which is a subsequence both of s_suff[i]  (the suffix of s of length i) and of t_suff[j]  (the suffix of t of length j)."
         example1: the default value is the correct answer for running Example 1
 
@@ -111,10 +111,10 @@ services:
         example3: "In particular, you can leave the default value (the empty dictionary, {}) is you stick to the original keys for all possible objects in the answer/solution, like in Example 1\n"
 
       # section with arguments that modify the setup
-      #request_setups:
-      #  regex: ^(.*)$
-      #  default: "{}"
-      #  explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, some RO_* problems allow setting `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine), (3) logs on the server that could help monitoring and grading an exam
       color_implementation:
@@ -169,19 +169,19 @@ services:
 
       # section with a possible instance to the problem:
       s:
-        regex: ^([A-Z]*)$
+        regex: ^([a-zA-Z]*)$
         default: 'ACCIPICCHIA'
         explain: is the first string
       t:
-        regex: ^([A-Z]*)$
+        regex: ^([a-zA-Z]*)$
         default: 'MAMMACHIOCCIA'
         explain: is the second string
       start_with:
-        regex: ^(\*|[A-Z])$
+        regex: ^(\*|[a-zA-Z])$
         default: '*'
         explain: the common subsequence is required to start with this character. Using the mask character * vanifies this constraint
       end_with:
-        regex: ^(\*|[A-Z])$
+        regex: ^(\*|[a-zA-Z])$
         default: '*'
         explain: the common subsequence is required to end with this character. Using the mask character * vanifies this constraint
       forbidden_s_interval_first_pos:
@@ -220,17 +220,17 @@ services:
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: 'this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., "opt_sol") and refer to it by the name `key` as prescribed by the caller. The possible `values` (i.e., solution object types currently supported) are the following:'
+        explain: 'this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `key` (e.g., "opt_sol") and refer to it by the name `value` as prescribed by the caller. The possible `keys` (i.e., solution object types currently supported) are the following:'
         explain1: '[opt_val] the maximum length of a string that is a feasible solution for the problem set up by the arguments describing the instance posed to the trainee'
         explain2: '[opt_sol] a maximum length string that is a feasible solution for the problem set up by the arguments describing the instance posed to the trainee'
         explain3: '[max_len_on_prefixes_of_len] the DP table meant to tell the maximum length of a common subsequence for any (prefix_of_s,prefix_of_t) pair'
         explain4: '[max_len_on_suffixes_from_pos] the DP table meant to tell the maximum length of a common subsequence for any (suffix_of_s,suffix_of_t) pair'
 
       # section with arguments that modify the setup
-      #request_setups:
-      #  regex: ^(.*)$
-      #  default: "{}"
-      #  explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, some RO_* problems allow setting `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
       color_implementation:
