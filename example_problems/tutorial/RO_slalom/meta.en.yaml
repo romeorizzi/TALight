@@ -49,7 +49,7 @@ services:
         default: "[-1,1,-1,1,1]"
         explain: "a partial DP table where some entries may have been concealed overwriting a -1 on top of them. Otherwise, `partial_num_free[v]` is the number of minimum cost node covers of the subtree T[v] o T rooted at v."
 
-      # API mode section, again to send the input received from the problem-solver to the service:
+      # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
@@ -101,10 +101,10 @@ services:
         explain: "`num_free[v]` è il numero di node covers di minimo costo per il sottoalbero T[v] di T radicato in v."
         explain-english: "`num_free[v]` is the number of minimum cost node covers of the subtree T[v] o T rooted at v."
 
-      # API mode section, to send the answers of the problem-solver and how to relate with it:
+      # API mode section, to transmit the answers of the problem-solver and how to relate with it:
       answer_dict:
         regex: ^(.*)$
-        default: ""
+        default: "{}"
         example1: "-a answer_dict=\"{'opt_sol':['A', 'B'], 'opt_val':30}\""
         example2: "-a answer_dict=\"{'opt_sol1':['A', 'B'], 'opt_val1':30}\""
         explain: "There are two options for passing to this TALight service the anwer to be evaluated and provided a feedback with. Either you use a separate argument for each possible object type comprising your answer, or you callect them all within one single dictionary that you pass through this one argument (`answer_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty string) then the first option is assumed, which may be better when experiencing the service from the CLI. Otherwise, the string passed through `answer_dict` is read as yaml to obtain the dictionary containing the answer of the student. An answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type represented by the standard name attached to it (e.g., like `opt_sol` or `opt_val`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible answer objects, and their names, by inspecting the complete list of arguments to this service). You can use these standard names as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows for more freedom: it allows you to introduce custom names, defined in terms of the standard ones (just an aliasing) and to attach them to the objects comprising your answer, using them as keys in your `answer_dict` dictionary. In this way the feedback provided by the service will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`"

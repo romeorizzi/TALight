@@ -170,16 +170,20 @@ def checker_logs(all_data,ENV,TALf):
     oracle_dict = all_data["oracle"]
     pt_safe = feedback_dict['pt_safe']
     pt_maybe = feedback_dict['pt_maybe']
-    pt_available = feedback_dict['pt_available']
-    for key in oracle_dict:
-        if ENV[key] != oracle_dict[key]:
-            pt_available = pt_safe
+    pt_min = pt_safe
+    pt_max = feedback_dict['pt_available']
+    if 'exception' not in oracle_dict: 
+        for key in oracle_dict:
+            if ENV[key] == oracle_dict[key]: # here, to get a closer approximation, you can allow the use of a function defined by the problem maker within the problem_specific_lib 
+                pt_min = pt_max
+            #else:   # this cannot be said right now (in general)
+            #    pt_max = pt_safe
     content_LOG_file = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nORACLE: "+repr(oracle_dict)+"\n\nINSTANCE: "+repr(all_data["input_data_assigned"])
     #print(f"content_LOG_file =`{content_LOG_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
     if ENV["task"] != -1:
         filename_spec += f'task_{ENV["task"]}_'
-    filename_spec += f'safe_{pt_safe}_maybe_{pt_maybe}_true_{pt_available}'
+    filename_spec += f'safe_{pt_safe}_maybe_{pt_maybe}_min_{pt_min}_max_{pt_max}'
     TALf.str2log_file(content=content_LOG_file, filename=filename_spec, timestamped = False)
     
 def checker_certificates(all_data,ENV,TALf):

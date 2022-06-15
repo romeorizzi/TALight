@@ -6,15 +6,17 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "though this TALight problem can be of direct use, like any other problem in the RO_* collection is mainly meant to supply immidiate and contextual feedback during exams (real or simulations), in exercitations (authonomous or driven), and other didactic endeavours. All the problems offered in the RO_* colection offer an oracle service and a check service like this one. The purpose of the check service is to immidiately and contextually evaluate the tentative answers of the student in order to support him clarifying what is a correct solution and how he should approach a problem. In the context of an exercise on the Longest Common Subsequence (LCS) Problem deployed from another software system (like the exam-RO-public project) or by other means of the liking, the problem solver is mainly given two strings s and t with the mission to find a longest sequence that is a subsequence o both. The arguments of this service give the flexibility that allows to cover several possible variants of this basic question, customizing it for an exam or a didactic experience. These didactic variants are suitable not only for exams but more generally for the verification and promotion of real understanding and active skills (both for a specific problem and methodological); if the variants offered are not enough for you, be aware that TALight problems aim to be extensible and open to promote collaboration between problem-makers/teachers (as well as to relativize and overcome the separation between them and problem-solvers/trainees). Beyond the instance received by the student, the service receives also the objects that comprise the answer of the student on one of the many possible questions/requests comprising the whole exercise. Given all these data, the service can closely support the student/problem solver in her steps, to make sure she properly connects to the exam, to the subject, and to the proper methodology. From the system where you organize your exams/exercises, design an exercise centered on an instance of LCS Problem composing a a suitable list of requests to the student, whose verification with contextual and/or postponed feedback you might delegate to this TALight service. Just to give a first idea, you will be able to impose additional constraints on single elements that redefine the admissibility of the solutions and you can check/validate dynamic programming tables submitted by the student (also for variants of the standard question that involve the competence of dynamic programming). The situation where the problem-solver may have received a partial DP table and her task was to to complete it is also covered (particularly useful to allow realistically a compilation by hand of the tables on sufficiently interesting instances)."
     args:
-      # section with the instance assigned to the problem-solver/student:
+      # section with the instance data assigned to the problem-solver/student:
       s:
         regex: ^([A-Z]*)$
         default: 'ACCIPICCHIA'
         explain: is the first string
+        example1: "the first string is s='ACCIPICCHIA' in our running Example 1"
       t:
         regex: ^([A-Z]*)$
         default: 'MAMMACHIOCCIA'
         explain: is the second string
+        example1: "the second string is s='MAMMACHIOCCIA' in our running Example 1"
       start_with:
         regex: ^(\*|[A-Z])$
         default: '*'
@@ -26,11 +28,11 @@ services:
       forbidden_s_interval_first_pos:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
-        explain: "this argument works in pair with argument `forbidden_s_interval_last_pos`, and no such a pair of arguments is supported for the second string t. Only for first string s, the problem poser (instructor) can impose the further constraint that, a common subsequence, in order to be truly considered as a feasible solution, must avoid taking characters out from a forbidden interval in s (like as if the first string was actually obtained from s by dropping/forbidding those characters that fall within a closed interval [first_pos,last_pos]. Positions start from 0. When last_pos < first_pos then no character is dropped from s (the first string)."
+        explain: "this argument always comes in pair with argument `forbidden_s_interval_last_pos`. We remark that no such pair of arguments is supported for the second string t. Only for first string s, the problem poser (instructor) can impose the further constraint that, a common subsequence, in order to be truly considered as a feasible solution, must avoid taking characters out from a forbidden interval in s (like as if the first string was actually obtained from s by dropping/forbidding those characters that fall within a closed interval [first_pos,last_pos]. Positions start from 0. When last_pos < first_pos then no character is dropped from s (the first string)."
       forbidden_s_interval_last_pos:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: this argument works in pair with argument `forbidden_s_interval_first_pos` (see the explanation offered there)
+        explain: this argument always comes in pair with argument `forbidden_s_interval_first_pos` (see the explanation offered there)
       reduce_s_to_its_prefix_of_length:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
@@ -49,41 +51,51 @@ services:
         explain: a common subsequence, in order to be truly considered as a feasible solution, must actually be a subsequence of pref_t[i], the suffix of t of length i, where i is the value assigned to this argument
 
       # section with additional data provided to the trainee by the problem poser, that this service should take in consideration:
-      partial_max_len_on_prefixes:
+      partial_max_len_on_prefixes_of_len:
         regex: ^(.*)$
-        default: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student also in order to reduce the massive and error-prone overhead of filling a large table. When this is the case, and the service is communicated these too, then it can offer more customized feedback to the student in her attempts to get into the game. We like and support this. In the specific, `partial_max_len_on_prefixes[i][j]` reports the maximum length of a string which is a subsequence both of s_pref[i]  (the prefix of s of length i) and of t_pref[j]  (the prefix of t of length j)."
-      partial_max_len_on_suffixes:
+        default: "[]"
+        explain: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student also in order to reduce the massive and error-prone overhead of filling a large table. When this is the case, and the service is communicated these too, then it can offer more customized feedback to the student in her attempts to get into the game. We like and support this. In the specific, `partial_max_len_on_prefixes_of_len[i][j]` reports the maximum length of a string which is a subsequence both of s_pref[i]  (the prefix of s of length i) and of t_pref[j]  (the prefix of t of length j)."
+        example: "[ [ 0, 0, 0, 0, 0], [ 0, -1, -1, -1, -1], [ 0, -1, -1, -1, -1], [ 0, -1, -1, -1, -1], [ 0, -1, -1, -1, -1] ]  is a possible continuation for our runnig Example 1, compatible with the other settings"
+      partial_max_len_on_suffixes_from_pos:
         regex: ^(.*)$
-        default: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student also in order to reduce the massive and error-prone overhead of filling a large table. When this is the case, and the service is communicated these too, then it can offer more customized feedback to the student in her attempts to get into the game. We like and support this. In the specific, `partial_max_len_on_suffixes[i][j]` reports the maximum length of a string which is a subsequence both of s_suff[i]  (the suffix of s of length i) and of t_suff[j]  (the suffix of t of length j)."
+        default: "[]"
+        explain: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student also in order to reduce the massive and error-prone overhead of filling a large table. When this is the case, and the service is communicated these too, then it can offer more customized feedback to the student in her attempts to get into the game. We like and support this. In the specific, `partial_max_len_on_suffixes_from_pos[i][j]` reports the maximum length of a string which is a subsequence both of s_suff[i]  (the suffix of s of length i) and of t_suff[j]  (the suffix of t of length j)."
+        example: "[ [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0],  [ 0, 0, 0, 0, 0] ]  is a possible continuation for our runnig Example 1, compatible with the other settings"
 
-      # API mode section, again to send the input received from the problem-solver to the service:
-      instance_dict:
+      # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
+      input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'s':'ACCIPICCHIA','t':'MAMMACHIOCCIA'}\""
-        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`instance_dict`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `s`, or `t`, or `start_with`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
+        example: "-a input_data_assigned=\"{'s':'ACCIPICCHIA','t':'MAMMACHIOCCIA'}\"  would be an alternative way to introduce our running Example 1 input data to the problem solver"
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `s`, or `t`, or `start_with`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
 
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       opt_val:
-        regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        regex: ^(.*)$
+        default: 4
+        example: 4 is actually the correct answer for running Example 1
         explain: "the maximum length of a string which is a feasible solution. In order to be a feasible solution, a string must be both a subsequence of string `s` and a subsequence of string `t`, but it must also respect any other additional constraint given. (A subsequence of a string is any string that can be obtained from it by dropping off some of its characters. The additional constraints, if any, get imposed by the arguments `start_with`,`end_with`,`forbidden_s_interval_first_pos`,`forbidden_s_interval_last_pos`,`reduce_s_to_its_prefix_of_length`,`reduce_t_to_its_prefix_of_length`,`reduce_s_to_its_suffix_of_length`,`reduce_t_to_its_suffix_of_length`. These additional contraints can be combined in any way as long as the optimum solution value for the question formulated by the problem poser to the problem solver appears as one of the entries of the DP tables considered)"
       opt_sol:
         regex: ^(.*)$
         default: ""
+        example: "the string '???' is actually the correct answer for running Example 1"
         explain: a maximum length string which is a feasible solution. (Roughly speaking, a feasible solution is a common subsequence, but we refer to the description for argument `opt_val` to get all the details)
-      max_len_on_prefixes:
+      max_len_on_prefixes_of_len:
         regex: ^(.*)$
-        default: "this is a DP table that the trainee has submitted to answer a question posed by who has composed the exercise. The DP table must be compliant to the definition explicited by the problem poser. That is, `partial_max_len_on_prefixes[i][j]` is expected to report the maximum length of a string which is a subsequence both of s_pref[i]  (the prefix of s of length i) and of t_pref[j]  (the prefix of t of length j)."
-      max_len_on_suffixes:
+        default: "[ [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0],  [ 0, 0, 0, 0, 0] ]
+        explain: "this is a DP table that the trainee has submitted to answer a question posed by who has composed the exercise. The DP table must be compliant to the definition explicited by the problem poser. That is, `partial_max_len_on_prefixes_of_len[i][j]` is expected to report the maximum length of a string which is a subsequence both of s_pref[i]  (the prefix of s of length i) and of t_pref[j]  (the prefix of t of length j)."
+        example1: the default value is the correct answer for running Example 1
+      max_len_on_suffixes_from_pos:
         regex: ^(.*)$
-        default: "this is a DP table that the trainee has submitted to answer a question posed by who has composed the exercise. The DP table must be compliant to the definition explicited by the problem poser. That is, `partial_max_len_on_suffixes[i][j]` is expected to report the maximum length of a string which is a subsequence both of s_suff[i]  (the suffix of s of length i) and of t_suff[j]  (the suffix of t of length j)."
+        default: "[ [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0], [ -1, -1, -1, -1, 0],  [ 0, 0, 0, 0, 0] ]
+        explain: "this is a DP table that the trainee has submitted to answer a question posed by who has composed the exercise. The DP table must be compliant to the definition explicited by the problem poser. That is, `partial_max_len_on_suffixes_from_pos[i][j]` is expected to report the maximum length of a string which is a subsequence both of s_suff[i]  (the suffix of s of length i) and of t_suff[j]  (the suffix of t of length j)."
+        example1: the default value is the correct answer for running Example 1
 
-      # API mode section, always to send the answers of the problem-solver:
+      # API mode section, to transmit the answers of the problem-solver and how to relate with it:
       answer_dict:
         regex: ^(.*)$
-        default: ""
-        example1: "-a answer_dict=\"{'num_paths1':28, 'num_opt_paths1':4}\""
+        default: "{}"
+        example1: "-a answer_dict=\"{'opt_sol':'????', 'opt_val':4}\""
         explain: "There are two options for passing to this TALight service the anwer to be evaluated and provided a feedback with. Either you use a separate argument for each possible object type comprising your answer, or you callect them all within one single dictionary that you pass through this one argument (`answer_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty string) then the first option is assumed, which may be better when experiencing the service from the CLI. Otherwise, the string passed through `answer_dict` is read as yaml to obtain the dictionary containing the answer of the student. An answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type represented by the standard name attached to it (e.g., like `opt_sol` or `opt_val`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible answer objects, and their names, by inspecting the complete list of arguments to this service). You can use these standard names as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows for more freedom: it allows you to introduce custom names, defined in terms of the standard ones (just an aliasing) and to attach them to the objects comprising your answer, using them as keys in your `answer_dict` dictionary. In this way the feedback provided by the service will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`. Put in other words, when using Option (2) you can rename the available objects (for more proximity to the problem solver in its own context) by means of the ancillary argument `alias_dict`, that makes sense only in tandem with this one."
 
       alias_dict:
@@ -92,8 +104,17 @@ services:
         explain: 'this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution that the instructor has asked from the problem solver on a given exercise/task/request. The keys are the names that the instructor has assigned to the standard object types involved in the request, the corresponding values should be among the following:'
         explain1: '[opt_val] the maximum length of a string that is a feasible solution for the problem set up by the arguments describing the instance posed to the trainee'
         explain2: '[opt_sol] a maximum length string that is a feasible solution for the problem set up by the arguments describing the instance posed to the trainee'
-        explain3: '[max_len_on_prefixes] the DP table meant to tell the maximum length of a common subsequence for any (prefix_of_s,prefix_of_t) pair'
-        explain4: '[max_len_on_suffixes] the DP table meant to tell the maximum length of a common subsequence for any (suffix_of_s,suffix_of_t) pair'
+        explain3: '[max_len_on_prefixes_of_len] the DP table meant to tell the maximum length of a common subsequence for any (prefix_of_s,prefix_of_t) pair'
+        explain4: '[max_len_on_suffixes_from_pos] the DP table meant to tell the maximum length of a common subsequence for any (suffix_of_s,suffix_of_t) pair'
+        example1: "-a alias_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
+        example2: "-a alias_dict=\"{'opt_sol1': 'opt_sol', 'opt_val1': 'opt_val'}\""
+        example3: "In particular, you can leave the default value (the empty dictionary, {}) is you stick to the original keys for all possible objects in the answer/solution, like in Example 1\n"
+
+      # section with arguments that modify the setup
+      #request_setups:
+      #  regex: ^(.*)$
+      #  default: "{}"
+      #  explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine), (3) logs on the server that could help monitoring and grading an exam
       color_implementation:
@@ -108,7 +129,7 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       yield_certificate_in_output_file:
@@ -138,10 +159,9 @@ services:
         regex: ^(-1|0|[1-9][0-9]*)$
         default: -1
 
-
   oracle:
     evaluator: [python, services/oracle_driver.py]
-    description: "given an mxn grid some of whose cells are forbidden, while the others may have a gain value associated, this service computes and returns correct answers to a set of possible questions specified, out of a finite supported set, through variable an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions. The service can also be asked to return a dynamic programming (DP)."
+    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
     args:
       pwd:
         regex: ^(.*)$
@@ -167,11 +187,11 @@ services:
       forbidden_s_interval_first_pos:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
-        explain: "this argument works in pair with argument `forbidden_s_interval_last_pos`, and no such a pair of arguments is supported for the second string t. Only for first string s, the problem poser (instructor) can impose the further constraint that, a common subsequence, in order to be truly considered as a feasible solution, must avoid taking characters out from a forbidden interval in s (like as if the first string was actually obtained from s by dropping/forbidding those characters that fall within a closed interval [first_pos,last_pos]. Positions start from 0. When last_pos < first_pos then no character is dropped from s (the first string)."
+        explain: "this argument always comes in pair with argument `forbidden_s_interval_last_pos`. We remark that no such pair of arguments is supported for the second string t. Only for first string s, the problem poser (instructor) can impose the further constraint that, a common subsequence, in order to be truly considered as a feasible solution, must avoid taking characters out from a forbidden interval in s (like as if the first string was actually obtained from s by dropping/forbidding those characters that fall within a closed interval [first_pos,last_pos]. Positions start from 0. When last_pos < first_pos then no character is dropped from s (the first string)."
       forbidden_s_interval_last_pos:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: this argument works in pair with argument `forbidden_s_interval_first_pos` (see the explanation offered there)
+        explain: this argument always comes in pair with argument `forbidden_s_interval_first_pos` (see the explanation offered there)
       reduce_s_to_its_prefix_of_length:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
@@ -187,23 +207,39 @@ services:
       reduce_t_to_its_suffix_of_length:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
-        explain: a common subsequence, in order to be truly considered as a feasible solution, must actually be a subsequence of pref_t[i], the suffix of t of length i, where i is the value assigned to this argument 
+        explain: a common subsequence, in order to be truly considered as a feasible solution, must actually be a subsequence of pref_t[i], the suffix of t of length i, where i is the value assigned to this argument
+
+      # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'s':'ACCIPICCHIA','t':'MAMMACHIOCCIA'}\""
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `costs` or `vals`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
 
       # section characterizing the answer requested to the oracle and the ad-hoc naming for the objects comprising it (the standard names can of course be used):
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: 'this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., "opt_val", "opt_sol") and refer to it by the name `key` as prescribed by the caller. The possible `values` (i.e., solution object types currently supported) are the following:'
+        explain: 'this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., "opt_sol") and refer to it by the name `key` as prescribed by the caller. The possible `values` (i.e., solution object types currently supported) are the following:'
         explain1: '[opt_val] the maximum length of a string that is a feasible solution for the problem set up by the arguments describing the instance posed to the trainee'
         explain2: '[opt_sol] a maximum length string that is a feasible solution for the problem set up by the arguments describing the instance posed to the trainee'
-        explain3: '[max_len_on_prefixes] the DP table meant to tell the maximum length of a common subsequence for any (prefix_of_s,prefix_of_t) pair'
-        explain4: '[max_len_on_suffixes] the DP table meant to tell the maximum length of a common subsequence for any (suffix_of_s,suffix_of_t) pair'
+        explain3: '[max_len_on_prefixes_of_len] the DP table meant to tell the maximum length of a common subsequence for any (prefix_of_s,prefix_of_t) pair'
+        explain4: '[max_len_on_suffixes_from_pos] the DP table meant to tell the maximum length of a common subsequence for any (suffix_of_s,suffix_of_t) pair'
+
+      # section with arguments that modify the setup
+      #request_setups:
+      #  regex: ^(.*)$
+      #  default: "{}"
+      #  explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
       as_yaml:
         regex: ^(0|1)$
         default: 0
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       recall_request:
@@ -224,7 +260,7 @@ services:
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
-    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis." 
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis."
     args:
       service:
         regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$

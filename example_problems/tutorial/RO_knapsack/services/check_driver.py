@@ -11,14 +11,10 @@ import problem_specific_lib as PSL
 
 # METADATA OF THIS TAL_SERVICE:
 # METADATA OF THIS TAL_SERVICE:
-args_list = PSL.instance_objects_spec + PSL.additional_infos_spec + [
-    ('input_data_assigned','yaml'),
-    ('opt_sol','yaml'),
-    ('opt_val','yaml'),
-    ('num_opt_sols','yaml'),
-    ('list_opt_sols','yaml'),
-    ('DPtable_opt_val','yaml'),
-    ('DPtable_num_opts','yaml'),
+args_list = PSL.instance_objects_spec + PSL.additional_infos_spec
+args_list += [('input_data_assigned','yaml')]
+args_list += [(key,'yaml') for key in PSL.answer_objects_spec]
+args_list += [
     ('alias_dict','yaml'),
     ('request_setups','yaml'),
     ('answer_dict','yaml'),

@@ -54,43 +54,51 @@ services:
         example2: "[ [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 1] ]  -if with the arguments specifying the instance posed to the trainee are set as in Example 2, and when meant as the table that, for every prefix of the list of the objects and for every knapsack capacity in the interval [0,Knapsack_Capacity], reveals the NUMBER OF OPTIMAL SOLUTIONS"
         example3: "[ [ 0, 0, 0, 0, 0], [ 0, 0, 13, 13, 13], [ 0, 0, 13, 17, 17], [ 0, 0, 13, 17, 30] ]  -if with the arguments specifying the instance posed to the trainee are set as in Example 1 or 2, and when meant as the table that, for every prefix of the list of the objects and for every knapsack capacity in the interval [0,Knapsack_Capacity], reveals the VALUE of an optimal solution"
 
-      # API mode section, again to send the input received from the problem-solver to the service:
+      # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a input_data_assigned=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
+        example: "-a input_data_assigned=\"{'labels':['A','B','C','D','E']],'costs':[2,3,4,5,6],'vals':[13,17,19,30,101], 'Knapsack_Capacity':30}\"  would be an alternative way to introduce our running Example 1 input data to the problem solver; as for running Example 2, just substitute the 30 with a 25"
         explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `costs` or `vals`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
 
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       opt_sol:
         regex: ^(.*)$
         default: "['A', 'B']"
+        example: "['A', 'B'] is one of the two optimal solutions for running Example 1, and the only optimal solution for running Example 2"
         explain: 'an optimal solution, i.e., a subset of objects of maximum total value among those whose total weight does not exceed `Knapsack_Capacity`'
       opt_val:
-        regex: ^(0|[1-9][0-9]*)$
+        regex: ^(.*)$
         default: 30
+        example: 30 is the correct answer for running Examples 1 and 2
         explain: 'the maximum total value of a feasible solution (=set of objects whose total weight does not exceed `Knapsack_Capacity`)'
       num_opt_sols:
         regex: ^(0|[1-9][0-9]*)$
-        default: 30
+        default: 2
+        example1: 2 is the correct answer for running Example 1
+        example2: 1 is the correct answer for running Example 2
         explain: the number of different optimal solutions (in any order)
       list_opt_sols:
         regex: ^(.*)$
-        default: "[ ['A', 'B'], ['A', 'C']]"
+        default: "[['A', 'B'], ['D']]"
+        example: "the default value is a correct answer for running Example 1 (but permuting the two solutions in the list, or the items within a same sublist, would make no difference); as for running Example 2, just drop the second and last solution in the list"
         explain: the list of all optimal solutions
       DPtable_opt_val:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
         explain: 'the DP table meant to tell the optimal value for any prefix of the available objects (note: in this case the order must be the one they have when we assign them to student) and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
+        example: the default value is the correct answer for running Examples 1 and 2
       DPtable_num_opts:
         regex: ^(.*)$
-        default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        default: "[[1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 2], [1, 1, 1, 1, 1, 2]]"
         explain: 'the DP table meant to tell the number of optimal solutions for any prefix of the available objects (note: in this case the order must be the one they have when we assign them to student) and for any possible value of the knapsack capacity up to `Knapsack_Capacity`'
+        example1: the default value is the correct answer for running Example 1
+        example2: the correct answer for running Example 2 differ from that for running Example 1 only in that the only 2 is actually a 1
 
-      # API mode section, to send the answers of the problem-solver and how to relate with it:
+      # API mode section, to transmit the answers of the problem-solver and how to relate with it:
       answer_dict:
         regex: ^(.*)$
-        default: ""
+        default: "{}"
         example1: "-a answer_dict=\"{'opt_sol':['A', 'B'], 'opt_val':30}\""
         example2: "-a answer_dict=\"{'opt_sol1':['A', 'B'], 'opt_val1':30}\""
         explain: "There are two options for passing to this TALight service the anwer to be evaluated and provided a feedback with. Either you use a separate argument for each possible object type comprising your answer, or you callect them all within one single dictionary that you pass through this one argument (`answer_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty string) then the first option is assumed, which may be better when experiencing the service from the CLI. Otherwise, the string passed through `answer_dict` is read as yaml to obtain the dictionary containing the answer of the student. An answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type represented by the standard name attached to it (e.g., like `opt_sol` or `opt_val`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible answer objects, and their names, by inspecting the complete list of arguments to this service). You can use these standard names as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows for more freedom: it allows you to introduce custom names, defined in terms of the standard ones (just an aliasing) and to attach them to the objects comprising your answer, using them as keys in your `answer_dict` dictionary. In this way the feedback provided by the service will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`. Put in other words, when using Option (2) you can rename the available objects (for more proximity to the problem solver in its own context) by means of the ancillary argument `alias_dict`, that makes sense only in tandem with this one."
