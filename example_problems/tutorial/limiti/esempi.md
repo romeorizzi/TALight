@@ -1,3 +1,5 @@
+## LIMITI DI FUNZIONI/SUCCESSIONI
+
 <details><summary> **Esempio ESISTENZA E CORRETTEZZA DI UN LIMITE:** </summary>
 
     rtal connect limiti exist_prover (istanza da catalogo)
@@ -13,7 +15,7 @@
     > # 0.04 (opppure più piccolo)
     > # proponi il tuo x nell'intorno [0.96,1.04]
     < 0.77
-    > # vedi: 0.77 < 0.96, quindi in realtà sei fuori dell'intervallo, quindi non sei riuscito a confutare la mia affermazione che il limite esista e valga 6.
+    > # vedi: 0.77 < 0.96, quindi in realtà sei fuori dell` intervallo, quindi non sei riuscito a confutare la mia affermazione che il limite esista e valga 6.
     > # lo vedi? Sei convinto che il limite esista e valga 6? (y/n)
     < n
     > # allora stabilisci una tollerenza epsilon > 0
@@ -61,7 +63,7 @@
     > 0.06
     > # stabilisci un tuo valore per delta > 0:
     < 0.1
-    > # Wow mi hai convinto! Vale |f(x)-6| < epsilon per tutti i valori di x compresi nell'intervallo (x0-delta , x0+delta)=(0.9 , 1.1) che ho utilizzato per verificare il tuo risultato. 
+    > # Wow mi hai convinto! Vale |f(x)-6| < epsilon per tutti i valori di x compresi nell` intervallo (x0-delta , x0+delta)=(0.9 , 1.1) che ho utilizzato per verificare il tuo risultato. 
     > # Ben fatto!
 </details>
 
@@ -140,22 +142,22 @@ E poi continuare come visto sopra.
 
 ## ARCHIMEDE
 #### Enunciato:
-Per ogni numero reale positivo a,b, esiste un numero naturale N tale che na > b (ovvero a > b/N).
-(Per ogni epsilon reale positivo esiste un numero naturale N tale che 1/N < epsilon (equivale all' enunciato precedente con b=1 e a=epsilon ) )
+Per ogni numero reale positivo a,b, esiste un numero naturale N tale che Na > b (ovvero a > b/N).
+(Per ogni epsilon reale positivo esiste un numero naturale N tale che 1/N < epsilon (equivale all` enunciato precedente con b=1 e a=epsilon ) )
 
-- Una successione {a_n} di termini positivi convergente deve avere un limite strettamente positivo, è vero?
+- Una successione {a_n} di termini positivi convergente deve avere un limite strettamente positivo: è vero?
 No, basta prendere la successione 1/n costituita di termini positivi ma convergente a 0
 - Dimostra che la successione 1/n, n=1,2,3,... tende a zero:
-usare il fatto che per Archimede preso a piacere epsilon > 0 esiste n \in N per il quale n*epsilon > 1. Dunque, 1/n < epsilon.
+usare il fatto che per Archimede preso a piacere epsilon > 0 esiste un numero n naturale tale che n*epsilon > 1. Dunque, 1/n < epsilon.
 
-<details><summary>**Esempio (dimostrazione enunciato Archimede senza epsilon, più immediata... giocando solo con a, b, e n):** </summary>
+<details><summary>**Esempio (dimostrazione enunciato Archimede senza epsilon, più immediata... giocando solo con a, b, e n... poco istruttiva dal punto di vista dei limiti, forse la si può aggiungere come "test" dopo aver risolto la dimostrazione):** </summary>
 
     > # è vero che per ogni numero reale positivo a,b, esiste un numero naturale N tale che na > b (ovvero a > b/N)? (y/n)
     < n
-    > # allora mi stai dicendo che esistono due numeri reali a,b tali che per ogni naturale n abbiamo che an <= b, ovvero n < b/a... vediamo se hai ragione tu
+    > # allora mi stai dicendo che esistono due numeri reali a,b tali che per ogni naturale n abbiamo che an <= b, ovvero n <= b/a... vediamo se hai ragione tu
     > # dammi un valore per a (diverso da 0):
     < 3.1
-    > # ora dammene uno per b:
+    > # dammi un valore per b (diverso da 0):
     < 8.06
     > # proviamo allora a calcolare b/a = 8.06/3.1 = 2.6
     > # secondo te è vero che i numeri naturali sono tutti <= 2.6? (y/n)
@@ -168,7 +170,7 @@ usare il fatto che per Archimede preso a piacere epsilon > 0 esiste n \in N per 
 
 <details><summary>**Esempio:**</summary>
 
-    > # Una successione {a_n} di termini positivi convergente non deve avere per forza un limite strettamente positivo
+    > # Una successione {a_n} di termini positivi convergente non è detto che abbia un limite strettamente positivo
     > # sei d'accordo con me? (y/n)
     < n
     > # Allora consideriamo la successione 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
@@ -190,19 +192,17 @@ usare il fatto che per Archimede preso a piacere epsilon > 0 esiste n \in N per 
 
 <details><summary>**Esempio come sopra ma usando la definizione standard di limite:**</summary>
 
-    > # Non è vero che una successione {a_n} di termini positivi convergente ha un limite strettamente positivo
+    > # Non è vero che una successione {a_n} di termini positivi convergente ha sempre un limite strettamente positivo
     > # sei d'accordo con me? (y/n)
     < n
     > # Allora consideriamo la successione a_n = 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
     < y
-    > # ma non converge ad un numero strettamente positivo... converge a 0!
-    > # ti ho convinto? (y/n)
-    < n
+    > # Ma non converge ad un numero strettamente positivo... converge a 0!
     > # Stabilisci un numero reale epsilon > 0:
     < 0.4
-    > # ecco il mio N:
+    > # Ecco il mio N:
     > # 2.5
-    > # proponi una tua x > 2.5:
+    > # Proponi una tua x > 2.5:
     < 2.6
     > # vedi: a_n(2.6) =0.38, e 0.38 \in [-0.4 , 0.4]=[l-e,l+e], quindi non sei riuscito a confutare la mia affermazione.
     > # Sei convinto ora che la successione converga a 0? (y/n)
@@ -212,10 +212,69 @@ usare il fatto che per Archimede preso a piacere epsilon > 0 esiste n \in N per 
 
 
 
+## DENSITA` DI Q IN R
+#### Enunciato:
+- PRIMA FORMA: per ogni a,b \in R, a<b, esiste un r \in Q tale che a<r<b
+- SECONDA FORMA: ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
+
+**Dimostrazione:**
+Prendiamo un numero reale alfa = a_0. a_1 a_2 a_3 a_4..... (esempio: se alfa=3.459 allora a_0=3, a_1=4, a_2=5, a_3=9)
+alfa è il limite della successione y_n di numeri razionali (decimali):
+y_0 = a_0
+y_1 = a_0. a_1
+y_2 = a_0. a_1 a_2
+............
+y_k = a_0. a_1 a_2....a_k 
+............
+
+Poichè |y_k - alfa | <= 1/10^k, si ha: lim{n->+inf} y_n = alfa.
+
+**Esempio:**
+alfa=sqrt(2)=1.414213562...
+y_0=1
+y_1=1.4
+y_2=1.41
+y_3=1.414
+............
+y_6=1.414213
+y_7=1.4142135
+............
+
+|y_3 - alfa | = 0.000213562... <= 1/10^3 = 0.001 e per ogni n>3 si ha |y_n - alfa| < 0.001  (infatti ad esempio |y_4 - alfa|=0.000013562 < 0.001 e così via)  dimostrando così che lim{n->inf} y_n = alfa
+
+<details><summary>**Esempio di dialogo:**</summary>
+    > # dimostra che ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
+    > # dimostra quindi che lim{n->inf} y_n = alfa, dove 
+    > alfa = sqrt(2) = 1,414213562373095049...
+    > y_0=1
+    > y_1=1.4
+    > y_2=1.41
+    > y_3=1.414
+    > y_4=1.4142
+    > y_5=1.41421
+    > y_6=1.414213
+    > y_7=1.4142135
+    > ............
+    > # ecco il mo epsilon:
+    > 0.004
+    > # stabilisci una M > 0 :
+    < 3
+    > # Molto bene! Vale |y_n - alfa| < 0.004 per tutti i valori di n > 3 che ho utilizzato per verificare la tua proposta.
+    > # Hai dimostrato che lim{n->inf} y_n = alfa, ottimo lavoro!
+
+</details>
 
 
 
 
+
+
+
+
+
+
+
+Numero di Nepero e= lim{n->+inf} (1+1/n)^n
 
 
 
