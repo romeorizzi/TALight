@@ -1,6 +1,6 @@
 ## LIMITI DI FUNZIONI/SUCCESSIONI
 
-<details><summary> **Esempio ESISTENZA E CORRETTEZZA DI UN LIMITE:** </summary>
+<details><summary><strong>Esempio ESISTENZA E CORRETTEZZA DI UN LIMITE:</strong></summary>
 
     rtal connect limiti exist_prover (istanza da catalogo)
     dimostra che il limite lim_{x --> 1} x^2+5
@@ -31,7 +31,7 @@
     > # Oh beh, contento te... Alla prossima!
 </details>
 
-<details><summary> **Esempio ESISTENZA MA NON CORRETTEZZA DI UN LIMITE:** </summary>
+<details><summary><strong>Esempio ESISTENZA MA NON CORRETTEZZA DI UN LIMITE:</strong></summary>
 
     rtal connect limiti exist_prover (istanza da catalogo)
     dimostra se il limite lim_{x --> 1} x^2+5
@@ -67,7 +67,7 @@
     > # Ben fatto!
 </details>
 
-<details><summary> **Esempio di NON ESISTENZA DI UN LIMITE: (guidato)** </summary>
+<details><summary><strong>Esempio di NON ESISTENZA DI UN LIMITE: (guidato)</strong></summary>
 
     rtal connect limiti exist_prover  (istanza da catalogo)
     dimostra se il limite lim_{x --> 0} 1/x
@@ -97,11 +97,12 @@ Lo stesso esercizio appena visto si potrebbe fare in modo meno guidato, ovvero c
 - uno tra i limiti destro e sinistro è infinito o non esiste (discontinuità seconda specie)
 - i limiti destro e sinistro esistono finiti e sono uguali tra loro ma non coincidono con la valutazione della funzione in x0 (discontinuità terza specie)
 - i limiti destro e sinistro sono infiniti ma hanno segno opposto 
+
 E poi continuare come visto sopra.
 
 
 
-<details><summary> **Esempio SOMMA di successioni:** </summary>
+<details><summary><strong>Esempio SOMMA di successioni:</strong></summary>
 
     rtal connect limiti sum_prover (istanza da catalogo)
     > # dimostra che se lim_{x --> inf} (x-1)/x = 1 e lim_{x --> inf} x/(2x+3) = 1/2 
@@ -150,7 +151,7 @@ No, basta prendere la successione 1/n costituita di termini positivi ma converge
 - Dimostra che la successione 1/n, n=1,2,3,... tende a zero:
 usare il fatto che per Archimede preso a piacere epsilon > 0 esiste un numero n naturale tale che n*epsilon > 1. Dunque, 1/n < epsilon.
 
-<details><summary>**Esempio (dimostrazione enunciato Archimede senza epsilon, più immediata... giocando solo con a, b, e n... poco istruttiva dal punto di vista dei limiti, forse la si può aggiungere come "test" dopo aver risolto la dimostrazione):** </summary>
+<details><summary><strong>Esempio</strong> (dimostrazione enunciato Archimede senza epsilon, più immediata... giocando solo con a, b, e n... poco istruttiva dal punto di vista dei limiti, forse la si può aggiungere come "test" dopo aver risolto la dimostrazione):</summary>
 
     > # è vero che per ogni numero reale positivo a,b, esiste un numero naturale N tale che na > b (ovvero a > b/N)? (y/n)
     < n
@@ -168,7 +169,7 @@ usare il fatto che per Archimede preso a piacere epsilon > 0 esiste un numero n 
     > Meno male, alla prossima!
 </details>
 
-<details><summary>**Esempio:**</summary>
+<details><summary><strong>Esempio:</strong></summary>
 
     > # Una successione {a_n} di termini positivi convergente non è detto che abbia un limite strettamente positivo
     > # sei d'accordo con me? (y/n)
@@ -190,7 +191,7 @@ usare il fatto che per Archimede preso a piacere epsilon > 0 esiste un numero n 
     > # Molto bene!
 </details>
 
-<details><summary>**Esempio come sopra ma usando la definizione standard di limite:**</summary>
+<details><summary><strong>Esempio come sopra ma usando la definizione standard di limite:</strong></summary>
 
     > # Non è vero che una successione {a_n} di termini positivi convergente ha sempre un limite strettamente positivo
     > # sei d'accordo con me? (y/n)
@@ -214,35 +215,52 @@ usare il fatto che per Archimede preso a piacere epsilon > 0 esiste un numero n 
 
 ## DENSITA` DI Q IN R
 #### Enunciato:
-- PRIMA FORMA: per ogni a,b \in R, a<b, esiste un r \in Q tale che a<r<b
-- SECONDA FORMA: ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
+- _PRIMA FORMA_: per ogni a,b \in R, a<b, esiste un r \in Q tale che a<r<b
+- _SECONDA FORMA_: ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
 
 **Dimostrazione:**
 Prendiamo un numero reale alfa = a_0. a_1 a_2 a_3 a_4..... (esempio: se alfa=3.459 allora a_0=3, a_1=4, a_2=5, a_3=9)
+
 alfa è il limite della successione y_n di numeri razionali (decimali):
+
 y_0 = a_0
+
 y_1 = a_0. a_1
+
 y_2 = a_0. a_1 a_2
+
 ............
+
 y_k = a_0. a_1 a_2....a_k 
+
 ............
 
 Poichè |y_k - alfa | <= 1/10^k, si ha: lim{n->+inf} y_n = alfa.
 
 **Esempio:**
+
 alfa=sqrt(2)=1.414213562...
+
 y_0=1
+
 y_1=1.4
+
 y_2=1.41
+
 y_3=1.414
+
 ............
+
 y_6=1.414213
+
 y_7=1.4142135
+
 ............
 
 |y_3 - alfa | = 0.000213562... <= 1/10^3 = 0.001 e per ogni n>3 si ha |y_n - alfa| < 0.001  (infatti ad esempio |y_4 - alfa|=0.000013562 < 0.001 e così via)  dimostrando così che lim{n->inf} y_n = alfa
 
-<details><summary>**Esempio di dialogo:**</summary>
+<details><summary><strong>Esempio di dialogo:</strong></summary>
+  
     > # dimostra che ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
     > # dimostra quindi che lim{n->inf} y_n = alfa, dove 
     > alfa = sqrt(2) = 1,414213562373095049...
@@ -263,18 +281,4 @@ y_7=1.4142135
     > # Hai dimostrato che lim{n->inf} y_n = alfa, ottimo lavoro!
 
 </details>
-
-
-
-
-
-
-
-
-
-
-
-Numero di Nepero e= lim{n->+inf} (1+1/n)^n
-
-
 
