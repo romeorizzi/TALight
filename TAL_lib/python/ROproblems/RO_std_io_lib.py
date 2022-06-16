@@ -17,20 +17,22 @@ def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
 
             
 def dict_of_instance(instance_objects,args_list,ENV):
-    #print("CASE: the instance objects have been passed one by one:
     if len(ENV["input_data_assigned"]) == 0:
+        #print("CASE: the instance objects have been passed one by one:
         return {obj_name:ENV[obj_name] for obj_name,obj_type in instance_objects}
     #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable"):
     input_data_assigned = {}
     for obj_name,obj_type in instance_objects:
+        print(f"obj_name={obj_name}, obj_type={obj_type}")
         if obj_name in ENV["input_data_assigned"]:
             obj_val = ENV["input_data_assigned"][obj_name]
+            print(f"TROVATO: obj_name={obj_name}, obj_type={obj_type}")
         elif obj_type == str:
             obj_val = ""
-        elif obj_type[:len('matrix_of_')] == 'matrix_of_' or obj_type[:len('list_of_')] == 'list_of_':
-            obj_val = []
         elif obj_type in [bool, int]:
             obj_val = 0
+        elif obj_type[:len('matrix_of_')] == 'matrix_of_' or obj_type[:len('list_of_')] == 'list_of_':
+            obj_val = []
         input_data_assigned[obj_name] = enforce_type_of_yaml_var(obj_val,obj_type, varname=obj_name)
     return input_data_assigned
 
@@ -42,11 +44,11 @@ def check_request(request_dict, implemented):
             exit(0)
         
 
-def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, alias_dict:dict, answer_object_type_spec:Dict, implemented:List[str]):
+def check_and_standardization_of_request_answer_consistency(ENV:dict, answer_object_type_spec:Dict, implemented:List[str]):
     """
-    arguments:
-      answer_dict               ad-hoc name --> answ_obj
-      alias_dict                ad-hoc name --> std_name
+    main arguments:
+      ENV['answer_dict']        ad-hoc name --> answ_obj
+      ENV['alias_dict']         ad-hoc name --> std_name
       answer_object_type_spec   std_name --> type_spec of the object (e.g., 'list_of_list_of_int')
       implemented  contains the std_names of available answer object types
     returns:
@@ -57,6 +59,20 @@ def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, al
        long_answer_dict         std_name --> (answ_obj, ad-hoc name, type_spec)
        goals  is the list of the std_names of the answ_objects that have been submitted by the student/problem solver (they are precisely those requested by the exercise evaluated)
     """
+    #print(f"answer_dict={answer_dict}, alias_dict={alias_dict}, answer_object_type_spec={answer_object_type_spec}, implemented={implemented}",file=stderr)
+    if len(ENV["answer_dict"]) != 0:
+        #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable", file=stderr)
+        answer_dict = ENV['answer_dict']
+        alias_dict = ENV['alias_dict']
+    else:
+        #print("CASE: the instance objects have been passed one by one", file=stderr)
+        answer_dict={}; alias_dict={}
+        for std_name in implemented:
+            #print(f"type(ENV[{std_name}])={type(ENV[std_name])}, answer_object_type_spec[{std_name}]={answer_object_type_spec[std_name]}, ENV[{std_name}]={ENV[std_name]}")
+            type_spec = answer_object_type_spec[std_name]
+            if type(type_spec) != str or ( (type_spec[:len('list_of_')] != 'list_of_' or len(ENV[std_name]) != 0) and (type_spec[:len('matrix_of_')] != 'matrix_of_' or len(ENV[std_name]) != 0) ):
+                answer_dict[std_name] = ENV[std_name]
+                alias_dict[std_name] = std_name
     for std_name in alias_dict.values():
         if std_name not in implemented:
             print(f'Error: the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `alias_dict` dictionary passed as argument to the TALight service.')    
@@ -71,9 +87,9 @@ def check_and_standardization_of_request_answer_consistency(answer_dict:Dict, al
             std_name = alias_dict[ad_hoc_name]
         else:
             std_name = ad_hoc_name
-            if std_name not in implemented:
-                print(f'Error: the key `{ad_hoc_name}` in the `answer_dict` dictionary passed as argument to the service is neither a standard name nor has been remapped through the `alias_dict` dictionary.')    
-                exit(0)
+        if std_name not in implemented:
+            print(f'Error: the key `{ad_hoc_name}` in the `answer_dict` dictionary passed as argument to the service is neither a standard name nor has been remapped through the `alias_dict` dictionary.')    
+            exit(0)
         #print(f"now checking variable of ad_hoc_name={ad_hoc_name} and value={answer_dict[ad_hoc_name]}. Its std_name={std_name} deserves a format {answer_object_type_spec[std_name]}, while it actually is {type(answer_dict[ad_hoc_name])}",file=stderr)
         answer_dict[ad_hoc_name] = enforce_type_of_yaml_var(answer_dict[ad_hoc_name],answer_object_type_spec[std_name], varname=ad_hoc_name)
         request_dict[ad_hoc_name] = std_name 

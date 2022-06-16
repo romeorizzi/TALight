@@ -9,13 +9,14 @@ Note:
 - invio di file (submission_filehandler) attualmente non supportato nè da Jupyter
 
 CLI examples:
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a labels="['A', 'B', 'C']" -a costs="[2, 3, 4]" -a vals="[13, 17, 19]" -a Knapsack_Capacity=5 -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B']}"
 
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -atask=3 -a input_data_assigned="{'Knapsack_Capacity': 5, 'labels': ['A', 'B', 'C', 'D', 'E'], 'costs': [2, 3, 4, 5, 6], 'vals': [13, 17, 19, 30, 101]}" -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B'], 'opt_val':'20'}" -awith_opening_message
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -a labels="['A', 'B', 'C']" -a costs="[2, 3, 4]" -a vals="[13, 17, 19]" -a Knapsack_Capacity=5 -a opt_sol="['A', 'B']" -a opt_val='5' -awith_opening_message
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -atask=3 -a input_data_assigned="{'Knapsack_Capacity': 5, 'labels': ['A', 'B', 'C', 'D', 'E'], 'costs': [2, 3, 4, 5, 6], 'vals': [13, 17, 19, 30, 101]}" -a alias_dict="{'opt_sol_MIA': 'opt_sol'}" -a answer_dict="{'opt_sol_MIA':['A', 'B'], 'opt_val':'20'}"
 
 rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -atask=7 -a alias_dict="{'opt_sol_Franz': 'opt_sol', 'opt_val_Franz': 'opt_val'}" -a answer_dict="{'opt_sol_Franz':['A', 'B'], 'opt_val_Franz':30}" -awith_opening_message  -a input_data_assigned="{'Knapsack_Capacity': 36, 'labels': ['A', 'B', 'C'], 'costs': [15, 16, 17], 'vals': [50, 52, 54]}"
-
-rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -atask=7 -a alias_dict="{'opt_sol_Franz': 'opt_sol', 'opt_val_Franz': 'opt_val'}" -a answer_dict="{'opt_sol_Franz':['A', 'B'], 'opt_val_Franz':30}" -awith_opening_message  -a input_data_assigned="{'Knapsack_Capacity': 7, 'labels': ['A', 'B', 'C'], 'costs': [15, 16, 17], 'vals': [50, 52, 54]}"
 
 rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_knapsack check -atask=7 -a alias_dict="{'opt_sol_Franz': 'opt_sol', 'opt_val_Franz': 'opt_val'}" -a answer_dict="{'opt_sol_Franz':['A', 'Bwrong_name'], 'opt_val_Franz':30}" -awith_opening_message  -a input_data_assigned="{'Knapsack_Capacity': 36, 'labels': ['A', 'B', 'C'], 'costs': [15, 16, 17], 'vals': [50, 52, 54]}"
 

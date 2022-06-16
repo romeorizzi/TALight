@@ -8,21 +8,21 @@ services:
     args:
       # section with the instance data assigned to the problem-solver/student:
       s:
-        regex: ^([a-zA-Z]*)$
+        regex: ^([A-Z]*)$
         default: 'ACCIPICCHIA'
         explain: is the first string
         example1: "the first string is s='ACCIPICCHIA' in our running Example 1"
       t:
-        regex: ^([a-zA-Z]*)$
+        regex: ^([A-Z]*)$
         default: 'MAMMACHIOCCIA'
         explain: is the second string
         example1: "the second string is s='MAMMACHIOCCIA' in our running Example 1"
       start_with:
-        regex: ^(\*|[a-zA-Z])$
+        regex: ^(\*|[A-Z])$
         default: '*'
         explain: the common subsequence is required to start with this character. Using the mask character * vanifies this constraint
       end_with:
-        regex: ^(\*|[a-zA-Z])$
+        regex: ^(\*|[A-Z])$
         default: '*'
         explain: the common subsequence is required to end with this character. Using the mask character * vanifies this constraint
       forbidden_s_interval_first_pos:
@@ -169,19 +169,19 @@ services:
 
       # section with a possible instance to the problem:
       s:
-        regex: ^([a-zA-Z]*)$
+        regex: ^([A-Z]*)$
         default: 'ACCIPICCHIA'
         explain: is the first string
       t:
-        regex: ^([a-zA-Z]*)$
+        regex: ^([A-Z]*)$
         default: 'MAMMACHIOCCIA'
         explain: is the second string
       start_with:
-        regex: ^(\*|[a-zA-Z])$
+        regex: ^(\*|[A-Z])$
         default: '*'
         explain: the common subsequence is required to start with this character. Using the mask character * vanifies this constraint
       end_with:
-        regex: ^(\*|[a-zA-Z])$
+        regex: ^(\*|[A-Z])$
         default: '*'
         explain: the common subsequence is required to end with this character. Using the mask character * vanifies this constraint
       forbidden_s_interval_first_pos:

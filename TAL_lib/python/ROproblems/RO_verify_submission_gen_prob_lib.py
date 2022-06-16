@@ -33,6 +33,9 @@ class verify_submission_gen:
     def verify_consistency(self, SEF):
         return True
                 
+    def set_up_and_cash_handy_data(self):
+        pass
+
     def verify_submission(self, SEF):
         if not self.verify_format(SEF):
             return SEF.completed_feedback

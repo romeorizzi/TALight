@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from sys import stderr
+import re
 from typing import Optional, List, Dict, Callable
 
 from RO_verify_submission_gen_prob_lib import verify_submission_gen
@@ -22,7 +23,7 @@ additional_infos_spec=[
     ('partial_max_len_on_suffixes_from_pos','matrix_of_int')
 ]
 answer_objects_spec = {
-    'opt_sol':'list_of_str',
+    'opt_sol':str,
     'opt_val':int,
     'max_len_on_prefixes_of_len':'matrix_of_int',
     'max_len_on_suffixes_from_pos':'matrix_of_int',
@@ -31,6 +32,15 @@ answer_objects_implemented = ['opt_sol','opt_val','max_len_on_prefixes_of_len','
 request_setups = {}
 
 
+def is_subseq(s,t):
+    if len(s)==0:
+        return True
+    if len(t)==0:
+        return False
+    if s[0]==t[0]:
+        return is_subseq(s[1:],t[1:])
+    return is_subseq(s,t[1:])
+        
 def check_instance_consistency(instance):
     #print(f"instance={instance}", file=stderr)
     m = len(instance["s"]) 
@@ -74,8 +84,6 @@ def solver(input_to_oracle):
     #print(f"Instance={I}",file=stderr)
     s= I['s']
     t= I['t']
-    print(f"s={s}, len(s)={len(s)}")
-    print(f"t={t}, len(t)={len(t)}")
     max_len_on_prefixes_of_len = [ [ 0 ] * (1+len(t)) for i in range(1+len(s)) ]
     for i in range(1,1+len(s)):
       for j in range(1,1+len(t)):
@@ -84,9 +92,9 @@ def solver(input_to_oracle):
           else:
               max_len_on_prefixes_of_len[i][j] = max(max_len_on_prefixes_of_len[i-1][j],max_len_on_prefixes_of_len[i][j-1])
 
-    print("max_len_on_prefixes_of_len:")
+    #print("max_len_on_prefixes_of_len:")
     #print(display_matrix(max_len_on_prefixes_of_len, rlabels=list("-"+s), clabels=list("-"+t)))
-    print(str(display_matrix(max_len_on_prefixes_of_len, rlabels=list("-"+s), clabels=list("-"+t))))
+    #print(str(display_matrix(max_len_on_prefixes_of_len, rlabels=list("-"+s), clabels=list("-"+t))))
     
     max_len_on_suffixes_from_pos = [ [ 0 ] * (1+len(t)) for i in range((1+len(s))) ]
     for i in range(len(s)-1,-1,-1):
@@ -97,7 +105,8 @@ def solver(input_to_oracle):
               max_len_on_suffixes_from_pos[i][j] = max(max_len_on_suffixes_from_pos[i+1][j],max_len_on_suffixes_from_pos[i][j+1])
     assert(max_len_on_prefixes_of_len[len(s)][len(t)]==max_len_on_suffixes_from_pos[0][0])
     
-    print(display_matrix(max_len_on_suffixes_from_pos, rlabels=list(range(len(s)))+['-'], clabels=list(range(len(t)))+['-']))
+    #print("max_len_on_suffixes_from_pos:")
+    #print(display_matrix(max_len_on_suffixes_from_pos, rlabels=list(range(len(s)))+['-'], clabels=list(range(len(t)))+['-']))
 
     
     def reconstruct_opt_lcs_pref_of_len(len_s,len_t):
@@ -149,29 +158,29 @@ def solver(input_to_oracle):
         if I['forbidden_s_interval_first_pos'] > I['forbidden_s_interval_last_pos']:
             if first_pos_in_s > 0 or first_pos_in_t > 0:
                 opt_val = max_len_on_suffixes_from_pos[first_pos_in_s][first_pos_in_t]
-                opt_sol = list(reconstruct_opt_lcs_suff_from_pos(first_pos_in_s,first_pos_in_t))
+                opt_sol = ''.join(reconstruct_opt_lcs_suff_from_pos(first_pos_in_s,first_pos_in_t))
             else:
                 opt_val = max_len_on_prefixes_of_len[last_pos_in_s +1][last_pos_in_t +1]
-                opt_sol = list(reconstruct_opt_lcs_pref_of_len(last_pos_in_s +1,last_pos_in_t +1)); opt_sol.reverse()
+                opt_sol = ''.join(reconstruct_opt_lcs_pref_of_len(last_pos_in_s +1,last_pos_in_t +1))[::-1]  #the slice at the end reverses the string
         elif first_pos_in_s > I['forbidden_s_interval_last_pos']:
             opt_val = max_len_on_suffixes_from_pos[first_pos_in_s][first_pos_in_t]
-            opt_sol = list(reconstruct_opt_lcs_suff_from_pos(first_pos_in_s,first_pos_in_t))
+            opt_sol = ''.join(reconstruct_opt_lcs_suff_from_pos(first_pos_in_s,first_pos_in_t))
         elif last_pos_in_s < I['forbidden_s_interval_first_pos']:
             opt_val = max_len_on_prefixes_of_len[last_pos_in_s +1][last_pos_in_t +1]
-            opt_sol = list(reconstruct_opt_lcs_pref_of_len(last_pos_in_s +1,last_pos_in_t +1)); opt_sol.reverse()
+            opt_sol = ''.join(reconstruct_opt_lcs_pref_of_len(last_pos_in_s +1,last_pos_in_t +1))[::-1]  #the slice at the end reverses the string
         else:
             if first_pos_in_s > 0 or last_pos_in_s < len(s)-1 or first_pos_in_t > 0 or last_pos_in_t < len(t)-1:
                 return {'exception': ("the question posed violates the policy of this problem",policy)}
             best_so_far_val = max_len_on_suffixes_from_pos[I['forbidden_s_interval_last_pos']+1][0]
-            best_so_far_sol = list(reconstruct_opt_lcs_suff_from_pos(first_pos_in_s,first_pos_in_t))
+            best_so_far_sol = ''.join(reconstruct_opt_lcs_suff_from_pos(first_pos_in_s,first_pos_in_t))
             if best_so_far_val < max_len_on_prefixes_of_len[I['forbidden_s_interval_first_pos']][len(t)]:
                 best_so_far_val = max_len_on_prefixes_of_len[I['forbidden_s_interval_first_pos']][len(t)]
-                best_so_far_sol = list(reconstruct_opt_lcs_pref_of_len(I['forbidden_s_interval_first_pos'],len(t))); best_so_far_sol.reverse()
+                best_so_far_sol = ''.join(reconstruct_opt_lcs_pref_of_len(I['forbidden_s_interval_first_pos'],len(t)))[::-1]
             for sweet_t_pos in range(len(t)):
                 if best_so_far_val < max_len_on_prefixes_of_len[I['forbidden_s_interval_first_pos']][sweet_t_pos+1] + max_len_on_suffixes_from_pos[I['forbidden_s_interval_last_pos']+1][sweet_t_pos+1]:
                     best_so_far_val = max_len_on_prefixes_of_len[I['forbidden_s_interval_first_pos']][sweet_t_pos+1] + max_len_on_suffixes_from_pos[I['forbidden_s_interval_last_pos']+1][sweet_t_pos+1]
-                    best_so_far_sol = list(reconstruct_opt_lcs_pref_of_len(I['forbidden_s_interval_first_pos'],sweet_t_pos+1)); best_so_far_sol.reverse()
-                    best_so_far_sol += list(reconstruct_opt_lcs_suff_from_pos(I['forbidden_s_interval_last_pos']+1,sweet_t_pos+1))
+                    best_so_far_sol = ''.join(reconstruct_opt_lcs_pref_of_len(I['forbidden_s_interval_first_pos'],sweet_t_pos+1))[::-1]
+                    best_so_far_sol += ''.join(reconstruct_opt_lcs_suff_from_pos(I['forbidden_s_interval_last_pos']+1,sweet_t_pos+1))
         
 
     oracle_answers = {}
@@ -192,39 +201,38 @@ class verify_submission_problem_specific(verify_submission_gen):
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
             SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
-        if 'num_opt_sols' in self.goals:
-            g = self.goals['num_opt_sols']
-            if type(g.answ) != int:
-                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
         if 'opt_sol' in self.goals:
             g = self.goals['opt_sol']
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di oggetti (esempio ['{self.I.labels[0]}','{self.I.labels[2]}']). Hai invece immesso `{g.answ}`.")
-            for ele in g.answ:
-                if ele not in self.I.labels:
-                    return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {self.I.labels}.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            if not bool(re.match("",g.answ)):
+                return SEF.format_NO(g, f"Come `{g.alias}` và inserita una stringa sull'alfabeto delle 26 lettere inglesi maiuscole. Invece hai immesso '{g.answ}'.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso una stringa sul corretto alfabeto (le 26 lettere inglesi maiuscole).", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         return True
-                
-    def set_up_and_cash_handy_data(self):
-        if 'opt_sol' in self.goals:
-            self.sum_vals = sum([val for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
-            self.sum_costs = sum([cost for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
             
     def verify_feasibility(self, SEF):
         if not super().verify_feasibility(SEF):
             return False
+        s=self.I.s ; t=self.I.t
+#        s=self.I['s'] ; s=self.I['t']
         if 'opt_sol' in self.goals:
             g = self.goals['opt_sol']
-            for ele in g.answ:
-                if ele in self.I.forced_out:
-                    return SEF.feasibility_NO(g, f"L'oggetto `{ele}` da tè inserito nella lista `{g.alias}` è tra quelli proibiti. Gli oggetti proibiti per la Richiesta {str(SEF.task_number)}, sono {self.I.forced_out}.")
-            for ele in self.I.forced_in:
-                if ele not in g.answ:
-                    return SEF.feasibility_NO(g, f"Nella lista `{g.alias}` hai dimenticato di inserire l'oggetto `{ele}` che invece è forzato. Gli oggetti forzati per la Richiesta {str(SEF.task_number)} sono {self.I.forced_in}.")
-            if self.sum_costs > self.I.Knapsack_Capacity:
-                return SEF.feasibility_NO(g, f"La tua soluzione in `{g.alias}` ha costo {self.sum_costs} > Knapsack_Capacity e quindi NON è ammissibile in quanto fora il budget per la Richiesta {str(SEF.task_number)}. La soluzione da tè inserita ricomprende il sottoinsieme di oggetti `{g.alias}`= {g.answ}.")
+            if not is_subseq(g.answ,s):
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una sottosequenza di `s`='{s}'. Hai invece immesso '{g.answ}'.")
+            if not is_subseq(g.answ,t):
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una sottosequenza di `t`='{t}'. Hai invece immesso '{g.answ}'.")
+            if not is_subseq(g.answ,s[:self.I.reduce_s_to_its_prefix_of_length]):
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza del prefisso di s di lunghezza {self.I.reduce_s_to_its_prefix_of_length}")
+            if not is_subseq(g.answ,t[:self.I.reduce_t_to_its_prefix_of_length]):
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza del prefisso di t di lunghezza {self.I.reduce_t_to_its_prefix_of_length}")
+            if not is_subseq(g.answ,s[-self.I.reduce_s_to_its_suffix_of_length:]):
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza del suffisso di s di lunghezza {self.I.reduce_s_to_its_prefix_of_length}")
+            if not is_subseq(g.answ,t[-self.I.reduce_t_to_its_suffix_of_length:]):
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza del suffisso di t di lunghezza {self.I.reduce_t_to_its_prefix_of_length}")
+            if self.I.forbidden_s_interval_first_pos <= self.I.forbidden_s_interval_last_pos and not is_subseq(g.answ,s[:self.I.forbidden_s_interval_first_pos]+s[self.I.forbidden_s_interval_last_pos+1:]):
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza di s che eviti l'intervallo escluso s[{self.I.forbidden_s_interval_first_pos},{self.I.forbidden_s_interval_last_pos}]")
+            if self.I.start_with != '*' and g.answ[0] != self.I.start_with:
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non inizia con carattere {self.I.start_with}")
+            if self.I.end_with != '*' and g.answ[0] != self.I.end_with:
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non termina con carattere {self.I.end_with}")
             SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
         return True
                 
@@ -233,7 +241,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             return False
         if 'opt_val' in self.goals and 'opt_sol' in self.goals:
             g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol'];
-            if self.sum_vals != g_val.answ:
-                return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {self.sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
-            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.", "")
+            if len(g_sol.answ) != g_val.answ:
+                return SEF.consistency_NO(['opt_val','opt_sol'], f"La lunghezza della soluzione immessa in `{g_sol.alias}` è {len(g_sol.answ)} e NON {g_val.answ}. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
+            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = len({g_sol.alias}).", "")
         return True

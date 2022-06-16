@@ -43,7 +43,7 @@ RO_io.check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = TOKEN_
 input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec + PSL.additional_infos_spec,args_list,ENV)
 #print(f"input_data_assigned={input_data_assigned}", file=stderr)
 PSL.check_instance_consistency(input_data_assigned)
-request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV['answer_dict'],ENV['alias_dict'], PSL.answer_objects_spec, PSL.answer_objects_implemented)
+request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV, PSL.answer_objects_spec, PSL.answer_objects_implemented)
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
 SEF = RO_eval.std_eval_feedback(ENV)
