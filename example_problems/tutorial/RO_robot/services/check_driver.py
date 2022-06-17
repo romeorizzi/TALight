@@ -10,7 +10,6 @@ import RO_std_eval_lib as RO_eval
 import problem_specific_lib as PSL
 
 # METADATA OF THIS TAL_SERVICE:
-# METADATA OF THIS TAL_SERVICE:
 args_list = PSL.instance_objects_spec + PSL.additional_infos_spec
 args_list += [('input_data_assigned','yaml')]
 args_list += [(key,'yaml') for key in PSL.answer_objects_spec]
