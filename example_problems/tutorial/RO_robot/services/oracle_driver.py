@@ -6,56 +6,48 @@ from multilanguage import Env, Lang, TALcolors
 from TALfiles import TALfilesHelper
 
 import RO_std_io_lib as RO_io
-from robot_lib import solver, check_instance_consistency
+
+import problem_specific_lib as PSL
 
 # METADATA OF THIS TAL_SERVICE:
-args_list = [
-    ('pwd', str),
-    ('grid', 'list_of_str'),
-    ('diag', bool),
-    ('partialDP_to', 'list_of_str'),
-    ('partialDP_from', 'list_of_str'),
-    ('cell_from', str),
-    ('cell_to', str),
-    ('cell_through', str),
-    ('request_dict', 'yaml'),
-    ('as_yaml', bool),
-    ('recall_instance', bool),
-    ('recall_request', bool),
-    ('with_opening_message', bool),
-    ('with_output_files', bool),
-    ('esercizio', int),
-    ('task', int),
+args_list = [('pwd',str)] + PSL.instance_objects_spec + [
+    ('input_data_assigned','yaml'),
+    ('request_dict','yaml'),
+    ('request_setups','yaml'),
+    ('color_implementation',str),
+    ('with_opening_message',bool),
+    ('as_yaml',bool),
+    ('recall_data_assigned',bool),
+    ('recall_request',bool),
+    ('with_output_files',bool),
+    ('esercizio',int),
+    ('task',int),
 ]
-instance_objects = ['grid', 'diag', 'partialDP_to',
-                    'partialDP_from', 'cell_from', 'cell_to', 'cell_through']
-sol_objects_implemented = ['opt_val','opt_path','DPtable_opt_from']
 
-ENV = Env(args_list)
-TAc = TALcolors(ENV, "None")
-LANG = Lang(ENV, TAc, lambda fstring: eval(
-    f"f'{fstring}'"), print_opening_msg='now'if ENV['with_opening_message'] else 'never')
+ENV =Env(args_list)
+TAc =TALcolors(ENV, "None")
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
 TOKEN_REQUIRED = True
-RO_io.check_access_rights(ENV, TALf, require_pwd=True,
-                       TOKEN_REQUIRED=TOKEN_REQUIRED)
-instance_dict = RO_io.dict_of_instance(instance_objects, args_list, ENV)
-check_instance_consistency(instance_dict)
-RO_io.check_request(ENV['request_dict'], sol_objects_implemented)
+RO_io.check_access_rights(ENV,TALf, require_pwd = True, TOKEN_REQUIRED = TOKEN_REQUIRED)
+input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec,args_list,ENV)
+#print(f"input_data_assigned={input_data_assigned}", file=stderr)
+PSL.check_instance_consistency(input_data_assigned)
+RO_io.check_request(ENV['request_dict'], PSL.answer_objects_implemented)
 
-request_dict = ENV["request_dict"]
-if len(request_dict) == 0:
-    request_dict = {key: key for key in sol_objects_implemented}
-print(f"request_dict={request_dict}", file=stderr)
+request_dict = ENV["request_dict"] if len(ENV["request_dict"]) != 0 else { key:key for key in PSL.answer_objects_implemented }
+request_setups = ENV["request_setups"] if len(ENV["request_setups"]) != 0 else PSL.request_setups
+#print(f"request_dict={request_dict}\nrequest_setups={request_setups}", file=stderr)
+    
+call_data = {"input_data_assigned":input_data_assigned,"request":request_dict,"request_setups":request_setups}
+print(f"call_data={call_data}", file=stderr)
+call_data["oracle"] = PSL.solver(call_data)
 
-call_data = {"instance": instance_dict, "request": request_dict}
-call_data["oracle"] = solver(call_data)
-
-RO_io.oracle_outputs(call_data, ENV)
+RO_io.oracle_outputs(call_data,ENV)
 if ENV.LOG_FILES != None:
-    RO_io.oracle_logs(call_data, ENV, TALf)
-if ENV["with_output_files"]:
-    RO_io.oracle_output_files(call_data, ENV, TALf)
+    RO_io.oracle_logs(call_data,ENV,TALf)
+if ENV["with_output_files"]:    
+    RO_io.oracle_output_files(call_data,ENV,TALf)

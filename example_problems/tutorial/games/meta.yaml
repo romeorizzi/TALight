@@ -40,7 +40,7 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
-        explain: Any string without space characters but meant to specify one of the services of the problem {problem}
+        explain: Any string without space characters but meant to specify one of the services of the problem %(problem)s
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

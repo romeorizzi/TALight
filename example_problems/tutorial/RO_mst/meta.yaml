@@ -15,7 +15,7 @@ services:
         regex: ^(.*)$
         default: '[]'
 #        default: ['A','B','C']
-        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+        explain: "opzionalmente (se non lo desideri lascia il valore `[]` di default) puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo argomento avreti potuto passare per valore la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
         explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
@@ -91,7 +91,7 @@ services:
         regex: ^(.*)$
         default: '[]'
 #        default: ['A','B','C']
-        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+        explain: "opzionalmente (se non lo desideri lascia il valore `[]` di default) puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo argomento avreti potuto passare per valore la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
         explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
@@ -163,7 +163,7 @@ services:
         regex: ^(.*)$
         default: '[]'
 #        default: ['A','B','C']
-        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+        explain: "opzionalmente (se non lo desideri lascia il valore `[]` di default) puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo argomento avreti potuto passare per valore la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
         explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
@@ -261,7 +261,7 @@ services:
         regex: ^(.*)$
         default: '[]'
 #        default: ['A','B','C']
-        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+        explain: "opzionalmente (se non lo desideri lascia il valore `[]` di default) puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo argomento avreti potuto passare per valore la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
         explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
@@ -322,7 +322,7 @@ services:
         regex: ^(.*)$
         default: '[]'
 #        default: ['A','B','C']
-        explain: "opzionalmente puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo arcomento avreti potuto passare la stringa `['A','B','C']`"
+        explain: "opzionalmente (se non lo desideri lascia il valore `[]` di default) puoi assegnare delle etichette univoche ai nodi. Queste etichette sono stringhe qualsiasi. Ad esempio, a questo argomento avreti potuto passare per valore la stringa `['A','B','C']`"
       archi:
         regex: ^(.*)$
         explain: "lista degli archi (non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti; se hanno lo stesso peso uno vale l'altro. Se ai nodi hai assegnato etichette come da esempio sopra, allora potevi sia usare questo valore di default che il valore `[('A','B',2),('B','C',3),('A','B',4),('A','B',4),('A','B',5)]`"
@@ -375,7 +375,7 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
-        explain: any string without space characters but meant to specify one of the services of the problem {problem}
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: en

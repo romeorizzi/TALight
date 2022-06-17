@@ -1,0 +1,304 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check:
+    evaluator: [python, services/check_driver.py]
+    description: "Oltre alla possibilità di impiego diretto, questo servizio è inteso controllare e fornire feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnategli di questo Problema Robot in una delle sue molte varianti possibili. Dato un grafo orientato D=(V,A), dove ciascun arco esprima il vincolo di mandare in esecuzione il nodo coda prima del nodo testa, il problema di stabilire se il workflow descritto da tale grafo sia implementabile corrisponde al Problema di Riconoscimento di un DAG, ossia richiede la competenza di comprendere se D sia un DAG (directed acyclic graph) oppure contenga un ciclo diretto. Se poi D è un DAG, ed era inoltre fornita una pesatura dei suoi archi (delay:A->Z_+) con numeri interi positivi che prescrivano un ritardo minimo col quale il nodo testa vada schedulato rispetto al tempo di schedulazione del nodo coda, il Problema CPM (Critical Path Method) di stabilire la durata minima del progetto dando un lower bound sull'esecuzione di ciascuna delle sue attività (nodi) può essere affrontato con la Programmazione Dinamica (DP). In tali contesti è consuetudine introdurre un nodo aggiuntivo, da eseguire per primo, al tempo zero, e che noi labelleremo col numero 0, i nodi di D saranno labellati coi numeri da 1 ad n, ed il Problema CPM è visto come il Problema LongWalk del calcolo del cammino di lunghezza massima (dove la lunghezza di un arco a in A sia data da delay[a], e la lunghezza di un cammino sia data dalla somma delle lunghezze dei suoi archi) dal nodo 0 a ciascun altro nodo i in V. Il servizio riceve in input la coppia (D=(V,A),delay:A->Z_+) assegnata al problem-solver/studente, ma anche un certificato di schedulabilità (un ordinamento topologico, ossia una permutazione p di {{1,2,...,n}} tale che p[c] < p[t] valga per ogni arco orientato [c,t] in A) oppure di non-schedulabilità (un ciclo diretto), prodotto dallo studente e sottomesso a valutazione/verfica. Il servizio controlla la validità del certificato ricevuto e restituisce un feedback/conferma che può venire speso immediatamente, oppure (per domande dove più opportuno) da consegnare al problem-solver/studente solo in un momento successivo. L'esame può essere condotto entro altro sistema che accede al servizio dal cloud, tramite sua API. Tramite i suoi argomenti, il sevizio copre anche alcune generalizzazioni del problema, come il comprendere se la rimozione di un solo vincolo (arco) possa bastare a rendere il grafo aciclico, oppure il condurre della rudimentale analisi di sensitività. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di competenze attive (sia per un problema specifico che metodologiche generali); se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere estensibili e aperti a promuovere la collaborazione tra problem-makers/insegnanti (nonchè a relativizzare e superare la separazione tra essi e i problem-solvers/trainees), ma considera anche di realizzare un tuo problema, per conto tuo o in collaborazione con altri docenti o in progetti per tuoi allievi. Dal sistema dove organizzi i tuoi esami/esercitazioni, entro un esercizio centrato su un'istanza del Problema CPM, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Oltre alla selezione di varianti didattiche che mettano in gioco una comprensione approfondita e critica delle buone caratterizzazioni sottostanti, attraverso gli argomenti di chiamata del servizio potrai trasmettergli eventuali tabelle di DP parziali il cui completamento avevi dato in consgna allo studente, in modo che il feedback possa essere contestualizzato efficacemente."    
+    args:
+      # sezione con i dati dell'istanza assegnati al problem-solver/studente:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "numero di nodi del grafo D=(V,A) in input. Se l'argometo `labels` viene lasciato al suo valore di defaul (lista vuota) allora i nodi di D vengono labellati con i numeri da 1 a n. In ogni caso, viene inoltre aggiunto un nodo zero, labellato col numero 0, che deve essere eseguito in partenza (in pratica un nodo sorgente universale)" 
+      labels:
+        regex: ^(.*)$
+        default: '[]'
+        example1: the default value for this argument is our first running example
+        example2: "['A','B','C'] is our second running example"
+        explain: "opzionalmente (se non lo desideri lascia il valore `[]` di default) puoi assegnare delle etichette univoche ai nodi diverse dai numeri da 1 a n. Queste etichette sono stringhe qualsiasi (oltre le stringhe il supporto attualmente è solo parziale). Ad esempio, a questo argomento avresti potuto passare per valore la stringa `['A','B','C']`, oppure la stringa `['svegliarsi','lavarsi','vestirsi']`"
+        note1: "quando la lista non è vuota l'argomento `n` viene ignorato e come n si assume la lunghezza della lista"
+        note2: "(con n indichiamo il numero di nodi di D, nodo 0 escluso. Il nodo 0, che per ora teniamo con noi per sicurezza, è solo un artificio retorico e in futuro potremo meglio valutare se sicuro toglierlo senza minare in generala l'espressibilità facile di alcune questioni indirizzabili con l'esercizio)"
+      arcs:
+        regex: ^(.*)$
+        default: "[(1,2,5),(2,3,6),(1,3,7)]"
+        explain: "lista degli archi. Il formato di ciascun arco è (coda,testa,delay). La coda e la testa sono etichette di nodi. Se ai nodi hai assegnato etichette ora devi usarle; ad esempio `[('A','B',5),('B','C',6),('A','C',7)]` darebbe traduzione corretta del valore di default di questo argomento nel caso `labels` fosse come da Esempio 2"
+      arcs_removed:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "in realtà, in una data chiamata al servizio (che corrisponde sempre ad una singola delle più domande/richieste/consegne ricomprese in un singolo esercizio dedicato al Problema CPM), piuttosto che in D (grafo orientato e pesato) siamo interessati a lavorare in un grafo D' ottenuto da D (istanza principale dell'esercizio) con alcune piccole variazioni introdotte nella richiesta specifica. Ad esempio alcuni archi di D (quelli specificati nell'argomento `arcs_removed`, precisamente) possono essere stati rimossi poichè chiudevano dei cicli."
+        note: "si assume che la lista nell'argomento `arcs` non contenga duplicati, pertanto `arcs_removed` sarà semplicemente una sottolista di `arcs` senza ambiguità di sorta"
+      arcs_added:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "oltre che rimuovendo archi/vincoli, in realtà, D' può essere ottenuto da D con l'aggiunta di archi. Il formato di un arco resta (coda,testa,delay). Si assume (siamo ancora nella sezione dei dati stabiliti dal problem maker) che ciò non introduca comunque duplicati di quanto in `arcs`. (Si veda la spiegazione offerta per l'argomento `args_removed` per maggior contesto.)"
+      focus_node:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+        explain: "per consegne che richiedano di focalizzare l'attenzione su un singolo nodo, si fornisca l'etichetta del nodo (dove `labels` sia stato lasciato al valore di default di lista vuota, l'etichetta sarà un numero da 1 a n)"
+      focus_arc:
+        regex: ^(.*)$
+        default: (1,2,5)
+        explain: "per consegne che richiedano di focalizzare l'attenzione su un singolo arco/vincolo si specifichi l'arco in `arcs`+`arcs_added`"
+
+      # sezione con informazioni aggiuntive fornite al trainee dal problem poser e che il presente servizio deve prendere in considerazione:
+      partial_to:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "a partial DP table is one where some entries are missing. The teacher can decide to provide such tables as inputs to the student for him to either get an hint, or to have the realistic and fair possibility to fill the table by hand also on interesting enough instances. In these situations, it is better that these partial DP tables get communicated to the service, which can be done through this argument. This argument is actually a generic DP table, with `partial_to[node]` reporting some jolly measure specific to the paths that end into `node`. For example, with reference to the functional `maximum length of such a path`, and assuming the default values for the other arguments of the service that specify the instance data, we would have: `partial_to` = \"{'1':0,'2':5,'3':11}\", which, with Example 2 for the argument `labels` would become \"{'A':0,'B':5,'C':11}\". (Notice that this table is actually a key-value map, essentially expressed in json)."
+      partial_from:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "see the above explanation for the argument `partialDP_to`. For the same general functional (maximum path total length) but now referring to any maximal path starting in the generic node, we would have: `partial_from` = \"{'1':11,'2':6,'3':0}\", which, with Example 2 for the argument `labels` would become \"{'A':11,'B':6,'C':0}\"."
+
+      # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example1: "-a input_data_assigned=\"{'n':3,'arcs':[(1,2,5),(2,3,6),(1,3,7)]}\""
+        example2: "-a input_data_assigned=\"{'labels':['A','B','C'],'arcs':[('A','B',5),('B','C',6),('A','C',7)]}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti/elementi che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `n`, o `arcs`, o `nodes`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+
+      # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
+      is_a_DAG:
+        regex: ^(.*)$
+        default: ""
+        explain: 'catalog the oriented graph as either a DAG or not:'
+        explain1: '[True] according to the problem solver it is a DAG'
+        explain2: '[False] according to the problem solver it is NOT a DAG'
+      cert_YES:
+        regex: ^(.*)$
+        default: "[]"
+        example1: "[1,2,3]"
+        example2: "['A','B','C']"
+        explain: "a topological sort of the oriented graph, that is, an ordering p:{1,2, ..., n}-->labels such that for every arc [t,h] it holds that i<j for the unique i and j such that p[i]=t and p[j]=h. In case the argument `labels` is left to an empty list then the codomain of the bijection p is {1,2, ...,n} itself, i.e., p encodes a permutation.)"
+      cert_NO:
+        regex: ^(.*)$
+        default: "[]"
+        example1: "[1,2,3,4], assuming we had a 4th node and arcs (3,4) and (4,1) added in"
+        example2: "['A','B','C','D'], assuming we had a 4th node and arcs ('C','D') and ('D','A') added in"
+        explain: a directed cycle in the form of a cyclic list of nodes where for any two nodes u,v that, in this order, appear consecutive in the list (including when u is the very last node in the list and v is the very first coming back) then ['u','v'] is a directed arc in the considered oriented graph.)
+      earliest_time_for_focus_node:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "the smallest time at which node/activity `focus_node` can be executed while respecting all the constraints as expressed by the arcs contained in `arcs`+`arcs_added` and not removed"
+      critical_path_to_focus_node:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "a critical path ending at `focus_node` and proving that activity `focus_node` can not be executed before `earliest_time_for_focus_node`, given that the sum of the delays on the arcs of the path is `earliest_time_for_focus_node`"
+      nodes_sensible_to_focus_arc:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "this is the list of those activities that can not be executed at their earliest time in every schedule where `focus_arc` is not tight. And (t,h,delay) is taight in a schedue s:labels --> R iff s[y]-s[t] = delay"
+      latest_time_for_focus_node:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "the latest time at which node/activity `focus_node` can be executed whithout delaying the termination of the plan (a plan is considered terminated when all of its nodes have been executed)"
+      critical_path_from_focus_node:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "a critical path starting at `focus_node` and proving that activity `focus_node` can not be executed after `latest_time_for_focus_node` without delaying the termination of the plan. To get a full fledged certificate, this path must be combined with a feasible scheduling under which the plan terminates at the earliest possbile. This could be the early schedule, as given by the DP table `min_time_to`"
+      min_time_to:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "the DP table that tells the earliest time possible at which eeach single node can be executed, assuming we can start executing the activities at time 0. For example, with reference to the default fill of the instance data in the other arguments of the service, we would have: `min_time_to` = \"{'1':0,'2':5,'3':11}\", which, with Example 2 for the argument `labels` would become \"{'A':0,'B':5,'C':11}\". (Notice that our tables are actually key-value maps, essentially expressed in json)"
+      min_time_from:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "the DP table that tells the minimum time that must necessarily elapse from the execution of a eneric node to the termination of the plan (i.e., to the time at which every node has been executed). For example, with reference to the default fill of the instance data in the other arguments of the service, we would have: `min_time_from` = \"{'1':11,'2':6,'3':0}\", which, with Example 2 for the argument `labels` would become \"{'A':11,'B':6,'C':0}\"."
+      latest_time_to:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "the DP table that tells the latest time at which we can execute each activity/node without delaying the termination of the plan. For example, with reference to the default fill of the instance data in the other arguments of the service, we would have: `min_time_to` = \"{'1':0,'2':5,'3':11}\", which, with Example 2 for the argument `labels` would become \"{'A':0,'B':5,'C':11}\". This might seem the same as `min_time_to` at first. However, if `arcs_added` = \"(1,3,20)\", then we would get `min_time_to` = \"{'1':0,'2':5,'3':20}\" and `latest_time_to` = \"{'1':0,'2':14,'3':20}\"."
+      critical_path_to:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "the DP table that for each activity/node v gives the certificate that v can not be executed before its earliest time possible as given by `min_time_to[v]`. For example, w.r.t. the usual reference, `critical_path_to` = \"{'1':[1],'2':[1,2],'3':[1,2,3]}\"."
+      critical_nodes_to:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "the DP table that for each activity/node v gives the list of those activities that must necessarily be executed at their earliest time possible in order to be able to execute v at its earliest time possible. For example, w.r.t. the usual reference, `critical_to` = \"{'1':[],'2':[1],'3':[1,2]}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `critical_to` = \"{'1':[],'2':[1],'3':[1]}\"."
+      critical_arcs_to:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "the DP table that for each activity/node v gives the list of those arcs/constraints in every plan that executes v at its earliest time possible. For example, w.r.t. the usual reference, `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,2),(2,3)]}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,3)]}\"."
+      sensible_to_focus_arc:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "the DP table that for each activity/node v tells whether the focus arc is among the critical arcs for v. For example, w.r.t. the usual reference, and assuming `focus_arc`=(1,2), then `sensible_to_focus_arc` = \"{'1':False,'2':True,'3':True}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `sensible_to_focus_arc` = \"{'1':False,'2':True,'3':False}\"."
+
+      # sezione modalità API, sempre per far pervenire le risposte del problem-solver:
+      answer_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example1: "-a answer_dict=\"{'opt_sol':['A', 'B'], 'opt_val':30}\""
+        example2: "-a answer_dict=\"{'opt_sol1':['A', 'B'], 'opt_val1':30}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della conegna del task/richiesta di esercizio, (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`answer_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
+
+      alias_dict:
+        regex: ^(.*)$
+        example: "{'opt_val1':'opt_val','opt_sol1':'opt_sol'}"
+        default: "{}"
+        explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
+
+      # sezione con argomenti che modificano i setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
+
+      # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      with_positive_enforcement:
+        regex: ^(0|1)$
+        default: 1
+      with_notes:
+        regex: ^(0|1)$
+        default: 1
+      recall_data_assigned:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+
+      # sezione coi punti da assegnare al singolo task/richiesta da assegnarsi al singolo task/richiesta (tra quelli proposti da un singolo esercizio) che ha comportato la chiamata a questo servizio dal contesto di una prova, esame, o simulazione di esame:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_consistency_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  oracle:
+    evaluator: [python, services/oracle_driver.py]
+    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
+    args:
+      pwd:
+        regex: ^(.*)$
+        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+
+      # sezione con i dati che specificano un'istanza del problema:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "numero di nodi del grafo D=(V,A) in input. Se l'argoneto `labels` viene lasciato al suo valore di defaul (lista vuota) allora i nodi di D vengono labellati con i numeri da 1 a n. In ogni caso, viene inoltre aggiunto un nodo zero, labellato col numero 0, che deve essere eseguito in partenza (in pratica un nodo sorgente universale)" 
+      labels:
+        regex: ^(.*)$
+        default: '[]'
+        example1: the default value for this argument is our first running example
+        example2: "['A','B','C'] is our second running example"
+        explain: "opzionalmente (se non lo desideri lascia il valore `[]` di default) puoi assegnare delle etichette univoche ai nodi diverse dai numeri da 1 a n. Queste etichette sono stringhe qualsiasi (oltre le stringhe il supporto attualmente è solo parziale). Ad esempio, a questo argomento avresti potuto passare per valore la stringa `['A','B','C']`, oppure la stringa `['svegliarsi','lavarsi','vestirsi']`"
+        note1: "quando la lista non è vuota l'argomento `n` viene ignorato e come n si assume la lunghezza della lista"
+        note2: "(con n indichiamo il numero di nodi di D, nodo 0 escluso. Il nodo 0, che per ora teniamo con noi per sicurezza, è solo un artificio retorico e in futuro potremo meglio valutare se sicuro toglierlo senza minare in generala l'espressibilità facile di alcune questioni indirizzabili con l'esercizio)"
+      arcs:
+        regex: ^(.*)$
+        default: "[(1,2,5),(2,3,6),(1,3,7)]"
+        explain: "lista degli archi. Il formato di ciascun arco è (coda,testa,delay). La coda e la testa sono etichette di nodi. Se ai nodi hai assegnato etichette ora devi usarle; ad esempio `[('A','B',5),('B','C',6),('A','C',7)]` darebbe traduzione corretta del valore di default di questo argomento nel caso `labels` fosse come da Esempio 2"
+      arcs_removed:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "in realtà, in una data chiamata al servizio (che corrisponde sempre ad una singola delle più domande/richieste/consegne ricomprese in un singolo esercizio dedicato al Problema CPM), piuttosto che in D (grafo orientato e pesato) siamo interessati a lavorare in un grafo D' ottenuto da D (istanza principale dell'esercizio) con alcune piccole variazioni introdotte nella richiesta specifica. Ad esempio alcuni archi di D (quelli specificati nell'argomento `arcs_removed`, precisamente) possono essere stati rimossi poichè chiudevano dei cicli."
+        note: "si assume che la lista nell'argomento `arcs` non contenga duplicati, pertanto `arcs_removed` sarà semplicemente una sottolista di `arcs` senza ambiguità di sorta"
+      arcs_added:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "oltre che rimuovendo archi/vincoli, in realtà, D' può essere ottenuto da D con l'aggiunta di archi. Il formato di un arco resta (coda,testa,delay). Si assume (siamo ancora nella sezione dei dati stabiliti dal problem maker) che ciò non introduca comunque duplicati di quanto in `arcs`. (Si veda la spiegazione offerta per l'argomento `args_removed` per maggior contesto.)"
+      focus_node:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+        explain: "per consegne che richiedano di focalizzare l'attenzione su un singolo nodo, si fornisca l'etichetta del nodo (dove `labels` sia stato lasciato al valore di default di lista vuota, l'etichetta sarà un numero da 1 a n)"
+      focus_arc:
+        regex: ^(.*)$
+        default: (1,2,5)
+        explain: "per consegne che richiedano di focalizzare l'attenzione su un singolo arco/vincolo si specifichi l'arco in `arcs`+`arcs_added`"
+
+      # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare ad ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
+      request_dict:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'orcolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
+        explain1: "[is_a_DAG] either 'True' or 'False' depending on whether the oriented graph of reference is a DAG or not. Gli argomenti che possono contribuire a determinare il grafo di riferimento sono `n`, `labels`, `arcs`, `arcs_removed`, `arcs_added`)"
+        explain2: '[cert_YES] a topological sort of the oriented graph, that is, an ordering p:{1,2, ..., n}-->labels such that for every arc [t,h] it holds that i<j for the unique i and j such that p[i]=t and p[j]=h. In case the argument `labels` is left to an empty list then the codomain of the bijection p is {1,2, ...,n} itself, i.e., p encodes a permutation.)'
+        explain3: "[cert_NO] a directed cycle in the form of a cyclic list of nodes where for any two nodes u,v that, in this order, appear consecutive in the list (including when u is the very last node in the list and v is the very first coming back) then ['u','v'] is a directed arc in the considered oriented graph.)"
+        explain4: '[earliest_time_for_focus_node] the smallest time at which node/activity `focus_node` can be executed while respecting all the constraints as expressed by the arcs contained in `arcs`+`arcs_added` and not removed'
+        explain5: '[critical_path_to_focus_node] a critical path ending at `focus_node` and proving that activity `focus_node` can not be executed before `earliest_time_for_focus_node`, given that the sum of the delays on the arcs of the path is `earliest_time_for_focus_node`'
+        explain6: '[nodes_sensible_to_focus_arc] this is the list of those activities that can not be executed at their earliest time in every schedule where `focus_arc` is not tight. And (t,h,delay) is taight in a schedue s:labels --> R iff s[y]-s[t] = delay'
+        explain7: '[latest_time_for_focus_node] the latest time at which node/activity `focus_node` can be executed whithout delaying the termination of the plan (a plan is considered terminated when all of its nodes have been executed)'
+        explain8: '[critical_path_from_focus_node] a critical path starting at `focus_node` and proving that activity `focus_node` can not be executed after `latest_time_for_focus_node` without delaying the termination of the plan. To get a full fledged certificate, this path must be combined with a feasible scheduling under which the plan terminates at the earliest possbile. This could be the early schedule, as given by the DP table `min_time_to`'
+        explain9: "[min_time_to] the DP table that tells the earliest time possible at which eeach single node can be executed, assuming we can start executing the activities at time 0. For example, with reference to the default fill of the instance data in the other arguments of the service, we would have: `min_time_to` = \"{'1':0,'2':5,'3':11}\", which, with Example 2 for the argument `labels` would become \"{'A':0,'B':5,'C':11}\". (Notice that our tables are actually key-value maps, essentially expressed in json)"
+        explain10: "[min_time_to] the DP table that tells the minimum time that must necessarily elapse from the execution of a eneric node to the termination of the plan (i.e., to the time at which every node has been executed). For example, with reference to the default fill of the instance data in the other arguments of the service, we would have: `min_time_from` = \"{'1':11,'2':6,'3':0}\", which, with Example 2 for the argument `labels` would become \"{'A':11,'B':6,'C':0}\"."
+        explain11: "[min_time_from] the DP table that tells the minimum time that must necessarily elapse from the execution of a eneric node to the termination of the plan (i.e., to the time at which every node has been executed). For example, with reference to the default fill of the instance data in the other arguments of the service, we would have: `min_time_from` = \"{'1':11,'2':6,'3':0}\", which, with Example 2 for the argument `labels` would become \"{'A':11,'B':6,'C':0}\"."
+        explain12: "[latest_time_to] the DP table that tells the latest time at which we can execute each activity/node without delaying the termination of the plan. For example, with reference to the default fill of the instance data in the other arguments of the service, we would have: `min_time_to` = \"{'1':0,'2':5,'3':11}\", which, with Example 2 for the argument `labels` would become \"{'A':0,'B':5,'C':11}\". This might seem the same as `min_time_to` at first. However, if `arcs_added` = \"(1,3,20)\", then we would get `min_time_to` = \"{'1':0,'2':5,'3':20}\" and `latest_time_to` = \"{'1':0,'2':14,'3':20}\"."
+        explain13: "[critical_path_to] the DP table that for each activity/node v gives the certificate that v can not be executed before its earliest time possible as given by `min_time_to[v]`. For example, w.r.t. the usual reference, `critical_path_to` = \"{'1':[1],'2':[1,2],'3':[1,2,3]}\"."
+        explain14: "[critical_nodes_to] the DP table that for each activity/node v gives the list of those activities that must necessarily be executed at their earliest time possible in order to be able to execute v at its earliest time possible. For example, w.r.t. the usual reference, `critical_to` = \"{'1':[],'2':[1],'3':[1,2]}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `critical_to` = \"{'1':[],'2':[1],'3':[1]}\"."
+        explain15: "[critical_arcs_to] the DP table that for each activity/node v gives the list of those arcs/constraints in every plan that executes v at its earliest time possible. For example, w.r.t. the usual reference, `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,2),(2,3)]}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,3)]}\"."
+        explain16: "[sensible_to_focus_arc] the DP table that for each activity/node v tells whether the focus arc is among the critical arcs for v. For example, w.r.t. the usual reference, and assuming `focus_arc`=(1,2), then `sensible_to_focus_arc` = \"{'1':False,'2':True,'3':True}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `sensible_to_focus_arc` = \"{'1':False,'2':True,'3':False}\"."
+
+      # sezione con argomenti che modificano i setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
+
+    # sezione con argomenti per determinare i canali di uscita e scegliere i formati dell'output:
+    color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+    as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_data_assigned:
+        regex: ^(0|1)$
+        default: 0
+      recall_request:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis." 
+    args:
+      service:
+        regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+      metafile:
+        regex: ^(default|en|it|[a-zA-Z0-9_]+)$
+        default: default
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it|[a-zA-Z0-9_]+)$
+        default: en
+...

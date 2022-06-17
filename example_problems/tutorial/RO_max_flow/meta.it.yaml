@@ -1,0 +1,356 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check:
+    evaluator: [python, services/check_driver.py]
+    description: "specificati due nodi diversi s e t, in un grafo misto (ossia dove possono essere presenti sia archi diretti che archi non-diretti), dove a ciascun arco e sia assegnata una capacità c[e] tra i numeri naturali, il Problema del Flusso Massimo (Max s,t-Flow Problem) chiede di trovare un flusso massimo da s a t che non ecceda le capacità degli archi. Specificare una soluzione richiede di indicare, per ogni arco e che si intenda impiegare (non sgombero), un valore di flusso x[e] nell'intervallo [0,c[e]], specificando inoltre, nel caso e fosse un arco non-diretto, in quale delle due direzioni lungo l'arco debbe fluire la quantità x[e]. Una tale risposta è effettivamente un flusso se ogni nodo v diverso da s (nodo sorgente) e da t (nodo destinazione) risulta bilanciato, ossia la somma totale del flusso entrante in v eguaglia la somma totale del flusso uscente da v. Un flusso è detto elementare se gli archi coinvolti (x[e] != 0) formano un cammino da s a t, e tutti gli archi fuori da questo cammino sono sgombri. In tale caso ogni arco coinvolto trasporta la medesima quantità di flusso (per il vincolo di bilanciamento). Si parla invece di flusso NON ammissibile quando per qualche arco e non sia rispettato il vincolo che x[e] ricada nell'intervallo [0,c[e]]. Il valore di un flusso x è definito come la somma dei valori di flusso x[e] con e=[*,s] entranti in s meno quella dei valori di flusso x[e] con e=[s,*] uscenti da s. Può essere altresì definito come il flusso complessivo uscente da s, oppure, alternativamente, come il flusso complessivo entrante in t, dato che quando il vincolo di bilanciamento vale su ciascun nodo diverso da s e t allora queste due quantità sono necessariamente uguali (deve essere bilanciato anche il super-nodo s+t ottenuto colassando in un solo nodo i nodi s e t, dato che in un universo chiuso non è possibile che un solo soggetto abbia un bilancio non nullo). Il Max Flow Problem chiede di trovare un flusso ammissibile di massimo valore. E' noto (ma avrai modo di dimostrare con mano) che quando tutte le capacità sono intere esiste allora sempre una soluzione ottima x che è un flusso intero. Parimenti, ogni flusso x può essere scomposto in al più m flussi elementari, dove m è il numero degli archi del grafo.
+Dato un insieme di nodi S che includa s ma non t, l'insieme di quegli archi diretti con la sola coda in s e di quegli archi non-diretti con precisamente un estremo in S viene detto un s,t-taglio (s,t-cut). Esso può essere rappresentando fornendo la lista esplicita degli archi che ricomprende, oppure la sua s-shore S. Sempre con riferimento ai valori di capacità c, il Problema del Taglio Minimo (Min s,t-Cut Problem) chiede di trovare un taglio dove sia minima la somma delle capacità degli archi coinvolti. Si noti che se dal grafo vengono rimossi tutti gli archi di un qualsiasi s,t-taglio allora l'unico s,t-flusso possibile ha valore nullo (in quanto non vi è più alcun cammino percorribile per portarsi da s a t). La buona caratterizzazione che lega questi due problemi è il celebre Max_Flow-Min_Cut theorem che afferma che questi due problemi di ottimizzazione presentano lo stesso valore ottimo su ogni singola istanza. Di nuovo, avrai modo di dimostrarlo fattivamente. Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnate dei Problema del MaxFlow e del MinCut. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze attive (sia per un problema specifico che metodologiche); se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere estensibili e aperti a promuovere la collaborazione tra problem-makers/insegnanti (nonchè a relativizzare e superare la separazione tra essi e i problem-solvers/trainees). Dal sistema dove organizzi i tuoi esami/esercitazioni, entro un esercizio centrato su un'istanza del Problema dello Zaino, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Solo per dare una prima idea, potrai imporre vincoli aggiuntivi su singoli elementi che ridefiniscano l'ammissibilità delle soluzioni e puoi controllare/validare certificati di ottimalità per le stesse  (anche per varianti della domanda standard che mettano in gioco una comprensione approfondita e critica delle buone caratterizzazioni). Con queste, il servizio può inoltre fornire feedback contestuale in caso si sia deciso di fornire allo studente/trainee un flusso non ottimo e si sia chiesto di stabilirne e certificarne l'ottimalità oppure di fornire un flusso elementare aumentante, oppure di produrre rappresentazioni equivalenti di flussi o tagli ottimi."    
+    args:
+      # sezione con i dati dell'istanza assegnati al problem-solver/studente:
+      n:
+        regex: ^([1-9][0-9]*)$
+        default: 4
+        explain: numero di nodi della rete (i nodi del grafo saranno labellati coi naturali da 0 a n-1)
+      s:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "il nodo s da cui esce il flusso (un numero naturale in [0,n-1])"
+      t:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "il nodo t in cui deve pervenire il flusso (un numero naturale in [0,n-1])"
+      arcs:
+        regex: ^(.*)$
+        default: "[[[0,1],9],[[0,2],6],[{1,2},1],[[1,3],6],[[2,3],9]"
+        explain: "lista di archi. Ogni arco è una lista la cui ultima componente è il peso, e la prima è l'insieme degli estremi dell'arco se esso è non-diretto, ovvero la lista [coda,testa] per gli archi diretti. Non gestiamo archi paralleli."
+      arcs_removed:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "di interesse sono solo i flussi massimi e/o i tagli minimi una volta rimossi questi archi dal grafo in input."
+      arcs_forbidden:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "l'attenzione è limitata ai soli s,t-tagli che non contengono questi archi."
+      query_arc:
+        regex: ^(.*)$
+        default: "{1,2}"
+        explain: "specifica l'arco d'interesse, ossia l'arco rispetto al quale vengono poste diverse questioni possibili concernenti le famiglie dei flussi massimi e/o dei tagli minimi."
+      x:
+        regex: ^(.*)$
+        default: "[[0,1,6],[0,2,6],[1,3,6],[2,3,6]]"
+        explain: "specifica una proposta generica di flusso. Al problem solver può essere richiesto di verificare se sia un flusso, se sia ammissibile/intero/ottimo, di dimostrarne l'ottimalità o produrre un flusso elementare aumentante per x, di fornire una scomposizione di x in flussi elementari, di produrre un flusso intero x' con val(x') >= val(x). Tipicamente x sarà un intero ma in caso contrario avrà massimo sette cifre decimali."
+      x_as_paths:
+        regex: ^(.*)$
+        default: "[[[0,1,3],6],[[0,2,3],6]]"
+        explain: 'specifica una proposta generica di flusso. Quì il flusso proposto è fornito in una sua decomposizione in flussi elementari.'
+      augmenting_path:
+        regex: ^(.*)$
+        default: "[0,1,2,3]"
+        explain: "proposto come possibile cammino aumentante rispetto al flusso corrente x per chiedere l'incremento massimo che possa comportare su val(x)."
+      augmenting_elementary_flow:
+        regex: ^(.*)$
+        default: "[[0,1,2,3],1]"
+        explain: "proposto come possibile flusso elementare aumentante rispetto al flusso corrente x per chiedere a quale flusso new_x condurrebbe la sua applicazione."
+      xx:
+        regex: ^(.*)$
+        default: "[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]"
+        explain: "proposto come flusso con val(xx) > val(x) per chiedere di derivarne un cammino aumentante oppure la decomposizione del flusso differenza (xx-x) in termini di flussi elementari."
+
+      # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'n':4,'arcs':[[[0,1],9],[[0,2],7],[{1,2},1],[[1,3],7],[[2,3],9],'arc_flow_query':{1,2},'x':[[0,1,6],[0,2,6],[1,3,6],[2,3,6]],'augmenting_elementary_flow':[[0,1,2,3],37],'xx':[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `arcs` o `n`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+
+      # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
+      max_flow_val:
+        regex: ^(.*)$
+        default: 13
+        explain: 'il massimo valore di un flusso ammissibile dal nodo s al nodo t)'
+      max_flow:
+        regex: ^(.*)$
+        default: "[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]"
+        explain: 'un massimo flusso dal nodo s al nodo t'
+      max_flow_as_paths:
+        regex: ^(.*)$
+        default: "[[[0,1,2,3],1],[[0,1,3],6],[[0,2,3],6]]"
+        explain: 'un massimo flusso dal nodo s al nodo t, decomposto in flussi elementari'
+      x_translated:
+        regex: ^(.*)$
+        default: "[[[0,1,3],6],[[0,2,3],6]]"
+        explain: 'una decomposizione di x in flussi elementari'
+      x_as_paths_translated:
+        regex: ^(.*)$
+        default: "[[0,1,6],[0,2,6],[1,3,6],[2,3,6]]"
+        explain: 'traduzione di x_as_paths in rappresentazione standard, dove per ogni arco coinvolto si specifica orientazione e livello di flusso.'
+      max_push_on_augmenting_path:
+        regex: ^(.*)$
+        default: 1
+        explain: "massimo incremento ottenibile su val(x) applicando al flusso x il cammino aumentante `augmenting_path`"
+      new_x:
+        regex: ^(.*)$
+        default: "[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]"
+        explain: 'il flusso che si ottiene "sommando" a x il flusso elementare in `augmenting_elementary_flow`'
+      elementary_flow_augmentation:
+        regex: ^(.*)$
+        default: "[[0,1,2,3],1]"
+        explain: "un qualsiasi flusso elementare che sia aumentante rispetto a x. Se presente tra le informazioni d'istanza, lo studente potrà essersi avvalso dell'infornazione contenuta in `xx` per ottenere questa sua risposta."
+      elementary_flow_augmentation_max:
+        regex: ^(.*)$
+        default: "[[0,1,2,3],1]"
+        explain: "un flusso elementare aumentante rispetto a x, di valore massimo. Se presente tra le informazioni d'istanza, lo studente potrà essersi avvalso dell'informazione contenuta in `xx` per ottenere questa sua risposta."
+      min_cut_val:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 13
+        explain: 'la minima capacità di un s,t-taglio'
+      min_cut_edges:
+        regex: ^(.*)$
+        default: "[[0,2],[1,3],{1,2}]"
+        explain: 'a minimum cost subset of arcs whose removal would imped any path from s to t'
+      min_cut_s_shore:
+        regex: ^(.*)$
+        default: "{0,1}"
+        explain: 'the checker expects a subset of the nodes containing s but not t, as encoding a minimum s,t-cut'
+      min_on_query_arc:
+        regex: ^(.*)$
+        default: 1
+        explain: "minimo valore di flusso che attraversa l'arco di query in un qualche flusso di valore massimo"
+      max_on_query_arc:
+        regex: ^(.*)$
+        default: 1
+        explain: "massimo valore di flusso che attraversa l'arco di query in un qualche flusso di valore massimo"
+      query_arc_type:
+        regex: ^(.*)$
+        default: ""
+        explain: 'catalog the query arc in one of the three categories:'
+        explain1: '[all] the arc belongs to all minimum cuts'
+        explain2: '[no] the arc belongs to no minimum cut'
+        explain3: '[some_but_not_all] the arc belongs to some but not all the minimum cuts'        
+      cert_in_no_cut:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "un taglio ed un flusso dello stesso valore che non saturi l'arco in questione; consentiamo allo studente di inserire il flusso ed il taglio nella forma che preferisce"
+        example: "[{0,1},[[0,1,6],[0,2,6],[1,3,6],[2,3,6]]] lamenterebbe che il taglio e il flusso non hanno lo stesso valore. Invece [{0},[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]] lamenterebbe che l'arco è saturo. Di fatto questo certificato non sarebbe producibile dato che supporterebbe un'affermazione falsa."
+      cert_in_all_cuts:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "ad un taglio e flusso ottimi (ossia dello stesso valore) si affianchi un flusso super-ottimo che violi unicamente il vincolo di capacità sull'arco in questione; consentiamo allo studente di inserire i flussi ed il taglio nella forma che preferisce"
+        example: "{0,1},[[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]],[[0,1,8],[0,2,6],[1,2,2],[1,3,6],[2,3,8]]]."
+      cert_in_some_cuts:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "un taglio che contiene l'arco ed un flusso dello stesso valore; consentiamo allo studente di inserire il flusso ed il taglio nella forma che preferisce"
+        example: "{0,1},[[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]."
+      cert_not_in_all_cuts:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "un taglio che non includa l'arco in questione, corredato di un flusso dello stesso valore; consentiamo allo studente di inserire il flusso ed il taglio nella forma che preferisce"
+        example: "[{0},[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]] lamenterebbe che il taglio e il flusso non hanno lo stesso valore. Invece [{0},[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]] lamenterebbe che il taglio contiene l'arco. Di fatto questo certificato non sarebbe producibile dato che supporterebbe un'affermazione falsa."
+
+      # sezione modalità API, sempre per far pervenire le risposte del problem-solver:
+      answer_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example1: "-a answer_dict=\"{'max_flow_val1':13}\""
+        example2: "-a answer_dict=\"{'max_flow_val2':13,'max_flow2':[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della conegna del task/richiesta di esercizio, (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`answer_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
+
+      alias_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example: "{'max_flow_val1':'max_flow_val'}"
+        explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
+
+      # sezione con argomenti che modificano i setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
+
+      # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      with_positive_enforcement:
+        regex: ^(0|1)$
+        default: 1
+      with_notes:
+        regex: ^(0|1)$
+        default: 1
+      recall_data_assigned:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+
+      # sezione coi punti da assegnare al singolo task/richiesta da assegnarsi al singolo task/richiesta (tra quelli proposti da un singolo esercizio) che ha comportato la chiamata a questo servizio dal contesto di una prova, esame, o simulazione di esame:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_consistency_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  oracle:
+    evaluator: [python, services/oracle_driver.py]
+    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
+    args:
+      pwd:
+        regex: ^(.*)$
+        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+
+      # sezione con i dati che specificano un'istanza del problema:
+      n:
+        regex: ^([1-9][0-9]*)$
+        default: 4
+        explain: numero di nodi della rete (i nodi del grafo saranno labellati coi naturali da 0 a n-1)
+      s:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "il nodo s da cui esce il flusso (un numero naturale in [0,n-1])"
+      t:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "il nodo t in cui deve pervenire il flusso (un numero naturale in [0,n-1])"
+      arcs:
+        regex: ^(.*)$
+        default: "[[[0,1],9],[[0,2],6],[{1,2},1],[[1,3],6],[[2,3],9]"
+        explain: "lista di archi. Ogni arco è una lista la cui ultima componente è il peso, e la prima è l'insieme degli estremi dell'arco se esso è non-diretto, ovvero la lista [coda,testa] per gli archi diretti. Non gestiamo archi paralleli."
+      arcs_removed:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "di interesse sono solo i flussi massimi e/o i tagli minimi una volta rimossi questi archi dal grafo in input."
+      arcs_forbidden:
+        regex: ^(.*)$
+        default: "[]"
+        explain: "l'attenzione è limitata ai soli s,t-tagli che non contengono questi archi."
+      query_arc:
+        regex: ^(.*)$
+        default: "{1,2}"
+        explain: "specifica l'arco d'interesse, ossia l'arco rispetto al quale vengono poste diverse questioni possibili concernenti le famiglie dei flussi massimi e/o dei tagli minimi."
+      x:
+        regex: ^(.*)$
+        default: "[[0,1,6],[0,2,6],[1,3,6],[2,3,6]]"
+        explain: "specifica una proposta generica di flusso. Al problem solver può essere richiesto di verificare se sia un flusso, se sia ammissibile/intero/ottimo, di dimostrarne l'ottimalità o produrre un flusso elementare aumentante per x, di fornire una scomposizione di x in flussi elementari, di produrre un flusso intero x' con val(x') >= val(x). Tipicamente x sarà un intero ma in caso contrario avrà massimo sette cifre decimali."
+      x_as_paths:
+        regex: ^(.*)$
+        default: "[[[0,1,3],6],[[0,2,3],6]]"
+        explain: 'specifica una proposta generica di flusso. Quì il flusso proposto è fornito in una sua decomposizione in flussi elementari.'
+      augmenting_path:
+        regex: ^(.*)$
+        default: "[0,1,2,3]"
+        explain: "proposto come possibile cammino aumentante rispetto al flusso corrente x per chiedere l'incremento massimo che possa comportare su val(x)."
+      augmenting_elementary_flow:
+        regex: ^(.*)$
+        default: "[[0,1,2,3],1]"
+        explain: "proposto come possibile flusso elementare aumentante rispetto al flusso corrente x per chiedere a quale flusso new_x condurrebbe la sua applicazione."
+      xx:
+        regex: ^(.*)$
+        default: "[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]"
+        explain: "proposto come flusso con val(xx) > val(x) per chiedere di derivarne un cammino aumentante oppure la decomposizione del flusso differenza (xx-x) in termini di flussi elementari."
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'n':4,'arcs':[[[0,1],9],[[0,2],7],[{1,2},1],[[1,3],7],[[2,3],9],'arc_flow_query':{1,2},'x':[[0,1,6],[0,2,6],[1,3,6],[2,3,6]],'augmenting_elementary_flow':[[0,1,2,3],37],'xx':[[0,1,7],[0,2,6],[1,2,1],[1,3,6],[2,3,7]]}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `arcs` o `n`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+
+      # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare ad ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
+      request_dict:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'orcolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
+        explain1: '[max_flow_val] il massimo valore di un flusso ammissibile dal nodo s al nodo t'
+        explain2: '[max_flow] un massimo flusso dal nodo s al nodo t)'
+        explain3: '[max_flow_as_paths] un massimo flusso dal nodo s al nodo t, decomposto in flussi elementari'
+        explain4: '[x_translated] una decomposizione di x in flussi elementari'
+        explain5: "[x_as_paths_translated] traduzione di x_as_paths in rappresentazione standard, dove per ogni arco coinvolto si specifica orientazione e livello di flusso"
+        explain6: "[max_push_on_augmenting_path] massimo incremento ottenibile su val(x) applicando al flusso x il cammino aumentante `augmenting_path`"
+        explain7: '[new_x] il flusso che si ottiene "sommando" a x il flusso elementare in `augmenting_elementary_flow`'
+        explain8: "[elementary_flow_augmentation] un qualsiasi flusso elementare che sia aumentante rispetto a x. Se presente tra le informazioni d'istanza, lo studente potrà essersi avvalso dell'infornazione contenuta in `xx` per ottenere questa sua risposta"
+        explain9: "[elementary_flow_augmentation_max] un flusso elementare aumentante rispetto a x, di valore massimo. Se presente tra le informazioni d'istanza, lo studente potrà essersi avvalso dell'informazione contenuta in `xx` per ottenere questa sua risposta"
+        explain10: "[min_cut_val] a minimum cost subset of arcs whose removal would imped any path from s to t"
+        explain11: "[min_cut_edges] a minimum cost subset of arcs whose removal would imped any path from s to t"
+        explain12: "[min_cut_s_shore] the checker expects a subset of the nodes containing s but not t, as encoding a minimum s,t-cut"
+        explain13: "[min_on_query_arc] minimo valore di flusso che attraversa l'arco di query in un qualche flusso di valore massimo"
+        explain14: "[cert_min_can] per convincere King Arthur che t>=0 è il minimo valore al quale la capacità c[e] dell'arco di query e può essere abbassata senza compromettere il massimo valore di flusso, devi convincerlo di due cose: (1) abbassarla a quel valore non ha conseguente, e (2) abbassarla oltre ridurrebbe inevitabilmente il valore ottimo. Questo argomento ospita il Certificato 1, che ha la forma di un taglio ed un flusso dello stesso valore, dove la quantità di flusso inviata lungo e non ecceda t."
+        explain15: "[cert_min_cannot] per convincere King Arthur che t>=0 è il minimo valore al quale la capacità c[e] dell'arco di query e può essere abbassata senza compromettere il massimo valore di flusso, devi convincerlo di due cose: (1) abbassarla a quel valore non ha conseguente, e (2) abbassarla oltre ridurrebbe inevitabilmente il valore ottimo. Questo argomento ospita il Certificato 2, interessante qualora t > 0. Ha la forma di un taglio T che contenga e, ed un flusso f di valore val(f) >= val(C) -c[e] +t."
+        explain16: "[max_on_query_arc] massimo valore di flusso che attraversa l'arco di query in un qualche flusso di valore massimo"
+        explain17: "[cert_max_can] per convincere King Arthur che t<=c[e] è il massimo valore per il quale esista un flusso di valore massimo con in più la proprietà di inviare almeno t unità di flusso lungo e, di fatto devi convincerlo di due cose: (1) una tale flusso massimo essite, e (2) nessun flusso massimo riesce ad interessare e in modo più importante. Questo argomento ospita il Certificato 1, che ha la forma di un taglio ed un flusso dello stesso valore, dove la quantità di flusso inviata lungo e sia almeno t."
+        explain18: "[cert_max_cannot] per convincere King Arthur che t<=c[e] è il massimo valore per il quale esista un flusso di valore massimo con in più la proprietà di inviare almeno t unità di flusso lungo e, di fatto devi convincerlo di due cose: (1) una tale flusso massimo essite, e (2) nessun flusso massimo riesce ad interessare e in modo più importante. Questo argomento ospita il Certificato 2, interessante qualora t < c[e]. Ha la forma di un taglio T che non contenga propriamente e ma ne venga attraversato in senso contrario, ed un flusso f di valore val(f)+c[e] >= val(C)+t."
+        explain19: "[query_arc_type] catalog the query arc depending on whether it belongs to all/no/some but not all the minimum cuts"
+        explain20: "[cert_in_no_cut] un taglio ed un flusso dello stesso valore che non saturi l'arco in questione"
+        explain21: "[cert_in_all_cuts] ad un taglio e flusso ottimi (ossia dello stesso valore) si affianchi un flusso super-ottimo che violi unicamente il vincolo di capacità sull'arco in questione"
+        explain22: "[cert_in_some_cuts] un taglio che contiene l'arco ed un flusso dello stesso valore"
+        explain23: "[cert_not_in_all_cuts] un taglio che non includa l'arco in questione, corredato di un flusso dello stesso valore"
+        example1: "-a request_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
+        example2: "-a request_dict=\"{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}\""
+        example3: "se lasci il valore di default (il dizionario vuoto {}) allora ottieni risposta a tutte le possibili domande per cui un solutore è già stato implementato. In tale caso i nomi impiegati nel responso dell'oracolo saranno quelli standard, come quelli nell'Esempio 1"
+
+      # sezione con argomenti che modificano i setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
+
+      # sezione con argomenti per determinare i canali di uscita e scegliere i formati dell'output:
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_data_assigned:
+        regex: ^(0|1)$
+        default: 0
+      recall_request:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis." 
+    args:
+      service:
+        regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+      metafile:
+        regex: ^(default|en|it|[a-zA-Z0-9_]+)$
+        default: default
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it|[a-zA-Z0-9_]+)$
+        default: en
+...

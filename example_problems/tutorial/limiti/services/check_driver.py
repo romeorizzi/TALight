@@ -14,7 +14,7 @@ args_list = [
     ('source',str),
     ('instance_id',int),
     ('instance_format',str),
-    ('download',bool),
+#    ('download',bool),
 ]
 
 ENV =Env(args_list)

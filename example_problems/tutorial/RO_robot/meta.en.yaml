@@ -10,11 +10,11 @@ services:
       grid:
         regex: ^(.*)$
         default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
-        explain: "the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value."
+        explain: the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value.
       budget:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: "a path is not admissible if the sum of the negative numbers encountered along the path, inverted in sign, exceeds the budget"
+        explain: a path is not admissible if the sum of the negative numbers encountered along the path, inverted in sign, exceeds the budget
       diag:
         regex: ^(0|1)$
         default: 0
@@ -31,6 +31,8 @@ services:
         regex: ^(.*)$
         default: (3,'C')
         explain: "in order for a path to be feasible it must also visit cell (3,'C'). Row 1 is the one at the top, column 'A' is the leftmost one."
+
+      # section with additional data provided to the trainee by the problem poser, that this service should take in consideration:
       partialDP_to:
         regex: ^(.*)$
         default: "[]"
@@ -39,31 +41,31 @@ services:
         regex: ^(.*)$
         default: "[]"
         explain: "see the above explanation for the argument `partialDP_to`. For the same functional and for the `gris` indicated above, we could have: partialDP_to = [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3, -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
-
-      # API mode section, again to send the input received from the problem-solver to the service:
-      instance_dict:
+        
+      # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
+      input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a instance_dict=\"{'grid':[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ],'diag':1}\""
-        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`instance_dict`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `instance_dict` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite sat designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `grid`, or `diag`, or `cell_to`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service."
+        example: "-a input_data_assigned=\"{'grid':[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ],'diag':1}\""
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `grid`, or `diag`, or `cell_to`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
 
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       num_paths:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: "the number of feasible paths, as filtered by the additional constraints (arguments that influence this, after `grid`, are `diag`, `budget`, `cell_from`, `cell_to`, `cell_through`)"
+        explain: the number of feasible paths, as filtered by the additional constraints (arguments that influence this, after `grid`, are `diag`, `budget`, `cell_from`, `cell_to`, `cell_through`)
       num_opt_paths:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: "the number of feasible paths that collect the maximum total prize possible"
+        explain: the number of feasible paths that collect the maximum total prize possible
       opt_val:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: "the maximum total prize a feasible path can collect"
+        explain: the maximum total prize a feasible path can collect
       opt_path:
         regex: ^(.*)$
         default: "[]"
-        explain: "a path collecting the maximum possible total prize"
+        explain: a path collecting the maximum possible total prize
       list_opt_paths:
         regex: ^(.*)$
         default: "[]"
@@ -81,11 +83,11 @@ services:
       DPtable_opt_to:
         regex: ^(.*)$
         default: "[]"
-        explain: "the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell"
+        explain: the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
       DPtable_opt_from:
         regex: ^(.*)$
         default: "[]"
-        explain: "the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell"
+        explain: the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
       DPtable_num_opt_to:
         regex: ^(.*)$
         default: "[]"
@@ -93,30 +95,36 @@ services:
       DPtable_num_opt_from:
         regex: ^(.*)$
         default: "[]"
-        explain: "the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell."
+        explain: the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.
 
-      # API mode section, always to send the answers of the problem-solver:
+      # API mode section, to transmit the answers of the problem-solver and how to relate with it:
       answer_dict:
         regex: ^(.*)$
-        default: ""
+        default: "{}"
         example1: "-a answer_dict=\"{'num_paths1':28, 'num_opt_paths1':4}\""
         explain: "There are two options for passing to this TALight service the anwer to be evaluated and provided a feedback with. Either you use a separate argument for each possible object type comprising your answer, or you callect them all within one single dictionary that you pass through this one argument (`answer_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty string) then the first option is assumed, which may be better when experiencing the service from the CLI. Otherwise, the string passed through `answer_dict` is read as yaml to obtain the dictionary containing the answer of the student. An answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type represented by the standard name attached to it (e.g., like `opt_sol` or `opt_val`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible answer objects, and their names, by inspecting the complete list of arguments to this service). You can use these standard names as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows for more freedom: it allows you to introduce custom names, defined in terms of the standard ones (just an aliasing) and to attach them to the objects comprising your answer, using them as keys in your `answer_dict` dictionary. In this way the feedback provided by the service will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`. Put in other words, when using Option (2) you can rename the available objects (for more proximity to the problem solver in its own context) by means of the ancillary argument `alias_dict`, that makes sense only in tandem with this one."
 
       alias_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: "this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution that the instructor has asked from the problem solver on a given exercise/task/request. The keys are the names that the instructor has assigned to the standard object types involved in the request, the corresponding values should be among the following:"
-        explain1: "[num_paths] the number of feasible paths"
-        explain2: "[num_opt_paths] the number of paths of maximum value"
-        explain3: "[opt_val] the maximum value of a feasible path"
-        explain4: "[opt_path] a path of maximum value"
-        explain5: "[list_opt_paths] the list of all optimum paths"
-        explain6: "[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell"
-        explain7: "[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
-        explain8: "[DPtable_opt_to] the DP table meant to tell the maximum value of a feasible path moving from top-left cell to the generic cell"
-        explain9: "[DPtable_opt_from] the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell"
-        explain10: "[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell"
-        explain11: "[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell."
+        explain: 'this argument (a string to be read as yaml) is a dictionary of the objects comprising the solution that the instructor has asked from the problem solver on a given exercise/task/request. The keys are the names that the instructor has assigned to the standard object types involved in the request, the corresponding values should be among the following:'
+        explain1: '[num_paths] the number of feasible paths'
+        explain2: '[num_opt_paths] the number of paths of maximum value'
+        explain3: '[opt_val] the maximum value of a feasible path'
+        explain4: '[opt_path] a path of maximum value'
+        explain5: '[list_opt_paths] the list of all optimum paths'
+        explain6: '[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell'
+        explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
+        explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a feasible path moving from top-left cell to the generic cell'
+        explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell'
+        explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
+        explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+
+      # section with arguments that modify the setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine), (3) logs on the server that could help monitoring and grading an exam
       color_implementation:
@@ -131,7 +139,7 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       yield_certificate_in_output_file:
@@ -204,24 +212,33 @@ services:
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: "this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `value` (e.g., 'opt_sol') and refer to it by the name `key` as prescribed by the caller. The possible `values` (i.e., solution object types currently supported) are the following:"
-        explain1: "[num_paths] the number of feasible paths"
-        explain2: "[num_opt_paths] the number of paths of maximum value"
-        explain3: "[opt_val] the maximum value of a feasible path"
-        explain4: "[opt_path] a path of maximum value"
-        explain5: "[list_opt_paths] the list of all optimum paths"
-        explain6: "[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell"
-        explain7: "[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
-        explain8: "[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell"
-        explain9: "[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell"
-        explain10: "[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell"
-        explain11: "[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell."
+        explain: 'this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `key` (e.g., "opt_sol") and refer to it by the name `value` as prescribed by the caller. The possible `keys` (i.e., solution object types currently supported) are the following:'
+        explain1: '[num_paths] the number of feasible paths'
+        explain2: '[num_opt_paths] the number of paths of maximum value'
+        explain3: '[opt_val] the maximum value of a feasible path'
+        explain4: '[opt_path] a path of maximum value'
+        explain5: '[list_opt_paths] the list of all optimum paths'
+        explain6: '[DPtable_num_to] the DP table meant to tell the number of paths from top-left cell to the generic cell'
+        explain7: '[DPtable_num_from] the DP table meant to tell the number of paths from the generic cell to the bottom-right cell'
+        explain8: '[DPtable_opt_to] the DP table meant to tell the maximum value of a path from top-left cell to the generic cell'
+        explain9: '[DPtable_opt_from] the DP table meant to tell the maximum value of a path from the generic cell to the bottom-right cell'
+        explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
+        explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
+
+      # section with arguments that modify the setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
       as_yaml:
         regex: ^(0|1)$
         default: 0
-      recall_instance:
+      recall_data_assigned:
         regex: ^(0|1)$
         default: 0
       recall_request:
@@ -247,7 +264,7 @@ services:
       service:
         regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
         default: synopsis
-        explain: "any string without space characters but meant to specify one of the services of the problem %(problem)s"
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
       metafile:
         regex: ^(default|en|it|[a-zA-Z0-9_]+)$
         default: default

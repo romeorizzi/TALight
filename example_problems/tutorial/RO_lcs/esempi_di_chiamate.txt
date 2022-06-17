@@ -1,0 +1,38 @@
+Note:
+- installare termcolor, tabulate e ansi2html
+- avviare il daemon rtald con:
+      rtald -a exam_RO_test.yaml -d /home/romeo/TALight/example_problems/tutorial
+      da un folder dove si sia creato il file  lanciando:
+      echo -e "%YAML 1.2\n---\ntokens:\n  - id123456_VR123456_123456789012345_nominativo_studente\n  - _0123456789_nickname_docente\nsave_directory: log_RO_exam\n..." > exam_RO_test.yaml
+
+- chiamate con DPtable hanno output None (ATTUALMENTE NON IMPLEMENTATO)
+- invio di file (submission_filehandler) attualmente non supportato nè da Jupyter
+
+CLI:
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a opt_val=3 -a opt_sol='ACICCIA' -awith_opening_message
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a answer_dict="{'opt_val_MIA':3,'opt_sol_MIA':'ACICCIA'}" -a alias_dict="{'opt_val_MIA':'opt_val', 'opt_sol_MIA':'opt_sol'}"
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a answer_dict="{'opt_val':3,'opt_sol':'ACICCIA'}"
+
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs check -a answer_dict="{'opt_val_MIA':3,'opt_sol_MIA':'ABC'}" -a alias_dict="{'opt_val_MIA':'opt_val', 'opt_sol_MIA':'opt_sol'}"
+
+
+
+# SERVIZIO ORACLE
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -a reduce_t_to_its_prefix_of_length=5 -a with_opening_message 
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -a request_dict="{'opt_sol':'opt_sol_BELLA'}"
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -a s="GIRANDOLA" -a t="MARIANGELA"
+
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -a input_data_assigned="{'s':'GIRANDOLA','t':'MARIANGELA'}"
+
+
+# Con richiesta di ottenere il file con soluzione (ed istanza) su un file in locale:
+
+CLI:
+rtal connect -x id123456_VR123456_123456789012345_nominativo_studente  RO_lcs oracle -a pwd=tmppwd -awith_output_files

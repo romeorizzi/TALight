@@ -1,4 +1,6 @@
-## Esempio ESISTENZA E CORRETTEZZA DI UN LIMITE:
+## LIMITI DI FUNZIONI/SUCCESSIONI
+
+<details><summary><strong>Esempio ESISTENZA E CORRETTEZZA DI UN LIMITE:</strong></summary>
 
     rtal connect limiti exist_prover (istanza da catalogo)
     dimostra che il limite lim_{x --> 1} x^2+5
@@ -13,7 +15,7 @@
     > # 0.04 (opppure più piccolo)
     > # proponi il tuo x nell'intorno [0.96,1.04]
     < 0.77
-    > # vedi: 0.77 < 0.96, quindi in realtà sei fuori dell'intervallo, quindi non sei riuscito a confutare la mia affermazione che il limite esista e valga 6.
+    > # vedi: 0.77 < 0.96, quindi in realtà sei fuori dell` intervallo, quindi non sei riuscito a confutare la mia affermazione che il limite esista e valga 6.
     > # lo vedi? Sei convinto che il limite esista e valga 6? (y/n)
     < n
     > # allora stabilisci una tollerenza epsilon > 0
@@ -27,8 +29,10 @@
     > # lo vedi? Sei convinto che il limite esista e valga 6? (y/n)
     > y
     > # Oh beh, contento te... Alla prossima!
+</details>
 
-## Esempio ESISTENZA MA NON CORRETTEZZA DI UN LIMITE:
+<details><summary><strong>Esempio ESISTENZA MA NON CORRETTEZZA DI UN LIMITE:</strong></summary>
+
     rtal connect limiti exist_prover (istanza da catalogo)
     dimostra se il limite lim_{x --> 1} x^2+5
     > # esiste e vale
@@ -59,11 +63,12 @@
     > 0.06
     > # stabilisci un tuo valore per delta > 0:
     < 0.1
-    > # Wow mi hai convinto! Vale |f(x)-6| < epsilon per tutti i valori di x compresi nell'intervallo (x0-delta , x0+delta)=(0.9 , 1.1) che ho utilizzato per verificare il tuo risultato. 
+    > # Wow mi hai convinto! Vale |f(x)-6| < epsilon per tutti i valori di x compresi nell` intervallo (x0-delta , x0+delta)=(0.9 , 1.1) che ho utilizzato per verificare il tuo risultato. 
     > # Ben fatto!
+</details>
 
+<details><summary><strong>Esempio di NON ESISTENZA DI UN LIMITE: (guidato)</strong></summary>
 
-## Esempio di NON ESISTENZA DI UN LIMITE: (guidato)
     rtal connect limiti exist_prover  (istanza da catalogo)
     dimostra se il limite lim_{x --> 0} 1/x
     > # esiste e vale
@@ -85,8 +90,9 @@
     > # Oh no! f(-0.15) = -0.6666 e -0.6666 < N 
     > # Mi hai smentito! Non è vero che il limite esiste e vale +inf.
     > # Questo limite non esiste proprio, ben fatto!
+</details>
 
-Lo stesso esercizio si potrebbe fare in modo meno guidato, ovvero chiedendo se il limite non esiste proprio o se è sbagliato solo il risultato, nel primo caso poi si potrebbe chiedere se il problema sia che:
+Lo stesso esercizio appena visto si potrebbe fare in modo meno guidato, ovvero chiedendo se il limite non esiste proprio o se è sbagliato solo il risultato, nel primo caso poi si potrebbe chiedere se il problema sia che:
 - i limiti destro e sinistro esistono finiti ma sono diversi (discontinuità prima specie)
 - uno tra i limiti destro e sinistro è infinito o non esiste (discontinuità seconda specie)
 - i limiti destro e sinistro esistono finiti e sono uguali tra loro ma non coincidono con la valutazione della funzione in x0 (discontinuità terza specie)
@@ -96,7 +102,8 @@ E poi continuare come visto sopra.
 
 
 
-## Esempio SOMMA di successioni:
+<details><summary><strong>Esempio SOMMA di successioni:</strong></summary>
+
     rtal connect limiti sum_prover (istanza da catalogo)
     > # dimostra che se lim_{x --> inf} (x-1)/x = 1 e lim_{x --> inf} x/(2x+3) = 1/2 
     > # allora lim_{x --> inf} (x-1)/x + x/(2x+5)
@@ -130,5 +137,148 @@ E poi continuare come visto sopra.
     > # vedi: f+g (9) = 1.3175, e 1.3175 in [1.2 , 1.8]=[l-epsilon,l+epsilon], quindi non sei riuscito a confutare la mia affermazione che  lim_{x --> inf} (x-1)/x + x/(2x+5) esiste e vale 3/2.
     > # lo vedi? Sei convinto che il limite esista e valga 6? (y/n)
     < y
-    > # Oh beh, contento te... Alla prossima!
+    > # Perfetto, alla prossima!
+
+</details>
+
+## ARCHIMEDE
+#### Enunciato:
+Per ogni numero reale positivo a,b, esiste un numero naturale N tale che Na > b (ovvero a > b/N).
+(Per ogni epsilon reale positivo esiste un numero naturale N tale che 1/N < epsilon (equivale all` enunciato precedente con b=1 e a=epsilon ) )
+
+- Una successione {a_n} di termini positivi convergente deve avere un limite strettamente positivo: è vero?
+No, basta prendere la successione 1/n costituita di termini positivi ma convergente a 0
+- Dimostra che la successione 1/n, n=1,2,3,... tende a zero:
+usare il fatto che per Archimede preso a piacere epsilon > 0 esiste un numero n naturale tale che n*epsilon > 1. Dunque, 1/n < epsilon.
+
+<details><summary><strong>Esempio</strong> (dimostrazione enunciato Archimede senza epsilon, più immediata... giocando solo con a, b, e n... poco istruttiva dal punto di vista dei limiti, forse la si può aggiungere come "test" dopo aver risolto la dimostrazione):</summary>
+
+    > # è vero che per ogni numero reale positivo a,b, esiste un numero naturale N tale che na > b (ovvero a > b/N)? (y/n)
+    < n
+    > # allora mi stai dicendo che esistono due numeri reali a,b tali che per ogni naturale n abbiamo che an <= b, ovvero n <= b/a... vediamo se hai ragione tu
+    > # dammi un valore per a (diverso da 0):
+    < 3.1
+    > # dammi un valore per b (diverso da 0):
+    < 8.06
+    > # proviamo allora a calcolare b/a = 8.06/3.1 = 2.6
+    > # secondo te è vero che i numeri naturali sono tutti <= 2.6? (y/n)
+    < n
+    > # beh, basta prendere 3 per verificare che 3 > 2.6
+    > # sei convinto ora? (y/n)
+    < y
+    > Meno male, alla prossima!
+</details>
+
+<details><summary><strong>Esempio:</strong></summary>
+
+    > # Una successione {a_n} di termini positivi convergente non è detto che abbia un limite strettamente positivo
+    > # sei d'accordo con me? (y/n)
+    < n
+    > # Allora consideriamo la successione 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
+    < y
+    > # ma non converge ad un numero strettamente positivo... converge a 0!
+    > # ti ho convinto? (y/n)
+    < n
+    > # Stabilisci un numero reale epsilon > 0:
+    < 0.3
+    > # se ti propongo n=4, si ha che 1/n=1/4=0.25 < 0.3 = epsilon
+    > # proponimi un altro valore per epsilon > 0:
+    < 0.2
+    > # per n=6, si ha che 1/n = 1/6 = 0.166666 < 0.2 = epsilon
+    > # vedi, per qualsiasi epsilon tu scelga, troverò sempre una n tale che 1/n < epsilon e più le epsilon sono piccole, più le n sono grandi
+    > # ci credi ora che per n -> infinito il la successione 1/n converge a 0? (y/n)
+    < y
+    > # Molto bene!
+</details>
+
+<details><summary><strong>Esempio come sopra ma usando la definizione standard di limite:</strong></summary>
+
+    > # Non è vero che una successione {a_n} di termini positivi convergente ha sempre un limite strettamente positivo
+    > # sei d'accordo con me? (y/n)
+    < n
+    > # Allora consideriamo la successione a_n = 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
+    < y
+    > # Ma non converge ad un numero strettamente positivo... converge a 0!
+    > # Stabilisci un numero reale epsilon > 0:
+    < 0.4
+    > # Ecco il mio N:
+    > # 2.5
+    > # Proponi una tua x > 2.5:
+    < 2.6
+    > # vedi: a_n(2.6) =0.38, e 0.38 \in [-0.4 , 0.4]=[l-e,l+e], quindi non sei riuscito a confutare la mia affermazione.
+    > # Sei convinto ora che la successione converga a 0? (y/n)
+    > y
+    > # Bene, alla prossima!
+</details>
+
+
+
+## DENSITA` DI Q IN R
+#### Enunciato:
+- _PRIMA FORMA_: per ogni a,b \in R, a<b, esiste un r \in Q tale che a<r<b
+- _SECONDA FORMA_: ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
+
+**Dimostrazione:**
+Prendiamo un numero reale alfa = a_0. a_1 a_2 a_3 a_4..... (esempio: se alfa=3.459 allora a_0=3, a_1=4, a_2=5, a_3=9)
+
+alfa è il limite della successione y_n di numeri razionali (decimali):
+
+y_0 = a_0
+
+y_1 = a_0. a_1
+
+y_2 = a_0. a_1 a_2
+
+............
+
+y_k = a_0. a_1 a_2....a_k 
+
+............
+
+Poichè |y_k - alfa | <= 1/10^k, si ha: lim{n->+inf} y_n = alfa.
+
+**Esempio:**
+
+alfa=sqrt(2)=1.414213562...
+
+y_0=1
+
+y_1=1.4
+
+y_2=1.41
+
+y_3=1.414
+
+............
+
+y_6=1.414213
+
+y_7=1.4142135
+
+............
+
+|y_3 - alfa | = 0.000213562... <= 1/10^3 = 0.001 e per ogni n>3 si ha |y_n - alfa| < 0.001  (infatti ad esempio |y_4 - alfa|=0.000013562 < 0.001 e così via)  dimostrando così che lim{n->inf} y_n = alfa
+
+<details><summary><strong>Esempio di dialogo:</strong></summary>
   
+    > # dimostra che ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
+    > # dimostra quindi che lim{n->inf} y_n = alfa, dove 
+    > alfa = sqrt(2) = 1,414213562373095049...
+    > y_0=1
+    > y_1=1.4
+    > y_2=1.41
+    > y_3=1.414
+    > y_4=1.4142
+    > y_5=1.41421
+    > y_6=1.414213
+    > y_7=1.4142135
+    > ............
+    > # ecco il mo epsilon:
+    > 0.004
+    > # stabilisci una M > 0 :
+    < 3
+    > # Molto bene! Vale |y_n - alfa| < 0.004 per tutti i valori di n > 3 che ho utilizzato per verificare la tua proposta.
+    > # Hai dimostrato che lim{n->inf} y_n = alfa, ottimo lavoro!
+
+</details>
+

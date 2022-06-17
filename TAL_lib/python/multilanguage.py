@@ -130,9 +130,13 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             print(f"# Unrecoverable Error: {varname} is not of type int. Here is its actual raw content as a string: {repr(yaml_var)}")
             exit(0)
     if typestr in ['bool',bool]:
+        if yaml_var.lower() in ['true','1']:
+            return True
+        if yaml_var.lower() in ['false','0']:
+            return False
         try:
-            yaml_var = int(yaml_var)
-            return bool(yaml_var)
+            yaml_var_as_int = int(yaml_var)
+            return bool(yaml_var_as_int)
         except:
             print(f"# Unrecoverable Error: {varname} is not of type bool. Here is its actual raw content as a string: {repr(yaml_var)}")
             exit(0)
