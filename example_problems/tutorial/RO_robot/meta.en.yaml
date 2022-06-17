@@ -41,7 +41,7 @@ services:
         regex: ^(.*)$
         default: "[]"
         explain: "see the above explanation for the argument `partialDP_to`. For the same functional and for the `gris` indicated above, we could have: partialDP_to = [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3, -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
-
+        
       # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
       input_data_assigned:
         regex: ^(.*)$
@@ -69,17 +69,17 @@ services:
       list_opt_paths:
         regex: ^(.*)$
         default: "[]"
-        explain: the list of all optimum paths
+        explain: "the list of all optimum paths"
       DPtable_num_to:
         regex: ^(.*)$
         default: "[]"
         example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        explain: the DP table meant to tell the number of paths from top-left cell to the generic cell
+        explain: "the DP table meant to tell the number of paths from top-left cell to the generic cell"
       DPtable_num_from:
         regex: ^(.*)$
         default: "[]"
         example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        explain: the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
+        explain: "the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
       DPtable_opt_to:
         regex: ^(.*)$
         default: "[]"
@@ -91,7 +91,7 @@ services:
       DPtable_num_opt_to:
         regex: ^(.*)$
         default: "[]"
-        explain: the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
+        explain: "the DP table meant to tell the number of optimal paths from top-left cell to the generic cell"
       DPtable_num_opt_from:
         regex: ^(.*)$
         default: "[]"
@@ -176,17 +176,17 @@ services:
     args:
       pwd:
         regex: ^(.*)$
-        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+        explain: "this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access."
 
       # section with a possible instance to the problem:
       grid:
         regex: ^(.*)$
         default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
-        explain: the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value.
+        explain: "the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value."
       diag:
         regex: ^(0|1)$
         default: 0
-        explain: set this flag to 1 if the robot can move also to the cell of the next col and row
+        explain: "set this flag to 1 if the robot can move also to the cell of the next col and row"
       partialDP_to:
         regex: ^(.*)$
         default: "[]"

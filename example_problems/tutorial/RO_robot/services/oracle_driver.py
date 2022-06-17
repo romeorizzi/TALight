@@ -51,4 +51,3 @@ if ENV.LOG_FILES != None:
     RO_io.oracle_logs(call_data,ENV,TALf)
 if ENV["with_output_files"]:    
     RO_io.oracle_output_files(call_data,ENV,TALf)
-

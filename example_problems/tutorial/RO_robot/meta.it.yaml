@@ -165,7 +165,7 @@ services:
     args:
       pwd:
         regex: ^(.*)$
-        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+        explain: "tale servizio non deve essere messo a disposizione degli studenti almeno durante le prove d'esame. Impostare una password privata per impedire accessi non autorizzati."
 
       # sezione con i dati che specificano un'istanza del problema:
       labels:

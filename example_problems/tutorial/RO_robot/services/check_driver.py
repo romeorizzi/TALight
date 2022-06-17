@@ -18,6 +18,7 @@ args_list += [
     ('alias_dict','yaml'),
     ('request_setups','yaml'),
     ('answer_dict','yaml'),
+    ('alias_dict','yaml'),
     ('color_implementation',str),
     ('with_opening_message',bool),
     ('as_yaml_with_points',bool),
@@ -50,6 +51,7 @@ SEF = RO_eval.std_eval_feedback(ENV)
 request_setups = ENV["request_setups"] if len(ENV["request_setups"]) != 0 else PSL.request_setups
 KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict, request_setups)
 feedback_dict = KingArthur.verify_submission(SEF)
+
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
 all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of,"request_setups":request_setups}

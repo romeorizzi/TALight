@@ -40,3 +40,9 @@ TEMA_OGGI*
 # Visual Studio
 .vs/
 .suo/
+
+# VS code
+.vscode/
+
+# IntelliJ
+.idea/
