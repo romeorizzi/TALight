@@ -10,7 +10,6 @@ import RO_std_eval_lib as RO_eval
 import problem_specific_lib as PSL
 
 # METADATA OF THIS TAL_SERVICE:
-# METADATA OF THIS TAL_SERVICE:
 args_list = PSL.instance_objects_spec + PSL.additional_infos_spec
 args_list += [('input_data_assigned','yaml')]
 args_list += [(key,'yaml') for key in PSL.answer_objects_spec]
@@ -21,6 +20,8 @@ args_list += [
     ('alias_dict','yaml'),
     ('color_implementation',str),
     ('with_opening_message',bool),
+    ('with_positive_enforcement',bool),
+    ('with_notes',bool),
     ('as_yaml_with_points',bool),
     ('yield_certificate_in_output_file',bool),
     ('recall_data_assigned',bool),
@@ -51,7 +52,6 @@ SEF = RO_eval.std_eval_feedback(ENV)
 request_setups = ENV["request_setups"] if len(ENV["request_setups"]) != 0 else PSL.request_setups
 KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict, request_setups)
 feedback_dict = KingArthur.verify_submission(SEF)
-
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
 all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of,"request_setups":request_setups}

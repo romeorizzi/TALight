@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from sys import stderr
 from typing import Optional, List, Dict, Callable
 
