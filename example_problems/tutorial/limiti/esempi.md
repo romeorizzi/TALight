@@ -1,7 +1,120 @@
 ## NUMERI REALI
-* Ogni insieme finito e non vuoto di numeri reali ammette sempre massimo e minimo.
-* Se un insieme non è finito non ammette massimo/minimo.
-* 
+1. Ogni insieme finito e non vuoto di numeri reali ammette sempre minimo e massimo. 
+<details><summary><strong>Esercizio: </strong></summary>
+
+	> # proviamo a vedere se in un insieme finito e non vuoto di numeri reali riusciamo a trovare sempre un minimo e un massimo.
+    > # dato l'insieme costituito da:
+	> 0, 6.3, 5/4, -14.31, pi, 28.7333, sqrt(2), -9*pi
+	> # determina il minimo:
+	< -9*pi
+    > # determina il massimo:
+	< 28.7333
+	> # bene! vuoi fare un'altra partita o ti senti pronto a passare al livello successivo? (another_match/next_level)
+	< another_match
+    > # dato l'insieme costituito da:
+	> 57/13, e, -sqrt(17), pi*0.65, -sin(30)*7, sqrt(5)
+	> # determina il minimo:
+	< -sqrt(17)
+    > # determina il massimo:
+	< 57/13
+	> # bene! vuoi fare un'altra partita o ti senti pronto a passare al livello successivo? (another_match/next_level)
+	< next_level
+    > # ok! riusciresti a scrivere un algoritmo ricorsivo che calcoli per te il massimo e il minimo? 
+	< .......
+</details>
+
+2. Se un insieme non è finito potrebbe non ammettere massimo/minimo.
+<details><summary><strong>Esercizio: </strong></summary>
+
+	> # Se un insieme non è finito potrebbe non ammettere massimo/minimo.
+	> # {x in R | 8 <= x^3 <= 125}
+	> # l'insieme ha minimo? (y/n)
+	< y
+	> # determinalo:
+	< 2
+	> # l'insieme ha massimo? (y/n)
+	< y
+	> # determinalo:
+	< 5
+	> # bene! proviamo con un altro esempio
+	> # {x in R | x > 15/2}
+	> # l'insieme ha minimo? (y/n)
+	< y
+	> # determinalo:
+	< 15/2
+	> # ma 15/2 non appartiene all'insieme... quindi non è un minimo!
+	> # l'insieme ha minimo? (y/n)
+	< n
+	> # l'insieme ha massimo? (y/n)
+	< n
+	> # bene! vuoi procedere con un altro esercizio o fermarti? (next/stop)
+	< stop
+	> # alla prossima!
+</details>
+
+3. Un insieme limitato (superiormente/inferiormente/entrambi) non sempre ammette massimo/minimo.
+<details><summary><strong>Esercizio: </strong></summary>
+
+	> # Un insieme limitato non sempre ammette massimo/minimo. 
+	> # {x in R | 8 <= x^3 <= 125}
+	> # ha minimo? (y/n)
+	< y
+	> # determinalo:
+	< 2
+	> # ha massimo? (y/n)
+	< n
+	> # esistono numeri in questo insieme maggiori di 5? (y/n)
+	< n
+	> # 5 appartiene all'insieme? (y/n)
+	< y
+	> quindi 5 è un massimo, sei d'accordo? (y/n)
+	< y
+	> # bene! proviamo con un altro esempio
+	> # {x in R | x^3 >= 27}
+	> # ha minimo? (y/n)
+	< y
+	> # determinalo:
+	< 3
+	> # ha massimo? (y/n)
+	< n
+	> # bene! vuoi procedere con un altro esercizio o fermarti? (next/stop)
+	< stop
+	> # alla prossima!
+</details>
+
+4. Un numero k $\in$ X (dove X è un insieme totalmente ordinato) è un **maggiorante** di Y $\subseteq$ X se k >= x per ogni x \in Y.
+5. L'**estremo superiore (estremo inferiore)**  di Y è il minimo (massimo) dei maggioranti (minoranti).
+<details><summary><strong>Esercizio: </strong></summary>
+
+	> # Sia Y = {x in R | -27 < x^3 <= 64}
+	> # Y ha minimo? (y/n)
+	< n
+	> # Y ha massimo? (y/n)
+	< y
+	> # determinalo:
+	< 4
+	> # Y ha (almeno) un minorante?
+	< y
+	> # determinalo
+	< -3
+	> # Y ha (almeno) un maggiorante?
+	< y
+	> # determinalo:
+	< 67
+	> # determina l'estremo inferiore di Y:
+	< -3
+	> # determina l'estremo superiore di Y:
+	< 5
+	> # vedi, basta prendere 4.999999 che è minore di 5 e non è in Y... 5 non può essere estremo superiore, riprova:
+	< 4
+	> # perfetto! nota infatti che se esiste un massimo, esso coincide con il sup!
+	> # vuoi procedere con un altro esercizio o fermarti? (next/stop)
+	< stop
+	> # ciao, alla prossima!
+</details>
+
+6. Ogni insieme Y $\subset$ X non vuoto e limitato superiormente possiede estremo superiore.
+7. L'insieme **R** dei numeri reali è un campo ordinato con la proprietà dell'estremo superiore vista al punto precedente.
 
 ## ARCHIMEDE
 #### Principio:
@@ -76,10 +189,10 @@ usare il fatto che per Archimede preso a piacere x > 0 esiste un numero n natura
 
 ## DENSITA` DI Q IN R
 #### Enunciato (prima forma):
-Siano x,y due numeri reali, x < y ; esiste q \in **Q** tale che  x < q < y. Ovvero **Q** è denso in **R**.
+Siano x,y due numeri reali, x < y ; esiste q $\in$ **Q** tale che  x < q < y. Ovvero **Q** è denso in **R**.
 <details><summary><strong>Esercizio - dimostrazione</strong></summary>
 
-    > # dimostra che dati x,y due numeri reali, x < y , esiste q \in Q tale che  x < q < y. Ovvero Q è denso in R.
+    > # dimostra che dati x,y due numeri reali, x < y , esiste q razionale tale che  x < q < y. Ovvero Q è denso in R.
     > # il mio valore per la x è:
     > 3.3
     > # il mio valore per la y è:
@@ -108,7 +221,9 @@ Siano x,y due numeri reali, x < y ; esiste q \in **Q** tale che  x < q < y. Ovve
 ##### Enunciato (seconda forma):
 Ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
 <details>
+
 **Dimostrazione:**
+
 Prendiamo un numero reale alfa = a_0. a_1 a_2 a_3 a_4..... (esempio: se alfa=3.459 allora a_0=3, a_1=4, a_2=5, a_3=9)
 
 alfa è il limite della successione y_n di numeri razionali (decimali):
