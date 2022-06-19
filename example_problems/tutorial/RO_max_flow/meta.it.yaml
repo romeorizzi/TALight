@@ -163,11 +163,6 @@ Dato un insieme di nodi S che includa s ma non t, l'insieme di quegli archi dire
         example: "{'max_flow_val1':'max_flow_val'}"
         explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
 
-      # sezione con argomenti che modificano i setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
       # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
       color_implementation:
@@ -307,11 +302,6 @@ Dato un insieme di nodi S che includa s ma non t, l'insieme di quegli archi dire
         example2: "-a request_dict=\"{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}\""
         example3: "se lasci il valore di default (il dizionario vuoto {}) allora ottieni risposta a tutte le possibili domande per cui un solutore è già stato implementato. In tale caso i nomi impiegati nel responso dell'oracolo saranno quelli standard, come quelli nell'Esempio 1"
 
-      # sezione con argomenti che modificano i setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
       # sezione con argomenti per determinare i canali di uscita e scegliere i formati dell'output:
       color_implementation:

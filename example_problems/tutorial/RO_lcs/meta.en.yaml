@@ -49,6 +49,14 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
         explain: a common subsequence, in order to be truly considered as a feasible solution, must actually be a subsequence of pref_t[i], the suffix of t of length i, where i is the value assigned to this argument
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "in case the problem solver sends a list of feasible solutions (and also, in our evaluation and feedback, we will consider the list complete even if the true number of solutions is actually higher, as long this limit has been already reached)"
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "in case the problem solver sends a list of optimal solutions (and also, in our evaluation and feedback, we will consider the list complete even if the true number of solutions is actually higher, as long this limit has been already reached)"
 
       # section with additional data provided to the trainee by the problem poser, that this service should take in consideration:
       partial_max_len_on_prefixes_of_len:
@@ -110,11 +118,6 @@ services:
         example2: "-a alias_dict=\"{'opt_sol1': 'opt_sol', 'opt_val1': 'opt_val'}\""
         example3: "In particular, you can leave the default value (the empty dictionary, {}) is you stick to the original keys for all possible objects in the answer/solution, like in Example 1\n"
 
-      # section with arguments that modify the setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, some RO_* problems allow setting `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine), (3) logs on the server that could help monitoring and grading an exam
       color_implementation:
@@ -208,6 +211,14 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
         explain: a common subsequence, in order to be truly considered as a feasible solution, must actually be a subsequence of pref_t[i], the suffix of t of length i, where i is the value assigned to this argument
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: the number of feasible solutions returned by the service, when requested to supply their list, will be capped to this value
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: the number of optimal solutions returned by the service, when requested to supply their list, will be capped to this value
 
       # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
       input_data_assigned:
@@ -226,11 +237,6 @@ services:
         explain3: '[max_len_on_prefixes_of_len] the DP table meant to tell the maximum length of a common subsequence for any (prefix_of_s,prefix_of_t) pair'
         explain4: '[max_len_on_suffixes_from_pos] the DP table meant to tell the maximum length of a common subsequence for any (suffix_of_s,suffix_of_t) pair'
 
-      # section with arguments that modify the setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, some RO_* problems allow setting `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
       color_implementation:

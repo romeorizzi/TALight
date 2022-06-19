@@ -13,6 +13,8 @@ instance_objects_spec = [
     ('UB','list_of_int'),
     ('forced_out','list_of_str'),
     ('forced_in','list_of_str'),
+    ('CAP_FOR_NUM_SOLS',int),
+    ('CAP_FOR_NUM_OPT_SOLS',int),
 ]
 additional_infos_spec=[
     ('partialDPtable','matrix_of_int')
@@ -26,7 +28,7 @@ answer_objects_spec = {
     'DPtable_num_opts':'matrix_of_int',
 }
 answer_objects_implemented = ['opt_sol','opt_val','num_opt_sols','DPtable_opt_val','DPtable_num_opts','list_opt_sols']
-request_setups = {'MAX_NUM_SOLS_IN_LIST':10, 'MAX_NUM_OPT_SOLS_IN_LIST':30}
+limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
 
 def sum_of_costs_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["costs"], instance["labels"]) if ele in ordered_list_of_elems])
@@ -87,6 +89,12 @@ def check_instance_consistency(instance):
             print(f'Errore: il costo/peso complessivo degli elementi obbligati ({cost_forced_in}) già eccede la capacità dello zaino {instance["Knapsack_Capacity"]}')
         else:
             print(f'Errore: il prodotto scalare del vettore `cost` e il vettore dei lower bounds `LB` già eccede la capacità dello zaino {instance["Knapsack_Capacity"]}')
+        exit(0)
+    if instance["CAP_FOR_NUM_SOLS"] > limits["CAP_FOR_NUM_SOLS"]:
+        print('Errore: non è consentito settare `CAP_FOR_NUM_SOLS` a {instance["CAP_FOR_NUM_SOLS"]} > {limits["CAP_FOR_NUM_SOLS"]}"]}')
+        exit(0)
+    if instance["CAP_FOR_NUM_OPT_SOLS"] > limits["CAP_FOR_NUM_OPT_SOLS"]:
+        print('Errore: non è consentito settare `CAP_FOR_NUM_OPT_SOLS` a {instance["CAP_FOR_NUM_OPT_SOLS"]} > {limits["CAP_FOR_NUM_OPT_SOLS"]}"]}')
         exit(0)
 
         
@@ -152,7 +160,7 @@ def solver(input_to_oracle):
         opt_val = 0; num_opt_sols = 1; list_opt_sols = [[]]
     else:
         opt_val=DPtable_opt_val[i][j]; num_opt_sols=DPtable_num_opts[i][j]
-    num_opt_sols_MAX=input_to_oracle["request_setups"]['MAX_NUM_OPT_SOLS_IN_LIST']
+    num_opt_sols_MAX=I['CAP_FOR_NUM_OPT_SOLS']
     #print(f"num_opt_sols_MAX={num_opt_sols_MAX}")
     list_opt_sols = list(yield_opt_sols_list(i,j,promise=opt_val,num_opt_sols_MAX=num_opt_sols_MAX))
     opt_sol = list_opt_sols[0]

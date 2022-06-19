@@ -141,11 +141,6 @@ services:
         default: "{}"
         explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
 
-      # sezione con argomenti che modificano i setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
       # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
       color_implementation:
@@ -233,6 +228,13 @@ services:
         default: (1,2,5)
         explain: "per consegne che richiedano di focalizzare l'attenzione su un singolo arco/vincolo si specifichi l'arco in `arcs`+`arcs_added`"
 
+      # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
+        explain: "Vi sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) è più indicata quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (la stringa vuota) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+
       # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare ad ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
       request_dict:
         regex: ^(.*)$
@@ -255,17 +257,12 @@ services:
         explain15: "[critical_arcs_to] the DP table that for each activity/node v gives the list of those arcs/constraints in every plan that executes v at its earliest time possible. For example, w.r.t. the usual reference, `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,2),(2,3)]}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,3)]}\"."
         explain16: "[sensible_to_focus_arc] the DP table that for each activity/node v tells whether the focus arc is among the critical arcs for v. For example, w.r.t. the usual reference, and assuming `focus_arc`=(1,2), then `sensible_to_focus_arc` = \"{'1':False,'2':True,'3':True}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `sensible_to_focus_arc` = \"{'1':False,'2':True,'3':False}\"."
 
-      # sezione con argomenti che modificano i setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
     # sezione con argomenti per determinare i canali di uscita e scegliere i formati dell'output:
-    color_implementation:
+      color_implementation:
         regex: ^(ANSI|html|None)$
         default: ANSI
-    as_yaml:
+      as_yaml:
         regex: ^(0|1)$
         default: 0
       recall_data_assigned:

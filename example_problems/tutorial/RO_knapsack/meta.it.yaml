@@ -43,21 +43,31 @@ services:
         regex: ^(.*)$
         default: "[]"
         explain: la soluzione è tenuta ad includere questi oggetti
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "se il problem solver invia una lista di soluzioni ammissibili, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque conpleta se raggiunge questa soglia)"
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "se il problem solver invia una lista di soluzioni otime, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque conpleta se raggiunge questa soglia)"
 
       # sezione con informazioni aggiuntive fornite al trainee dal problem poser e che il presente servizio deve prendere in considerazione:
       partialDPtable:
         regex: ^(.*)$
         default: "[]"
         explain: "una tabella di programmazione dinamica solo parzialmente riempita (gli elementi nascosti sono stati sovrascritti da dei -1)."
-        example1: "[ [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 2] ]  -se con gli argomenti che specificano l'istanza posta al trainee tutti settati come da Esempio 1 (ovvero lasciati al loro valore di default), e se si intende la tabella che, per ogni prefisso della lista degli oggetti e per ogni capacità dello zaino nell'intervallo [0,Knapsack_Capacity], rivela il NUMERO DI SOLUZIONI OTTIME"
-        example2: "[ [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 1], [ 1, 1, 1, 1, 1] ]  -se con gli argomenti che specificano l'istanza posta al trainee tutti settati come da Esempio 2, e se si intende la tabella che, per ogni prefisso della lista degli oggetti e per ogni capacità dello zaino nell'intervallo [0,Knapsack_Capacity], rivela il NUMERO DI SOLUZIONI OTTIME"
-        example3: "[ [ 0, 0, 0, 0, 0], [ 0, 0, 13, 13, 13], [ 0, 0, 13, 17, 17], [ 0, 0, 13, 17, 30] ]  -se con gli argomenti che specificano l'istanza posta al trainee come da Esempio 1 o 2, e se si intende la tabella che, per ogni prefisso della lista degli oggetti e per ogni capacità dello zaino nell'intervallo [0,Knapsack_Capacity], rivela il VALORE di una soluzione ottima"
+        example1: "[ [ 1, 1, 1, -1, -1], [ 1, 1, 1, -1, -1], [ 1, 1, -1, -1, -1], [ -1, -1, -1, -1, 2] ]  -se con gli argomenti che specificano l'istanza posta al trainee tutti settati come da Esempio 1 (ovvero lasciati al loro valore di default), e se si intende la tabella che, per ogni prefisso della lista degli oggetti e per ogni capacità dello zaino nell'intervallo [0,Knapsack_Capacity], rivela il NUMERO DI SOLUZIONI OTTIME, questa impostazione offre un modo naturale e corretto per sviluppare tale caso d'esempio; assumeremo questo come il nostro Caso d'Esempio 1. Nota: il valore di default di questo argomento (lista vuota) viene interpretato dal servizio come l'informazione che nessuna tabella precompilata è stata fornita al problem solver; è quindi diverso che dare una tabella tutta di -1 dato che non si produrrà alcun riscontro sulla compatibilità della risposta ricevuta con quanto già presente nella consegna assegnata allo studente all'esame"
+        example2: "[ [ 1, 1, 1, -1, -1], [ 1, 1, 1, -1, -1], [ 1, 1, -1, -1, -1], [ -1, -1, -1, -1, 1] ]  -questa impostazione offre un modo naturale e corretto per sviluppare il nostro Caso d'Esempio 2, se si intende la tabella che, per ogni prefisso della lista degli oggetti e per ogni capacità dello zaino nell'intervallo [0,Knapsack_Capacity], rivela il NUMERO DI SOLUZIONI OTTIME"
+        example3: "[ [ 0, 0, 0, 0, 0], [ 0, 0, -1, 13, -1], [ 0, 0, -1, -1, 17], [ 0, 0, 13, 17, -1] ]  -questa impostazione offre un modo corretto alternativo (e anche più classico) per affiancare i dati di istanza posta al trainee come da Esempio 1 (o anche come da Esempio 2), se si intende la tabella che, per ogni prefisso della lista degli oggetti e per ogni capacità dello zaino nell'intervallo [0,Knapsack_Capacity], rivela il VALORE di una soluzione ottima. Come nostro Caso d'Esempio 3 assumeremo questa tabella impiegata a corredo dei dati di isanza come da Esempio 1."
 
-      # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
+      # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a input_data_assigned=\"{'labels':['A','B','C','D','E']],'costs':[2,3,4,5,6],'vals':[13,17,19,30,101], 'Knapsack_Capacity':30}\"  per introdurre il Caso d'Esempio 1; per il Caso d'Esempio 2 basta mettere un 25 al posto del 30"
+        example1: "-a input_data_assigned=\"{'labels':['A','B','C','D','E']],'costs':[2,3,4,5,6],'vals':[13,17,19,30,101], , 'Knapsack_Capacity':30}, 'partialDPtable':[ [ 1, 1, 1, -1, -1], [ 1, 1, 1, -1, -1], [ 1, 1, -1, -1, -1], [ -1, -1, -1, -1, 2] ]\" offre un modo alternativo per immettere il Caso d'Esempio 1"
+        example2: "-a input_data_assigned=\"{'labels':['A','B','C','D','E']],'costs':[2,3,4,5,6],'vals':[13,17,19,25,101], 'Knapsack_Capacity':30}, 'partialDPtable':[ [ 0, 0, 0, 0, 0], [ 0, 0, -1, 13, -1], [ 0, 0, -1, -1, 17], [ 0, 0, 13, 17, -1] ]\" offre un modo alternativo per immettere il Caso d'Esempio 2"
+        example3: "-a input_data_assigned=\"{'labels':['A','B','C','D','E']],'costs':[2,3,4,5,6],'vals':[13,17,19,30,101], , 'Knapsack_Capacity':30}, 'partialDPtable':[ [ 0, 0, 0, 0, 0], [ 0, 0, -1, 13, -1], [ 0, 0, -1, -1, 17], [ 0, 0, 13, 17, -1] ]\" offre un modo alternativo per immettere il Caso d'Esempio 3"
         explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
@@ -107,12 +117,6 @@ services:
         example: "{'opt_val1':'opt_val','opt_sol1':'opt_sol'}"
         default: "{}"
         explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
-
-      # sezione con argomenti che modificano i setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
       # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
       color_implementation:
@@ -200,6 +204,16 @@ services:
         regex: ^(.*)$
         default: "[]"
         explain: la soluzione è tenuta ad includere questi oggetti
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: il numero di soluzioni ammissibili ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: il numero di soluzioni ottime ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+
+      # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
@@ -220,12 +234,6 @@ services:
         example1: "-a request_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
         example2: "-a request_dict=\"{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}\""
         example3: "se lasci il valore di default (il dizionario vuoto {}) allora ottieni risposta a tutte le possibili domande per cui un solutore è già stato implementato. In tale caso i nomi impiegati nel responso dell'oracolo saranno quelli standard, come quelli nell'Esempio 1"
-
-      # sezione con argomenti che modificano i setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
       # sezione con argomenti per determinare i canali di uscita e scegliere i formati dell'output:
       color_implementation:

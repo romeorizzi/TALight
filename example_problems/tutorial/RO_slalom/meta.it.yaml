@@ -21,6 +21,14 @@ services:
         explain: "per ogni nodo viene specificato il padre"
         nota1: "per ogni nodo i, dad[i] < i"
         nota2: "lo 0 ad inizio lista indica che il nodo 1 non ha padre, essendo stato eletto a radice"
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "se il problem solver invia una lista di soluzioni ammissibili, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque conpleta se raggiunge questa soglia)"
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "se il problem solver invia una lista di soluzioni otime, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque conpleta se raggiunge questa soglia)"
 
       # sezione con informazioni aggiuntive fornite al trainee dal problem poser e che il presente servizio deve prendere in considerazione:
       partial_forced_in:
@@ -185,6 +193,16 @@ services:
         explain: "per ogni nodo viene specificato il padre"
         nota1: "per ogni nodo i, dad[i] < i"
         nota2: "lo 0 ad inizio lista indica che il nodo 1 non ha padre, essendo stato eletto a radice"
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: il numero di soluzioni ammissibili ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: il numero di soluzioni ottime ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+
+      # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"

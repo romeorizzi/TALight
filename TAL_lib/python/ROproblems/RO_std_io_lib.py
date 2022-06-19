@@ -18,9 +18,9 @@ def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
             
 def dict_of_instance(instance_objects,args_list,ENV):
     if len(ENV["input_data_assigned"]) == 0:
-        #print("CASE: the instance objects have been passed one by one:
+        #print('CASE: the instance objects have been passed one by one', file=stderr)
         return {obj_name:ENV[obj_name] for obj_name,obj_type in instance_objects}
-    #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable"):
+    #print('CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable', file=stderr)
     input_data_assigned = {}
     for obj_name,obj_type in instance_objects:
         #print(f"obj_name={obj_name}, obj_type={obj_type}", file=stderr)
@@ -30,7 +30,9 @@ def dict_of_instance(instance_objects,args_list,ENV):
         elif obj_type == str:
             obj_val = ""
         elif obj_type in [bool, int]:
-            obj_val = 0
+            print(f"Error: the service argument {obj_name} has not been set")
+            print(f"Error: the service argument {obj_name} has not been set", file=stderr)
+            exit(0)
         elif obj_type[:len('matrix_of_')] == 'matrix_of_' or obj_type[:len('list_of_')] == 'list_of_':
             obj_val = []
         input_data_assigned[obj_name] = enforce_type_of_yaml_var(obj_val,obj_type, varname=obj_name)

@@ -31,6 +31,14 @@ services:
         regex: ^(.*)$
         default: (3,'C')
         explain: "in order for a path to be feasible it must also visit cell (3,'C'). Row 1 is the one at the top, column 'A' is the leftmost one."
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "se il problem solver invia una lista di soluzioni ammissibili, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque conpleta se raggiunge questa soglia)"
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "se il problem solver invia una lista di soluzioni otime, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque conpleta se raggiunge questa soglia)"
 
       # sezione con informazioni aggiuntive fornite al trainee dal problem poser e che il presente servizio deve prendere in considerazione:
       partialDP_to:
@@ -192,6 +200,16 @@ services:
         regex: ^(.*)$
         default: "[]"
         explain: la soluzione è tenuta ad includere questi oggetti
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: il numero di soluzioni ammissibili ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: il numero di soluzioni ottime ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+
+      # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"

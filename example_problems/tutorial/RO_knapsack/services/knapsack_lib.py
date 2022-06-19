@@ -13,6 +13,8 @@ instance_objects_spec = [
     ('UB','list_of_int'),
     ('forced_out','list_of_str'),
     ('forced_in','list_of_str'),
+    ('CAP_FOR_NUM_SOLS',int),
+    ('CAP_FOR_NUM_OPT_SOLS',int),
 ]
 additional_infos_spec=[
     ('partialDPtable','matrix_of_int')
@@ -26,7 +28,7 @@ answer_objects_spec = {
     'DPtable_num_opts':'matrix_of_int',
 }
 answer_objects_implemented = ['opt_sol','opt_val','num_opt_sols','DPtable_opt_val','DPtable_num_opts','list_opt_sols']
-request_setups = {'MAX_NUM_SOLS_IN_LIST':10, 'MAX_NUM_OPT_SOLS_IN_LIST':30}
+limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
 
 def sum_of_costs_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["costs"], instance["labels"]) if ele in ordered_list_of_elems])
@@ -88,7 +90,12 @@ def check_instance_consistency(instance):
         else:
             print(f'Errore: il prodotto scalare del vettore `cost` e il vettore dei lower bounds `LB` già eccede la capacità dello zaino {instance["Knapsack_Capacity"]}')
         exit(0)
-
+    if instance["CAP_FOR_NUM_SOLS"] > limits["CAP_FOR_NUM_SOLS"]:
+        print('Errore: non è consentito settare `CAP_FOR_NUM_SOLS` a {instance["CAP_FOR_NUM_SOLS"]} > {limits["CAP_FOR_NUM_SOLS"]}"]}')
+        exit(0)
+    if instance["CAP_FOR_NUM_OPT_SOLS"] > limits["CAP_FOR_NUM_OPT_SOLS"]:
+        print('Errore: non è consentito settare `CAP_FOR_NUM_OPT_SOLS` a {instance["CAP_FOR_NUM_OPT_SOLS"]} > {limits["CAP_FOR_NUM_OPT_SOLS"]}"]}')
+        exit(0)
         
 def solver(input_to_oracle):
     #print(f"input_to_oracle={input_to_oracle}",file=stderr)
@@ -137,7 +144,7 @@ def solver(input_to_oracle):
         obj_label = I["labels"][i-1]
         obj_cost = I["costs"][i-1]; obj_val = I["vals"][i-1]
         obj_LB = LB[i-1]; obj_UB = UB[i-1]
-        #print(f'\ni={i}\nj={j}\npromise={promise}\nobj_label={obj_label}\nobj_cost={obj_cost}\nobj_val={obj_val}\nopt_sol={opt_sol}', file=stderr)
+        #print(f'\ni={i}\nj={j}\npromise={promise}\nnum_opt_sols_MAX={num_opt_sols_MAX}\nobj_label={obj_label}\nobj_cost={obj_cost}\nobj_val={obj_val}\nobj_LB={obj_LB}\nobj_UB={obj_UB}', file=stderr)
         for obj_times in range(obj_UB+1):
             if obj_times*obj_cost > j:
                 break
@@ -152,8 +159,7 @@ def solver(input_to_oracle):
         opt_val = 0; num_opt_sols = 1; list_opt_sols = [[]]
     else:
         opt_val=DPtable_opt_val[i][j]; num_opt_sols=DPtable_num_opts[i][j]
-    num_opt_sols_MAX=input_to_oracle["request_setups"]['MAX_NUM_OPT_SOLS_IN_LIST']
-    #print(f"num_opt_sols_MAX={num_opt_sols_MAX}")
+    num_opt_sols_MAX=I['CAP_FOR_NUM_OPT_SOLS']
     list_opt_sols = list(yield_opt_sols_list(i,j,promise=opt_val,num_opt_sols_MAX=num_opt_sols_MAX))
     opt_sol = list_opt_sols[0]
     #print(f"opt_sol={opt_sol}\nopt_val={opt_val}\nnum_opt_sols={num_opt_sols}\nDPtable_opt_val={DPtable_opt_val}\nDPtable_num_opts={DPtable_num_opts}\nlist_opt_sols={list_opt_sols}", file=stderr)
@@ -164,8 +170,8 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:Dict):
-        super().__init__(SEF,input_data_assigned, long_answer_dict, request_setups)
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):
+        super().__init__(SEF,input_data_assigned, long_answer_dict)
 
     def verify_format(self, SEF):
         if not super().verify_format(SEF):
