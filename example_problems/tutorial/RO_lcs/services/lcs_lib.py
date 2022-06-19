@@ -190,7 +190,7 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:str):
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:Dict):
         super().__init__(SEF,input_data_assigned, long_answer_dict, request_setups)
 
     def verify_format(self, SEF):
