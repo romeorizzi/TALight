@@ -1,6 +1,6 @@
 ## NUMERI REALI
-1. Ogni insieme finito e non vuoto di numeri reali ammette sempre minimo e massimo. 
-<details><summary><strong>Esercizio: </strong></summary>
+**1.** Ogni insieme finito e non vuoto di numeri reali ammette sempre minimo e massimo. 
+<details><summary><strong>Esercizio - dimostrazione: </strong></summary>
 
 	> # proviamo a vedere se in un insieme finito e non vuoto di numeri reali riusciamo a trovare sempre un minimo e un massimo.
     > # dato l'insieme costituito da:
@@ -23,7 +23,7 @@
 	< .......
 </details>
 
-2. Se un insieme non è finito potrebbe non ammettere massimo/minimo.
+**2.** Se un insieme non è finito potrebbe non ammettere massimo/minimo.
 <details><summary><strong>Esercizio: </strong></summary>
 
 	> # Se un insieme non è finito potrebbe non ammettere massimo/minimo.
@@ -52,7 +52,7 @@
 	> # alla prossima!
 </details>
 
-3. Un insieme limitato (superiormente/inferiormente/entrambi) non sempre ammette massimo/minimo.
+**3.** Un insieme limitato (superiormente/inferiormente/entrambi) non sempre ammette massimo/minimo.
 <details><summary><strong>Esercizio: </strong></summary>
 
 	> # Un insieme limitato non sempre ammette massimo/minimo. 
@@ -82,8 +82,9 @@
 	> # alla prossima!
 </details>
 
-4. Un numero k $\in$ X (dove X è un insieme totalmente ordinato) è un **maggiorante** di Y $\subseteq$ X se k >= x per ogni x \in Y.
-5. L'**estremo superiore (estremo inferiore)**  di Y è il minimo (massimo) dei maggioranti (minoranti).
+**4.** Un numero k $\in$ X (dove X è un insieme totalmente ordinato) è un **maggiorante** di Y $\subseteq$ X se k >= x per ogni x \in Y.
+
+**5.** L'**estremo superiore (estremo inferiore)**  di Y è il minimo (massimo) dei maggioranti (minoranti).
 <details><summary><strong>Esercizio: </strong></summary>
 
 	> # Sia Y = {x in R | -27 < x^3 <= 64}
@@ -113,14 +114,15 @@
 	> # ciao, alla prossima!
 </details>
 
-6. Ogni insieme Y $\subset$ X non vuoto e limitato superiormente possiede estremo superiore.
-7. L'insieme **R** dei numeri reali è un campo ordinato con la proprietà dell'estremo superiore vista al punto precedente.
+**6.** Ogni insieme Y $\subset$ X non vuoto e limitato superiormente possiede estremo superiore.
+
+**7.** L'insieme **R** dei numeri reali è un campo ordinato con la proprietà dell'estremo superiore vista al punto precedente.
 
 ## ARCHIMEDE
 #### Principio:
-Per ogni numero reale x > 0 esiste un numero naturale _n_ tale che 1/_n_ < x.
+Per ogni $x \in$ **R**, $x > 0$, esiste $n \in$ **N** tale che $\frac{1}{n} < x$.
 
-(Dati due numeri reali a>0, b>0, esiste un numero naturale _n_ tale che _n_ a > b (ovvero a > b/_n_).)
+(Dati due numeri reali a>0, b>0, esiste $ n \in$ **N** tale che _n_*a > b (ovvero a > b/_n_).)
 
 CORRELAZIONI:
 * Una successione di termini positivi convergente deve avere un limite strettamente positivo?
@@ -130,61 +132,76 @@ usare il fatto che per Archimede preso a piacere x > 0 esiste un numero n natura
 
 <details><summary><strong>Esercizio</strong> ("dimostrazione" del principio di Archimede immediata... giocando solo con x e n...)</summary>
 
+_se il ragazzo risponde di **no**:_
+
     > # è vero che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
     < n
     > # ah no? allora dammi un valore per x > 0:
     < 26.58
-    > # vedi, per n= 0.038 vale 1/n= 26.31 e 26.31 < x = 26.58.
+    > # vedi, per n= 0.038 vale 1/n= 26.31 e 26.31 < 26.58=x.
     > # mi credi ora? (y/n)
-    > n
+    < n
     > # ah no? allora dammi un valore per x > 0:
     < 0.0034
-    > # vedi, per n= 295 vale 1/n= 0.00338 e 0.00338 < x = 0.0034.
+    > # vedi, per n= 295 vale 1/n= 0.00338 e 0.00338 < 0.0034=x.
     > # mi credi ora? (y/n)
     > y
     > Bene, alla prossima!
+
+_se il ragazzo ripsonde di **sì**:_
+
+    > # è vero che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
+    < y
+    > # bene! allora prova a convincermi
+	> # la mia proposta per x è:
+	> 3*pi
+	> # dammi una n tale che 1/n < x:
+	< 0.09
+    > # vedi, per n=0.09 vale 1/n= 11.111 e 11.111 > 9.424777961=x, riprova:
+	> # dammi una n tale che 1/n < x:
+    < 0.107
+    > # per n=0.107 vale 1/n=9.34579 e 9.34579 < 9.424777961=x
+	> # mi stai iniziando a convincere, voglio riprovare
+	> # la mia proposta per x è:
+	> sqrt(2)*1/3
+	> # dammi una n tale che 1/n < x:
+	< 2.15
+    > # per n=2.15 vale 1/n=0.46512 e 0.46512 < 0.4714=x
+	> # ok mi hai convinto! ottimo lavoro!
 </details>
 
-<details><summary><strong>Curiosità - un piccolo salto verso i limiti di successioni</strong></summary>
+<details><summary><strong>Esercizio/curiosità - un piccolo salto verso i limiti di successioni</strong></summary>
 
-    > # Il limite di una successione di termini positivi convergente non ha sempre un limite strettamente positivo
+    > # Il limite di una successione convergente di termini positivi non è sempre strettamente positivo
     > # sei d'accordo con me? (y/n)
     < n
     > # Allora consideriamo la successione 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
     < y
-    > # ma non converge ad un numero strettamente positivo... converge a 0!
-    > # ti ho convinto? (y/n)
-    < n
-    > # Stabilisci un numero reale x > 0:
-    < 0.3
-    > # se ti propongo n=4, si ha che 1/n=1/4=0.25 < 0.3 = x
-    > # proponimi un altro valore per x > 0:
-    < 0.2
-    > # per n=6, si ha che 1/n = 1/6 = 0.166666 < 0.2 = x
-    > # vedi, per qualsiasi x tu scelga, troverò sempre una n tale che 1/n < x e più le x sono piccole, più le n sono grandi
-    > # ci credi ora che per n -> infinito il la successione 1/n converge a 0? (y/n)
-    < y
-    > # Molto bene!
-</details>
-
-<details><summary><strong>Esercizio</strong> (come sopra ma usando la definizione standard di limite)</summary>
-
-    > # Non è vero che una successione {a_n} di termini positivi convergente ha sempre un limite strettamente positivo
-    > # sei d'accordo con me? (y/n)
-    < n
-    > # Allora consideriamo la successione a_n = 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
-    < y
     > # Ma non converge ad un numero strettamente positivo... converge a 0!
+    > # sei d'accordo con me? (y/n)
+_se risponde no_
+
+	< n
     > # Stabilisci un numero reale epsilon > 0:
     < 0.4
     > # Ecco il mio N:
     > # 2.5
     > # Proponi una tua x > 2.5:
     < 2.6
-    > # vedi: a_n(2.6) =0.38, e 0.38 \in [-0.4 , 0.4]=[l-e,l+e], quindi non sei riuscito a confutare la mia affermazione.
+    > # vedi: 1/2.6 =0.38, e 0.38 \in [-0.4 , 0.4]=[l-e,l+e], quindi non sei riuscito a confutare la mia affermazione.
     > # Sei convinto ora che la successione converga a 0? (y/n)
     > y
     > # Bene, alla prossima!
+_se risponde sì_
+
+	< y
+	> # bene, allora non avrai problemi a dimostrarmelo!
+	> # il mio valore per epsilon è:
+	> 0.15
+	> # proponi il tuo N:
+	< 6.7
+    > # Molto bene! Vale |1/n - 0| < 0.15 per tutti i valori di n > 6.7 che ho utilizzato per verificare la tua proposta.
+	> # Alla prossima!
 </details>
 
 ## DENSITA` DI Q IN R
@@ -197,9 +214,9 @@ Siano x,y due numeri reali, x < y ; esiste q $\in$ **Q** tale che  x < q < y. Ov
     > 3.3
     > # il mio valore per la y è:
 	> 3.4
-	> # scrivi un numero naturale n che soddisfi il principio di Archimede con (y-x):
+	> # scrivi un numero naturale n che soddisfi il principio di Archimede (con argomento y-x):
 	< 8
-	> # no, 1/8 = 0.125 e 0.125 > y-x=0.1, riprova!
+	> # no, 1/8 = 0.125 e 0.125 > 0.1=y-x, riprova!
 	< 11
 	> # bene, nota ora che 11x vale
 	> 36.3
@@ -210,12 +227,12 @@ Siano x,y due numeri reali, x < y ; esiste q $\in$ **Q** tale che  x < q < y. Ov
 	> # utilizzando questo intero e la n che mi hai proposto, riesci a trovare un numero razionale (della forma a/b) compreso tra 3.3 e 3.4? scrivilo:
 	< 37/11
 	> # Ben fatto! Abbiamo trovato la q che cercavamo, ovvero 37/11 = 3.36...
-	> # Riesci ora a scrivere un algoritmo che dati x e y trovi q?
+	> # vuoi fare un'altra partita o ti senti pronto a passare al livello successivo? (another_match/next_level)
+	< next_level
+	> # Riusciresti ora a scrivere un algoritmo che dati x e y trovi q?
 	< ..............
 	
 </details>
-
-
 
 
 ##### Enunciato (seconda forma):
