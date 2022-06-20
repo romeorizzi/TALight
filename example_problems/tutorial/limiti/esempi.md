@@ -124,15 +124,9 @@ Per ogni $x \in$ **R**, $x > 0$, esiste $n \in$ **N** tale che $\frac{1}{n} < x$
 
 (Dati due numeri reali a>0, b>0, esiste $ n \in$ **N** tale che _n_*a > b (ovvero a > b/_n_).)
 
-CORRELAZIONI:
-* Una successione di termini positivi convergente deve avere un limite strettamente positivo?
-No, basta prendere la successione 1/n costituita di termini positivi ma convergente a 0
-* Dimostrare che la successione 1/n, n=1,2,3,... tende a zero:
-usare il fatto che per Archimede preso a piacere x > 0 esiste un numero n naturale tale che n * x > 1. Dunque, 1/n < x.
-
 <details><summary><strong>Esercizio</strong> ("dimostrazione" del principio di Archimede immediata... giocando solo con x e n...)</summary>
 
-_se il ragazzo risponde di **no**:_
+_1) se il ragazzo risponde di **no**:_
 
     > # è vero che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
     < n
@@ -146,9 +140,11 @@ _se il ragazzo risponde di **no**:_
     > # vedi, per n= 295 vale 1/n= 0.00338 e 0.00338 < 0.0034=x.
     > # mi credi ora? (y/n)
     > y
-    > Bene, alla prossima!
+    > Bene! Vuoi provare a convincermi tu ora? (y/n)
+	< y
+	da ora ci si ricollega al caso 2) qui sotto ...
 
-_se il ragazzo ripsonde di **sì**:_
+_2) se il ragazzo ripsonde di **sì**:_
 
     > # è vero che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
     < y
@@ -168,7 +164,18 @@ _se il ragazzo ripsonde di **sì**:_
 	< 2.15
     > # per n=2.15 vale 1/n=0.46512 e 0.46512 < 0.4714=x
 	> # ok mi hai convinto! ottimo lavoro!
+	> # te la senti di passare al livello successivo o preferisci fermarti qui? (next_level/stop)
+	< next_level
+	> # scrivi un algoritmo che calcoli per te il valore della n:
+	< ......
 </details>
+
+		
+CORRELAZIONI:
+* Una successione di termini positivi convergente deve avere un limite strettamente positivo?
+No, basta prendere la successione 1/n costituita di termini positivi ma convergente a 0
+* Dimostrare che la successione 1/n, n=1,2,3,... tende a zero:
+usare il fatto che per Archimede preso a piacere x > 0 esiste un numero n naturale tale che n * x > 1. Dunque, 1/n < x.
 
 <details><summary><strong>Esercizio/curiosità - un piccolo salto verso i limiti di successioni</strong></summary>
 
