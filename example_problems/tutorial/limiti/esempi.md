@@ -1,50 +1,41 @@
 ## NUMERI REALI
-**1.** Ogni insieme finito e non vuoto di numeri reali ammette sempre minimo e massimo. 
+**1.** Ogni insieme finito e non vuoto di numeri reali ammette sempre un massimo. 
 <details><summary><strong>Esercizio - dimostrazione: </strong></summary>
 
-	> # proviamo a vedere se in un insieme finito e non vuoto di numeri reali riusciamo a trovare sempre un minimo e un massimo.
+	> # proviamo a vedere se in un insieme finito e non vuoto di numeri reali riusciamo a trovare sempre un massimo.
     > # dato l'insieme costituito da:
 	> 0, 6.3, 5/4, -14.31, pi, 28.7333, sqrt(2), -9*pi
-	> # determina il minimo:
-	< -9*pi
     > # determina il massimo:
 	< 28.7333
-	> # bene! vuoi fare un'altra partita o ti senti pronto a passare al livello successivo? (another_match/next_level)
+	> # bene! vuoi fare un'altra partita o ti senti pronto a passare ad un livello successivo? (another_match/next_level)
 	< another_match
     > # dato l'insieme costituito da:
 	> 57/13, e, -sqrt(17), pi*0.65, -sin(30)*7, sqrt(5)
-	> # determina il minimo:
-	< -sqrt(17)
     > # determina il massimo:
 	< 57/13
-	> # bene! vuoi fare un'altra partita o ti senti pronto a passare al livello successivo? (another_match/next_level)
+	> # bene! vuoi fare un'altra partita o ti senti pronto a passare ad un livello successivo? (another_match/next_level)
 	< next_level
-    > # ok! riusciresti a scrivere un algoritmo ricorsivo che calcoli per te il massimo e il minimo? 
+    > # ok! ecco una proposta per il livello successivo: 
+	> # riusciresti a scrivere un algoritmo ricorsivo che calcoli per te il massimo di un insieme finito? 
 	< .......
 </details>
 
-**2.** Se un insieme non è finito potrebbe non ammettere massimo/minimo.
+**2.** Se un insieme non è finito potrebbe non ammettere massimo.
 <details><summary><strong>Esercizio: </strong></summary>
 
-	> # Se un insieme non è finito potrebbe non ammettere massimo/minimo.
+	> # Se un insieme non è finito potrebbe non ammettere massimo.
 	> # {x in R | 8 <= x^3 <= 125}
-	> # l'insieme ha minimo? (y/n)
-	< y
-	> # determinalo:
-	< 2
 	> # l'insieme ha massimo? (y/n)
 	< y
-	> # determinalo:
+	> # sì? allora dammelo:
 	< 5
 	> # bene! proviamo con un altro esempio
-	> # {x in R | x > 15/2}
-	> # l'insieme ha minimo? (y/n)
+	> # {x in R | x < 15/2}
+	> # l'insieme ha massimo? (y/n)
 	< y
-	> # determinalo:
+	> # sì? allora dammelo:
 	< 15/2
-	> # ma 15/2 non appartiene all'insieme... quindi non è un minimo!
-	> # l'insieme ha minimo? (y/n)
-	< n
+	> # guarda che 15/2 non appartiene all'insieme... quindi non è un massimo!
 	> # l'insieme ha massimo? (y/n)
 	< n
 	> # bene! vuoi procedere con un altro esercizio o fermarti? (next/stop)
@@ -57,10 +48,6 @@
 
 	> # Un insieme limitato non sempre ammette massimo/minimo. 
 	> # {x in R | 8 <= x^3 <= 125}
-	> # ha minimo? (y/n)
-	< y
-	> # determinalo:
-	< 2
 	> # ha massimo? (y/n)
 	< n
 	> # esistono numeri in questo insieme maggiori di 5? (y/n)
@@ -71,10 +58,6 @@
 	< y
 	> # bene! proviamo con un altro esempio
 	> # {x in R | x^3 >= 27}
-	> # ha minimo? (y/n)
-	< y
-	> # determinalo:
-	< 3
 	> # ha massimo? (y/n)
 	< n
 	> # bene! vuoi procedere con un altro esercizio o fermarti? (next/stop)
@@ -84,26 +67,18 @@
 
 **4.** Un numero k $\in$ X (dove X è un insieme totalmente ordinato) è un **maggiorante** di Y $\subseteq$ X se k >= x per ogni x \in Y.
 
-**5.** L'**estremo superiore (estremo inferiore)**  di Y è il minimo (massimo) dei maggioranti (minoranti).
+**5.** L'**estremo superiore**  di Y è il minimo dei maggioranti.
 <details><summary><strong>Esercizio: </strong></summary>
 
 	> # Sia Y = {x in R | -27 < x^3 <= 64}
-	> # Y ha minimo? (y/n)
-	< n
 	> # Y ha massimo? (y/n)
 	< y
-	> # determinalo:
+	> # sì? allora dammelo:
 	< 4
-	> # Y ha (almeno) un minorante?
-	< y
-	> # determinalo
-	< -3
 	> # Y ha (almeno) un maggiorante?
 	< y
-	> # determinalo:
+	> # sì? allora dammelo:
 	< 67
-	> # determina l'estremo inferiore di Y:
-	< -3
 	> # determina l'estremo superiore di Y:
 	< 5
 	> # vedi, basta prendere 4.999999 che è minore di 5 e non è in Y... 5 non può essere estremo superiore, riprova:
@@ -122,51 +97,49 @@
 #### Principio:
 Per ogni $x \in$ **R**, $x > 0$, esiste $n \in$ **N** tale che $\frac{1}{n} < x$.
 
-(Dati due numeri reali a>0, b>0, esiste $ n \in$ **N** tale che _n_*a > b (ovvero a > b/_n_).)
-
 <details><summary><strong>Esercizio</strong> ("dimostrazione" del principio di Archimede immediata... giocando solo con x e n...)</summary>
+
+	> #saresti propenso a credere che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
 
 _1) se il ragazzo risponde di **no**:_
 
-    > # è vero che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
     < n
-    > # ah no? allora dammi un valore per x > 0:
-    < 26.58
-    > # vedi, per n= 0.038 vale 1/n= 26.31 e 26.31 < 26.58=x.
-    > # mi credi ora? (y/n)
-    < n
-    > # ah no? allora dammi un valore per x > 0:
+    > # ah no? proviamo! inserisci un qualsiasi valore x > 0:
     < 0.0034
     > # vedi, per n= 295 vale 1/n= 0.00338 e 0.00338 < 0.0034=x.
     > # mi credi ora? (y/n)
+	< n
+    > # ah no? proviamo! inserisci un qualsiasi valore x > 0:
+    < 26.58
+    > # vedi, per n= 1 vale 1/n= 1 e 1 < 26.58=x.
+    > # mi credi ora? (y/n)
     > y
-    > Bene! Vuoi provare a convincermi tu ora? (y/n)
-	< y
-	da ora ci si ricollega al caso 2) qui sotto ...
+    > Bene! Se vuoi provare a convincermi tu ora, invertendo i ruoli, ti consiglio questo esercizio: 
+	> rtal connect limiti ....
 
 _2) se il ragazzo ripsonde di **sì**:_
 
-    > # è vero che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
     < y
     > # bene! allora prova a convincermi
 	> # la mia proposta per x è:
 	> 3*pi
 	> # dammi una n tale che 1/n < x:
 	< 0.09
-    > # vedi, per n=0.09 vale 1/n= 11.111 e 11.111 > 9.424777961=x, riprova:
+    > # vedi, 0.09 non è un numero naturale, riprova:
 	> # dammi una n tale che 1/n < x:
-    < 0.107
-    > # per n=0.107 vale 1/n=9.34579 e 9.34579 < 9.424777961=x
+    < 1
+    > # per n=1 vale 1/n=1 e 1 < 9.424777961=x
 	> # mi stai iniziando a convincere, voglio riprovare
 	> # la mia proposta per x è:
-	> sqrt(2)*1/3
+	> sqrt(2)*1/6
 	> # dammi una n tale che 1/n < x:
-	< 2.15
-    > # per n=2.15 vale 1/n=0.46512 e 0.46512 < 0.4714=x
+	< 5
+    > # per n=5 vale 1/n=0.2 e 0.2 < 0.2357=x
 	> # ok mi hai convinto! ottimo lavoro!
-	> # te la senti di passare al livello successivo o preferisci fermarti qui? (next_level/stop)
+	> # preferisci fermarti qui o ti senti pronto a passare ad un livello successivo? (stop/next_level)
 	< next_level
-	> # scrivi un algoritmo che calcoli per te il valore della n:
+    > # ok! ecco una proposta per il livello successivo: 
+	> # scrivi un algoritmo che, dato x, calcoli per te un valore di n che soddisfi il principio di Archimede:
 	< ......
 </details>
 
