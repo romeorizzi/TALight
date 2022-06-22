@@ -1,7 +1,28 @@
 # backups
 *~
 *.bak
-**/.DS_Store
+
+# LaTex
+*.aux
+*.log
+*.bbl
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.vtc
+*.blg
+
+# archives
+*.zip
+*.tgz
+*.tar.gz
+*.tar
+*.7z
+
+# MacOS X
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 a.out
@@ -12,18 +33,6 @@ __pycache__/
 
 # signatures and cryptography
 *.sig
-
-# archives
-*.zip
-*.tgz
-*.tar.gz
-*.tar
-*.7z
-
-# LaTex
-*.pdf
-*.aux
-*.log
 
 # CMS
 .inode
