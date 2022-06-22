@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
 from sys import argv, exit
 
-import lcs_lib as ll
+import limiti_lib as ll
 
-
-def main(m, n, alphabet, gen_seed, file_full_extension):
+def main(set_cardinality, gen_seed):
     # Automatic cast:
-    m = int(m)
-    n = int(n)
-    alphabet = alphabet
+    set_cardinality = int(set_cardinality)
     gen_seed = int(gen_seed)
 
     # Generate lcs instance
-    instance = ll.instance_randgen_1(m, n, alphabet, gen_seed)
+    instance = ll.instance_randgen(set_cardinality, gen_seed)
 
     # Generate selected output
-    print(ll.instance_to_str(instance, ll.file_extension_to_format_name(file_full_extension)))
+    print(', '.join(instance))
 
 
 if __name__ == "__main__":
     from sys import argv
-    assert len(argv) == 6, 'Miss arguments'
-    main(argv[1], argv[2], argv[3], argv[4], argv[5])
+    assert len(argv) == 4, 'Miss arguments'
+    main(argv[1], argv[2])
     exit(0)
