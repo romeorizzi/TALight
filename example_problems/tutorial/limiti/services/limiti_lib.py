@@ -1,8 +1,54 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from fractions import Fraction
 import numpy as np
 import math
 from sympy import *
+from math import *
+import random
+
+correct = ['Bene!', 'Molto bene!', 'Corretto!', 'Ok!','Ben fatto!']
+wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
+end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
+
+def instance_to_array(input_str):
+    instance_str=input_str.split(", ")
+    return instance_str
+
+def instance_to_number(instance_str):
+    instance = list(map(eval, instance_str))
+    return instance
+
+def instance_randgen(set_cardinality:int,seed:int):
+    assert set_cardinality>0
+    instance_constants=['e','pi']
+    instance_functions=['cos','sin','sqrt']
+    random.seed(seed)
+    instance = []
+    integer=(set_cardinality//2)//2
+    decimal=set_cardinality//2 - integer
+    fraction=(set_cardinality-integer-decimal)//2
+    math_constants=(set_cardinality-integer-decimal-fraction)//2
+    math_functions=set_cardinality-integer-decimal-fraction-math_constants
+    for i in range (integer):
+        random.seed(seed+i)
+        instance.append(str(random.randint(-20,20)))
+    for i in range (decimal):
+        random.seed(seed+i)
+        instance.append(format(random.uniform(-20,20), '.2f'))
+    for i in range (fraction):
+        random.seed(seed+i)
+        instance.append(str(random.randint(-70,70))+'/'+str(random.randint(2,15)))
+    for i in range (math_constants):
+        random.seed(seed+i)
+        instance.append(random.choice(instance_constants)+'*'+str(random.randint(2,5)))
+    for i in range (math_functions):
+        random.seed(seed+i)
+        funct=random.choice(instance_functions)
+        instance.append(funct+'('+(str(random.randint(3,400))if funct=='sqrt' else 'pi'+'*'+str(random.randint(1,11))+'/'+str(random.randint(1,6)))+')')
+    random.shuffle(instance)
+    return instance
+
 
 def alfabeto(variable):
     for word in {'sqrt','log','pow','factorial','exp','cos','sin','tan','acos','asin','atan','pi','e','inf'}:

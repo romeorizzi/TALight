@@ -3,12 +3,8 @@ from sys import stderr
 from typing import Optional, List, Dict, Callable
 from types import SimpleNamespace
 
-import termcolor 
-from ansi2html import Ansi2HTMLConverter
-ansi2html = Ansi2HTMLConverter(inline = True)
-
 class verify_submission_gen:
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:str):
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):
         self.I = SimpleNamespace(**input_data_assigned)
         self.goals = SEF.load(long_answer_dict)
         self.long_answer_dict = long_answer_dict

@@ -31,6 +31,14 @@ services:
         regex: ^(.*)$
         default: (3,'C')
         explain: "in order for a path to be feasible it must also visit cell (3,'C'). Row 1 is the one at the top, column 'A' is the leftmost one."
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "in case the problem solver sends a list of feasible solutions (and also, in our evaluation and feedback, we will consider the list complete even if the true number of solutions is actually higher, as long this limit has been already reached)"
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "in case the problem solver sends a list of optimal solutions (and also, in our evaluation and feedback, we will consider the list complete even if the true number of solutions is actually higher, as long this limit has been already reached)"
 
       # section with additional data provided to the trainee by the problem poser, that this service should take in consideration:
       partialDP_to:
@@ -120,11 +128,6 @@ services:
         explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
         explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
 
-      # section with arguments that modify the setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine), (3) logs on the server that could help monitoring and grading an exam
       color_implementation:
@@ -207,6 +210,22 @@ services:
         regex: ^(.*)$
         default: (3,'C')
         explain: "only the paths that start from cell (3,'C') are feasible. Row 1 is the one at the top, column 'A' is the leftmost one."
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: the number of feasible solutions returned by the service, when requested to supply their list, will be capped to this value
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: the number of optimal solutions returned by the service, when requested to supply their list, will be capped to this value
+
+      # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `costs` or `vals`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
+
 
       # section characterizing the answer requested to the oracle and the ad-hoc naming for the objects comprising it (the standard names can of course be used):
       request_dict:
@@ -225,11 +244,6 @@ services:
         explain10: '[DPtable_num_opt_to] the DP table meant to tell the number of optimal paths from top-left cell to the generic cell'
         explain11: '[DPtable_num_opt_from] the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.'
 
-      # section with arguments that modify the setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "this argument (a string read as yaml) passes a dictionary with the possible customizations of some settings with respect to their default values ​​predefined by the problem. For example, the settings `MAX_NUM_SOLS_IN_LIST` and ` MAX_NUM_OPT_SOLS_IN_LIST` that establish the maximum number of (optimal) solutions to be returned when the list of such objects is requested to oracle"
 
       # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
       color_implementation:

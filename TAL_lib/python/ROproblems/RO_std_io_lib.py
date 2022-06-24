@@ -9,28 +9,30 @@ from multilanguage import enforce_type_of_yaml_var
 
 def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
     if require_pwd and ENV["pwd"] != 'tmppwd':
-        print(f'Password di accesso non corretta (password immessa: `{ENV["pwd"]}`)')
+        print(f'Errore: Password di accesso non corretta (password immessa: `{ENV["pwd"]}`)')
         exit(0)    
     if TOKEN_REQUIRED and ENV.LOG_FILES == None:
-        print("Il servizio è stato chiamato senza access token. Modalità attualmente non consentita.")
+        print("Errore: Il servizio è stato chiamato senza access token. Modalità attualmente non consentita.")
         exit(0)    
 
             
 def dict_of_instance(instance_objects,args_list,ENV):
     if len(ENV["input_data_assigned"]) == 0:
-        #print("CASE: the instance objects have been passed one by one:
+        #print('CASE: the instance objects have been passed one by one', file=stderr)
         return {obj_name:ENV[obj_name] for obj_name,obj_type in instance_objects}
-    #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable"):
+    #print('CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable', file=stderr)
     input_data_assigned = {}
     for obj_name,obj_type in instance_objects:
-        print(f"obj_name={obj_name}, obj_type={obj_type}")
+        #print(f"obj_name={obj_name}, obj_type={obj_type}", file=stderr)
         if obj_name in ENV["input_data_assigned"]:
             obj_val = ENV["input_data_assigned"][obj_name]
-            print(f"TROVATO: obj_name={obj_name}, obj_type={obj_type}")
+            #print(f"TROVATO: obj_name={obj_name}, obj_type={obj_type}", file=stderr)
         elif obj_type == str:
             obj_val = ""
         elif obj_type in [bool, int]:
-            obj_val = 0
+            print(f"Error: the service argument {obj_name} has not been set")
+            print(f"Error: the service argument {obj_name} has not been set", file=stderr)
+            exit(0)
         elif obj_type[:len('matrix_of_')] == 'matrix_of_' or obj_type[:len('list_of_')] == 'list_of_':
             obj_val = []
         input_data_assigned[obj_name] = enforce_type_of_yaml_var(obj_val,obj_type, varname=obj_name)
@@ -68,7 +70,7 @@ def check_and_standardization_of_request_answer_consistency(ENV:dict, answer_obj
         #print("CASE: the instance objects have been passed one by one", file=stderr)
         answer_dict={}; alias_dict={}
         for std_name in implemented:
-            #print(f"type(ENV[{std_name}])={type(ENV[std_name])}, answer_object_type_spec[{std_name}]={answer_object_type_spec[std_name]}, ENV[{std_name}]={ENV[std_name]}")
+            #print(f"type(ENV[{std_name}])={type(ENV[std_name])}, answer_object_type_spec[{std_name}]={answer_object_type_spec[std_name]}, ENV[{std_name}]={ENV[std_name]}", file=stderr)
             type_spec = answer_object_type_spec[std_name]
             if type(type_spec) != str or ( (type_spec[:len('list_of_')] != 'list_of_' or len(ENV[std_name]) != 0) and (type_spec[:len('matrix_of_')] != 'matrix_of_' or len(ENV[std_name]) != 0) ):
                 answer_dict[std_name] = ENV[std_name]
@@ -130,10 +132,10 @@ def oracle_outputs(call_data,ENV):
     else:
         display_dict(call_data['oracle'])
         if ENV['recall_request']:
-            print()
+            print(call_data['oracle'])
             display_dict(call_data['request'])
         if ENV['recall_data_assigned']:
-            print()
+            print(call_data['oracle'])
             display_dict(call_data['input_data_assigned'])
 
 def oracle_output_files(call_data,ENV,TALf):
@@ -155,10 +157,8 @@ def oracle_output_files(call_data,ENV,TALf):
     else:
         display_dict(call_data['oracle'])
         if ENV['recall_request']:
-            print()
             display_dict(call_data['request'])
         if ENV['recall_data_assigned']:
-            print()
             display_dict(call_data['input_data_assigned'])
 
 def oracle_logs(call_data,ENV,TALf):

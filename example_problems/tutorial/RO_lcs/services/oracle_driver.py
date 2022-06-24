@@ -13,7 +13,6 @@ import problem_specific_lib as PSL
 args_list = [('pwd',str)] + PSL.instance_objects_spec + [
     ('input_data_assigned','yaml'),
     ('request_dict','yaml'),
-    ('request_setups','yaml'),
     ('color_implementation',str),
     ('with_opening_message',bool),
     ('as_yaml',bool),
@@ -34,16 +33,15 @@ TALf = TALfilesHelper(TAc, ENV)
 TOKEN_REQUIRED = True
 RO_io.check_access_rights(ENV,TALf, require_pwd = True, TOKEN_REQUIRED = TOKEN_REQUIRED)
 input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec,args_list,ENV)
-#print(f"input_data_assigned={input_data_assigned}", file=stderr)
+#print("\n"f"input_data_assigned={input_data_assigned}", file=stderr)
 PSL.check_instance_consistency(input_data_assigned)
 RO_io.check_request(ENV['request_dict'], PSL.answer_objects_implemented)
 
 request_dict = ENV["request_dict"] if len(ENV["request_dict"]) != 0 else { key:key for key in PSL.answer_objects_implemented }
-request_setups = ENV["request_setups"] if len(ENV["request_setups"]) != 0 else PSL.request_setups
-#print(f"request_dict={request_dict}\nrequest_setups={request_setups}", file=stderr)
+#print(f"request_dict={request_dict}", file=stderr)
     
-call_data = {"input_data_assigned":input_data_assigned,"request":request_dict,"request_setups":request_setups}
-print(f"call_data={call_data}", file=stderr)
+call_data = {"input_data_assigned":input_data_assigned,"request":request_dict}
+#print(f"call_data={call_data}", file=stderr)
 call_data["oracle"] = PSL.solver(call_data)
 
 RO_io.oracle_outputs(call_data,ENV)
@@ -51,4 +49,3 @@ if ENV.LOG_FILES != None:
     RO_io.oracle_logs(call_data,ENV,TALf)
 if ENV["with_output_files"]:    
     RO_io.oracle_output_files(call_data,ENV,TALf)
-

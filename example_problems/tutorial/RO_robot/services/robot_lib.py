@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import logging
 from dataclasses import dataclass
 from typing import Dict
@@ -59,6 +60,10 @@ request_setups = {
     "MAX_NUM_OPT_SOLS_IN_LIST": 30,
 }
 
+answer_objects_implemented = ['opt_sol','opt_val','num_opt_sols','DPtable_opt_val','DPtable_num_opts','list_opt_sols']
+limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
+
+
 
 _Cell = tuple[int, int]
 _Grid = list[list[int]]
@@ -67,7 +72,6 @@ _Grid = list[list[int]]
 def _xmap(x: int) -> int:
     """Map internal x coordinate of a cell to a human-readable format."""
     return x + 1
-
 
 def _ymap(y: int) -> str:
     """Map internal y coordinate of a cell to a human-readable format."""

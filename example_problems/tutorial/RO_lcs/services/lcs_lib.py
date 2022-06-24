@@ -17,6 +17,8 @@ instance_objects_spec = [
     ('reduce_t_to_its_prefix_of_length',int),
     ('reduce_s_to_its_suffix_of_length',int),
     ('reduce_t_to_its_suffix_of_length',int),
+    ('CAP_FOR_NUM_SOLS',int),
+    ('CAP_FOR_NUM_OPT_SOLS',int),
 ]
 additional_infos_spec=[
     ('partial_max_len_on_prefixes_of_len','matrix_of_int'),
@@ -29,7 +31,7 @@ answer_objects_spec = {
     'max_len_on_suffixes_from_pos':'matrix_of_int',
 }
 answer_objects_implemented = ['opt_sol','opt_val','max_len_on_prefixes_of_len','max_len_on_suffixes_from_pos']
-request_setups = {}
+limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
 
 
 def is_subseq(s,t):
@@ -57,7 +59,13 @@ def check_instance_consistency(instance):
     if instance["reduce_t_to_its_suffix_of_length"] < 0:
         print(f"Errore: reduce_t_to_its_suffix_of_length={reduce_t_to_its_suffix_of_length} < 0  non è permesso. Puoi invece usare numeri arbitrariamente grandi per questo argomento (oltre len(t) significa considerare l'intera stringa t).")    
         exit(0)
-
+    if instance["CAP_FOR_NUM_SOLS"] > limits["CAP_FOR_NUM_SOLS"]:
+        print('Errore: non è consentito settare `CAP_FOR_NUM_SOLS` a {instance["CAP_FOR_NUM_SOLS"]} > {limits["CAP_FOR_NUM_SOLS"]}"]}')
+        exit(0)
+    if instance["CAP_FOR_NUM_OPT_SOLS"] > limits["CAP_FOR_NUM_OPT_SOLS"]:
+        print('Errore: non è consentito settare `CAP_FOR_NUM_OPT_SOLS` a {instance["CAP_FOR_NUM_OPT_SOLS"]} > {limits["CAP_FOR_NUM_OPT_SOLS"]}"]}')
+        exit(0)
+ 
 class DPtable:
     def __init__(self, m,n,rlabels,clabels,init_fill=None):
         self.m = m
@@ -190,8 +198,8 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:str):
-        super().__init__(SEF,input_data_assigned, long_answer_dict, request_setups)
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):
+        super().__init__(SEF,input_data_assigned, long_answer_dict)
 
     def verify_format(self, SEF):
         if not super().verify_format(SEF):

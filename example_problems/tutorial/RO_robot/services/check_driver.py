@@ -15,11 +15,12 @@ args_list += [('input_data_assigned','yaml')]
 args_list += [(key,'yaml') for key in PSL.answer_objects_spec]
 args_list += [
     ('alias_dict','yaml'),
-    ('request_setups','yaml'),
     ('answer_dict','yaml'),
     ('alias_dict','yaml'),
     ('color_implementation',str),
     ('with_opening_message',bool),
+    ('with_positive_enforcement',bool),
+    ('with_notes',bool),
     ('as_yaml_with_points',bool),
     ('yield_certificate_in_output_file',bool),
     ('recall_data_assigned',bool),
@@ -47,13 +48,11 @@ request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.ch
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
 SEF = RO_eval.std_eval_feedback(ENV)
-request_setups = ENV["request_setups"] if len(ENV["request_setups"]) != 0 else PSL.request_setups
-KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict, request_setups)
+KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict)
 feedback_dict = KingArthur.verify_submission(SEF)
-
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 
-all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of,"request_setups":request_setups}
+all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"feedback":feedback_dict,"request":name_of}
 #print(f"all_data={all_data}", file=stderr)
 RO_io.checker_reply(all_data,ENV)
 if ENV.LOG_FILES != None:

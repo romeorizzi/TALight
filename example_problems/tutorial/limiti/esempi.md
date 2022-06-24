@@ -1,92 +1,202 @@
 ## NUMERI REALI
-* Ogni insieme finito e non vuoto di numeri reali ammette sempre massimo e minimo.
-* Se un insieme non è finito non ammette massimo/minimo.
-* 
+**1.** Ogni insieme finito e non vuoto di numeri reali ammette sempre un massimo. 
+<details><summary><strong>Esercizio - dimostrazione: </strong></summary>
+
+	> # proviamo a vedere se in un insieme finito e non vuoto di numeri reali riusciamo a trovare sempre un massimo.
+    > # dato l'insieme costituito da:
+	> 0, 6.3, 5/4, -14.31, pi, 28.7333, sqrt(2), -9*pi
+    > # determina il massimo:
+	< 28.7333
+	> # bene! vuoi fare un'altra partita o ti senti pronto a passare ad un livello successivo? (another_match/next_level)
+	< another_match
+    > # dato l'insieme costituito da:
+	> 57/13, e, -sqrt(17), pi*0.65, -sin(30)*7, sqrt(5)
+    > # determina il massimo:
+	< 57/13
+	> # bene! vuoi fare un'altra partita o ti senti pronto a passare ad un livello successivo? (another_match/next_level)
+	< next_level
+    > # ok! ecco una proposta per il livello successivo: 
+	> # riusciresti a scrivere un algoritmo ricorsivo che calcoli per te il massimo di un insieme finito? 
+	< .......
+</details>
+
+**2.** Se un insieme non è finito potrebbe non ammettere massimo.
+<details><summary><strong>Esercizio: </strong></summary>
+
+	> # Se un insieme non è finito potrebbe non ammettere massimo.
+	> # {x in R | 8 <= x^3 <= 125}
+	> # l'insieme ha massimo? (y/n)
+	< y
+	> # sì? allora dammelo:
+	< 5
+	> # bene! proviamo con un altro esempio
+	> # {x in R | x < 15/2}
+	> # l'insieme ha massimo? (y/n)
+	< y
+	> # sì? allora dammelo:
+	< 15/2
+	> # guarda che 15/2 non appartiene all'insieme... quindi non è un massimo!
+	> # l'insieme ha massimo? (y/n)
+	< n
+	> # bene! vuoi procedere con un altro esercizio o fermarti? (next/stop)
+	< stop
+	> # alla prossima!
+</details>
+
+**3.** Un insieme limitato (superiormente/inferiormente/entrambi) non sempre ammette massimo/minimo.
+<details><summary><strong>Esercizio: </strong></summary>
+
+	> # Un insieme limitato non sempre ammette massimo/minimo. 
+	> # {x in R | 8 <= x^3 <= 125}
+	> # ha massimo? (y/n)
+	< n
+	> # esistono numeri in questo insieme maggiori di 5? (y/n)
+	< n
+	> # 5 appartiene all'insieme? (y/n)
+	< y
+	> quindi 5 è un massimo, sei d'accordo? (y/n)
+	< y
+	> # bene! proviamo con un altro esempio
+	> # {x in R | x^3 >= 27}
+	> # ha massimo? (y/n)
+	< n
+	> # bene! vuoi procedere con un altro esercizio o fermarti? (next/stop)
+	< stop
+	> # alla prossima!
+</details>
+
+**4.** Un numero k $\in$ X (dove X è un insieme totalmente ordinato) è un **maggiorante** di Y $\subseteq$ X se k >= x per ogni x \in Y.
+
+**5.** L'**estremo superiore**  di Y è il minimo dei maggioranti.
+<details><summary><strong>Esercizio: </strong></summary>
+
+	> # Sia Y = {x in R | -27 < x^3 <= 64}
+	> # Y ha massimo? (y/n)
+	< y
+	> # sì? allora dammelo:
+	< 4
+	> # Y ha (almeno) un maggiorante?
+	< y
+	> # sì? allora dammelo:
+	< 67
+	> # determina l'estremo superiore di Y:
+	< 5
+	> # vedi, basta prendere 4.999999 che è minore di 5 e non è in Y... 5 non può essere estremo superiore, riprova:
+	< 4
+	> # perfetto! nota infatti che se esiste un massimo, esso coincide con il sup!
+	> # vuoi procedere con un altro esercizio o fermarti? (next/stop)
+	< stop
+	> # ciao, alla prossima!
+</details>
+
+**6.** Ogni insieme Y $\subset$ X non vuoto e limitato superiormente possiede estremo superiore.
+
+**7.** L'insieme **R** dei numeri reali è un campo ordinato con la proprietà dell'estremo superiore vista al punto precedente.
 
 ## ARCHIMEDE
 #### Principio:
-Per ogni numero reale x > 0 esiste un numero naturale _n_ tale che 1/_n_ < x.
+Per ogni $x \in$ **R**, $x > 0$, esiste $n \in$ **N** tale che $\frac{1}{n} < x$.
 
-(Dati due numeri reali a>0, b>0, esiste un numero naturale _n_ tale che _n_ a > b (ovvero a > b/_n_).)
+<details><summary><strong>Esercizio</strong> ("dimostrazione" del principio di Archimede immediata... giocando solo con x e n...)</summary>
 
+	> #saresti propenso a credere che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
+
+_1) se il ragazzo risponde di **no**:_
+
+    < n
+    > # ah no? proviamo! inserisci un qualsiasi valore x > 0:
+    < 0.0034
+    > # vedi, per n= 295 vale 1/n= 0.00338 e 0.00338 < 0.0034=x.
+    > # mi credi ora? (y/n)
+	< n
+    > # ah no? proviamo! inserisci un qualsiasi valore x > 0:
+    < 26.58
+    > # vedi, per n= 1 vale 1/n= 1 e 1 < 26.58=x.
+    > # mi credi ora? (y/n)
+    > y
+    > Bene! Se vuoi provare a convincermi tu ora, invertendo i ruoli, ti consiglio questo esercizio: 
+	> rtal connect limiti ....
+
+_2) se il ragazzo ripsonde di **sì**:_
+
+    < y
+    > # bene! allora prova a convincermi
+	> # la mia proposta per x è:
+	> 3*pi
+	> # dammi una n tale che 1/n < x:
+	< 0.09
+    > # vedi, 0.09 non è un numero naturale, riprova:
+	> # dammi una n tale che 1/n < x:
+    < 1
+    > # per n=1 vale 1/n=1 e 1 < 9.424777961=x
+	> # mi stai iniziando a convincere, voglio riprovare
+	> # la mia proposta per x è:
+	> sqrt(2)*1/6
+	> # dammi una n tale che 1/n < x:
+	< 5
+    > # per n=5 vale 1/n=0.2 e 0.2 < 0.2357=x
+	> # ok mi hai convinto! ottimo lavoro!
+	> # preferisci fermarti qui o ti senti pronto a passare ad un livello successivo? (stop/next_level)
+	< next_level
+    > # ok! ecco una proposta per il livello successivo: 
+	> # scrivi un algoritmo che, dato x, calcoli per te un valore di n che soddisfi il principio di Archimede:
+	< ......
+</details>
+
+		
 CORRELAZIONI:
 * Una successione di termini positivi convergente deve avere un limite strettamente positivo?
 No, basta prendere la successione 1/n costituita di termini positivi ma convergente a 0
 * Dimostrare che la successione 1/n, n=1,2,3,... tende a zero:
 usare il fatto che per Archimede preso a piacere x > 0 esiste un numero n naturale tale che n * x > 1. Dunque, 1/n < x.
 
-<details><summary><strong>Esercizio</strong> ("dimostrazione" del principio di Archimede immediata... giocando solo con x e n...)</summary>
+<details><summary><strong>Esercizio/curiosità - un piccolo salto verso i limiti di successioni</strong></summary>
 
-    > # è vero che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)
-    < n
-    > # ah no? allora dammi un valore per x > 0:
-    < 26.58
-    > # vedi, per n= 0.038 vale 1/n= 26.31 e 26.31 < x = 26.58.
-    > # mi credi ora? (y/n)
-    > n
-    > # ah no? allora dammi un valore per x > 0:
-    < 0.0034
-    > # vedi, per n= 295 vale 1/n= 0.00338 e 0.00338 < x = 0.0034.
-    > # mi credi ora? (y/n)
-    > y
-    > Bene, alla prossima!
-</details>
-
-<details><summary><strong>Curiosità - un piccolo salto verso i limiti di successioni</strong></summary>
-
-    > # Il limite di una successione di termini positivi convergente non ha sempre un limite strettamente positivo
+    > # Il limite di una successione convergente di termini positivi non è sempre strettamente positivo
     > # sei d'accordo con me? (y/n)
     < n
     > # Allora consideriamo la successione 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
     < y
-    > # ma non converge ad un numero strettamente positivo... converge a 0!
-    > # ti ho convinto? (y/n)
-    < n
-    > # Stabilisci un numero reale x > 0:
-    < 0.3
-    > # se ti propongo n=4, si ha che 1/n=1/4=0.25 < 0.3 = x
-    > # proponimi un altro valore per x > 0:
-    < 0.2
-    > # per n=6, si ha che 1/n = 1/6 = 0.166666 < 0.2 = x
-    > # vedi, per qualsiasi x tu scelga, troverò sempre una n tale che 1/n < x e più le x sono piccole, più le n sono grandi
-    > # ci credi ora che per n -> infinito il la successione 1/n converge a 0? (y/n)
-    < y
-    > # Molto bene!
-</details>
-
-<details><summary><strong>Esercizio</strong> (come sopra ma usando la definizione standard di limite)</summary>
-
-    > # Non è vero che una successione {a_n} di termini positivi convergente ha sempre un limite strettamente positivo
-    > # sei d'accordo con me? (y/n)
-    < n
-    > # Allora consideriamo la successione a_n = 1/n, n=1,2,3,... questa successione è composta da termini positivi? (y/n)
-    < y
     > # Ma non converge ad un numero strettamente positivo... converge a 0!
+    > # sei d'accordo con me? (y/n)
+_se risponde no_
+
+	< n
     > # Stabilisci un numero reale epsilon > 0:
     < 0.4
     > # Ecco il mio N:
     > # 2.5
     > # Proponi una tua x > 2.5:
     < 2.6
-    > # vedi: a_n(2.6) =0.38, e 0.38 \in [-0.4 , 0.4]=[l-e,l+e], quindi non sei riuscito a confutare la mia affermazione.
+    > # vedi: 1/2.6 =0.38, e 0.38 \in [-0.4 , 0.4]=[l-e,l+e], quindi non sei riuscito a confutare la mia affermazione.
     > # Sei convinto ora che la successione converga a 0? (y/n)
     > y
     > # Bene, alla prossima!
+_se risponde sì_
+
+	< y
+	> # bene, allora non avrai problemi a dimostrarmelo!
+	> # il mio valore per epsilon è:
+	> 0.15
+	> # proponi il tuo N:
+	< 6.7
+    > # Molto bene! Vale |1/n - 0| < 0.15 per tutti i valori di n > 6.7 che ho utilizzato per verificare la tua proposta.
+	> # Alla prossima!
 </details>
 
 ## DENSITA` DI Q IN R
 #### Enunciato (prima forma):
-Siano x,y due numeri reali, x < y ; esiste q \in **Q** tale che  x < q < y. Ovvero **Q** è denso in **R**.
+Siano x,y due numeri reali, x < y ; esiste q $\in$ **Q** tale che  x < q < y. Ovvero **Q** è denso in **R**.
 <details><summary><strong>Esercizio - dimostrazione</strong></summary>
 
-    > # dimostra che dati x,y due numeri reali, x < y , esiste q \in Q tale che  x < q < y. Ovvero Q è denso in R.
+    > # dimostra che dati x,y due numeri reali, x < y , esiste q razionale tale che  x < q < y. Ovvero Q è denso in R.
     > # il mio valore per la x è:
     > 3.3
     > # il mio valore per la y è:
 	> 3.4
-	> # scrivi un numero naturale n che soddisfi il principio di Archimede con (y-x):
+	> # scrivi un numero naturale n che soddisfi il principio di Archimede (con argomento y-x):
 	< 8
-	> # no, 1/8 = 0.125 e 0.125 > y-x=0.1, riprova!
+	> # no, 1/8 = 0.125 e 0.125 > 0.1=y-x, riprova!
 	< 11
 	> # bene, nota ora che 11x vale
 	> 36.3
@@ -97,18 +207,20 @@ Siano x,y due numeri reali, x < y ; esiste q \in **Q** tale che  x < q < y. Ovve
 	> # utilizzando questo intero e la n che mi hai proposto, riesci a trovare un numero razionale (della forma a/b) compreso tra 3.3 e 3.4? scrivilo:
 	< 37/11
 	> # Ben fatto! Abbiamo trovato la q che cercavamo, ovvero 37/11 = 3.36...
-	> # Riesci ora a scrivere un algoritmo che dati x e y trovi q?
+	> # vuoi fare un'altra partita o ti senti pronto a passare al livello successivo? (another_match/next_level)
+	< next_level
+	> # Riusciresti ora a scrivere un algoritmo che dati x e y trovi q?
 	< ..............
 	
 </details>
 
 
-
-
 ##### Enunciato (seconda forma):
 Ogni numero reale è limite di una successione di razionali (di più, è limite di una successione di numeri decimali)
 <details>
+
 **Dimostrazione:**
+
 Prendiamo un numero reale alfa = a_0. a_1 a_2 a_3 a_4..... (esempio: se alfa=3.459 allora a_0=3, a_1=4, a_2=5, a_3=9)
 
 alfa è il limite della successione y_n di numeri razionali (decimali):
