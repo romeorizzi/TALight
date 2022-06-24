@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
+import logging
 from dataclasses import dataclass
-from sys import stderr
-from typing import Optional, List, Dict, Callable
+from typing import Dict
 
 from RO_verify_submission_gen_prob_lib import verify_submission_gen
+
+_LOGGER = logging.getLogger(__package__).getChild("robot")
 
 instance_objects_spec = [
     ("grid", "matrix_of_ints"),
@@ -102,7 +104,7 @@ def check_matrix_shape(f: _Grid) -> bool:
 
 
 def check_instance_consistency(instance):
-    #print(f"instance={instance}", file=stderr)
+    _LOGGER.debug("instance = %s", instance)
     grid = instance['grid']
     ROWS, COLS = len(grid), len(grid[0])
     # TODO: ask whether this check is necessary for the type 'matrix_of_int'
@@ -128,7 +130,7 @@ def check_instance_consistency(instance):
             exit(0)
 
 
-def dptable_num_to_cell(g: _Grid, diag: bool = False) -> _Grid:
+def dptable_num_to(g: _Grid, diag: bool = False) -> _Grid:
     """
     Build a DP table suitable for counting the number of paths.
     Construction starts from the cell in the top-left corner.
@@ -167,7 +169,7 @@ def dptable_num_to_cell(g: _Grid, diag: bool = False) -> _Grid:
     return t
 
 
-def dptable_num_from_cell(g: _Grid, diag: bool = False) -> _Grid:
+def dptable_num_from(g: _Grid, diag: bool = False) -> _Grid:
     """
     Build a DP table suitable for counting the number of paths.
     Construction starts from the cell in the bottom-right corner.
@@ -207,7 +209,7 @@ def dptable_num_from_cell(g: _Grid, diag: bool = False) -> _Grid:
     return t
 
 
-def dptable_opt_to_cell(g: _Grid, diag: bool = False) -> _Grid:
+def dptable_opt_to(g: _Grid, diag: bool = False) -> _Grid:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -247,7 +249,7 @@ def dptable_opt_to_cell(g: _Grid, diag: bool = False) -> _Grid:
     return t
 
 
-def dptable_opt_from_cell(g: _Grid, diag: bool = False) -> _Grid:
+def dptable_opt_from(g: _Grid, diag: bool = False) -> _Grid:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -293,7 +295,7 @@ class NumOptCell:
     value: int  # the optimal value of a path ending at this cell
 
 
-def dptable_num_opt_to_cell(f: _Grid, diag: bool = False) -> _Grid:
+def dptable_num_opt_to(f: _Grid, diag: bool = False) -> _Grid:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -345,7 +347,7 @@ def dptable_num_opt_to_cell(f: _Grid, diag: bool = False) -> _Grid:
     return as_tuple_matrix(t)
 
 
-def dptable_num_opt_from_cell(f: _Grid, diag: bool = False) -> _Grid:
+def dptable_num_opt_from(f: _Grid, diag: bool = False) -> _Grid:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -470,6 +472,9 @@ def conceal(dptable: _Grid):
 
 
 def solver(input_to_oracle):
+    assert input_to_oracle is not None
+
+    _LOGGER.debug("input = %s", input_to_oracle)
     INSTANCE = input_to_oracle["instance"]
 
     # extract and parse inputs
@@ -480,7 +485,7 @@ def solver(input_to_oracle):
     target = parse_cell(INSTANCE["cell_from"])
     through = parse_cell(INSTANCE["cell_through"])
 
-    def _adapt_grid(g: _Grid) -> tuple[_Grid, _Grid]:
+    def splitgrids(g: _Grid) -> tuple[_Grid, _Grid]:
         """
         Simplify the task as a pair of grid problems:
             1. subgrid from 'cell_from' to 'cell_through'
@@ -489,31 +494,59 @@ def solver(input_to_oracle):
         Returns:
             the top-left and the bottom-right subgrids
         """
-        ROWS, COLS = len(g), len(g[0])
 
         # source and target cells restrict the admissible area
         # of the original grid to a rectangle subset
         top_left_slice = [g[x][y] for x in range(source[0], through[0] + 1)
-            for y in range(source[0], through[0] + 1)]
-        
+                          for y in range(source[0], through[0] + 1)]
+
         # through cell creates a chokepoint in the grid
         bottom_right_slice = [g[x][y] for x in range(through[0], target[0] + 1)
-            for y in range(through[1], target[1] + 1)]
+                              for y in range(through[1], target[1] + 1)]
+
         return top_left_slice, bottom_right_slice
 
+    def fusegrids(tl_slice: _Grid, br_slice: _Grid) -> _Grid:
+        """
+        Fills a full size grid
 
-    def fill_dptable_to_original_size():
-        pass
+        Args:
+            tl_slice: top-left subgrid, from 'cell_from' to 'cell_through
+            br_slice: bottom-right subgrig, from 'cell_through' to 'cell_to'
+        """
+        assert check_matrix_shape(tl_slice)
+        assert check_matrix_shape(br_slice)
 
-    # compute tables
-    DPtable_num_to = dptable_num_to_cell(grid, diag=diag)
-    DPtable_num_from = dptable_num_from_cell(grid, diag=diag)
+        ROWS, COLS = len(grid), len(grid[0])
+        table = [[0 for _ in range(COLS)] for _ in range(ROWS)]
 
-    DPtable_opt_to = dptable_opt_to_cell(grid, diag=diag)
-    DPtable_opt_from = dptable_opt_from_cell(grid, diag=diag)
+        # place each subgrid in appropriate spot
+        MARGINS = [(source, through), (through, target)]
+        for subgrid, cellmin, cellmax in zip([tl_slice, br_slice], MARGINS):
+            rows, cols = len(subgrid), len(subgrid[0])
+            assert rows == cellmax[0] - cellmin[0]
+            assert cols == cellmax[1] - cellmin[1]
 
-    DPtable_num_opt_to = dptable_num_opt_to_cell(grid, diag=diag)
-    DPtable_num_opt_from = dptable_num_opt_from_cell(grid, diag=diag)
+            # copy over dptable
+            for x in range(rows):
+                for y in range(cols):
+                    table[cellmin[0] + x][cellmin[1] + y] = subgrid[x][y]
+
+        return table
+
+    # top-left subgrid, bottom-right subgrid
+    subtables = [[f(g, diag=diag) for g in splitgrids(grid)] for f in [
+        dptable_num_to,
+        dptable_num_from,
+        dptable_opt_to,
+        dptable_opt_from,
+        dptable_num_opt_to,
+        dptable_num_opt_from]]
+
+    (DPtable_num_to, DPtable_num_from,
+     DPtable_opt_to, DPtable_opt_from,
+     DPtable_num_opt_to, DPtable_num_opt_from) = [fusegrids(*t) for t in subtables]
+
 
     # retrieve and format outputs
     # TODO: adapt solutions to different 'from' and 'to' cells
