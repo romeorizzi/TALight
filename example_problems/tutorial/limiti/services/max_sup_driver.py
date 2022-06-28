@@ -233,7 +233,7 @@ if ENV["source"]!='catalogue':
     seed=ENV["seed"]
     TAc.print(LANG.render_feedback("seed", f'seed: {seed}'), "yellow", ["bold"])
 else:
-    input = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension='max_sup.txt')
+    input = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension='txt')
     instance=input.split('\n')[0]
     seed=int(input.split('\n')[1])
     output_filename = f"instance_catalogue_{ENV['instance_id']}.max_sup.txt"
