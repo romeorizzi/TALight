@@ -3,14 +3,15 @@
 from fractions import Fraction
 import numpy as np
 import math
+from scipy import rand
 from sympy import *
 from math import *
 import random
 
-correct = ['Bene!', 'Molto bene!', 'Corretto!', 'Ok!','Ben fatto!']
+correct = ['Bene!', 'Molto bene!', 'Ok!','Ottimo!']
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
-
+reference_set=['R','Q','Z','N']
 def instance_to_array(input_str):
     instance_str=input_str.split(", ")
     return instance_str
@@ -45,10 +46,121 @@ def instance_randgen(set_cardinality:int,seed:int):
     for i in range (math_functions):
         random.seed(seed+i)
         funct=random.choice(instance_functions)
-        instance.append(funct+'('+(str(random.randint(3,400))if funct=='sqrt' else 'pi'+'*'+str(random.randint(1,11))+'/'+str(random.randint(1,6)))+')')
+        instance.append((funct+'('+str(random.randint(3,400))+')')if funct=='sqrt' else (funct+'(pi'+'*'+str(random.randint(1,11))+'/'+str(random.randint(1,6)))+')*'+str(random.randint(1,25)))
     random.shuffle(instance)
     return instance
 
+def instance_randgen_1(seed:int):
+    random.seed(seed)
+    diseq_grater=random.choice(['>','>='])
+    diseq_less=random.choice(['<','<='])
+    diseq_less_1=random.choice(['<','<='])
+    diseq=random.choice([diseq_grater,diseq_less])
+    parameter=random.choice([True,False])
+    # parameter=True
+    if parameter:
+        m=random.randint(1,5)
+        cond_1=random.choice([str(m)+'*k', str(m)+'*k+1'])
+        x_sup=random.randint(5,200)
+        k_inf=random.randint(1,5)
+        k_sup=random.randint(7,15)
+        if diseq in diseq_less and '=' in diseq:
+            x_min=0
+            k_min=0
+            k_max_1='k'+str(k_sup)
+            x_max_1='x'+str(x_sup)
+        elif diseq in diseq_less and '=' not in diseq:
+            x_min=0
+            k_min=0
+            k_max_1='k'+str(k_sup-1)
+            x_max_1='x'+str(x_sup-1)
+        else:
+            x_min='x'+str(x_sup) if '=' in diseq else 'x'+str(x_sup+1)
+            k_min='k'+str(k_sup) if '=' in diseq else 'k'+str(k_sup+1)
+            x_max_1=None
+            k_max_1=None
+        if '=' in diseq_less_1:
+            min_k=k_inf
+            k_max_2='k'+str(k_sup)
+        else:
+            min_k=k_inf+1
+            k_max_2='k'+str(k_sup-1)
+        cond_2=random.choice([['x'+diseq+str(x_sup), [x_min,x_max_1]], ['k'+diseq+str(k_sup),[k_min,k_max_1]], [str(k_inf)+diseq_less_1+'k'+diseq_less_1+str(k_sup),[min_k,k_max_2]]])
+        condition='x='+cond_1+', '+cond_2[0]
+        instance='{x | '+condition+'  k in N}'
+        return ('parameter',instance, cond_1, cond_2[1])
+    else:
+        def max_sup(x,x_inf,x_sup):
+            if diseq in diseq_less and '=' in diseq:
+                max_1=x
+                sup_1=x
+            elif diseq in diseq_less and '=' not in diseq:
+                max_1=None
+                sup_1=x
+            else:
+                max_1=None
+                sup_1=np.inf
+            if '=' in diseq_less_1:
+                max_2=x_sup
+                sup_2=x_sup
+            else:
+                max_2=None
+                sup_2=x_sup
+            if '=' in diseq_less:
+                min_2=x_inf
+            else:
+                min_2=x_inf+0.00000000000001
+            return max_1,sup_1,max_2,sup_2,min_2
+        linear=random.choice([True,False])
+        if linear:
+            x=random.randint(-30,30)
+            x_inf=random.randint(-50,50)
+            x_sup=x_inf+random.randint(2,30)
+            max_1,sup_1,max_2,sup_2, min_2=max_sup(x,x_inf,x_sup)
+            condition=random.choice([['x'+diseq+str(x), max_1,sup_1], [str(x_inf)+diseq_less+'x'+diseq_less_1+str(x_sup), max_2,[min_2,sup_2]]])
+        else:
+            power=random.randint(2,3)
+            variable='x^'+str(power)
+            x=random.randint(-10,10)
+            x_inf=random.randint(1,5)
+            x_sup=x_inf+random.randint(2,5)
+            max_1,sup_1,max_2,sup_2,min_2=max_sup(x,x_inf,x_sup)
+            if power==2:
+                min_2='pow2'+str(min_2)
+                sup_2=abs(sup_2)
+                if max_1!=None:
+                    max_1=abs(max_1)
+                if max_2!=None:
+                    max_2=abs(max_2)
+            if sup_1!=np.inf and power==2:
+                sup_1=abs(sup_1)
+                min_1=-sup_1
+            else:
+                min_1=None
+            condition=random.choice([[variable+diseq+str(x**power),max_1,[min_1,sup_1]], [str(x_inf**power)+diseq_less+variable+diseq_less_1+str(x_sup**power), max_2, [min_2,sup_2]]])
+        instance='{x in R | '+condition[0]+'}'
+        return ('without_parameter',instance, condition[1], condition[2])
+
+def find_max_with_parameter(condition,max):
+    if max!=None:
+        if max[0]=='k':
+            x_max=eval(condition, {"k": int(max[1:])})
+        else:
+            i=0
+            k_max=int(max[1:])
+            if '+' in condition:
+                k_max=(int(max[1:])-1)/int(condition[0])
+            else:
+                k_max=int(max[1:])/int(condition[0])
+            while not k_max.is_integer():
+                i+=1
+                k_max=int(max[1:])-i
+                if '+' in condition:
+                    k_max=(k_max-1)/int(condition[0])
+                else:
+                    k_max=k_max/int(condition[0])
+            x_max=eval(condition,{'k':k_max})
+        return x_max
 
 def alfabeto(variable):
     for word in {'sqrt','log','pow','factorial','exp','cos','sin','tan','acos','asin','atan','pi','e','inf'}:
