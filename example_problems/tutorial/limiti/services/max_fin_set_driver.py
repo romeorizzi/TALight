@@ -35,7 +35,7 @@ def soluzione(instance_str,max_position):
 
 def new_set(seed,source):
     if source=='catalogue':
-        set_values = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension='fin_set.txt')
+        set_values = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension='txt')
         TAc.print(LANG.render_feedback("instance", f'Dato l\'insieme (avente instance_id={ENV["instance_id"]}):\n'+'{'+set_values+'}'),  "yellow", ["bold"])
         instance_str=ll.instance_to_array(set_values)
         output_filename = f"instance_catalogue_{ENV['instance_id']}.fin_set.txt"

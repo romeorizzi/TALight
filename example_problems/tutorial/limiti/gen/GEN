@@ -7,13 +7,13 @@ add_format: txt
 
 
 collection: instances_hardcoded
-COPY: instances_hardcoded/instance_001_handmade.fin_set.txt
-COPY: instances_hardcoded/instance_002_handmade.fin_set.txt
-COPY: instances_hardcoded/instance_003_handmade.fin_set.txt
-COPY: instances_hardcoded/instance_004_handmade.fin_set.txt
-COPY: instances_hardcoded/instance_005_handmade.fin_set.txt
-COPY: instances_hardcoded/instance_001_handmade.max_sup.txt
-COPY: instances_hardcoded/instance_002_handmade.max_sup.txt
+COPY: instances_hardcoded/instance_001_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_002_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_003_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_004_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_005_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_001_handmade_max_sup.txt
+COPY: instances_hardcoded/instance_002_handmade_max_sup.txt
 
 collection: instances_card_at_most_10
 #                randgen,    set_cardinality,  seed

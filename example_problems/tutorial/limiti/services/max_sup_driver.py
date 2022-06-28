@@ -116,7 +116,6 @@ def max_case_parameter(condition,min,max):
         if max!=None: # il massimo esiste e il ragazzo ha risposto giusto, verifichiamo ora il massimo che propone lui
             TAc.print(LANG.render_feedback("max", f'scrivimelo:'),  "yellow", ["bold"])
             x_max=ll.find_max_with_parameter(condition,max)
-            # print('x max ',x_max)
             existence_but_not_correctness_max(x_max)
         else: # il massimo non esiste ma il ragazzo dice di si
             non_existence_max_with_parameter(condition,min)
