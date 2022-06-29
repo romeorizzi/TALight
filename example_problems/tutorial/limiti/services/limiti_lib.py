@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from asyncio import constants
 from fractions import Fraction
+from re import X
 from unicodedata import decimal
 import numpy as np
 import math
@@ -9,7 +10,7 @@ from scipy import rand
 from sympy import *
 from math import *
 import random
-
+import decimal
 correct = ['Bene!', 'Molto bene!', 'Ok!','Ottimo!']
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
@@ -63,6 +64,13 @@ def instance_archimede(seed:int):
     sin_cos_sqrt=(instance_function+'('+str(random.randint(3,400))+')/'+str(random.choice([10,100,1000])))if instance_function=='sqrt' else (coefficient+'*'+instance_function+'(pi'+'*'+str(num)+'/'+str(den)+')')
     final_choice=random.choice([decimal_number,constant,sin_cos_sqrt])
     return final_choice
+
+def instance_density(seed:int):
+    random.seed(seed)
+    x=decimal.Decimal(str(round(random.random()*random.randint(2,20),4)))
+    aggiunta=decimal.Decimal(str(round(random.uniform(0,1)/random.choice([1,10]),4)))
+    y=decimal.Decimal(str(round(x+aggiunta,4)))
+    return x,y
 
 def instance_randgen_1(seed:int):
     random.seed(seed)

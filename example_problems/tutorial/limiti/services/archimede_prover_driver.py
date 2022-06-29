@@ -19,8 +19,8 @@ TALf = TALfilesHelper(TAc, ENV)
 ## START CODING YOUR SERVICE:
 def check_user_solution(x):
     user_sol=eval(TALinput(str, regex=f"^((\S)+)$", sep=None, TAc=TAc)[0])
-    if user_sol<0 or int(user_sol)!=user_sol:
-        TAc.print(LANG.render_feedback("error", f'no, il numero che hai inserito non e\' naturale, riprova:'), "red", ["bold"])
+    if user_sol<=0 or int(user_sol)!=user_sol:
+        TAc.print(LANG.render_feedback("error", f'no, il numero che hai inserito non e\' naturale positivo, riprova:'), "red", ["bold"])
         return check_user_solution()
     proof=1/user_sol
     if not proof<eval(str(x)):
@@ -66,7 +66,7 @@ def disprove():
         TAc.print(LANG.render_feedback("error", f'hai inserito un valore per x non positivo... dammene un altro:'), "red", ["bold"])
         disprove()
     else:
-        n=ceil(1/x_eval)
+        n=ceil(1/x_eval+0.00000000001)
         n_reciprocal=1/n
         return TAc.print(LANG.render_feedback("disprove", f'vedi, per n= {n} vale 1/n= {n_reciprocal} che e\' < {x}=x.'),  "yellow", ["bold"])
 
@@ -76,13 +76,13 @@ def no_case():
         TAc.print(LANG.render_feedback("change-idea", f'hai cambiato idea? (y/n)'),  "yellow", ["bold"])
         y_n=TALinput(str, regex=f"^(y|n)$", sep=None, TAc=TAc)[0]
         if y_n=='y':
-            TAc.print(LANG.render_feedback("what-to-do", f'Bene! Vuoi provare a convincermi tu ora, invertendo i ruoli, oppure preferisci salutarmi e fermarti qui? (change_rules/stop)'),  "yellow", ["bold"])
+            TAc.print(LANG.render_feedback("what-to-do", f'Bene! Vuoi provare a convincermi tu ora, invertendo i ruoli, oppure preferisci salutarmi e fermarti qui? (inverti_ruoli/stop)'),  "yellow", ["bold"])
             answer_what_to_do=TALinput(str, regex=f"([a-zA-Z])\w+", sep=None, TAc=TAc)[0]
             if answer_what_to_do=='stop':
                 TAc.print(LANG.render_feedback("end", random.choice(ll.end)), "green", ["bold"])
                 exit(0)
             else:
-                assert answer_what_to_do=='change_rules'
+                assert answer_what_to_do=='inverti_ruoli'
                 TAc.print(LANG.render_feedback("proof", 'Bene, sei pronto/a a dimostrarmi il principio di Archimede? Cominciamo subito!'), "white")
                 counter=0
                 new_match(ENV['seed'], counter)
@@ -91,7 +91,7 @@ def no_case():
             assert y_n=='n'
             no_case()
 
-TAc.print(LANG.render_feedback("principio-Archimede", '\nSaresti propenso/a a credere che per ogni numero reale x > 0 esiste un numero naturale n tale che 1/n < x? (y/n)'), "white")
+TAc.print(LANG.render_feedback("principio-Archimede", '\nSaresti propenso/a a credere che per ogni numero reale x > 0 esiste un numero naturale n > 0 tale che 1/n < x? (y/n)'), "white")
 y_n=TALinput(str, regex=f"^(y|n)$", sep=None, TAc=TAc)[0]
 if y_n=='y':
     TAc.print(LANG.render_feedback("proof", 'Bene, sei pronto/a a dimostrarmi il principio di Archimede? Cominciamo subito!'), "white")
