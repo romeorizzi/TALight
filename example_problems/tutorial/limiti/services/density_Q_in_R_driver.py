@@ -46,33 +46,39 @@ def check_int_in_interval(nx,ny):
     TAc.print(LANG.render_feedback("correct", random.choice(ll.correct)), "green", ["bold"])
     return user_int
 
-def check_q(x,y):
+def check_q(x,y,n,user_int):
     q=TALinput(str, regex=f"^((\S)+)$", sep=None, TAc=TAc)[0]
-    regex = '^\d+(/)\d+$'
+    regex = '^[-+*()\d]+(/)[-+*()\d]+$'
     result = re.match(regex, q)
     if not result:
         TAc.print(LANG.render_feedback("error", f'non hai inserito un numero razionale nella forma da me indicata (ovvero a/b)... riprova:'), "red", ["bold"])	
-        return check_q(x,y)
+        return check_q(x,y,n,user_int)
     elif eval(q)<x:
         TAc.print(LANG.render_feedback("error", f'guarda che {q}<{x}, riprova:'), "red", ["bold"])
-        return check_q(x,y)
+        return check_q(x,y,n,user_int)
     elif eval(q)>y:
         TAc.print(LANG.render_feedback("error", f'guarda che {q}>{y}, riprova:'), "red", ["bold"])
-        return check_q(x,y)
-    return TAc.print(LANG.render_feedback("correct", f'Ben fatto! Abbiamo trovato la q che cercavamo, ovvero {q} = {eval(q)}'), "green", ["bold"])
+        return check_q(x,y,n,user_int)
+    correct_q=user_int/n
+    if eval(q)!=correct_q:
+        TAc.print(LANG.render_feedback("error", f'mmmm ci sei quasi! il numero razionale che hai inserito e\' compreso tra x ed y ma puoi fare di meglio: utilizza una relazione tra l\'intero che hai scelto (ovvero {user_int}) ed n={n} per creare un intero della forma \'a/b\', riprova:'), "yellow", ["bold"])
+        return check_q(x,y,n,user_int)
+    return TAc.print(LANG.render_feedback("correct", f'Ben fatto! Abbiamo trovato la q che cercavamo, ovvero {q} = {eval(q)}. Abbiamo dimostrato che Q e\' denso in R!'), "green", ["bold"])
 
 def new_match(seed):
     TAc.print(LANG.render_feedback("seed", f'(seed: {seed})'), "yellow", ["bold"])
     x,y=ll.instance_density(seed)
     # print('y-x ',y-x)
-    TAc.print(LANG.render_feedback("proposal", f'Le mie proposte sono: \nx={x} \ny={y} \nscrivi un numero naturale n > 0 che soddisfi il principio di Archimede (con argomento y-x):'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("proposal", f'Le mie proposte sono:'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("proposal", f'x={x} \ny={y} '), "yellow", ["reverse"])
+    TAc.print(LANG.render_feedback("proposal", f'scrivi un numero naturale n > 0 che soddisfi il principio di Archimede (con argomento y-x):'), "yellow", ["bold"])
     n=check_user_solution(y-x)
     nx=n*x
     ny=n*y
     TAc.print(LANG.render_feedback("next-step", f'Nota ora che {n}*x vale {nx} e {n}*y vale {ny} \ndimmi un intero in ({nx} , {ny}):'), "yellow", ["bold"])
     user_int=check_int_in_interval(nx,ny)
-    TAc.print(LANG.render_feedback("next-step", f'Utilizzando questo intero e la n che mi hai proposto, riusciresti a trovare un numero razionale (ovvero della forma a/b) compreso tra {x} e {y}? scrivilo:'), "yellow", ["bold"])
-    check_q(x,y)
+    TAc.print(LANG.render_feedback("next-step", f'Utilizzando questo intero e la n che mi hai proposto, riusciresti a trovare un numero razionale (ovvero della forma a/b) compreso tra x={x} e y={y}? scrivilo:'), "yellow", ["bold"])
+    check_q(x,y,n,user_int)
 
 def what_to_do():
     TAc.print(LANG.render_feedback("what-to-do", 'Vuoi fermarti qui, fare un\'altra partita o passare ad un livello successivo? (stop/nuova_partita/livello_successivo)'),  "yellow", ["bold"])
@@ -95,16 +101,18 @@ def disprove():
     TAc.print(LANG.render_feedback("disprove", 'inserisci un valore reale y tale che x<y:'),  "yellow", ["bold"])
     user_y=TALinput(str, regex=f"^(\S)+$", sep=None, TAc=TAc)[0]
     y_eval=eval(user_y)
-    # print(x_eval, y_eval)
+    print(x_eval, y_eval)
     if x_eval<0 and 0<y_eval:
         return TAc.print(LANG.render_feedback("disprove", f'vedi, per q=0 si ha che x={user_x} < 0 < {user_y}=y'),  "yellow", ["bold"])
     if not x_eval<y_eval:
         TAc.print(LANG.render_feedback("error", f'hai inserito un valore per y<=x e io te ne avevo chiesto uno maggiore... ricominciamo:'), "red", ["bold"])	
         return disprove()
-    n=ceil(1/(y_eval-x_eval)+0.000000000001)
-    integer=ceil(n*x_eval+0.000000000001)
+    n=ceil(1/(y_eval-x_eval)+0.00000000001)
+    integer=ceil(n*x_eval+0.00000000001)
+    print('n ',n,'integer ',integer)
     assert integer < n*y_eval
     q=integer/n
+    print(q)
     assert x_eval<q and q<y_eval
     return TAc.print(LANG.render_feedback("disprove", f'vedi, per q={integer}/{n}={q} si ha che x={user_x} < {q} < {user_y}=y'),  "yellow", ["bold"])
 
