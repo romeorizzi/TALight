@@ -53,23 +53,23 @@ def new_match(seed,source):
     instance_str=new_set(seed,source)
     instance=ll.instance_to_number(instance_str)
     max_position=instance.index(max(instance))
-    print(instance_str[max_position])
+    # print(instance_str[max_position])
     TAc.print(LANG.render_feedback("max", f'determina il massimo:'), "yellow", ["bold"])
     soluzione(instance_str,max_position)
 
 def what_to_do():
     TAc.print(LANG.render_feedback("what-to-do", 'Vuoi fermarti qui, fare un\'altra partita oppure ti senti pronto a passare ad un livello successivo? (stop/another_match/next_level)'),  "yellow", ["bold"])
-    answer_what_to_do=TALinput(str, regex=f"([a-zA-Z])\w+", sep=None, TAc=TAc)
-    if answer_what_to_do[0]=='stop':
+    answer_what_to_do=TALinput(str, regex=f"([a-zA-Z])\w+", sep=None, TAc=TAc)[0]
+    if answer_what_to_do=='stop':
         TAc.print(LANG.render_feedback("end", random.choice(ll.end)), "green", ["bold"])
         exit(0)
-    elif answer_what_to_do[0]=='another_match':
+    elif answer_what_to_do=='another_match':
         seed=random.randint(100000,999999)
         new_match(seed,'randgen')
         what_to_do()
     else:
-        assert answer_what_to_do[0]=='next_level'
-        TAc.print(LANG.render_feedback("algorithm", 'Ok! Ecco una proposta per il livello successivo: \nProva a scrivere (qui su terminale o immettendo un bot) una funzione ricorsiva che calcoli per te il massimo di un insieme finito'),  "yellow", ["bold"])
+        assert answer_what_to_do=='next_level'
+        TAc.print(LANG.render_feedback("algorithm", 'Ok! Ecco una proposta per il livello successivo: \nProva a scrivere (qui su terminale o immettendo un file) una funzione ricorsiva che calcoli per te il massimo di un insieme finito:'),  "yellow", ["bold"])
         # path=TALinput(str, sep=None, TAc=TAc)[0]
         # answer=TALf.get_file_str_from_path(path)
         # print(answer)

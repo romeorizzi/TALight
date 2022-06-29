@@ -70,6 +70,36 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
+  archimede_prover:
+    evaluator: [python, services/archimede_prover.py]
+    description: 'In questo esercizio dovrai verificare se l\''insieme che ti viene fornito ha un estremo superiore, se ha un massimo (ed eventualmente determinarlo) ed infine qual e\'' l\''estremo superiore.'
+    args:
+      source:
+        regex: ^(catalogue|randgen)$
+        default: randgen
+        explain: 'Per inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina, non è necessario impostare questo argomento: basta chiamare il servizio con:\n rtal connect limiti max_fin_ser -finstance=percorso_del_file_contenete_l\''istanza\n Con questa chiamata il servizio presuppone che il file contenga due righe: la prima destinata a contenere l\''istanza e la seconda costituita dal suo seed. (capire se mantenere o no: in questo caso al ragazzo converrebbe semplicemente richiamare il servizio con un determinato seed... c\''e` poco vantaggio nel caricare una propria istanza) L\''argomento `source` viene usato solo quando non associ un file locale al gestore del file dell\''istanza. In tal caso, determina il modo in cui l\''istanza viene immessa nel servizio:'
+        explain1: '[catalogue] il servizio lavora su un\''istanza presa dal catalogo situato sul server. Le istanze nel catalogo sono numerate in modo progressivo a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza a cui sei interessato/a.'
+        explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. (capire se mettere come descittore d\''istanza `parameter`: con l\''argomento pari a 1 si avra` un\''istanza del tipo {x | x=2*k+1, 3<k<9  k in N}; con l\''argomento pari a 0 si avra` qualcosa del tipo {x in R | 4<=x^2<49})'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: 'qualsiasi naturale positivo (nella sua rappresentazione decimale)'
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 001
+        explain: 'Questo argomento viene utilizzato per identificare una particolare istanza (ovvero un insieme) all\''interno del catalogo delle istanze archiviate sul server. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.'
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Se questo flag è impostato a 1 allora la soluzione viene scaricata come file nella cartella il cui percorso completo è specificato tramite il flag -o.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
