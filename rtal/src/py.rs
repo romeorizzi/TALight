@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 mod problem;
 mod proto;
 
@@ -31,31 +32,54 @@ impl RTAL {
             version: proto::VERSION,
         }) {
             Ok(x) => Message::Text(x),
-            Err(x) => return Err(format!("Cannot forge handshake request: {}", x)),
+            Err(x) => {
+                return Err(PRE::new_err(format!(
+                    "Cannot forge handshake request: {}",
+                    x
+                )))
+            }
         };
         if let Err(x) = ws.write_message(handshake_request) {
-            return Err(format!("Cannot send handshake request: {}", x));
+            return Err(PRE::new_err(format!(
+                "Cannot send handshake request: {}",
+                x
+            )));
         };
         let handshake_reply = loop {
             match ws.read_message() {
                 Ok(Message::Text(x)) => match Reply::parse(&x) {
                     Ok(Reply::Handshake { magic, version }) => break (magic, version),
-                    Ok(_) => return Err(format!("Server performed a wrong handshake")),
-                    Err(x) => return Err(format!("Could not parse server handshake: {}", x)),
+                    Ok(_) => {
+                        return Err(PRE::new_err(format!("Server performed a wrong handshake")))
+                    }
+                    Err(x) => {
+                        return Err(PRE::new_err(format!(
+                            "Could not parse server handshake: {}",
+                            x
+                        )))
+                    }
                 },
-                Err(x) => return Err(format!("Connection lost while performing handshake: {}", x)),
+                Err(x) => {
+                    return Err(PRE::new_err(format!(
+                        "Connection lost while performing handshake: {}",
+                        x
+                    )))
+                }
                 Ok(_) => {}
             }
         };
         if !(handshake_reply.0 == proto::MAGIC && handshake_reply.1 == proto::VERSION) {
             return if handshake_reply.0 == proto::MAGIC {
-                Err(format!(
+                Err(PRE::new_err(format!(
                     "Protocol version mismatch: local={}, server={}",
                     proto::VERSION,
                     handshake_reply.1
-                ))
+                )))
             } else {
-                Err(format!("\"{}\" is not a Turing Arena Light server", url))
+                Err(PRE::new_err(format!(
+                    "\"{}\" is not a Turing Arena Light server",
+                    url
+                )))
             };
         }
         Ok(RTAL { ws })
