@@ -55,7 +55,7 @@ def instance_randgen(set_cardinality:int,seed:int):
 def instance_archimede(seed:int):
     random.seed(seed)
     decimal_number=float(format(random.random(),'.6f'))
-    coefficient=format(decimal_number/(10**random.randint(1,2)),'.5f')
+    coefficient=format(decimal_number/(10**random.choice([1,2])),'.4f')
     instance_constant=random.choice(['e','pi'])
     instance_function=random.choice(['cos','sin','sqrt'])
     constant=coefficient+'*'+instance_constant

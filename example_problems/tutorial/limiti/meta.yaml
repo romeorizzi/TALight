@@ -99,6 +99,20 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
+  archimede_curiosity:
+    evaluator: [python, services/archimede_curiosity_driver.py]
+    description: 'Con questo esercizio/curiostia\'' si fa un piccolo salto verso i limiti di successioni. Ti verra\'' chiesto se il limite di una successione convergente di termini positivi e\'' sempre strettamente positivo oppure no ed in seguito ti verra\'' proposta una particolare serie per confermare o confutare questa affermazione.'
+    args:
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
