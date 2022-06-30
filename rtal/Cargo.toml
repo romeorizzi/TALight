@@ -16,13 +16,18 @@ path="src/check.rs"
 name="rtald"
 path="src/server.rs"
 
+[lib]
+name="pyrtal"
+path="src/py.rs"
+crate-type = ["cdylib"]
+
 [dependencies]
 clap = { version = "3", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 tracing = "0.1"
-#tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tracing-subscriber = "0.3"
-tokio-tungstenite = { version = "0.16", features = ["connect", "rustls-tls-webpki-roots"] }
+tungstenite = { version = "0.17", features = ["rustls-tls-webpki-roots"] }
+tokio-tungstenite = { version = "0.17", features = ["connect", "rustls-tls-webpki-roots"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serde_yaml = "0.8"
@@ -31,10 +36,11 @@ path-absolutize = "3"
 regex = "1"
 futures-util = "0.3"
 tokio-tar = "0.3"
-sanitize-filename = "0.3"
+sanitize-filename = "0.4"
 twox-hash = "1"
 tempfile = "3"
 chrono = "0.4"
+pyo3 = { version = "0.16", features = ["extension-module"] }
 
 [target.'cfg(unix)'.dependencies]
-nix = "0.23"
+nix = "0.24"
