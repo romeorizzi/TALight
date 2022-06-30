@@ -11,46 +11,59 @@ from sympy import *
 from math import *
 import random
 import decimal
-correct = ['Bene!', 'Molto bene!', 'Ok!','Ottimo!']
+correct = random.choice(['Bene!', 'Molto bene!', 'Ok!','Ottimo!'])
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
 def instance_to_array(input_str):
-    instance_str=input_str.split(", ")
+    instance_str=input_str.split('\n')
     return instance_str
 
 def instance_to_number(instance_str):
     instance = list(map(eval, instance_str))
     return instance
 
-def instance_randgen(set_cardinality:int,seed:int):
+def instance_randgen(set_cardinality:int,reference_set:str,seed:int):
     assert set_cardinality>0
-    instance_constants=['e','pi']
-    instance_functions=['cos','sin','sqrt']
     random.seed(seed)
     instance = []
-    integer=(set_cardinality//2)//2
-    decimal=set_cardinality//2 - integer
-    fraction=(set_cardinality-integer-decimal)//2
-    math_constants=(set_cardinality-integer-decimal-fraction)//2
-    math_functions=set_cardinality-integer-decimal-fraction-math_constants
-    for i in range (integer):
-        random.seed(seed+i)
-        instance.append(str(random.randint(-20,20)))
-    for i in range (decimal):
-        random.seed(seed+i)
-        instance.append(format(random.uniform(-20,20), '.2f'))
-    for i in range (fraction):
-        random.seed(seed+i)
-        instance.append(str(random.randint(-70,70))+'/'+str(random.randint(2,15)))
-    for i in range (math_constants):
-        random.seed(seed+i)
-        instance.append(random.choice(instance_constants)+'*'+str(random.randint(2,5)))
-    for i in range (math_functions):
-        random.seed(seed+i)
-        funct=random.choice(instance_functions)
-        instance.append((funct+'('+str(random.randint(3,400))+')')if funct=='sqrt' else (funct+'(pi'+'*'+str(random.randint(1,11))+'/'+str(random.randint(1,6)))+')*'+str(random.randint(1,25)))
-    random.shuffle(instance)
+    if reference_set=='natural':
+        instance= random.sample(range(50),set_cardinality)
+    else:
+        assert reference_set=='decimal'
+        for i in range (set_cardinality):
+            random.seed(seed+i)
+            instance.append(format(random.uniform(-50,50), '.2f'))
     return instance
+
+# def instance_randgen(set_cardinality:int,seed:int):
+#     assert set_cardinality>0
+#     instance_constants=['e','pi']
+#     instance_functions=['cos','sin','sqrt']
+#     random.seed(seed)
+#     instance = []
+#     integer=(set_cardinality//2)//2
+#     decimal=set_cardinality//2 - integer
+#     fraction=(set_cardinality-integer-decimal)//2
+#     math_constants=(set_cardinality-integer-decimal-fraction)//2
+#     math_functions=set_cardinality-integer-decimal-fraction-math_constants
+#     for i in range (integer):
+#         random.seed(seed+i)
+#         instance.append(str(random.randint(-20,20)))
+#     for i in range (decimal):
+#         random.seed(seed+i)
+#         instance.append(format(random.uniform(-20,20), '.2f'))
+#     for i in range (fraction):
+#         random.seed(seed+i)
+#         instance.append(str(random.randint(-70,70))+'/'+str(random.randint(2,15)))
+#     for i in range (math_constants):
+#         random.seed(seed+i)
+#         instance.append(random.choice(instance_constants)+'*'+str(random.randint(2,5)))
+#     for i in range (math_functions):
+#         random.seed(seed+i)
+#         funct=random.choice(instance_functions)
+#         instance.append((funct+'('+str(random.randint(3,400))+')')if funct=='sqrt' else (funct+'(pi'+'*'+str(random.randint(1,11))+'/'+str(random.randint(1,6)))+')*'+str(random.randint(1,25)))
+#     random.shuffle(instance)
+#     return instance
 
 def instance_archimede(seed:int):
     random.seed(seed)
