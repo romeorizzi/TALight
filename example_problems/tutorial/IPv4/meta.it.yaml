@@ -1,0 +1,49 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  all:
+    regex: ^((\S)+)$
+    descrizione: "Questo servizio mette a disposizione tutti i sotto-problemi della problema IPv4"
+    args:
+      problemi: 
+        regex:  ^(first_IP|last_IP|random_IP|list_all)$
+        default: random_IP
+        explain: "the options are as follows:"
+        explain1: -first_IP= scrivi solo il primo indirizzo ip appartenente all'indirizzo di rete
+        explain2: -last_IP= scrivi solo l'ultimo indirizzo ip appartentete all'indirizzo di rete
+        explain3: -random_IP= scrivi un indirizzo ip appartentente all'indirizzo di rete
+        explain4: -list_all= scrivi l'intera lista degli indirizzi ip appartenenti all'indirizzo di rete, in ordine crescente
+      first_ip:
+        regex: ^((\d)+\.){3}(\d)$
+        default: first_ip
+        evaluator: [python, services/first_ip.py]
+      last_ip:
+        regex: ^((\d)+\.){3}(\d)$
+        default: last_ip
+        evaluator: [python, servieces/last_ip.py]
+      random_ip:
+        regex: ^((\d)+\.){3}(\d)$
+        default: random_ip
+        evaluator: [python, services/random_ip]
+      list_all:
+        regex: ^((\d)+\.){3}(\d)$
+        default: list_all
+        evaluator: [python, services/list_all]
+      lang: 
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...

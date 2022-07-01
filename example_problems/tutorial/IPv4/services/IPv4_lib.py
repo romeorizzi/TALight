@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 from os import supports_bytes_environ
 import random
+from TALinputs import TALinput
+from multilanguage import Env, TALcolors, Lang
+
+ENV =Env(args_list)
+TAc =TALcolors(ENV)
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 
 def subnet_mask():
   """This function will generate, in a pseudo-random way, the subnet mask"""
@@ -40,7 +46,8 @@ def net_address(subnet):
   return numeroIndirizzoInternet
 
 def first_ip(numeroIndirzzoInternet):
-  ip=input("Enter the first ip address belonging to the network address:\n")
+  ("Enter the first ip address belonging to the network address:\n")
+  ip=TALinput(str, regex="^((\d)+\.){3}(\d)+$", sep=None, TAc=TAc)
   numeriIP=[]
   numeri=[]
   numeroIndirzzoInternet= ip.split(".")
