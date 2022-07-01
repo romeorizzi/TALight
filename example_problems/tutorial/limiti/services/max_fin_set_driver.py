@@ -3,7 +3,6 @@ from sys import exit
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from TALfiles import TALfilesHelper
-from math import *
 import limiti_lib as ll
 from numpy import array
 # METADATA OF THIS TAL_SERVICE:
@@ -28,7 +27,7 @@ seed=ENV["seed"]
 set_cardinality=ENV["set_cardinality"]
 if source=='catalogue':
     set_values = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension='txt')
-    TAc.print(LANG.render_feedback("instance", f'# instance_id={ENV["instance_id"]} \n# Dati i seguenti numeri: \n{set_values}'),  "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance", f'# instance_id: {ENV["instance_id"]} \n# Dati i seguenti numeri: \n{set_values}'),  "yellow", ["bold"])
     instance=ll.instance_to_array(set_values)
     output_filename = f"instance_catalogue_{ENV['instance_id']}_max_fin_set.txt"
 else:

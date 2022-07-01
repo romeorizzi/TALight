@@ -204,40 +204,26 @@ def new_match(seed,contatore,output_filename):
                 TAc.print(LANG.render_feedback("max", f'Guarda che e\' limitato... ad esempio {sup+random.randint(1,10)} e\' un maggiorante.'),  "red", ["bold"])
                 TAc.print(LANG.render_feedback("max", f'Ti ho convinto?'),  "yellow", ["bold"])
                 return new_match(seed, contatore,output_filename)
-    TAc.print(LANG.render_feedback("sup", f'dammi ora l\'estremo superiore:'),  "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("sup", f'dammi ora l\'estremo superiore (se credi che l\'insieme non sia limato superiormente scrivi "inf"):'),  "yellow", ["bold"])
     if ENV["download"]:
         output=instance+'\n'+str(seed)
         TALf.str2output_file(output,output_filename)
     return sup_case(sup)
 
-def what_to_do():
-    TAc.print(LANG.render_feedback("what-to-do", 'Vuoi fermarti qui o fare un\'altra partita? (stop/another_match)'),  "yellow", ["bold"])
-    answer_what_to_do=TALinput(str, regex=f"([a-zA-Z])\w+", sep=None, TAc=TAc)
-    if answer_what_to_do[0]=='stop':
-        TAc.print(LANG.render_feedback("end", random.choice(ll.end)), "green", ["bold"])
-        exit(0)
-    else:
-        assert answer_what_to_do[0]=='another_match'
-        seed=random.randint(100000,999999)
-        TAc.print(LANG.render_feedback("seed", f'seed: {seed}'), "yellow", ["bold"])
-        output_filename = f"instance_{seed}.max_sup.txt"
-        new_match(seed,contatore,output_filename)
-        what_to_do()
-
-TAc.print(LANG.render_feedback("start", 'Per risolvere l\'esercizio ti potrebbero tornare utili i seguenti concetti: \n1) Se un insieme non e\' finito potrebbe non ammettere massimo. \n2) Un insieme limitato (superiormente/inferiormente/entrambi) non sempre ammette massimo.\n3) Un numero k in X (dove X e\' un insieme totalmente ordinato) e\' un maggiorante di Y, Y sottoinsieme di X, se k >= x per ogni x in Y. \n4) L\'estremo superiore di Y e\' il minimo dei maggioranti. \n5) Ogni sottoinsieme Y di X non vuoto e limitato superiormente possiede estremo superiore.'), "white")
+# TAc.print(LANG.render_feedback("start", 'Per risolvere l\'esercizio ti potrebbero tornare utili i seguenti concetti: \n1) Se un insieme non e\' finito potrebbe non ammettere massimo. \n2) Un insieme limitato (superiormente/inferiormente/entrambi) non sempre ammette massimo.\n3) Un numero k in X (dove X e\' un insieme totalmente ordinato) e\' un maggiorante di Y, Y sottoinsieme di X, se k >= x per ogni x in Y. \n4) L\'estremo superiore di Y e\' il minimo dei maggioranti. \n5) Ogni sottoinsieme Y di X non vuoto e limitato superiormente possiede estremo superiore.'), "white")
 if ENV["source"]!='catalogue':
     assert ENV["source"]=='randgen'
-    output_filename = f"instance_{ENV['seed']}.max_sup.txt"
+    output_filename = f"instance_{ENV['seed']}_max_sup.txt"
     seed=ENV["seed"]
     TAc.print(LANG.render_feedback("seed", f'seed: {seed}'), "yellow", ["bold"])
 else:
     input = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension='txt')
     instance=input.split('\n')[0]
     seed=int(input.split('\n')[1])
-    output_filename = f"instance_catalogue_{ENV['instance_id']}.max_sup.txt"
+    output_filename = f"instance_catalogue_{ENV['instance_id']}_max_sup.txt"
     TAc.print(LANG.render_feedback("seed", f'instance_id: {ENV["instance_id"]}'), "yellow", ["bold"])
 
 contatore=0 # mi serve per generare numeri casuali in modo indipendente dal seed (nel caso di "insieme limitato ma il ragazzo dice di no")
 new_match(seed,contatore,output_filename)
-what_to_do()
+TAc.print(LANG.render_feedback("end", random.choice(ll.end)), "green", ["bold"])
 exit(0)

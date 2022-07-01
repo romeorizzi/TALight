@@ -85,6 +85,69 @@ def instance_density(seed:int):
     y=decimal.Decimal(str(round(x+aggiunta,4)))
     return x,y
 
+
+def instance_inf_set(seed:int):
+    random.seed(seed)
+    diseq_grater=random.choice(['>','>='])
+    parameter=True if seed<350000 else False
+    # parameter=False
+    if parameter:
+        m=random.randint(1,5)
+        cond_1=random.choice([str(m)+'*k', str(m)+'*k+1'])
+        x=random.randint(5,200)
+        k=random.randint(7,15)
+        x_min='x'+str(x) if '=' in diseq_grater else 'x'+str(x+1)
+        k_min='k'+str(k) if '=' in diseq_grater else 'k'+str(k+1)
+        cond_2=random.choice([['x'+diseq_grater+str(x), x_min], ['k'+diseq_grater+str(k),k_min]])
+        condition='x='+cond_1+', '+cond_2[0]
+        instance='{x | '+condition+'  k in N}'
+        return ('parameter',instance, cond_1, cond_2[1])
+    else:
+        diseq_less=random.choice(['<','<='])
+        diseq_less_1=random.choice(['<','<='])
+        diseq=random.choice([diseq_grater,diseq_less])
+        def max_sup(x,x_inf,x_sup):
+            if diseq in diseq_less:
+                max_1=x if '=' in diseq else None
+                sup_1=x
+            else:
+                max_1=None
+                sup_1=np.inf
+            max_2=x_sup if '=' in diseq_less_1 else None
+            sup_2=x_sup
+            min_2=x_inf if '=' in diseq_less else x_inf+0.00000000000001
+            return max_1,sup_1,max_2,sup_2,min_2
+        linear=random.choice([True,False])
+        if linear:
+            power=1
+            x=random.randint(-30,30)
+            x_inf=random.randint(-50,50)
+            x_sup=x_inf+random.randint(2,30)
+            max_1,sup_1,max_2,sup_2, min_2=max_sup(x,x_inf,x_sup)
+            condition=random.choice([['x'+diseq+str(x), max_1,sup_1], [str(x_inf)+diseq_less+'x'+diseq_less_1+str(x_sup), max_2,[min_2,sup_2]]])
+        else:
+            power=random.randint(2,3)
+            variable='x^'+str(power)
+            x=random.randint(-10,10)
+            x_inf=random.randint(1,5)
+            x_sup=x_inf+random.randint(2,5)
+            max_1,sup_1,max_2,sup_2,min_2=max_sup(x,x_inf,x_sup)
+            if power==2:
+                sup_2=abs(sup_2)
+                if max_1!=None:
+                    max_1=abs(max_1)
+                if max_2!=None:
+                    max_2=abs(max_2)
+            if sup_1!=np.inf and power==2:
+                sup_1=abs(sup_1)
+                min_1=-sup_1
+            else:
+                min_1=None
+            condition=random.choice([[variable+diseq+str(x**power),max_1,[min_1,sup_1]], [str(x_inf**power)+diseq_less+variable+diseq_less_1+str(x_sup**power), max_2, [min_2,sup_2]]])
+        instance='{x in R | '+condition[0]+'}'
+        return ('without_parameter'+str(power),instance, condition[1], condition[2])
+
+
 def instance_randgen_1(seed:int):
     random.seed(seed)
     diseq_grater=random.choice(['>','>='])
