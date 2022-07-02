@@ -2,27 +2,27 @@
 ---
 public_folder: public
 services:
-  gimme_IPs_in_subnet:
-    descrizione: "this service takes in a subnet Mask (e.g., 255.255.0.0) defining a whole range of valid IP addresses. The service returns IP addresses from that range. Use the arguments of the service to specify which IP's in the range should be returned."
+  #gimme_IPs_in_subnet:
+  #  descrizione: "this service takes in a subnet Mask (e.g., 255.255.0.0) defining a whole range of valid IP addresses. The service returns IP addresses from that range. Use the arguments of the service to specify which IP's in the range should be returned."
     #evaluator: [python, services/gimme_IP_in_subnet_driver.py]
-    args:
+  #  args:
     #  subnet_Mask:
     #    regex:  ^((\d)+\.){3}(\d)+$
     #    default: 255.255.0.0
     #    regex-explained: a netmask comprises four fields separated by dots. Each field is a numer in digital representation.
     #    example: 255.255.0.0
     #    explain: a subnet mask comprises four fields separated by dots. Each field is a number that can have a value of 0 or 255 
-      output:
-        regex:  ^(first_IP|last_IP|random_IP|list_all)$
-        default: random_IP
-        explain: "the options are as follows:"
-        explain1: -first_IP= return only the first valid IP of the range
-        explain2: -last_IP= return only the last valid IP of the range
-        explain3: -random_IP= return a random_IP in the range 
-        explain4: -list_all= return a list of the IPs in the range in order from the minus to the biggest.
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
+  #    output:
+  #      regex:  ^(first_IP|last_IP|random_IP|list_all)$
+  #      default: random_IP
+  #      explain: "the options are as follows:"
+  #      explain1: -first_IP= return only the first valid IP of the range
+  #      explain2: -last_IP= return only the last valid IP of the range
+  #      explain3: -random_IP= return a random_IP in the range 
+  #      explain4: -list_all= return a list of the IPs in the range in order from the minus to the biggest.
+  #    lang:
+  #      regex: ^(hardcoded|hardcoded_ext|en|it)$
+   #     default: it
 
   #IPs_in_subnet_check:
   #  descrizione: "this service takes in a subnet Mask (e.g., 255.255.0.0) defining a whole range of valid IP addresses. The service returns IP addresses from that range. Use the arguments of the service to specify which IP's in the range should be returned."
@@ -55,11 +55,9 @@ services:
     descrizione: "Per questo problema ti viene chiesto di inserire il primo indirizzo ip appartenente all'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      primo indirizzo ip --> 169.21.3.0"
     evaluator: [python, services/first_ip/first_ip.py]
     args:
-        regex: ^((\d)+\.){3}(\d)$
-        subnet_mask: 
-          description: "a subnet mask comprises four fields separated by dots. Each field is a number that can have a value of 0 or 255"
-        net_address:
-          description: "the internet address is made up of 4 triplets of numbers divided by a period. Each number can range from 0 to 255"
+        ip_address: 
+          regex: ^((\d)+\.){3}(\d)$
+          
         lang: 
           regex: ^(hardcoded|hardcoded_ext|en|it)$
           default: it
