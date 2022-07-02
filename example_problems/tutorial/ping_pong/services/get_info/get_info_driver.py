@@ -1,1 +1,0 @@
-../../../../../universal_services/get_info/get_info_driver.py

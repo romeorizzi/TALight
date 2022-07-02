@@ -39,7 +39,11 @@ except Exception as e:
         print(LANG.render_feedback("operation-necessary", ' This operation is necessary. The synopsis service aborts and drops the channel.'), file=out)
     exit(1)
 
-problem_folder = os.path.join(environ["TAL_META_DIR"], '..', ENV['problem'])
+path_tokens = os.path.split(environ["TAL_META_DIR"])[:-1]
+problem_folder = path_tokens[0]
+for token in path_tokens[1:]:
+    problem_folder = os.path.join(problem_folder,token)
+problem_folder = os.path.join(problem_folder,ENV['problem'])
 meta_yaml_file = os.path.join(problem_folder,'meta.yaml')
 if not os.path.isdir(problem_folder):
     TAc.print(LANG.render_feedback("problem-folder-missing", f'Error: problem folder not found in the directory currently deployed by the rtald server invocated. I was searching for problem folder: {problem_folder}'), "red", ["bold"])
