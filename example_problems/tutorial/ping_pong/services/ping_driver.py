@@ -8,13 +8,13 @@ from TALfiles import TALfilesHelper
 args_list = [
     ('msg',str),
     ('ping_via',str),
-    ('bounch_on',str),
+    ('pong_via',str),
     ('with_opening_message',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now' if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
@@ -36,11 +36,11 @@ else:
         exit(1)
 
 reply = "You sent me the string:\n" + msg
-if ENV['bounch_on'] == 'stdout':
+if ENV['pong_via'] == 'stdout':
     print(reply)
-elif ENV['bounch_on'] == 'stderr':
+elif ENV['pong_via'] == 'stderr':
     print(reply, file=stderr)
 else:
-    assert ENV['bounch_on'] == 'file'
+    assert ENV['pong_via'] == 'file'
     TALf.str2output_file(reply,f'pong.txt')
 exit(0)

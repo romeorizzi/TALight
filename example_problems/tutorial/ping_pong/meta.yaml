@@ -4,7 +4,7 @@ public_folder: public
 services:
   ping:
     evaluator: [python, services/ping_driver.py]
-    description: "the user sends a message and the service bounches it back. By default, the message is sent via argument `msg` and bounched on `stdout`. However, the arguments `ping_via` and `bounch_on` allow for other configurations."
+    description: "the user sends a message and the service bounches it back. By default, the message is sent via argument `msg` and bounched on `stdout`. However, the arguments `ping_via` and `pong_via` allow for other configurations."
     files:
       - file_with_msg
     args:
@@ -15,7 +15,7 @@ services:
       ping_via:
         regex: ^(TALight_argument|file|stdin_dry|stdin_interactive)$
         default: TALight_argument
-      bounch_on:
+      pong_via:
         regex: ^(stdout|stderr|file)$
         default: stdout
       with_opening_message:
@@ -24,6 +24,47 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it|[a-zA-Z0-9_]+)$
         default: hardcoded
+
+  get_info:
+    evaluator: [python, services/get_info_driver.py]
+    description: "this service takes in the name of a TALight problem deployed by the server (plus possibly the name of one problem's service) and provides information about the whole problem (or the single service) in the form of a subtree of the yaml tree described in the meta.yaml file of the problem. The yaml file is filtered according to the values set for the arguments of the service."
+    args:
+      problem:
+        regex: ^(.*)$
+        explain: the name of the TALight problem you seek information about in the form of a yaml file offering a subtree of its meta.yaml file
+      service:
+        regex: ^(.*)$
+        default: all_services
+      exclude_services:
+        regex: ^(.*)$
+        default: "[synopsis]"
+      output_on:
+        regex: ^(stdout|file)$
+        default: stdout
+      with_description:
+        regex: ^(0|1)$
+        default: 0
+      with_evaluator:
+        regex: ^(0|1)$
+        default: 0
+      with_files:
+        regex: ^(0|1)$
+        default: 1
+      exclude_arguments:
+        regex: ^(.*)$
+        default: "[lang, with_opening_message]"
+      with_regex:
+        regex: ^(0|1)$
+        default: 1
+      with_default:
+        regex: ^(0|1)$
+        default: 1
+      with_explain:
+        regex: ^(0|1)$
+        default: 0
+      with_example:
+        regex: ^(0|1)$
+        default: 0
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
