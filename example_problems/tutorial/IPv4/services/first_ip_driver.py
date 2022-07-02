@@ -12,9 +12,9 @@ args_list=[
   ("ip_address", write),
 ]
 
-ENV =Env(args_list)
-TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+ENV = Env(args_list)
+TAc = TALcolors(ENV)
+LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 
 
 subnet=subnet_mask()
@@ -25,11 +25,13 @@ TAc.print("\nINTERNET ADDRESS:  ", "green")
 TAc.print(internet, "green", ["italic"])
 
 TAc.print("Inserire il primo indirizzo ip appartenente all'indirizo di rete qui sopra", "red", ["bold"])
-ip=(ENV[ip_address], TAc, LANG)
+#ip=(ENV[ip_address], TAc, LANG)
+ip=TALinput(None, 4, None, None, str='#', regex= "^((\d)+\.){3}(\d)+$")
 separetedStrings= ip.split(".")
 numeriIP=[]
 for i in range (len(separetedStrings)) :
   numeriIP.append( int(separetedStrings[i]))
+  
 if internet[0] != numeriIP[0] or internet[1]!=numeriIP[1] or internet[2] != numeriIP[2] or internet[3]!=numeriIP[3] :
   TAc.print("ERRORE\nRiprova", "red", ["bold"])
 else:
