@@ -4,9 +4,7 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, TALcolors, Lang
 
-ENV =Env(args_list)
-TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+
 
 def subnet_mask():
   """This function will generate, in a pseudo-random way, the subnet mask"""
@@ -42,47 +40,15 @@ def net_address(subnet):
     n1=random.randint(1,255)
     n2=random.randint(1,255)
     n3=random.randint(1,255)
-  numeroIndirizzoInternet=n1,".",n2,".",n3,".",n4
+  numeroIndirizzoInternet=[]
+  numeroIndirizzoInternet.append(n1,n2,n3,n4)
   return numeroIndirizzoInternet
 
-def first_ip(numeroIndirzzoInternet):
-  ("Enter the first ip address belonging to the network address:\n")
-  ip=TALinput(str, regex="^((\d)+\.){3}(\d)+$", sep=None, TAc=TAc)
-  numeriIP=[]
-  numeri=[]
-  numeroIndirzzoInternet= ip.split(".")
-  for i in range (len(numeroIndirzzoInternet)) :
-    numeri.append( int(numeroIndirzzoInternet[i]))
-  separetedStrings= ip.split(".")
-  for i in range (len(separetedStrings)) :
-    numeriIP.append( int(separetedStrings[i]))
-  if numeri[2]!=0:
-    while numeri[0]!=numeriIP[0] or numeri[1]!=numeriIP[1] or numeri[2]!=numeriIP[2] or numeri[3]!=0:
-      print ("WRONG\nTRY AGAIN\n")
-      ip=input()
-      separetedStrings = ip.split(".")
-      numeriIP=[]
-      for  i in range (len(separetedStrings)) :
-        numeriIP.append( int(separetedStrings[i]))
-  elif numeri[1]!=0:
-    while numeri[0]!=numeriIP[0] or numeri[1]!=numeriIP[1] or numeri[2]!=0 or numeri[3]!=0:
-      print ("WRONG\nTRY AGAIN\n")
-      ip=input()
-      separetedStrings = ip.split(".")
-      numeriIP=[]
-      for  i in range (len(separetedStrings)) :
-        numeriIP.append( int(separetedStrings[i]))
-  else:
-    while numeri[0]!=numeriIP[0] or numeri[1]!=0 or numeri[2]!=0 or numeri[3]!=0:
-      print ("WRONG\nTRY AGAIN\n")
-      ip=input()
-      separetedStrings = ip.split(".")
-      numeriIP=[]
-      for  i in range (len(separetedStrings)) :
-        numeriIP.append( int(separetedStrings[i]))
-  print("RIGHT")
+#bisogna cancellare tutto quanto
+#è tutto sbagliato
 
-def last_ip(numeroIndirizzoInternet):
+
+#def last_ip(numeroIndirizzoInternet):
   ip=input("Enter the last ip address belonging to the network address:\n")
   numeriIP=[]
   numeri=[]
@@ -118,7 +84,7 @@ def last_ip(numeroIndirizzoInternet):
         numeriIP.append( int(separetedStrings[i]))
   print("RIGHT")
 
-def random_ip(numeroIndirizzoInternet):
+#def random_ip(numeroIndirizzoInternet):
   ip=input("Enter a random ip address belonging to the network address:\n")
   numeriIP=[]
   numeri=[]
@@ -154,7 +120,7 @@ def random_ip(numeroIndirizzoInternet):
         numeriIP.append( int(separetedStrings[i]))
   print("RIGHT")
 
-def list_all(numeroIndirizzoInternet):
+#def list_all(numeroIndirizzoInternet):
   ip=input("Enter all IPs address belonging to the network address:\n")
   numeriIP=[]
   numeri=[]
