@@ -1,0 +1,15 @@
+CLI examples:
+
+rtal connect ping_pong ping
+
+rtal connect ping_pong ping -a ping_via=stdin_dry
+
+rtal connect ping_pong ping -a ping_via=stdin_interactive
+
+rtal connect ping_pong ping -a ping_via=file (deve dare errore)
+
+rtal connect ping_pong ping -a ping_via=file -ffile_with_msg=prova
+
+rtal connect ping_pong ping -a ping_via=file -ffile_with_msg=prova -abounch_on=stderr
+
+rtal connect ping_pong ping -a ping_via=file -ffile_with_msg=prova -abounch_on=file
