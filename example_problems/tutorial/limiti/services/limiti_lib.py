@@ -15,7 +15,7 @@ correct = random.choice(['Bene!', 'Molto bene!', 'Ok!','Ottimo!'])
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
 
-def indices(stringa):
+def indices(stringa,n):
     indices=set()
     if 'sottoinsieme' in stringa:
         posiz_start=stringa.find("sottoinsieme")+13
@@ -25,19 +25,28 @@ def indices(stringa):
             indices.add(i)
     elif 'confronto' in stringa:
         posiz_1=stringa.find("confronto")+11
-        if stringa[posiz_1+1]==',' and stringa[posiz_1].isdigit():
+        if stringa[posiz_1+1]==',' and stringa[posiz_1].isdigit() and int(stringa[posiz_1])<=n:
             indices.add(int(stringa[posiz_1]))
         else:
             comma_position=stringa.find(',')
             indices.add(str(stringa[posiz_1-1:comma_position]))
             posiz_1=comma_position-1
         posiz_2=posiz_1+3
-        if stringa[posiz_2].isdigit() and stringa[posiz_2+1]==')':
+        if stringa[posiz_2].isdigit() and int(stringa[posiz_2])<=n and stringa[posiz_2+1]==')':
             indices.add(int(stringa[posiz_2]))
         else:
             parenthesis_position=stringa.find(')')
             indices.add(str(stringa[posiz_2-1:parenthesis_position]))
     return indices
+
+def get_instance_from_txt(instance_as_str):
+    """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
+    instance = list()
+    lines = instance_as_str.split('\n')
+    for line in lines:
+        if len(line) != 0:
+            instance.append(line)
+    return instance
 
 def instance_to_array(input_str):
     instance_str=input_str.split('\n')
@@ -274,12 +283,12 @@ def get_file_str_from_path(path):
     file=open(path, 'r')
     return file.read()
 
-def get_instance_from_txt(instance):
-    istanza=instance.split('\n')
-    function=istanza[0]
-    x_0=istanza[1]
-    c=istanza[2]
-    return function,x_0,c
+# def get_instance_from_txt(instance):
+#     istanza=instance.split('\n')
+#     function=istanza[0]
+#     x_0=istanza[1]
+#     c=istanza[2]
+#     return function,x_0,c
 
 def x_0_infinito(x_0,eps_N):
     M = input('\nInserisci il tuo valore per M: ')
