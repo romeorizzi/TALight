@@ -6,7 +6,6 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from TALfiles import TALfilesHelper
 import limiti_lib as ll
-import random
 from math import *
 import re
 # METADATA OF THIS TAL_SERVICE:
@@ -65,6 +64,20 @@ def check_q(x,y,n,user_int):
         return check_q(x,y,n,user_int)
     return TAc.print(LANG.render_feedback("correct", f'Ben fatto! Abbiamo trovato la q che cercavamo, infatti {q} = {eval(q)} e` compresa tra x={x} ed y={y}.'), "green", ["bold"])
 
+def user_nx(n,x):
+    user_nx=eval(TALinput(str, regex=f"^([+-]?[.\d]*)$", sep=None, TAc=TAc)[0])
+    nx=eval(str(round(n*x,2)))
+    if user_nx!=nx:
+        TAc.print(LANG.render_feedback("error", f'no, nx e` diverso da {user_nx}, ricalcola:'), "red", ["bold"])
+        return user_nx()
+    return nx
+def user_ny(n,y):
+    user_ny=eval(TALinput(str, regex=f"^([+-]?[.\d]*)$", sep=None, TAc=TAc)[0])
+    ny=eval(str(round(n*y,2)))
+    if user_ny!=ny:
+        TAc.print(LANG.render_feedback("error", f'no, ny e` diverso da {user_ny}, ricalcola:'), "red", ["bold"])
+        return user_ny(n,y)
+    return user_ny
 
 TAc.print(LANG.render_feedback("proof", '# Dimostriamo insieme che dati x,y due numeri reali, x<y , esiste un numero razionale q tale che x<q<y, ovvero Q e` denso in R. \nCominciamo subito!'), "white", ["bold"])
 TAc.print(LANG.render_feedback("seed", f'# (seed: {seed})'), "yellow", ["bold"])
@@ -83,16 +96,10 @@ if user_difference!=difference:
 TAc.print(LANG.render_feedback("find-n", f'# 1.2) scrivi un numero naturale n>0 che soddisfi il principio di Archimede con argomento y-x, ovvero {user_difference}: \n# (se non ricordi questo principio ti consiglio l\'esercizio -> rtal connect limiti archimede_prover)'), "yellow", ["bold"])
 n=check_user_solution(user_difference)
 TAc.print(LANG.render_feedback("find-n", f'# PASSO 2: trovare un intero nell\'intervallo (nx,ny), che sappiamo esistere poiche` abbiamo costruito n tale che nx-ny>1: \n# 2.1) calcola nx (arrotonda a 2 cifre decimali se necessario):'), "yellow", ["bold"])
-user_nx=eval(TALinput(str, regex=f"^([+-]?[.\d]*)$", sep=None, TAc=TAc)[0])
-nx=eval(str(round(n*x,2)))
-if user_nx!=nx:
-    TAc.print(LANG.render_feedback("error", f'no, nx e` diverso da {user_nx}, ricalcola:'), "red", ["bold"])
+user_nx=user_nx(n,x)
 TAc.print(LANG.render_feedback("find-n", f'# 2.2) calcola ny (arrotonda a 2 cifre decimali se necessario):'), "yellow", ["bold"])
-user_ny=eval(TALinput(str, regex=f"^([+-]?[.\d]*)$", sep=None, TAc=TAc)[0])
-ny=eval(str(round(n*y,2)))
-if user_ny!=ny:
-    TAc.print(LANG.render_feedback("error", f'no, ny e` diverso da {user_ny}, ricalcola:'), "red", ["bold"])
-TAc.print(LANG.render_feedback("find-n", f'# 2.3) dammi un intero nell\'intervallo ({nx} , {ny}):'), "yellow", ["bold"])
+user_ny=user_ny(n,y)
+TAc.print(LANG.render_feedback("find-n", f'# 2.3) dammi un intero nell\'intervallo ({user_nx} , {user_ny}):'), "yellow", ["bold"])
 user_int=check_int_in_interval(user_nx,user_ny)
 TAc.print(LANG.render_feedback("next-step", f'# PASSO 3: trovare la q che secondo l\'enunciato e` tale che x<q<y. \n# Utilizzando l\'intero {user_int} e la n che mi hai proposto prima, riusciresti a trovare un numero razionale (nella forma a/b) compreso tra x={x} e y={y}? scrivilo:'), "yellow", ["bold"])
 check_q(x,y,n,user_int)

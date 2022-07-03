@@ -14,6 +14,31 @@ import decimal
 correct = random.choice(['Bene!', 'Molto bene!', 'Ok!','Ottimo!'])
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
+
+def indices(stringa):
+    indices=set()
+    if 'sottoinsieme' in stringa:
+        posiz_start=stringa.find("sottoinsieme")+13
+        start=int(stringa[posiz_start])
+        end=int(stringa[posiz_start+2])
+        for i in range(start,end+1):
+            indices.add(i)
+    elif 'confronto' in stringa:
+        posiz_1=stringa.find("confronto")+11
+        if stringa[posiz_1+1]==',' and stringa[posiz_1].isdigit():
+            indices.add(int(stringa[posiz_1]))
+        else:
+            comma_position=stringa.find(',')
+            indices.add(str(stringa[posiz_1-1:comma_position]))
+            posiz_1=comma_position-1
+        posiz_2=posiz_1+3
+        if stringa[posiz_2].isdigit() and stringa[posiz_2+1]==')':
+            indices.add(int(stringa[posiz_2]))
+        else:
+            parenthesis_position=stringa.find(')')
+            indices.add(str(stringa[posiz_2-1:parenthesis_position]))
+    return indices
+
 def instance_to_array(input_str):
     instance_str=input_str.split('\n')
     return instance_str

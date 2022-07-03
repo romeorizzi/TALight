@@ -16,7 +16,7 @@ services:
         explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. In questo caso dovresti specificare i valori per gli argomenti del servizio corrispondenti ai descrittori d\''istanza (set_cardinality, seed) quando li vuoi differenti dai loro valori di default.'
         # explain3: '[terminal] you enter your instance (just an element, one per line) directly by either typing it directly or through cut and paste.'
       reference_set:
-        regex: ^(natural|decimal)$
+        regex: ^(natural|decimal|generic)$
         default: natural
         explain: 'specifica l\''insieme dei numeri su cui vuoi lavorare: '
         explain1: '[natural] per lavorare con i numeri naturali'
