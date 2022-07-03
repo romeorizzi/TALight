@@ -40,8 +40,8 @@ def net_address(subnet):
     n1=random.randint(1,255)
     n2=random.randint(1,255)
     n3=random.randint(1,255)
-  numeroIndirizzoInternet=[]
-  numeroIndirizzoInternet.append(n1,n2,n3,n4)
+  numeroIndirizzoInternet=[n1,n2,n3,n4]
+  #numeroIndirizzoInternet.append(n1).append(n2).append(n3n4)
   return numeroIndirizzoInternet
 
 #bisogna cancellare tutto quanto
