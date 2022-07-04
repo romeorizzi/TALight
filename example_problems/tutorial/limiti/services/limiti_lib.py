@@ -252,6 +252,9 @@ def find_max_with_parameter(condition,max):
             x_max=eval(condition,{'k':k_max})
         return x_max
 
+
+# TUTTE QUESTE FUNZIONI SOTTO DA RIFARE/ELIMINARE
+
 def alfabeto(variable):
     for word in {'sqrt','log','pow','factorial','exp','cos','sin','tan','acos','asin','atan','pi','e','inf'}:
         if word in variable:
