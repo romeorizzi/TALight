@@ -164,8 +164,8 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:Dict):
-        super().__init__(SEF,input_data_assigned, long_answer_dict, request_setups)
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, oracle_response:Dict = None):
++        super().__init__(SEF,input_data_assigned, long_answer_dict, oracle_response)
 
     def verify_format(self, SEF):
         if not super().verify_format(SEF):
@@ -215,8 +215,8 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_consistency(SEF):
             return False
         if 'opt_val' in self.goals and 'opt_sol' in self.goals:
-            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol'];
+            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol']
             if self.sum_vals != g_val.answ:
                 return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {self.sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
-            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.", "")
+            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.", f"resta da stabilire l'ottimalità di `{g_val.alias}` e `{g_sol.alias}`")
         return True

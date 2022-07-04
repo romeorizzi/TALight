@@ -6,6 +6,11 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "given a set of objects, each one with its value and weight, and a total budget (Knapsack_Capacity), the Knapsack Problem asks to find a maximum value subset of the objects not exceeding the budget. This service checks and gives full (or partial, during exams or training and for non-superusers) feedback to answers of the problem solver/trainee/student to requests of several kinds all concerning a given Knapsack Problem instance. These didactic variants are suitable for exams but also to more generally assess the competences and comprehension; if these variants do not cover your needs keep in mind the TALight problems aim at being open and foster collaboration among problem makers and instructors. From the system implementing your exams/exercitations, in an exercize centered on an instance of the Knapsack Problem, compose each single request to the student, whose evaluation and feedback contextual and/or posticipated you intend to demand to this TALight service, simply combining its various arguments listed here below. Just to give a first idea, it is possible to impose further constraints on single element to redefine the notion of a feasible solution, and it is also possible to check/validate the correctness of dynamic programming (DP) tables submitted by the student (even for variants of the standard questions that call for mastering competence in DP). With these, the service also supports giving contextual feedback in case partially pre-filled DP tables were supplied to the student/trainee to avoid him being overwhelmed by their size (expecially useful to realistically allow a compilation by hand of the tables on interesting enough instances)."
     args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema).
+
       # section with the instance data assigned to the problem-solver/student:
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
@@ -139,6 +144,9 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
       recall_data_assigned:
         regex: ^(0|1)$
         default: 0

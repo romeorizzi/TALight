@@ -6,6 +6,11 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "though this TALight problem can be of direct use, like any other problem in the RO_* collection is mainly meant to supply immidiate and contextual feedback during exams (real or simulations), in exercitations (authonomous or driven), and other didactic endeavours. All the problems offered in the RO_* colection offer an oracle service and a check service like this one. The purpose of the check service is to immidiately and contextually evaluate the tentative answers of the student in order to support him clarifying what is a correct solution and how he should approach a problem. In the context of an exercise on the Longest Common Subsequence (LCS) Problem deployed from another software system (like the exam-RO-public project) or by other means of the liking, the problem solver is mainly given two strings s and t with the mission to find a longest sequence that is a subsequence o both. The arguments of this service give the flexibility that allows to cover several possible variants of this basic question, customizing it for an exam or a didactic experience. These didactic variants are suitable not only for exams but more generally for the verification and promotion of real understanding and active skills (both for a specific problem and methodological); if the variants offered are not enough for you, be aware that TALight problems aim to be extensible and open to promote collaboration between problem-makers/teachers (as well as to relativize and overcome the separation between them and problem-solvers/trainees). Beyond the instance received by the student, the service receives also the objects that comprise the answer of the student on one of the many possible questions/requests comprising the whole exercise. Given all these data, the service can closely support the student/problem solver in her steps, to make sure she properly connects to the exam, to the subject, and to the proper methodology. From the system where you organize your exams/exercises, design an exercise centered on an instance of LCS Problem composing a a suitable list of requests to the student, whose verification with contextual and/or postponed feedback you might delegate to this TALight service. Just to give a first idea, you will be able to impose additional constraints on single elements that redefine the admissibility of the solutions and you can check/validate dynamic programming tables submitted by the student (also for variants of the standard question that involve the competence of dynamic programming). The situation where the problem-solver may have received a partial DP table and her task was to to complete it is also covered (particularly useful to allow realistically a compilation by hand of the tables on sufficiently interesting instances)."
     args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema).
+
       # section with the instance data assigned to the problem-solver/student:
       s:
         regex: ^([A-Z]*)$
@@ -132,6 +137,9 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
       recall_data_assigned:
         regex: ^(0|1)$
         default: 0

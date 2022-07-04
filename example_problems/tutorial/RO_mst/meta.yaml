@@ -6,6 +6,11 @@ services:
     evaluator: [python, services/check_one_MST_driver.py]
     description: "given a graph with weighs on its edges, together with an alleged minimum spanning tree (MST) in the form of a subset of its edges, this service checks it and gives feedback about its feasibility, possibly subject to further constraints. The service can also check its optimality but this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server."
     args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema).
+
       # section with the instance assigned to the problem-solver/student:
       n:
         regex: ^(0|[1-9][0-9]*)$

@@ -34,7 +34,7 @@ def sum_of_costs_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["costs"], instance["labels"]) if ele in ordered_list_of_elems])
 
 def sum_of_vals_over(instance, ordered_list_of_elems):
-    return sum([peso for peso,ele in zip(instance["vals"], instance["labels"]) if ele in ordered_list_of_elems])
+    return sum([val for val,ele in zip(instance["vals"], instance["labels"]) if ele in ordered_list_of_elems])
 
 def check_instance_consistency(instance):
     #print(f"instance={instance}", file=stderr)
@@ -170,8 +170,8 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):
-        super().__init__(SEF,input_data_assigned, long_answer_dict)
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, oracle_response:Dict = None):
+        super().__init__(SEF,input_data_assigned, long_answer_dict, oracle_response)
 
     def verify_format(self, SEF):
         if not super().verify_format(SEF):
@@ -221,8 +221,28 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_consistency(SEF):
             return False
         if 'opt_val' in self.goals and 'opt_sol' in self.goals:
-            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol'];
+            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol']
             if self.sum_vals != g_val.answ:
                 return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {self.sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
-            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.", "")
+            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.", f"resta da stabilire l'ottimalità di `{g_val.alias}` e `{g_sol.alias}`")
+        return True
+
+    def verify_optimality(self, SEF):
+        if not super().verify_optimality(SEF):
+            return False
+        if 'opt_val' in self.goals:
+            g_val = self.goals['opt_val']
+            if SEF.oracle_dict['opt_val'] != g_val.answ:
+                return SEF.optimality_NO(g_val, f"Il valore ottimo corretto è {SEF.oracle_dict['opt_val']} {'>' if SEF.oracle_dict['opt_val'] != g_val.answ else '<'} {g_val.answ}, che è il valore invece immesso in `{g_val.alias}`.")
+            else:
+                SEF.optimality_OK(g_val, f"{g_val.alias}={g_val.answ} è effettivamente il valore ottimo.", "")
+        if 'opt_sol' in self.goals:
+            g_sol = self.goals['opt_sol']
+            g_sol_answ = self.goals['opt_sol'].answ
+            g_val_answ = sum([val for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in g_sol_answ])
+            assert g_val_answ <= SEF.oracle_dict['opt_val']
+            if g_val_answ < SEF.oracle_dict['opt_val']:
+                return SEF.optimality_NO(g_sol, f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {g_val_answ} < {SEF.oracle_dict['opt_val']}, valore corretto per una soluzione ottima quale {SEF.oracle_dict['opt_sol']}. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
+            else:
+                SEF.optimality_OK(g_sol, f"Confermo l'ottimailtà della soluzione {g_sol.alias}={g_sol.answ}.", "")
         return True

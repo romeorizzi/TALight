@@ -6,7 +6,12 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "the input to the problem solver is an mxn rectangular grid where a robot initially spawn in the top left cell (1,'A') is due to get in the bottom right cell (m,'A'+(n-1)). In doing so, he must avoid visiting the forbidden cells, i.e., those containing negative numbers. The zero valued cells have no effect on the robot whereas the cells of positive value represent prized to be cumulated (algebric sum). At every step the robot can move to the cell situated either immidiately below or to the immidiate right of where he currently stands. If the `diag` argument to this `check` service is set to 1, then the robot can also move diagonally, i.e., directly from cell (i,j) to cell (i+1,j+1). The first request is to count the number of different paths that do not pass through any forbidden cell. However, the concept of prohibition can be relaxed by assigning a budget to the robot; a path will be admissible if the sum of the negative numbers encountered along the path, inverted in sign, does not exceed the budget. Among the eligible paths, it will then be possible to claim the one that collects a maximum total amount of prizes. And the problem solver can be asked to calculate the number of optimal paths or even to list them. This service checks and provides complete contextual feedback (or partial, during exams or training and for unprotected users) to the answers of the problem solver/trainee/student to various types of requests all concerning instances assigned to him of this Robot Problem in one of its many possible variants. These didactic variants are suitable not only for exams but more generally for the verification and promotion of real understanding and active skills (both for a specific problem and methodological); if the variants offered are not enough for you, be aware that TALight problems aim to be extensible and open to promote collaboration between problem-makers/teachers (as well as to relativize and overcome the separation between them and problem-solvers/trainees). From the system where you organize your exams/exercises, within an exercise centered on an instance of the Robot Problem, compose all your requests to the student, whose verification with contextual and/or postponed feedback you intend to delegate to this TALight service, simply by combining the various arguments specified below. Just to give a first idea, you will be able to impose additional constraints on single elements that redefine the admissibility of the solutions and you can check/validate dynamic programming tables submitted by the student (also for variants of the standard question that involve the competence of dynamic programming). The situation where the problem-solver may have received a partial DP table and her task was to to complete it is also covered (particularly useful to allow realistically a hand compilation of the tables on sufficiently interesting instances)."
     args:
-      # section with the instance assigned to the problem-solver/student:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema).
+
+      # section with the instance data assigned to the problem-solver/student:
       grid:
         regex: ^(.*)$
         default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
@@ -142,6 +147,9 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
       recall_data_assigned:
         regex: ^(0|1)$
         default: 0

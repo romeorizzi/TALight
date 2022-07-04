@@ -6,6 +6,11 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "dato un insieme di oggetti, ciascuno col suo valore e peso, e una soglia sul massimo peso consentito (Knapsack_Capacity), il Problema dello Zaino (Knapsack Problem) chiede di trovare un sottoinsieme di oggetti il cui peso complessivo non superi la soglia, e che massimizzi il valore totale raccolto. Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnate del Problema dello Zaino. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze attive (sia per un problema specifico che metodologiche); se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere estensibili e aperti a promuovere la collaborazione tra problem-makers/insegnanti (nonchè a relativizzare e superare la separazione tra essi e i problem-solvers/trainees). Dal sistema dove organizzi i tuoi esami/esercitazioni, entro un esercizio centrato su un'istanza del Problema dello Zaino, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Solo per dare una prima idea, potrai imporre vincoli aggiuntivi su singoli elementi che ridefiniscano l'ammissibilità delle soluzioni e puoi controllare/validare tabelle di programmazione dinamica sottomesse dallo studente  (anche per varianti della domanda standard che mettano in gioco la competenza della programmazione dinamica). Con queste, il servizio può inoltre fornire feedback contestuale in caso si sia deciso di fornire allo studente/trainee delle tabelle parzialmente precompialte per evitargli di rimanere soverchiato dalle dimensioni della tabella (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti)."
     args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: our standard check and validation on the solution submitted by the student is a King Arthur check. However, when an instructor password is provided through this argument, then also the response produced by the oracle is accomodated into the immidiate reply of the service `check`, so that a more complete (but solution spoilering) feedback is offered.
+
       # sezione con i dati dell'istanza assegnati al problem-solver/studente:
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
@@ -131,6 +136,9 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
       recall_data_assigned:
         regex: ^(0|1)$
         default: 0
