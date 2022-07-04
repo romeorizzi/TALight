@@ -26,20 +26,20 @@ TAc.print(internet, "green")
 
 TAc.print("\nInserire il primo indirizzo ip appartenente all'indirizo di rete qui sopra", "green", ["bold"])
 
-ip=""
+ip=[]
 
 ip=(ENV['ip_address'], TAc, LANG)
-ip=TALinput(token_type=str,num_tokens=4, regex= f"regex: ^(([0-1]?[0-9]?[0-9])|([2][0-4][0-9])|(25[0-5]))$", TAc=TAc, sep='.')#, regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
+ip=TALinput(token_type=str, regex= f" ([0-9]{1,3}\.){3}[0-9]{1,3}", TAc=TAc)#, sep='.')#, regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
 
-#TALinput(str, regex=f"^((\S)+)$", sep=None, TAc=TAc)
+#ip=TALinput(str, regex=f"^((\S)+)$", sep='.', TAc=TAc)
 
 #separetedStrings= ip.split(".")
-#numeriIP=[]
-#for i in range (len(separetedStrings)) :
-#  numeriIP.append( int(separetedStrings[i]))
-  
-#if internet[0] != numeriIP[0] or internet[1]!=numeriIP[1] or internet[2] != numeriIP[2] or internet[3]!=numeriIP[3] :
-if internet[0]!=ip[0] or internet[1]!=ip[1] or internet[2]!=ip[2]  or internet[3]!=ip[3] :
+numeriIP=[]
+for i in range (4) :
+  #numeriIP.append( int(separetedStrings[i]))
+  numeriIP.append(int(ip[i]))
+if internet[0] != numeriIP[0] or internet[1]!=numeriIP[1] or internet[2] != numeriIP[2] or internet[3]!=numeriIP[3] :
+#if internet[0]!=ip[0] or internet[1]!=ip[1] or internet[2]!=ip[2]  or internet[3]!=ip[3] :
   TAc.print("ERRORE\nRiprova", "red", ["bold"])
 else:
   TAc.print("GIUSTO\n", "green", ["bold"])

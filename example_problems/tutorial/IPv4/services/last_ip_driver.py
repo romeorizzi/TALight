@@ -26,19 +26,18 @@ TAc.print(internet, "green")
 
 TAc.print("\nInserire l'ultimo indirizzo ip appartenente all'indirizo di rete qui sopra", "green", ["bold"])
 
-ip=""
+ip=[]
 
 ip=(ENV['ip_address'], TAc, LANG)
-#ip=TALinput(str, regex= f"regex: //([0-9]{1,3}\.){3}[0-9]{1,3}/gm", TAc=TAc,sep='.')#, regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
+ip=TALinput(str, regex= f"regex: //([0-9]{1,3}\.){3}[0-9]{1,3}/gm", TAc=TAc,sep='.')#, regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
 
 #TALinput(str, regex=f"^((\S)+)$", sep=None, TAc=TAc)
-ip=input()
-separetedStrings= ip.split(".")
+#ip=input()
+#separetedStrings= ip.split(".")
 Ip=[]
-for i in range (len(separetedStrings)) :
-  Ip.append( int(separetedStrings[i]))
+for i in range (4) :
+  Ip.append( int(ip[i]))
   
-#if internet[0] != numeriIP[0] or internet[1]!=numeriIP[1] or internet[2] != numeriIP[2] or internet[3]!=numeriIP[3] :
 if internet[1] == 0:
   if internet[0]!=Ip[0] or Ip[1]!=255 or Ip[2]!=255  or Ip[3]!=255 :
     TAc.print("ERRORE\nRiprova", "red", ["bold"])
