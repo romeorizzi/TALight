@@ -31,9 +31,10 @@ def net_address(subnet):
   separetedStrings= subnet.split(".");
   for i in range (len(separetedStrings)) :
     numeri.append( int(separetedStrings[i]))
-  if numeri[0]=="255" and numeri[1]=="0":
+    
+  if numeri[0]==255 and numeri[1]==0:
     n1=random.randint(1,255)
-  elif numeri[1]=="255" and numeri[2]=="0":
+  elif numeri[1]==255 and numeri[2]==0:
     n1=random.randint(1,255)
     n2=random.randint(1,255)
   else:
@@ -43,7 +44,8 @@ def net_address(subnet):
   numeroIndirizzoInternet=[n1,n2,n3,n4]
   #numeroIndirizzoInternet.append(n1).append(n2).append(n3n4)
   return numeroIndirizzoInternet
-
+  #subnet 255.255.0.0
+  #add     189.2.3.0
 #bisogna cancellare tutto quanto
 #è tutto sbagliato
 

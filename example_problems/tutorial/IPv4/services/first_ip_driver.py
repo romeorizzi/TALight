@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
-#from asyncore import write
 from sys import stderr, exit
 
-import string
-import random
 from typing import Any
 from IPv4_lib import *
 from TALinputs import TALinput
@@ -26,12 +23,13 @@ TAc.print(subnet, "green")
 TAc.print("\nINTERNET ADDRESS:  ", "green")
 TAc.print(internet, "green")
 
+
 TAc.print("\nInserire il primo indirizzo ip appartenente all'indirizo di rete qui sopra", "green", ["bold"])
 
 ip=""
 
 ip=(ENV['ip_address'], TAc, LANG)
-ip=TALinput(str, regex= f"^((\d)+\.){3}(\d)+$", sep=".", TAc=TAc)#,regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
+ip=TALinput(token_type=str,num_tokens=4, regex= f"regex: ^(([0-1]?[0-9]?[0-9])|([2][0-4][0-9])|(25[0-5]))$", TAc=TAc, sep='.')#, regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
 
 #TALinput(str, regex=f"^((\S)+)$", sep=None, TAc=TAc)
 
