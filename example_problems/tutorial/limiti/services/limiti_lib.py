@@ -15,28 +15,40 @@ correct = random.choice(['Bene!', 'Molto bene!', 'Ok!','Ottimo!'])
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
 
-def indices(stringa,n):
+def indices(stringa,n,source):
     indices=set()
     if 'sottoinsieme' in stringa:
         posiz_start=stringa.find("sottoinsieme")+13
-        start=int(stringa[posiz_start])
-        end=int(stringa[posiz_start+2])
+        comma_position=stringa.find(',')
+        parenthesis_position=stringa.find(')')
+        start=eval(stringa[posiz_start:comma_position],{'n':n})
+        end=eval(stringa[comma_position+1:parenthesis_position],{'n':n})
         for i in range(start,end+1):
             indices.add(i)
     elif 'confronto' in stringa:
-        posiz_1=stringa.find("confronto")+11
-        if stringa[posiz_1+1]==',' and stringa[posiz_1].isdigit() and int(stringa[posiz_1])<=n:
-            indices.add(int(stringa[posiz_1]))
-        else:
-            comma_position=stringa.find(',')
-            indices.add(str(stringa[posiz_1-1:comma_position]))
-            posiz_1=comma_position-1
-        posiz_2=posiz_1+3
-        if stringa[posiz_2].isdigit() and int(stringa[posiz_2])<=n and stringa[posiz_2+1]==')':
-            indices.add(int(stringa[posiz_2]))
-        else:
-            parenthesis_position=stringa.find(')')
-            indices.add(str(stringa[posiz_2-1:parenthesis_position]))
+        def elem(indices,argument,n,source):
+            if source=='random':
+                if len(argument)==2 and argument[0]=='s' and argument[1].isdigit() and int(argument[1])<=n:
+                    indices.add(int(argument[1]))
+                else:
+                    indices.add(str(argument))
+            elif source=='generic':
+                if argument=='s1' or argument=='sn':
+                    indices.add(eval(argument[1],{'n':n}))
+                else:
+                    try:
+                        eval_argument=eval(argument,{'n':n})
+                        indices.add(eval_argument)
+                    except:
+                        indices.add(argument)
+        posiz_1=stringa.find("confronto")+10
+        comma_position=stringa.find(',')
+        arg_1=stringa[posiz_1:comma_position]
+        # posiz_1=stringa.find("confronto")+11
+        elem(indices,arg_1,n,source)
+        parenthesis_position=stringa.find(')')
+        arg_2=stringa[comma_position+1:parenthesis_position]
+        elem(indices,arg_2,n,source)
     return indices
 
 def get_instance_from_txt(instance_as_str):
