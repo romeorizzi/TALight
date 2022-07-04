@@ -119,7 +119,21 @@ services:
 
   archimede_prover:
     evaluator: [python, services/archimede_prover_driver.py]
-    description: 'In questo esercizio dovrai dimostrare al tuo pc il principio di Archimede, ovvero che per ogni x reale, x>0, esiste un numero naturale n tale che 1/n<x. Dapprima lavorerai solamente con i numeri x ed n ed in seguito, se ti sentirai pronto, potrai passare ad un livello successivo in cui ti verra\'' chiesto di scrivere un algoritmo che, dato x, calcoli per te un valore di n che soddisfi il principio di Archimede.'
+    description: 'Questo servizio ti permetterà di convincere me (ed anche un po\'' te stesso) che per ogni x reale, x>0, esiste un numero naturale n tale che 1/n < x (anche conosciuto come principio di Archimede).'
+    args:
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  archimede_disprover:
+    evaluator: [python, services/archimede_disprover_driver.py]
+    description: 'Questo servizio cercherà di convincerti che per ogni x reale, x>0, esiste un numero naturale n tale che 1/n < x (anche conosciuto come principio di Archimede).'
     args:
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$

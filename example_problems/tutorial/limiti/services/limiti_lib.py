@@ -81,46 +81,16 @@ def instance_randgen(set_cardinality:int,reference_set:str,seed:int):
             instance.append(format(random.uniform(-50,50), '.2f'))
     return instance
 
-# def instance_randgen(set_cardinality:int,seed:int):
-#     assert set_cardinality>0
-#     instance_constants=['e','pi']
-#     instance_functions=['cos','sin','sqrt']
-#     random.seed(seed)
-#     instance = []
-#     integer=(set_cardinality//2)//2
-#     decimal=set_cardinality//2 - integer
-#     fraction=(set_cardinality-integer-decimal)//2
-#     math_constants=(set_cardinality-integer-decimal-fraction)//2
-#     math_functions=set_cardinality-integer-decimal-fraction-math_constants
-#     for i in range (integer):
-#         random.seed(seed+i)
-#         instance.append(str(random.randint(-20,20)))
-#     for i in range (decimal):
-#         random.seed(seed+i)
-#         instance.append(format(random.uniform(-20,20), '.2f'))
-#     for i in range (fraction):
-#         random.seed(seed+i)
-#         instance.append(str(random.randint(-70,70))+'/'+str(random.randint(2,15)))
-#     for i in range (math_constants):
-#         random.seed(seed+i)
-#         instance.append(random.choice(instance_constants)+'*'+str(random.randint(2,5)))
-#     for i in range (math_functions):
-#         random.seed(seed+i)
-#         funct=random.choice(instance_functions)
-#         instance.append((funct+'('+str(random.randint(3,400))+')')if funct=='sqrt' else (funct+'(pi'+'*'+str(random.randint(1,11))+'/'+str(random.randint(1,6)))+')*'+str(random.randint(1,25)))
-#     random.shuffle(instance)
-#     return instance
-
 def instance_archimede(seed:int):
     random.seed(seed)
-    decimal_number=float(format(random.random(),'.6f'))
-    coefficient=format(decimal_number/(10**random.choice([1,2])),'.4f')
+    decimal_number=float(format(random.random(),'.4f'))
+    coefficient=format(decimal_number,'.2f')
     instance_constant=random.choice(['e','pi'])
     instance_function=random.choice(['cos','sin','sqrt'])
     constant=coefficient+'*'+instance_constant
     num=random.randint(1,4)
-    den=num*2+random.randint(1,5)
-    sin_cos_sqrt=(instance_function+'('+str(random.randint(3,400))+')/'+str(random.choice([10,100,1000])))if instance_function=='sqrt' else (coefficient+'*'+instance_function+'(pi'+'*'+str(num)+'/'+str(den)+')')
+    den=num*2+random.randint(1,4)
+    sin_cos_sqrt=(instance_function+'('+str(random.randint(2,100))+')/'+str(random.choice([10,100])))if instance_function=='sqrt' else (instance_function+'(pi'+'*'+str(num)+'/'+str(den)+')')
     final_choice=random.choice([decimal_number,constant,sin_cos_sqrt])
     return final_choice
 
