@@ -25,15 +25,6 @@ reference_set=ENV["reference_set"]
 source=ENV["source"]
 seed=ENV["seed"]
 set_cardinality=ENV["set_cardinality"]
-
-if TALf.exists_input_file('instance'):
-    instance=TALf.input_file_as_str('instance')
-    instance_array = ll.get_instance_from_txt(instance)
-    TAc.print(LANG.render_feedback("successful-load", 'Il file che hai associato al gestore di file `instance` e` stato caricato con successo.'), "white", ["bold"])
-    TAc.print(LANG.render_feedback("this-is-the-instance", f'L\'insieme che mi hai sottoposto e`: \n{instance} \ned il massimo e`'), "yellow", ["bold"])
-    max_elem=max(instance_array)
-    TAc.print(LANG.render_feedback("this-is-the-max", f'{max_elem}'), "yellow", ["reverse"])
-    exit(0)
 if source=='catalogue':
     set_values = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension='txt')
     TAc.print(LANG.render_feedback("instance", f'# instance_id: {ENV["instance_id"]} \n# Dati i seguenti numeri: \n{set_values}'),  "yellow", ["bold"])

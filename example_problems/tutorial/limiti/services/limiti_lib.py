@@ -14,6 +14,52 @@ import decimal
 correct = random.choice(['Bene!', 'Molto bene!', 'Ok!','Ottimo!'])
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
+
+def indices(stringa,n,source):
+    indices=set()
+    if 'sottoinsieme' in stringa:
+        posiz_start=stringa.find("sottoinsieme")+13
+        comma_position=stringa.find(',')
+        parenthesis_position=stringa.find(')')
+        start=eval(stringa[posiz_start:comma_position],{'n':n})
+        end=eval(stringa[comma_position+1:parenthesis_position],{'n':n})
+        for i in range(start,end+1):
+            indices.add(i)
+    elif 'confronto' in stringa:
+        def elem(indices,argument,n,source):
+            if source=='random':
+                if len(argument)==2 and argument[0]=='s' and argument[1].isdigit() and int(argument[1])<=n:
+                    indices.add(int(argument[1]))
+                else:
+                    indices.add(str(argument))
+            elif source=='generic':
+                if argument=='s1' or argument=='sn':
+                    indices.add(eval(argument[1],{'n':n}))
+                else:
+                    try:
+                        eval_argument=eval(argument,{'n':n})
+                        indices.add(eval_argument)
+                    except:
+                        indices.add(argument)
+        posiz_1=stringa.find("confronto")+10
+        comma_position=stringa.find(',')
+        arg_1=stringa[posiz_1:comma_position]
+        # posiz_1=stringa.find("confronto")+11
+        elem(indices,arg_1,n,source)
+        parenthesis_position=stringa.find(')')
+        arg_2=stringa[comma_position+1:parenthesis_position]
+        elem(indices,arg_2,n,source)
+    return indices
+
+def get_instance_from_txt(instance_as_str):
+    """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
+    instance = list()
+    lines = instance_as_str.split('\n')
+    for line in lines:
+        if len(line) != 0:
+            instance.append(line)
+    return instance
+
 def instance_to_array(input_str):
     instance_str=input_str.split('\n')
     return instance_str
@@ -35,46 +81,16 @@ def instance_randgen(set_cardinality:int,reference_set:str,seed:int):
             instance.append(format(random.uniform(-50,50), '.2f'))
     return instance
 
-# def instance_randgen(set_cardinality:int,seed:int):
-#     assert set_cardinality>0
-#     instance_constants=['e','pi']
-#     instance_functions=['cos','sin','sqrt']
-#     random.seed(seed)
-#     instance = []
-#     integer=(set_cardinality//2)//2
-#     decimal=set_cardinality//2 - integer
-#     fraction=(set_cardinality-integer-decimal)//2
-#     math_constants=(set_cardinality-integer-decimal-fraction)//2
-#     math_functions=set_cardinality-integer-decimal-fraction-math_constants
-#     for i in range (integer):
-#         random.seed(seed+i)
-#         instance.append(str(random.randint(-20,20)))
-#     for i in range (decimal):
-#         random.seed(seed+i)
-#         instance.append(format(random.uniform(-20,20), '.2f'))
-#     for i in range (fraction):
-#         random.seed(seed+i)
-#         instance.append(str(random.randint(-70,70))+'/'+str(random.randint(2,15)))
-#     for i in range (math_constants):
-#         random.seed(seed+i)
-#         instance.append(random.choice(instance_constants)+'*'+str(random.randint(2,5)))
-#     for i in range (math_functions):
-#         random.seed(seed+i)
-#         funct=random.choice(instance_functions)
-#         instance.append((funct+'('+str(random.randint(3,400))+')')if funct=='sqrt' else (funct+'(pi'+'*'+str(random.randint(1,11))+'/'+str(random.randint(1,6)))+')*'+str(random.randint(1,25)))
-#     random.shuffle(instance)
-#     return instance
-
 def instance_archimede(seed:int):
     random.seed(seed)
-    decimal_number=float(format(random.random(),'.6f'))
-    coefficient=format(decimal_number/(10**random.choice([1,2])),'.4f')
+    decimal_number=float(format(random.random(),'.4f'))
+    coefficient=format(decimal_number,'.2f')
     instance_constant=random.choice(['e','pi'])
     instance_function=random.choice(['cos','sin','sqrt'])
     constant=coefficient+'*'+instance_constant
     num=random.randint(1,4)
-    den=num*2+random.randint(1,5)
-    sin_cos_sqrt=(instance_function+'('+str(random.randint(3,400))+')/'+str(random.choice([10,100,1000])))if instance_function=='sqrt' else (coefficient+'*'+instance_function+'(pi'+'*'+str(num)+'/'+str(den)+')')
+    den=num*2+random.randint(1,4)
+    sin_cos_sqrt=(instance_function+'('+str(random.randint(2,100))+')/'+str(random.choice([10,100])))if instance_function=='sqrt' else (instance_function+'(pi'+'*'+str(num)+'/'+str(den)+')')
     final_choice=random.choice([decimal_number,constant,sin_cos_sqrt])
     return final_choice
 
@@ -236,6 +252,9 @@ def find_max_with_parameter(condition,max):
             x_max=eval(condition,{'k':k_max})
         return x_max
 
+
+# TUTTE QUESTE FUNZIONI SOTTO DA RIFARE/ELIMINARE
+
 def alfabeto(variable):
     for word in {'sqrt','log','pow','factorial','exp','cos','sin','tan','acos','asin','atan','pi','e','inf'}:
         if word in variable:
@@ -249,12 +268,12 @@ def get_file_str_from_path(path):
     file=open(path, 'r')
     return file.read()
 
-def get_instance_from_txt(instance):
-    istanza=instance.split('\n')
-    function=istanza[0]
-    x_0=istanza[1]
-    c=istanza[2]
-    return function,x_0,c
+# def get_instance_from_txt(instance):
+#     istanza=instance.split('\n')
+#     function=istanza[0]
+#     x_0=istanza[1]
+#     c=istanza[2]
+#     return function,x_0,c
 
 def x_0_infinito(x_0,eps_N):
     M = input('\nInserisci il tuo valore per M: ')

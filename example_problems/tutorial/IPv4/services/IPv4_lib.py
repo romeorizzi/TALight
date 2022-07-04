@@ -31,59 +31,22 @@ def net_address(subnet):
   separetedStrings= subnet.split(".");
   for i in range (len(separetedStrings)) :
     numeri.append( int(separetedStrings[i]))
-  if numeri[0]=="255" and numeri[1]=="0":
+    
+  if numeri[0]==255 and numeri[1]==0:
     n1=random.randint(1,255)
-  elif numeri[1]=="255" and numeri[2]=="0":
+  elif numeri[1]==255 and numeri[2]==0:
     n1=random.randint(1,255)
     n2=random.randint(1,255)
   else:
     n1=random.randint(1,255)
     n2=random.randint(1,255)
     n3=random.randint(1,255)
-  numeroIndirizzoInternet=[]
-  numeroIndirizzoInternet.append(n1,n2,n3,n4)
+  numeroIndirizzoInternet=[n1,n2,n3,n4]  
   return numeroIndirizzoInternet
 
 #bisogna cancellare tutto quanto
 #è tutto sbagliato
-
-
 #def last_ip(numeroIndirizzoInternet):
-  ip=input("Enter the last ip address belonging to the network address:\n")
-  numeriIP=[]
-  numeri=[]
-  numeroIndirzzoInternet= ip.split(".")
-  for i in range (len(numeroIndirzzoInternet)) :
-    numeri.append( int(numeroIndirzzoInternet[i]))
-  separetedStrings= ip.split(".")
-  for i in range (len(separetedStrings)) :
-    numeriIP.append( int(separetedStrings[i]))
-  if numeri[2]!=0:
-    while numeri[0]!=numeriIP[0] or numeri[1]!=numeriIP[1] or numeri[2]!=numeriIP[2] or numeri[3]!=255:
-      print ("WRONG\nTRY AGAIN\n")
-      ip=input()
-      separetedStrings = ip.split(".")
-      numeriIP=[]
-      for  i in range (len(separetedStrings)) :
-        numeriIP.append( int(separetedStrings[i]))
-  elif numeri[1]!=0:
-    while numeri[0]!=numeriIP[0] or numeri[1]!=numeriIP[1] or numeri[2]!=255 or numeri[3]!=255:
-      print ("WRONG\nTRY AGAIN\n")
-      ip=input()
-      separetedStrings = ip.split(".")
-      numeriIP=[]
-      for  i in range (len(separetedStrings)) :
-        numeriIP.append( int(separetedStrings[i]))
-  else:
-    while numeri[0]!=numeriIP[0] or numeri[1]!=255 or numeri[2]!=255 or numeri[3]!=255:
-      print ("WRONG\nTRY AGAIN\n")
-      ip=input()
-      separetedStrings = ip.split(".")
-      numeriIP=[]
-      for  i in range (len(separetedStrings)) :
-        numeriIP.append( int(separetedStrings[i]))
-  print("RIGHT")
-
 #def random_ip(numeroIndirizzoInternet):
   ip=input("Enter a random ip address belonging to the network address:\n")
   numeriIP=[]

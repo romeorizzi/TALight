@@ -4,9 +4,7 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from TALfiles import TALfilesHelper
 import limiti_lib as ll
-import random
 from math import *
-import re
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('seed',int),
