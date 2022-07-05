@@ -57,7 +57,7 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-    max_inf_set:
+  max_inf_set:
     evaluator: [python, services/max_inf_set_driver.py]
     description: 'Con questo servizio potrai verificare se un insieme non finito ha un massimo oppure no.'
     args:
