@@ -1,18 +1,44 @@
 #!/usr/bin/env python3
+import os
 from sys import stderr, stdout
 from typing import Optional, List, Dict, Callable
 import termcolor 
 from ansi2html import Ansi2HTMLConverter
 ansi2html = Ansi2HTMLConverter(inline = True)
 
+try:
+    import ruamel.yaml
+except Exception as e:
+    print(e)
+    for out in [stdout, stderr]:
+        TAc.print(LANG.render_feedback("ruamel-missing", 'Internal error (RO_std_io_lib): if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package \'ruamel\' on your machine.'), "red", ["bold"], file=out)
+    exit(1)
+
 from multilanguage import enforce_type_of_yaml_var
 
-def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
+def check_access_rights(ENV,TALf, require_pwd = False):
+    current_status_filename = os.path.join(os.path.expanduser("~"),'TALight','exam_sessions','current_status.yaml')
+    if not os.path.exists(current_status_filename):
+        for error_stream in [stdout,stderr]:
+            print(f'Errore (RO_std_io_lib): Non trovo il file: `{current_status_filename}`)', file=error_stream)
+        exit(1)
+    with open(current_status_filename, 'r') as stream:
+        try:
+            current_status_yaml = ruamel.yaml.safe_load(stream)
+        except:
+            TAc.print(LANG.render_feedback("current_status-unparsable", f'Error: the file \'{current_status_filename}\' could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
+            exit(1)
+    if current_status_yaml['current_status'] in ['during_exam','exam_simulation']:
+        require_TALtoken = True
+    else:
+        require_pwd = False
+        require_TALtoken = False
+
     if require_pwd and ENV["pwd"] != 'tmppwd':
         for error_stream in [stdout,stderr]:
             print(f'Errore (RO_std_io_lib): Password di accesso non corretta (password immessa: `{ENV["pwd"]}`)', file=error_stream)
         exit(0)    
-    if TOKEN_REQUIRED and ENV.LOG_FILES == None:
+    if require_TALtoken and ENV.LOG_FILES == None:
         for error_stream in [stdout,stderr]:
             print("Errore (RO_std_io_lib): Il servizio è stato chiamato senza access token. Modalità attualmente non consentita.", file=error_stream)
         exit(0)    

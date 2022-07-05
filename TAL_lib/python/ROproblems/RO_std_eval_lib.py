@@ -124,6 +124,8 @@ class std_eval_feedback:
         self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = True)
         pt_safe = self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK
         #self.evaluation_format(explanation,pt_safe=pt_safe,pt_out=self.pt_tot-pt_safe)
+        # comment/decomment:
+        self.evaluation_format(explanation,pt_safe=pt_safe,pt_out=self.pt_tot-pt_safe)
         return False
         
     def optimality_OK(self, goal, positive_enforcement, note):
