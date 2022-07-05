@@ -30,8 +30,8 @@ ip=[]
 
 ip=(ENV['ip_address'], TAc, LANG)
 ip=TALinput(token_type=str, regex= f" ([0-9]{1,3}\.){3}[0-9]{1,3}", TAc=TAc)#, sep='.')#, regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
-
-#ip=TALinput(str, regex=f"^((\S)+)$", sep='.', TAc=TAc)
+# '/(^[0-1]?[0-9]?[0-9]$)|(^[2][0-4][0-9]$)|(^25[0-5]$)/'   regex:per avere un numero tra 0 e 255
+# #ip=TALinput(str, regex=f"^((\S)+)$", sep='.', TAc=TAc)
 
 #separetedStrings= ip.split(".")
 numeriIP=[]

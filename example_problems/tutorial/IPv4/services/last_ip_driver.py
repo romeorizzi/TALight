@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from sys import stderr, exit
-from telnetlib import IP
 
 from typing import Any
 from IPv4_lib import *
