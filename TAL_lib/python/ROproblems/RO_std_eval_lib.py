@@ -121,7 +121,8 @@ class std_eval_feedback:
         self.voice_OK(f"Consistenza tra `{'` e `'.join([goal_std_name for goal_std_name in goals])}`", positive_enforcement, note)
 
     def optimality_NO(self, goal, explanation):
-        self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = True)
+        #self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = True)
+        self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = False)
         pt_safe = self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK
         #self.evaluation_format(explanation,pt_safe=pt_safe,pt_out=self.pt_tot-pt_safe)
         # comment/decomment:
@@ -129,7 +130,8 @@ class std_eval_feedback:
         return False
         
     def optimality_OK(self, goal, positive_enforcement, note):
-        self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = True)
+        #self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = True)
+        self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = False)
         
             
     def feedback_when_all_non_spoilering_checks_passed(self):

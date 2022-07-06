@@ -35,7 +35,8 @@ args_list += [
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV, ENV["color_implementation"])
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
+#LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'on_stderr')
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now' if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
@@ -52,6 +53,9 @@ SEF = RO_eval.std_eval_feedback(ENV,all_data["oracle"])
 KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict)
 all_data["feedback"] = KingArthur.verify_submission(SEF)
 #print(f"feedback_dict={all_data["feedback"]}", file=stderr)
+unasked_answ_objects = [key for key in all_data["oracle"] if key not in request_dict.values()]
+for key in unasked_answ_objects:
+    del all_data["oracle"][key]
 RO_io.checker_reply(all_data,ENV)
 if ENV.LOG_FILES != None:
     RO_io.checker_logs(all_data,ENV,TALf)

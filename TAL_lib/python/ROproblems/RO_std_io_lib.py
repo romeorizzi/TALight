@@ -98,9 +98,18 @@ def check_and_standardization_of_request_answer_consistency(ENV:dict, answer_obj
         #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable", file=stderr)
         answer_dict = ENV['answer_dict']
         alias_dict = ENV['alias_dict']
+        for ad_hoc_name, std_name in alias_dict.items():
+            if ad_hoc_name != std_name and ad_hoc_name in answer_object_type_spec:
+                for error_stream in [stdout,stderr]:
+                    print(f'Error (RO_std_io_lib): the argument `alias_dict` is not allowed to associate to a standard name ({std_name}) an alias ({ad_hoc_name}) which is actually another standard name.', file=error_stream)    
+                exit(0)
     else:
         #print("CASE: the instance objects have been passed one by one", file=stderr)
         answer_dict={}; alias_dict={}
+        if len(ENV["alias_dict"]) != 0:
+            for error_stream in [stdout,stderr]:
+                print(f'Error (RO_std_io_lib): when the argument `answer_dict` is left to its default value (empty dictionary), then also the argument `alias_dict` should be left to its default value (empty dictionary).', file=error_stream)    
+            exit(0)
         for std_name in implemented:
             #print(f"type(ENV[{std_name}])={type(ENV[std_name])}, answer_object_type_spec[{std_name}]={answer_object_type_spec[std_name]}, ENV[{std_name}]={ENV[std_name]}", file=stderr)
             type_spec = answer_object_type_spec[std_name]
@@ -209,7 +218,8 @@ def checker_reply(all_data,ENV):
     if ENV['with_oracle']:
         feedback_dict = all_data["feedback"]['spoilering']
     else:
-        feedback_dict = all_data["feedback"]['non_spoilering']       
+        feedback_dict = all_data["feedback"]['spoilering']
+        #feedback_dict = all_data["feedback"]['non_spoilering']       
     #print(f"feedback_dict={feedback_dict}", file=stderr)
     if ENV["recall_data_assigned"]:
         feedback_dict["input_data_assigned"] = all_data["input_data_assigned"]

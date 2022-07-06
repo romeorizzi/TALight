@@ -257,11 +257,12 @@ class verify_submission_problem_specific(verify_submission_gen):
     def verify_optimality(self, SEF):
         if not super().verify_optimality(SEF):
             return False
-        g_val = self.goals['opt_val']
-        true_opt_val = SEF.oracle_dict[g_val.alias]
+        true_opt_val = SEF.oracle_dict['opt_val']
+        true_opt_sol = SEF.oracle_dict['opt_sol']
         if 'opt_val' in self.goals:
+            g_val = self.goals['opt_val']
             if true_opt_val != g_val.answ:
-                return SEF.optimality_NO(g_val, f"Il valore ottimo corretto è {true_opt_val} {'>' if true_opt_val != g_val.answ else '<'} {g_val.answ}, che è il valore invece immesso in `{g_val.alias}`.")
+                return SEF.optimality_NO(g_val, f"Il valore ottimo corretto è {true_opt_val} {'>' if true_opt_val != g_val.answ else '<'} {g_val.answ}, che è il valore invece immesso in `{g_val.alias}`. Una soluzione di valore ottimo è {true_opt_sol}.")
             else:
                 SEF.optimality_OK(g_val, f"{g_val.alias}={g_val.answ} è effettivamente il valore ottimo.", "")
         if 'opt_sol' in self.goals:
@@ -270,7 +271,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             g_val_answ = len(g_sol_answ)
             assert g_val_answ <= true_opt_val
             if g_val_answ < true_opt_val:
-                return SEF.optimality_NO(g_sol, f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {g_val_answ} < {true_opt_val}, valore corretto per una soluzione ottima quale {SEF.oracle_dict['opt_sol']}. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
+                return SEF.optimality_NO(g_sol, f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {g_val_answ} < {true_opt_val}, valore corretto per una soluzione ottima quale {true_opt_sol}. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
             else:
                 SEF.optimality_OK(g_sol, f"Confermo l'ottimailtà della soluzione {g_sol.alias}={g_sol.answ}.", "")
         return True

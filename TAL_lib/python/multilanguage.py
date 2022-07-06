@@ -214,7 +214,7 @@ class Env:
 
 class Lang:
     def __init__(self, ENV, TAc, service_server_eval, book_strictly_required=False, print_opening_msg = 'delayed'):
-        assert print_opening_msg in ['delayed','never','now']
+        assert print_opening_msg in ['delayed','never','now','on_stderr']
         self.service_server_eval = service_server_eval
         self.ENV=ENV
         self.TAc=TAc
@@ -266,10 +266,12 @@ class Lang:
         # END: MESSAGE BOOK LOADING
         if print_opening_msg == 'now':
             self.print_opening_msg()
+        elif print_opening_msg == 'on_stderr':
+            self.print_opening_msg(stderr)
         elif print_opening_msg == 'never':
             self.to_be_printed_opening_msg = False
         
-    def print_opening_msg(self):
+    def print_opening_msg(self, fout=stdout):
         self.to_be_printed_opening_msg = False
         problem=self.ENV.problem
         service=self.ENV.service
@@ -284,7 +286,7 @@ class Lang:
                 self.opening_msg += f"{arg_name}={arg_val}, "
         self.opening_msg = self.opening_msg[:-2] + ".\n"
         self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {self.ENV.exe_fullname}).', {"problem":problem, "service":service, "ENV":self.ENV, "lang":self.ENV["lang"]})
-        self.TAc.print(self.opening_msg, "green")
+        self.TAc.print(self.opening_msg, "green", file=fout)
 
     def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionary=None, obj=None):
         """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the hardcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
