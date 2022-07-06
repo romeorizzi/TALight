@@ -28,9 +28,9 @@ TAc.print("\nInserire un indirizzo ip appartenente all'indirizo di rete qui sopr
 ip=[]
 
 ip=(ENV['ip_address'], TAc, LANG)
-#ip=TALinput(str, regex= f"regex: //([0-9]{1,3}\.){3}[0-9]{1,3}/gm", TAc=TAc,sep='.')#, regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
+ip=TALinput(str, regex= f"regex: ([0-1]?[0-9]?[0-9]$)|(^[2][0-4][0-9]$)|(^25[0-5])", TAc=TAc,sep='.')#, regex_explained= "un indirizzo ip è un insieme di 4 terzine di numeri; ogni numero può andare da un minimo di 0 ad un massimo di 255")
 
-ip=TALinput(str, regex=f"^((\S)+)$", TAc=TAc, sep=".")
+#ip=TALinput(str, regex=f"^((\S)+)$", TAc=TAc, sep=".")
 #ip=input()
 #separetedStrings= ip.split(".")
 Ip=[]

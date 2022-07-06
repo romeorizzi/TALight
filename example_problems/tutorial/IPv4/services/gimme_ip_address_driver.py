@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from sys import stderr, exit
 
 from typing import Any

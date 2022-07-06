@@ -37,7 +37,6 @@ services:
         default: it
   
   first_ip:
-    regex: //([0-9]{1,3}\.){3}[0-9]{1,3}/gm
     descrizione: "Per questo problema ti viene chiesto di inserire il primo indirizzo ip appartenente all'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      primo indirizzo ip --> 169.21.3.0"
     evaluator: [python, services/first_ip_driver.py]
     args:
