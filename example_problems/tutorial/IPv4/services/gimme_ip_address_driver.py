@@ -16,7 +16,7 @@ LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 
 
 # START CODING YOUR SERVICE:
 
-TAc.print("\nInserire un indirizzo ip, riceverai i 3 possibili indirizzi internet a cui l'indirizzo ip può essere contenuto", "green")
+TAc.print("\nInserire un indirizzo ip, riceverai i 3 possibili indirizzi internet a cui l'indirizzo ip puo essere contenuto", "green")
 
 
 
@@ -30,6 +30,17 @@ Ip=[]
 for i in range (4) :
   #Ip.append( int(separetedStrings[i]))
   Ip.append( int(ip[i]))
-  
-TAc.print("\nL'indirizzo ip inserito può essere contenuto nei seguenti indirizzi internet:\n", "grenn", ["bold"])
-TAc.print(Ip[0],"green", "0.0.0")
+
+TAc.print("\nL'indirizzo ip inserito puo essere contenuto nei seguenti indirizzi internet:\n", "green", ["bold"])
+TAc.print(Ip[0],"green") 
+TAc.print("0.0.0\n", "green")
+TAc.print(Ip[0],"green")
+TAc.print(".", "green")
+TAc.print(Ip[1], "green")
+TAc.print(".0.0\n", "green")
+TAc.print(Ip[0],"green")
+TAc.print(".", "green")
+TAc.print(Ip[1],"green")
+TAc.print(".", "green")
+TAc.print(Ip[2], "green")
+TAc.print(".0.0\n", "green")

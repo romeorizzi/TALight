@@ -3,16 +3,16 @@
 public_folder: public
 services:
 
-  services_all:
-    descrizione: "Questo servizio mostra tutti i servizi per questo problema"
+  all_services:
+    description: "Questoserviziomostratuttiiserviziperquestoproblema"
     evaluator: [python, services/all_services_driver.py]
     args:
       lang: 
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
+        default: hardcoded
 
   gimme_ip_address:
-    descrizione: "Questo servizio ti chiede di inserire un indirizzo ip, dopodiché stampera i 3 possibili indirizzi di rete a cui può appartenere."
+    description: "Questo servizio ti chiede di inserire un indirizzo ip, dopodiche stampera i 3 possibili indirizzi di rete a cui puo appartenere."
     evaluator: [python, services/gimme_ip_address_driver.py]
     args:
       ip_address: 
@@ -23,7 +23,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
-  how_many_ips_driver:
+  how_many_ips:
     descrizione: "this service takes in a subnet Mask (e.g., 255.255.0.0) defining a whole range of valid IP addresses. The service returns IP addresses from that range. Use the arguments of the service to specify which IP's in the range should be returned."
     evaluator: [python, services/how_many_ips_driver.py]
     args:
@@ -85,7 +85,7 @@ services:
         explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
+        default: hardcoded
       metafile:
         regex: ^(main|en|it)$
         default: main
