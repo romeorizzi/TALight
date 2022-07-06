@@ -16,9 +16,8 @@ except Exception as e:
 
 class TALcolors:
     def __init__(self, ENV, color_implementation ="ANSI"):
-        if color_implementation=="None":
-           self.color_implementation = None
-        else:
+        self.color_implementation = None
+        if color_implementation != "None":
             if environ["TAL_META_TTY"]=='1' or color_implementation=="html":
                 try:
                     self.termcolor = import_module('termcolor')
