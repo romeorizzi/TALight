@@ -148,12 +148,10 @@ def solver(input_to_oracle):
         obj_label = I["labels"][i-1]
         obj_cost = I["costs"][i-1]; obj_val = I["vals"][i-1]
         obj_LB = LB[i-1]; obj_UB = UB[i-1]
-        print(f'\ni={i}\nj={j}\npromise={promise}\nnum_opt_sols_MAX={num_opt_sols_MAX}\nobj_label={obj_label}\nobj_cost={obj_cost}\nobj_val={obj_val}\nobj_LB={obj_LB}\nobj_UB={obj_UB}', file=stderr)
+        #print(f'\ni={i}\nj={j}\npromise={promise}\nnum_opt_sols_MAX={num_opt_sols_MAX}\nobj_label={obj_label}\nobj_cost={obj_cost}\nobj_val={obj_val}\nobj_LB={obj_LB}\nobj_UB={obj_UB}', file=stderr)
         for obj_times in range(obj_LB,obj_UB+1):
-            print(f"obj_times before = {obj_times}", file=stderr)
             if obj_times*obj_cost > j or DPtable_opt_val[i-1][j-obj_times*obj_cost] is None:
                 break
-            print(f"{obj_times=}", file=stderr)
             if promise <= obj_times*obj_val + DPtable_opt_val[i-1][j-obj_times*obj_cost]:
                 assert promise == obj_times*obj_val + DPtable_opt_val[i-1][j-obj_times*obj_cost]
                 for opt_sol in yield_opt_sols_list(i-1,j-obj_times*obj_cost,promise-obj_times*obj_val,num_opt_sols_MAX):
