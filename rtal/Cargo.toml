@@ -41,6 +41,7 @@ twox-hash = "1"
 tempfile = "3"
 chrono = "0.4"
 pyo3 = { version = "0.16", features = ["extension-module"] }
+pythonize = "0.16"
 
 [target.'cfg(unix)'.dependencies]
 nix = "0.24"

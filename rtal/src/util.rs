@@ -5,13 +5,13 @@ use tokio_tungstenite::tungstenite::Error as TsError;
 use tokio_tungstenite::tungstenite::Message;
 use twox_hash::xxh3::hash128;
 
-const BUFFER_SIZE: usize = 1 << 20;
+pub const BUFFER_SIZE: usize = 1 << 20;
 
 #[derive(Serialize, Deserialize, Debug)]
-struct BinaryDataHeader {
-    name: String,
-    size: usize,
-    hash: u128,
+pub struct BinaryDataHeader {
+    pub name: String,
+    pub size: usize,
+    pub hash: u128,
 }
 
 pub async fn send_binary_data<T: Sink<Message> + Unpin>(
