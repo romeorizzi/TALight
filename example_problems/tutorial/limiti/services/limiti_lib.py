@@ -16,8 +16,8 @@ end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
 
 def indices(stringa,n,source):
     indices=set()
-    if 'sottoinsieme' in stringa:
-        posiz_start=stringa.find("sottoinsieme")+13
+    if 'max_in_sottoinsieme' in stringa:
+        posiz_start=stringa.find("max_in_sottoinsieme")+20
         comma_position=stringa.find(',')
         parenthesis_position=stringa.find(')')
         start=eval(stringa[posiz_start:comma_position],{'n':n})
@@ -26,24 +26,23 @@ def indices(stringa,n,source):
             indices.add(i)
     elif 'confronto' in stringa:
         def elem(indices,argument,n,source):
-            if source=='random':
-                if len(argument)==2 and argument[0]=='s' and argument[1].isdigit() and int(argument[1])<=n:
-                    indices.add(int(argument[1]))
+            if source!='open':
+                if argument[0]=='s' and (argument[1:].isdigit() or argument[1:]=='n'):
+                    indices.add(int(eval(argument[1:],{'n':n})))
                 else:
                     indices.add(str(argument))
-            elif source=='generic':
+            else:
                 if argument=='s1' or argument=='sn':
-                    indices.add(eval(argument[1],{'n':n}))
+                    indices.add(eval(argument[1:],{'n':n}))
                 else:
                     try:
-                        eval_argument=eval(argument,{'n':n})
+                        eval_argument=eval(argument[1:],{'n':n})
                         indices.add(eval_argument)
                     except:
                         indices.add(argument)
         posiz_1=stringa.find("confronto")+10
         comma_position=stringa.find(',')
         arg_1=stringa[posiz_1:comma_position]
-        # posiz_1=stringa.find("confronto")+11
         elem(indices,arg_1,n,source)
         parenthesis_position=stringa.find(')')
         arg_2=stringa[comma_position+1:parenthesis_position]
