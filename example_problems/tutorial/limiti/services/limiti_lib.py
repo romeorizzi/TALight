@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from asyncio import constants
-from fractions import Fraction
 from re import X
 from unicodedata import decimal
 import numpy as np
 import math
-from scipy import rand
 from sympy import *
 from math import *
 import random
 import decimal
+from sympy import Symbol, symbols,solve
+
 correct = random.choice(['Bene!', 'Molto bene!', 'Ok!','Ottimo!'])
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
@@ -252,86 +251,38 @@ def find_max_with_parameter(condition,max):
             x_max=eval(condition,{'k':k_max})
         return x_max
 
-
-# TUTTE QUESTE FUNZIONI SOTTO DA RIFARE/ELIMINARE
-
-def alfabeto(variable):
-    for word in {'sqrt','log','pow','factorial','exp','cos','sin','tan','acos','asin','atan','pi','e','inf'}:
-        if word in variable:
-            variable=variable.replace(word,'math.'+word)
-    if '^' in variable:
-        variable=variable.replace('^','**')
-    return variable
-
 def get_file_str_from_path(path):
     """Returns the contents of the file as a string from the selected path."""
     file=open(path, 'r')
     return file.read()
 
-# def get_instance_from_txt(instance):
-#     istanza=instance.split('\n')
-#     function=istanza[0]
-#     x_0=istanza[1]
-#     c=istanza[2]
-#     return function,x_0,c
-
-def x_0_infinito(x_0,eps_N):
-    M = input('\nInserisci il tuo valore per M: ')
-    M=alfabeto(M)
-    M = eval(M,{"epsilon":eps_N,"N":eps_N,"math":math})
-    assert M > 0, "Hai inserito una M negativa!"
-    start_end_point=M+0.000000000000001
-    intervallo= np.linspace(start_end_point, 1000, 3000) if x_0=='inf' else np.linspace(-1000, -start_end_point, 3000)
-    return M,intervallo
-
-def x_0_finito(x_0,eps_N):
-    delta = input('\nInserisci il tuo valore per delta: ')
-    delta=alfabeto(delta)
-    print(delta)
-    delta = eval(delta,{"epsilon":eps_N,"N":eps_N,"math":math})
-    assert delta > 0, "Hai inserito un delta negativo!"
-    intervallo= np.linspace(x_0-delta, x_0+delta, 50)
-    return delta, intervallo
-
-def disequazione(): # funzione da riguardare
-    a = float(input("inserire a: "))
-    b = float(input("inserire b: "))
-    c = float(input("inserire c: "))
-    if a == 0:
-        if b == 0:
-            print('no benee')
-            return('Input non valido')
-        else:
-            if c == 0:
-                if b>0:
-                    return("x > 0")
-                else:
-                    return("x < 0")
-            else:
-                if b>0:
-                    return("x > " + str(-c/b))
-                else: 
-                    return("x < " + str(-c/b))
+def inf_seq(seed:int):
+    random.seed(seed)
+    n=Symbol('n')
+    epsilon=Symbol('epsilon')
+    n_coeff_1=random.randint(1,3)
+    constant_term_1=random.randint(-3,4)
+    n_coeff_2=random.randint(1,3)
+    constant_term_2=random.randint(-3,4)
+    num_1=expand(n_coeff_1*n+constant_term_1)
+    num_2=expand(n_coeff_2*n+constant_term_2)
+    numerator=random.choice([num_1,expand(num_1*num_2)])
+    num_roots_plus=solve(numerator+epsilon,n)
+    num_roots_minus=solve(numerator-epsilon,n)
+    succ_type=random.choice(['poly','fract'])
+    # succ_type='poly'
+    if succ_type=='poly':
+        inf_sequence=numerator
+        # print('semplificato ',simplify(inf_sequence-epsilon))
+        # print('soluz',solve(inf_sequence-epsilon,n))
     else:
-        delta = b**2 - (4*a*c)
-        print("La disequazione da risolvere e': ", a, "x^2 +", b, "x +", c, "> 0")
-        if delta < 0 and a > 0:
-            return ("La soluzione e' l'insieme dei numeri R")
-        elif delta < 0 and a < 0:
-            return("La soluzione in R e' l'insieme vuoto")
-        elif delta >= 0 and a > 0:
-            x1 = ((-b) + math.sqrt(delta))/(2*a)
-            x2 = ((-b) - math.sqrt(delta))/(2*a)
-            print("La soluzione e' l'intervallo esterno delle radici\n")
-            if x1 < x2:
-                return("x < " + str(x1) + " e x > " + str(x2))
-            else:
-                return("x < " + str(x2) + " e x > " + str(x1))
-        elif delta >= 0 and a < 0:
-            print("La soluzione e' nell'intervallo interno tra le radici\n")
-            x1 = ((-b) + math.sqrt(delta))/(2*a)
-            x2 = ((-b) - math.sqrt(delta))/(2*a)
-            if x1 > x2:
-                return(" "+ str(x2) + " < x < "+str(x1))
-            else:
-                return(" "+ str(x1) + " < x < "+str(x2))
+        constant_term_3=random.randint(-3,4)
+        den_1=expand(n_coeff_2*n+constant_term_3)
+        if degree(numerator)==2:
+            denominator=den_1
+        else:
+            den_2=expand(n_coeff_1*n+constant_term_3)
+            denominator=random.choice([den_1,expand(den_1*den_2)])
+        inf_sequence=numerator/denominator
+        den_root=solve(denominator,n)
+    return inf_sequence

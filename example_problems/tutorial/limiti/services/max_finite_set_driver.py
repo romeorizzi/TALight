@@ -11,7 +11,7 @@ args_list = [
     ('reference_set',str),
     ('instance_id',int),
     ('seed',int),
-    ('set_cardinality',int),
+    ('cardinality',int),
     ('download',bool),
 ]
 
@@ -24,16 +24,8 @@ TALf = TALfilesHelper(TAc, ENV)
 reference_set=ENV["reference_set"]
 source=ENV["source"]
 seed=ENV["seed"]
-set_cardinality=ENV["set_cardinality"]
+set_cardinality=ENV["cardinality"]
 
-if TALf.exists_input_file('instance'):
-    instance=TALf.input_file_as_str('instance')
-    instance_array = ll.get_instance_from_txt(instance)
-    TAc.print(LANG.render_feedback("successful-load", 'Il file che hai associato al gestore di file `instance` e` stato caricato con successo.'), "white", ["bold"])
-    TAc.print(LANG.render_feedback("this-is-the-instance", f'L\'insieme che mi hai sottoposto e`: \n{instance} \ned il massimo e`'), "yellow", ["bold"])
-    max_elem=max(instance_array)
-    TAc.print(LANG.render_feedback("this-is-the-max", f'{max_elem}'), "yellow", ["reverse"])
-    exit(0)
 if source=='catalogue':
     set_values = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension='txt')
     TAc.print(LANG.render_feedback("instance", f'# instance_id: {ENV["instance_id"]} \n# Dati i seguenti numeri: \n{set_values}'),  "yellow", ["bold"])
@@ -50,14 +42,14 @@ if ENV["download"]:
 instance=ll.instance_to_number(instance)
 max_value=max(instance)
 # print(instance_str[max_value])
-TAc.print(LANG.render_feedback("max", f'# determina il massimo:'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("max", f'# inserisci il massimo:'), "yellow", ["bold"])
 user_max=eval(TALinput(str, regex=f"^([+-]?[.\d]*)$", sep=None, TAc=TAc)[0])
 # controllare soluzione studente
 if user_max==max_value:
-    TAc.print(LANG.render_feedback("correct", f'Ottimo! {max_value} e` nell\'insieme e non ci sono numeri maggiori di lui, quindi e` un massimo.'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("correct", f'Ottimo! Confermo che {max_value} e` il massimo in quanto: \n1) appartiene all\'insieme, \n2) non ci sono numeri maggiori di lui.'), "green", ["bold"])
     exit(0)
 elif user_max not in instance:
-    TAc.print(LANG.render_feedback("wrong", f'No, {user_max} non e` nell\'insieme quindi non puo` essere un massimo!'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong", f'No, {user_max} non e` nell\'insieme quindi non puo` essere il massimo!'), "red", ["bold"])
     exit(0)
 else:
     elem=instance[0]
@@ -67,5 +59,5 @@ else:
             grater_numbers.append(instance[i])
     grater_numbers.sort()
     grater_number=grater_numbers[(len(grater_numbers)-1)//2]
-    TAc.print(LANG.render_feedback("wrong", f'No, ad esempio {grater_number} e` piu` grande di {user_max} quindi non puo` essere un massimo!'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong", f'No, infatti {grater_number} > {user_max}, inoltre {grater_number} appartiene all\'insieme, quindi {user_max} non puo` essere il massimo!'), "red", ["bold"])
     exit(0)

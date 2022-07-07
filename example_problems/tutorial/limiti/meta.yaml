@@ -2,19 +2,16 @@
 ---
 public_folder: public
 services:
-  max_fin_set:
-    evaluator: [python, services/max_fin_set_driver.py]
+  max_finite_set:
+    evaluator: [python, services/max_finite_set_driver.py]
     description: 'Con questo servizio puoi convincerti che ogni insieme finito e non vuoto di numeri ammette sempre un massimo.'
-    files:
-      - instance
     args:
       source:
         regex: ^(catalogue|randgen)$
         default: randgen
-        explain: 'Per inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina non è necessario impostare questo argomento, basta chiamare il servizio con:\n rtal connect limiti max_fin_set -finstance=percorso_del_file_contenete_l\''istanza\n Con questa chiamata senza ulteriori argomenti, il servizio presuppone che il file contenga tante righe quanti gli elementi dell\''insieme (una riga per ogni numero) e ti verra` ritornato il massimo. L\''argomento `source` viene usato solo quando non associ un file locale; in tal caso calcolerai tu il massimo dell\''insieme. Puoi determinare il modo in cui l\''istanza viene immessa nel servizio:' 
+        explain: 'Puoi determinare il modo in cui l\''istanza viene immessa nel servizio:' 
         explain1: '[catalogue] il servizio lavora su un\''istanza presa dal catalogo situato sul server. Le istanze nel catalogo sono numerate in modo progressivo a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza a cui sei interessato/a.'
-        explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. In questo caso dovresti specificare i valori per gli argomenti del servizio corrispondenti ai descrittori d\''istanza (set_cardinality, seed) quando li vuoi differenti dai loro valori di default.'
-        # explain3: '[terminal] you enter your instance (just an element, one per line) directly by either typing it directly or through cut and paste.'
+        explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. In questo caso dovresti specificare i valori per gli argomenti del servizio corrispondenti ai descrittori d\''istanza (reference_set,cardinality,seed) quando li vuoi differenti dai loro valori di default.'
       reference_set:
         regex: ^(natural|decimal)$
         default: natural
@@ -33,7 +30,7 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      set_cardinality:
+      cardinality:
         regex: ^([1-9][0-9]*)$
         regex-explained: 'qualsiasi numero naturale maggiore di 0 (l\''insieme deve avere almeno un elemento)'
         regex-URL: 'https://extendsclass.com/regex/a55297b'
@@ -46,27 +43,48 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  max_fin_set_proof:
-    evaluator: [python, services/max_fin_set_proof_driver.py]
-    description: 'Questo servizio ti permette di dimostrare formalmente che ogni insieme finito e non vuoto di numeri ammette sempre un massimo.'
+  solve_max_finite_set:
+    evaluator: [python, services/solve_max_finite_set_driver.py]
+    description: 'Con questo servizio proverò a convincerti che ogni insieme finito e non vuoto di numeri ammette sempre un massimo. \nPer inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina basta chiamare il servizio con:\n rtal connect limiti max_finite_set -finstance=percorso_del_file_contenete_l\''istanza\n Con questa chiamata il servizio presuppone che il file contenga tante righe quanti gli elementi dell\''insieme (un numero per riga) e ti verrà ritornato il massimo. Il servizio presuppone che tu immetta un insieme di numeri naturali, per modificare quest\''impostazione richiama il servizio con \n`rtal connect limiti solve_max_finite_set -areference_set=deciaml`. Per modificare la cardinalità dell\''insieme invece specifica un valore per il descrittore d\''istanza `cardinality`. \nQuando invece non associ un file locale potrai scrivere l\''istanza direttamente su terminale.'
+    files:
+      - instance
     args:
+      reference_set:
+        regex: ^(natural|decimal)$
+        default: natural
+        explain: 'specifica l\''insieme dei numeri su cui vuoi lavorare: '
+        explain1: '[natural] per lavorare con i numeri naturali'
+        explain2: '[decimal] per lavorare con i decimali limitati'
       cardinality:
-        regex: ^(random|generic)$
-        default: random
-        explain: 'Per iniziare una dimostrazione guidata passo passo e allenarti su insiemi di k elementi (con k che va da 1 a 10) mantieni il valore di default `random`, altrimenti imposta il valore `generic` per passare al caso generale (insieme di n elementi, n non definito).'
+        regex: ^([1-9][0-9]*)$
+        regex-explained: 'qualsiasi numero naturale maggiore di 0 (l\''insieme deve avere almeno un elemento)'
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 7
+        explain: 'Questo argomento viene utilizzato per indicare la cardinalità dell\''insieme di vuoi che trovi il massimo.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  max_inf_set:
-    evaluator: [python, services/max_inf_set_driver.py]
+  max_finite_set_proof:
+    evaluator: [python, services/max_finite_set_proof_driver.py]
+    description: 'Questo servizio ti permette di dimostrare formalmente che ogni insieme finito e non vuoto di numeri ammette sempre un massimo.'
+    args:
+      cardinality:
+        regex: ^([1-9][0-9]*|random|open)$
+        default: random
+        explain: 'Per iniziare una dimostrazione guidata passo passo e allenarti su insiemi di k elementi (con k scelto a random dal servizio nell\''intervallo [2,10]) mantieni il valore di default `random`, altrimenti puoi definire tu la cardinalità dell\''insieme con cui lavorare (specificando un qualsiasi natuale positivo >=1); oppure puoi impostare il valore `open` per passare al caso generale (insieme di n elementi, n non definito).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  max_infinite_set:
+    evaluator: [python, services/max_infinite_set_driver.py]
     description: 'Con questo servizio potrai verificare se un insieme non finito ha un massimo oppure no.'
     args:
       source:
         regex: ^(catalogue|randgen)$
         default: randgen
-        explain: 'Attraverso l\''argomento `source` puoi determinare il modo in cui l\''istanza viene immessa nel servizio:'
+        explain: 'Attraverso l\''argomento `sourcè puoi determinare il modo in cui l\''istanza viene immessa nel servizio:'
         explain1: '[catalogue] il servizio lavora su un\''istanza presa dal catalogo situato sul server. Le istanze nel catalogo sono numerate in modo progressivo a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza a cui sei interessato/a.'
-        explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. capire se mettere come descittore d\''istanza `parameter`: con l\''argomento pari a 1 si avra` un\''istanza del tipo {{x | x=2*k+1, 3<k<9  k in N}}; con l\''argomento pari a 0 si avra` qualcosa del tipo {{x in R | 4<=x^2<49}}'
+        explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. capire se mettere come descittore d\''istanza `parameter`: con l\''argomento pari a 1 si avrà un\''istanza del tipo {{x | x=2*k+1, 3<k<9  k in N}}; con l\''argomento pari a 0 si avrà qualcosa del tipo {{x in R | 4<=x^2<49}}'
       instance_id:
         regex: ^([1-9][0-9]*)$
         regex-explained: 'qualsiasi naturale positivo >=1 (nella sua rappresentazione decimale)'
@@ -93,9 +111,9 @@ services:
       source:
         regex: ^(catalogue|randgen)$
         default: randgen
-        explain: 'Attraverso l\''argomento `source` puoi determinare il modo in cui l\''istanza viene immessa nel servizio:'
+        explain: 'Attraverso l\''argomento `sourcè puoi determinare il modo in cui l\''istanza viene immessa nel servizio:'
         explain1: '[catalogue] il servizio lavora su un\''istanza presa dal catalogo situato sul server. Le istanze nel catalogo sono numerate in modo progressivo a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza a cui sei interessato/a.'
-        explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. capire se mettere come descittore d\''istanza `parameter`: con l\''argomento pari a 1 si avra` un\''istanza del tipo {{x | x=2*k+1, 3<k<9  k in N}}; con l\''argomento pari a 0 si avra` qualcosa del tipo {{x in R | 4<=x^2<49}}'
+        explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. capire se mettere come descittore d\''istanza `parameter`: con l\''argomento pari a 1 si avrà un\''istanza del tipo {{x | x=2*k+1, 3<k<9  k in N}}; con l\''argomento pari a 0 si avrà qualcosa del tipo {{x in R | 4<=x^2<49}}'
       instance_id:
         regex: ^([1-9][0-9]*)$
         regex-explained: 'qualsiasi naturale positivo >=1 (nella sua rappresentazione decimale)'
@@ -156,7 +174,7 @@ services:
         default: it
   density_Q_in_R_disprover:
     evaluator: [python, services/density_Q_in_R_disprove_driver.py]
-    description: 'Con questo servizio cerchero` di convincerti che l\''insieme dei numeri razionali e\'' denso nei reali, ovvero che dati due numeri reali x,y con x<y, esiste un numero q razionale tale che x < q < y.'
+    description: 'Con questo servizio cercherò di convincerti che l\''insieme dei numeri razionali e\'' denso nei reali, ovvero che dati due numeri reali x,y con x<y, esiste un numero q razionale tale che x < q < y.'
     args:
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -168,7 +186,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   archimede_curiosity_prover:
-    evaluator: [python, services/archimede_curiosity_prover.py]
+    evaluator: [python, services/archimede_curiosity_prover_driver.py]
     description: 'Questo servizio può essere visto come un piccolo salto verso i limiti di successioni. Potrai convincermi che il limite di una successione convergente di termini positivi non è sempre strettamente positivo e sperimenterai la correlazione che sussiste tra questa affermazione e il principio di Archimede.'
     args:
       seed:
@@ -181,7 +199,7 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   archimede_curiosity_disprover:
-    evaluator: [python, services/archimede_curiosity_disprover.py]
+    evaluator: [python, services/archimede_curiosity_disprover_driver.py]
     description: 'Questo servizio può essere visto come un piccolo salto verso i limiti di successioni. Proverò a convincerti che il limite di una successione convergente di termini positivi non è sempre strettamente positivo e sperimenteremo la correlazione che sussiste tra questa affermazione e il principio di Archimede.'
     args:
       seed:
@@ -193,6 +211,20 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+  infinite_sequence:
+    evaluator: [python, services/infinite_sequence_driver.py]
+    description: 'Con questo servizio potrai valutare se la successione che ti viene proposta è limitata oppure no.'
+    args:
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:

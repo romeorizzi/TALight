@@ -1,20 +1,15 @@
 #!/usr/bin/env python3
 from sys import stderr
-from fractions import Fraction
 from multilanguage import Env, Lang, TALcolors
-from TALinputs import TALinput
 from TALfiles import TALfilesHelper
 
 import math
-import numpy as np
 import os
 import limiti_lib as ll
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('source',str),
-    ('instance_id',int),
-    ('instance_format',str),
-#    ('download',bool),
+    # ('instance_id',int),
 ]
 
 ENV =Env(args_list)

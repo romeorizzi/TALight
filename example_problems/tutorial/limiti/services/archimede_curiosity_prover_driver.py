@@ -3,7 +3,6 @@ from sys import exit
 from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from TALfiles import TALfilesHelper
-import limiti_lib as ll
 import random
 from math import *
 # METADATA OF THIS TAL_SERVICE:
