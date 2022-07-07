@@ -21,7 +21,7 @@ services:
         explain: "set this flag to 1 if the robot can move also diagonally, i.e., directly from cell (i,j) to cell (i+1,j+1)"
       cell_from:
         regex: ^(.*)$
-        default: (1,'A')
+        default: "[1,'A']"
         explain: "assuming the argument `cell_from` is set to (3,'C'), then only the paths that start from cell (3,'C') are feasible. Row 1 is the one at the top, column 'A' is the leftmost one."
       cell_to:
         regex: ^(.*)$

@@ -32,6 +32,11 @@ args_list += [
     ('task',int),
 ]
 
+#request_setups = {
+#    "MAX_NUM_SOLS_IN_LIST": 10,
+#    "MAX_NUM_OPT_SOLS_IN_LIST": 30,
+#}
+
 ENV =Env(args_list)
 TAc =TALcolors(ENV, ENV["color_implementation"])
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
@@ -48,7 +53,7 @@ request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.ch
 #print(f"long_answer_dict={long_answer_dict}", file=stderr)
 
 SEF = RO_eval.std_eval_feedback(ENV)
-KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict)
+KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict) #, request_setups)
 feedback_dict = KingArthur.verify_submission(SEF)
 #print(f"feedback_dict={feedback_dict}", file=stderr)
 

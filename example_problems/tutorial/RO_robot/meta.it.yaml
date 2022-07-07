@@ -21,15 +21,15 @@ services:
         explain: "set this flag to 1 if the robot can move also diagonally, i.e., directly from cell (i,j) to cell (i+1,j+1)"
       cell_from:
         regex: ^(.*)$
-        default: (1,'A')
+        default: "['1','A']"
         explain: "assuming the argument `cell_from` is set to (3,'C'), then only the paths that start from cell (3,'C') are feasible. Row 1 is the one at the top, column 'A' is the leftmost one."
       cell_to:
         regex: ^(.*)$
-        default: (4,'E')
+        default: "['4','E']"
         explain: "assuming the argument `cell_from` is set to (3,'C'), then only the paths that end in cell (3,'C') are feasible. Row 1 is the one at the top, column 'A' is the leftmost one."
       cell_through:
         regex: ^(.*)$
-        default: (3,'C')
+        default: "['3','C']"
         explain: "in order for a path to be feasible it must also visit cell (3,'C'). Row 1 is the one at the top, column 'A' is the leftmost one."
       CAP_FOR_NUM_SOLS:
         regex: ^([1-9][0-9]*)$

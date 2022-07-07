@@ -9,12 +9,12 @@ from RO_verify_submission_gen_prob_lib import verify_submission_gen
 _LOGGER = logging.getLogger(__package__).getChild("robot")
 
 instance_objects_spec = [
-    ("grid", "matrix_of_ints"),
+    ("grid", "matrix_of_int"),
     ("budget", int),
     ("diag", bool),
-    ("cell_from", tuple[int, str]),
-    ("cell_to", tuple[int, str]),
-    ("cell_through", tuple[int, str]),
+    ("cell_from", "list_of_str"),
+    ("cell_to", "list_of_str"),
+    ("cell_through", "list_of_str"),
 ]
 additional_infos_spec = [
     ("partialDP_to", "matrix_of_int"),
@@ -60,7 +60,7 @@ request_setups = {
     "MAX_NUM_OPT_SOLS_IN_LIST": 30,
 }
 
-answer_objects_implemented = ['opt_sol','opt_val','num_opt_sols','DPtable_opt_val','DPtable_num_opts','list_opt_sols']
+answer_objects_implemented = ['num_paths','num_opt_paths','opt_val','opt_path','list_opt_paths','DPtable_num_to','DPtable_num_from','DPtable_opt_to','DPtable_opt_from','DPtable_num_opt_to','DPtable_num_opt_from']
 limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
 
 
@@ -83,10 +83,12 @@ def _map(x, y):
 
 
 def parse_cell(cell: str) -> _Cell:
-    # remove parenthesis
-    cell = cell[1:-1]
-    row, col = cell.split(",")
-    row, col = ord(row.lower()) - ord("a"), int(col)
+    # Take row and col
+    #cell = cell[1:-1]
+    #row, col = cell.split(",")
+    #row, col = ord(row.lower()) - ord("a"), int(col)
+    row, col = cell
+    row, col = int(row) - 1, ord(col.lower()) - ord("a")
     return (row, col)
 
 
@@ -112,8 +114,8 @@ def check_instance_consistency(instance):
         print(f"Error: {grid} must be a matrix")
         exit(0)
 
-    for row in range(grid):
-        for col in range(row):
+    for row in range(len(grid)):
+        for col in range(len(grid[row])):
             if (c := grid[row][col]) < -1:
                 print(f"Error: value {c} in {_map(row, col)} is not allowed")
                 exit(0)
@@ -563,8 +565,8 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF, input_data_assigned: Dict, long_answer_dict: Dict, request_setups: str):
-        super().__init__(SEF, input_data_assigned, long_answer_dict, request_setups)
+    def __init__(self, SEF, input_data_assigned: Dict, long_answer_dict: Dict):#, request_setups: str):
+        super().__init__(SEF, input_data_assigned, long_answer_dict)#, request_setups)
 
     def verify_format(self, SEF):
         if not super().verify_format(SEF):
