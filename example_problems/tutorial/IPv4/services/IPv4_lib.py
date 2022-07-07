@@ -4,7 +4,23 @@ import random
 from TALinputs import TALinput
 from multilanguage import Env, TALcolors, Lang
 
+args_list=[]
 
+ENV = Env(args_list)
+TAc = TALcolors(ENV)
+LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+
+def input_ip():
+  ip=TALinput(int ,num_tokens=4, regex= f"regex: ^((\d)+)((\.)+)$ ", TAc=TAc ,sep='.')
+  tooMuch=0
+  for i in range(4):
+    if ip[i]>255:
+      tooMuch+=1
+
+  if tooMuch>1:
+    TAc.print("\nERRORE\nIn un indirizzo ip i numeri vanno da un minino di 0 ad un massimo di 255 compresi", "red", ["bold"])
+    exit(0)
+  return ip
 
 def subnet_mask():
   """This function will generate, in a pseudo-random way, the subnet mask"""
@@ -43,32 +59,3 @@ def net_address(subnet):
     n3=random.randint(1,255)
   numeroIndirizzoInternet=[n1,n2,n3,n4]  
   return numeroIndirizzoInternet
-
-#bisogna cancellare tutto quanto
-#è tutto sbagliato
-#def list_all(numeroIndirizzoInternet):
-  ip=input("Enter all IPs address belonging to the network address:\n")
-  numeriIP=[]
-  numeri=[]
-  numeroIndirizzoIp=0
-  numeroIndirzzoInternet= ip.split(".")
-  for i in range (len(numeroIndirzzoInternet)) :
-    numeri.append( int(numeroIndirzzoInternet[i]))
-  separetedStrings= ip.split(".")
-  for i in range (len(separetedStrings)) :
-    numeriIP.append( int(separetedStrings[i]))
-  for i in range (256): 
-    while numeri[0]!=numeriIP[0] or numeri[1]!=numeriIP[1] or numeri[2]!=numeriIP[2] or numeriIP[3]!=numeroIndirizzoIp:
-      print("ERRORE\nRIPORVA\nRicorda di inserire gli indirizzi in ordine crescente: ")
-      ip=input()
-      separetedStrings = ip.split(".")
-      numeriIP=[]
-      for g in range (len(separetedStrings)) :
-        numeriIP.append( int(separetedStrings[g]))
-    print("RIGTH\n\n")
-    ip=input("Enter a IP address: ")
-    numeriIP=[]
-    separetedStrings= ip.split(".")
-    for f in range (len(separetedStrings)) :
-        numeriIP.append( int(separetedStrings[f]))
-    numeroIndirizzoIp+=1   
