@@ -4,32 +4,32 @@ public_folder: public
 services:
 
   gimme_ip_address:
-    description: "Questo servizio ti chiede di inserire un indirizzo ip, dopodiche stampera i 3 possibili indirizzi di rete a cui puo appartenere."
+    description: "Questo servizio ti chiedere di inserire un indirizzo ip, per mostrarti a quali indirizzi direte possa appartenere."
     evaluator: [python, services/gimme_ip_address_ita_driver.py]
     args:
       ip_address: 
         regex: /([0-9]{1,3}\.){3}[0-9]{1,3}/gm
         default: 1.2.3.4
-        regex-explained: "L'indirizzo ip è una serie di 4 terzine di numeri divisi de da un punto"      
+        regex-explained: "L'indirizzo ip è una serie di 4 numeri divisi da un punto."      
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
   how_many_ips:
-    description: "this service takes in a subnet Mask (e.g., 255.255.0.0) defining a whole range of valid IP addresses. The service returns IP addresses from that range. Use the arguments of the service to specify which IP's in the range should be returned."
+    description: "Questo servizio prende una subnet mask per mostrare la quantita' di indirizzi ip che possono essere configurati."
     evaluator: [python, services/how_many_ips_ita_driver.py]
     args:
       subnet_Mask:
         regex:  ^((\d)+\.){3}(\d)+$
         default: 255.255.0.0
-        regex-explained: a netmask comprises four fields separated by dots. Each field is a numer in digital representation.
-        explain: a subnet mask comprises four fields separated by dots. Each field is a number that can have a value of 0 or 255 
+        regex-explained: Una subnet mask comprende quattro campi separati da punti. Ogni campo è un numero nella rappresentazione digitale.
+        explain: una subnet mask comprende quattro campi separati da punti. Ogni campo è un numero che può avere un valore di 0 o 255. 
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
   
   first_ip:
-    description: "Per questo problema ti viene chiesto di inserire il primo indirizzo ip appartenente all'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      primo indirizzo ip --> 169.21.3.0"
+    description: "Questo servizio chiede il primo indirizzo ip appartenente all'indirizzo di rete dato (esempio: indirizzo di rete --> 169.21.3.0      primo indirizzo ip --> 169.21.3.0)"
     evaluator: [python, services/first_ip_ita_driver.py]
     args:
         ip_address: 
@@ -41,7 +41,7 @@ services:
           default: it
 
   last_ip:
-    description: "Per questo problema ti viene chiesto di inserire l'ultimo indirizzo ip appartenente all'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255"
+    description: "Questo servizio chiede l'ultimo indirizzo ip appartenente all'indirizzo di rete dato (esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255"
     evaluator: [python, services/last_ip_ita_driver.py]
     args:
         ip_address: 
@@ -53,7 +53,7 @@ services:
           default: it
 
   random_ip:
-    description: "Per questo problema ti viene chiesto di inserire un indirizzo ip appartenente all'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255"
+    description: "Questo servizio chiede un indirizzo ip appartenente all'indirizzo di rete dato(esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255"
     evaluator: [python, services/random_ip_ita_driver.py]
     args:
         ip_address: 

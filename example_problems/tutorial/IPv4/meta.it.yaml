@@ -2,37 +2,70 @@
 ---
 public_folder: public
 services:
-  all:
-    regex: ^((\S)+)$
-    descrizione: "Questo servizio mette a disposizione tutti i sotto-problemi della problema IPv4"
+
+  gimme_ip_address:
+    description: "Questo servizio ti chiedere di inserire un indirizzo ip, per mostrarti a quali indirizzi direte possa appartenere."
+    evaluator: [python, services/gimme_ip_address_ita_driver.py]
     args:
-      problemi: 
-        regex:  ^(first_IP|last_IP|random_IP|list_all)$
-        default: random_IP
-        explain: "the options are as follows:"
-        explain1: -first_IP= scrivi solo il primo indirizzo ip appartenente all'indirizzo di rete
-        explain2: -last_IP= scrivi solo l'ultimo indirizzo ip appartentete all'indirizzo di rete
-        explain3: -random_IP= scrivi un indirizzo ip appartentente all'indirizzo di rete
-        explain4: -list_all= scrivi l'intera lista degli indirizzi ip appartenenti all'indirizzo di rete, in ordine crescente
-      first_ip:
-        regex: ^((\d)+\.){3}(\d)$
-        default: first_ip
-        evaluator: [python, services/first_ip.py]
-      last_ip:
-        regex: ^((\d)+\.){3}(\d)$
-        default: last_ip
-        evaluator: [python, servieces/last_ip.py]
-      random_ip:
-        regex: ^((\d)+\.){3}(\d)$
-        default: random_ip
-        evaluator: [python, services/random_ip]
-      list_all:
-        regex: ^((\d)+\.){3}(\d)$
-        default: list_all
-        evaluator: [python, services/list_all]
-      lang: 
+      ip_address: 
+        regex: /([0-9]{1,3}\.){3}[0-9]{1,3}/gm
+        default: 1.2.3.4
+        regex-explained: "L'indirizzo ip è una serie di 4 numeri divisi da un punto."      
+      lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+
+  how_many_ips:
+    description: "Questo servizio prende una subnet mask per mostrare la quantita' di indirizzi ip che possono essere configurati."
+    evaluator: [python, services/how_many_ips_ita_driver.py]
+    args:
+      subnet_Mask:
+        regex:  ^((\d)+\.){3}(\d)+$
+        default: 255.255.0.0
+        regex-explained: Una subnet mask comprende quattro campi separati da punti. Ogni campo è un numero nella rappresentazione digitale.
+        explain: una subnet mask comprende quattro campi separati da punti. Ogni campo è un numero che può avere un valore di 0 o 255. 
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  
+  first_ip:
+    description: "Questo servizio chiede il primo indirizzo ip appartenente all'indirizzo di rete dato (esempio: indirizzo di rete --> 169.21.3.0      primo indirizzo ip --> 169.21.3.0)"
+    evaluator: [python, services/first_ip_ita_driver.py]
+    args:
+        ip_address: 
+          regex: /([0-9]{1,3}\.){3}[0-9]{1,3}/gm
+          default: 1.2.3.4
+          regex-explained: "L'indirizzo ip è una serie di 4 terzine di numeri divisi de da un punto"      
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: it
+
+  last_ip:
+    description: "Questo servizio chiede l'ultimo indirizzo ip appartenente all'indirizzo di rete dato (esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255"
+    evaluator: [python, services/last_ip_ita_driver.py]
+    args:
+        ip_address: 
+          regex: /([0-9]{1,3}\.){3}[0-9]{1,3}/gm
+          default: 1.2.3.4
+          regex-explained: "L'indirizzo ip è una serie di 4 terzine di numeri divisi de da un punto"      
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: it
+
+  random_ip:
+    description: "Questo servizio chiede un indirizzo ip appartenente all'indirizzo di rete dato(esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255"
+    evaluator: [python, services/random_ip_ita_driver.py]
+    args:
+        ip_address: 
+          regex: /([0-9]{1,3}\.){3}[0-9]{1,3}/gm
+          default: 1.2.3.4
+          regex-explained: "L'indirizzo ip è una serie di 4 terzine di numeri divisi de da un punto"      
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: it
+         
+  
+
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:
@@ -42,7 +75,7 @@ services:
         explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
+        default: hardcoded
       metafile:
         regex: ^(main|en|it)$
         default: main
