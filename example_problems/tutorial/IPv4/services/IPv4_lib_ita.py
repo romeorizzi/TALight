@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from os import supports_bytes_environ
+# -*- coding:latin-1-*-
+
 import random
 from TALinputs import TALinput
 from multilanguage import Env, TALcolors, Lang

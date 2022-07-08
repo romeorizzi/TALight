@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# -*- coding:latin-1-*-
+
 from sys import stderr, exit
 
 from typing import Any
-from IPv4_lib import *
+from IPv4_lib_ita import *
 from TALinputs import TALinput
 from multilanguage import Env, TALcolors, Lang
 

@@ -3,7 +3,7 @@
 
 from sys import stderr, exit
 
-from IPv4_lib import *
+from IPv4_lib_ita import *
 from TALinputs import TALinput
 from multilanguage import Env, TALcolors, Lang
 
