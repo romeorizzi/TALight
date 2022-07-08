@@ -3,7 +3,7 @@
 
 from sys import stderr, exit
 
-from IPv4_lib_ita import *
+from IPv4_lib_eng import *
 from TALinputs import TALinput
 from multilanguage import Env, TALcolors, Lang
 
@@ -17,7 +17,7 @@ LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 
 
 # START CODING YOUR SERVICE:
 
-TAc.print("\nInserire un indirizzo ip, riceverai i 3 possibili indirizzi internet a cui l'indirizzo ip può essere contenuto", "green", ["bold"])
+TAc.print("\nEnter an ip address, you will receive the 3 possible internet addresses to which the ip address can be contained", "green", ["bold"])
 
 
 
@@ -27,7 +27,7 @@ Ip=(ENV['ip_address'], TAc, LANG)
 Ip=input_ip()
 
 
-TAc.print("\nL'indirizzo ip inserito può essere contenuto nei seguenti indirizzi internet:\n", "green", ["bold"])
+TAc.print("\nThe ip address entered can be contained in the following internet addresses:\n", "green", ["bold"])
 TAc.print("1°-->   ", "green", end="")
 TAc.print(Ip[0],"green", end="") 
 TAc.print(".0.0.0\n", "green")

@@ -19,7 +19,7 @@ def input_ip():
       tooMuch+=1
 
   if tooMuch>1:
-    TAc.print("\nERRORE\nIn un indirizzo ip i numeri vanno da un minino di 0 ad un massimo di 255 compresi", "red", ["bold"])
+    TAc.print("\nERROR\nIn an IP address the numbers range from a minimum of 0 to a maximum of 255 inclusive", "red", ["bold"])
     exit(0)
   
   return ip

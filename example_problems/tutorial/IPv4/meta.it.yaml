@@ -41,7 +41,7 @@ services:
           default: it
 
   last_ip:
-    description: "Questo servizio chiede l'ultimo indirizzo ip appartenente all'indirizzo di rete dato (esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255"
+    description: "Questo servizio chiede l'ultimo indirizzo ip appartenente all'indirizzo di rete dato (esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255)"
     evaluator: [python, services/last_ip_ita_driver.py]
     args:
         ip_address: 
@@ -53,7 +53,7 @@ services:
           default: it
 
   random_ip:
-    description: "Questo servizio chiede un indirizzo ip appartenente all'indirizzo di rete dato(esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255"
+    description: "Questo servizio chiede un indirizzo ip appartenente all'indirizzo di rete dato(esempio: indirizzo di rete --> 169.21.3.0      indirizzo ip --> 169.21.3.255)"
     evaluator: [python, services/random_ip_ita_driver.py]
     args:
         ip_address: 
