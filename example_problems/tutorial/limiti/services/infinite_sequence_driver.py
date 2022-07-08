@@ -26,7 +26,7 @@ n=Symbol('n')
 # pprint(successione)
 epsilon=Symbol('epsilon')
 succ_limit = limit(successione, n, oo)
-assert type(succ_limit) is not calculus.accumulationbounds.AccumulationBounds
+# assert type(succ_limit) is not calculus.accumulationbounds.AccumulationBounds
 user_limit=TALinput(str, sep=None, TAc=TAc)[0]
 try:
     eval_limit=eval(user_limit)

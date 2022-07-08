@@ -217,7 +217,7 @@ class Lang:
         self.service_server_eval = service_server_eval
         self.ENV=ENV
         self.TAc=TAc
-        self.to_be_printed_opening_msg = True
+        self.to_be_printed_opening_msg = print_opening_msg != 'never' 
 
         # BEGIN: MESSAGE BOOK LOADING (try to load the message book)
         self.messages_book = None
@@ -267,10 +267,10 @@ class Lang:
             self.print_opening_msg()
         elif print_opening_msg == 'on_stderr':
             self.print_opening_msg(stderr)
-        elif print_opening_msg == 'never':
-            self.to_be_printed_opening_msg = False
         
     def print_opening_msg(self, fout=stdout):
+        if self.to_be_printed_opening_msg == False:
+            return
         self.to_be_printed_opening_msg = False
         problem=self.ENV.problem
         service=self.ENV.service
@@ -291,8 +291,7 @@ class Lang:
         """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the hardcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
         #print("render_feedback has received msg_code="+msg_code+"\nrendition_of_the_hardcoded_msg="+rendition_of_the_hardcoded_msg+"\ntrans_dictionary=",end="")
         #print(trans_dictionary)
-        if self.to_be_printed_opening_msg:
-            self.print_opening_msg()
+        self.print_opening_msg()
         if self.messages_book != None and msg_code not in self.messages_book:
             self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book. We overcome this inconvenience by using the hardcoded phrase which follows next.","red", file=stderr)
         if self.messages_book == None or msg_code not in self.messages_book:
@@ -307,8 +306,5 @@ class Lang:
             return eval(f"f'{fstring}'")
         msg_encoded = self.messages_book[msg_code]
         return self.service_server_eval(msg_encoded)
-    
-    def suppress_opening_msg(self):
-        self.to_be_printed_opening_msg = False
 
 
