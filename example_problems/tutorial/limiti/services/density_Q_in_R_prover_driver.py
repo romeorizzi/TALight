@@ -78,12 +78,11 @@ user_difference=eval(TALinput(str, regex=f"^([+-]?[.\d]*)$", sep=None, TAc=TAc)[
 if user_difference!=difference:
     TAc.print(LANG.render_feedback("error", f'no, y-x e` diverso da {user_difference}'), "red", ["bold"])
     exit(0)
+TAc.print(LANG.render_feedback("correct", 'Ok!'), "green", ["bold"])
 TAc.print(LANG.render_feedback("find-N", f'#      1.2) proponi un numero naturale N>0 che soddisfi il principio di Archimede con argomento y-x={y-x}, ovvero tale che 1/N < {user_difference}: \n# (se non ricordi questo principio consigliamo l\'esercizio -> rtal connect limiti archimede_prover)'), "yellow", ["bold"])
 N=check_user_solution(user_difference)
-TAc.print(LANG.render_feedback("find-N", f'# PASSO 2: trovare un qualsiasi intero a nell\'intervallo (Nx,Ny)=({x*N},{y*N}) (almeno uno deve esistere, avendo costruito N tale che Nx-Ny>1):'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("find-N", f'# PASSO 2: trovare un qualsiasi intero m nell\'intervallo (Nx,Ny)=({x*N},{y*N}) (almeno uno deve esistere, avendo costruito N tale che Nx-Ny>1):'), "yellow", ["bold"])
 user_int=check_int_in_interval(N*x,N*y)
-TAc.print(LANG.render_feedback("next-step", f'# PASSO 3: produrre il numero razionale q tale che x={x}<q<{y}=y.\n# Suggerimento: utilizza l\'intero a ed il naturale positivo N ottenuti sopra per produrre un tale q (nella forma a/b):'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("next-step", f'# PASSO 3: produrre il numero razionale q tale che x={x}<q<{y}=y.\n# Suggerimento: utilizza l\'intero m ed il naturale positivo N ottenuti sopra per produrre un tale q (nella forma a/b):'), "yellow", ["bold"])
 check_q(x,y,N,user_int)
-
-TAc.print(LANG.render_feedback("algorithm", '\nSe te la senti potresti provare a scrivere (richiamando un bot) un algoritmo che dati x e y trovi q seguendo la traccia di quello che abbiamo appena dimostrato insieme: se ci riuscirai avrai dimostrato la densita` di Q in R! ;)'),  "white", ["bold"])
 exit(0)

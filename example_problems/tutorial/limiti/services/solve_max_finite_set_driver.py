@@ -30,8 +30,8 @@ if TALf.exists_input_file('instance'):
     TAc.print(LANG.render_feedback("correct", f'in quanto: \n1) appartiene all\'insieme, \n2) non ci sono numeri maggiori di lui.'), "yellow", ["bold"])
     exit(0)
 else:
-    TAc.print(LANG.render_feedback("waiting", f'In attesa dell\' insieme di {set_cardinality} numeri {tipo_insieme}. \nFormato: un numero per riga.\nQualsiasi riga che inizia con il carattere "#" viene ignorata.\nSe preferisci, puoi richiamare il servizio con `rtal connect limiti solve_max_finite_set -finstance=percorso_del_file_contenente_la_tua_istanza` e prederemo direttamente noi l\'insieme invece di agire copiandolo e incollandolo te stesso qui sul terminale.'), "yellow")
-    TAc.print(LANG.render_feedback("waiting", f'Scrivi '), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("waiting", f'In attesa dell\' insieme di {set_cardinality} numeri {tipo_insieme}. \nFormato: un numero per riga.\nQualsiasi riga che inizia con il carattere "#" viene ignorata.\nSe preferisci, puoi richiamare il servizio con `rtal connect limiti solve_max_finite_set -finstance=percorso_del_file_contenente_la_tua_istanza` e prederemo direttamente noi l\'insieme invece di agire copiandolo e incollandolo te stesso qui sul terminale.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("waiting", f'Inizia ad inserire riga per riga i numeri {tipo_insieme} dell\'insieme di cardinalita` {set_cardinality}:'), "yellow", ["bold"])
     instance = []
     for i in range (set_cardinality):
         if reference_set=='natural':

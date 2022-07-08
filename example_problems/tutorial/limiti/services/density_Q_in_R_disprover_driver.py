@@ -17,7 +17,7 @@ TALf = TALfilesHelper(TAc, ENV)
 
 ## START CODING YOUR SERVICE:
 
-TAc.print(LANG.render_feedback("enunciato", '\nRiusciro` a convincerti che dati x,y due numeri reali, x<y , esiste un numero razionale q tale che x<q<y?'), "white")
+TAc.print(LANG.render_feedback("enunciato", '\nProvero` a convincerti che dati x,y due numeri reali, x<y , esiste un numero razionale q tale che x<q<y.'), "white")
 TAc.print(LANG.render_feedback("disprove", 'inserisci un qualsiasi valore reale x:'),  "yellow", ["bold"])
 user_x=TALinput(str, regex=f"^(\S)+$", sep=None, TAc=TAc)[0]
 x_eval=eval(user_x)
@@ -38,5 +38,5 @@ q=integer/n
 # print(q)
 assert x_eval<q and q<y_eval
 TAc.print(LANG.render_feedback("disprove", f'vedi, per q={integer}/{n}={q} si ha che x={user_x} < {integer}/{n} < {user_y}=y'),  "yellow", ["bold"])
-TAc.print(LANG.render_feedback("what-to-do", f'Spero di averti convinto! \nSe vuoi provare ora a dimostrare la densita` di Q in R ti consiglio il servizio \'rtal connect limiti density_Q_in_R_prover\''),  "white", ["bold"])
+TAc.print(LANG.render_feedback("what-to-do", f'Spero di averti convinto! \n\nSe vuoi provare ora a dimostrare la densita` di Q in R ti consiglio il servizio \'rtal connect limiti density_Q_in_R_prover\''),  "white", ["bold"])
 exit(0)

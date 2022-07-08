@@ -3,7 +3,6 @@
 from re import X
 from unicodedata import decimal
 import numpy as np
-import math
 from sympy import *
 from math import *
 import random
@@ -13,21 +12,32 @@ from sympy import Symbol, symbols,solve
 correct = random.choice(['Bene!', 'Molto bene!', 'Ok!','Ottimo!'])
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']
 end=['Alla prossima!', 'E\' stato un piacere, alla prossima!']
+def args_confronto(stringa):
+    posiz_1=stringa.find("confronto")+10
+    comma_position=stringa.find(',')
+    arg_1=stringa[posiz_1:comma_position]
+    parenthesis_position=stringa.find(')')
+    arg_2=stringa[comma_position+1:parenthesis_position]
+    return arg_1,arg_2
+
+def args_subset(stringa):
+    posiz_start=stringa.find("max_in_sottoinsieme")+20
+    comma_position=stringa.find(',')
+    parenthesis_position=stringa.find(')')
+    start=stringa[posiz_start:comma_position]
+    end=stringa[comma_position+1:parenthesis_position]
+    return start,end
 
 def indices(stringa,n,source):
     indices=set()
     if 'max_in_sottoinsieme' in stringa:
-        posiz_start=stringa.find("max_in_sottoinsieme")+20
-        comma_position=stringa.find(',')
-        parenthesis_position=stringa.find(')')
-        start=eval(stringa[posiz_start:comma_position],{'n':n})
-        end=eval(stringa[comma_position+1:parenthesis_position],{'n':n})
-        for i in range(start,end+1):
+        start,end=args_subset(stringa)
+        for i in range(eval(start,{'n':n}),eval(end,{'n':n})+1):
             indices.add(i)
     elif 'confronto' in stringa:
         def elem(indices,argument,n,source):
             if source!='open':
-                if argument[0]=='s' and (argument[1:].isdigit() or argument[1:]=='n'):
+                if argument[0]=='s' and (argument[1:].isdigit() or eval(argument[1:],{'n':n})<=n):
                     indices.add(int(eval(argument[1:],{'n':n})))
                 else:
                     indices.add(str(argument))
@@ -40,12 +50,8 @@ def indices(stringa,n,source):
                         indices.add(eval_argument)
                     except:
                         indices.add(argument)
-        posiz_1=stringa.find("confronto")+10
-        comma_position=stringa.find(',')
-        arg_1=stringa[posiz_1:comma_position]
+        arg_1,arg_2=args_confronto(stringa)
         elem(indices,arg_1,n,source)
-        parenthesis_position=stringa.find(')')
-        arg_2=stringa[comma_position+1:parenthesis_position]
         elem(indices,arg_2,n,source)
     return indices
 
@@ -54,8 +60,8 @@ def get_instance_from_txt(instance_as_str):
     instance = list()
     lines = instance_as_str.split('\n')
     for line in lines:
-        if len(line) != 0:
-            instance.append(line)
+        if len(line) != 0 and line[0]!='#':
+            instance.append(eval(line))
     return instance
 
 def instance_to_array(input_str):
@@ -99,11 +105,10 @@ def instance_density(seed:int):
     y=decimal.Decimal(str(round(x+aggiunta,4)))
     return x,y
 
-
 def instance_inf_set(seed:int):
     random.seed(seed)
     diseq_grater=random.choice(['>','>='])
-    parameter=True if seed<350000 else False
+    parameter=True if seed<320000 else False
     # parameter=False
     if parameter:
         m=random.randint(1,5)
@@ -160,7 +165,6 @@ def instance_inf_set(seed:int):
             condition=random.choice([[variable+diseq+str(x**power),max_1,[min_1,sup_1]], [str(x_inf**power)+diseq_less+variable+diseq_less_1+str(x_sup**power), max_2, [min_2,sup_2]]])
         instance='{x in R | '+condition[0]+'}'
         return ('without_parameter'+str(power),instance, condition[1], condition[2])
-
 
 def instance_randgen_1(seed:int):
     random.seed(seed)
@@ -258,7 +262,7 @@ def get_file_str_from_path(path):
 def inf_seq(seed:int):
     random.seed(seed)
     n=Symbol('n')
-    epsilon=Symbol('epsilon')
+    # epsilon=Symbol('epsilon')
     n_coeff_1=random.randint(1,3)
     constant_term_1=random.randint(-3,4)
     n_coeff_2=random.randint(1,3)
@@ -266,8 +270,8 @@ def inf_seq(seed:int):
     num_1=expand(n_coeff_1*n+constant_term_1)
     num_2=expand(n_coeff_2*n+constant_term_2)
     numerator=random.choice([num_1,expand(num_1*num_2)])
-    num_roots_plus=solve(numerator+epsilon,n)
-    num_roots_minus=solve(numerator-epsilon,n)
+    # num_roots_plus=solve(numerator+epsilon,n)
+    # num_roots_minus=solve(numerator-epsilon,n)
     succ_type=random.choice(['poly','fract'])
     # succ_type='poly'
     if succ_type=='poly':
@@ -283,5 +287,5 @@ def inf_seq(seed:int):
             den_2=expand(n_coeff_1*n+constant_term_3)
             denominator=random.choice([den_1,expand(den_1*den_2)])
         inf_sequence=numerator/denominator
-        den_root=solve(denominator,n)
+        # den_root=solve(denominator,n)
     return inf_sequence

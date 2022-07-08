@@ -46,7 +46,7 @@ if succ_limit==oo:
     else:
         TAc.print(LANG.render_feedback("wrong", f'No, infatti una successione e` limitata se il limite per n -> +oo e` finito, e questa ha limite oo.'), "red", ["bold"])
         exit(0)
-TAc.print(LANG.render_feedback("next-step", f'Allora ti sfido a dimostrarmelo ;)'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("next-step", f'Allora non avrai problemi a dimostrarmelo ;)'), "yellow", ["bold"])
 epsilon_value=random.randint(1,9)/10
 TAc.print(LANG.render_feedback("epsilon", f'Il mio valore per epsilon e`: \n{epsilon_value}'), "yellow", ["bold"])
 TAc.print(LANG.render_feedback("give-me-n_0", f'dammi un valore per n_0 naturale, n_0 > 0 tale che |{successione}-{succ_limit}|<{epsilon_value} per ogni n>n_0:'), "yellow", ["bold"])
@@ -70,5 +70,5 @@ if y_n=='y':
     TAc.print(LANG.render_feedback("correct", f'Esatto, infatti una successione e` limitata se il limite per n -> +oo e` finito, e qui vale {succ_limit}.'), "green", ["bold"])
     exit(0)
 else:
-    TAc.print(LANG.render_feedback("wrong", f'No, infatti una successione e` limitata se il limite per n -> +oo e` finito, e qui vale {succ_limit}.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong", f'Si che e` limitata, infatti il limite per n -> +oo e` finito, e qui vale {succ_limit}.'), "red", ["bold"])
     exit(0)

@@ -31,7 +31,7 @@ def check_user_solution(x):
         TAc.print(LANG.render_feedback("error", f'no, 1/{user_sol} = {round(proof,5)} e come noterai {round(proof,5)} >= {x}, riprova:'), "red", ["bold"])
         return check_user_solution(x)
     assert proof<eval(str(x))
-    return TAc.print(LANG.render_feedback("correct", f'Bene!'), "green", ["bold"])
+    return TAc.print(LANG.render_feedback("correct", f'Bene! Infatti 1/{user_sol} = {round(proof,5)} < {x} = {eval(x)}'), "green", ["bold"])
 
 def new_match(seed,counter):
     counter+=1
