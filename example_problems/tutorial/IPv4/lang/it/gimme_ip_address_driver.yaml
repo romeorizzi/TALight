@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION: 
+out-of-range_number_in_ip_address: '\nERRORE: tutti i numeri di un indirizzo IP devono appartenere all\''intervallo chiuso [0,255]'
+title_info_table: f'\nIndirizzi di rete che possono contenere l\''indirizzo IP {".".join(Ip)}:'
+prompt_ip_address: '\nInserisci il tuo indirizzo ip: '
+...

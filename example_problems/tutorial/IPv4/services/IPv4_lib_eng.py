@@ -2,25 +2,15 @@
 # -*- coding:latin-1-*-
 
 import random
+
 from TALinputs import TALinput
-from multilanguage import Env, TALcolors, Lang
 
-args_list=[]
-
-ENV = Env(args_list)
-TAc = TALcolors(ENV)
-LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
-
-def input_ip():
-  ip=TALinput(int ,num_tokens=4, regex= f"regex: ^((\d)+)((\.)+)$ ", TAc=TAc ,sep='.')
-  tooMuch=0
-  for i in range(4):
-    if ip[i]>255:
-      tooMuch+=1
-
-  if tooMuch>1:
-    TAc.print("\nERROR\nIn an IP address the numbers range from a minimum of 0 to a maximum of 255 inclusive", "red", ["bold"])
-    exit(0)
+def input_ip(TAc,LANG):
+  ip=TALinput(str, num_tokens=4, regex="^((\d)+)$", TAc=TAc, sep='.')
+  for tk in ip:
+      if int(ip[i]) > 255:
+          TAc.print(LANG.render_feedback("out-of-range_number_in_ip_address","\nERROR\nAll numbers in an IP address should belong to the closed interval [0,255]"), "red", ["bold"])
+          exit(0)
   
   return ip
 

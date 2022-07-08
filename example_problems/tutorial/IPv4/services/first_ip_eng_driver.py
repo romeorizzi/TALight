@@ -2,19 +2,21 @@
 # -*- coding:latin-1-*-
 
 from sys import stderr, exit
-
 from typing import Any
-from IPv4_lib_eng import *
+
 from TALinputs import TALinput
 from multilanguage import Env, TALcolors, Lang
 
+from IPv4_lib_eng import *
+
 args_list=[
   ('ip_address', str),
+  ('with_opening_message',bool),
 ]
 
 ENV = Env(args_list)
 TAc = TALcolors(ENV)
-LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+LANG= Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now' if ENV['with_opening_message'] else 'never')
 
 # START CODING YOUR SERVICE:
 
