@@ -6,7 +6,7 @@ from typing import List
 
 from multilanguage import Env, TALcolors, Lang
 
-from IPv4_lib_eng import input_ip
+from IPv4_lib import input_ip
 
 args_list=[
   ('ip_address', str),
@@ -40,7 +40,7 @@ def print_info(Ip:List):
 
 if ENV['interactive']:
     while True:
-        TAc.print(LANG.render_feedback("prompt_ip_address","\nEnter your ip address: ", "yellow", ["bold"]))
+        TAc.print(LANG.render_feedback("prompt_ip_address","\nEnter your ip address: "), "yellow", ["bold"])
         Ip=input_ip(TAc,LANG)
         print_info(Ip)
 else:

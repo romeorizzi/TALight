@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION: 
+larg: '16.777.216 indirzzi ip possono essere configurati in questa subnet mask'
+medium: '65.535 indirizzi ip possono essere configurati in questa subnet mask'
+small: '256 indirizzi ip possono essere configurati in questa subnet mask'
+ask_subnet_mask: 'Inserisci una subnet mask, per vedere quanti indirizzi ip possono essere configurati all\\''interno di essa:'
+error_1: 'ERRORE'
+error_2: 'Una subnet mask è un insieme di 4 numeri che possono essere 0 o 255'
+error_3: 'Una subnet mask è un insieme di 4 numeri che posso essere 0 o 255; dopo uno 0 non ci puo\\'' essere un 255'
+error_4: 'Una subnet mask non puo\\'' terminare con 255'
