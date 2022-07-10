@@ -6,24 +6,12 @@ services:
     evaluator: [python, services/max_finite_set_driver.py]
     description: 'Con questo servizio puoi convincerti che ogni insieme finito e non vuoto di numeri ammette sempre un massimo.'
     args:
-      # source:
-      #   regex: ^(catalogue|randgen)$
-      #   default: randgen
-      #   explain: 'Puoi determinare il modo in cui l\''istanza viene immessa nel servizio:' 
-      #   explain1: '[catalogue] il servizio lavora su un\''istanza presa dal catalogo situato sul server. Le istanze nel catalogo sono numerate in modo progressivo a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza a cui sei interessato/a.'
-      #   explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. In questo caso dovresti specificare i valori per gli argomenti del servizio corrispondenti ai descrittori d\''istanza (reference_set,cardinality,seed) quando li vuoi differenti dai loro valori di default.'
-      reference_set:
+      numbers_type:
         regex: ^(natural|decimal)$
         default: natural
         explain: 'specifica l\''insieme dei numeri su cui vuoi lavorare: '
         explain1: '[natural] per lavorare con i numeri naturali'
         explain2: '[decimal] per lavorare con i decimali limitati'
-      # instance_id:
-      #   regex: ^([1-9][0-9]*)$
-      #   regex-explained: 'qualsiasi naturale positivo (nella sua rappresentazione decimale)'
-      #   regex-URL: 'https://extendsclass.com/regex/a55297b'
-      #   default: 1
-      #   explain: 'Questo argomento viene utilizzato per identificare una particolare istanza (ovvero un insieme) all\''interno del catalogo delle istanze archiviate sul server. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
@@ -36,6 +24,14 @@ services:
         regex-URL: 'https://extendsclass.com/regex/a55297b'
         default: 7
         explain: 'Questo argomento viene utilizzato per indicare la cardinalità dell\''insieme di cui si vuole trovare il massimo.'
+      verbose:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1 viene stampato il confronto di ogni elemento dell\''insieme rispetto al massimo.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       download:
         regex: ^(0|1)$
         default: 0
@@ -49,18 +45,14 @@ services:
     files:
       - instance
     args:
-      reference_set:
-        regex: ^(natural|decimal)$
-        default: natural
-        explain: 'specifica l\''insieme dei numeri su cui vuoi lavorare: '
-        explain1: '[natural] per lavorare con i numeri naturali'
-        explain2: '[decimal] per lavorare con i decimali limitati'
-      cardinality:
-        regex: ^([1-9][0-9]*)$
-        regex-explained: 'qualsiasi numero naturale maggiore di 0 (l\''insieme deve avere almeno un elemento)'
-        regex-URL: 'https://extendsclass.com/regex/a55297b'
-        default: 7
-        explain: 'Questo argomento viene utilizzato per indicare la cardinalità dell\''insieme di vuoi che trovi il massimo.'
+      verbose:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1 viene stampato il confronto di ogni elemento dell\''insieme rispetto al massimo.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -69,9 +61,9 @@ services:
     description: 'Questo servizio ti permette di dimostrare formalmente che ogni insieme finito e non vuoto di numeri ammette sempre un massimo.'
     args:
       cardinality:
-        regex: ^([1-9][0-9]*|random|open)$
-        default: random
-        explain: 'Per iniziare una dimostrazione guidata passo passo e allenarti su insiemi di k elementi (con k scelto a random dal servizio nell\''intervallo [2,10]) mantieni il valore di default `random`, altrimenti puoi definire tu la cardinalità dell\''insieme con cui lavorare (specificando un qualsiasi natuale positivo >=1); oppure puoi impostare il valore `open` per passare al caso generale (insieme di n elementi, n non definito).'
+        regex: ^([1-9][0-9]*|you_choose|open)$
+        default: you_choose
+        explain: 'Per iniziare una dimostrazione guidata passo passo e allenarti su insiemi di k elementi (con k scelto a random dal servizio nell\''intervallo [2,10]) mantieni il valore di default `you_choose`, altrimenti puoi definire tu la cardinalità dell\''insieme con cui lavorare (specificando un qualsiasi natuale positivo >=1); oppure puoi impostare il valore `open` per passare al caso generale (insieme di n elementi, n non definito).'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -79,41 +71,60 @@ services:
     evaluator: [python, services/max_infinite_set_driver.py]
     description: 'Con questo servizio potrai verificare se un insieme non finito ha un massimo oppure no.'
     args:
-      # source:
-      #   regex: ^(catalogue|randgen)$
-      #   default: randgen
-      #   explain: 'Attraverso l\''argomento `source` puoi determinare il modo in cui l\''istanza viene immessa nel servizio:'
-      #   explain1: '[catalogue] il servizio lavora su un\''istanza presa dal catalogo situato sul server. Le istanze nel catalogo sono numerate in modo progressivo a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza a cui sei interessato/a.'
-      #   explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. capire se mettere come descittore d\''istanza `parameter`: con l\''argomento pari a 1 si avrà un\''istanza del tipo {{x | x=2*k+1, 3<k<9  k in N}}; con l\''argomento pari a 0 si avrà qualcosa del tipo {{x in R | 4<=x^2<49}}'
-      # instance_id:
-      #   regex: ^([1-9][0-9]*)$
-      #   regex-explained: 'qualsiasi naturale positivo >=1 (nella sua rappresentazione decimale)'
-      #   regex-URL: 'https://extendsclass.com/regex/a55297b'
-      #   default: 1
-      #   explain: 'Questo argomento viene utilizzato per identificare una particolare istanza (ovvero un insieme) all\''interno del catalogo delle istanze archiviate sul server. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      download:
+      silent:
         regex: ^(0|1)$
-        default: 0
-        explain: 'Se questo flag è impostato a 1 allora la soluzione viene scaricata come file nella cartella il cui percorso completo è specificato tramite il flag -o.'
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
+
+  max_infinite_set_prover:
+    evaluator: [python, services/max_infinite_set_prover_driver.py]
+    description: 'Con questo servizio potrai dimostrare se un insieme non finito ha un massimo oppure no.'
+    args:
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
+  max_infinite_set_disprover:
+    evaluator: [python, services/max_infinite_set_disprover_driver.py]
+    description: 'Con questo servizio proverò a dimostrarti se un insieme non finito ha un massimo oppure no.'
+    args:
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+
   max_sup:
     evaluator: [python, services/max_sup_driver.py]
     description: 'In questo servizio riepilogativo vengono messi insieme i concetti di insieme limitato superiormente, massimo ed estremo superiore.'
     args:
-      source:
-        regex: ^(catalogue|randgen)$
-        default: randgen
-        explain: 'Attraverso l\''argomento `sourcè puoi determinare il modo in cui l\''istanza viene immessa nel servizio:'
-        explain1: '[catalogue] il servizio lavora su un\''istanza presa dal catalogo situato sul server. Le istanze nel catalogo sono numerate in modo progressivo a partire da 1. Usa l\''argomento `instance_id` per specificare l\''istanza a cui sei interessato/a.'
-        explain2: '[randgen_1] il servizio lavora su istanze pseudo-casuali. capire se mettere come descittore d\''istanza `parameter`: con l\''argomento pari a 1 si avrà un\''istanza del tipo {{x | x=2*k+1, 3<k<9  k in N}}; con l\''argomento pari a 0 si avrà qualcosa del tipo {{x in R | 4<=x^2<49}}'
       instance_id:
         regex: ^([1-9][0-9]*)$
         regex-explained: 'qualsiasi naturale positivo >=1 (nella sua rappresentazione decimale)'
