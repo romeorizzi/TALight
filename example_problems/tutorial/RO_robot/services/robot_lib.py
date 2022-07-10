@@ -94,14 +94,24 @@ def parse_cell(cell: str) -> _Cell:
 
 def free(field: _Grid, row: int, col: int) -> bool:
     """Checks whether a cell is free or forbidden."""
-    return field[row][col] != -1
+    if field:
+        return field[row][col] != -1
+    else:
+        return False
 
 
 def check_matrix_shape(f: _Grid) -> bool:
+    """Checks if matrix is empty."""
+    if not f:
+        return False
+
+    """Checks if list is a matrix."""
     cols = len(f[0])
+
     for row in f:
         if len(row) != cols:
             return False
+
     return True
 
 
@@ -475,9 +485,8 @@ def conceal(dptable: _Grid):
 
 def solver(input_to_oracle):
     assert input_to_oracle is not None
-
     _LOGGER.debug("input = %s", input_to_oracle)
-    INSTANCE = input_to_oracle["instance"]
+    INSTANCE = input_to_oracle["input_data_assigned"]
 
     # extract and parse inputs
     grid = INSTANCE["grid"]
