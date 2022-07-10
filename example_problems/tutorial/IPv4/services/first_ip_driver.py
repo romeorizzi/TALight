@@ -46,13 +46,15 @@ if ENV['interactive']:
 
     TAc.print(LANG.render_feedback("right","RIGHT\n"), "green", ["bold"])
     punteggio+=1
-    subnet=subnet_mask()
-    internet=net_address(subnet)
-    TAc.print("\nSUBNET MASK:  ", "green", ["bold"])
-    TAc.print(subnet, "green")
-    TAc.print("\nINTERNET ADDRESS:  ", "green", ["bold"])
-    TAc.print(f"{'.'.join(internet)}", "green")
-    Ip=input_ip(TAc, LANG)
+    
+    if punteggio < 10:
+      subnet=subnet_mask()
+      internet=net_address(subnet)
+      TAc.print("SUBNET MASK:  ", "green", ["bold"])
+      TAc.print(subnet, "green")
+      TAc.print("\nINTERNET ADDRESS:  ", "green", ["bold"]), 
+      TAc.print(f"{'.'.join(internet)}", "green")
+      Ip=input_ip(TAc, LANG)
 
   TAc.print(LANG.render_feedback("final_message","\nCongratulations\n"), "green", ["bold"])
   TAc.print(LANG.render_feedback("point","Correct answers: 10/10"), "green")
