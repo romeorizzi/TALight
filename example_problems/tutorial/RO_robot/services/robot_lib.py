@@ -496,6 +496,7 @@ def solver(input_to_oracle):
     target = parse_cell(INSTANCE["cell_from"])
     through = parse_cell(INSTANCE["cell_through"])
 
+
     def splitgrids(g: _Grid) -> tuple[_Grid, _Grid]:
         """
         Simplify the task as a pair of grid problems:
@@ -508,11 +509,15 @@ def solver(input_to_oracle):
 
         # source and target cells restrict the admissible area
         # of the original grid to a rectangle subset
+        for x in range(source[0], through[0] + 1):
+            print(x)
+            for y in range(source[0], through[0] + 1):
+                print(y)
         top_left_slice = [g[x][y] for x in range(source[0], through[0] + 1)
                           for y in range(source[0], through[0] + 1)]
-
+        
         # through cell creates a chokepoint in the grid
-        bottom_right_slice = [g[x][y] for x in range(through[0], target[0] + 1)
+        bottom_right_slice = [g[x][y] for x in range(through[0], target[0] + 1) 
                               for y in range(through[1], target[1] + 1)]
 
         return top_left_slice, bottom_right_slice
@@ -544,6 +549,7 @@ def solver(input_to_oracle):
                     table[cellmin[0] + x][cellmin[1] + y] = subgrid[x][y]
 
         return table
+
 
     # top-left subgrid, bottom-right subgrid
     subtables = [[f(g, diag=diag) for g in splitgrids(grid)] for f in [

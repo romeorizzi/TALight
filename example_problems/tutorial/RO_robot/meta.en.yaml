@@ -80,7 +80,7 @@ services:
         explain: "the list of all optimum paths"
       DPtable_num_to:
         regex: ^(.*)$
-        default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30]]"
+        default: "[]"
         example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
         explain: "the DP table meant to tell the number of paths from top-left cell to the generic cell"
       DPtable_num_from:
