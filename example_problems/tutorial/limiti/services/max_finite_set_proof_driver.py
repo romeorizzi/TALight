@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import string
 from sys import exit
 
 from multilanguage import Env, Lang, TALcolors
@@ -53,7 +54,7 @@ def check_command_subset(stringa,n,cardinality,max_values):
             if not int(eval_str)==eval_str:
                 TAc.print(LANG.render_feedback("wrong", f'No, \'max_in_sottoinsieme\' prende come argomenti solo numeri interi (o espressioni numeriche, al piu` e` consentito l\'utilizzo della variabile n).'), "red", ["bold"])
                 exit(0)
-            elif int(eval_str)>max(max_values):
+            elif int(eval_str)>max(max_values) and max(max_values)!=1:
                 TAc.print(LANG.render_feedback("wrong", f'No, se |S|={max(max_values)} staresti richiamando un elemento che non appartiene ad S.'), "red", ["bold"])
                 exit(0)
             else:
@@ -65,6 +66,9 @@ def check_command_subset(stringa,n,cardinality,max_values):
     end_value=check_argument_value(end,n) if cardinality!='open' else check_argument_value_open(end,n,max_values)
     if cardinality=='open' and int(eval(start_value,{'n':max(max_values)}))==1 and eval(end_value,{'n':max(max_values)})>=max(max_values):
         TAc.print(LANG.render_feedback("wrong", f'No, il sottoinsieme di cui mi hai chiesto di trovare il massimo potrebbe essere un sottoinsieme improprio!'), "red", ["bold"])
+        exit(0)
+    elif cardinality=='open' and int(eval(start_value,{'n':max(max_values)}))>eval(end_value,{'n':max(max_values)}):
+        TAc.print(LANG.render_feedback("wrong", f'No, tu non conosci la cardinalita` di S e potresti star richiamando \'max_in_sottoinsieme(j,k)\' con j>k'), "red", ["bold"])
         exit(0)
     if cardinality=='open':
         start_value=int(eval(start_value,{'n':n}))
@@ -110,6 +114,7 @@ def check_command_confronto(user_command,n,cardinality,max_values):
 
 def check_first_command_confronto_open(user_command):
     arg_1,arg_2=ll.args_confronto(user_command)
+    print(f' arg 1: {arg_1}, arg 2: {arg_2}')
     def check_argument(argument):
         try:
             arg_value=eval(argument)
@@ -117,8 +122,9 @@ def check_first_command_confronto_open(user_command):
         except:
             riuscito=False
         if riuscito:
-            if not int(argument)==argument:
-                TAc.print(LANG.render_feedback("wrong", f'No, \'max_in_sottoinsieme\' prende come argomenti solo numeri interi o espressioni numeriche, e` consentito anche l\'utilizzo della variabile n.'), "red", ["bold"])
+            if not int(arg_value)==arg_value:
+                print('sono qui')
+                TAc.print(LANG.render_feedback("wrong", f'No, \'confronto\' prende come argomenti solo numeri interi o espressioni numeriche, e` consentito anche l\'utilizzo della variabile n.'), "red", ["bold"])
                 exit(0)
             elif not arg_value in [1,2]:
                 TAc.print(LANG.render_feedback("wrong-input", f'No, se n fosse {random.randint(1,5)+int(argument)} staresti richiamando un elemento che non appartiene ad S.'), "red", ["bold"])
@@ -126,7 +132,7 @@ def check_first_command_confronto_open(user_command):
             return int(argument)
         else:
             if not argument in ['n','n-1']:
-                TAc.print(LANG.render_feedback("wrong-input", f'No, \'max_in_sottoinsieme\' prende come argomenti solo numeri interi o espressioni numeriche, e` consentito anche l\'utilizzo della variabile n.'), "red", ["bold"])
+                TAc.print(LANG.render_feedback("wrong-input", f'No, \'confronto\' prende come argomenti solo numeri interi o espressioni numeriche, e` consentito anche l\'utilizzo della variabile n.'), "red", ["bold"])
                 exit(0)
             return argument
     start=check_argument(arg_1)
@@ -166,7 +172,7 @@ def check_max_after_return(indices_list,user_command,max_elem,n):
                 check_max_after_return(indices_list,user_command,max_elem,n)
 def check_argument_value_subset_open(stringa):
     try:
-        eval_str=eval(stringa)
+        eval_str=eval(stringa, {'n':2})
         riuscito=True
     except:
         riuscito=False
@@ -178,14 +184,15 @@ def check_argument_value_subset_open(stringa):
             TAc.print(LANG.render_feedback("wrong", f'No, questa chiamata all\'oracolo non sarebbe valida per n=2.'), "red", ["bold"])
             exit(0)
         else:
-            int_value=int(eval_str)
-            return int_value
+            try:
+                eval_str=eval(stringa)
+                int_value=int(eval_str)
+                return int_value
+            except:
+                return stringa
     else:
-        if not stringa in ['n','n-1']:
-            TAc.print(LANG.render_feedback("wrong", f'No, \'max_in_sottoinsieme\' prende come argomenti solo numeri interi o espressioni numeriche, e` consentito anche l\'utilizzo della variabile n.'), "red", ["bold"])
-            exit(0)
-        else:
-            return stringa
+        TAc.print(LANG.render_feedback("wrong", f'No, \'max_in_sottoinsieme\' prende come argomenti solo numeri interi o espressioni numeriche, e` consentito anche l\'utilizzo della variabile n.'), "red", ["bold"])
+        exit(0)
 def check_first_command_subset_open(stringa):
     start,end=ll.args_subset(stringa)
     start_value=check_argument_value_subset_open(start)
@@ -194,6 +201,7 @@ def check_first_command_subset_open(stringa):
     cond_2=start_value=='n' and not end_value=='n'
     cond_3=start_value==2 and end_value=='n-1'
     cond_4=start_value=='n-1' and not end_value=='n'
+    cond_5= start_value=='n-1' and end_value=='n'
     if cond_1:
         TAc.print(LANG.render_feedback("wrong", f'No, \'max_in_sottoinsieme(j,k)\' deve essere tale che j<=k'), "red", ["bold"])
         exit(0)
@@ -209,6 +217,9 @@ def check_first_command_subset_open(stringa):
             exit(0)
     elif start_value==1 and end_value=='n':
         TAc.print(LANG.render_feedback("wrong", f'No, il sottoinsieme di cui mi hai chiesto di trovare il massimo e` un sottoinsieme improprio!'), "red", ["bold"])
+        exit(0)
+    elif cond_5:
+        TAc.print(LANG.render_feedback("wrong", f'No, se n=2 mi staresti chiedendo di trovare il massimo di un sottoinsieme improprio!'), "red", ["bold"])
         exit(0)
     return start_value,end_value
 
@@ -245,7 +256,7 @@ if cardinality!='open':
     exit(0)
 else:
     TAc.print(LANG.render_feedback("start", 'Ti va di dimostrare formalmente che un insieme finito di numeri ha sempre un massimo? Cominciamo subito!'), "white", ["bold"])
-    TAc.print(LANG.render_feedback("set-explain", 'Consideriamo l\'insieme S della forma S={s1,s2,s3,...,sn} con n>1. Qual e` il massimo dell\'insieme S? Per rispondere hai a disposizione ben 2 oracoli: \n- confronto(j,k) : confronta due elementi nell\'insieme S, ovvero sj ed sk e restituisce il maggiore dei due \n- max_in_sottoinsieme(j,k) : considera il sottoinsieme proprio di S costituito dagli elementi che vanno da sj fino ad sk (quindi j<=k) e restituisce il massimo tra questi. \nProva a combinare chiamate agli oracoli disponibili in modo da costruire il massimo. Una volta terminato scrivi "return j" (per indicarmi che il massimo dell\'insieme S e` sj) e capiro` che hai finito..'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("set-explain", 'Consideriamo l\'insieme S della forma S={s1,s2,s3,...,sn} con n>1. Qual e` il massimo dell\'insieme S? Per rispondere hai a disposizione ben 2 oracoli: \n- confronto(j,k) : confronta due elementi nell\'insieme S, ovvero sj ed sk e restituisce il maggiore dei due \n- max_in_sottoinsieme(j,k) : considera il sottoinsieme proprio di S costituito dagli elementi che vanno da sj fino ad sk (quindi j<=k) e restituisce il massimo tra questi. \nProva a richiamare gli oracoli disponibili combinandoli in modo da costruire il massimo. Una volta terminato scrivi "return j" (per indicarmi che il massimo dell\'insieme S e` sj) e capiro` che hai finito.'), "yellow", ["bold"])
     user_command=TALinput(str, regex=f"^[(,)\w/ =\d +-]*$", sep='\n', TAc=TAc)[0]
     if 'max_in_sottoinsieme' in user_command:
         start,end=check_first_command_subset_open(user_command)
@@ -258,10 +269,12 @@ else:
     TAc.print(LANG.render_feedback("n-proposal", f'n={n}'), "yellow", ["reverse"])
     all_elem_in_set=[i for i in range(1,n+1)]
     checked_set=random.sample(all_elem_in_set,k=n)
+    # n=5
+    # checked_set=[1,4,3,2,5]
     print(f'elementi ordinati: {checked_set}')
     indices_list=[]
     indices_list.append({i for i in range(eval(str(start),{'n':n}),eval(str(end),{'n':n})+1)})
-    print(indices_list)
+    # print(indices_list)
     max_values=set()
     first_indices=[i for i in range(eval(str(start),{'n':n}),eval(str(end),{'n':n})+1)]
     position_first_max=[checked_set.index(item) for item in first_indices]
