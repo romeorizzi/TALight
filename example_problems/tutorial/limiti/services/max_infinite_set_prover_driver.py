@@ -88,7 +88,10 @@ if parameter=='parameter':
             exit(0)
         else:
             answer=eval(answer)
-            if answer>max_value:
+            if answer<propose:
+                TAc.print(LANG.render_feedback("error", f'{answer}<{propose}, quindi non mi hai ancora smentito.'),  "red", ["bold"])
+                exit(0)
+            elif answer>max_value:
                 TAc.print(LANG.render_feedback("error", f'Beh, nemmeno {answer} appartiene all\'insieme, quindi non mi hai ancora smentito.'),  "red", ["bold"])
                 exit(0)
             else:

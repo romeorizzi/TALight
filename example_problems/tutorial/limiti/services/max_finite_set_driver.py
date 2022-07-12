@@ -33,7 +33,7 @@ set_cardinality=ENV["cardinality"]
 
 instance=array(ll.instance_randgen(set_cardinality,reference_set,seed),dtype='str')
 set_values='\n'.join(instance)
-TAc.print(LANG.render_feedback("seed", f'# puoi richiamarmi attraverso il comando -aseed= {ENV["seed"]}'), "yellow")
+TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed= {ENV["seed"]}'), "yellow")
 TAc.print(LANG.render_feedback("start", f'# Dati i seguenti numeri: \n{set_values}'), "yellow", ["bold"])
 output_filename = f"instance_{seed}_max_fin_set.txt"
 if ENV["download"]:
@@ -47,7 +47,7 @@ user_max=eval(TALinput(str, regex=f"^([+-]?[.\d]*)$", sep=None, TAc=TAc)[0])
 if user_max==max_value:
     TAc.print(LANG.render_feedback("correct", f'Ottimo! Confermo che {max_value} e` il massimo in quanto: \n1) {max_value} appartiene all\'insieme, \n2) nell\'insieme non sono presenti numeri maggiori di {max_value}.'), "green", ["bold"])
 elif user_max not in instance:
-    TAc.print(LANG.render_feedback("wrong", f'No, {user_max} non e` nell\'insieme quindi non puo` essere il massimo!'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong", f'No, {user_max} non appartiene all\'insieme quindi non puo` essere il massimo!'), "red", ["bold"])
     exit(0)
 else:
     elem=instance[0]

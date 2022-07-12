@@ -77,7 +77,7 @@ def indices(stringa,n,source):
 def core_function_max_finite_set_proof(indices_list,user_command,checked_set,n,cardinality):
     command_index=indices(user_command,n,cardinality)
     # print(f'command index {command_index}')
-    print(f'indices list {indices_list}')
+    # print(f'indices list {indices_list}')
     position_command_indices=[]
     for item in command_index:
         position_command_indices.append(checked_set.index(item))
@@ -109,7 +109,7 @@ def core_function_max_finite_set_proof(indices_list,user_command,checked_set,n,c
             del indices_list[i]
     if bool(new_index_set):
         indices_list.append(new_index_set)
-    print(f'indices list {indices_list}')
+    # print(f'indices list {indices_list}')
     return indices_list,max_elem
 
 def get_instance_from_txt(instance_as_str):

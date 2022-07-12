@@ -7,12 +7,15 @@ import limiti_lib as ll
 from math import *
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('seed',int),
+    ('silent',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+if ENV['silent']:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
+else:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
 
 ## START CODING YOUR SERVICE:
@@ -38,5 +41,5 @@ q=integer/n
 # print(q)
 assert x_eval<q and q<y_eval
 TAc.print(LANG.render_feedback("disprove", f'vedi, per q={integer}/{n}={q} si ha che x={user_x} < {integer}/{n} < {user_y}=y'),  "yellow", ["bold"])
-TAc.print(LANG.render_feedback("what-to-do", f'Spero di averti convinto! \n\nSe vuoi provare ora a dimostrare la densita` di Q in R ti consiglio il servizio \'rtal connect limiti density_Q_in_R_prover\''),  "white", ["bold"])
+TAc.print(LANG.render_feedback("what-to-do", f'Spero di averti convinto! \n\nSe ora vuoi provare tu a dimostrare la densita` di Q in R ti consiglio il servizio \'rtal connect limiti density_Q_in_R_prover\''),  "white", ["bold"])
 exit(0)

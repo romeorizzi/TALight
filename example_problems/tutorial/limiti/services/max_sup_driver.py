@@ -13,11 +13,15 @@ args_list = [
     ('instance_id',int),
     ('seed',int),
     ('download',bool),
+    ('silent',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+if ENV['silent']:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
+else:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
 
 ## START CODING YOUR SERVICE:

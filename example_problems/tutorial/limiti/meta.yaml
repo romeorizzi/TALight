@@ -64,6 +64,14 @@ services:
         regex: ^([1-9][0-9]*|you_choose|open)$
         default: you_choose
         explain: 'Per iniziare una dimostrazione guidata passo passo e allenarti su insiemi di k elementi (con k scelto a random dal servizio nell\''intervallo [2,10]) mantieni il valore di default `you_choose`, altrimenti puoi definire tu la cardinalità dell\''insieme con cui lavorare (specificando un qualsiasi natuale positivo >=1); oppure puoi impostare il valore `open` per passare al caso generale (insieme di n elementi, n non definito).'
+      verbose:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1 viene stampato il confronto di ogni elemento dell\''insieme rispetto al massimo.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -121,32 +129,32 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
-  max_sup:
-    evaluator: [python, services/max_sup_driver.py]
-    description: 'In questo servizio riepilogativo vengono messi insieme i concetti di insieme limitato superiormente, massimo ed estremo superiore.'
-    args:
-      instance_id:
-        regex: ^([1-9][0-9]*)$
-        regex-explained: 'qualsiasi naturale positivo >=1 (nella sua rappresentazione decimale)'
-        regex-URL: 'https://extendsclass.com/regex/a55297b'
-        default: 1
-        explain: 'Questo argomento viene utilizzato per identificare una particolare istanza (ovvero un insieme) all\''interno del catalogo delle istanze archiviate sul server. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.'
-      seed:
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
-        regex-URL: 'https://extendsclass.com/regex/90e74ec'
-        default: random_seed
-        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      download:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Se questo flag è impostato a 1 allora la soluzione viene scaricata come file nella cartella il cui percorso completo è specificato tramite il flag -o.'
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
+  # max_sup:
+  #   evaluator: [python, services/max_sup_driver.py]
+  #   description: 'In questo servizio riepilogativo vengono messi insieme i concetti di insieme limitato superiormente, massimo ed estremo superiore.'
+  #   args:
+  #     instance_id:
+  #       regex: ^([1-9][0-9]*)$
+  #       regex-explained: 'qualsiasi naturale positivo >=1 (nella sua rappresentazione decimale)'
+  #       regex-URL: 'https://extendsclass.com/regex/a55297b'
+  #       default: 1
+  #       explain: 'Questo argomento viene utilizzato per identificare una particolare istanza (ovvero un insieme) all\''interno del catalogo delle istanze archiviate sul server. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.'
+  #     seed:
+  #       regex: ^(random_seed|[1-9][0-9]{5,5})$
+  #       regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+  #       regex-URL: 'https://extendsclass.com/regex/90e74ec'
+  #       default: random_seed
+  #       explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+  #     download:
+  #       regex: ^(0|1)$
+  #       default: 0
+  #       explain: 'Se questo flag è impostato a 1 allora la soluzione viene scaricata come file nella cartella il cui percorso completo è specificato tramite il flag -o.'
+  #     lang:
+  #       regex: ^(hardcoded|hardcoded_ext|en|it)$
+  #       default: it
   archimede_prover:
     evaluator: [python, services/archimede_prover_driver.py]
-    description: 'Questo servizio ti permetterà di convincere me (ed anche un po\'' te stesso) che per ogni x reale, x>0, esiste un numero naturale n tale che 1/n < x (anche conosciuto come principio di Archimede).'
+    description: 'Questo servizio ti permetterà di dimostrare che per ogni x reale, x>0, esiste un numero naturale n tale che 1/n < x (anche conosciuto come principio di Archimede).'
     args:
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -154,6 +162,10 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -161,12 +173,16 @@ services:
     evaluator: [python, services/archimede_disprover_driver.py]
     description: 'Questo servizio cercherà di convincerti che per ogni x reale, x>0, esiste un numero naturale n tale che 1/n < x (anche conosciuto come principio di Archimede).'
     args:
-      seed:
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
-        regex-URL: 'https://extendsclass.com/regex/90e74ec'
-        default: random_seed
-        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      # seed:
+      #   regex: ^(random_seed|[1-9][0-9]{5,5})$
+      #   regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+      #   regex-URL: 'https://extendsclass.com/regex/90e74ec'
+      #   default: random_seed
+      #   explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -180,6 +196,10 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -187,12 +207,10 @@ services:
     evaluator: [python, services/density_Q_in_R_disprover_driver.py]
     description: 'Con questo servizio cercherò di convincerti che l\''insieme dei numeri razionali e\'' denso nei reali, ovvero che dati due numeri reali x,y con x<y, esiste un numero q razionale tale che x < q < y.'
     args:
-      seed:
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
-        regex-URL: 'https://extendsclass.com/regex/90e74ec'
-        default: random_seed
-        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -206,6 +224,10 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -213,18 +235,16 @@ services:
     evaluator: [python, services/archimede_curiosity_disprover_driver.py]
     description: 'Questo servizio può essere visto come un piccolo salto verso i limiti di successioni. Proverò a convincerti che il limite di una successione convergente di termini positivi non è sempre strettamente positivo e sperimenteremo la correlazione che sussiste tra questa affermazione e il principio di Archimede.'
     args:
-      seed:
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
-        regex-URL: 'https://extendsclass.com/regex/90e74ec'
-        default: random_seed
-        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  infinite_sequence:
-    evaluator: [python, services/infinite_sequence_driver.py]
-    description: 'Con questo servizio potrai valutare se la successione che ti viene proposta è limitata oppure no.'
+  check_limit:
+    evaluator: [python, services/check_limit_driver.py]
+    description: 'Con questo servizio potrai verificare qual è il limite della successione che ti viene proposta.'
     args:
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -232,10 +252,13 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      silent:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
     args:

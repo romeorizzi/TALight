@@ -8,11 +8,15 @@ from math import *
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('seed',int),
+    ('silent',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+if ENV['silent']:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
+else:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
 
 ## START CODING YOUR SERVICE:
@@ -33,7 +37,7 @@ def check_user_solution(x):
     assert proof<eval(str(x))
     return TAc.print(LANG.render_feedback("correct", f'Molto bene! Infatti vale |1/n-0| <{epsilon} per ogni n>{user_sol} (ovvero e` verificata la definizione di limite finito di una successione). \nNota ora pero` che vale anche il principio di Archimede per questa particolare successione poiche` tende a 0 ed e` formata da termini positivi, percio` |1/n-0|=1/n e secondo Archimede per ogni reale epsilon>0 esiste un naturale n>0 tale che 1/n<epsilon, e con la epsilon che ti ho dato vale per n={user_sol}.'), "green", ["bold"])
 
-TAc.print(LANG.render_feedback("remember", '\nREMEMBER - per svolgere questo esercizio ti puo` tornare utile la seguente definizione: il limite di una successione fn per n->inf e` finito e vale f se per ogni epsilon>0 esiste n_0>0 naturale tale che n>n_0 => |fn-f|<epsilon.'), "green")
+# TAc.print(LANG.render_feedback("remember", '\nREMEMBER - per svolgere questo esercizio ti puo` tornare utile la seguente definizione: il limite di una successione fn per n->inf e` finito e vale f se per ogni epsilon>0 esiste N>0 naturale tale che n>N => |fn-f|<epsilon.'), "green")
 
 TAc.print(LANG.render_feedback("principio-Archimede-curiosity", 'Il limite di una successione convergente di termini positivi non e` sempre strettamente positivo.'), "white")
 TAc.print(LANG.render_feedback("start", f'Consideriamo ad esempio la successione 1/n, n=1,2,3,... qual e` il limite per n -> inf?'), "yellow", ["bold"])
@@ -51,6 +55,6 @@ else:
 random.seed(seed)
 epsilon=float(format(random.random(),'.3f'))
 TAc.print(LANG.render_feedback("start", f'Il mio valore per epsilon e`: \n{epsilon}'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("start", f'Proponi il tuo n_0 (che sia naturale e n_0>0):'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("start", f'Proponi il tuo N (che sia naturale e N>0):'), "yellow", ["bold"])
 check_user_solution(epsilon)
 exit(0)

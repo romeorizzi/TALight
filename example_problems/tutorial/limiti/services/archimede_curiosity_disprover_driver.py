@@ -8,16 +8,18 @@ import random
 from math import *
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
-    ('seed',int),
+    ('silent',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+if ENV['silent']:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
+else:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
 
 ## START CODING YOUR SERVICE:
-seed=ENV["seed"]
 def evaluate_epsilon():
     try:
         user_epsilon=eval(TALinput(str, regex=f"^((\S)+)$", sep=None, TAc=TAc)[0])
@@ -32,7 +34,6 @@ TAc.print(LANG.render_feedback("remember", '\nREMEMBER - per svolgere questo ese
 
 TAc.print(LANG.render_feedback("principio-Archimede-curiosity", 'Provero` a convincerti che il limite di una successione convergente di termini positivi non e` sempre strettamente positivo.'), "white")
 TAc.print(LANG.render_feedback("start", f'Prendero` come esempio la successione 1/n, n=1,2,3,... il cui limite per n -> inf e` 0 e ora te lo dimostro:'), "yellow", ["bold"])
-random.seed(seed)
 TAc.print(LANG.render_feedback("epsilon", f'Stabilisci un numero reale epsilon>0:'), "yellow", ["bold"])
 user_epsilon=evaluate_epsilon()
 TAc.print(LANG.render_feedback("n_0", f'Ecco il mio n_0:'), "yellow", ["bold"])

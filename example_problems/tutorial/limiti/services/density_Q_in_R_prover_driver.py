@@ -10,11 +10,15 @@ import re
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('seed',int),
+    ('silent',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+if ENV['silent']:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
+else:
+    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
 
 ## START CODING YOUR SERVICE:
@@ -79,7 +83,7 @@ if user_difference!=difference:
     TAc.print(LANG.render_feedback("error", f'no, y-x e` diverso da {user_difference}'), "red", ["bold"])
     exit(0)
 TAc.print(LANG.render_feedback("correct", 'Ok!'), "green", ["bold"])
-TAc.print(LANG.render_feedback("find-N", f'#      1.2) proponi un numero naturale N>0 che soddisfi il principio di Archimede con argomento y-x={y-x}, ovvero tale che 1/N < {user_difference}: \n# (se non ricordi questo principio consigliamo l\'esercizio -> rtal connect limiti archimede_prover)'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("find-N", f'#      1.2) proponi un numero naturale N>0 che soddisfi il principio di Archimede con argomento y-x={y-x}, ovvero tale che 1/N < {user_difference}: \n# (se non ricordi questo principio ti consiglio l\'esercizio -> rtal connect limiti archimede_prover)'), "yellow", ["bold"])
 N=check_user_solution(user_difference)
 TAc.print(LANG.render_feedback("find-N", f'# PASSO 2: trovare un qualsiasi intero m nell\'intervallo (Nx,Ny)=({x*N},{y*N}) (almeno uno deve esistere, avendo costruito N tale che Nx-Ny>1):'), "yellow", ["bold"])
 user_int=check_int_in_interval(N*x,N*y)
