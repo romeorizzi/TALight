@@ -1,0 +1,12 @@
+%YAML 1.2
+---
+# Notice: the following levels of security corresopnd to the Section Use within the settings.yaml file used by the notebooks.
+# WARNING: during the exam the uncommented option for the `current_status` parameter should be the first (namely, `during_exam`).
+
+current_status: during_exam
+#current_status: exam_simulation
+#current_status: training
+#current_status: open
+#current_status: correction_phase
+
+...
