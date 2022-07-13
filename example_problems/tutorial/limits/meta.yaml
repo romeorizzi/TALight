@@ -93,8 +93,8 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
-  max_infinite_set_prover:
-    evaluator: [python, services/max_infinite_set_prover_driver.py]
+  max_infinite_set_prover_is_user:
+    evaluator: [python, services/max_infinite_set_prover_is_user_driver.py]
     description: 'Con questo servizio potrai dimostrare se un insieme non finito ha un massimo oppure no.'
     args:
       seed:
@@ -111,49 +111,8 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
 
-  max_infinite_set_disprover:
-    evaluator: [python, services/max_infinite_set_disprover_driver.py]
-    description: 'Con questo servizio proverò a dimostrarti se un insieme non finito ha un massimo oppure no.'
-    args:
-      seed:
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
-        regex-URL: 'https://extendsclass.com/regex/90e74ec'
-        default: random_seed
-        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
-      lang:
-        regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
-
-  # max_sup:
-  #   evaluator: [python, services/max_sup_driver.py]
-  #   description: 'In questo servizio riepilogativo vengono messi insieme i concetti di insieme limitato superiormente, massimo ed estremo superiore.'
-  #   args:
-  #     instance_id:
-  #       regex: ^([1-9][0-9]*)$
-  #       regex-explained: 'qualsiasi naturale positivo >=1 (nella sua rappresentazione decimale)'
-  #       regex-URL: 'https://extendsclass.com/regex/a55297b'
-  #       default: 1
-  #       explain: 'Questo argomento viene utilizzato per identificare una particolare istanza (ovvero un insieme) all\''interno del catalogo delle istanze archiviate sul server. Questo catalogo è organizzato in raccolte di istanze con caratteristiche comuni.'
-  #     seed:
-  #       regex: ^(random_seed|[1-9][0-9]{5,5})$
-  #       regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
-  #       regex-URL: 'https://extendsclass.com/regex/90e74ec'
-  #       default: random_seed
-  #       explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-  #     download:
-  #       regex: ^(0|1)$
-  #       default: 0
-  #       explain: 'Se questo flag è impostato a 1 allora la soluzione viene scaricata come file nella cartella il cui percorso completo è specificato tramite il flag -o.'
-  #     lang:
-  #       regex: ^(hardcoded|hardcoded_ext|en|it)$
-  #       default: it
-  archimede_prover:
-    evaluator: [python, services/archimede_prover_driver.py]
+  archimede_prover_is_user:
+    evaluator: [python, services/archimede_prover_is_user_driver.py]
     description: 'Questo servizio ti permetterà di dimostrare che per ogni x reale, x>0, esiste un numero naturale n tale che 1/n < x (anche conosciuto come principio di Archimede).'
     args:
       seed:
@@ -162,32 +121,18 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  archimede_disprover:
-    evaluator: [python, services/archimede_disprover_driver.py]
+  archimede_prover_is_server:
+    evaluator: [python, services/archimede_prover_is_server_driver.py]
     description: 'Questo servizio cercherà di convincerti che per ogni x reale, x>0, esiste un numero naturale n tale che 1/n < x (anche conosciuto come principio di Archimede).'
     args:
-      # seed:
-      #   regex: ^(random_seed|[1-9][0-9]{5,5})$
-      #   regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
-      #   regex-URL: 'https://extendsclass.com/regex/90e74ec'
-      #   default: random_seed
-      #   explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  density_Q_in_R_prover:
-    evaluator: [python, services/density_Q_in_R_prover_driver.py]
+  density_Q_in_R_prover_is_user:
+    evaluator: [python, services/density_Q_in_R_prover_is_user_driver.py]
     description: 'In questo percorso dimostreremo insieme passo passo che l\''insieme dei numeri razionali e\'' denso nei reali, ovvero che dati due numeri reali x,y con x<y, esiste un numero q razionale tale che x < q < y.'
     args:
       seed:
@@ -203,8 +148,8 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  density_Q_in_R_disprover:
-    evaluator: [python, services/density_Q_in_R_disprover_driver.py]
+  density_Q_in_R_prover_is_server:
+    evaluator: [python, services/density_Q_in_R_prover_is_server_driver.py]
     description: 'Con questo servizio cercherò di convincerti che l\''insieme dei numeri razionali e\'' denso nei reali, ovvero che dati due numeri reali x,y con x<y, esiste un numero q razionale tale che x < q < y.'
     args:
       silent:
@@ -214,8 +159,8 @@ services:
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  archimede_curiosity_prover:
-    evaluator: [python, services/archimede_curiosity_prover_driver.py]
+  archimede_and_limits_prover_is_user:
+    evaluator: [python, services/archimede_and_limits_prover_is_user_driver.py]
     description: 'Questo servizio può essere visto come un piccolo salto verso i limiti di successioni. Potrai convincermi che il limite di una successione convergente di termini positivi non è sempre strettamente positivo e sperimenterai la correlazione che sussiste tra questa affermazione e il principio di Archimede.'
     args:
       seed:
@@ -224,21 +169,13 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
-  archimede_curiosity_disprover:
-    evaluator: [python, services/archimede_curiosity_disprover_driver.py]
+  archimede_and_limits_prover_is_server:
+    evaluator: [python, services/archimede_and_limits_prover_is_server_driver.py]
     description: 'Questo servizio può essere visto come un piccolo salto verso i limiti di successioni. Proverò a convincerti che il limite di una successione convergente di termini positivi non è sempre strettamente positivo e sperimenteremo la correlazione che sussiste tra questa affermazione e il principio di Archimede.'
     args:
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -252,10 +189,32 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  solve_limit:
+    evaluator: [python, services/solve_limit_driver.py]
+    description: 'Questo servizio calcola il limite della successione che gli proponi attraverso il seed o inserisci direttamente da terminale.'
+    args:
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  limit_prover_is_user:
+    evaluator: [python, services/limit_prover_is_user_driver.py]
+    description: 'Attraverso questo servizio puoi verificare il valore assunto da un certo limite di successione.'
+    args:
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it

@@ -41,5 +41,5 @@ q=integer/n
 # print(q)
 assert x_eval<q and q<y_eval
 TAc.print(LANG.render_feedback("disprove", f'vedi, per q={integer}/{n}={q} si ha che x={user_x} < {integer}/{n} < {user_y}=y'),  "yellow", ["bold"])
-TAc.print(LANG.render_feedback("what-to-do", f'Spero di averti convinto! \n\nSe ora vuoi provare tu a dimostrare la densita` di Q in R ti consiglio il servizio \'rtal connect limiti density_Q_in_R_prover\''),  "white", ["bold"])
+TAc.print(LANG.render_feedback("what-to-do", f'Spero di averti convinto! \n\nSe ora vuoi provare tu a dimostrare la densita` di Q in R ti consiglio il servizio \'rtal connect limits density_Q_in_R_prover_is_user\''),  "white", ["bold"])
 exit(0)
