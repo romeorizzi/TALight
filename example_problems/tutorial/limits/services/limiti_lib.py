@@ -36,14 +36,75 @@ def not_max_but_in_set_parameter(condition,max_value):
         not_max_but_in_set-=random.randint(1,3)
         my_k=(not_max_but_in_set-1)/int(condition[0]) if '+' in condition else (not_max_but_in_set)/int(condition[0])
     return not_max_but_in_set
-
-def propose_without_parameter_inf_set(power,min_value,sup_value):
+def non_appartiene_e_non_maggiorante(condition,min_value):
+    non_maggiorante=random.randint(-10,60)
+    my_k=(non_maggiorante-1)/int(condition[0]) if '+' in condition else (non_maggiorante)/int(condition[0])
+    while (non_maggiorante<=min_value or my_k.is_integer()):
+        non_maggiorante+=random.randint(1,3)
+        my_k=(non_maggiorante-1)/int(condition[0]) if '+' in condition else (non_maggiorante)/int(condition[0])
+    return non_maggiorante
+def appartiene_ma_non_maggiorante(condition,min_value):
+    non_maggiorante=random.randint(-10,60)
+    my_k=(non_maggiorante-1)/int(condition[0]) if '+' in condition else (non_maggiorante)/int(condition[0])
+    while (non_maggiorante<=min_value or not my_k.is_integer()):
+        non_maggiorante+=random.randint(1,3)
+        my_k=(non_maggiorante-1)/int(condition[0]) if '+' in condition else (non_maggiorante)/int(condition[0])
+    return non_maggiorante
+def appartiene_ma_non_maggiorante_without_parameter(power,min_value,sup_value):
+    propose=random.randint(-20,30)
     if sup_value!=inf:
-        propose=sup_value-1+round(random.uniform(0,1),2)
+        if power==2:
+            propose=abs(propose)
+        if min_value!=None:
+            while not (propose<sup_value and propose>min_value):
+                if propose>=sup_value:
+                    propose-=1
+                elif propose<=min_value:
+                    propose+=1
+        else:
+            while propose>=sup_value:
+                propose-=1
     elif sup_value==inf:
-        propose=abs(round(min_value,2))+1 if power==2 else round(min_value,2)+1
+        if power==2:
+            propose=abs(propose)
+            min_value=abs(min_value)
+        while propose<=min_value:
+            propose+=1
+    return propose
+def not_in_set_without_parameter_min(power,min_value,sup_value):
+    propose=random.randint(-20,30)
+    if sup_value!=inf:
+        if power==2:
+            propose=-abs(propose)
+            sup_value=-abs(sup_value)
+            while propose>=sup_value:
+                propose-=1
+        else:
+            while propose>=min_value:
+                propose-=1
+    elif sup_value==inf:
+        if power==2:
+            propose=abs(propose)
+            min_value=abs(min_value)
+        while propose>=min_value:
+            propose-=1
     return propose
 
+def not_in_set_without_parameter_max(power,min_value,sup_value):
+    propose=random.randint(-20,30)
+    if power==2:
+        propose=-abs(propose)
+        sup_value=-abs(sup_value)
+        while propose>=sup_value:
+            propose-=1
+    else:
+        if min_value!=None:
+            while propose>=min_value:
+                propose-=1
+        else:
+            while propose>=sup_value:
+                propose-=1
+    return propose
 def args_subset(stringa):
     posiz_start=stringa.find("max_in_sottoinsieme")+20
     comma_position=stringa.find(',')

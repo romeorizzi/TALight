@@ -89,7 +89,7 @@ else: # CASO SENZA PARAMETRO k
     if sup==inf: # l'insieme non è limitato superiormente
         if user_max=='none' or user_max==None:
             TAc.print(LANG.render_feedback("correct", f'Sono d\'accordo!'), "green", ["bold"])
-            TAc.print(LANG.render_feedback("other-service", f'Se ora vuoi provare a convincermi chiama il servizio `rtal connect limiti max_infinite_set_prover`.'), "white")
+            TAc.print(LANG.render_feedback("other-service", f'Se ora vuoi provare a convincermi chiama il servizio `rtal connect limits max_infinite_set_prover_is_user`.'), "white")
             exit(0)
         else:
             TAc.print(LANG.render_feedback("error", f'No, questo insieme non ammette massimo.'),  "red", ["bold"])
@@ -99,7 +99,7 @@ else: # CASO SENZA PARAMETRO k
         if max_value==None: # non esiste il massimo
             if user_max=='none' or user_max==None: # l'utente risponde giusto
                 TAc.print(LANG.render_feedback("correct", f'Sono d\'accordo! Per questo insieme non esiste il massimo.'), "green", ["bold"])
-                TAc.print(LANG.render_feedback("other-service", f'Se ora vuoi provare a convincermi chiama il servizio `rtal connect limiti max_infinite_set_prover`.'), "white")
+                TAc.print(LANG.render_feedback("other-service", f'Se ora vuoi provare a convincermi chiama il servizio `rtal connect limits max_infinite_set_prover_is_user`.'), "white")
                 exit(0)
             else: # l'utente inserisce un numero
                 user_max_comparison=abs(user_max) if power==2 else user_max
@@ -114,13 +114,13 @@ else: # CASO SENZA PARAMETRO k
         else: # eiste il massimo
             if user_max=='none' or user_max==None: # l'utente dice che non esiste il massimo
                 TAc.print(LANG.render_feedback("error", f'Invece il massimo c\'e` e vale {max_value}.'),  "red", ["bold"])
-                TAc.print(LANG.render_feedback("other-service", f'Se ora ti sei convinto dell\' esistenza del massimo e vuoi provare a dimostrarmelo chiama il servizio `rtal connect limiti max_infinite_set_prover`.'), "white")  
+                TAc.print(LANG.render_feedback("other-service", f'Se ora ti sei convinto dell\' esistenza del massimo e vuoi provare a dimostrarmelo chiama il servizio `rtal connect limits max_infinite_set_prover_is_user`.'), "white")  
                 exit(0)
             else:
                 # print(f'min {min}, user max {user_max}, max {max}')
                 if user_max==max_value:
                     TAc.print(LANG.render_feedback("correct", f'Sono d\'accordo!'), "green", ["bold"])
-                    TAc.print(LANG.render_feedback("other-service", f'Se ora vuoi provare a convincermi chiama il servizio `rtal connect limiti max_infinite_set_prover`.'), "white")
+                    TAc.print(LANG.render_feedback("other-service", f'Se ora vuoi provare a convincermi chiama il servizio `rtal connect limits max_infinite_set_prover_is_user`.'), "white")
                     exit(0)
                 else:
                     user_max_comparison=abs(user_max) if power==2 else user_max
