@@ -22,14 +22,14 @@ services:
         default: 'MAMMACHIOCCIA'
         explain: is the second string
         example1: "the second string is s='MAMMACHIOCCIA' in our running Example 1"
-      start_with:
-        regex: ^(\*|[A-Z])$
-        default: '*'
-        explain: the common subsequence is required to start with this character. Using the mask character * vanifies this constraint
-      end_with:
-        regex: ^(\*|[A-Z])$
-        default: '*'
-        explain: the common subsequence is required to end with this character. Using the mask character * vanifies this constraint
+      beginning:
+        regex: ^([A-Z]*)$
+        default: ''
+        explain: "the common subsequence is required to begin with the string 'beginning' as its prefix. Leaving the default value (the empty string) for this parameter nullifies this constraint"
+      ending:
+        regex: ^([A-Z]*)$
+        default: ''
+        explain: "the common subsequence is required to end with the string 'ending' as its suffix. Leaving the default value (the empty string) for this parameter nullifies this constraint"
       forbidden_s_interval_first_pos:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
@@ -80,14 +80,14 @@ services:
         regex: ^(.*)$
         default: "{}"
         example: "-a input_data_assigned=\"{'s':'ACCIPICCHIA','t':'MAMMACHIOCCIA'}\"  would be an alternative way to introduce our running Example 1 input data to the problem solver"
-        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `s`, or `t`, or `start_with`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `s`, or `t`, or `beginning`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
 
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       opt_val:
         regex: ^(.*)$
         default: 7
         example: 7 is actually the correct answer for running Example 1
-        explain: "the maximum length of a string which is a feasible solution. In order to be a feasible solution, a string must be both a subsequence of string `s` and a subsequence of string `t`, but it must also respect any other additional constraint given. (A subsequence of a string is any string that can be obtained from it by dropping off some of its characters. The additional constraints, if any, get imposed by the arguments `start_with`,`end_with`,`forbidden_s_interval_first_pos`,`forbidden_s_interval_last_pos`,`reduce_s_to_its_prefix_of_length`,`reduce_t_to_its_prefix_of_length`,`reduce_s_to_its_suffix_of_length`,`reduce_t_to_its_suffix_of_length`. These additional contraints can be combined in any way as long as the optimum solution value for the question formulated by the problem poser to the problem solver appears as one of the entries of the DP tables considered)"
+        explain: "the maximum length of a string which is a feasible solution. In order to be a feasible solution, a string must be both a subsequence of string `s` and a subsequence of string `t`, but it must also respect any other additional constraint given. (A subsequence of a string is any string that can be obtained from it by dropping off some of its characters. The additional constraints, if any, get imposed by the arguments `beginning`,`ending`,`forbidden_s_interval_first_pos`,`forbidden_s_interval_last_pos`,`reduce_s_to_its_prefix_of_length`,`reduce_t_to_its_prefix_of_length`,`reduce_s_to_its_suffix_of_length`,`reduce_t_to_its_suffix_of_length`. These additional contraints can be combined in any way as long as the optimum solution value for the question formulated by the problem poser to the problem solver appears as one of the entries of the DP tables considered)"
       opt_sol:
         regex: ^(.*)$
         default: "ACICCIA"
@@ -187,14 +187,14 @@ services:
         regex: ^([A-Z]*)$
         default: 'MAMMACHIOCCIA'
         explain: is the second string
-      start_with:
-        regex: ^(\*|[A-Z])$
-        default: '*'
-        explain: the common subsequence is required to start with this character. Using the mask character * vanifies this constraint
-      end_with:
-        regex: ^(\*|[A-Z])$
-        default: '*'
-        explain: the common subsequence is required to end with this character. Using the mask character * vanifies this constraint
+      beginning:
+        regex: ^([A-Z]*)$
+        default: ''
+        explain: "the common subsequence is required to begin with the string 'beginning' as its prefix. Leaving the default value (the empty string) for this parameter nullifies this constraint"
+      ending:
+        regex: ^([A-Z]*)$
+        default: ''
+        explain: "the common subsequence is required to end with the string 'ending' as its suffix. Leaving the default value (the empty string) for this parameter nullifies this constraint"
       forbidden_s_interval_first_pos:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000

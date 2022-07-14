@@ -9,8 +9,8 @@ from RO_utils import display_matrix
 instance_objects_spec = [
     ('s',str),
     ('t',str),
-    ('start_with',str),
-    ('end_with',str),
+    ('beginning',str),
+    ('ending',str),
     ('forbidden_s_interval_first_pos',int),
     ('forbidden_s_interval_last_pos',int),
     ('reduce_s_to_its_prefix_of_length',int),
@@ -145,23 +145,23 @@ def solver(input_to_oracle):
 
     first_pos_in_s = max(0,len(s)-I['reduce_s_to_its_suffix_of_length'])
     first_pos_in_t = max(0,len(t)-I['reduce_t_to_its_suffix_of_length'])
-    if I['start_with'] != '*':
-        while first_pos_in_s < len(s) and (s[first_pos_in_s] != I['start_with'] or I['forbidden_s_interval_first_pos'] <= first_pos_in_s <= I['forbidden_s_interval_last_pos']):
+    for char in I['beginning']:
+        while first_pos_in_s < len(s) and (s[first_pos_in_s] != char or I['forbidden_s_interval_first_pos'] <= first_pos_in_s <= I['forbidden_s_interval_last_pos']):
             first_pos_in_s += 1
-        while first_pos_in_t < len(t) and t[first_pos_in_t] != I['start_with']:
+        while first_pos_in_t < len(t) and t[first_pos_in_t] != char:
             first_pos_in_t += 1
     last_pos_in_s = min(len(s),I['reduce_s_to_its_prefix_of_length']) -1
     last_pos_in_t = min(len(t),I['reduce_t_to_its_prefix_of_length']) -1
-    if I['end_with'] != '*':
-        while last_pos_in_s >= 0 and (s[last_pos_in_s] != I['end_with'] or I['forbidden_s_interval_first_pos'] <= last_pos_in_s <= I['forbidden_s_interval_last_pos']):
+    for char in I['ending']:
+        while last_pos_in_s >= 0 and (s[last_pos_in_s] != char or I['forbidden_s_interval_first_pos'] <= last_pos_in_s <= I['forbidden_s_interval_last_pos']):
             last_pos_in_s -= 1
-        while last_pos_in_t >= 0 and t[last_pos_in_t] != I['end_with']:
+        while last_pos_in_t >= 0 and t[last_pos_in_t] != char:
             last_pos_in_t -= 1
 
     if last_pos_in_t < first_pos_in_t or last_pos_in_s < first_pos_in_s:
         opt_val = 0 ; opt_sol = []
     elif (first_pos_in_t > 0 and last_pos_in_t < len(t)-1) or (first_pos_in_s > 0 and last_pos_in_s < len(s)-1) or (first_pos_in_t > 0 and last_pos_in_s < len(s)-1) or (first_pos_in_s > 0 and last_pos_in_t < len(t)-1):
-        return {'exception': ("the question posed violates the policy of this problem",policy)}
+        return {'exception': ("the question posed delivers a problem that would exit the intended solution approach, violating our policy of reference",policy)}
     else:
         if I['forbidden_s_interval_first_pos'] > I['forbidden_s_interval_last_pos']:
             if first_pos_in_s > 0 or first_pos_in_t > 0:
@@ -178,7 +178,7 @@ def solver(input_to_oracle):
             opt_sol = ''.join(reconstruct_opt_lcs_pref_of_len(last_pos_in_s +1,last_pos_in_t +1))[::-1]  #the slice at the end reverses the string
         else:
             if first_pos_in_s > 0 or last_pos_in_s < len(s)-1 or first_pos_in_t > 0 or last_pos_in_t < len(t)-1:
-                return {'exception': ("the question posed violates the policy of this problem",policy)}
+                return {'exception': ("the question posed delivers a problem that would exit the intended solution approach, violating our policy of reference",policy)}
             best_so_far_val = max_len_on_suffixes_from_pos[I['forbidden_s_interval_last_pos']+1][0]
             best_so_far_sol = ''.join(reconstruct_opt_lcs_suff_from_pos(first_pos_in_s,first_pos_in_t))
             if best_so_far_val < max_len_on_prefixes_of_len[I['forbidden_s_interval_first_pos']][len(t)]:
@@ -199,7 +199,7 @@ def solver(input_to_oracle):
 
 class verify_submission_problem_specific(verify_submission_gen):
     def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, oracle_response:Dict = None):
-+        super().__init__(SEF,input_data_assigned, long_answer_dict, oracle_response)
+        super().__init__(SEF,input_data_assigned, long_answer_dict, oracle_response)
 
     def verify_format(self, SEF):
         if not super().verify_format(SEF):
@@ -237,10 +237,10 @@ class verify_submission_problem_specific(verify_submission_gen):
                 SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza del suffisso di t di lunghezza {self.I.reduce_t_to_its_prefix_of_length}")
             if self.I.forbidden_s_interval_first_pos <= self.I.forbidden_s_interval_last_pos and not is_subseq(g.answ,s[:self.I.forbidden_s_interval_first_pos]+s[self.I.forbidden_s_interval_last_pos+1:]):
                 SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza di s che eviti l'intervallo escluso s[{self.I.forbidden_s_interval_first_pos},{self.I.forbidden_s_interval_last_pos}]")
-            if self.I.start_with != '*' and g.answ[0] != self.I.start_with:
-                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non inizia con carattere {self.I.start_with}")
-            if self.I.end_with != '*' and g.answ[0] != self.I.end_with:
-                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non termina con carattere {self.I.end_with}")
+            if self.I.beginning != '*' and g.answ[0] != self.I.beginning:
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non inizia con carattere {self.I.beginning}")
+            if self.I.ending != '*' and g.answ[0] != self.I.ending:
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non termina con carattere {self.I.ending}")
             SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
         return True
                 
