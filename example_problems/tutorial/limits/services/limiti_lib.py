@@ -36,7 +36,6 @@ def not_max_but_in_set_parameter(condition,max_value):
         not_max_but_in_set-=random.randint(1,3)
         my_k=(not_max_but_in_set-1)/int(condition[0]) if '+' in condition else (not_max_but_in_set)/int(condition[0])
     return not_max_but_in_set
-
 def non_appartiene_e_non_maggiorante(condition,min_value):
     non_maggiorante=random.randint(-10,60)
     my_k=(non_maggiorante-1)/int(condition[0]) if '+' in condition else (non_maggiorante)/int(condition[0])
@@ -44,7 +43,6 @@ def non_appartiene_e_non_maggiorante(condition,min_value):
         non_maggiorante+=random.randint(1,3)
         my_k=(non_maggiorante-1)/int(condition[0]) if '+' in condition else (non_maggiorante)/int(condition[0])
     return non_maggiorante
-
 def appartiene_ma_non_maggiorante(condition,min_value):
     non_maggiorante=random.randint(-10,60)
     my_k=(non_maggiorante-1)/int(condition[0]) if '+' in condition else (non_maggiorante)/int(condition[0])

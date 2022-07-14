@@ -60,13 +60,19 @@ services:
     evaluator: [python, services/max_finite_set_proof_driver.py]
     description: 'Questo servizio ti permette di dimostrare formalmente che ogni insieme finito e non vuoto di numeri ammette sempre un massimo.'
     args:
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
       cardinality:
         regex: ^([1-9][0-9]*|you_choose|open)$
         default: you_choose
         explain: 'Per iniziare una dimostrazione guidata passo passo e allenarti su insiemi di k elementi (con k scelto a random dal servizio nell\''intervallo [2,10]) mantieni il valore di default `you_choose`, altrimenti puoi definire tu la cardinalità dell\''insieme con cui lavorare (specificando un qualsiasi natuale positivo >=1); oppure puoi impostare il valore `open` per passare al caso generale (insieme di n elementi, n non definito).'
       verbose:
         regex: ^(0|1)$
-        default: 1
+        default: 0
         explain: 'Se questo flag è impostato su 1 viene stampato il confronto di ogni elemento dell\''insieme rispetto al massimo.'
       silent:
         regex: ^(0|1)$
