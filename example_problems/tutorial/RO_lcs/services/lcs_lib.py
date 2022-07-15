@@ -211,8 +211,8 @@ class verify_submission_problem_specific(verify_submission_gen):
             SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
         if 'opt_sol' in self.goals:
             g = self.goals['opt_sol']
-            if not bool(re.match("",g.answ)):
-                return SEF.format_NO(g, f"Come `{g.alias}` và inserita una stringa sull'alfabeto delle 26 lettere inglesi maiuscole. Invece hai immesso '{g.answ}'.")
+            if not bool(re.match("^[A-Za-z0-9_-]*$",g.answ)):
+                return SEF.format_NO(g, f"Come `{g.alias}` và inserita una stringa sull'alfabeto delle 26 lettere inglesi (maiuscole+minuscole) e cifre decimali. Invece hai immesso '{g.answ}'.")
             SEF.format_OK(g, f"come `{g.alias}` hai immesso una stringa sul corretto alfabeto (le 26 lettere inglesi maiuscole).", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         return True
             
