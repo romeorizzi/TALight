@@ -237,10 +237,10 @@ class verify_submission_problem_specific(verify_submission_gen):
                 SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza del suffisso di t di lunghezza {self.I.reduce_t_to_its_prefix_of_length}")
             if self.I.forbidden_s_interval_first_pos <= self.I.forbidden_s_interval_last_pos and not is_subseq(g.answ,s[:self.I.forbidden_s_interval_first_pos]+s[self.I.forbidden_s_interval_last_pos+1:]):
                 SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza di s che eviti l'intervallo escluso s[{self.I.forbidden_s_interval_first_pos},{self.I.forbidden_s_interval_last_pos}]")
-            if self.I.beginning != '*' and g.answ[0] != self.I.beginning:
-                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non inizia con carattere {self.I.beginning}")
-            if self.I.ending != '*' and g.answ[0] != self.I.ending:
-                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non termina con carattere {self.I.ending}")
+            if g.answ[0:len(self.I.beginning)] != self.I.beginning:
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non inizia col prefisso {self.I.beginning}")
+            if g.answ[len(self.I.ending):] != self.I.ending:
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non termina col suffisso {self.I.ending}")
             SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
         return True
                 
