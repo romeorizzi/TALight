@@ -202,12 +202,16 @@ services:
     evaluator: [python, services/solve_limit_driver.py]
     description: 'Questo servizio calcola il limite della successione che gli proponi attraverso il seed o inserisci direttamente da terminale.'
     args:
-      seed:
-        regex: ^(random_seed|[1-9][0-9]{5,5})$
-        regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
-        regex-URL: 'https://extendsclass.com/regex/90e74ec'
-        default: random_seed
-        explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
+      input: 
+        regex: ^([1-9][0-9]{5,5}|terminal)$
+        default: terminal
+        explain: 'per specificare un\''istanza già incontrata in precedenza specificare il seed (un numero di 6 cifre); di default ti verrà chiesto di inserire l\''istanza su terminale'
+      # seed:
+      #   regex: ^(random_seed|[1-9][0-9]{5,5})$
+      #   regex-explained: 'sia la stringa "random_seed" o un numero decimale di esattamente 6 cife'
+      #   regex-URL: 'https://extendsclass.com/regex/90e74ec'
+      #   default: random_seed
+      #   explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
