@@ -1,1 +1,1 @@
-../../TAL_lib/python/bot_interface.py
+../../TAL_lib/python/bot_lib.py

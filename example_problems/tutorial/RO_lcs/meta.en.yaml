@@ -172,7 +172,7 @@ services:
 
   oracle:
     evaluator: [python, services/oracle_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
+    description: "a string is a sequence of characters. Given two strings s and t, is service computes and returns their longest common subsequence (i.e., an optimal solution to the LCS problem). Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
     args:
       pwd:
         regex: ^(.*)$
