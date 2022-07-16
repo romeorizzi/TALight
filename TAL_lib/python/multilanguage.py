@@ -18,16 +18,18 @@ class TALcolors:
     def __init__(self, ENV, color_implementation ="ANSI"):
         self.color_implementation = None
         if color_implementation != "None":
+            self.termcolor_is_installed = False
             if environ["TAL_META_TTY"]=='1' or color_implementation=="html":
                 try:
                     self.termcolor = import_module('termcolor')
+                    termcolor_is_installed = True
                 except Exception as e:
                     self.color_implementation = None
                     for out in ['stderr','stdout']:
                         print(f"# Recoverable Error: {e}", file=out)
                         print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on the machine where rtald is running.)", file=out)
                     return
-            if 'termcolor' in sys.modules:
+            if self.termcolor_is_installed:
                 if color_implementation=="ANSI":
                     self.color_implementation = 'ANSI'
                 elif color_implementation=="html":
