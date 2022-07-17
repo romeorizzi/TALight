@@ -17,6 +17,7 @@ services:
       interactive:
         regex: ^(0|1)$
         default: 1
+        explain: "when set to 1, the service promts the user for the input ip address"
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: hardcoded

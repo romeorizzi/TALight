@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding:latin-1-*-
 
-from ast import Interactive
-from ipaddress import ip_address
 from sys import stderr, exit
 
 from TALinputs import TALinput
