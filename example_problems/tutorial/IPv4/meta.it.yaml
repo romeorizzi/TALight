@@ -25,7 +25,7 @@ services:
     description: "Il problem solver dara' in input una subnet mask. Il servizio stampera' la quantita' di indirizzi ip configurabili all'interno di essa"
     evaluator: [python, services/how_many_ips_driver.py]
     args:
-      subnet_Mask:
+      subnet_mask:
         regex:  ^((\d)+\.){3}(\d)+$
         default: 255.255.0.0
         regex-explained: Una subnet mask e' un insieme di 4 numeri divisi da punti. 
@@ -44,7 +44,7 @@ services:
     description: "Il servizio chiedera' al problem solver di inserire il primo indirizzo ip, dopo avergli dato la subnet mask e l'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      primo indirizzo ip --> 169.21.3.0)"
     evaluator: [python, services/first_ip_driver.py]
     args:
-        subnet_Mask:
+        subnet_mask:
           regex: ^(0|255)[.]{3}$
           default: 255.255.255.0
         net_address: 
@@ -68,7 +68,7 @@ services:
     description: "Il servizio chiedera' al problem solver l'ultimo indirizzo ip, dopo avergli dato la subnet mask e l'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255)"
     evaluator: [python, services/last_ip_driver.py]
     args:
-        subnet_Mask:
+        subnet_mask:
           regex: ^(0|255)[.]{3}$
           default: 255.255.255.0
         net_address: 
@@ -93,7 +93,7 @@ services:
     description: "Il servizio chiedera' al problem solver un indirizzo di rete, dopo avergli dato la subnet mask e l'indirizzo di rete(example: network address --> 169.21.3.0      ip address --> 169.21.3.231)"
     evaluator: [python, services/random_ip_driver.py]
     args:
-        subnet_Mask:
+        subnet_mask:
           regex: ^(0|255)[.]{3}$
           default: 255.255.255.0
         net_address: 

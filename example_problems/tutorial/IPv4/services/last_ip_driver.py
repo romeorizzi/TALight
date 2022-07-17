@@ -9,7 +9,7 @@ from multilanguage import Env, TALcolors, Lang
 from IPv4_lib import *
 
 args_list=[
-  ('subnet_Mask', str),
+  ('subnet_mask', str),
   ('net_address', str),
   ('ip_address', str),
   ('with_opening_message',bool),
@@ -78,7 +78,7 @@ if ENV['interactive']:
 
 else:
   TAc.print("SUBNET MASK:  ", "green", ["bold"])
-  TAc.print(ENV['subnet_Mask'], "green")
+  TAc.print(ENV['subnet_mask'], "green")
   TAc.print("\nINTERNET ADDRESS:  ", "green", ["bold"]), 
   TAc.print(ENV['net_address'], "green")
   TAc.print("\nLat ip address", "green", ["bold"])
