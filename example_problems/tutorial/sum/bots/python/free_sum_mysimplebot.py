@@ -7,4 +7,4 @@ BOT = Bot(report_inputs=False,reprint_outputs=False)
 while True:
     line = BOT.input()
     n = int(line)
-    print(f"{n} 0")
+    BOT.print(f"{n} 0")
