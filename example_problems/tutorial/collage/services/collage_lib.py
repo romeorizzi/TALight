@@ -8,7 +8,7 @@ from datetime import datetime
 from termcolor import colored
 from contextlib import redirect_stdout
 
-AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_len':'with_len.txt'},'solution':{'all_solutions': 'all_solutions.txt'}}
+AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_len':'with_len.txt', 'collage_dat':'collage.dat'},'solution':{'all_solutions': 'all_solutions.txt'}}
 DEFAULT_INSTANCE_FORMAT='with_len'
 DEFAULT_SOLUTION_FORMAT='all_solutions'
 
@@ -44,8 +44,8 @@ def format_name_expand(format_name, format_gender):
 def instance_to_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
     """This function returns the string representation of the given <instance> provided in format <instance_format_name>"""
     format_primary, format_secondary = format_name_expand(format_name, 'instance')
-    # if format_primary == 'dat':
-    #     return instance_to_dat_str(instance, format_name)
+    if format_primary == 'dat':
+        return instance_to_dat_str(instance, format_name)
     if format_primary == 'txt':
         return instance_to_txt_str(instance, format_name)
 
@@ -68,6 +68,30 @@ def instance_to_txt_str(instance, format_name="with_len"):
     output += '\n'
 
     return output
+
+def instance_to_dat_str(instance,format_name='collage_dat'):
+  """Of the given <instance>, this function returns the .dat string in format <format_name>"""
+  assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
+  rainbow = instance['rainbow']
+  seq_len = instance['seq_len']
+
+  output = f"param n := {seq_len};                  # Number of stripes in the rainbow\n"
+  output += "param: RAINBOW COLORS "
+  output += f":= {rainbow} "
+  output += ";\nend;"
+    
+  return output
+
+def get_instance_from_dat(instance_as_str, format_name):
+  """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
+  assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{instance_format_name}` unsupported for objects of category `instance`.'
+  split_instance = instance_as_str.split(";")
+  instance = {}
+
+  instance['seq_len'] = int(get_param(split_instance[0])) # assign seq_len
+  instance['rainbow'] = list(ast.literal_eval(get_param(split_instance[1]).replace("] [","],[").replace(" ","")))
+
+  return instance
 
 def instances_generator(num_instances, scaling_factor: float, seq_len: int, num_col: int, mod: int, seed = "random_seed"):
     instances = []
