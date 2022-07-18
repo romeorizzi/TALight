@@ -45,7 +45,7 @@ if ENV["seq_len"] > MAX_SEQ_LEN:
 
 ## Input Sources
 if TALf.exists_input_file('instance'):
-  instance = tl.get_instance_from_str(TALf.input_file_as_str('instance'), instance_format_name=ENV["instance_format"])
+  instance = cl.get_instance_from_str(TALf.input_file_as_str('instance'), instance_format_name=ENV["instance_format"])
   TAc.print(LANG.render_feedback("successful-load", 'The file you have associated to `instance` filehandler has been successfully loaded.'), "yellow", ["bold"])
 
 elif ENV["source"] == 'terminal':
@@ -93,7 +93,7 @@ else: # take instance from catalogue
   instance = cl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
   TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
 
-TAc.print(LANG.render_feedback("this-is-the-instance", 'This is the instance:'), "white", ["bold"])
+TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
 TAc.print(cl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
 
 content = cl.solutions(instance,ENV['instance_format'])

@@ -8,8 +8,8 @@ from datetime import datetime
 from termcolor import colored
 from contextlib import redirect_stdout
 
-AVAILABLE_FORMATS = {'instance':{'inline':'inline.txt'},'solution':{'all_solutions': 'all_solutions.txt'}}
-DEFAULT_INSTANCE_FORMAT='inline'
+AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_len':'with_len.txt'},'solution':{'all_solutions': 'all_solutions.txt'}}
+DEFAULT_INSTANCE_FORMAT='with_len'
 DEFAULT_SOLUTION_FORMAT='all_solutions'
 
 MAX_NUM_COL = 256
@@ -49,14 +49,16 @@ def instance_to_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
     if format_primary == 'txt':
         return instance_to_txt_str(instance, format_name)
 
-def instance_to_txt_str(instance, format_name="inline"):
+def instance_to_txt_str(instance, format_name="with_len"):
     """Of the given <instance>, this function returns the .txt string in format <format_name>"""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
     rainbow = instance['rainbow'] 
-    seq_len = instance['seq_len']
+    #seq_len = instance['seq_len']
     output= f''
 
-    output += f'{seq_len}\n'
+    if format_name == "with_len":
+      seq_len = instance['seq_len']
+      output += f'{seq_len}\n'
 
     # Devo specificare la riga dell'array, anche se ce n'è una sola...
     #for i in rainbow[0]:
@@ -149,11 +151,12 @@ def random_rainbow(seq_len:int, num_col:int, mod:int, seed:int):
   return rainbow
 
 
-def print_rainbow(rainbow):
+def print_rainbow(rainbow, instance_format=DEFAULT_INSTANCE_FORMAT):
   seq_len = len(rainbow)
 
   # Commentare questa riga nel caso non si voglia il numero di elementi a video
-  print(seq_len)
+  if instance_format == "with_len":
+    print(seq_len)
 
   line = ''
 
@@ -181,14 +184,13 @@ def get_instance_from_txt(instance_as_str, format_name):
     instance = {}
     str_to_arr = instance_as_str.split()
 
-    if format_name != "inline":
-      #instance['rainbow'] = triangle_from_array([int(x) for x in str_to_arr])
-      pass
+    if format_name != "with_len":
+      instance['rainbow'] = str_to_arr
+      #instance['seq_len'] = len(str_to_arr)
 
     else:
       instance['rainbow'] = str_to_arr[1:]
-    
-    instance['seq_len'] = len(str_to_arr[1:])
+      instance['seq_len'] = len(str_to_arr[1:])
     
     return instance
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 from sys import stderr, exit, argv
 # import argparse
 import sys

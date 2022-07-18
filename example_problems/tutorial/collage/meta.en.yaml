@@ -41,10 +41,10 @@ services:
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
       instance_format:
-        regex: ^(inline)$
-        default: inline
+        regex: ^(with_len|simple)$
+        default: with_len
         explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
-        explain1: '[inline] contains the representation of the collage by line.'
+        explain1: '[with_len] contains the representation of the collage by line.'
       silent:
         regex: ^(0|1)$
         default: 0
@@ -75,8 +75,8 @@ services:
         default: 1
         explain:
       instance_format:
-        regex: ^(inline)$
-        default: inline
+        regex: ^(with_len|simple)$
+        default: with_len
         explain:
       seq_len:
         regex: ^([1-9][0-9]{0,2}|1000)$
@@ -145,10 +145,10 @@ services:
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
       instance_format:
-        regex: ^(inline)$
-        default: inline
+        regex: ^(with_len|simple)$
+        default: with_len
         explain: Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.
-        explain1: '[inline] contains the representation of the collage by line.'
+        explain1: '[with_len] contains the representation of the collage by line.'
       silent:
         regex: ^(0|1)$
         default: 0

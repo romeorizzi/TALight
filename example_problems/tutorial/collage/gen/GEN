@@ -8,7 +8,8 @@
 #     seed (int) seed generating the small triangle
 #     big_seed (int) generating the big triangle
 
-add_format: inline.txt
+add_format: simple.txt
+add_format: with_len.txt
 
 #collection: instances_hardcoded
 #COPY: instances_hardcoded/instance_001.pyramid.txt
@@ -18,53 +19,53 @@ add_format: inline.txt
 
 collection: small_instances
 #                randgen,    seq_len, num_col,  mod,  seed,   
-GEN:  randgen_1_basic.py     10       7         2     123456       
+GEN:  randgen_1_basic.py     10       7         1     123456       
 GEN:  randgen_1_basic.py     10       7         2     345678        
-GEN:  randgen_1_basic.py     10       7         2     134259       
+GEN:  randgen_1_basic.py     10       7         1     134259       
 GEN:  randgen_1_basic.py     10       7         2     743201       
 GEN:  randgen_1_basic.py     10       7         2     129473      
-GEN:  randgen_1_basic.py     10       7         2     372493      
+GEN:  randgen_1_basic.py     10       7         1     372493      
 GEN:  randgen_1_basic.py     10       7         2     194372     
 GEN:  randgen_1_basic.py     10       7         2     329483
-GEN:  randgen_1_basic.py     10       7         2     673210
-GEN:  randgen_1_basic.py     10       7         2     382910
+GEN:  randgen_1_basic.py     10       7         1     673210
+GEN:  randgen_1_basic.py     10       7         1     382910
 
 collection: medium_instances
 #                randgen,    seq_len, num_col,  mod,  seed,   
 GEN:  randgen_1_basic.py     50       35        2     538493  
-GEN:  randgen_1_basic.py     50       35        2     309302   
-GEN:  randgen_1_basic.py     50       35        2     494021     
+GEN:  randgen_1_basic.py     50       35        1     309302   
+GEN:  randgen_1_basic.py     50       35        1     494021     
 GEN:  randgen_1_basic.py     50       35        2     458390  
 GEN:  randgen_1_basic.py     50       35        2     203927  
 GEN:  randgen_1_basic.py     50       35        2     148920    
-GEN:  randgen_1_basic.py     50       35        2     484022      
+GEN:  randgen_1_basic.py     50       35        1     484022      
 GEN:  randgen_1_basic.py     50       35        2     329488      
-GEN:  randgen_1_basic.py     50       35        2     644884     
-GEN:  randgen_1_basic.py     50       35        2     100001     
+GEN:  randgen_1_basic.py     50       35        1     644884     
+GEN:  randgen_1_basic.py     50       35        1     100001     
 
 collection: big_instances
 #                randgen,    seq_len, num_col,  mod,  seed,   
-GEN:  randgen_1_basic.py     200      150       2     434355        
+GEN:  randgen_1_basic.py     200      150       1     434355        
 GEN:  randgen_1_basic.py     200      150       2     556677      
 GEN:  randgen_1_basic.py     200      150       2     124244     
 GEN:  randgen_1_basic.py     200      150       2     167743  
-GEN:  randgen_1_basic.py     200      150       2     124124   
-GEN:  randgen_1_basic.py     200      150       2     454522    
+GEN:  randgen_1_basic.py     200      150       1     124124   
+GEN:  randgen_1_basic.py     200      150       1     454522    
 GEN:  randgen_1_basic.py     200      150       2     774788       
-GEN:  randgen_1_basic.py     200      150       2     456462        
-GEN:  randgen_1_basic.py     200      150       2     968444       
+GEN:  randgen_1_basic.py     200      150       1     456462        
+GEN:  randgen_1_basic.py     200      150       1     968444       
 GEN:  randgen_1_basic.py     200      150       2     464563     
   
 collection: huge_instances
 #                randgen,    seq_len, num_col,  mod,  seed,   
 GEN:  randgen_1_basic.py     1000     256       2     645747  
-GEN:  randgen_1_basic.py     1000     256       2     574453 
-GEN:  randgen_1_basic.py     1000     256       2     256637   
+GEN:  randgen_1_basic.py     1000     256       1     574453 
+GEN:  randgen_1_basic.py     1000     256       1     256637   
 GEN:  randgen_1_basic.py     1000     256       2     574732     
-GEN:  randgen_1_basic.py     1000     256       2     124111   
-GEN:  randgen_1_basic.py     1000     256       2     454363   
+GEN:  randgen_1_basic.py     1000     256       1     124111   
+GEN:  randgen_1_basic.py     1000     256       1     454363   
 GEN:  randgen_1_basic.py     1000     256       2     444444     
 GEN:  randgen_1_basic.py     1000     256       2     456567     
-GEN:  randgen_1_basic.py     1000     256       2     968544   
+GEN:  randgen_1_basic.py     1000     256       1     968544   
 GEN:  randgen_1_basic.py     1000     256       2     747474     
 
