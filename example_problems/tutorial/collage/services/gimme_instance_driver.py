@@ -66,7 +66,8 @@ else:
         if ENV['source'] != 'catalogue': # display random instance
             output = ""
             output += f'\nThe parameters encoding this instance are:\nseq_len: {ENV["seq_len"]}\nnum_col: {ENV["num_col"]}\nmod: {mod}\nseed: {ENV["seed"]}'
-            TAc.print(LANG.render_feedback("output-instance", output), "yellow", ["bold"])
+            # TAc.print(LANG.render_feedback("output-instance", output), "yellow", ["bold"])
+
 if ENV['download']:
     TALf.str2output_file(instance_str,output_filename)
 
