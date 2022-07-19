@@ -16,7 +16,7 @@ wrong-ans: '# NO! Hai dato la soluzione sbagliato all`istanza avente questi para
 out-of-time-ans: '# La valutazione è stata interrotta in quanto la tua soluzione ha impiegato troppo tempo su questa istanza o su una delle precedenti. I parametri di questa istanza sono:\n#seq_l
 en = {t["seq_len"]}, num_col = {t["num_col"]}, seed = {t["seed"]}.\n'
 right-in-time: '# OK! La tua soluzione ha raggiunto l`obiettivo "{goal}".\n'
-right-not-in-time: '# OK! Anche se tutte le risposte date dalla tua soluzione sono corrette, queste superano il tempo limite su qualche istanza. Per tanto non hai raggiunto il goal "{goal}"'
+right-not-in-time: '# OK! Anche se tutte le risposte date dalla tua soluzione sono corrette, queste superano il tempo limite su qualche istanza. Pertanto non hai raggiunto il goal "{goal}"'
 wrong-answ: '# NO! La tua soluzione ha dato una risposta sbagliata su almeno un`istanza. La tua soluzione non ha raggiunto il goal "{goal}".\n'
 summary-of-results: '# RIEPILOGO DEI RISULTATI:'
 short-summary-of-results: '# RIEPILOGO DEI RISULTATI:'

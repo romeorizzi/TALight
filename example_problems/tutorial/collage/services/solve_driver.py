@@ -55,7 +55,7 @@ elif ENV["source"] == 'terminal':
   instance['num_col'] = ENV['num_col']
 
   rainbow = []
-  TAc.print(LANG.render_feedback("waiting-line", f'#? waiting for the color stripes.\nFormat: numbers separated by spaces\n'), "yellow")
+  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the color stripes.\nFormat: numbers separated by spaces\n'), "yellow")
 
   TAc.print(LANG.render_feedback("insert-line", f'Enter sequence containing {ENV["seq_len"]} stripes:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
@@ -69,7 +69,7 @@ elif ENV["source"] == 'terminal':
 
     if len(l) != ENV['seq_len']:
       TAc.NO()
-      TAc.print(LANG.render_feedback("wrong-elements-number", f"Expected elements for line, but received {len(l)}."), "red", ["bold"])
+      TAc.print(LANG.render_feedback("wrong-elements-number", f"Expected {ENV['seq_len']} elements for line, but received {len(l)}."), "red", ["bold"])
       exit(0)
 
   rainbow.append(l)

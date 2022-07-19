@@ -61,7 +61,7 @@ elif ENV["source"] == 'terminal':
         exit(0)
       if len(l) != ENV['seq_len']:
         TAc.NO()
-        TAc.print(LANG.render_feedback("wrong-elements-number", f"Expected elements for line, but received {len(l)}."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("wrong-elements-number", f"Expected {ENV['seq_len']} elements for line, but received {len(l)}."), "red", ["bold"])
         exit(0)
 
     rainbow.append(l)
