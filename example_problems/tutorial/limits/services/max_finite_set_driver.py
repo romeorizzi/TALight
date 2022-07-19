@@ -33,7 +33,7 @@ set_cardinality=ENV["cardinality"]
 
 instance=array(ll.instance_randgen(set_cardinality,reference_set,seed),dtype='str')
 set_values='\n'.join(instance)
-TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed= {ENV["seed"]}'), "yellow")
+TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed={ENV["seed"]}'), "yellow")
 TAc.print(LANG.render_feedback("start", f'# Dati i seguenti numeri: \n{set_values}'), "yellow", ["bold"])
 output_filename = f"instance_{seed}_max_fin_set.txt"
 if ENV["download"]:

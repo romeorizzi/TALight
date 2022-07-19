@@ -36,7 +36,7 @@ def check_user_solution(x):
     return TAc.print(LANG.render_feedback("correct", f'Molto bene! Infatti vale |1/n-0| < {epsilon} per ogni n > {user_sol} (ovvero e` verificata la definizione di limite finito di una successione). \nNota ora che vale anche il principio di Archimede per questa particolare successione poiche` tende a 0 ed e` formata da termini positivi, percio` |1/n-0| = 1/n e secondo Archimede per ogni reale epsilon > 0 esiste un naturale n > 0 tale che 1/n < epsilon, e con la epsilon che ti ho dato vale per n = {user_sol}.'), "green", ["bold"])
 
 # TAc.print(LANG.render_feedback("remember", '\nREMEMBER - per svolgere questo esercizio ti puo` tornare utile la seguente definizione: il limite di una successione fn per n->inf e` finito e vale f se per ogni epsilon>0 esiste N>0 naturale tale che n>N => |fn-f|<epsilon.'), "green")
-
+TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed={ENV["seed"]}'), "yellow")
 TAc.print(LANG.render_feedback("principio-Archimede-curiosity", '# Il limite di una successione convergente di termini positivi non e` sempre strettamente positivo.'), "white")
 TAc.print(LANG.render_feedback("start", f'# Consideriamo infatti la successione 1/n, n=1,2,3,... \n# qual e` il limite per n -> inf?'), "yellow", ["bold"])
 try:
@@ -53,6 +53,6 @@ else:
 random.seed(seed)
 epsilon=float(format(random.random(),'.3f'))
 TAc.print(LANG.render_feedback("start", f'# Il mio valore per epsilon e`: \n{epsilon}'), "yellow", ["bold"])
-TAc.print(LANG.render_feedback("start", f'# Proponi il tuo N>0 naturale:'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("start", f'# Proponi il tuo N>0 naturale tale che |1/n-0| < {epsilon} per ogni n > N:'), "yellow", ["bold"])
 check_user_solution(epsilon)
 exit(0)

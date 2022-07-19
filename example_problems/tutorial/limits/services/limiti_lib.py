@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from re import X
-from unicodedata import decimal
 import numpy as np
 from sympy import *
 from math import *
 import random
 import decimal
-from sympy import Symbol, symbols,solve
 
 correct = random.choice(['Bene!', 'Molto bene!', 'Ok!','Ottimo!'])
 wrong=['Mmmm non sono molto sicuro che sia esatto, riprova:','Non credo che sia corretto, ritenta:','Prova a ricontrollare, ritenta:']

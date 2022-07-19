@@ -41,7 +41,7 @@ services:
         default: it
   solve_max_finite_set:
     evaluator: [python, services/solve_max_finite_set_driver.py]
-    description: 'Con questo servizio proverò a convincerti che ogni insieme finito e non vuoto di numeri ammette sempre un massimo. \nPer inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina basta chiamare il servizio con:\n rtal connect limiti max_finite_set -finstance=percorso_del_file_contenete_l\''istanza\n Con questa chiamata il servizio presuppone che il file contenga tante righe quanti gli elementi dell\''insieme (un numero per riga) e ti verrà ritornato il massimo. Il servizio presuppone che tu immetta un insieme di numeri naturali, per modificare quest\''impostazione richiama il servizio con \n`rtal connect limiti solve_max_finite_set -areference_set=deciaml`. Per modificare la cardinalità dell\''insieme invece specifica un valore per il descrittore d\''istanza `cardinality`. \nQuando invece non associ un file locale potrai scrivere l\''istanza direttamente su terminale.'
+    description: 'Con questo servizio proverò a convincerti che ogni insieme finito e non vuoto di numeri ammette sempre un massimo. \nPer inviare al servizio un\''istanza contenuta in un file presente sulla tua macchina basta chiamare il servizio con:\n rtal connect limits solve_max_finite_set -finstance=percorso_del_file_contenete_l\''istanza\n Con questa chiamata il servizio presuppone che il file contenga tante righe quanti gli elementi dell\''insieme (un numero per riga) e ti verrà ritornato il massimo. \nQuando invece non associ un file locale potrai scrivere l\''istanza direttamente su terminale.'
     files:
       - instance
     args:
@@ -49,10 +49,6 @@ services:
         regex: ^(0|1)$
         default: 1
         explain: 'Se questo flag è impostato su 1 viene stampato il confronto di ogni elemento dell\''insieme rispetto al massimo.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -74,10 +70,6 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'Se questo flag è impostato su 1 viene stampato il confronto di ogni elemento dell\''insieme rispetto al massimo.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -91,10 +83,6 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -109,10 +97,6 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -147,10 +131,6 @@ services:
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'specificare il codice numerico (qualsiasi numero intero nell\''intervallo [100000,999999]) per lavorare con un\''istanza pseudo-casuale già incontrata. Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seed a caso e lo comunica all\''utente.'
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -158,10 +138,6 @@ services:
     evaluator: [python, services/density_Q_in_R_prover_is_server_driver.py]
     description: 'Con questo servizio cercherò di convincerti che l\''insieme dei numeri razionali e\'' denso nei reali, ovvero che dati due numeri reali x,y con x<y, esiste un numero q razionale tale che x < q < y.'
     args:
-      silent:
-        regex: ^(0|1)$
-        default: 1
-        explain: 'Se questo flag è impostato su 1, verrà stampata solamente l\''istanza, altrimenti verranno stampati anche i descrittori d\''istanza con i rispettivi valori.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: it
@@ -187,7 +163,7 @@ services:
         default: it
   check_limit:
     evaluator: [python, services/check_limit_driver.py]
-    description: 'Con questo servizio potrai verificare qual è il limite della successione che ti viene proposta.'
+    description: 'Con questo servizio potrai risolvere il limite della successione che ti viene proposta.'
     args:
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -200,7 +176,7 @@ services:
         default: it
   solve_limit:
     evaluator: [python, services/solve_limit_driver.py]
-    description: 'Questo servizio calcola il limite della successione che gli proponi attraverso il seed o inserisci direttamente da terminale.'
+    description: 'Questo servizio calcola il limite della successione che gli proponi attraverso il seed o che inserisci direttamente da terminale.'
     args:
       input: 
         regex: ^([1-9][0-9]{5,5}|terminal)$

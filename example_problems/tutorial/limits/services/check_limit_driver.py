@@ -18,7 +18,7 @@ LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg =
 # START CODING YOUR SERVICE:
 seed=ENV["seed"]
 # INIZIO DEL DIALOGO CON LO STUDENTE
-TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed= {ENV["seed"]}'), "yellow")
+TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed={ENV["seed"]}'), "yellow")
 successione=ll.inf_seq(seed)
 TAc.print(LANG.render_feedback("this-is-the-succession", f'# Data la successione \n{successione} \n# qual e` il suo limite per n -> +oo? (se pensi che non esista scrivi "None", se credi che sia infinito scrivi "oo")'), "yellow", ["bold"])
 n=Symbol('n')

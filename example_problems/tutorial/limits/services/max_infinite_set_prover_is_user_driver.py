@@ -9,18 +9,14 @@ import random
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('seed',int),
-    ('silent',bool),
 ]
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-if ENV['silent']:
-    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
-else:
-    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
 
 ## START CODING YOUR SERVICE:
 seed=ENV["seed"]
-TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed= {ENV["seed"]}'), "yellow")
+TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed={ENV["seed"]}'), "yellow")
 parameter,instance,arg_1,arg_2=ll.instance_inf_set(seed)
 TAc.print(LANG.render_feedback("instance", f'# Dato l\'insieme \n{instance}'),  "yellow", ["bold"])
 # for i in range (20):

@@ -11,27 +11,23 @@ args_list = [
     ('seed',int),
     ('cardinality',str),
     ('verbose',bool),
-    ('silent',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-if ENV['silent']:
-    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
-else:
-    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
 
 ## START CODING YOUR SERVICE:
 cardinality=ENV["cardinality"]
 random.seed(ENV['seed'])
-TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed= {ENV["seed"]}'), "yellow")
+TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed={ENV["seed"]}'), "yellow")
 def base_case():
     user_command=TALinput(str, regex=f"^((\S)+)$", sep=None, TAc=TAc)[0]
     if user_command!='s1' and user_command!='sn':
         TAc.print(LANG.render_feedback("wrong", f'# questa scrittura non la capisco o e` errata... prova a rispondere con "sj" per un certo j tale che sj appartiene ad S:'), "red", ["bold"])
         return base_case()
     else:
-        return TAc.print(LANG.render_feedback("correct", 'Giusto! Infatti: \n- s1 appartiene ad S? Si! \n- ogni elemento sj in S e` tale che sj<=s1? Si, infatti S={s1} e s1<=s1)'), "green", ["bold"])
+        return TAc.print(LANG.render_feedback("correct", 'Giusto! Infatti: \n- s1 appartiene ad S? Si! \n- ogni elemento sj in S e` tale che sj<=s1? Si, infatti S={s1} e s1<=s1'), "green", ["bold"])
 def check_command_subset(stringa,n,cardinality,max_values):
     start,end=ll.args_subset(stringa)
     def check_argument_value(stringa,n):

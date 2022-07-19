@@ -9,15 +9,11 @@ from math import *
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('verbose',bool),
-    ('silent',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-if ENV['silent']:
-    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
-else:
-    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 ## START CODING YOUR SERVICE:

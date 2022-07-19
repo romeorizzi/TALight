@@ -30,7 +30,7 @@ def input_N():
     else: 
         return int(user_N)
 
-TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed= {ENV["seed"]}'), "yellow")
+TAc.print(LANG.render_feedback("seed", f'# puoi richiamare questa particolare istanza specificando -aseed={ENV["seed"]}'), "yellow")
 successione=ll.inf_seq(seed)
 n=Symbol('n')
 succ_limit = limit(successione, n, oo)
@@ -40,16 +40,11 @@ if succ_limit!=oo:
     epsilon_value=random.randint(1,9)/10
     TAc.print(LANG.render_feedback("epsilon", f'# Il mio valore per epsilon e`: \n{epsilon_value}'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("give-me-n_0", f'# dammi un numero naturale N > 0 tale che |{successione} - {succ_limit}| < {epsilon_value} per ogni n > N:'), "yellow", ["bold"])
-    try:
-        user_N=eval(TALinput(str, sep=None, TAc=TAc)[0])
-    except:
-        TAc.print(LANG.render_feedback("error", f'non riesco a decifrare cos\'hai scritto'), "red", ["bold"])
-        exit(0)
+    user_N=input_N()
     if user_N<=0 or int(user_N)!=user_N:
         TAc.print(LANG.render_feedback("error", f'no, il numero che hai inserito non e` naturale e positivo'), "red", ["bold"])
         TAc.print(LANG.render_feedback("other-service", f'Prova a richiamarmi utilizzando il flag relativo al seed per rispondere nel modo corretto.'), "white")
         exit(0)
-    user_N=input_N()
     for i in range (user_N+1,user_N+1000,):
         if abs(successione.subs(n,i)-succ_limit)>=epsilon_value:
             TAc.print(LANG.render_feedback("error", f'vedi, per n = {i} vale |{successione} - {succ_limit}|={abs(successione.subs(n,i)-succ_limit)} >= {epsilon_value}.'), "red", ["bold"])

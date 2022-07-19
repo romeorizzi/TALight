@@ -10,15 +10,11 @@ import re
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('seed',int),
-    ('silent',bool),
 ]
 
 ENV =Env(args_list)
 TAc =TALcolors(ENV)
-if ENV['silent']:
-    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
-else:
-    LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 ## START CODING YOUR SERVICE:
@@ -68,7 +64,7 @@ def check_q(x,y,n,user_int):
     return TAc.print(LANG.render_feedback("correct", f'Ben fatto! Abbiamo trovato la q che cercavamo, infatti {q} = {eval(q)} e` compresa tra x={x} ed y={y}.'), "green", ["bold"])
 
 TAc.print(LANG.render_feedback("proof", '# Dimostriamo insieme che dati x,y due numeri reali, x<y , esiste un numero razionale q tale che x<q<y, ovvero Q e` denso in R. \nCominciamo subito!'), "white", ["bold"])
-TAc.print(LANG.render_feedback("seed", f'# (seed: {seed})'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("seed", f'# (seed: {seed})'), "yellow")
 x,y=ll.instance_density(seed)
 # print('y-x ',y-x)
 TAc.print(LANG.render_feedback("x-proposal", f'# La mia proposta per x e`:'), "yellow", ["bold"])
@@ -83,7 +79,7 @@ if user_difference!=difference:
     TAc.print(LANG.render_feedback("error", f'no, y-x e` diverso da {user_difference}'), "red", ["bold"])
     exit(0)
 TAc.print(LANG.render_feedback("correct", 'Ok!'), "green", ["bold"])
-TAc.print(LANG.render_feedback("find-N", f'#      1.2) proponi un numero naturale N>0 che soddisfi il principio di Archimede con argomento y-x={y-x}, ovvero tale che 1/N < {user_difference}: \n# (se non ricordi questo principio ti consiglio l\'esercizio -> rtal connect limiti archimede_prover)'), "yellow", ["bold"])
+TAc.print(LANG.render_feedback("find-N", f'#      1.2) proponi un numero naturale N>0 che soddisfi il principio di Archimede con argomento y-x={y-x}, ovvero tale che 1/N < {user_difference}: \n# (se non ricordi questo principio ti consiglio l\'esercizio -> rtal connect limits archimede_prover_is_user)'), "yellow", ["bold"])
 N=check_user_solution(user_difference)
 TAc.print(LANG.render_feedback("find-N", f'# PASSO 2: trovare un qualsiasi intero m nell\'intervallo (Nx,Ny)=({x*N},{y*N}) (almeno uno deve esistere, avendo costruito N tale che Nx-Ny>1):'), "yellow", ["bold"])
 user_int=check_int_in_interval(N*x,N*y)
