@@ -14,6 +14,7 @@ import collage_lib as cl
 args_list = [
     ('goal',str),
     ('code_lang',str),
+    ('lang',str)
 ]
 
 ENV =Env(args_list)
@@ -84,11 +85,11 @@ def test(instance):
     TAc.print(seq_len, "yellow", ["bold"])
     TAc.print(LANG.render_feedback("rainbow-colors",'# Rainbow is made of this number of colors: '), "white", ["bold"], end='')
     TAc.print(num_col, "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("print-rainbow", f'# The sequence of reference is:'), "white", ["bold"])
+    TAc.print(LANG.render_feedback("print-rainbow", f'\n# The sequence is:\n'), "white", ["bold"])
 
     cl.print_rainbow(rainbow)
 
-    TAc.print(LANG.render_feedback("best-reward-question", f'# Which is the right number of sheets for this collage?'), "white")
+    TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is the minimum number of sheets for this collage?'), "white", ["bold"])
     start = monotonic()
     answer = TALinput(int, line_recognizer=lambda val,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
     end = monotonic()

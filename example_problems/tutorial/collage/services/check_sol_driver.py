@@ -20,6 +20,7 @@ args_list = [
     ('opt_sol_val',int),
     ('display',bool),
     ('silent',bool),
+    ('lang',str),
 ]
 
 # Max sequence length and max colors number in the sequence
@@ -56,7 +57,7 @@ elif ENV["source"] == 'terminal':
     for el in l:
       if el < 0 or el > ENV['num_col']:
         TAc.NO()
-        TAc.print(LANG.render_feedback("val-out-of-range", f"The value {el} falls outside the valid range [{ENV['MIN_VAL']},{ENV['MAX_VAL']}]."), "red", ["bold"])
+        TAc.print(LANG.render_feedback("val-out-of-range", f"The value {el} falls outside the valid range [1,{MAX_NUM_COL}]."), "red", ["bold"])
         exit(0)
       if len(l) != ENV['seq_len']:
         TAc.NO()

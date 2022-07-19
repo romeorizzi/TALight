@@ -57,6 +57,10 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'If this flag is set to 1 then the instance file is downloaded into the folder whose fullpath is specified by means of the -o flag (if this path is relative it homes from where the service call has been issued).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+        
 
 ###
 # SERVIZIO CHECK_SOL
@@ -108,6 +112,10 @@ services:
         regex: ^(0|1)$
         default: 1
         explain: If this flag is set to 1 then the instance file is listed by the service.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+        
 
 ###
 # GIMME_INSTANCE
@@ -161,6 +169,9 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'If this flag is set to 1 then the instance file is downloaded into the folder whose fullpath is specified by means of the -o flag (if this path is relative it homes from where the service call has been issued).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
 
 ###
 # SERVIZIO EVAL_SOL
@@ -183,6 +194,9 @@ services:
         explain: 'specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed.'
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
 
 
 ###
@@ -192,11 +206,11 @@ services:
     evaluator: [python, services/help/help_driver.py]
     args:
       page:
-        regex: ^(approx_vc|service_1|help|synopsis)$
+        regex: ^(collage|solve|check_sol|eval_sol|gimme_instance|help|synopsis)$
         default: help
       lang:
         regex: ^(en|it)$
-        default: it
+        default: en
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
@@ -207,7 +221,7 @@ services:
         explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
+        default: en
       metafile:
         regex: ^(main|en|it)$
         default: main

@@ -58,6 +58,9 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'Se questo flag è impostato su 1, il file di istanza viene scaricato nella cartella il cui percorso completo è specificato tramite il flag -o (se questo percorso è relativo si trova da dove è stata emessa la chiamata di servizio).'
+      lang:
+        regex: ^(en|it)$
+        default: en
 
 ###
 # SERVIZIO CHECK_SOL
@@ -112,6 +115,9 @@ services:
         regex: ^(0|1)$
         default: 1
         explain: 'Se questo flag è impostato su 1, il file di istanza viene mostrato dal servizio.'
+      lang:
+        regex: ^(en|it)$
+        default: en
 
 ###
 # GIMME_INSTANCE
@@ -166,6 +172,9 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'Se questo flag è impostato su 1, il file di istanza viene scaricato nella cartella il cui percorso completo è specificato tramite il flag -o (se questo percorso è relativo si trova da dove è stata emessa la chiamata di servizio).'
+      lang:
+        regex: ^(en|it)$
+        default: en
 
 ###
 # SERVIZIO EVAL_SOL
@@ -188,6 +197,9 @@ services:
         explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         default: random_seed
+      lang:
+        regex: ^(en|it)$
+        default: en
 
 
 ###
@@ -197,11 +209,11 @@ services:
     evaluator: [python, services/help/help_driver.py]
     args:
       page:
-        regex: ^(approx_vc|service_1|help|synopsis)$
+        regex: ^(collage|solve|check_sol|eval_sol|gimme_instance|help|synopsis)$
         default: help
       lang:
         regex: ^(en|it)$
-        default: it
+        default: en
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
@@ -209,10 +221,10 @@ services:
       service:
         regex: ^((\S)+)$
         default: synopsis
-        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+        explain: 'Qualsiasi stringa senza spazi, ma intesa a specificare uno dei servizi del problema %(problem)s'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
-        default: it
+        default: en
       metafile:
         regex: ^(main|en|it)$
         default: main

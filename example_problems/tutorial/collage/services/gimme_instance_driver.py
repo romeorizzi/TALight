@@ -20,6 +20,7 @@ args_list = [
     ('silent', bool),
     ('display', bool),
     ('download',bool),
+    ('lang',str)
 ]
 
 # Max sequence length and max colors number in the sequence

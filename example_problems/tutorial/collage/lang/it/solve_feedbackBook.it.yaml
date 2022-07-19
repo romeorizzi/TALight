@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+color-limit-exceed: 'Errore: il massimo numero di colori deve essere minore o uguale di {MAX_NUM_COL}!'
+wrong-sequence-length: 'Errore: la lunghezza della sequenza ({ENV["seq_len"]}) eccede il limite massimo ({MAX_SEQ_LEN})!'
+successful-load: 'Istanza caricata con successo'
+waiting-line: '#? In attesa della sequenza dei colori\nFormato: numeri separati da spazi'
+insert-line: 'Inserisci la sequenza contenente {ENV["seq_len"]} strisce:'
+val-out-of-range: 'Il valore {el} è fuori dal range valido [1,{MAX_NUM_COL}]'
+wrong-elements-number: 'Attesi {ENV["seq_len"]}, ma ne sono stati inseriti {len(l)}'
+instance-from-catalogue: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo'
+this-is-the-instance: '\nEcco l`istanza:\n'
+all-solutions-title: 'Ecco qui la soluzione per l`istanza:'
+solutions: 'La soluzione per il servizio {key} è: {content[key]}'

@@ -224,7 +224,7 @@ SOLUZIONI
 def solutions(instance,instance_format=DEFAULT_INSTANCE_FORMAT):
     sols = {}
     sheets = calculate_sheets(instance['rainbow'])
-    sols['calculate_sheets'] = f"# sheets: {sheets}"
+    sols['calculate_sheets'] = f"{sheets}"
 
     return sols
 
