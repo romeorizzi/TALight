@@ -3,9 +3,6 @@
 public_folder: public
 services:
 
-###
-# SERVIZIO SOLVE
-###
   solve:
     evaluator: [python, services/solve_driver.py]
     description: 'Questo servizio fornisce una soluzione per una data istanza del problema del Collage. Puoi caricare un file contenente l`istanza sul gestore di istanze del servizio, utilizzando l`opzione `-f` del sottocomando `connect` di `rtal`, oppure provare a inserire la tua istanza direttamente dal terminale una volta che il servizio è stato avviato. Inoltre puoi generare una istanza pseudo-casuale specificandone le caratteristiche quali la lunghezza dell`istanza e il numero massimo di colori utilizzabile oppure selezionare una delle istanze disponibili nel catalogo delle istanze.'
@@ -27,11 +24,11 @@ services:
         default: 10
         explain: 'Numero di strisce che compongono l`arcobaleno (lunghezza della sequenza).'
       num_col:
-        regex: ^.*$
+        regex: ^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-6])$
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
       mod:
-        regex: ^.*$
+        regex: ^([1-2]|-1)$
         default: -1 
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza con colori uguali adiacenti, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
@@ -62,9 +59,6 @@ services:
         regex: ^(en|it)$
         default: en
 
-###
-# SERVIZIO CHECK_SOL
-###
   check_sol:
     evaluator: [python, services/check_sol_driver.py]
     description: 'Questo servizio ti chiede di fornire una soluzione all`istanza generata dal problema. Se la soluzione fornita è corretta, verrà visualizzato un messaggio di conferma, altrimenti si avrà un messaggio di errore.'
@@ -90,11 +84,11 @@ services:
         default: 10
         explain: 'Numero di strisce che compongono l`arcobaleno (lunghezza della sequenza).'
       num_col:
-        regex: ^.*$
+        regex: ^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-6])$
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
       mod:
-        regex: ^.*$
+        regex: ^([1-2]|-1)$
         default: -1
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza con colori uguali adiacenti, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
@@ -106,7 +100,7 @@ services:
       opt_sol_val:
         regex: ^(0|[1-9][0-9]{0,5})$
         default: 0
-        explain:
+        explain: 'Usa questo argomento per dire al servizio quello che ritieni sia il numero minimo di fogli del collage. Lascia questo argomento al suo valore predefinito nel caso in cui non hai congetture e intendi utilizzare questo servizio solo per ottenere il valore ottimale. Una soluzione per una determinata istanza di collage è un numero intero non negativo.'
       silent:
         regex: ^(0|1)$
         default: 0
@@ -119,9 +113,6 @@ services:
         regex: ^(en|it)$
         default: en
 
-###
-# GIMME_INSTANCE
-###
   gimme_instance:
     evaluator: [python,services/gimme_instance_driver.py]
     description: 'Un`istanza del problema Collage consiste in una sequenza di colori, definita da parametri come la lunghezza della sequenza, il numero di colori utilizzati e il seme che la genera. Chiama questo servizio (`gimme_instance`) per ottenere un`istanza di tuo gradimento in uno dei formati supportati. L`istanza può provenire da fonti differenti (generata casualmente o appartenente a un catalogo presente sul server). Il servizio può essere utilizzato per ottenere un`istanza casuale oppure un`istanza presente nel catalogo.\nPuoi chiedere di salvare l`istanza in un file sulla tua macchina locale e/o di visualizzarla sul monitor. Per tua comodità, il formato di questa istanza può essere specificato attraverso l`argomento `instance_format`.'
@@ -141,11 +132,12 @@ services:
         default: 10
         explain: 'Numero di strisce che compongono l`arcobaleno (lunghezza della sequenza).'
       num_col:
-        regex: ^.*$
+        regex: ^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-6])$
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
       mod:
         regex: ^.*$ 
+        regex: ^([1-2]|-1)$
         default: -1
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza con colori uguali adiacenti, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
@@ -160,6 +152,7 @@ services:
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[with_len] contiene il numero di elementi che compongono l`arcobaleno, oltre all`arcobaleno stesso.'
         explain2: '[simple] contiene la sola sequenza di colori dell`arcobaleno.'
+        explain3: '[collage_dat] contiene l`istanza del collage in formato .dat.'
       silent:
         regex: ^(0|1)$
         default: 0
@@ -176,9 +169,6 @@ services:
         regex: ^(en|it)$
         default: en
 
-###
-# SERVIZIO EVAL_SOL
-###
   eval_sol:
     description: 'Questo servizio valuta il tuo codice che calcola il numero minimo di fogli che compongono il Collage.'
     evaluator: [python, services/eval_sol_driver.py]
@@ -186,7 +176,7 @@ services:
       - sourcecode
     args:
       goal:
-        explain: 'set your goal (efficient includes also correct).'
+        explain: 'Specifica il goal.'
         regex: ^(correct|time_at_most_2_exp_n|time_at_most_n_exp_2)$
         default: correct
       code_lang: 
@@ -199,12 +189,8 @@ services:
         default: random_seed
       lang:
         regex: ^(en|it)$
-        default: en
+        default: hardcoded
 
-
-###
-# ALTRO
-###
   help:
     evaluator: [python, services/help/help_driver.py]
     args:
