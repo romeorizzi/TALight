@@ -1,54 +1,92 @@
 #!/usr/bin/env python3
-from sys import stderr, exit, argv
-# import argparse
+from sys import setrecursionlimit, stderr, exit, argv
+import argparse
 import sys
 import random
 from bot_lib import Bot
 
+parser = argparse.ArgumentParser(description="I am a bot for the TALight problem `collage`. In a never ending loop (until I get the '# WE HAVE FINISHED' line), I read an input instances from stdin and I write my answer for it on stdout.")
+parser.add_argument('--recursive', action='store_true', help="Use this option to select the recursive solution method.")
+parser.add_argument('--dynprog', action='store_true', help="Use this option to select the dynamic programming solution method.")
+args = parser.parse_args()
+
+print(f"""# I am a bot for the TALight problem `Collage`. Call me like this:
+#     {argv[0]} -h
+# if you want to know more about me (how to call me, my arguments and what I am supposed to do for you).
+# My parameters for the current call are set as follows:
+#   {args.recursive=}
+#   {args.dynprog=}""")
+
+setrecursionlimit(10**8)
+
+NMAX=1000
+
+seq=[]
+memo = [[0 for __ in range(NMAX)] for _ in range(NMAX)]
+
 # BOT = Bot(report_inputs=True,reprint_outputs=True)
 BOT = Bot(report_inputs=False,reprint_outputs=False)
 
+def Min(i:int, j:int):
+  if i > j:
+    return 0
+  
+  if i == j:
+    return 1
+  
+  if memo[i][j] > 0:
+    return memo[i][j]
+
+  ret = 1 + Min(i+1, j)
+
+  for k in range(i+1,j+1):
+    if seq[k] == seq[i]:
+      ret = min(ret, Min(i+1, k-1) + Min(k, j))
+
+  memo[i][j] = ret
+
+  return memo[i][j]
+
+def PD(n):
+  for i in range(n, -1, -1):
+    for j in range(i-1, n):
+      if(i > j):
+        memo[i][j] = 0
+      elif(i==j):
+        memo[i][j] = 1
+      else:
+        memo[i][j] = 1 + memo[i+1][j];
+        for k in range(i+1, j+1):
+          if seq[k] == seq[i]:
+            memo[i][j] = min(memo[i][j], memo[i+1][k-1] + memo[k][j])
+  return memo[0][n-1]
+
 def calculate_sheets(rainbow):
   seq_len = len(rainbow)
-
-  m = [[0 for __ in range(seq_len)] for _ in range(seq_len)]
-  col = [0 for _ in range(seq_len)]
-
-  old = 256
-  j = 0
-  second = [int(x) for x in rainbow]
+  n=0
+  prev=-1
 
   for i in range(seq_len):
-    k = second[i]
-    if ( k != old ):
-      col[j] = k
-      m[0][j] = 1
-      j = j + 1
-      old = k
+    tmp = rainbow[i]
 
-  seq_len = j
+    if tmp != prev:
+      seq.append(tmp)
+      prev = tmp
+      n += 1
 
-  for i in range(1, seq_len):
-    for j in range(seq_len - i):
-      minimo=int(sys.maxsize)
-      for k in range(1, i + 1):
-        if col[j]==col[j+i]:
-          temp = 1
-        else:
-          temp = 0
-        a = m[k-1][j] + m[i-k][j+k] - temp
-        minimo = min(a , minimo)
-        m[i][j] = minimo
+  if args.recursive:
+    risp=Min(0,n-1)
+  elif args.dynprog:
+    risp=PD(n)
+  else:
+    risp=Min(0,n-1)
 
-  return int(m[seq_len-1][0])
+  return risp
+
 
 while True:
   seq_len = int(BOT.input())
   rainbow = BOT.input().split()
-  #rainbow = []
-
-  # for i in seq:
-  #  rainbow.append(i)
 
   answer = calculate_sheets(rainbow)
   BOT.print(answer)
