@@ -7,12 +7,19 @@ from datetime import datetime
 
 from termcolor import colored
 from contextlib import redirect_stdout
+from sys import setrecursionlimit
+
+setrecursionlimit(10**8)
 
 AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_len':'with_len.txt', 'collage_dat':'collage.dat'},'solution':{'all_solutions': 'all_solutions.txt'}}
 DEFAULT_INSTANCE_FORMAT='with_len'
 DEFAULT_SOLUTION_FORMAT='all_solutions'
 
 MAX_NUM_COL = 256
+NMAX=1000
+
+seq=[]
+memo = [[0 for __ in range(NMAX)] for _ in range(NMAX)]
 
 def format_name_to_file_extension(format_name, format_gender):
     assert format_gender in AVAILABLE_FORMATS, f'No format has been adopted for objects of the gender `{format_gender}`.'
@@ -228,42 +235,59 @@ def solutions(instance,instance_format=DEFAULT_INSTANCE_FORMAT):
 
     return sols
 
+# Recursive solution (faster)
+def Min(i:int, j:int):
+  if i > j:
+    return 0
+  
+  if i == j:
+    return 1
+  
+  if memo[i][j] > 0:
+    return memo[i][j]
+
+  ret = 1 + Min(i+1, j)
+
+  for k in range(i+1,j+1):
+    if seq[k] == seq[i]:
+      ret = min(ret, Min(i+1, k-1) + Min(k, j))
+
+  memo[i][j] = ret
+
+  return memo[i][j]
+
+# Dynamic Programming solution (slower)
+def PD(n):
+  for i in range(n, -1, -1):
+    for j in range(i-1, n):
+      if(i > j):
+        memo[i][j] = 0
+      elif(i==j):
+        memo[i][j] = 1
+      else:
+        memo[i][j] = 1 + memo[i+1][j];
+        for k in range(i+1, j+1):
+          if seq[k] == seq[i]:
+            memo[i][j] = min(memo[i][j], memo[i+1][k-1] + memo[k][j])
+  return memo[0][n-1]
+
 def calculate_sheets(rainbow):
   seq_len = len(rainbow)
-
-  m = [[0 for __ in range(seq_len)] for _ in range(seq_len)]
-  col = [0 for _ in range(seq_len)]
-
-  old = 256
-  j = 0
-  second = [int(x) for x in rainbow]
+  n=0
+  prev=-1
 
   for i in range(seq_len):
-    k = second[i]
+    tmp = rainbow[i]
 
-    if ( k != old ):
-      col[j] = k
-      m[0][j] = 1
-      j = j + 1
-      old = k
+    if tmp != prev:
+      seq.append(tmp)
+      prev = tmp
+      n += 1
 
-  seq_len = j
+  risp=Min(0,n-1)
+  #risp=PD(n)
+  return risp
 
-  for i in range(1, seq_len):
-    for j in range(seq_len - i):
-      minimo=int(sys.maxsize)
-
-      for k in range(1, i + 1):
-        if col[j]==col[j+i]:
-          temp = 1
-        else:
-          temp = 0
-
-        a = m[k-1][j] + m[i-k][j+k] - temp
-        minimo = min(a , minimo)
-        m[i][j] = minimo
-
-  return int(m[seq_len-1][0])
 
 '''
 GOAL SUMMARIES
