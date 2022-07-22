@@ -1,21 +1,19 @@
 # generator parameters: 
 
-# n, m, MIN_VAL, MAX_VAL, seed, big_seed 
-#     n (int) size of the small triangle
-#     m (int) size of the big triangle
-#     MIN_VAL (int) minimum element value in the triangle
-#     MAX_VAL (int) maximum element value in the triangle
+# seq_len, num_col, mod, seed 
+#     seq_len (int) size of the rainbow
+#     num_col (int) colors of the rainbow
+#     mod (int) how to generate the rainbow
 #     seed (int) seed generating the small triangle
-#     big_seed (int) generating the big triangle
 
 add_format: simple.txt
 add_format: with_len.txt
 
 #collection: instances_hardcoded
-#COPY: instances_hardcoded/instance_001.pyramid.txt
-#COPY: instances_hardcoded/instance_001.in_lines.txt
-#COPY: instances_hardcoded/instance_002.pyramid.txt
-#COPY: instances_hardcoded/instance_002.in_lines.txt
+#COPY: instances_hardcoded/instance_001.simple.txt
+#COPY: instances_hardcoded/instance_001.with_len.txt
+#COPY: instances_hardcoded/instance_002.simple.txt
+#COPY: instances_hardcoded/instance_002.with_len.txt
 
 collection: small_instances
 #                randgen,    seq_len, num_col,  mod,  seed,   
