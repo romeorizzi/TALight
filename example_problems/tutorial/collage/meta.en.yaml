@@ -125,19 +125,19 @@ services:
         regex-explained: any positive natural (in its decimal representation)
         regex-URL: 'https://extendsclass.com/regex/a55297b'
         default: 1
-        explain:
+        explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''collage.tar\'' you get downloaded on your machine by issuing `rtal get collage`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
       seq_len:
         regex: ^([1-9][0-9]{0,2}|1000)$
         default: 10
-        explain:
+        explain: 'Number of stripes that make up the rainbow (sequence length)'
       num_col:
         regex: ^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-6])$
         default: 4
-        explain:
+        explain: 'Number of colors of the rainbow'
       mod:
         regex: ^([1-2]|-1)$
         default: -1
-        explain:
+        explain: 'Rainbow generation mode: option [1] generates a sequence with adjacent equal colors, option [2] generates a sequence without adjacent equal colors.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'

@@ -12,7 +12,7 @@ args_list = [
     ('META_TTY',bool),
 ]
 
-ENV =Env(problem, service, args_list)
+ENV =Env(problem, service, args_list) ## --> Qui il problema!
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), book_strictly_required=True)
 
