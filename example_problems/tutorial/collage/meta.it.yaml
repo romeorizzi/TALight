@@ -28,8 +28,8 @@ services:
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
       mod:
-        regex: ^([1-2]|-1)$
-        default: -1 
+        regex: ^([0-2])$
+        default: 0
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza con colori uguali adiacenti, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -88,8 +88,8 @@ services:
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
       mod:
-        regex: ^([1-2]|-1)$
-        default: -1
+        regex: ^([0-2])$
+        default: 0
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza con colori uguali adiacenti, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -137,8 +137,8 @@ services:
         explain: 'Numero di colori che compongono l`arcobaleno'
       mod:
         regex: ^.*$ 
-        regex: ^([1-2]|-1)$
-        default: -1
+        regex: ^([0-2])$
+        default: 0
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza con colori uguali adiacenti, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$

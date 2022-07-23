@@ -4,6 +4,7 @@ open-channel: '# I will serve: problem={problem}, service={service}'
 feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file {service}_feedbackBook.{ENV["lang"]}.yaml contained in the folder \''lang\'' of the problem {problem}.'
 
 #NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+random-type: 'A random mode will be chosen from the one with the same adjacent colors and without the same adjacent colors'
 wrong-sequence-lenght: 'Error: the lenght of the sequence ({ENV["seq_len"]}) exceeded the limit ({MAX_SEQ_LEN}).'
 successful-load: 'The file you have associated to `instance` filehandler has been successfully loaded.'
 waiting-line: '#? waiting for the color sequence.\nFormat: numbers separated by spaces\n'

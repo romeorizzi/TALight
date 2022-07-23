@@ -148,22 +148,17 @@ def random_rainbow(seq_len:int, num_col:int, mod:int, seed:int):
   random.seed(seed)
   rainbow = []
 
-  if mod == -1:
+  if mod == 0:
     pass
 
-  if mod == 0:
-    TAc.NO()
-    TAc.print(LANG.render_feedback("invalid-random-type", f'Invalid option for random generation: please, select 1 or 2'), "red", ["bold"])
-    exit(0)
-
-  # Random con doppioni
+  # Random con colori uguali adiacenti
   elif mod == 1:
     values = [i for i in range (num_col)]
 
     for row in range(0,seq_len):
       rainbow.append(random.choice(values))
 
-  # Random senza doppioni
+  # Random senza colori uguali adiacenti
   elif mod == 2:
     oldColor = MAX_NUM_COL
 
@@ -175,8 +170,6 @@ def random_rainbow(seq_len:int, num_col:int, mod:int, seed:int):
       rainbow.append(tmp)
 
   else:
-    TAc.NO()
-    TAc.print(LANG.render_feedback("invalid-random-type", f'Invalid option for random generation: please, select 1 or 2'), "red", ["bold"])
     exit(0)
 
   return rainbow

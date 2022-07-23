@@ -41,7 +41,8 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 if ENV['source'] != 'catalogue':
-    if ENV['mod'] == -1:
+    if ENV['mod'] == 0:
+      TAc.print(LANG.render_feedback("random-type", f'A random mode will be chosen from the one with adjacent same colors and no adjacent same colors'), "yellow", ["bold"])
       mod = random.choice([1,2])
     else:
       mod = ENV['mod']
@@ -72,3 +73,4 @@ else:
 if ENV['download']:
     TALf.str2output_file(instance_str,output_filename)
 
+exit(0)

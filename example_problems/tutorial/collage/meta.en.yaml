@@ -28,8 +28,8 @@ services:
         default: 4
         explain: 'Number of colors of the rainbow'
       mod:
-        regex: ^([1-2]|-1)$
-        default: -1 
+        regex: ^([0-2])$
+        default: 0
         explain: 'Rainbow generation mode: option [1] generates a sequence with adjacent equal colors, option [2] generates a sequence without adjacent equal colors.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -87,8 +87,8 @@ services:
         default: 4
         explain: 'Number of colors of the rainbow'
       mod:
-        regex: ^([1-2]|-1)$
-        default: -1
+        regex: ^([0-2])$
+        default: 0
         explain: 'Rainbow generation mode: option [1] generates a sequence with adjacent equal colors, option [2] generates a sequence without adjacent equal colors.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -135,8 +135,8 @@ services:
         default: 4
         explain: 'Number of colors of the rainbow'
       mod:
-        regex: ^([1-2]|-1)$
-        default: -1
+        regex: ^([0-2])$
+        default: 0
         explain: 'Rainbow generation mode: option [1] generates a sequence with adjacent equal colors, option [2] generates a sequence without adjacent equal colors.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$

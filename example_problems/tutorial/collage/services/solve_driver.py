@@ -79,7 +79,8 @@ elif ENV["source"] == 'terminal':
   output_filename = f"terminal_instance.{ENV['instance_format']}.txt"
 
 elif ENV["source"] == 'randgen_1':
-  if ENV['mod'] == -1:
+  if ENV['mod'] == 0:
+    TAc.print(LANG.render_feedback("random-type", f'A random mode will be chosen from the one with adjacent same colors and no adjacent same colors'), "yellow", ["bold"])
     mod = random.choice([1,2])
   else:
     mod = ENV['mod']
