@@ -5,40 +5,167 @@ from typing import Optional, List, Dict, Callable
 from RO_verify_submission_gen_prob_lib import verify_submission_gen
 
 instance_objects_spec = [
-    ('Knapsack_Capacity',int),
+    ('n',int),
     ('labels','list_of_str'),
-    ('costs','list_of_int'),
-    ('vals','list_of_int'),
-    ('LB','list_of_int'),
-    ('UB','list_of_int'),
-    ('forced_out','list_of_str'),
-    ('forced_in','list_of_str'),
-    ('CAP_FOR_NUM_SOLS',int),
-    ('CAP_FOR_NUM_OPT_SOLS',int),
+    ('arcs','list_of_tuple[str,str,int]'),
+    ('arcs_removed','list_of_tuple[str,str,int]'),
+    ('arcs_added','list_of_tuple[str,str,int]'),
+    ('focus_node',int),
+    ('focus_arc','tuple[str,str,int]'),
 ]
 additional_infos_spec=[
-    ('partialDPtable','matrix_of_int')
+    ('partial_to','list_of_tuple[str,int]'),
+    ('partial_from','list_of_tuple[str,int]'),
 ]
 answer_objects_spec = {
-    'opt_sol':'list_of_str',
-    'opt_val':'int',
-    'num_opt_sols':'int',
-    'list_opt_sols':'list_of_list_of_str',
-    'DPtable_opt_val':'matrix_of_int',
-    'DPtable_num_opts':'matrix_of_int',
+    'is_a_DAG':bool,
+    'cert_YES':'list_of_tuple[str,str,int]',
+    'cert_NO':'list_of_tuple[str,str,int]',
+    'earliest_time_for_focus_node':int,
+    'critical_path_to_focus_node':'list_of_tuple[str,str,int]',
+    'nodes_sensible_to_focus_arc':'list_of_tuple[str,str,int]',
+    'latest_time_for_focus_node':int,
+    'critical_path_from_focus_node':'list_of_tuple[str,str,int]',
+    'min_time_to':'list_of_tuple[str,int]',
+    'min_time_from':'list_of_tuple[str,int]',
+    'latest_time_to':'list_of_tuple[str,int]',
+    'critical_path_to':'list_of_tuple[str,list_of_str]',
+    'critical_nodes_to':'list_of_tuple[str,list_of_str]',
+    'critical_arcs_to':'list_of_tuple[str,list_of_tuple[str,str,int]]',
+    'sensible_to_focus_arc':'list_of_tuple[str,bool]',
 }
-answer_objects_implemented = ['opt_sol','opt_val','num_opt_sols','DPtable_opt_val','DPtable_num_opts','list_opt_sols']
-limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
-
+answer_objects_implemented = [
+    'is_a_DAG',
+    'cert_YES',
+    'cert_NO',
+    'earliest_time_for_focus_node',
+    'critical_path_to_focus_node',
+    'nodes_sensible_to_focus_arc',
+    'latest_time_for_focus_node',
+    'critical_path_from_focus_node',
+    'min_time_to',
+    'min_time_from',
+    'latest_time_to',
+    'critical_path_to',
+    'critical_nodes_to',
+    'critical_arcs_to',
+    'sensible_to_focus_arc',
+]
+'''
 def sum_of_costs_over(instance, ordered_list_of_elems):
     return sum([peso for peso,ele in zip(instance["costs"], instance["labels"]) if ele in ordered_list_of_elems])
 
 def sum_of_vals_over(instance, ordered_list_of_elems):
     return sum([val for val,ele in zip(instance["vals"], instance["labels"]) if ele in ordered_list_of_elems])
+'''
+
+# Una classe per rappresentare un oggetto graph
+class Graph:
+    # Costruttore
+    def __init__(self, edges, n):
+ 
+        # Un elenco di elenchi per rappresentare un elenco di adiacenze
+        self.adjList = [[] for _ in range(n)]
+ 
+        # aggiunge archi al graph diretto
+        for (src, dest) in edges:
+            self.adjList[src].append(dest)
+
+def to_graph(nodes, lst_tup):
+    edges={}
+    for node in nodes:
+        edges[node] = nodes.index(node)
+    new_lst_tup = []
+    for arc in lst_tup:
+        new_lst_tup.append((edges[arc[0]],edges[arc[1]]))
+
+    D = Graph(new_lst_tup, len(nodes))
+    return D
+
+def isDAG(graph, n):
+ 
+    # tiene traccia del rilevamento o meno di un vertice
+    discovered = [False] * n
+ 
+    # tiene traccia dell'ora di partenza di un vertice in DFS
+    departure = [None] * n
+ 
+    time = 0
+ 
+    # Esegui l'attraversamento DFS da tutti i vertici sconosciuti
+    # per visitare tutte le componenti connesse di un grafo
+    for i in range(n):
+        if not discovered[i]:
+            time = DFS(graph, i, discovered, departure, time)
+ 
+    # controlla se il dato graph diretto è DAG o meno
+    for u in range(n):
+ 
+        # controlla se (u, v) forma un back-edge.
+        for v in graph.adjList[u]:
+ 
+            # Se il tempo di partenza del vertice `v` è maggiore di uguale
+            # all'ora di partenza di `u`, formano un back edge.
+ 
+            # Si noti che `departure[u]` sarà uguale a `departure[v]`
+            # solo se `u = v`, cioè il vertice contiene un arco a se stesso
+            if departure[u] <= departure[v]:
+                return 2
+            if departure[u] == departure[v]:
+                return 1
+    # senza bordi posteriori
+    return 0
+
+def get_nodes_from_arcs(arcs):
+    lst = []
+    for arc in arcs:
+        lst.append((arc[0],arc[1]))
+    return lst
 
 def check_instance_consistency(instance):
     #print(f"instance={instance}", file=stderr)
-    n = len(instance["labels"]) 
+    labels = instance["labels"]
+
+    n = len(instance["labels"])
+    chk_labels = False
+    if n==0:
+        chk_labels = True
+        n = instance["n"]
+        labels = []
+        for i in range(1, n+1):
+            labels.append(str(i))
+
+    for arc in instance["arcs"]:
+        if (arc[0] not in labels or arc[1] not in labels):
+            print('ERRORE: Nell\'arco {} in "arcs" è presente un nodo non definito'.format(arc))
+            exit(0)
+        if(get_nodes_from_arcs(instance["arcs"]).count((arc[0],arc[1])) > 1):
+            print('ERRORE: l\'arco {} è ripetuto in "arcs"'.format(arc))
+            exit(0)
+
+    for arc in instance["arcs_removed"]:
+        if (arc not in instance["arcs"]):
+            print('ERRORE: Nell\'arco {} in "arcs_removed" è presente un nodo non definito'.format(arc))
+            exit(0)
+
+    for arc in instance["arcs_added"]:
+        if (arc not in instance["arcs"]):
+            print('ERRORE: Nell\'arco {} in "arcs_added" è presente un nodo non definito'.format(arc))
+            exit(0)
+
+    if chk_labels:
+        if str(instance["focus_node"]) not in labels:
+            print ('ERRORE: Il nodo "focus_node" {} non è definito'.format(instance["focus_node"]))
+            exit(0)
+
+    for arc in instance["focus_arc"]:
+        if (arc not in instance["arcs"] and arc not in instance["arcs_added"]):
+            print('ERRORE: L\'arco {} non è presente in "arcs_added" nè in "arcs"'.format(arc))
+            exit(0)
+
+
+
+    '''
     if len(instance["costs"]) != n:
         print(f'Errore: len(instance["costs"])={len(instance["costs"])} != {n}=len(instance["labels"])')    
         exit(0)
@@ -96,6 +223,7 @@ def check_instance_consistency(instance):
     if instance["CAP_FOR_NUM_OPT_SOLS"] > limits["CAP_FOR_NUM_OPT_SOLS"]:
         print('Errore: non è consentito settare `CAP_FOR_NUM_OPT_SOLS` a {instance["CAP_FOR_NUM_OPT_SOLS"]} > {limits["CAP_FOR_NUM_OPT_SOLS"]}"]}')
         exit(0)
+    '''
         
 def solver(input_to_oracle):
     #print(f"input_to_oracle={input_to_oracle}",file=stderr)
@@ -171,7 +299,7 @@ def solver(input_to_oracle):
             oracle_answers[ad_hoc_name] = locals()[std_name]
     return oracle_answers
 
-
+#------------------LASCIARE STANDARD-------------------------------------------------------------------------
 class verify_submission_problem_specific(verify_submission_gen):
     def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, oracle_response:Dict = None):
         super().__init__(SEF,input_data_assigned, long_answer_dict, oracle_response)
