@@ -45,8 +45,9 @@ class verify_submission_gen:
             return whole_feedback_dict(SEF.non_spoilering_feedback)
         if not self.verify_consistency(SEF):
             return whole_feedback_dict(SEF.non_spoilering_feedback)
-        also_optimal = self.verify_optimality(SEF)
         feedback_dict = whole_feedback_dict(SEF.feedback_when_all_non_spoilering_checks_passed())
+        return feedback_dict
+        also_optimal = self.verify_optimality(SEF)
         if also_optimal:
             feedback_dict['spoilering']['feedback_string'] += "(also optimality was checked for the positive, all points are safe)"
             feedback_dict['spoilering']['pt_safe'] += feedback_dict['spoilering']['pt_maybe']
@@ -54,7 +55,6 @@ class verify_submission_gen:
             feedback_dict['spoilering']['feedback_string'] = SEF.all_feedback_so_far
             feedback_dict['spoilering']['pt_out'] += feedback_dict['spoilering']['pt_maybe']
         feedback_dict['spoilering']['pt_maybe'] = 0
-        return feedback_dict
 
 def whole_feedback_dict(non_spoilering_feedback):
     feedback_dict = {}
