@@ -176,7 +176,6 @@ def find_maxdeg(vertices, edges_list):
     deg_list.append((vi,deg))
 
   deg_list.sort(key=lambda tup: tup[1], reverse=True)
-  print(f'lista grado nodi: {deg_list}')
   v = deg_list[0]
 
   return v
@@ -189,28 +188,21 @@ def lowerbound(vertices, edges):
   return lb
 
 def neighbours(v, edges):
-  print(f'dentro neighbours: {edges}')
   neighbour = []
 
   for e in edges:
-    #print(type(v))
-    #print(type(e))
-    #print(f'archi neigh: {e}')
     if v in e:
       if v == e[0]:
         neighbour.append(e[1])
       else:
         neighbour.append(e[0])
 
-  print(f'lista vicini di {v}: {neighbour}')
   return neighbour        
 
 def remove_node(node, list_edges, vertices_list):
-  print(f'Nodo da rimuovere: {node}')
   for e in list_edges[:]:
     if node in e:
       list_edges.remove(e)
-      print(f'Rimosso arco {e}')
 
   vertices_list.remove(node)
 
@@ -237,28 +229,18 @@ def calculate_exact_vc(num_vertices, graph):
 
   while frontier != [] :
     (vi, state, parent) = frontier.pop()
-    print(f'\nInizio: prendo nodo {vi} da frontiera con stato {state}')
     backtrack = False
 
     if state == 0:
-      print(f'nodo {vi} con stato 0')
-      print(f'vi: {vi}')
-      print(f'curG: {curG}')
       neighbour = neighbours(vi, curG)
 
       for node in neighbour:
-        print(node)
         curVC.append((node, 1))
         vertices_list, curG = remove_node(node, curG, vertices_list)
-      print(f'curG: {curG}')
-      print(f'vertici: {vertices_list}')
 
       
     elif state == 1: 
-      print(f'nodo {vi} con stato 1')
       vertices_list, curG = remove_node(vi, curG, vertices_list)
-      print(f'curG: {curG}')
-      print(f'vertici: {vertices_list}')
 
     else:
       pass
@@ -283,41 +265,25 @@ def calculate_exact_vc(num_vertices, graph):
         backtrack = True
 
     if backtrack == True:
-      print("Sono nel backtrack")
       if frontier != []:
         nextnode_parent = frontier[-1][2]
-        print(f'nextnode_parent: {nextnode_parent}')
 
         if nextnode_parent in curVC:
-          print("nextnode_parent nel VC")
           id = curVC.index(nextnode_parent) + 1
-          print(f'id: {id}') 
-          print(f'len curVC: {len(curVC)}') 
 
           while id < len(curVC):
-            print("Nel while")
             mynode, mystate = curVC.pop()
-            print(f'mynode: {mynode}')
             
             ## Per qualche motivo mette dei doppioni, da qui l'if...
             if mynode not in vertices_list:
               vertices_list.append(mynode)
 
             curVC_nodes = list(map(lambda t:t[0], curVC))
-            #print(f'nodi curVC: {curVC_nodes}')
-            #print(G)
             neighbourG = neighbours(mynode, G)
-            print(f'neighbourG: {neighbourG}')
 
             for ng in neighbourG:
-              print(f'ng: {ng}')
-              print(f'mynode: {mynode}')
-              print(f'nodi correnti: {vertices_list}')
-              print(f'nodi curVC: {curVC_nodes}')
               if (ng in vertices_list) and (ng not in curVC_nodes):
                 curG.append((mynode,ng))
-
-            print(curG)
 
         elif nextnode_parent == (-1, -1):
           curVC.clear()
@@ -330,6 +296,44 @@ def calculate_exact_vc(num_vertices, graph):
  
   # return optVC
   return res
+
+def calculate_approx_vc(num_vertices, graph):
+  G = get_edges(graph)
+  curG = G.copy()
+  curG.sort(key=lambda tup: tup[0])
+  vertices_list = [i for i in range(num_vertices)]
+
+  visited = []
+  c = []
+
+  while curG != []:
+    v = find_maxdeg(vertices_list, curG)[0]
+    neighbour = neighbours(v, curG)
+    vertices_list.remove(v)
+    
+    v1 = find_maxdeg(neighbour, curG)[0]
+    vertices_list.remove(v1)
+
+    if v > v1:
+      arco = (v1,v)
+    else:
+      arco = (v,v1)
+
+    visited.append(arco)
+    curG.remove(arco)
+
+    c.append(v)
+    c.append(v1)
+
+    for e in curG[:]:
+      if v in e and e not in visited:
+        curG.remove(e)
+        visited.append(e)
+      if v1 in e and e not in visited:
+        curG.remove(e)
+        visited.append(e)
+
+  return c
 
 def verify_vc(instance, vertices):
   graph = instance['graph']
