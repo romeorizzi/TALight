@@ -335,16 +335,13 @@ def calculate_approx_vc(num_vertices, graph):
 
   return c
 
-def verify_vc(instance, vertices):
-  graph = instance['graph']
-  
-  edges_list = graph[0].replace('}{',' ').replace('{','').replace('}','').split(' ')
-  vc_list = vertices.split(' ')
+def verify_vc(vertices, graph):
+  edges_list = get_edges(graph)
 
   # Scorro una copia della lista
   for e in edges_list[:]:
-    for v in vc_list:
-      if v in e:
+    for v in vertices:
+      if int(v) in e:
         edges_list.remove(e)
         break
 

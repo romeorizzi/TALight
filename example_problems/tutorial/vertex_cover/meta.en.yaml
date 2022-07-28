@@ -87,7 +87,7 @@ services:
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
-      vc_sol:
+      vc_sol_val:
         regex: ^.*^ # Deve essere una stringa contenente i (supposti) vertici del vc
         default: 0
         explain: 'Use this argument to tell the service what you conjecture to be the vertices of the vertex cover. Leave this argument to its default value in case you have non conjecture and only intend to use this service to be told about the optimum value. A solution for a given collage instance is a non-negative integer number.'
