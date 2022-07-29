@@ -69,10 +69,10 @@ else:
   answer = ENV['vc_sol_val']
 
 if answer[0] == 'C' or answer[0] == 'c':
-  right_sol = vcl.calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+  right_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'])
   TAc.print(LANG.render_feedback("best-sol", f'A possible vertex cover is {right_sol}.'), "green", ["bold"])
 else:
-  right_sol = vcl.verify_vc(answer, instance['graph'])
+  right_sol = vcl.verify_approx_vc(answer, instance['graph'])
 
   if right_sol:
     TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution value you provided is a valid vertex cover for the graph.'), "green", ["bold"])

@@ -163,17 +163,6 @@ def print_graph(graph, instance_format=DEFAULT_INSTANCE_FORMAT):
   pass
 
 
-def get_edges(graph):
-  edges_list = []
-
-  edges_list_str = graph[0].replace('}{',' ').replace('{','').replace('}','').split(' ')
-  
-  for e in edges_list_str:
-    n = e.replace(',', ' ').split(' ')
-    edges_list.append((int(n[0]),int(n[1])))
-
-  return edges_list
-
 '''
 SOLUTORI
 '''
@@ -199,6 +188,17 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
 '''
  Metodi per il branch and bound
 '''
+def get_edges(graph):
+  edges_list = []
+
+  edges_list_str = graph[0].replace('}{',' ').replace('{','').replace('}','').split(' ')
+  
+  for e in edges_list_str:
+    n = e.replace(',', ' ').split(' ')
+    edges_list.append((int(n[0]),int(n[1])))
+
+  return edges_list
+
 def find_maxdeg(vertices, edges_list):
   deg_list = []
 
@@ -333,7 +333,8 @@ def calculate_minimum_vc(num_vertices, graph):
   res = []
   for n in optVC:
     res.append(n[0])
- 
+
+  res.sort() 
   # return optVC
   return res
 
@@ -379,11 +380,12 @@ def calculate_approx_vc(num_vertices, graph):
 ## Verifico se un vertex cover fornito in input è un vc valido per il grafo
 def verify_vc(vertices, graph):
   edges_list = get_edges(graph)
+  vertices = list(map(int, vertices))
 
   # Scorro una copia della lista
   for e in edges_list[:]:
     for v in vertices:
-      if int(v) in e:
+      if v in e:
         edges_list.remove(e)
         break
 
@@ -391,6 +393,36 @@ def verify_vc(vertices, graph):
     return 0
   else:
     return 1
+
+## Verifico se il vc approssimato fornito dall'utente è tale
+def verify_approx_vc(vc_edges, graph):
+  edges_list = get_edges(graph)
+  curG = edges_list.copy()
+  curG.sort(key=lambda tup: tup[0])
+  edges_vc = get_edges(vc_edges)
+
+  visited = []
+  
+  while curG != []:
+    for e in edges_vc:
+      e = tuple(sorted(e))
+      if e not in visited:
+        curG.remove(e)
+      else: 
+        return 0
+
+      for v in e:
+        for e1 in curG[:]:
+          if v in e1 and e1 not in visited:
+            curG.remove(e1)
+            visited.append(e1)
+
+  for e in edges_vc:
+    for v in e:
+      if v in visited:
+        return 0
+
+  return 1
 
 ## Verifico se una soluzione approssimata è 2-approssimazione per il VC
 def is_2_approx(c, c_star):
