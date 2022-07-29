@@ -177,10 +177,22 @@ def get_edges(graph):
 '''
 SOLUTORI
 '''
-def solutions(instance,instance_format=DEFAULT_INSTANCE_FORMAT):
+def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
   sols = {}
-  vc = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
-  sols['calculate_minimum_vc'] = f"{vc}"
+
+  if sol_type == 'minimum':
+    vc = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+    sols['calculate_minimum_vc'] = f"{vc}"
+
+  elif sol_type == 'approx':
+    vc = calculate_approx_vc(instance['num_vertices'], instance['graph'])
+    sols['calculate_approx_vc'] = f"{vc}"
+
+  elif sol_type == 'both':
+    vc_min = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+    vc_appr = calculate_approx_vc(instance['num_vertices'], instance['graph'])
+    sols['calculate_minimum_vc'] = f"{vc_min}"
+    sols['calculate_approx_vc'] = f"{vc_appr}"
 
   return sols
 

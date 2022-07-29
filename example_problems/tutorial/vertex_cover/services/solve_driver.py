@@ -14,6 +14,7 @@ args_list = [
     ('instance_id',int),
     ('instance_format',str),
     ('num_vertices',int),
+    ('sol_type',str),
     ('seed',str),
     ('download',bool),
     ('lang',str)
@@ -59,7 +60,7 @@ else: # take instance from catalogue
 TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
 TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
 
-content = vcl.solutions(instance,ENV['instance_format'])
+content = vcl.solutions(ENV['sol_type'],instance,ENV['instance_format'])
 
 TAc.print(LANG.render_feedback("all-solutions-title", f"Here are the solutions for the given instance:"), "green", ["bold"])
 

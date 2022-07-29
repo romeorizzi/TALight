@@ -29,6 +29,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain:
+      sol_type:
+        regex: ^(minimum|approx|both)
+        default: minimum
+        explain: 'Choose the type of vertex cover solution you want: "minimum" returns a minimum vertex cover for the graph, "approx" returns a 2-approximated vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -55,10 +59,10 @@ services:
         default: en
   
   ##
-  ## CHECK_VC --> L'utente deve fornire il suo vc e il sistema dice se è corretto o no
+  ## CHECK_MINIMUM_VC --> L'utente deve fornire il suo vc e il sistema dice se è corretto o no
   ##
-  check_vc:
-    evaluator: [python, services/check_vc_driver.py]
+  check_minimum_vc:
+    evaluator: [python, services/check_minimum_vc_driver.py]
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
