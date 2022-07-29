@@ -76,6 +76,30 @@ def instance_to_txt_str(instance, format_name="with_len"):
 
     return output
 
+def get_instance_from_str(instance_as_str, instance_format_name=DEFAULT_INSTANCE_FORMAT):
+    """This function returns the instance it gets from its string representation as provided in format <instance_format_name>."""
+    format_primary, format_secondary = format_name_expand(instance_format_name, 'instance')
+    if format_primary == 'dat':
+       return get_instance_from_dat(instance_as_str, instance_format_name)
+    if format_primary == 'txt':
+      return get_instance_from_txt(instance_as_str, instance_format_name)
+
+def get_instance_from_txt(instance_as_str, format_name):
+    """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
+    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{instance_format_name}` unsupported for objects of category `instance`.'
+    instance = {}
+    str_to_arr = instance_as_str.split()
+
+    if format_name != "with_len":
+      instance['rainbow'] = str_to_arr
+      #instance['seq_len'] = len(str_to_arr)
+
+    else:
+      instance['rainbow'] = str_to_arr[1:]
+      instance['seq_len'] = len(str_to_arr[1:])
+    
+    return instance
+
 def instance_to_dat_str(instance,format_name='collage_dat'):
   """Of the given <instance>, this function returns the .dat string in format <format_name>"""
   assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
@@ -191,32 +215,6 @@ def print_rainbow(rainbow, instance_format=DEFAULT_INSTANCE_FORMAT):
 
 ''' Fine sezione generatori '''
 
-'''
-Recupero istanze da catalogo
-'''
-def get_instance_from_str(instance_as_str, instance_format_name=DEFAULT_INSTANCE_FORMAT):
-    """This function returns the instance it gets from its string representation as provided in format <instance_format_name>."""
-    format_primary, format_secondary = format_name_expand(instance_format_name, 'instance')
-    # if format_primary == 'dat':
-    #    return get_instance_from_dat(instance_as_str, instance_format_name)
-    if format_primary == 'txt':
-      return get_instance_from_txt(instance_as_str, instance_format_name)
-
-def get_instance_from_txt(instance_as_str, format_name):
-    """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
-    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{instance_format_name}` unsupported for objects of category `instance`.'
-    instance = {}
-    str_to_arr = instance_as_str.split()
-
-    if format_name != "with_len":
-      instance['rainbow'] = str_to_arr
-      #instance['seq_len'] = len(str_to_arr)
-
-    else:
-      instance['rainbow'] = str_to_arr[1:]
-      instance['seq_len'] = len(str_to_arr[1:])
-    
-    return instance
 
 '''
 SOLUZIONI
