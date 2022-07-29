@@ -69,7 +69,7 @@ else:
   answer = ENV['vc_sol_val']
 
 if answer[0] == 'C' or answer[0] == 'c':
-  right_sol = vcl.calculate_exact_vc(instance['num_vertices'], instance['graph'])
+  right_sol = vcl.calculate_minimum_vc(instance['num_vertices'], instance['graph'])
   TAc.print(LANG.render_feedback("best-sol", f'A possible vertex cover is {right_sol}.'), "green", ["bold"])
 else:
   right_sol = vcl.verify_vc(answer, instance['graph'])

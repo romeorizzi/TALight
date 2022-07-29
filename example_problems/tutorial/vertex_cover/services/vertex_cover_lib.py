@@ -64,6 +64,30 @@ def instance_to_txt_str(instance, format_name="with_vertices"):
 
     return output
 
+def get_instance_from_str(instance_as_str, instance_format_name=DEFAULT_INSTANCE_FORMAT):
+    """This function returns the instance it gets from its string representation as provided in format <instance_format_name>."""
+    format_primary, format_secondary = format_name_expand(instance_format_name, 'instance')
+    if format_primary == 'dat':
+       return get_instance_from_dat(instance_as_str, instance_format_name)
+    if format_primary == 'txt':
+      return get_instance_from_txt(instance_as_str, instance_format_name)
+
+def get_instance_from_txt(instance_as_str, format_name):
+    """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
+    assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{instance_format_name}` unsupported for objects of category `instance`.'
+    instance = {}
+    str_to_arr = instance_as_str.split()
+
+    if format_name != "with_vertices":
+      instance['graph'] = str_to_arr
+      #instance['num_vertices'] = len(str_to_arr)
+
+    else:
+      instance['graph'] = str_to_arr[1:]
+      instance['num_vertices'] = len(str_to_arr[1:])
+    
+    return instance
+
 # Da rivedere per VC
 def instance_to_dat_str(instance,format_name='vertex_cover_dat'):
   """Of the given <instance>, this function returns the .dat string in format <format_name>"""
@@ -155,8 +179,8 @@ SOLUTORI
 '''
 def solutions(instance,instance_format=DEFAULT_INSTANCE_FORMAT):
   sols = {}
-  vc = calculate_exact_vc(instance['num_vertices'], instance['graph'])
-  sols['calculate_exact_vc'] = f"{vc}"
+  vc = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+  sols['calculate_minimum_vc'] = f"{vc}"
 
   return sols
 
@@ -209,9 +233,9 @@ def remove_node(node, list_edges, vertices_list):
   return vertices_list, list_edges
 
 '''
-solutore vero e proprio
+solutore vero e proprio: uso un algoritmo Branch and Bound
 '''
-def calculate_exact_vc(num_vertices, graph):
+def calculate_minimum_vc(num_vertices, graph):
   optVC = []
   curVC = []
   frontier = []
@@ -290,13 +314,18 @@ def calculate_exact_vc(num_vertices, graph):
           curVC = G.copy()
            
   # Formatto la soluzione come stringa 
-  res = ''
+  #res = ''
+  #for n in optVC:
+  #  res += str(n[0]) + ' ' 
+
+  res = []
   for n in optVC:
-    res += str(n[0]) + ' ' 
+    res.append(n[0])
  
   # return optVC
   return res
 
+## Calcolo una 2-approssimazione del VC. La scelta dell'arco è greedy
 def calculate_approx_vc(num_vertices, graph):
   G = get_edges(graph)
   curG = G.copy()
@@ -335,6 +364,7 @@ def calculate_approx_vc(num_vertices, graph):
 
   return c
 
+## Verifico se un vertex cover fornito in input è un vc valido per il grafo
 def verify_vc(vertices, graph):
   edges_list = get_edges(graph)
 
@@ -350,6 +380,12 @@ def verify_vc(vertices, graph):
   else:
     return 1
 
+## Verifico se una soluzione approssimata è 2-approssimazione per il VC
+def is_2_approx(c, c_star):
+  if c/c_star <= 2:
+    return 1
+  
+  return 0
 
 '''
 GOAL SUMMARIES
