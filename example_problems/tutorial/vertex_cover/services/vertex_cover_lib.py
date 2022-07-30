@@ -170,16 +170,16 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
   sols = {}
 
   if sol_type == 'minimum':
-    vc = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+    size, vc = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
     sols['calculate_minimum_vc'] = f"{vc}"
 
   elif sol_type == 'approx':
-    vc = calculate_approx_vc(instance['num_vertices'], instance['graph'])
+    size, vc = calculate_approx_vc(instance['num_vertices'], instance['graph'])
     sols['calculate_approx_vc'] = f"{vc}"
 
   elif sol_type == 'both':
-    vc_min = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
-    vc_appr = calculate_approx_vc(instance['num_vertices'], instance['graph'])
+    size_min, vc_min = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+    size_appr, vc_appr = calculate_approx_vc(instance['num_vertices'], instance['graph'])
     sols['calculate_minimum_vc'] = f"{vc_min}"
     sols['calculate_approx_vc'] = f"{vc_appr}"
 
@@ -325,20 +325,19 @@ def calculate_minimum_vc(num_vertices, graph):
           curVC.clear()
           curVC = G.copy()
            
-  # Formatto la soluzione come stringa 
-  #res = ''
-  #for n in optVC:
-  #  res += str(n[0]) + ' ' 
-
   res = []
   for n in optVC:
     res.append(n[0])
 
-  res.sort() 
+  res.sort()
+  size = len(res)
+ 
   # return optVC
-  return res
+  return size, ' '.join(map(str,res))
 
-## Calcolo una 2-approssimazione del VC. La scelta dell'arco è greedy
+## Calcolo una 2-approssimazione del VC. La scelta dell'arco è greedy,
+## Quindi in teoria dovrei avere sempre la miglior approssimazione
+## possibile...
 def calculate_approx_vc(num_vertices, graph):
   G = get_edges(graph)
   curG = G.copy()
@@ -375,7 +374,9 @@ def calculate_approx_vc(num_vertices, graph):
         curG.remove(e)
         visited.append(e)
 
-  return c
+  size = len(c)
+
+  return size, ' '.join(map(str,c))
 
 ## Verifico se un vertex cover fornito in input è un vc valido per il grafo
 def verify_vc(vertices, graph):
@@ -426,7 +427,7 @@ def verify_approx_vc(vc_edges, graph):
 
 ## Verifico se una soluzione approssimata è 2-approssimazione per il VC
 def is_2_approx(c, c_star):
-  if c/c_star <= 2:
+  if len(c)/len(c_star) <= 2:
     return 1
   
   return 0
