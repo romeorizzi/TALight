@@ -257,6 +257,31 @@ services:
         default: en
 
   ##
+  ## EVAL_VC
+  ##
+  eval_vc:
+    description: 'This service evaluates your code which calculates the minimum number of sheets in the collage.'
+    evaluator: [python, services/eval_vc_driver.py]
+    files:
+      - sourcecode
+    args:
+      goal:
+        explain: 'Set your goal (efficient includes also correct).'
+        regex: ^(correct|minimum|approx)$
+        default: correct
+      code_lang: 
+        explain: 'The more we know about your bot the better we can estimate the efficiency of your algorithm.'
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      seed:
+        explain: 'Specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+
+  ##
   ## ALTRO
   ##
   help:

@@ -123,7 +123,7 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
   for _ in range(num_instances):
     instance = {}
     if seed == "random_seed":
-      seed = random.randint(1000000,999999)
+      seed = random.randint(100000,999999)
 
     instance['num_vertices'] = num_vertices
     instance['graph'] = random_graph(num_vertices, seed)
@@ -159,8 +159,9 @@ def random_graph(num_vertices, seed):
 
   return graph
 
-def print_graph(graph, instance_format=DEFAULT_INSTANCE_FORMAT):
-  pass
+def print_graph(num_vertices, graph, instance_format=DEFAULT_INSTANCE_FORMAT):
+  print(f'{num_vertices}')  
+  print(f'{graph[0]}')
 
 
 '''
