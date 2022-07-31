@@ -103,7 +103,7 @@ def get_instance_from_txt(instance_as_str, format_name):
 def instance_to_dat_str(instance,format_name='collage_dat'):
   """Of the given <instance>, this function returns the .dat string in format <format_name>"""
   assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
-  rainbow = instance['rainbow']
+  rainbow = ' '.join(map(str, instance['rainbow']))
   seq_len = instance['seq_len']
 
   output = f"param n := {seq_len};                  # Number of stripes in the rainbow\n"
