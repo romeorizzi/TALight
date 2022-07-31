@@ -77,16 +77,27 @@ def test(instance):
 
   start = monotonic()
   answer = TALinput(str, line_recognizer=lambda val,TAc,LANG:True, TAc=TAc, LANG=LANG)
-  answer = ' '.join(map(str, answer))
+  #answer = ' '.join(map(str, answer))
   end = monotonic()
   instance['measured_time'] = end-start
 
   if num_vertices < 80:
-    size,vc = vcl.calculate_minimum_vc(num_vertices, graph)
+    #size,vc = vcl.calculate_minimum_vc(num_vertices, graph)
+    ok = vcl.verify_vc(answer, graph)
   else:
-    size,vc = vcl.calculate_approx_vc(num_vertices, graph)
+    #size,vc = vcl.calculate_approx_vc(num_vertices, graph)
+    ans = []
+    edges = ''
 
-  if answer == vc:
+    for i in range(0, len(answer), 2):
+      edges += '{' + answer[i] + ',' + answer[i+1] + '}'
+
+    ans.append(edges)
+
+    ok = vcl.verify_approx_vc(ans, graph)
+
+  #if answer == vc:
+  if ok:
     instance['answer_correct'] = True
   else:
     instance['answer_correct'] = False

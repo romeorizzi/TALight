@@ -68,17 +68,28 @@ if not ENV['vc_sol_val']: # manual insertion
 else:
   answer = ENV['vc_sol_val']
 
+size_sol,appr_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'])
+
 if answer[0] == 'C' or answer[0] == 'c':
-  size,right_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'])
-  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is {right_sol}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is {size}.'), "green", ["bold"])
+  #size,right_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'])
+  #TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is {right_sol}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is {appr_sol}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is {size_sol}.'), "green", ["bold"])
 else:
+  size_ans = 2 * (len(vcl.get_edges(answer)))
   right_sol = vcl.verify_approx_vc(answer, instance['graph'])
 
   if right_sol:
-    TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution value you provided is a valid 2-approximation vertex cover for the graph.'), "green", ["bold"])
+    if size_ans == size_sol:
+      TAc.OK()
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "green", ["bold"])
+    elif size_ans > size_sol:
+      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph, but you can do better than this (your size is {size_ans}).'), "yellow", ["bold"])
+    else:
+      TAc.OK()
+      TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it\'s better than mine!'), "green", ["bold"])
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-best-sol", f'We don\'t agree, the solution value you provided is not a valid 2-approximation vertex cover for the graph.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation vertex cover for the graph.'), "red", ["bold"])
 
 exit(0)

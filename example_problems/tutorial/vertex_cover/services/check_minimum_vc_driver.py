@@ -68,17 +68,25 @@ if not ENV['vc_sol_val']: # manual insertion
 else:
   answer = ENV['vc_sol_val']
 
+size_opt, opt_sol = vcl.calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+
 if answer[0] == 'C' or answer[0] == 'c':
-  size,right_sol = vcl.calculate_minimum_vc(instance['num_vertices'], instance['graph'])
-  TAc.print(LANG.render_feedback("best-sol", f'A possible (minimum) vertex cover is {right_sol}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the (minumum) vertex cover is {size}.'), "green", ["bold"])
+  #size_opt,opt_sol = vcl.calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+  #TAc.print(LANG.render_feedback("best-sol", f'A possible (minimum) vertex cover is {opt_sol}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum vertex cover is {opt_sol}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum vertex cover is {size_opt}.'), "green", ["bold"])
 else:
   right_sol = vcl.verify_vc(answer, instance['graph'])
+  size_ans = len(answer)
 
   if right_sol:
-    TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution value you provided is a valid vertex cover for the graph.'), "green", ["bold"])
+    if size_ans == size_opt:
+      TAc.OK()
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid minimum vertex cover for the graph.'), "green", ["bold"])
+    elif size_ans > size_opt:
+      TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution vyou provided is a valid vertex cover for the graph, but it\'s not minimum (your size is {size_ans}).'), "yellow", ["bold"])
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-best-sol", f'We don\'t agree, the solution value you provided is not a valid vertex cover for the graph.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph.'), "red", ["bold"])
 
 exit(0)

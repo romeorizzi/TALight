@@ -22,7 +22,8 @@ services:
         default: 1
         explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''vertex_cover.tar\'' you get downloaded on your machine by issuing `rtal get vertex_cover`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
       num_vertices:
-        regex: ^([1-9][0-9]*)$
+        #regex: ^([1-9][0-9]*)$
+        regex: ^([1-9]|[1-9][0-9]|100)$
         default: 8
         explain:
       num_edges:
@@ -79,7 +80,8 @@ services:
         default: with_vertices
         explain:
       num_vertices:
-        regex: ^([1-9][0-9]*)$
+        #regex: ^([1-9][0-9]*)$
+        regex: ^([1-9]|[1-4][0-9]|50)$
         default: 8
         explain:
       num_edges:
@@ -128,7 +130,8 @@ services:
         default: with_vertices
         explain:
       num_vertices:
-        regex: ^([1-9][0-9]*)$
+        #regex: ^([1-9][0-9]*)$
+        regex: ^([1-9]|[1-9][0-9]|1[0-2][0-9]|130)$
         default: 8
         explain:
       num_edges:
@@ -177,7 +180,8 @@ services:
         default: with_vertices
         explain:
       num_vertices:
-        regex: ^([1-9][0-9]*)$
+        #regex: ^([1-9][0-9]*)$
+        regex: ^([1-9]|[1-6][0-9]|70)$
         default: 8
         explain:
       num_edges:
