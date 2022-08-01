@@ -61,6 +61,7 @@ services:
         
   check_sol:
     evaluator: [python, services/check_sol_driver.py]
+    description: 'For a given rainbow instance, the problem asks you to find the number of sheets that made up the collage. If you think to know what the best value is, you can call this service for confirmation. You can also ask the service to tell you what the true optimum value is.'
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$

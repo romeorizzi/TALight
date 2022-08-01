@@ -61,6 +61,7 @@ services:
 
   check_sol:
     evaluator: [python, services/check_sol_driver.py]
+    description: 'Per una data istanza dell`arcobaleno, il problema ti chiede di trovare il numero di fogli che compone il collage. Se pensi di conoscere la soluzione corretta, puoi chiamare questo servizio per conferma. Puoi anche chiedere al servizio quale sia la soluzione esatta.'
     description: 'Questo servizio ti chiede di fornire una soluzione all`istanza generata dal problema. Se la soluzione fornita è corretta, verrà visualizzato un messaggio di conferma, altrimenti si avrà un messaggio di errore.'
     args:
       source:
