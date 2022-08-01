@@ -1,0 +1,299 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  
+  ##
+  ## SOLVE
+  ##
+  solve:
+    evaluator: [python, services/solve_driver.py]
+    description: 'Questo servizio fornisce una soluzione per una data istanza del problema Vertex Cover. Puoi caricare un file contenente l`istanza sul gestore di istanze del servizio, utilizzando l`opzione `-f` del sottocomando `connect` di `rtal`, oppure provare a inserire la tua istanza direttamente dal terminale una volta che il servizio è stato avviato. Inoltre puoi generare una istanza pseudo-casuale specificandone le caratteristiche quali la lunghezza dell`istanza e il numero massimo di colori utilizzabile oppure selezionare una delle istanze disponibili nel catalogo delle istanze.'
+    files:
+      - instance
+    args:
+      source:
+        regex: ^(catalogue|randgen_1|terminal)$
+        default: randgen_1
+        explain: 'Le istanze possono provenire dal catalogo o essere generate sul posto. Scegli un`opzione tra:\n [catalogue] il servizio restituirà un`istanza prelevata dal catalogo delle istanze memorizzate sul server. Le istanze nel catalogo sono numerate progressivamente a partire da 1. Usa l`argomento `instance_id` per specificare l`istanza che ti interessa. Chiamare questo servizio potrebbe non essere il modo più conveniente per ottenere un`istanza dal catalogo: l`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che ti viene scaricato sul tuo computer utilizzando il comando `rtal get vertex_cover`. Inoltre, se mantieni l`intero repository con il problema in locale (tutte le fonti), questo catalogo viene creato automaticamente digitando `make` per una configurazione completa del problema sulla tua macchina (questo è un passaggio necessario quando si imposta il problema su un server).\n [randgen_1] il servizio fornisce l`istanza pseudo-casuale prodotta dal generatore pseudo-casuale. Ogni generatore richiede all`utente di specificare un insieme di valori per i parametri necessari (come ad esempio il `seed`) al fine di ottenere in modo univoco l`istanza risultante. Questo set dipende dal generatore. I valori validi per questo set di parametri (chiamato "descrittore di istanza") offrono una "descrizione di istanza" che specifica in modo univoco l`istanza w.r.t. quel generatore. Assicurati quindi di passare i valori desiderati per tutti gli argomenti di servizio corrispondenti ai parametri richiesti dal generatore. Si noti che passando la stessa configurazione di valori si ottiene la stessa istanza. Ciò è utile poiché garantisce la riproducibilità di qualsiasi esperimento e la possibilità di utilizzare ed esplorare una stessa istanza con diversi servizi di questo problema.\n [terminal] il servizio utilizzerà un`istanza collage che inserirai manualmente, riga per riga.'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: any positive natural (in its decimal representation)
+        default: 1
+        explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
+      num_vertices:
+        #regex: ^([1-9][0-9]*)$
+        regex: ^([1-9]|[1-9][0-9]|100)$
+        default: 8
+        explain: 'Numero dei vertici del grafo'
+      num_edges:
+        regex: ^([1-9][0-9]*)$
+        default: 11
+        explain: 'Numero degli archi che connettono i vertici del grafo'
+      sol_type:
+        regex: ^(minimum|approx|both)
+        default: minimum
+        explain: 'Scegli il tipo di soluzione che preferisci: "minimum" restituisce un vertex cover minimo per il grafo, "approx" restituisce una 2-approssimazione del vertex cover'
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
+        default: random_seed
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
+      instance_format:
+        regex: ^(simple|with_vertices)$
+        default: with_vertices
+        explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
+        explain1: '[simple] Contiene solo il grafo'
+        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Se questo flag è impostato su 1, verrà stampata solo l`istanza. In questo modo, se reindirizzi l`output su file (>) otterrai un file di istanza valido per gli altri servizi.'
+      display:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, il file di istanza viene mostrato dal servizio.'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Se questo flag è impostato su 1, il file di istanza viene scaricato nella cartella il cui percorso completo è specificato tramite il flag -o (se questo percorso è relativo si trova da dove è stata emessa la chiamata di servizio).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+  
+  ##
+  ## CHECK_MINIMUM_VC --> L'utente deve fornire il suo vc e il sistema dice se è corretto o no
+  ##
+  check_minimum_vc:
+    evaluator: [python, services/check_minimum_vc_driver.py]
+    description: 'Questo servizio verifica se il tuo vertex cover è il vertex cover minimo per il grafo dato oppure no'
+    args:
+      source:
+        regex: ^(catalogue|randgen_1|terminal)$
+        default: randgen_1
+        explain: 'Le istanze possono provenire dal catalogo o essere generate sul posto. Scegli un`opzione tra:\n [catalogue] il servizio restituirà un`istanza prelevata dal catalogo delle istanze memorizzate sul server. Le istanze nel catalogo sono numerate progressivamente a partire da 1. Usa l`argomento `instance_id` per specificare l`istanza che ti interessa. Chiamare questo servizio potrebbe non essere il modo più conveniente per ottenere un`istanza dal catalogo: l`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che ti viene scaricato sul tuo computer utilizzando il comando `rtal get vertex_cover`. Inoltre, se mantieni l`intero repository con il problema in locale (tutte le fonti), questo catalogo viene creato automaticamente digitando `make` per una configurazione completa del problema sulla tua macchina (questo è un passaggio necessario quando si imposta il problema su un server).\n [randgen_1] il servizio fornisce l`istanza pseudo-casuale prodotta dal generatore pseudo-casuale. Ogni generatore richiede all`utente di specificare un insieme di valori per i parametri necessari (come ad esempio il `seed`) al fine di ottenere in modo univoco l`istanza risultante. Questo set dipende dal generatore. I valori validi per questo set di parametri (chiamato "descrittore di istanza") offrono una "descrizione di istanza" che specifica in modo univoco l`istanza w.r.t. quel generatore. Assicurati quindi di passare i valori desiderati per tutti gli argomenti di servizio corrispondenti ai parametri richiesti dal generatore. Si noti che passando la stessa configurazione di valori si ottiene la stessa istanza. Ciò è utile poiché garantisce la riproducibilità di qualsiasi esperimento e la possibilità di utilizzare ed esplorare una stessa istanza con diversi servizi di questo problema.\n [terminal] il servizio utilizzerà un`istanza collage che inserirai manualmente, riga per riga.'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: any positive natural (in its decimal representation)
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 1
+        explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
+      instance_format:
+        regex: ^(simple|with_vertices)$
+        default: with_vertices
+        explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
+        explain1: '[simple] Contiene solo il grafo'
+        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+      num_vertices:
+        #regex: ^([1-9][0-9]*)$
+        regex: ^([1-9]|[1-4][0-9]|50)$
+        default: 8
+        explain: 'Numero dei vertici del grafo'
+      num_edges:
+        regex: ^([1-9][0-9]*)$
+        default: 11
+        explain: 'Numero degli archi che connettono i vertici del grafo'
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
+        default: random_seed
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
+      vc_sol_val:
+        regex: ^.*^ # Deve essere una stringa contenente i (supposti) vertici del vc
+        default: 0
+        explain: 'Usa questo argomento per dire al servizio quello che ritieni siano i vertici appartenenti al vertex cover. Lascia questo argomento al suo valore predefinito nel caso in cui non hai congetture e intendi utilizzare questo servizio solo per ottenere il valore ottimale. Una soluzione per una determinata istanza di vertex cover è una sequenza di numeri interi non negativi.'
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Se questo flag è impostato su 1, verrà stampata solo l`istanza. In questo modo, se reindirizzi l`output su file (>) otterrai un file di istanza valido per gli altri servizi.'
+      display:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, il file di istanza viene mostrato dal servizio.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+
+  ##
+  ## CHECK_APPROX_VC --> L'utente deve fornire il suo vc e il sistema dice se è corretto o no
+  ##
+  check_approx_vc:
+    evaluator: [python, services/check_approx_vc_driver.py]
+    description: 'Questo servizio verifica se la tua approssimazione del vertex cover è corretta oppure no'
+    args:
+      source:
+        regex: ^(catalogue|randgen_1|terminal)$
+        default: randgen_1
+        explain: 'Le istanze possono provenire dal catalogo o essere generate sul posto. Scegli un`opzione tra:\n [catalogue] il servizio restituirà un`istanza prelevata dal catalogo delle istanze memorizzate sul server. Le istanze nel catalogo sono numerate progressivamente a partire da 1. Usa l`argomento `instance_id` per specificare l`istanza che ti interessa. Chiamare questo servizio potrebbe non essere il modo più conveniente per ottenere un`istanza dal catalogo: l`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che ti viene scaricato sul tuo computer utilizzando il comando `rtal get vertex_cover`. Inoltre, se mantieni l`intero repository con il problema in locale (tutte le fonti), questo catalogo viene creato automaticamente digitando `make` per una configurazione completa del problema sulla tua macchina (questo è un passaggio necessario quando si imposta il problema su un server).\n [randgen_1] il servizio fornisce l`istanza pseudo-casuale prodotta dal generatore pseudo-casuale. Ogni generatore richiede all`utente di specificare un insieme di valori per i parametri necessari (come ad esempio il `seed`) al fine di ottenere in modo univoco l`istanza risultante. Questo set dipende dal generatore. I valori validi per questo set di parametri (chiamato "descrittore di istanza") offrono una "descrizione di istanza" che specifica in modo univoco l`istanza w.r.t. quel generatore. Assicurati quindi di passare i valori desiderati per tutti gli argomenti di servizio corrispondenti ai parametri richiesti dal generatore. Si noti che passando la stessa configurazione di valori si ottiene la stessa istanza. Ciò è utile poiché garantisce la riproducibilità di qualsiasi esperimento e la possibilità di utilizzare ed esplorare una stessa istanza con diversi servizi di questo problema.\n [terminal] il servizio utilizzerà un`istanza collage che inserirai manualmente, riga per riga.'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: any positive natural (in its decimal representation)
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 1
+        explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
+      instance_format:
+        regex: ^(simple|with_vertices)$
+        default: with_vertices
+        explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
+        explain1: '[simple] Contiene solo il grafo'
+        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+      num_vertices:
+        #regex: ^([1-9][0-9]*)$
+        regex: ^([1-9]|[1-9][0-9]|1[0-2][0-9]|130)$
+        default: 8
+        explain: 'Numero dei vertici del grafo'
+      num_edges:
+        regex: ^([1-9][0-9]*)$
+        default: 11
+        explain: 'Numero degli archi che connettono i vertici del grafo'
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
+        default: random_seed
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
+      vc_sol_val:
+        regex: ^.*^ # Deve essere una stringa contenente i (supposti) vertici del vc
+        default: 0
+        explain: 'Usa questo argomento per dire al servizio quello che ritieni siano i vertici appartenenti al vertex cover. Lascia questo argomento al suo valore predefinito nel caso in cui non hai congetture e intendi utilizzare questo servizio solo per ottenere il valore ottimale. Una soluzione per una determinata istanza di vertex cover è una sequenza di numeri interi non negativi.'
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Se questo flag è impostato su 1, verrà stampata solo l`istanza. In questo modo, se reindirizzi l`output su file (>) otterrai un file di istanza valido per gli altri servizi.'
+      display:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, il file di istanza viene mostrato dal servizio.'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+
+  ##
+  ## GIMME_INSTANCE
+  ##
+  gimme_instance:
+    evaluator: [python,services/gimme_instance_driver.py]
+    description: 'Un`istanza del problema Vertex Cover consiste in un grafo indiretto, definita da parametri quali il numero di vertici e il seed che genera gli archi del grafo. Chiama questo servizio (`gimme_instance`) per ottenere un`istanza di tuo gradimento in uno dei formati supportati. L`istanza può provenire da fonti differenti (generata casualmente o appartenente a un catalogo presente sul server). Il servizio può essere utilizzato per ottenere un`istanza casuale oppure un`istanza presente nel catalogo.\nPuoi chiedere di salvare l`istanza in un file sulla tua macchina locale e/o di visualizzarla sul monitor. Per tua comodità, il formato di questa istanza può essere specificato attraverso l`argomento `instance_format`.'
+    args:
+      source:
+        regex: ^(catalogue|randgen_1)$
+        default: randgen_1
+        explain: 'Le istanze possono provenire dal catalogo o essere generate sul posto. Scegli un`opzione tra:\n [catalogue] il servizio restituirà un`istanza prelevata dal catalogo delle istanze memorizzate sul server. Le istanze nel catalogo sono numerate progressivamente a partire da 1. Usa l`argomento `instance_id` per specificare l`istanza che ti interessa. Chiamare questo servizio potrebbe non essere il modo più conveniente per ottenere un`istanza dal catalogo: l`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che ti viene scaricato sul tuo computer utilizzando il comando `rtal get vertex_cover`. Inoltre, se mantieni l`intero repository con il problema in locale (tutte le fonti), questo catalogo viene creato automaticamente digitando `make` per una configurazione completa del problema sulla tua macchina (questo è un passaggio necessario quando si imposta il problema su un server).\n [randgen_1] il servizio fornisce l`istanza pseudo-casuale prodotta dal generatore pseudo-casuale. Ogni generatore richiede all`utente di specificare un insieme di valori per i parametri necessari (come ad esempio il `seed`) al fine di ottenere in modo univoco l`istanza risultante. Questo set dipende dal generatore. I valori validi per questo set di parametri (chiamato "descrittore di istanza") offrono una "descrizione di istanza" che specifica in modo univoco l`istanza w.r.t. quel generatore. Assicurati quindi di passare i valori desiderati per tutti gli argomenti di servizio corrispondenti ai parametri richiesti dal generatore. Si noti che passando la stessa configurazione di valori si ottiene la stessa istanza. Ciò è utile poiché garantisce la riproducibilità di qualsiasi esperimento e la possibilità di utilizzare ed esplorare una stessa istanza con diversi servizi di questo problema.'
+      instance_id:
+        regex: ^([1-9][0-9]*)$
+        regex-explained: any positive natural (in its decimal representation)
+        regex-URL: 'https://extendsclass.com/regex/a55297b'
+        default: 1
+        explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
+      num_vertices:
+        regex: ^([1-9][0-9]*)$
+        default: 8
+        explain: 'Numero dei vertici del grafo'
+      num_edges:
+        regex: ^([1-9][0-9]*)$
+        default: 11
+        explain: 'Numero degli archi che connettono i vertici del grafo'
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
+      instance_format:
+        regex: ^(with_vertices|simple|vertex_cover_dat)$
+        default: with_vertices
+        explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
+        explain1: '[simple] Contiene solo il grafo'
+        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+        explain2: '[vertex_cover_dat] Contiene il grafo con il numero di vertici, in formato .dat'
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Se questo flag è impostato su 1, verrà stampata solo l`istanza. In questo modo, se reindirizzi l`output su file (>) otterrai un file di istanza valido per gli altri servizi.'
+      display:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'Se questo flag è impostato su 1, il file di istanza viene mostrato dal servizio.'
+      download:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Se questo flag è impostato su 1, il file di istanza viene scaricato nella cartella il cui percorso completo è specificato tramite il flag -o (se questo percorso è relativo si trova da dove è stata emessa la chiamata di servizio).'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+
+  ##
+  ## EVAL_MINIMUM_VC
+  ##
+  eval_minimum_vc:
+    description: 'This service evaluates your code which calculates the minimum vertex cover for a given graph.'
+    evaluator: [python, services/eval_minimum_vc_driver.py]
+    files:
+      - sourcecode
+    args:
+      goal:
+        explain: 'Specifica il goal.'
+        regex: ^(correct|minimum)$
+        default: correct
+      code_lang: 
+        explain: 'Speficica il linguaggio con cui è scritto il bot. Più conosciamo del tuo bot, più possiamo stimare l`efficienza del tuo algoritmo.'
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      seed:
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+
+  ##
+  ## EVAL_2APPROX_VC
+  ##
+  eval_2approx_vc:
+    description: 'This service evaluates your code which calculates the 2-approximated vertex cover for a given graph.'
+    evaluator: [python, services/eval_2approx_vc_driver.py]
+    files:
+      - sourcecode
+    args:
+      goal:
+        explain: 'Specifica il goal.'
+        regex: ^(correct|big_instances)$
+        default: correct
+      code_lang: 
+        explain: 'Speficica il linguaggio con cui è scritto il bot. Più conosciamo del tuo bot, più possiamo stimare l`efficienza del tuo algoritmo.'
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      seed:
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+
+  ##
+  ## ALTRO
+  ##
+  help:
+    evaluator: [python, services/help/help_driver.py]
+    args:
+      page:
+        regex: ^(collage|solve|check_sol|eval_sol|gimme_instance|help|synopsis)$
+        default: help
+      lang:
+        regex: ^(en|it)$
+        default: en
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: 'Any string without space characters but meant to specify one of the services of the problem %(problem)s'
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: en
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
