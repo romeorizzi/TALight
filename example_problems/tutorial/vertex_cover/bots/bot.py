@@ -19,8 +19,6 @@ print(f"""# I am a bot for the TALight problem `Vertex Cover`. Call me like this
 #   {args.minimum=}
 #   {args.approx=}""")
 
-THRESHOLD = 80
-
 # BOT = Bot(report_inputs=True,reprint_outputs=True)
 BOT = Bot(report_inputs=False,reprint_outputs=False)
 
@@ -216,14 +214,12 @@ while True:
   num_vertices = int(BOT.input())
   graph = BOT.input().split()
 
-  if num_vertices < THRESHOLD:
-    if args.minimum:
-      size,answer = calculate_minimum_vc(num_vertices, graph)
-    elif args.approx:
-      size,answer = calculate_approx_vc(num_vertices, graph)
-    else:
-      size,answer = calculate_minimum_vc(num_vertices, graph)
-  else:
+  if args.minimum:
+    size,answer = calculate_minimum_vc(num_vertices, graph)
+  elif args.approx:
     size,answer = calculate_approx_vc(num_vertices, graph)
+  else:
+    size,answer = calculate_minimum_vc(num_vertices, graph)
   
+  BOT.print(size)
   BOT.print(answer)
