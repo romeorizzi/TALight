@@ -1,0 +1,13 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+successful-load: 'Istanza caricata con successo'
+waiting-line: '#? In attesa del grafo\nFormato degli archi: {{x,y}}{{w,z}}...{{n,m}} \n'
+insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici:'
+instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo'
+this-is-the-instance: '\nEcco l`istanza:\n'
+all-solutions-title: 'Ecco le soluzioni per l`istanza data:'
+solutions: 'Soluzione per il servizio {key}: {content[key]}'

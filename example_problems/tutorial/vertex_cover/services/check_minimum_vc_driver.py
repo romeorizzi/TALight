@@ -84,7 +84,7 @@ else:
       TAc.OK()
       TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid minimum vertex cover for the graph.'), "green", ["bold"])
     elif size_ans > size_opt:
-      TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution vyou provided is a valid vertex cover for the graph, but it\'s not minimum (your size is {size_ans}).'), "yellow", ["bold"])
+      TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid vertex cover for the graph, but it`s not minimum (your size is {size_ans}).'), "yellow", ["bold"])
   else:
     TAc.NO()
     TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph.'), "red", ["bold"])

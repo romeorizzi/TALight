@@ -58,7 +58,7 @@ def test(instance):
 
   TAc.print(LANG.render_feedback("graph-size",'# We have this number of vertices in the graph: '), "white", ["bold"], end='')
   TAc.print(num_vertices, "yellow", ["bold"])
-  TAc.print(LANG.render_feedback("print-graph", f'\n# The sequence is:\n'), "white", ["bold"])
+  TAc.print(LANG.render_feedback("print-graph", f'\n# The graph is:\n'), "white", ["bold"])
   #TAc.print(num_vertices, "white", ["bold"])
   #TAc.print(graph[0], "white", ["bold"])
 

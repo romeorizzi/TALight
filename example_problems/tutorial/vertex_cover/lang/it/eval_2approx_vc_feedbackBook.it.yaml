@@ -1,0 +1,22 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+graph-size: '# Abbiamo questo numero di vertici nel grafo: '
+print-graph: '\nIl grafo è:\n'
+best-sol-question: '\n# Qual è la 2-approssimazione del vertex cover per questo grafo?'
+
+# SUMMARIES
+summary: '\n# RIEPILOGO RISULTATI PER IL GOAL "{goal}":\n'
+right-ans: '# Testcase {i}: Risposta corretta! Tempo impiegato sulla tua macchina: {t["measured_time"]}'
+wrong-ans: '# NO! Hai dato la soluzione sbagliato all`istanza avente questi parametri:\n#num_vertices = {t["num_vertices"]}, seed = {t["seed"]}.\n'
+out-of-time-ans: '# La valutazione è stata interrotta in quanto la tua soluzione ha impiegato troppo tempo su questa istanza o su una delle precedenti. I parametri di questa istanza sono:\n#num_vertices = {t["num_vertices"]}, seed = {t["seed"]}.\n'
+right-in-time: '# OK! La tua soluzione ha raggiunto l`obiettivo "{goal}".\n'
+right-not-in-time: '# OK! Anche se tutte le risposte date dalla tua soluzione sono corrette, queste superano il tempo limite su qualche istanza. Pertanto non hai raggiunto il goal "{goal}"'
+wrong-answ: '# NO! La tua soluzione ha dato una risposta sbagliata su almeno un`istanza. La tua soluzione non ha raggiunto il goal "{goal}".\n'
+summary-of-results: '# RIEPILOGO DEI RISULTATI:'
+short-summary-of-results: '# RIEPILOGO DEI RISULTATI:'
+goal-passed: '# Goal {goal}: SUPERATO (istanze superate: {num_instances_passed[goal]}/{num_instances[goal]} istanze)'
+goal-NOT-passed: '# Goal {goal}: NON superato (istanze superate: {num_instances_passed[goal]}/{num_instances[goal]} instanze, risposte corrette: {num_instances_correct_ans[goal]}/{num_instances[goal]}, risposte sbagliate: {num_instances_wrong_ans[goal]}/{num_instances[goal]} istanze)'

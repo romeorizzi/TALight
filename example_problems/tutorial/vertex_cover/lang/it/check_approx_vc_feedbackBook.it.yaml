@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+successful-load: 'Istanza caricata con successo'
+waiting-line: '#? In attesa del grafo\nFormato degli archi: {{x,y}}{{w,z}}...{{n,m}} \n'
+insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici:'
+instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo'
+this-is-the-instance: '\nEcco l`istanza:\n'
+insert-opt-value: '\nScrivi qui quella che ritieni sia una 2-approssimazione del vertex cover per questo grafo, se ne hai una. Altrimenti, se vuoi conoscere la risposta corretta inserisci "C".'
+best-sol: 'Una possibile 2-approssimazione del vertex cover è {appr_sol}.'
+size-sol: 'La taglia del vertex cover 2-approssimato è {size_sol}.'
+right-best-sol: 'Perfetto, la soluzione che hai fornito è una 2-approssimazione valida per il grafo.'
+right-sol: 'La soluzione che hai fornito è una 2-approssimazione valida del vertex cover per il grafo, ma puoi fare meglio di così (la tua taglia è {size-ans})'
+new-best-sol: 'Grande! La soluzione che hai fornito è una 2-approssimazione valida del vertex cover per il grafo ed è migliore della mia!'
+wrong-sol: 'Spiacente, la soluzione che hai fornito NON è una 2-approssimazione del vertex cover valida per il grafo'
