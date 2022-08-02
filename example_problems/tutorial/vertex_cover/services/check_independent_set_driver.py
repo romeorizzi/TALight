@@ -99,7 +99,6 @@ else:
         edge = tuple(sorted(edge))
 
         if edge in edges:
-          print("si")
           ind_set_check = False
           break
 
