@@ -47,7 +47,7 @@ input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec + PSL.add
 PSL.check_instance_consistency(input_data_assigned)
 request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV, PSL.answer_objects_spec, PSL.answer_objects_implemented)
 all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"request":name_of}
-print(f"all_data={all_data}", file=stderr)
+#print(f"all_data={all_data}", file=stderr)
 all_data["oracle"] = PSL.solver(all_data)
 SEF = RO_eval.std_eval_feedback(ENV,all_data["oracle"])
 KingArthur = PSL.verify_submission_problem_specific(SEF, input_data_assigned, long_answer_dict)

@@ -19,7 +19,7 @@ class TALcolors:
         self.color_implementation = color_implementation
         if color_implementation == "ANSI" and environ["TAL_META_TTY"]=='0':
             self.color_implementation = None
-        if self.color_implementation != "None":
+        if self.color_implementation != None:
             self.termcolor_is_installed = False
             if environ["TAL_META_TTY"]=='1' or color_implementation=="html":
                 try:
