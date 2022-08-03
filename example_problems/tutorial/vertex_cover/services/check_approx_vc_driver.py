@@ -68,7 +68,7 @@ if not ENV['vc_sol_val']: # manual insertion
 else:
   answer = ENV['vc_sol_val']
 
-size_sol,appr_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'])
+size_sol,appr_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'], 'greedy')
 
 if answer[0] == 'C' or answer[0] == 'c':
   #size,right_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'])
@@ -84,7 +84,7 @@ else:
       TAc.OK()
       TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "green", ["bold"])
     elif size_ans > size_sol:
-      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph, but you can do better than this (your size is {size_ans}).'), "yellow", ["bold"])
+      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. There may be a better approximation (your size is {size_ans}).'), "yellow", ["bold"])
     else:
       TAc.OK()
       TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it\'s better than mine!'), "green", ["bold"])

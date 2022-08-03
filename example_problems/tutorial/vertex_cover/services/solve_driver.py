@@ -62,7 +62,7 @@ TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"
 
 content = vcl.solutions(ENV['sol_type'],instance,ENV['instance_format'])
 
-TAc.print(LANG.render_feedback("all-solutions-title", f"Here are the solutions for the given instance:"), "green", ["bold"])
+TAc.print(LANG.render_feedback("all-solutions-title", f"Here are possible solutions for the given instance:"), "green", ["bold"])
 
 for key in content.keys():
   TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: {content[key]}'), "white",["bold"])

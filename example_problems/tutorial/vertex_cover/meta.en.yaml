@@ -32,7 +32,7 @@ services:
         explain: 'Number of edges that connect the vertices of the graph'
       sol_type:
         regex: ^(minimum|approx|both)
-        default: minimum
+        default: both
         explain: 'Choose the type of vertex cover solution you want: "minimum" returns a minimum vertex cover for the graph, "approx" returns a 2-approximated vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -285,8 +285,8 @@ services:
     args:
       goal:
         explain: 'Set your goal (efficient includes also correct).'
-        regex: ^(correct|minimum)$
-        default: correct
+        regex: ^(feasible|minimum)$
+        default: feasible
       code_lang: 
         explain: 'The more we know about your bot the better we can estimate the efficiency of your algorithm.'
         regex: ^(python|java|nodejs|compiled)$
@@ -310,8 +310,8 @@ services:
     args:
       goal:
         explain: 'Set your goal (efficient includes also correct).'
-        regex: ^(correct|big_instances)$
-        default: correct
+        regex: ^(feasible|big_instances)$
+        default: feasible
       code_lang: 
         explain: 'The more we know about your bot the better we can estimate the efficiency of your algorithm.'
         regex: ^(python|java|nodejs|compiled)$

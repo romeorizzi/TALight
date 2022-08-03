@@ -180,7 +180,7 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
 
   elif sol_type == 'both':
     size_min, vc_min = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
-    size_appr, vc_appr = calculate_approx_vc(instance['num_vertices'], instance['graph'])
+    size_appr, vc_appr = calculate_approx_vc(instance['num_vertices'], instance['graph'],'greedy')
     sols['calculate_minimum_vc'] = f"{vc_min}"
     sols['calculate_approx_vc'] = f"{vc_appr}"
 
@@ -339,27 +339,34 @@ def calculate_minimum_vc(num_vertices, graph):
 ## Calcolo una 2-approssimazione del VC. La scelta dell'arco è greedy,
 ## Quindi in teoria dovrei avere sempre la miglior approssimazione
 ## possibile...
-def calculate_approx_vc(num_vertices, graph):
+def calculate_approx_vc(num_vertices, graph, mode='random'):
   G = get_edges(graph)
   curG = G.copy()
   curG.sort(key=lambda tup: tup[0])
-  vertices_list = [i for i in range(num_vertices)]
 
   visited = []
   c = []
 
   while curG != []:
-    v = find_maxdeg(vertices_list, curG)[0]
-    neighbour = neighbours(v, curG)
-    vertices_list.remove(v)
+    if mode == 'greedy':
+      vertices_list = [i for i in range(num_vertices)]
+      v = find_maxdeg(vertices_list, curG)[0]
+      neighbour = neighbours(v, curG)
+      vertices_list.remove(v)
     
-    v1 = find_maxdeg(neighbour, curG)[0]
-    vertices_list.remove(v1)
-
-    if v > v1:
-      arco = (v1,v)
-    else:
+      v1 = find_maxdeg(neighbour, curG)[0]
+      vertices_list.remove(v1)
+    
       arco = (v,v1)
+      arco = tuple(sorted(arco))
+
+    ## Prendo un arco casualmente
+    elif mode == 'random':
+      i = random.randint(0,len(curG)-1)
+      arco = curG[i]
+      arco = tuple(sorted(arco))
+      v = arco[0]
+      v1 = arco[1]
 
     visited.append(arco)
     curG.remove(arco)

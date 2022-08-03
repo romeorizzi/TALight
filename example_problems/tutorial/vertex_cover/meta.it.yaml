@@ -32,7 +32,7 @@ services:
         explain: 'Numero degli archi che connettono i vertici del grafo'
       sol_type:
         regex: ^(minimum|approx|both)
-        default: minimum
+        default: both
         explain: 'Scegli il tipo di soluzione che preferisci: "minimum" restituisce un vertex cover minimo per il grafo, "approx" restituisce una 2-approssimazione del vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$

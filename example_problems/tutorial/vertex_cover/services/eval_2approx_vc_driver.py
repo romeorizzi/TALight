@@ -32,14 +32,14 @@ else:
   MAX_TIME = 2
 
 # INSTANCES FOR GOAL = correct
-if ENV['goal'] == 'correct':
-  goals.append('correct')
+if ENV['goal'] == 'feasible':
+  goals.append('feasible')
 
   num_vertices = 10
   NUM_INSTANCES = 5
   scaling_factor = 1.6
 
-  instances['correct'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices)
+  instances['feasible'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices)
 
 # INSTANCES FOR GOAL = approx
 if ENV['goal'] == 'big_instances':
@@ -64,7 +64,7 @@ def test(instance):
 
   vcl.print_graph(num_vertices, graph)
 
-  TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is the 2-approximation vertex cover for this graph?'), "white", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is a 2-approximation vertex cover for this graph?'), "white", ["bold"])
 
   start = monotonic()
   size_answer = TALinput(str, line_recognizer=lambda val,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
@@ -81,7 +81,7 @@ def test(instance):
 
   ans.append(edges)
 
-  if ENV['goal'] == 'correct':
+  if ENV['goal'] == 'feasible':
     check = vcl.verify_approx_vc(ans, graph)
     size,vc = vcl.calculate_minimum_vc(num_vertices, graph)
     ok = False
