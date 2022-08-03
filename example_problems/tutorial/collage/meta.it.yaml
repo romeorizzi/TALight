@@ -27,7 +27,7 @@ services:
         regex: ^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-6])$
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
-      mod:
+      type_seq:
         regex: ^([1-2])$
         default: 1
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza dove posizioni consecutive possono presentare lo stesso colore, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
@@ -88,10 +88,10 @@ services:
         regex: ^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-6])$
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
-      mod:
-        regex: ^([0-2])$
-        default: 0
-        explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza con colori uguali adiacenti, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
+      type_seq:
+        regex: ^([1-2])$
+        default: 1
+        explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza dove posizioni consecutive possono presentare lo stesso colore, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
@@ -136,11 +136,11 @@ services:
         regex: ^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-6])$
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
-      mod:
+      type_seq:
         regex: ^.*$ 
-        regex: ^([0-2])$
-        default: 0
-        explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza con colori uguali adiacenti, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
+        regex: ^([1-2])$
+        default: 1
+        explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza dove posizioni consecutive possono presentare lo stesso colore, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
@@ -178,8 +178,8 @@ services:
     args:
       goal:
         explain: 'Specifica il goal.'
-        regex: ^(correct|time_at_most_2_exp_n|time_at_most_n_exp_2)$
-        default: correct
+        regex: ^(seq_from_1_to_50|seq_from_50_to_200|seq_from_200_to_1000)$
+        default: seq_from_1_to_50
       code_lang: 
         explain: 'Speficica il linguaggio con cui è scritto il bot. Più conosciamo del tuo bot, più possiamo stimare l`efficienza del tuo algoritmo.'
         regex: ^(python|java|nodejs|compiled)$

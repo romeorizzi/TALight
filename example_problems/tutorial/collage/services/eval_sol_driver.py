@@ -23,57 +23,48 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 
-# INSTANCES FOR GOAL = correct
-goals = ['correct']
+if ENV["code_lang"] == "compiled":
+  MAX_TIME = 1
+else:
+  MAX_TIME = 2
 
 instances = {}
-seq_len = 7
-num_col = 3
-NUM_INSTANCES = 5
-scaling_factor = 2
-mod = random.choice([1,2])
+goals = []
+type_seq = random.choice([1,2])
 
-instances['correct'] = cl.instances_generator(NUM_INSTANCES, scaling_factor, seq_len, num_col, mod)
+# INSTANCES FOR GOAL = seq_1_to_50
+if ENV["goal"] == 'seq_from_1_to_50':
+  goals.append('seq_from_1_to_50')
 
-# INSTANCES FOR GOAL = 2^n o n^2        
-#if ENV["goal"] == 'time_at_most_2_exp_n' or ENV["goal"] =='time_at_most_n_exp_2':
-if ENV["goal"] == 'time_at_most_2_exp_n':
-  goals.append('time_at_most_2_exp_n')
-  seq_len = 20  # could still be 2^{\choose(n,2)}
-  num_col = 15
-    
-  if ENV["code_lang"] == "compiled":
-    # MAX_N = 18
-    pass
-
-  NUM_INSTANCES = 7
-  scaling_factor = 1.8
-
-  instances['time_at_most_2_exp_n'] = cl.instances_generator(NUM_INSTANCES, scaling_factor, seq_len, num_col, mod)
-
-# INSTANCES FOR GOAL = n^2
-if ENV["goal"] == 'time_at_most_n_exp_2':
-  goals.append('time_at_most_n_exp_2')
-  instances['time_at_most_n_exp_2'] = []
-  seq_len = 30  # could still be 2^n
-  num_col = 20
-    
-  if ENV["code_lang"] == "compiled":
-    seq_len = 40  # could still be 2^n
-    num_col = 30
-
-  # MAX_N = 50  # we intend to evaluate positively only the linear O(n^2) solutions
-  
-  if ENV["code_lang"] == "compiled":
-    # MAX_N = 100
-    pass
-    
+  seq_len = 7
+  num_col = 3
   NUM_INSTANCES = 5
   scaling_factor = 1.6
 
-  instances['time_at_most_n_exp_2'] = cl.instances_generator(NUM_INSTANCES, scaling_factor, seq_len, num_col, mod)
+  instances['seq_from_1_to_50'] = cl.instances_generator(NUM_INSTANCES, scaling_factor, seq_len, num_col, type_seq)
+
+# INSTANCES FOR GOAL = seq_from_50_to_200
+if ENV["goal"] == 'seq_from_50_to_200':
+  goals.append('seq_from_50_to_200')
+  
+  seq_len = 50
+  num_col = 35  
+  NUM_INSTANCES = 5
+  scaling_factor = 1.4
+
+  instances['seq_from_50_to_200'] = cl.instances_generator(NUM_INSTANCES, scaling_factor, seq_len, num_col, type_seq)
            
-MAX_TIME = 2
+# INSTANCES FOR GOAL = seq_from_200_to_1000
+if ENV["goal"] == 'seq_from_200_to_1000':
+  goals.append('seq_from_200_to_1000')
+
+  seq_len = 200
+  num_col = 160
+  NUM_INSTANCES = 7
+  scaling_factor = 1.3
+
+  instances['seq_from_200_to_1000'] = cl.instances_generator(NUM_INSTANCES, scaling_factor, seq_len, num_col, type_seq)
+
 
 # FUNCTION TESTING ONE SINGLE TESTCASE: 
 def test(instance):

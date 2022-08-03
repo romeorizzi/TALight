@@ -15,7 +15,7 @@ args_list = [
     ('instance_format',str),
     ('seq_len',int),
     ('num_col',int),
-    ('mod',int),
+    ('type_seq',int),
     ('seed',str),
     ('silent', bool),
     ('display', bool),
@@ -40,11 +40,11 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 if ENV['source'] != 'catalogue':
-    mod = ENV['mod']
+    #type_seq = ENV['type_seq']
 
     # Get random instance
-    #instance = cl.instances_generator(1, 1, ENV['seq_len'], ENV['num_col'], ENV['mod'], ENV['seed'])[0]
-    instance = cl.instances_generator(1, 1, ENV['seq_len'], ENV['num_col'], mod, ENV['seed'])[0]
+    instance = cl.instances_generator(1, 1, ENV['seq_len'], ENV['num_col'], ENV['type_seq'], ENV['seed'])[0]
+    #instance = cl.instances_generator(1, 1, ENV['seq_len'], ENV['num_col'], type_seq, ENV['seed'])[0]
     instance_str = cl.instance_to_str(instance, format_name=ENV['instance_format'])
     output_filename = f"random_instance_{ENV['seed']}.{ENV['instance_format']}.txt"
 else: # Get instance from catalogue
@@ -62,7 +62,7 @@ else:
         TAc.print(instance_str, "white", ["bold"])
         if ENV['source'] != 'catalogue': # display random instance
             output = ""
-            output += f'\nThe parameters encoding this instance are:\nseq_len: {ENV["seq_len"]}\nnum_col: {ENV["num_col"]}\nmod: {mod}\nseed: {ENV["seed"]}'
+            output += f'\nThe parameters encoding this instance are:\nseq_len: {ENV["seq_len"]}\nnum_col: {ENV["num_col"]}\ntype_seq: {type_seq}\nseed: {ENV["seed"]}'
             # TAc.print(LANG.render_feedback("output-instance", output), "yellow", ["bold"])
 
 if ENV['download']:

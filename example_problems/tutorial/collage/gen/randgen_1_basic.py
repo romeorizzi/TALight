@@ -5,14 +5,14 @@ from pathlib import Path
 import collage_lib as cl
 
 
-def main(seq_len, num_col, mod, seed, file_full_extension):
+def main(seq_len, num_col, type_seq, seed, file_full_extension):
     # Automatic cast:
     seq_len = int(seq_len)
     num_col = int(num_col)
-    mod = int(mod)
+    type_seq = int(type_seq)
     seed = int(seed)
     # Generate collage instance
-    instance = cl.instances_generator(1, 1, seq_len, num_col, mod, seed)[0]
+    instance = cl.instances_generator(1, 1, seq_len, num_col, type_seq, seed)[0]
     # Generate selected output
     print(cl.instance_to_str(instance, cl.file_extension_to_format_name(file_full_extension)))
 

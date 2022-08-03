@@ -124,16 +124,16 @@ def get_instance_from_dat(instance_as_str, format_name):
 
   return instance
 
-def instances_generator(num_instances, scaling_factor: float, seq_len: int, num_col: int, mod: int, seed = "random_seed"):
+def instances_generator(num_instances, scaling_factor: float, seq_len: int, num_col: int, type_seq: int, seed = "random_seed"):
     instances = []
     for _ in range(num_instances):
       instance = {}
       if seed == "random_seed":
         seed = random.randint(100000,999999)
       instance['seq_len'] = seq_len
-      instance['rainbow'] = random_rainbow(seq_len, num_col, mod, seed)
+      instance['rainbow'] = random_rainbow(seq_len, num_col, type_seq, seed)
       instance['num_col'] = num_col
-      instance['mod'] = mod
+      instance['type_seq'] = type_seq
       instance['seed'] = seed
 
       seq_len = math.ceil(scaling_factor *  seq_len)
@@ -168,22 +168,22 @@ def instances_generator(num_instances, scaling_factor: float, seq_len: int, num_
 
     return instances
 
-def random_rainbow(seq_len:int, num_col:int, mod:int, seed:int):
+def random_rainbow(seq_len:int, num_col:int, type_seq:int, seed:int):
   random.seed(seed)
   rainbow = []
 
-  if mod == 0:
+  if type_seq == 0:
     pass
 
   # Random con colori uguali adiacenti
-  elif mod == 1:
+  elif type_seq == 1:
     values = [i for i in range (num_col)]
 
     for row in range(0,seq_len):
       rainbow.append(random.choice(values))
 
   # Random senza colori uguali adiacenti
-  elif mod == 2:
+  elif type_seq == 2:
     oldColor = MAX_NUM_COL
 
     for row in range(seq_len):
