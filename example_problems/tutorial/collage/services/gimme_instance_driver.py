@@ -40,11 +40,7 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 if ENV['source'] != 'catalogue':
-    if ENV['mod'] == 0:
-      TAc.print(LANG.render_feedback("random-type", f'A random mode will be chosen from the one with adjacent same colors and no adjacent same colors'), "yellow", ["bold"])
-      mod = random.choice([1,2])
-    else:
-      mod = ENV['mod']
+    mod = ENV['mod']
 
     # Get random instance
     #instance = cl.instances_generator(1, 1, ENV['seq_len'], ENV['num_col'], ENV['mod'], ENV['seed'])[0]
