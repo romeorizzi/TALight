@@ -1,0 +1,56 @@
+# generator parameters: 
+
+# seq_len, num_col, mod, seed 
+#     seq_len (int) size of the rainbow
+#     num_col (int) colors of the rainbow
+#     mod (int) how to generate the rainbow
+#     seed (int) seed generating the small triangle
+
+add_format: simple.txt
+add_format: with_vertices.txt
+
+#collection: instances_hardcoded
+#COPY: instances_hardcoded/instance_001.simple.txt
+#COPY: instances_hardcoded/instance_001.with_len.txt
+#COPY: instances_hardcoded/instance_002.simple.txt
+#COPY: instances_hardcoded/instance_002.with_len.txt
+
+collection: vertices_at_most_20
+#                randgen,    num_vertices,  seed,   
+GEN:  randgen_1_basic.py     8              123456       
+GEN:  randgen_1_basic.py     8              345678        
+GEN:  randgen_1_basic.py     10             134259       
+GEN:  randgen_1_basic.py     10             743201       
+GEN:  randgen_1_basic.py     12             129473      
+GEN:  randgen_1_basic.py     12             372493      
+GEN:  randgen_1_basic.py     15             194372     
+GEN:  randgen_1_basic.py     15             329483
+GEN:  randgen_1_basic.py     20             673210
+GEN:  randgen_1_basic.py     20             382910
+
+collection: vertices_at_most_50
+#                randgen,    num_vertices,  seed,   
+GEN:  randgen_1_basic.py     22             538493
+GEN:  randgen_1_basic.py     22             309302        
+GEN:  randgen_1_basic.py     25             494021       
+GEN:  randgen_1_basic.py     25             458390       
+GEN:  randgen_1_basic.py     30             203927      
+GEN:  randgen_1_basic.py     30             148920      
+GEN:  randgen_1_basic.py     40             484022   
+GEN:  randgen_1_basic.py     40             329488
+GEN:  randgen_1_basic.py     50             644884
+GEN:  randgen_1_basic.py     50             100001
+
+collection: vertices_at_most_80
+#                randgen,    num_vertices,  seed,   
+GEN:  randgen_1_basic.py     52             434355
+GEN:  randgen_1_basic.py     52             556677        
+GEN:  randgen_1_basic.py     55             124244       
+GEN:  randgen_1_basic.py     55             167743       
+GEN:  randgen_1_basic.py     60             124124      
+GEN:  randgen_1_basic.py     60             454522      
+GEN:  randgen_1_basic.py     70             774788   
+GEN:  randgen_1_basic.py     70             456462
+GEN:  randgen_1_basic.py     80             968444
+GEN:  randgen_1_basic.py     80             464563
+

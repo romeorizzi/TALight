@@ -50,7 +50,8 @@ if ENV['silent']:
 else:
     TAc.print(LANG.render_feedback("instance-title", f'This is the instance:\n'), "yellow", ["bold"])
     if ENV['display']:
-        TAc.print(instance_str, "white", ["bold"])
+        #TAc.print(instance_str, "white", ["bold"])
+        TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
         if ENV['source'] != 'catalogue': # display random instance
             output = ""
             output += f'\nThe parameters encoding this instance are:\nnum_vertices: {ENV["num_vertices"]}\nseed: {ENV["seed"]}'

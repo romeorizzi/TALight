@@ -60,6 +60,9 @@ def instance_to_txt_str(instance, format_name="with_vertices"):
     for i in graph:
       output += str(i)
 
+    if 'risp' in instance:
+      output += f'\n{instance["risp"]}'
+
     output += '\n'
 
     return output
@@ -79,12 +82,14 @@ def get_instance_from_txt(instance_as_str, format_name):
     str_to_arr = instance_as_str.split()
 
     if format_name != "with_vertices":
-      instance['graph'] = str_to_arr
+      instance['graph'] = str_to_arr[1:2]
       #instance['num_vertices'] = len(str_to_arr)
 
     else:
-      instance['graph'] = str_to_arr[1:]
-      instance['num_vertices'] = len(str_to_arr[1:])
+      #instance['graph'] = str_to_arr[1:]
+      #instance['num_vertices'] = len(str_to_arr[1:])
+      instance['num_vertices'] = int(str_to_arr[0])
+      instance['graph'] = str_to_arr[1:2]
     
     return instance
 
@@ -173,16 +178,20 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
   if sol_type == 'minimum':
     size, vc = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
     sols['calculate_minimum_vc'] = f"{vc}"
+    sols['vertex_cover_size'] = f"{size}"
 
   elif sol_type == 'approx':
     size, vc = calculate_approx_vc(instance['num_vertices'], instance['graph'])
     sols['calculate_approx_vc'] = f"{vc}"
+    sols['2-approx_matching'] = f"{int(size/2)}"
 
   elif sol_type == 'both':
     size_min, vc_min = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
-    size_appr, vc_appr = calculate_approx_vc(instance['num_vertices'], instance['graph'],'greedy')
+    size_appr, vc_appr = calculate_approx_vc(instance['num_vertices'], instance['graph'], 'greedy')
     sols['calculate_minimum_vc'] = f"{vc_min}"
-    sols['calculate_approx_vc'] = f"{vc_appr}"
+    sols['vertex_cover_size'] = f"{size_min}"
+    sols['calculate_2-approx_vc'] = f"{vc_appr}"
+    sols['2-approx_maximal_matching'] = f"{int(size_appr/2)}"
 
   return sols
 
@@ -433,12 +442,6 @@ def verify_approx_vc(vc_edges, graph):
 
   return 1
 
-## Verifico se una soluzione approssimata è 2-approssimazione per il VC
-def is_2_approx(c, c_star):
-  if len(c)/len(c_star) <= 2:
-    return 1
-  
-  return 0
 
 '''
 GOAL SUMMARIES

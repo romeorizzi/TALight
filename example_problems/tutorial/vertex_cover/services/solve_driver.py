@@ -37,7 +37,7 @@ elif ENV["source"] == 'terminal':
   instance['num_vertices'] = ENV['num_vertices']
 
   graph = []
-  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nEdges format: {{x,y}}{{w,z}}...{{n,m}}\n'), "yellow")
+  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: {{x,y}}{{w,z}}...{{n,m}}\n'), "yellow")
 
   TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)

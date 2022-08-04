@@ -11,6 +11,8 @@ def main(num_vertices, seed, file_full_extension):
     seed = int(seed)
     # Generate collage instance
     instance = vcl.instances_generator(1, 1, num_vertices, seed)[0]
+    size, sol = vcl.calculate_minimum_vc(num_vertices, instance['graph'])
+    instance['risp'] = sol
     # Generate selected output
     print(vcl.instance_to_str(instance, vcl.file_extension_to_format_name(file_full_extension)))
 

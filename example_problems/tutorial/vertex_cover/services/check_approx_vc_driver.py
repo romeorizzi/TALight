@@ -36,7 +36,7 @@ elif ENV["source"] == 'terminal':
   instance['num_vertices'] = ENV['num_vertices']
 
   graph = []
-  TAc.print(LANG.render_feedback("waiting-line", f'#? waiting for the graph.\nEdges format: {{x,y}}{{w,z}}...{{n,m}} \n'), "yellow")
+  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: {{x,y}}{{w,z}}...{{n,m}} \n'), "yellow")
 
   TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
@@ -62,7 +62,7 @@ if ENV['display']:
   TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
 
 if not ENV['vc_sol_val']: # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured 2-approximation vertex cover for this graph if you have one. Otherwise, if you only intend to be told about the vertex cover, enter "C".'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured (maximal) matching for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
 
 else:
@@ -84,7 +84,7 @@ else:
       TAc.OK()
       TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "green", ["bold"])
     elif size_ans > size_sol:
-      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. There may be a better approximation (your size is {size_ans}).'), "yellow", ["bold"])
+      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. There may be a better approximation (your matching is {size_ans/2}).'), "yellow", ["bold"])
     else:
       TAc.OK()
       TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it\'s better than mine!'), "green", ["bold"])

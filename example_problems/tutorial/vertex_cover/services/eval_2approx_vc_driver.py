@@ -82,8 +82,8 @@ def test(instance):
   ans.append(edges)
 
   if ENV['goal'] == 'feasible':
-    check = vcl.verify_approx_vc(ans, graph)
     size,vc = vcl.calculate_minimum_vc(num_vertices, graph)
+    check = vcl.verify_approx_vc(ans, graph)
     ok = False
 
     if check:
