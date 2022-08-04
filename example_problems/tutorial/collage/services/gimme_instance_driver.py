@@ -62,7 +62,7 @@ else:
         TAc.print(instance_str, "white", ["bold"])
         if ENV['source'] != 'catalogue': # display random instance
             output = ""
-            output += f'\nThe parameters encoding this instance are:\nseq_len: {ENV["seq_len"]}\nnum_col: {ENV["num_col"]}\ntype_seq: {type_seq}\nseed: {ENV["seed"]}'
+            output += f'\nThe parameters encoding this instance are:\nseq_len: {ENV["seq_len"]}\nnum_col: {ENV["num_col"]}\ntype_seq: {ENV["type_seq"]}\nseed: {ENV["seed"]}'
             # TAc.print(LANG.render_feedback("output-instance", output), "yellow", ["bold"])
 
 if ENV['download']:
