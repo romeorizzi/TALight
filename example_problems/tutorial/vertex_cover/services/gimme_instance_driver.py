@@ -14,6 +14,7 @@ args_list = [
     ('instance_id',int),
     ('instance_format',str),
     ('num_vertices',int),
+    ('num_edges',int),
     ('seed',str),
     ('silent', bool),
     ('display', bool),
@@ -35,7 +36,7 @@ TALf = TALfilesHelper(TAc, ENV)
 
 if ENV['source'] != 'catalogue':
     # Get random instance
-    instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['seed'])[0]
+    instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
     instance_str = vcl.instance_to_str(instance, format_name=ENV['instance_format'])
     output_filename = f"random_instance_{ENV['seed']}.{ENV['instance_format']}.txt"
 else: # Get instance from catalogue

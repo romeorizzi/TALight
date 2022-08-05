@@ -3,10 +3,14 @@ import os
 import sys
 import random
 import math
-from datetime import datetime
+import networkx as nx
+import matplotlib.pyplot as plt
 
+from random import randint
+from datetime import datetime
 from termcolor import colored
 from contextlib import redirect_stdout
+from networkx.algorithms import approximation
 
 AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_vertices':'with_vertices.txt', 'vertex_cover_dat':'.dat'},'solution':{'all_solutions': 'all_solutions.txt'}}
 DEFAULT_INSTANCE_FORMAT='with_vertices'
@@ -50,7 +54,7 @@ def instance_to_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
 def instance_to_txt_str(instance, format_name="with_vertices"):
     """Of the given <instance>, this function returns the .txt string in format <format_name>"""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
-    graph = instance['graph'] 
+    graph = instance['graph'].edges()
     output= f''
 
     if format_name == "with_vertices":
@@ -122,7 +126,7 @@ def get_instance_from_dat(instance_as_str, format_name):
 '''
 GENERATORE GRAFI
 '''
-def instances_generator(num_instances, scaling_factor: float, num_vertices: int, seed = "random_seed"):
+def instances_generator(num_instances, scaling_factor: float, num_vertices: int, num_edges: int, seed = "random_seed"):
   instances = []
 
   for _ in range(num_instances):
@@ -131,7 +135,7 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
       seed = random.randint(100000,999999)
 
     instance['num_vertices'] = num_vertices
-    instance['graph'] = random_graph(num_vertices, seed)
+    instance['graph'] = random_graph(num_vertices, num_edges, seed)
     instance['seed'] = seed
 
     num_vertices = math.ceil(scaling_factor * num_vertices)
@@ -143,26 +147,18 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
 
   return instances
 
-def random_graph(num_vertices, seed):
+def random_graph(num_vertices, num_edges, seed):
   random.seed(seed)
 
-  graph = []
-  #graph = ''
-  edge = ''
+  G = nx.gnm_random_graph(num_vertices, num_edges, seed)
 
-  for i in range(num_vertices):
-    for j in range(i+1, num_vertices):
-      arco = random.choice([0,1])
-
-      if arco:
-        #edge = str(i) + ',' + str(j)
-        #graph.append('{' + edge + '}')
-        edge += '{' + str(i) + ',' + str(j) + '}'
-        #graph += edge
-
-  graph.append(edge)
-
-  return graph
+  # Forzo la generazione di un grafo connesso
+  while G.size() != num_edges:
+    G = nx.gnm_random_graph(num_vertices, num_edges, seed)
+    
+  #graph = G.edges()
+  #return graph
+  return G
 
 def print_graph(num_vertices, graph, instance_format=DEFAULT_INSTANCE_FORMAT):
   print(f'{num_vertices}')  
@@ -176,22 +172,25 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
   sols = {}
 
   if sol_type == 'minimum':
-    size, vc = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+    size, vc = calculate_minimum_vc(instance['graph'])
     sols['calculate_minimum_vc'] = f"{vc}"
     sols['vertex_cover_size'] = f"{size}"
 
   elif sol_type == 'approx':
-    size, vc = calculate_approx_vc(instance['num_vertices'], instance['graph'])
+    size, vc = calculate_approx_vc(instance['graph'])
+    #vc1 = nx.approximation.min_weighted_vertex_cover(instance['graph'])
+    min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
     sols['calculate_approx_vc'] = f"{vc}"
-    sols['2-approx_matching'] = f"{int(size/2)}"
+    sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   elif sol_type == 'both':
-    size_min, vc_min = calculate_minimum_vc(instance['num_vertices'], instance['graph'])
-    size_appr, vc_appr = calculate_approx_vc(instance['num_vertices'], instance['graph'], 'greedy')
+    size_min, vc_min = calculate_minimum_vc(instance['graph'])
+    size_appr, vc_appr = calculate_approx_vc(instance['graph'], 'greedy')
+    min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
     sols['calculate_minimum_vc'] = f"{vc_min}"
     sols['vertex_cover_size'] = f"{size_min}"
     sols['calculate_2-approx_vc'] = f"{vc_appr}"
-    sols['2-approx_maximal_matching'] = f"{int(size_appr/2)}"
+    sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   return sols
 
@@ -209,161 +208,132 @@ def get_edges(graph):
 
   return edges_list
 
-def find_maxdeg(vertices, edges_list):
-  deg_list = []
-
-  for vi in vertices:
-    deg = 0
-
-    for edge in edges_list:
-      if vi in edge:
-        deg += 1
-
-    deg_list.append((vi,deg))
+def find_maxdeg(graph, vertices=None):
+  if vertices == None:
+    deg_list = list(graph.degree())
+  else:
+    deg_list = list(graph.degree(vertices))
 
   deg_list.sort(key=lambda tup: tup[1], reverse=True)
-  v = deg_list[0]
+
+  v = deg_list[0] 
 
   return v
 
-def lowerbound(vertices, edges):
-  #num_edges, _ = get_edges(graph)
-
-  lb = math.ceil(len(edges) / find_maxdeg(vertices, edges)[1])
+def lowerbound(graph):
+  lb=graph.number_of_edges() / find_maxdeg(graph)[1]
+  lb=math.ceil(lb)
 
   return lb
 
-def neighbours(v, edges):
-  neighbour = []
-
-  for e in edges:
-    if v in e:
-      if v == e[0]:
-        neighbour.append(e[1])
-      else:
-        neighbour.append(e[0])
-
-  return neighbour        
-
-def remove_node(node, list_edges, vertices_list):
-  for e in list_edges[:]:
-    if node in e:
-      list_edges.remove(e)
-
-  vertices_list.remove(node)
-
-  return vertices_list, list_edges
 
 '''
 solutore vero e proprio: uso un algoritmo Branch and Bound
+Liberamente tratto da https://github.com/arjunchint/Minimum-Vertex-Cover/blob/master/Code/BnB.py
 '''
-def calculate_minimum_vc(num_vertices, graph):
-  optVC = []
-  curVC = []
-  frontier = []
-  neighbour = []
+def calculate_minimum_vc(graph):
+  OptVC = []
+  CurVC = []
+  Frontier = []
+  neighbor = []
 
-  G = get_edges(graph)
-  curG = G.copy()
-  vertices_list = [i for i in range(num_vertices)]
+  UpperBound = graph.number_of_nodes()
 
-  upperbound = num_vertices
-  v = find_maxdeg(vertices_list, curG)
+  CurG = graph.copy()
+  v = find_maxdeg(CurG)
 
-  frontier.append((v[0], 0, (-1, -1)))
-  frontier.append((v[0], 1, (-1, -1)))
+  Frontier.append((v[0], 0, (-1, -1)))  # tuples of node,state,(parent vertex,parent vertex state)
+  Frontier.append((v[0], 1, (-1, -1)))
 
-  while frontier != [] :
-    (vi, state, parent) = frontier.pop()
+  while Frontier!=[]:
+    (vi,state,parent)=Frontier.pop()
+    
     backtrack = False
+  
+    if state == 0: 
+      neighbor = CurG.neighbors(vi)
+      for node in list(neighbor):
+        CurVC.append((node, 1))
+        CurG.remove_node(node)
 
-    if state == 0:
-      neighbour = neighbours(vi, curG)
-
-      for node in neighbour:
-        curVC.append((node, 1))
-        vertices_list, curG = remove_node(node, curG, vertices_list)
-
-      
     elif state == 1: 
-      vertices_list, curG = remove_node(vi, curG, vertices_list)
+      CurG.remove_node(vi)
 
     else:
       pass
 
-    curVC.append((vi, state)) 
+    CurVC.append((vi, state))
+    CurVC_size = len(CurVC)
 
-    if len(curG) == 0: # Ho la soluzione
-      if len(curVC) < upperbound:
-        optVC = curVC.copy()
-        upperbound = len(curVC)
+    if CurG.number_of_edges() == 0: # Ho la soluzione
+      if CurVC_size < UpperBound:
+        OptVC = CurVC.copy()  
+        UpperBound = CurVC_size
 
       backtrack = True
+        
+    else: 
+      CurLB = lowerbound(CurG) + CurVC_size
 
-    else:
-      curLB = lowerbound(vertices_list, curG) + len(curVC)
+      if CurLB < UpperBound:
+        vj = find_maxdeg(CurG)
+        Frontier.append((vj[0], 0, (vi, state))) 
+        Frontier.append((vj[0], 1, (vi, state)))
 
-      if(curLB < upperbound):
-        vj = find_maxdeg(vertices_list, curG)
-        frontier.append((vj[0], 0, (vi, state)))
-        frontier.append((vj[0], 1, (vi, state)))
       else:
-        backtrack = True
+        backtrack=True
 
-    if backtrack == True:
-      if frontier != []:
-        nextnode_parent = frontier[-1][2]
+    if backtrack==True:
+      if Frontier != []:
+        nextnode_parent = Frontier[-1][2]
 
-        if nextnode_parent in curVC:
-          id = curVC.index(nextnode_parent) + 1
+        if nextnode_parent in CurVC:
+          id = CurVC.index(nextnode_parent) + 1
 
-          while id < len(curVC):
-            mynode, mystate = curVC.pop()
+          while id < len(CurVC): 
+            mynode, mystate = CurVC.pop() 
+            CurG.add_node(mynode) #undo the deletion from CurG
             
-            ## Per qualche motivo mette dei doppioni, da qui l'if...
-            if mynode not in vertices_list:
-              vertices_list.append(mynode)
-
-            curVC_nodes = list(map(lambda t:t[0], curVC))
-            neighbourG = neighbours(mynode, G)
-
-            for ng in neighbourG:
-              if (ng in vertices_list) and (ng not in curVC_nodes):
-                curG.append((mynode,ng))
+            curVC_nodes = list(map(lambda t:t[0], CurVC))
+            for nd in graph.neighbors(mynode):
+              if (nd in CurG.nodes()) and (nd not in curVC_nodes):
+                CurG.add_edge(nd, mynode)
 
         elif nextnode_parent == (-1, -1):
-          curVC.clear()
-          curVC = G.copy()
-           
+          # backtrack to the root node
+          CurVC.clear()
+          CurG = graph.copy()
+        else:
+          print('error in backtracking step')
+   
   res = []
-  for n in optVC:
+
+  for n in OptVC:
     res.append(n[0])
 
   res.sort()
   size = len(res)
  
-  # return optVC
+  # return OptVC
   return size, ' '.join(map(str,res))
 
 ## Calcolo una 2-approssimazione del VC. La scelta dell'arco è greedy,
 ## Quindi in teoria dovrei avere sempre la miglior approssimazione
 ## possibile...
-def calculate_approx_vc(num_vertices, graph, mode='random'):
-  G = get_edges(graph)
-  curG = G.copy()
-  curG.sort(key=lambda tup: tup[0])
+def calculate_approx_vc(graph, mode='random'):
+  curG = graph.copy()
 
   visited = []
   c = []
+  vertices_list = [i for i in range(graph.number_of_nodes())]
 
-  while curG != []:
+  while curG.number_of_edges() != 0:
     if mode == 'greedy':
-      vertices_list = [i for i in range(num_vertices)]
-      v = find_maxdeg(vertices_list, curG)[0]
-      neighbour = neighbours(v, curG)
+      v = find_maxdeg(curG, vertices_list)[0]
+      neighbour = curG.neighbors(v)
       vertices_list.remove(v)
     
-      v1 = find_maxdeg(neighbour, curG)[0]
+      v1 = find_maxdeg(curG,neighbour)[0]
       vertices_list.remove(v1)
     
       arco = (v,v1)
@@ -371,24 +341,29 @@ def calculate_approx_vc(num_vertices, graph, mode='random'):
 
     ## Prendo un arco casualmente
     elif mode == 'random':
-      i = random.randint(0,len(curG)-1)
-      arco = curG[i]
+      random.seed(datetime.now())
+
+      edges = list(curG.edges())
+      i = random.randint(0, curG.number_of_edges() - 1)
+
+      arco = edges[i]
       arco = tuple(sorted(arco))
+
       v = arco[0]
       v1 = arco[1]
 
     visited.append(arco)
-    curG.remove(arco)
+    curG.remove_edge(v,v1)
 
     c.append(v)
     c.append(v1)
 
-    for e in curG[:]:
+    for e in list(curG.edges())[:]:
       if v in e and e not in visited:
-        curG.remove(e)
+        curG.remove_edge(e[0],e[1])
         visited.append(e)
       if v1 in e and e not in visited:
-        curG.remove(e)
+        curG.remove_edge(e[0],e[1])
         visited.append(e)
 
   size = len(c)
@@ -397,7 +372,7 @@ def calculate_approx_vc(num_vertices, graph, mode='random'):
 
 ## Verifico se un vertex cover fornito in input è un vc valido per il grafo
 def verify_vc(vertices, graph):
-  edges_list = get_edges(graph)
+  edges_list = graph.edges()
   vertices = list(map(int, vertices))
 
   # Scorro una copia della lista
@@ -414,7 +389,7 @@ def verify_vc(vertices, graph):
 
 ## Verifico se il vc approssimato fornito dall'utente è tale
 def verify_approx_vc(vc_edges, graph):
-  edges_list = get_edges(graph)
+  edges_list = graph.edges()
   curG = edges_list.copy()
   curG.sort(key=lambda tup: tup[0])
   edges_vc = get_edges(vc_edges)
@@ -442,6 +417,16 @@ def verify_approx_vc(vc_edges, graph):
 
   return 1
 
+'''
+VARIE
+'''
+def plot_graph(graph, block=False):
+  nx.draw(graph, with_labels=True)
+
+  if not block:
+    plt.show(block=False)
+  else:
+    plt.show()
 
 '''
 GOAL SUMMARIES

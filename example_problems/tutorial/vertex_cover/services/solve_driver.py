@@ -6,6 +6,7 @@ from TALinputs import TALinput
 from TALfiles import TALfilesHelper
 
 import random
+import networkx as nx
 import vertex_cover_lib as vcl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -14,6 +15,7 @@ args_list = [
     ('instance_id',int),
     ('instance_format',str),
     ('num_vertices',int),
+    ('num_edges',int),
     ('sol_type',str),
     ('seed',str),
     ('download',bool),
@@ -36,21 +38,25 @@ elif ENV["source"] == 'terminal':
   instance = {}
   instance['num_vertices'] = ENV['num_vertices']
 
-  graph = []
-  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: {{x,y}}{{w,z}}...{{n,m}}\n'), "yellow")
+  G = nx.Graph()
+  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
 
   TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
-  graph.append(l)
-    
-  instance['graph'] = graph[0]
+  edges = [eval(t) for t in l]
+  #for e in edges:
+  #  e = tuple(sorted(e))
+  #  G.add_edge(e[0],e[1])
+  G.add_edges_from(edges)
+
+  instance['graph'] = G
   instance_str = vcl.instance_to_str(instance, format_name=ENV['instance_format'])
   output_filename = f"terminal_instance.{ENV['instance_format']}.txt"
 
 elif ENV["source"] == 'randgen_1':
   # Get random instance
-  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['seed'])[0]
+  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
 
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
@@ -66,6 +72,8 @@ TAc.print(LANG.render_feedback("all-solutions-title", f"Here are possible soluti
 
 for key in content.keys():
   TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: {content[key]}'), "white",["bold"])
+
+#vcl.plot_graph(instance['graph'], block=True)
 
 if ENV["download"]:
   TALf.str2output_file(content,f'all_solutions.txt')
