@@ -82,12 +82,12 @@ services:
         example: "['A', 'B'] è una delle due soluzioni ottime per il Caso d'Esempio 1, e la sola soluzione ottima per il Caso d'Esempio 2"
         explain: 'una soluzione ottima, ossia un sottoinsieme di oggetti a massimo valore totale, tra quelli il cui peso totale non ecceda la soglia `Knapsack_Capacity`'
       opt_val:
-        regex: ^(0|[1-9][0-9]*)$
+        regex: ^(.*)$
         default: 30
         explain: 'il massimo valore totale di una soluzione ammissibile (=insieme di oggetti il cui peso totale non ecceda `Knapsack_Capacity`)'
         example: 30 è la risposta corretta per i Casi d'Esempio 1 e 2
       num_opt_sols:
-        regex: ^(0|[1-9][0-9]*)$
+        regex: ^(.*)$
         default: 2
         example1: 2 è la risposta corretta per il Caso d'Esempio 1
         example2: 1 è la risposta corretta per il Caso d'Esempio 2
@@ -96,7 +96,7 @@ services:
         regex: ^(.*)$
         default: "[['A', 'B'], ['D']]"
         explain: "la lista di tutte le soluzioni ottime (in qualsiasi ordine)"
-        example: "il valore di default è risposta corretta per il Caso d'Esempio 1 (ma scambiare le due soluzioni nell'elenco, o gli elementi all'interno di una stessa sottolista, non farebbe differenza); per il Caso d'Esempio 2, busta omettere la seconda ed ultima soluzione della lista"
+        example: "il valore di default è risposta corretta per il Caso d'Esempio 1 (ma scambiare le due soluzioni nell'elenco, o gli elementi all'interno di una stessa sottolista, non farebbe differenza); per il Caso d'Esempio 2, basta omettere la seconda ed ultima soluzione della lista"
       DPtable_opt_val:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
