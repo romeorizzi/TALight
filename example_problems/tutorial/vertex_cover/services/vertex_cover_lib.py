@@ -372,7 +372,7 @@ def calculate_approx_vc(graph, mode='random'):
 
 ## Verifico se un vertex cover fornito in input è un vc valido per il grafo
 def verify_vc(vertices, graph):
-  edges_list = graph.edges()
+  edges_list = list(graph.edges())
   vertices = list(map(int, vertices))
 
   # Scorro una copia della lista
@@ -388,16 +388,16 @@ def verify_vc(vertices, graph):
     return 1
 
 ## Verifico se il vc approssimato fornito dall'utente è tale
-def verify_approx_vc(vc_edges, graph):
-  edges_list = graph.edges()
+def verify_approx_vc(matching, graph):
+  edges_list = list(graph.edges())
   curG = edges_list.copy()
   curG.sort(key=lambda tup: tup[0])
-  edges_vc = get_edges(vc_edges)
+  max_matching = [eval(t) for t in matching]
 
   visited = []
   
   while curG != []:
-    for e in edges_vc:
+    for e in max_matching:
       e = tuple(sorted(e))
       if e not in visited:
         curG.remove(e)
@@ -410,7 +410,7 @@ def verify_approx_vc(vc_edges, graph):
             curG.remove(e1)
             visited.append(e1)
 
-  for e in edges_vc:
+  for e in max_matching:
     for v in e:
       if v in visited:
         return 0
