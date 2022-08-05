@@ -389,25 +389,23 @@ def verify_vc(vertices, graph):
 
 ## Verifico se il vc approssimato fornito dall'utente è tale
 def verify_approx_vc(matching, graph):
-  edges_list = list(graph.edges())
-  curG = edges_list.copy()
-  curG.sort(key=lambda tup: tup[0])
+  curG = graph.copy()
   max_matching = [eval(t) for t in matching]
 
   visited = []
   
-  while curG != []:
+  while curG.number_of_edges() != 0:
     for e in max_matching:
       e = tuple(sorted(e))
       if e not in visited:
-        curG.remove(e)
+        curG.remove_edge(e[0],e[1])
       else: 
         return 0
 
       for v in e:
-        for e1 in curG[:]:
+        for e1 in list(curG.edges())[:]:
           if v in e1 and e1 not in visited:
-            curG.remove(e1)
+            curG.remove_edge(e1[0],e1[1])
             visited.append(e1)
 
   for e in max_matching:
