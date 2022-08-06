@@ -150,6 +150,7 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
       seed = random.randint(100000,999999)
 
     instance['num_vertices'] = num_vertices
+    instance['num_edges'] = num_edges
     instance['graph'] = random_graph(num_vertices, num_edges, seed)
     instance['seed'] = seed
 
@@ -197,7 +198,8 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
     sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   elif sol_type == 'both':
-    size_min, vc_min = calculate_minimum_vc(instance['graph'])
+    if instance['num_vertices'] <= 80:
+      size_min, vc_min = calculate_minimum_vc(instance['graph'])
     size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
     min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
     sols['calculate_minimum_vc'] = f"{vc_min}"

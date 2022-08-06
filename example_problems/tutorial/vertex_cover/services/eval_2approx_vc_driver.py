@@ -47,9 +47,9 @@ if ENV['goal'] == 'big_instances':
   goals.append('big_instances')
 
   num_vertices = 80
-  num_edges = 100
+  num_edges = 130
   NUM_INSTANCES = 5
-  scaling_factor = 1.2
+  scaling_factor = 1.4
 
   instances['big_instances'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices, num_edges)
 
@@ -80,9 +80,9 @@ def test(instance):
   edges = ''
 
   for i in range(0, len(answer), 2):
-    edges += '(' + answer[i] + ',' + answer[i+1] + ')'
+    edges = '(' + answer[i] + ',' + answer[i+1] + ')'
 
-  ans.append(edges)
+    ans.append(edges)
 
   if ENV['goal'] == 'feasible':
     size,vc = vcl.calculate_minimum_vc(graph)

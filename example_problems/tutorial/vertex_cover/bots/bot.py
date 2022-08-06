@@ -36,7 +36,7 @@ def find_maxdeg(graph, vertices=None):
 
   deg_list.sort(key=lambda tup: tup[1], reverse=True)
 
-  v = deg_list[0] 
+  v = deg_list[0]
 
   return v
 
@@ -66,16 +66,16 @@ def calculate_minimum_vc(graph):
 
   while Frontier!=[]:
     (vi,state,parent)=Frontier.pop()
-    
+
     backtrack = False
-  
-    if state == 0: 
+
+    if state == 0:
       neighbor = CurG.neighbors(vi)
       for node in list(neighbor):
         CurVC.append((node, 1))
         CurG.remove_node(node)
 
-    elif state == 1: 
+    elif state == 1:
       CurG.remove_node(vi)
 
     else:
@@ -86,17 +86,17 @@ def calculate_minimum_vc(graph):
 
     if CurG.number_of_edges() == 0: # Ho la soluzione
       if CurVC_size < UpperBound:
-        OptVC = CurVC.copy()  
+        OptVC = CurVC.copy()
         UpperBound = CurVC_size
 
       backtrack = True
 
-    else: 
+    else:
       CurLB = lowerbound(CurG) + CurVC_size
 
       if CurLB < UpperBound:
         vj = find_maxdeg(CurG)
-        Frontier.append((vj[0], 0, (vi, state))) 
+        Frontier.append((vj[0], 0, (vi, state)))
         Frontier.append((vj[0], 1, (vi, state)))
 
       else:
@@ -109,10 +109,10 @@ def calculate_minimum_vc(graph):
         if nextnode_parent in CurVC:
           id = CurVC.index(nextnode_parent) + 1
 
-          while id < len(CurVC): 
-            mynode, mystate = CurVC.pop() 
+          while id < len(CurVC):
+            mynode, mystate = CurVC.pop()
             CurG.add_node(mynode) #undo the deletion from CurG
-            
+
             curVC_nodes = list(map(lambda t:t[0], CurVC))
             for nd in graph.neighbors(mynode):
               if (nd in CurG.nodes()) and (nd not in curVC_nodes):
@@ -124,7 +124,7 @@ def calculate_minimum_vc(graph):
           CurG = graph.copy()
         else:
           print('error in backtracking step')
-   
+
   res = []
 
   for n in OptVC:
@@ -132,7 +132,7 @@ def calculate_minimum_vc(graph):
 
   res.sort()
   size = len(res)
- 
+
   # return OptVC
   return size, ' '.join(map(str,res))
 
@@ -141,6 +141,7 @@ def calculate_approx_vc(graph, mode='random'):
 
   visited = []
   c = []
+  max_matching = []
   vertices_list = [i for i in range(graph.number_of_nodes())]
 
   while curG.number_of_edges() != 0:
@@ -148,10 +149,10 @@ def calculate_approx_vc(graph, mode='random'):
       v = find_maxdeg(curG, vertices_list)[0]
       neighbour = curG.neighbors(v)
       vertices_list.remove(v)
-    
+
       v1 = find_maxdeg(curG,neighbour)[0]
       vertices_list.remove(v1)
-    
+
       arco = (v,v1)
       arco = tuple(sorted(arco))
 
@@ -174,6 +175,8 @@ def calculate_approx_vc(graph, mode='random'):
     c.append(v)
     c.append(v1)
 
+    max_matching.append((v,v1))
+
     for e in list(curG.edges())[:]:
       if v in e and e not in visited:
         curG.remove_edge(e[0],e[1])
@@ -185,6 +188,7 @@ def calculate_approx_vc(graph, mode='random'):
   size = len(c)
 
   return size, ' '.join(map(str,c))
+
 
 while True:
   #num_vertices = int(BOT.input())
