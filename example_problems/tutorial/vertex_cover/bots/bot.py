@@ -191,12 +191,13 @@ def calculate_approx_vc(graph, mode='random'):
 
 
 while True:
-  #num_vertices = int(BOT.input())
+  vertices,num_edges = map(int, BOT.input().split())
   graph = BOT.input()
   graph = graph.replace(', ',',').split()
   edges = [eval(t) for t in graph]
 
   G = nx.Graph()
+  G.add_nodes_from([int(v) for v in range(vertices)])
   G.add_edges_from(edges)
   
   if args.minimum:

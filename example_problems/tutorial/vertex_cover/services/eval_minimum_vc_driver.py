@@ -56,8 +56,10 @@ if ENV['goal'] == 'minimum':
 # FUNCTION TESTING ONE SINGLE TESTCASE: 
 def test(instance):
   graph = instance['graph']
-  num_vertices = graph.number_of_nodes()
-  num_edges = graph.number_of_edges()
+  num_vertices = instance['num_vertices']
+  num_edges = instance['num_edges']
+  #num_vertices = graph.number_of_nodes()
+  #num_edges = graph.number_of_edges()
 
   TAc.print(LANG.render_feedback("graph-size",'# We have this number of vertices in the graph: '), "white", ["bold"], end='')
   TAc.print(num_vertices, "yellow", ["bold"])
@@ -65,7 +67,7 @@ def test(instance):
   TAc.print(num_edges, "yellow", ["bold"])
   TAc.print(LANG.render_feedback("print-graph", f'\n# The graph is:\n'), "white", ["bold"])
 
-  vcl.print_graph(list(graph.edges()))
+  vcl.print_graph(num_vertices, num_edges, list(graph.edges()))
 
   TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is the minimum vertex cover for this graph?'), "white", ["bold"])
 
@@ -82,7 +84,6 @@ def test(instance):
     ok = False
 
     if check:
-      print(f"# size_ans {size_answer} size {size}")
       if int(size_answer) == size:
         ok = True
   else:

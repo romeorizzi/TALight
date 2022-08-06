@@ -175,7 +175,8 @@ def random_graph(num_vertices, num_edges, seed):
     
   return G
 
-def print_graph(graph, instance_format=DEFAULT_INSTANCE_FORMAT):
+def print_graph(num_vertices, num_edges, graph, instance_format=DEFAULT_INSTANCE_FORMAT):
+  print(f'{num_vertices} {num_edges}')
   print(f'{" ".join(map(str,graph))}')
 
 
