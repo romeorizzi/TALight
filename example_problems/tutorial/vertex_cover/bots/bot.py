@@ -5,6 +5,9 @@ import argparse
 import sys
 import random
 import math
+import networkx as nx
+
+from datetime import datetime
 from bot_lib import Bot
 
 parser = argparse.ArgumentParser(description="I am a bot for the TALight problem `Vertex Cover`. In a never ending loop (until I get the '# WE HAVE FINISHED' line), I read an input instances from stdin and I write my answer for it on stdout.")
@@ -25,201 +28,179 @@ BOT = Bot(report_inputs=False,reprint_outputs=False)
 '''
  Metodi per il branch and bound
 '''
-def get_edges(graph):
-  edges_list = []
-
-  edges_list_str = graph[0].replace('}{',' ').replace('{','').replace('}','').split(' ')
-  
-  for e in edges_list_str:
-    n = e.replace(',', ' ').split(' ')
-    edges_list.append((int(n[0]),int(n[1])))
-
-  return edges_list
-
-def find_maxdeg(vertices, edges_list):
-  deg_list = []
-
-  for vi in vertices:
-    deg = 0
-
-    for edge in edges_list:
-      if vi in edge:
-        deg += 1
-
-    deg_list.append((vi,deg))
+def find_maxdeg(graph, vertices=None):
+  if vertices == None:
+    deg_list = list(graph.degree())
+  else:
+    deg_list = list(graph.degree(vertices))
 
   deg_list.sort(key=lambda tup: tup[1], reverse=True)
-  v = deg_list[0]
+
+  v = deg_list[0] 
 
   return v
 
-def lowerbound(vertices, edges):
-  #num_edges, _ = get_edges(graph)
-
-  lb = math.ceil(len(edges) / find_maxdeg(vertices, edges)[1])
+def lowerbound(graph):
+  lb=graph.number_of_edges() / find_maxdeg(graph)[1]
+  lb=math.ceil(lb)
 
   return lb
 
-def neighbours(v, edges):
-  neighbour = []
+'''
+solutore vero e proprio: uso un algoritmo Branch and Bound
+Liberamente tratto da https://github.com/arjunchint/Minimum-Vertex-Cover/blob/master/Code/BnB.py
+'''
+def calculate_minimum_vc(graph):
+  OptVC = []
+  CurVC = []
+  Frontier = []
+  neighbor = []
 
-  for e in edges:
-    if v in e:
-      if v == e[0]:
-        neighbour.append(e[1])
-      else:
-        neighbour.append(e[0])
+  UpperBound = graph.number_of_nodes()
 
-  return neighbour
+  CurG = graph.copy()
+  v = find_maxdeg(CurG)
 
-def remove_node(node, list_edges, vertices_list):
-  for e in list_edges[:]:
-    if node in e:
-      list_edges.remove(e)
+  Frontier.append((v[0], 0, (-1, -1)))  # tuples of node,state,(parent vertex,parent vertex state)
+  Frontier.append((v[0], 1, (-1, -1)))
 
-  vertices_list.remove(node)
-
-  return vertices_list, list_edges
-
-def calculate_minimum_vc(num_vertices, graph):
-  optVC = []
-  curVC = []
-  frontier = []
-  neighbour = []
-
-  G = get_edges(graph)
-  curG = G.copy()
-  vertices_list = [i for i in range(num_vertices)]
-
-  upperbound = num_vertices
-  v = find_maxdeg(vertices_list, curG)
-
-  frontier.append((v[0], 0, (-1, -1)))
-  frontier.append((v[0], 1, (-1, -1)))
-
-  while frontier != [] :
-    (vi, state, parent) = frontier.pop()
+  while Frontier!=[]:
+    (vi,state,parent)=Frontier.pop()
+    
     backtrack = False
+  
+    if state == 0: 
+      neighbor = CurG.neighbors(vi)
+      for node in list(neighbor):
+        CurVC.append((node, 1))
+        CurG.remove_node(node)
 
-    if state == 0:
-      neighbour = neighbours(vi, curG)
-
-      for node in neighbour:
-        curVC.append((node, 1))
-        vertices_list, curG = remove_node(node, curG, vertices_list)
-
-      
     elif state == 1: 
-      vertices_list, curG = remove_node(vi, curG, vertices_list)
+      CurG.remove_node(vi)
 
     else:
       pass
 
-    curVC.append((vi, state)) 
+    CurVC.append((vi, state))
+    CurVC_size = len(CurVC)
 
-    if len(curG) == 0: # Ho la soluzione
-      if len(curVC) < upperbound:
-        optVC = curVC.copy()
-        upperbound = len(curVC)
+    if CurG.number_of_edges() == 0: # Ho la soluzione
+      if CurVC_size < UpperBound:
+        OptVC = CurVC.copy()  
+        UpperBound = CurVC_size
 
       backtrack = True
 
-    else:
-      curLB = lowerbound(vertices_list, curG) + len(curVC)
+    else: 
+      CurLB = lowerbound(CurG) + CurVC_size
 
-      if(curLB < upperbound):
-        vj = find_maxdeg(vertices_list, curG)
-        frontier.append((vj[0], 0, (vi, state)))
-        frontier.append((vj[0], 1, (vi, state)))
+      if CurLB < UpperBound:
+        vj = find_maxdeg(CurG)
+        Frontier.append((vj[0], 0, (vi, state))) 
+        Frontier.append((vj[0], 1, (vi, state)))
+
       else:
-        backtrack = True
+        backtrack=True
 
-    if backtrack == True:
-      if frontier != []:
-        nextnode_parent = frontier[-1][2]
+    if backtrack==True:
+      if Frontier != []:
+        nextnode_parent = Frontier[-1][2]
 
-        if nextnode_parent in curVC:
-          id = curVC.index(nextnode_parent) + 1
+        if nextnode_parent in CurVC:
+          id = CurVC.index(nextnode_parent) + 1
 
-          while id < len(curVC):
-            mynode, mystate = curVC.pop()
+          while id < len(CurVC): 
+            mynode, mystate = CurVC.pop() 
+            CurG.add_node(mynode) #undo the deletion from CurG
             
-            ## Per qualche motivo mette dei doppioni, da qui l'if...
-            if mynode not in vertices_list:
-              vertices_list.append(mynode)
-
-            curVC_nodes = list(map(lambda t:t[0], curVC))
-            neighbourG = neighbours(mynode, G)
-
-            for ng in neighbourG:
-              if (ng in vertices_list) and (ng not in curVC_nodes):
-                curG.append((mynode,ng))
+            curVC_nodes = list(map(lambda t:t[0], CurVC))
+            for nd in graph.neighbors(mynode):
+              if (nd in CurG.nodes()) and (nd not in curVC_nodes):
+                CurG.add_edge(nd, mynode)
 
         elif nextnode_parent == (-1, -1):
-          curVC.clear()
-          curVC = G.copy()
-           
+          # backtrack to the root node
+          CurVC.clear()
+          CurG = graph.copy()
+        else:
+          print('error in backtracking step')
+   
   res = []
-  for n in optVC:
+
+  for n in OptVC:
     res.append(n[0])
 
   res.sort()
   size = len(res)
  
-  # return optVC
+  # return OptVC
   return size, ' '.join(map(str,res))
 
-def calculate_approx_vc(num_vertices, graph):
-  G = get_edges(graph)
-  curG = G.copy()
-  curG.sort(key=lambda tup: tup[0])
-  vertices_list = [i for i in range(num_vertices)]
+def calculate_approx_vc(graph, mode='random'):
+  curG = graph.copy()
 
   visited = []
   c = []
+  vertices_list = [i for i in range(graph.number_of_nodes())]
 
-  while curG != []:
-    v = find_maxdeg(vertices_list, curG)[0]
-    neighbour = neighbours(v, curG)
-    vertices_list.remove(v)
+  while curG.number_of_edges() != 0:
+    if mode == 'greedy':
+      v = find_maxdeg(curG, vertices_list)[0]
+      neighbour = curG.neighbors(v)
+      vertices_list.remove(v)
     
-    v1 = find_maxdeg(neighbour, curG)[0]
-    vertices_list.remove(v1)
-
-    if v > v1:
-      arco = (v1,v)
-    else:
+      v1 = find_maxdeg(curG,neighbour)[0]
+      vertices_list.remove(v1)
+    
       arco = (v,v1)
+      arco = tuple(sorted(arco))
+
+    ## Prendo un arco casualmente
+    elif mode == 'random':
+      random.seed(datetime.now())
+
+      edges = list(curG.edges())
+      i = random.randint(0, curG.number_of_edges() - 1)
+
+      arco = edges[i]
+      arco = tuple(sorted(arco))
+
+      v = arco[0]
+      v1 = arco[1]
 
     visited.append(arco)
-    curG.remove(arco)
+    curG.remove_edge(v,v1)
 
     c.append(v)
     c.append(v1)
 
-    for e in curG[:]:
+    for e in list(curG.edges())[:]:
       if v in e and e not in visited:
-        curG.remove(e)
+        curG.remove_edge(e[0],e[1])
         visited.append(e)
       if v1 in e and e not in visited:
-        curG.remove(e)
+        curG.remove_edge(e[0],e[1])
         visited.append(e)
 
   size = len(c)
 
   return size, ' '.join(map(str,c))
 
-
 while True:
-  num_vertices = int(BOT.input())
-  graph = BOT.input().split()
+  #num_vertices = int(BOT.input())
+  graph = BOT.input()
+  graph = graph.replace(', ',',').split()
+  edges = [eval(t) for t in graph]
 
+  G = nx.Graph()
+  G.add_edges_from(edges)
+  
   if args.minimum:
-    size,answer = calculate_minimum_vc(num_vertices, graph)
+    size,answer = calculate_minimum_vc(G)
   elif args.approx:
-    size,answer = calculate_approx_vc(num_vertices, graph)
+    size,answer = calculate_approx_vc(G)
   else:
-    size,answer = calculate_minimum_vc(num_vertices, graph)
+    size,answer = calculate_minimum_vc(G)
   
   BOT.print(size)
   BOT.print(answer)

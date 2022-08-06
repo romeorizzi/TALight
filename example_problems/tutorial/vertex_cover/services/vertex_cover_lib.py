@@ -54,15 +54,22 @@ def instance_to_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
 def instance_to_txt_str(instance, format_name="with_vertices"):
     """Of the given <instance>, this function returns the .txt string in format <format_name>"""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
-    graph = instance['graph'].edges()
     output= f''
 
     if format_name == "with_vertices":
       num_vertices = instance['num_vertices']
-      output += f'{num_vertices}\n'
+      num_edges = instance['graph'].number_of_edges()
+      output += f'{num_vertices} {num_edges}\n'
 
-    for i in graph:
-      output += str(i)
+    graph = instance['graph'].edges()
+
+    output += ''.join(map(str, graph))
+
+    if 'exact_sol' in instance:
+      if instance['exact_sol']:
+        output += '\n1'
+      else:
+        output += '\n0'
 
     if 'risp' in instance:
       output += f'\n{instance["risp"]}'
@@ -83,17 +90,25 @@ def get_instance_from_txt(instance_as_str, format_name):
     """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{instance_format_name}` unsupported for objects of category `instance`.'
     instance = {}
-    str_to_arr = instance_as_str.split()
+    str_to_arr = instance_as_str.split('\n')
 
     if format_name != "with_vertices":
-      instance['graph'] = str_to_arr[1:2]
-      #instance['num_vertices'] = len(str_to_arr)
+      edges = str_to_arr[0].replace(', ', ',').replace(')(',') (').split()
+      edges = [eval (t) for t in edges]
+      G = nx.Graph()
+      G.add_edges_from(edges)
+      instance['graph'] = G
 
     else:
-      #instance['graph'] = str_to_arr[1:]
-      #instance['num_vertices'] = len(str_to_arr[1:])
-      instance['num_vertices'] = int(str_to_arr[0])
-      instance['graph'] = str_to_arr[1:2]
+      v_e_split = str_to_arr[0].split(' ')
+      instance['num_vertices'] = int(v_e_split[0])
+      instance['num_edges'] = int(v_e_split[1])
+      
+      edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
+      edges = [eval (t) for t in edges]
+      G = nx.Graph()
+      G.add_edges_from(edges)
+      instance['graph'] = G
     
     return instance
 
@@ -139,6 +154,7 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
     instance['seed'] = seed
 
     num_vertices = math.ceil(scaling_factor * num_vertices)
+    num_edges = math.ceil(scaling_factor * num_edges)
 
     instance['measured_time'] = None
     instance['answer_correct'] = None
@@ -156,13 +172,10 @@ def random_graph(num_vertices, num_edges, seed):
   while G.size() != num_edges:
     G = nx.gnm_random_graph(num_vertices, num_edges, seed)
     
-  #graph = G.edges()
-  #return graph
   return G
 
-def print_graph(num_vertices, graph, instance_format=DEFAULT_INSTANCE_FORMAT):
-  print(f'{num_vertices}')  
-  print(f'{graph[0]}')
+def print_graph(graph, instance_format=DEFAULT_INSTANCE_FORMAT):
+  print(f'{" ".join(map(str,graph))}')
 
 
 '''
@@ -177,7 +190,7 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
     sols['vertex_cover_size'] = f"{size}"
 
   elif sol_type == 'approx':
-    size, vc = calculate_approx_vc(instance['graph'])
+    size, vc, max_matching = calculate_approx_vc(instance['graph'])
     #vc1 = nx.approximation.min_weighted_vertex_cover(instance['graph'])
     min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
     sols['calculate_approx_vc'] = f"{vc}"
@@ -185,11 +198,11 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
 
   elif sol_type == 'both':
     size_min, vc_min = calculate_minimum_vc(instance['graph'])
-    size_appr, vc_appr = calculate_approx_vc(instance['graph'], 'greedy')
+    size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
     min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
     sols['calculate_minimum_vc'] = f"{vc_min}"
     sols['vertex_cover_size'] = f"{size_min}"
-    sols['calculate_2-approx_vc'] = f"{vc_appr}"
+    sols['calculate_2-approx_vc'] = f"{max_matching}"
     sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   return sols
@@ -197,17 +210,6 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
 '''
  Metodi per il branch and bound
 '''
-def get_edges(graph):
-  edges_list = []
-
-  edges_list_str = graph[0].replace('}{',' ').replace('{','').replace('}','').split(' ')
-  
-  for e in edges_list_str:
-    n = e.replace(',', ' ').split(' ')
-    edges_list.append((int(n[0]),int(n[1])))
-
-  return edges_list
-
 def find_maxdeg(graph, vertices=None):
   if vertices == None:
     deg_list = list(graph.degree())
@@ -325,6 +327,7 @@ def calculate_approx_vc(graph, mode='random'):
 
   visited = []
   c = []
+  max_matching = []
   vertices_list = [i for i in range(graph.number_of_nodes())]
 
   while curG.number_of_edges() != 0:
@@ -358,6 +361,8 @@ def calculate_approx_vc(graph, mode='random'):
     c.append(v)
     c.append(v1)
 
+    max_matching.append((v,v1))
+
     for e in list(curG.edges())[:]:
       if v in e and e not in visited:
         curG.remove_edge(e[0],e[1])
@@ -368,7 +373,7 @@ def calculate_approx_vc(graph, mode='random'):
 
   size = len(c)
 
-  return size, ' '.join(map(str,c))
+  return size, ' '.join(map(str,c)), ' '.join(map(str, max_matching))
 
 ## Verifico se un vertex cover fornito in input è un vc valido per il grafo
 def verify_vc(vertices, graph):

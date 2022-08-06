@@ -71,7 +71,7 @@ if not ENV['vc_sol_val']: # manual insertion
 else:
   answer = ENV['vc_sol_val']
 
-size_sol,appr_sol = vcl.calculate_approx_vc(instance['graph'], 'greedy')
+size_sol,appr_sol,max_matching = vcl.calculate_approx_vc(instance['graph'], 'greedy')
 
 if answer[0] == 'C' or answer[0] == 'c':
   #size,right_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'])

@@ -36,33 +36,36 @@ if ENV['goal'] == 'feasible':
   goals.append('feasible')
 
   num_vertices = 10
+  num_edges = 15
   NUM_INSTANCES = 5
   scaling_factor = 1.6
 
-  instances['feasible'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices)
+  instances['feasible'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices, num_edges)
 
 # INSTANCES FOR GOAL = approx
 if ENV['goal'] == 'big_instances':
   goals.append('big_instances')
 
   num_vertices = 80
+  num_edges = 100
   NUM_INSTANCES = 5
   scaling_factor = 1.2
 
-  instances['big_instances'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices)
+  instances['big_instances'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices, num_edges)
 
 # FUNCTION TESTING ONE SINGLE TESTCASE: 
 def test(instance):
   graph = instance['graph']
-  num_vertices = instance['num_vertices']
+  num_vertices = graph.number_of_nodes()
+  num_edges = graph.number_of_edges()
 
   TAc.print(LANG.render_feedback("graph-size",'# We have this number of vertices in the graph: '), "white", ["bold"], end='')
   TAc.print(num_vertices, "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("graph-size",'# We have this number of edges in the graph: '), "white", ["bold"], end='')
+  TAc.print(num_edges, "yellow", ["bold"])
   TAc.print(LANG.render_feedback("print-graph", f'\n# The graph is:\n'), "white", ["bold"])
-  #TAc.print(num_vertices, "white", ["bold"])
-  #TAc.print(graph[0], "white", ["bold"])
 
-  vcl.print_graph(num_vertices, graph)
+  vcl.print_graph(list(graph.edges()))
 
   TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is a 2-approximation vertex cover for this graph?'), "white", ["bold"])
 
@@ -77,12 +80,12 @@ def test(instance):
   edges = ''
 
   for i in range(0, len(answer), 2):
-    edges += '{' + answer[i] + ',' + answer[i+1] + '}'
+    edges += '(' + answer[i] + ',' + answer[i+1] + ')'
 
   ans.append(edges)
 
   if ENV['goal'] == 'feasible':
-    size,vc = vcl.calculate_minimum_vc(num_vertices, graph)
+    size,vc = vcl.calculate_minimum_vc(graph)
     check = vcl.verify_approx_vc(ans, graph)
     ok = False
 

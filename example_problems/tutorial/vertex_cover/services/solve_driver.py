@@ -45,9 +45,6 @@ elif ENV["source"] == 'terminal':
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
   edges = [eval(t) for t in l]
-  #for e in edges:
-  #  e = tuple(sorted(e))
-  #  G.add_edge(e[0],e[1])
   G.add_edges_from(edges)
 
   instance['graph'] = G
