@@ -90,23 +90,30 @@ def get_instance_from_txt(instance_as_str, format_name):
     """This function returns the instance it gets from its .txt string representation in format <instance_format_name>."""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{instance_format_name}` unsupported for objects of category `instance`.'
     instance = {}
+
     str_to_arr = instance_as_str.split('\n')
+    v_e_split = str_to_arr[0].split(' ')
+
+    instance['num_vertices'] = int(v_e_split[0])
+    instance['num_edges'] = int(v_e_split[1])
 
     if format_name != "with_vertices":
       edges = str_to_arr[0].replace(', ', ',').replace(')(',') (').split()
       edges = [eval (t) for t in edges]
       G = nx.Graph()
+      G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
       G.add_edges_from(edges)
       instance['graph'] = G
 
     else:
-      v_e_split = str_to_arr[0].split(' ')
-      instance['num_vertices'] = int(v_e_split[0])
-      instance['num_edges'] = int(v_e_split[1])
+      #v_e_split = str_to_arr[0].split(' ')
+      #instance['num_vertices'] = int(v_e_split[0])
+      #instance['num_edges'] = int(v_e_split[1])
       
       edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
       edges = [eval (t) for t in edges]
       G = nx.Graph()
+      G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
       G.add_edges_from(edges)
       instance['graph'] = G
     
@@ -360,6 +367,8 @@ def calculate_approx_vc(graph, mode='random'):
 
     visited.append(arco)
     curG.remove_edge(v,v1)
+    curG.remove_node(v)
+    curG.remove_node(v1)
 
     c.append(v)
     c.append(v1)
