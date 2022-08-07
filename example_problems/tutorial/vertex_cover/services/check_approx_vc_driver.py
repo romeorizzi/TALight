@@ -36,14 +36,20 @@ if TALf.exists_input_file('instance'):
 elif ENV["source"] == 'terminal':
   instance = {}
   instance['num_vertices'] = ENV['num_vertices']
+  instance['num_edges'] = ENV['num_edges']
 
-  G = nx.Graph()
   TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
 
-  TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices:'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices and {ENV["num_edges"]} edges:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
   edges = [eval(t) for t in l]
+
+  if len(edges) != ENV['num_edges']:
+    TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
+    exit(0)
+
+  G = nx.Graph()
   G.add_edges_from(edges)
 
   instance['graph'] = G
@@ -65,7 +71,7 @@ if ENV['display']:
   TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
 
 if not ENV['vc_sol_val']: # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured (maximal) matching for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured (minimum) maximal matching for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
 
 else:
@@ -74,10 +80,9 @@ else:
 size_sol,appr_sol,max_matching = vcl.calculate_approx_vc(instance['graph'], 'greedy')
 
 if answer[0] == 'C' or answer[0] == 'c':
-  #size,right_sol = vcl.calculate_approx_vc(instance['num_vertices'], instance['graph'])
-  #TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is {right_sol}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is {appr_sol}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is {size_sol}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is: {appr_sol}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("min-maximal-matching", f'A possible minimum maximal matching is: {max_matching}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is: {size_sol}.'), "green", ["bold"])
 else:
   size_ans = 2 * (len([eval(t) for t in answer]))
   right_sol = vcl.verify_approx_vc(answer, instance['graph'])

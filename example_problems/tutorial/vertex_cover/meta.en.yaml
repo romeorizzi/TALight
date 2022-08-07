@@ -40,7 +40,7 @@ services:
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
       instance_format:
-        regex: ^(simple|with_vertices)$
+        regex: ^(simple|with_vertices|vc_dat)$
         default: with_vertices
         explain: 'Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.'
         explain1: '[simple] Contains only the graph'
@@ -79,7 +79,7 @@ services:
         default: 1
         explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''vertex_cover.tar\'' you get downloaded on your machine by issuing `rtal get vertex_cover`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
       instance_format:
-        regex: ^(simple|with_vertices)$
+        regex: ^(simple|with_vertices|vc_dat)$
         default: with_vertices
         explain: 'Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.'
         explain1: '[simple] Contains only the graph'
@@ -132,7 +132,7 @@ services:
         default: 1
         explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''vertex_cover.tar\'' you get downloaded on your machine by issuing `rtal get vertex_cover`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
       instance_format:
-        regex: ^(simple|with_vertices)$
+        regex: ^(simple|with_vertices|vc_dat)$
         default: with_vertices
         explain: 'Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.'
         explain1: '[simple] Contains only the graph'
@@ -185,7 +185,7 @@ services:
         default: 1
         explain: 'This argument is taken into account when source=catalogue. It is used to identify a particular instance within the catalogue of instances stored on the server. The whole catalogue is public, that is, it is contained in the file \''vertex_cover.tar\'' you get downloaded on your machine by issuing `rtal get vertex_cover`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on the server. This catalogue is organized in collections of instances with a same origin or other common features.'
       instance_format:
-        regex: ^(simple|with_vertices)$
+        regex: ^(simple|with_vertices|vc_dat)$
         default: with_vertices
         explain: 'Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.'
         explain1: '[simple] Contains only the graph'
@@ -252,7 +252,7 @@ services:
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
       instance_format:
-        regex: ^(with_vertices|simple|vertex_cover_dat)$
+        regex: ^(with_vertices|simple|vc_dat)$
         default: with_vertices
         explain: 'Use this argument to choose the format of the .txt file containing the instance. You can also ask for the instance as already expressed within specific datafile formats that we have decided to support.'
         explain1: '[simple] Contains only the graph'

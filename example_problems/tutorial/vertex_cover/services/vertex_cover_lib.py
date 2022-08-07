@@ -12,7 +12,7 @@ from termcolor import colored
 from contextlib import redirect_stdout
 from networkx.algorithms import approximation
 
-AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_vertices':'with_vertices.txt', 'vertex_cover_dat':'.dat'},'solution':{'all_solutions': 'all_solutions.txt'}}
+AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_vertices':'with_vertices.txt', 'vc_dat':'.dat'},'solution':{'all_solutions': 'all_solutions.txt'}}
 DEFAULT_INSTANCE_FORMAT='with_vertices'
 DEFAULT_SOLUTION_FORMAT='all_solutions'
 
@@ -74,7 +74,7 @@ def instance_to_txt_str(instance, format_name="with_vertices"):
 
       output += f'{instance["risp"]}'
 
-    output += '\n'
+    #output += '\n'
 
     return output
 
@@ -118,15 +118,18 @@ def get_instance_from_txt(instance_as_str, format_name):
     return instance
 
 # Da rivedere per VC
-def instance_to_dat_str(instance,format_name='vertex_cover_dat'):
+def instance_to_dat_str(instance,format_name='vc_dat'):
   """Of the given <instance>, this function returns the .dat string in format <format_name>"""
   assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
-  graph = instance['graph'][0]
+  graph = instance['graph']
   num_vertices = instance['num_vertices']
+  num_edges = instance['num_edges']
 
-  output = f"param vertices := {num_vertices};                  # Number of vertices in the graph\n"
+  output = f"param num_vertices := {num_vertices};            # Number of vertices in the graph\n"
+  output += f"param num_edges := {num_edges};                 # Number of edges in the graph\n"
   output += "param: EDGES OF THE GRAPH "
-  output += f":= {graph} "
+  output += f":= {list(graph.edges())} "
+  #output += f":= {''.join(map(str, graph.edges()))} "
   output += ";\nend;"
     
   return output
@@ -137,8 +140,14 @@ def get_instance_from_dat(instance_as_str, format_name):
   split_instance = instance_as_str.split(";")
   instance = {}
 
-  instance['num_vertices'] = int(get_param(split_instance[0])) # assign seq_len
-  instance['graph'] = list(ast.literal_eval(get_param(split_instance[1]).replace("] [","],[").replace(" ","")))
+  instance['num_vertices'] = int(get_param(split_instance[0])) # assign num_vertices
+  instance['num_edges'] = int(get_param(split_instance[1])) # assign num_edges
+  edges = list(ast.literal_eval(get_param(split_instance[2]).replace("] [","],[").replace(", ",",").replace(')(',') ('))) # DA VERIFICARE!
+
+  G = nx.Graph()
+  G.add_nodes_from([c for v in range(instance['num_vertices'])])
+  G.add_edges_from(edges)
+  instance['graph'] = G
 
   return instance
 

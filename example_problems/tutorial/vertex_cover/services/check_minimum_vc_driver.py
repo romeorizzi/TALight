@@ -36,14 +36,20 @@ if TALf.exists_input_file('instance'):
 elif ENV["source"] == 'terminal':
   instance = {}
   instance['num_vertices'] = ENV['num_vertices']
+  instance['num_edges'] = ENV['num_edges']
 
-  G = nx.Graph()
   TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
 
-  TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices:'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices and {ENV["num_edges"]} edges:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
   edges = [eval(t) for t in l]
+
+  if len(edges) != ENV['num_edges']:
+    TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
+    exit(0)
+
+  G = nx.Graph()
   G.add_edges_from(edges)
 
   instance['graph'] = G
@@ -74,10 +80,8 @@ else:
 size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
 
 if answer[0] == 'C' or answer[0] == 'c':
-  #size_opt,opt_sol = vcl.calculate_minimum_vc(instance['num_vertices'], instance['graph'])
-  #TAc.print(LANG.render_feedback("best-sol", f'A possible (minimum) vertex cover is {opt_sol}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum vertex cover is {opt_sol}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum vertex cover is {size_opt}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum vertex cover is: {opt_sol}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum vertex cover is: {size_opt}.'), "green", ["bold"])
 else:
   right_sol = vcl.verify_vc(answer, instance['graph'])
   size_ans = len(answer)
