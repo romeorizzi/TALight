@@ -331,7 +331,7 @@ services:
     evaluator: [python, services/help/help_driver.py]
     args:
       page:
-        regex: ^(collage|solve|check_sol|eval_sol|gimme_instance|help|synopsis)$
+        regex: ^(vertex_cover|solve|check_minimum_vc|check_approx_vc|eval_minimum_vc|eval_2approx_vc|gimme_instance|help|synopsis)$
         default: help
       lang:
         regex: ^(en|it)$
