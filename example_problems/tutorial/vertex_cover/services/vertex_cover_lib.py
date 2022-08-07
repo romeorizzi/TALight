@@ -99,6 +99,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       G = nx.Graph()
       G.add_edges_from(edges)
       instance['graph'] = G
+      instance['known_sol'] = str_to_arr[1]
 
     else:
       v_e_split = str_to_arr[0].split(' ')
@@ -111,6 +112,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
       G.add_edges_from(edges)
       instance['graph'] = G
+      instance['known_sol'] = int(str_to_arr[2])
     
     return instance
 
@@ -171,6 +173,9 @@ def random_graph(num_vertices, num_edges, seed):
 
   G = nx.gnm_random_graph(num_vertices, num_edges, seed)
 
+  #while nx.number_of_isolates(G) != 0:
+  #  G = nx.gnm_random_graph(num_vertices, num_edges, seed)
+    
   return G
 
 def print_graph(num_vertices, num_edges, graph, instance_format=DEFAULT_INSTANCE_FORMAT):
@@ -184,7 +189,14 @@ SOLUTORI
 def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
   sols = {}
 
+  VMAX = 80
+
   if sol_type == 'minimum':
+    if 'known_sol' in instance:
+      if instance['known_sol'] == 0:
+        sols['calculate_minimum_vc'] = 'Instance too big! Please, use approximation.'
+        return sols
+
     size, vc = calculate_minimum_vc(instance['graph'])
     sols['calculate_minimum_vc'] = f"{vc}"
     sols['vertex_cover_size'] = f"{size}"
@@ -197,14 +209,30 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
     sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   elif sol_type == 'both':
-    if instance['num_vertices'] <= 80:
-      size_min, vc_min = calculate_minimum_vc(instance['graph'])
-    size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
-    min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
-    sols['calculate_minimum_vc'] = f"{vc_min}"
-    sols['vertex_cover_size'] = f"{size_min}"
-    sols['calculate_2-approx_vc'] = f"{max_matching}"
-    sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
+    # Caso di istanza da catalogo
+    if 'known_sol' in instance:
+      if instance['known_sol'] == 1:
+        size_min, vc_min = calculate_minimum_vc(instance['graph'])
+        sols['calculate_minimum_vc'] = f"{vc_min}"
+        sols['vertex_cover_size'] = f"{size_min}"
+
+      size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
+      min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
+      sols['calculate_2-approx_vc'] = f"{max_matching}"
+      sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
+
+    # Istanza random
+    else:
+      if instance['num_vertices'] <= VMAX:
+        size_min, vc_min = calculate_minimum_vc(instance['graph'])
+        sols['calculate_minimum_vc'] = f"{vc_min}"
+        sols['vertex_cover_size'] = f"{size_min}"
+
+      size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
+      min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
+
+      sols['calculate_2-approx_vc'] = f"{max_matching}"
+      sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   return sols
 
