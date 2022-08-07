@@ -92,23 +92,18 @@ def get_instance_from_txt(instance_as_str, format_name):
     instance = {}
 
     str_to_arr = instance_as_str.split('\n')
-    v_e_split = str_to_arr[0].split(' ')
-
-    instance['num_vertices'] = int(v_e_split[0])
-    instance['num_edges'] = int(v_e_split[1])
 
     if format_name != "with_vertices":
       edges = str_to_arr[0].replace(', ', ',').replace(')(',') (').split()
       edges = [eval (t) for t in edges]
       G = nx.Graph()
-      G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
       G.add_edges_from(edges)
       instance['graph'] = G
 
     else:
-      #v_e_split = str_to_arr[0].split(' ')
-      #instance['num_vertices'] = int(v_e_split[0])
-      #instance['num_edges'] = int(v_e_split[1])
+      v_e_split = str_to_arr[0].split(' ')
+      instance['num_vertices'] = int(v_e_split[0])
+      instance['num_edges'] = int(v_e_split[1])
       
       edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
       edges = [eval (t) for t in edges]
@@ -176,10 +171,6 @@ def random_graph(num_vertices, num_edges, seed):
 
   G = nx.gnm_random_graph(num_vertices, num_edges, seed)
 
-  # Forzo la generazione di un grafo connesso
-  while G.size() != num_edges:
-    G = nx.gnm_random_graph(num_vertices, num_edges, seed)
-    
   return G
 
 def print_graph(num_vertices, num_edges, graph, instance_format=DEFAULT_INSTANCE_FORMAT):
