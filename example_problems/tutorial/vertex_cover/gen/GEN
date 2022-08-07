@@ -16,53 +16,53 @@ add_format: with_vertices.txt
 
 collection: vertices_at_most_20
 #                randgen,    num_vertices,  num_edges,    seed,   
-GEN:  randgen_1_basic.py     8              10            123456       
-GEN:  randgen_1_basic.py     8              11            345678        
+GEN:  randgen_1_basic.py     8              12            123456       
+GEN:  randgen_1_basic.py     8              13            345678        
 GEN:  randgen_1_basic.py     10             15            134259       
-GEN:  randgen_1_basic.py     10             15            743201       
-GEN:  randgen_1_basic.py     12             15            129473      
-GEN:  randgen_1_basic.py     12             15            372493      
-GEN:  randgen_1_basic.py     15             20            194372     
-GEN:  randgen_1_basic.py     15             23            329483
+GEN:  randgen_1_basic.py     10             16            743201       
+GEN:  randgen_1_basic.py     12             18            129473      
+GEN:  randgen_1_basic.py     12             20            372493      
+GEN:  randgen_1_basic.py     15             23            194372     
+GEN:  randgen_1_basic.py     15             25            329483
 GEN:  randgen_1_basic.py     20             30            673210
 GEN:  randgen_1_basic.py     20             35            382910
 
 collection: vertices_at_most_50
 #                randgen,    num_vertices,  num_edges,    seed,   
 GEN:  randgen_1_basic.py     22             35            538493
-GEN:  randgen_1_basic.py     22             36            309302        
+GEN:  randgen_1_basic.py     22             38            309302        
 GEN:  randgen_1_basic.py     25             40            494021       
 GEN:  randgen_1_basic.py     25             42            458390       
 GEN:  randgen_1_basic.py     30             45            203927      
 GEN:  randgen_1_basic.py     30             48            148920      
-GEN:  randgen_1_basic.py     40             53            484022   
-GEN:  randgen_1_basic.py     40             55            329488
-GEN:  randgen_1_basic.py     50             65            644884
-GEN:  randgen_1_basic.py     50             70            100001
+GEN:  randgen_1_basic.py     40             60            484022   
+GEN:  randgen_1_basic.py     40             65            329488
+GEN:  randgen_1_basic.py     50             75            644884
+GEN:  randgen_1_basic.py     50             78            100001
 
 collection: vertices_at_most_80
 #                randgen,    num_vertices,  num_edges,    seed,   
-GEN:  randgen_1_basic.py     52             75            434355
-GEN:  randgen_1_basic.py     52             78            556677        
-GEN:  randgen_1_basic.py     55             80            124244       
-GEN:  randgen_1_basic.py     55             80            167743       
-GEN:  randgen_1_basic.py     60             85            124124      
-GEN:  randgen_1_basic.py     60             85            454522      
-GEN:  randgen_1_basic.py     70             95            774788   
-GEN:  randgen_1_basic.py     70             95            456462
-GEN:  randgen_1_basic.py     80             100           968444
-GEN:  randgen_1_basic.py     80             110           464563
+GEN:  randgen_1_basic.py     52             80            434355
+GEN:  randgen_1_basic.py     52             83            556677        
+GEN:  randgen_1_basic.py     55             85            124244       
+GEN:  randgen_1_basic.py     55             90            167743       
+GEN:  randgen_1_basic.py     60             95            124124      
+GEN:  randgen_1_basic.py     60             100           454522      
+GEN:  randgen_1_basic.py     70             110           774788   
+GEN:  randgen_1_basic.py     70             115           456462
+GEN:  randgen_1_basic.py     80             120           968444
+GEN:  randgen_1_basic.py     80             125           464563
 
 collection: vertices_at_most_130
 #                randgen,     num_vertices,  num_edges,    seed,   
-GEN:  randgen_1_basic.py      90             110           434355
-GEN:  randgen_1_basic.py      90             110           556677        
-GEN:  randgen_1_basic.py      105            130           124244       
-GEN:  randgen_1_basic.py      105            130           167743       
-GEN:  randgen_1_basic.py      115            140           124124      
-GEN:  randgen_1_basic.py      115            140           454522      
-GEN:  randgen_1_basic.py      120            150           774788   
-GEN:  randgen_1_basic.py      120            150           456462
-GEN:  randgen_1_basic.py      130            170           968444
-GEN:  randgen_1_basic.py      130            170           464563
+GEN:  randgen_1_basic.py      90             140           434355
+GEN:  randgen_1_basic.py      90             145           556677        
+GEN:  randgen_1_basic.py      105            155           124244       
+GEN:  randgen_1_basic.py      105            160           167743       
+GEN:  randgen_1_basic.py      115            170           124124      
+GEN:  randgen_1_basic.py      115            180           454522      
+GEN:  randgen_1_basic.py      120            185           774788   
+GEN:  randgen_1_basic.py      120            190           456462
+GEN:  randgen_1_basic.py      130            200           968444
+GEN:  randgen_1_basic.py      130            220           464563
 

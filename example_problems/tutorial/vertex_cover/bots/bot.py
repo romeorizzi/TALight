@@ -142,7 +142,8 @@ def calculate_approx_vc(graph, mode='random'):
   visited = []
   c = []
   max_matching = []
-  vertices_list = [i for i in range(graph.number_of_nodes())]
+  #vertices_list = [i for i in range(graph.number_of_nodes())]
+  vertices_list = [i for i in list(graph.nodes())]
 
   while curG.number_of_edges() != 0:
     if mode == 'greedy':

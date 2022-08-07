@@ -63,16 +63,16 @@ def instance_to_txt_str(instance, format_name="with_vertices"):
 
     graph = instance['graph'].edges()
 
-    output += ''.join(map(str, graph))
-
-    if 'exact_sol' in instance:
-      if instance['exact_sol']:
-        output += '\n1'
-      else:
-        output += '\n0'
+    output += f'{"".join(map(str, graph))}\n'
 
     if 'risp' in instance:
-      output += f'\n{instance["risp"]}'
+      if 'exact_sol' in instance:
+        if instance['exact_sol'] == 1:
+          output += '1\n'
+        else:
+          output += '0\n'
+
+      output += f'{instance["risp"]}'
 
     output += '\n'
 
@@ -99,7 +99,8 @@ def get_instance_from_txt(instance_as_str, format_name):
       G = nx.Graph()
       G.add_edges_from(edges)
       instance['graph'] = G
-      instance['known_sol'] = str_to_arr[1]
+      instance['num_vertices'] = len([v for v in list(G.nodes())])
+      instance['exact_sol'] = int(str_to_arr[1])
 
     else:
       v_e_split = str_to_arr[0].split(' ')
@@ -112,7 +113,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
       G.add_edges_from(edges)
       instance['graph'] = G
-      instance['known_sol'] = int(str_to_arr[2])
+      instance['exact_sol'] = int(str_to_arr[2])
     
     return instance
 
@@ -192,46 +193,55 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
   VMAX = 80
 
   if sol_type == 'minimum':
-    if 'known_sol' in instance:
-      if instance['known_sol'] == 0:
+    if 'exact_sol' in instance:
+      if instance['exact_sol'] == 0:
         sols['calculate_minimum_vc'] = 'Instance too big! Please, use approximation.'
         return sols
 
-    size, vc = calculate_minimum_vc(instance['graph'])
-    sols['calculate_minimum_vc'] = f"{vc}"
-    sols['vertex_cover_size'] = f"{size}"
+    else:
+      if instance['num_vertices'] <= VMAX:
+        size, vc = calculate_minimum_vc(instance['graph'])
+        sols['calculate_minimum_vc'] = f"{vc}"
+        sols['vertex_cover_size'] = f"{size}"
+      else:
+        sols['calculate_minimum_vc'] = 'Instance too big! Please, use approximation.'
 
   elif sol_type == 'approx':
     size, vc, max_matching = calculate_approx_vc(instance['graph'])
     #vc1 = nx.approximation.min_weighted_vertex_cover(instance['graph'])
     min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
     sols['calculate_approx_vc'] = f"{vc}"
+    sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
     sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   elif sol_type == 'both':
     # Caso di istanza da catalogo
-    if 'known_sol' in instance:
-      if instance['known_sol'] == 1:
+    if 'exact_sol' in instance:
+      if instance['exact_sol'] == 1:
         size_min, vc_min = calculate_minimum_vc(instance['graph'])
         sols['calculate_minimum_vc'] = f"{vc_min}"
         sols['vertex_cover_size'] = f"{size_min}"
 
       size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
       min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
-      sols['calculate_2-approx_vc'] = f"{max_matching}"
+      sols['calculate_2-approx_vc'] = f"{vc_appr}"
+      sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
       sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
     # Istanza random
     else:
-      if instance['num_vertices'] <= VMAX:
+      if int(instance['num_vertices']) <= VMAX:
         size_min, vc_min = calculate_minimum_vc(instance['graph'])
         sols['calculate_minimum_vc'] = f"{vc_min}"
         sols['vertex_cover_size'] = f"{size_min}"
+      else:
+        sols['calculate_minimum_vc'] = 'Instance too big! Please, use approximation.'
 
       size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
       min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
 
-      sols['calculate_2-approx_vc'] = f"{max_matching}"
+      sols['calculate_2-approx_vc'] = f"{vc_appr}"
+      sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
       sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   return sols
@@ -353,11 +363,11 @@ def calculate_minimum_vc(graph):
 ## possibile...
 def calculate_approx_vc(graph, mode='random'):
   curG = graph.copy()
-
   visited = []
   c = []
   max_matching = []
-  vertices_list = [i for i in range(graph.number_of_nodes())]
+  #vertices_list = [i for i in range(graph.number_of_nodes())]
+  vertices_list = [i for i in list(graph.nodes())]
 
   while curG.number_of_edges() != 0:
     if mode == 'greedy':
