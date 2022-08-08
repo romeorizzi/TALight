@@ -103,16 +103,13 @@ else:
       TAc.OK()
       TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it\'s better than mine!'), "green", ["bold"])
       
-      if ENV['source'] == 'catalogue':
+      if ENV['source'] == 'catalogue' and instance['exact_sol'] == 0:
+        path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances')
+        instance_filename = f'instance_{str(ENV["instance_id"]).zfill(3)}'
         answer = ' '.join(map(str, answer))
-        instance_filename = f'instance_{str(ENV["instance_id"]).zfill(3)}.{ENV["instance_format"]}.txt'
-        full_path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances', instance_filename)
+        answer = f'{answer.replace(",",", ").replace(") (", ")(")}'
 
-        lines = open(full_path, 'r').readlines()
-
-        if instance['exact_sol'] == 0:
-          lines[-2] = f'{answer.replace(",",", ").replace(") (", ")(")}\n'
-          open(full_path, 'w').writelines(lines)
+        vcl.update_instance_txt(path, instance_filename, answer)
 
   else:
     TAc.NO()

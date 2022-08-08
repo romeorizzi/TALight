@@ -119,6 +119,17 @@ def get_instance_from_txt(instance_as_str, format_name):
     
     return instance
 
+def update_instance_txt(path, file, new_data):
+  for format_gender in AVAILABLE_FORMATS['instance']:
+    format_name = AVAILABLE_FORMATS['instance'][format_gender]
+    if format_name.split('.')[1] == 'txt':
+      instance_filename = f'{file}.{format_name}'
+      full_path = os.path.join(path, instance_filename)
+
+      lines = open(full_path, 'r').readlines()
+      lines[-2] = f'{new_data}\n'
+      open(full_path, 'w').writelines(lines)
+
 # Da rivedere per VC
 def instance_to_dat_str(instance,format_name='vc_dat'):
   """Of the given <instance>, this function returns the .dat string in format <format_name>"""
