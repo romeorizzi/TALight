@@ -101,6 +101,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       instance['graph'] = G
       instance['num_vertices'] = len([v for v in list(G.nodes())])
       instance['exact_sol'] = int(str_to_arr[1])
+      instance['sol'] = str_to_arr[2]
 
     else:
       v_e_split = str_to_arr[0].split(' ')
@@ -114,6 +115,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       G.add_edges_from(edges)
       instance['graph'] = G
       instance['exact_sol'] = int(str_to_arr[2])
+      instance['sol'] = str_to_arr[3]
     
     return instance
 
@@ -218,10 +220,8 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
   elif sol_type == 'approx':
     size, vc, max_matching = calculate_approx_vc(instance['graph'])
     #vc1 = nx.approximation.min_weighted_vertex_cover(instance['graph'])
-    min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
     sols['calculate_approx_vc'] = f"{vc}"
     sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
-    sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   elif sol_type == 'both':
     # Caso di istanza da catalogo
@@ -232,10 +232,8 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
         sols['vertex_cover_size'] = f"{size_min}"
 
       size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
-      min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
       sols['calculate_2-approx_vc'] = f"{vc_appr}"
       sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
-      sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
     # Istanza random
     else:
@@ -247,11 +245,9 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
         sols['calculate_minimum_vc'] = 'Instance too big! Please, use approximation.'
 
       size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
-      min_max_matching = nx.approximation.min_maximal_matching(instance['graph'])
 
       sols['calculate_2-approx_vc'] = f"{vc_appr}"
       sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
-      sols['min-maximal-matching'] = f"{' '.join(map(str,min_max_matching))}"
 
   return sols
 
@@ -473,13 +469,10 @@ def verify_approx_vc(matching, graph):
 '''
 VARIE
 '''
-def plot_graph(graph, block=False):
+def plot_graph(graph):
   nx.draw(graph, with_labels=True)
 
-  if not block:
-    plt.show(block=False)
-  else:
-    plt.show()
+  plt.show()
 
 '''
 GOAL SUMMARIES

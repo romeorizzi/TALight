@@ -7,6 +7,7 @@ from TALfiles import TALfilesHelper
 
 import random
 import networkx as nx
+import matplotlib.pyplot as plt
 import vertex_cover_lib as vcl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -17,6 +18,7 @@ args_list = [
     ('num_vertices',int),
     ('num_edges',int),
     ('sol_type',str),
+    ('plot',bool),
     ('seed',str),
     ('download',bool),
     ('lang',str)
@@ -72,10 +74,11 @@ for key in content.keys():
   TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: '), "yellow",["bold"])
   TAc.print(LANG.render_feedback("solutions", f'{content[key]}'), "white",["bold"])
 
-#vcl.plot_graph(instance['graph'], block=True)
-
 if ENV["download"]:
   TALf.str2output_file(content,f'all_solutions.txt')
+
+if ENV['plot']:
+  vcl.plot_graph(instance['graph'])
 
 exit(0)
 
