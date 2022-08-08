@@ -141,9 +141,17 @@ def instance_to_dat_str(instance,format_name='vc_dat'):
   output = f"param num_vertices := {num_vertices};            # Number of vertices in the graph\n"
   output += f"param num_edges := {num_edges};                 # Number of edges in the graph\n"
   output += "param: EDGES OF THE GRAPH "
-  output += f":= {list(graph.edges())} "
+  output += f":= {list(graph.edges())};\n"
+  if 'risp' in instance:
+      if 'exact_sol' in instance:
+        if instance['exact_sol'] == 1:
+          output += f'param exact_sol := 1\n'
+        else:
+          output += f'param exact_sol := 0\n'
+
+      output += f'param sol := {instance["risp"]}\n'
   #output += f":= {''.join(map(str, graph.edges()))} "
-  output += ";\nend;"
+  output += "end;"
     
   return output
 
