@@ -17,6 +17,7 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
+    ('weighted',bool),
     ('seed',str),
     ('vc_sol_val',int),
     ('display',bool),
@@ -50,8 +51,24 @@ elif ENV["source"] == 'terminal':
     TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
     exit(0)
 
+  if ENV['weighted']:
+    TAc.print(LANG.render_feedback("insert-line", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
+    l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
+
+    if len(l) != ENV['num_vertices']:
+      TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weight ({len(l)} instead of {ENV["num_vertices"]})\n'), "red", ["bold"])
+      exit(0)
+
   G = nx.Graph()
+  G.add_nodes_from([int(v) for v in range(ENV['num_vertices'])])
   G.add_edges_from(edges)
+
+  if ENV['weighted']:
+    i = 0
+
+    for v in G.nodes():
+      G.add_node(v, weight=int(l[i]))
+      i += 1
 
   instance['graph'] = G
 
@@ -60,7 +77,7 @@ elif ENV["source"] == 'terminal':
 
 elif ENV["source"] == 'randgen_1':
   # Get random instance
-  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
+  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'], ENV['weighted'])[0]
 
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))

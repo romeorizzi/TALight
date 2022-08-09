@@ -101,6 +101,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Numero degli archi che connettono i vertici del grafo'
+      weighted:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Genera un grafo con nodi pesati'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -154,6 +158,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Numero degli archi che connettono i vertici del grafo'
+      weighted:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Genera un grafo con nodi pesati'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -253,6 +261,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Numero degli archi che connettono i vertici del grafo'
+      weighted:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Genera un grafo con nodi pesati'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'

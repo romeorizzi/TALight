@@ -40,17 +40,40 @@ if TALf.exists_input_file('instance'):
 elif ENV["source"] == 'terminal':
   instance = {}
   instance['num_vertices'] = ENV['num_vertices']
+  instance['num_edges'] = ENV['num_edges']
 
-  G = nx.Graph()
   TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
 
-  TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices:'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices and {ENV["num_edges"]} edges:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
   edges = [eval(t) for t in l]
+
+  if len(edges) != ENV['num_edges']:
+    TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
+    exit(0)
+
+  if ENV['weighted']:
+    TAc.print(LANG.render_feedback("insert-line", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
+    l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
+
+    if len(l) != ENV['num_vertices']:
+      TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weight ({len(l)} instead of {ENV["num_vertices"]})\n'), "red", ["bold"])
+      exit(0)
+
+  G = nx.Graph()
+  G.add_nodes_from([int(v) for v in range(ENV['num_vertices'])])
   G.add_edges_from(edges)
 
+  if ENV['weighted']:
+    i = 0
+
+    for v in G.nodes():
+      G.add_node(v, weight=int(l[i]))
+      i += 1
+
   instance['graph'] = G
+
   instance_str = vcl.instance_to_str(instance, format_name=ENV['instance_format'])
   output_filename = f"terminal_instance.{ENV['instance_format']}.txt"
 

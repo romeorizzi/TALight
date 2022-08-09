@@ -15,6 +15,7 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
+    ('weighted',bool),
     ('seed',str),
     ('silent', bool),
     ('display', bool),
