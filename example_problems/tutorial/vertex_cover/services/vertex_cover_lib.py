@@ -176,7 +176,7 @@ def get_instance_from_dat(instance_as_str, format_name):
 '''
 GENERATORE GRAFI
 '''
-def instances_generator(num_instances, scaling_factor: float, num_vertices: int, num_edges: int, seed = "random_seed"):
+def instances_generator(num_instances, scaling_factor: float, num_vertices: int, num_edges: int, seed = "random_seed", weighted = 0):
   instances = []
 
   for _ in range(num_instances):
@@ -186,7 +186,7 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
 
     instance['num_vertices'] = num_vertices
     instance['num_edges'] = num_edges
-    instance['graph'] = random_graph(num_vertices, num_edges, seed)
+    instance['graph'] = random_graph(num_vertices, num_edges, seed, weighted)
     instance['seed'] = seed
 
     num_vertices = math.ceil(scaling_factor * num_vertices)
@@ -199,11 +199,19 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
 
   return instances
 
-def random_graph(num_vertices, num_edges, seed):
+def random_graph(num_vertices, num_edges, seed, weighted):
   random.seed(seed)
 
   G = nx.gnm_random_graph(num_vertices, num_edges, seed)
 
+  # Aggiungo un peso ai nodi
+  if weighted == 1:
+    for n in G.nodes():
+      G.add_node(n, weight=random.randint(1,10))
+
+  # L'idea era di controllare se ci sono nodi non connessi e,
+  # nel caso, rigenerare il grafo. Il problema è però il seed,
+  # che va cambiato e quindi rende non replicabile il grafo...
   #while nx.number_of_isolates(G) != 0:
   #  G = nx.gnm_random_graph(num_vertices, num_edges, seed)
     

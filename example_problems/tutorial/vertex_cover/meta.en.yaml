@@ -30,6 +30,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Number of edges that connect the vertices of the graph'
+      weighted:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Generates a graph with weighted nodes'
       sol_type:
         regex: ^(minimum|approx|both)$
         default: both

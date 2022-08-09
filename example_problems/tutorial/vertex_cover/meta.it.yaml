@@ -30,6 +30,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Numero degli archi che connettono i vertici del grafo'
+      weighted:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Genera un grafo con nodi pesati'
       sol_type:
         regex: ^(minimum|approx|both)$
         default: both

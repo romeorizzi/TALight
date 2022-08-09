@@ -17,6 +17,7 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
+    ('weighted',bool),
     ('sol_type',str),
     ('plot',bool),
     ('seed',str),
@@ -55,7 +56,7 @@ elif ENV["source"] == 'terminal':
 
 elif ENV["source"] == 'randgen_1':
   # Get random instance
-  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
+  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'], ENV['weighted'])[0]
 
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
@@ -65,13 +66,13 @@ else: # take instance from catalogue
 TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
 TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
 
-content = vcl.solutions(ENV['sol_type'],instance,ENV['instance_format'])
+content = vcl.solutions(ENV['sol_type'], instance, ENV['instance_format'])
 
 TAc.print(LANG.render_feedback("all-solutions-title", f"Here are possible solutions for the given instance:"), "green", ["bold"])
 
 for key in content.keys():
   #TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: {content[key]}'), "white",["bold"])
-  TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: '), "yellow",["bold"])
+  TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: '), "yellow",["bold"], end='')
   TAc.print(LANG.render_feedback("solutions", f'{content[key]}'), "white",["bold"])
 
 if ENV["download"]:

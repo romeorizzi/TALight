@@ -6,6 +6,7 @@ from TALinputs import TALinput
 from TALfiles import TALfilesHelper
 
 import random
+import networkx as nx
 import vertex_cover_lib as vcl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -14,6 +15,7 @@ args_list = [
     ('instance_id',int),
     ('instance_format',str),
     ('num_vertices',int),
+    ('num_edges',int),
     ('seed',str),
     ('vc_sol_val',int),
     ('display',bool),
@@ -36,21 +38,28 @@ elif ENV["source"] == 'terminal':
   instance['num_vertices'] = ENV['num_vertices']
 
   graph = []
-  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: {{x,y}}{{w,z}}...{{n,m}} \n'), "yellow")
+  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m) \n'), "yellow")
 
   TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
-  #l = [int(x) for x in l]
+  
+  edges = [eval(t) for t in l]
 
-  graph.append(l)
-    
-  instance['graph'] = graph[0]
+  if len(edges) != ENV['num_edges']:
+    TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
+    exit(0)
+
+  G = nx.Graph()
+  G.add_edges_from(edges)
+
+  instance['graph'] = G
+
   instance_str = vcl.instance_to_str(instance, format_name=ENV['instance_format'])
   output_filename = f"terminal_instance.{ENV['instance_format']}.txt"
 
 elif ENV["source"] == 'randgen_1':
   # Get random instance
-  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['seed'])[0]
+  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
 
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
@@ -68,7 +77,7 @@ if not ENV['vc_sol_val']: # manual insertion
 else:
   answer = ENV['vc_sol_val']
 
-size_opt, opt_sol = vcl.calculate_minimum_vc(instance['num_vertices'], instance['graph'])
+size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
 opt_sol = opt_sol.split()
 opt_sol = [int(x) for x in opt_sol]
 ind_set = []
@@ -89,7 +98,7 @@ else:
   vc_sol = vcl.verify_vc(answer, instance['graph'])
   answer = [int(x) for x in answer]
   size_ans = len(answer)
-  edges = vcl.get_edges(instance['graph'])
+  edges = list(instance['graph'].edges())
 
   if not vc_sol:
     # Controllo che i nodi non siano collegati da un arco
