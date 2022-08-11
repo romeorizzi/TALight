@@ -204,10 +204,12 @@ def random_graph(num_vertices, num_edges, seed, weighted):
 
   G = nx.gnm_random_graph(num_vertices, num_edges, seed)
 
-  # Aggiungo un peso ai nodi
-  if weighted == 1:
-    for n in G.nodes():
+  # Aggiungo un peso ai nodi (1 se non viene specificato nulla
+  for n in G.nodes():
+    if weighted == 1:
       G.add_node(n, weight=random.randint(1,10))
+    else:
+      G.add_node(n, weight=1)
 
   # L'idea era di controllare se ci sono nodi non connessi e,
   # nel caso, rigenerare il grafo. Il problema è però il seed,
@@ -497,9 +499,13 @@ def verify_approx_vc(matching, graph):
 VARIE
 '''
 def plot_graph(graph):
-  nx.draw(graph, with_labels=True)
+  nx.draw_networkx(graph)
+  ax = plt.gca()
+  ax.margins(0.20)
+  plt.axis("off")
 
   plt.show()
+  
 
 '''
 GOAL SUMMARIES

@@ -19,7 +19,7 @@ args_list = [
     ('num_edges',int),
     ('weighted',bool),
     ('seed',str),
-    ('vc_sol_val',int),
+    ('vc_sol_val',str),
     ('display',bool),
     ('silent',bool),
     ('lang',str),
@@ -88,11 +88,11 @@ if ENV['display']:
   TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
   TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
 
-if not ENV['vc_sol_val']: # manual insertion
+if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured maximal matching for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
-
 else:
+  #answer = [eval(t) for t in ENV['vc_sol_val'].split()]
   answer = ENV['vc_sol_val']
 
 if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
@@ -103,9 +103,12 @@ else:
   size_sol = len([int(i) for i in appr_sol.split() ])
 
 if answer[0] == 'C' or answer[0] == 'c':
-  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is: {appr_sol}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("min-maximal-matching", f'A possible maximal matching is: {max_matching}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is: {size_sol}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is: '), "green", ["bold"], end='')
+  TAc.print(LANG.render_feedback("best-sol", f'{appr_sol}.'), "white", ["bold"])
+  TAc.print(LANG.render_feedback("min-maximal-matching", f'A possible maximal matching is: '), "green", ["bold"], end='')
+  TAc.print(LANG.render_feedback("min-maximal-matching", f'{max_matching}.'), "white", ["bold"])
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is: '), "green", ["bold"], end='')
+  TAc.print(LANG.render_feedback("size-sol", f'{size_sol}.'), "white", ["bold"])
 else:
   size_ans = 2 * (len([eval(t) for t in answer]))
   right_sol = vcl.verify_approx_vc(answer, instance['graph'])

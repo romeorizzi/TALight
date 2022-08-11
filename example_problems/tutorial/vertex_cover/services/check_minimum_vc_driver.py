@@ -16,9 +16,9 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
-    ('weighted',bool)
+    ('weighted',bool),
     ('seed',str),
-    ('vc_sol_val',int),
+    ('vc_sol_val',str),
     ('display',bool),
     ('silent',bool),
     ('lang',str),
@@ -87,18 +87,19 @@ if ENV['display']:
   TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
   TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
 
-if not ENV['vc_sol_val']: # manual insertion
+if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured vertex cover for this graph if you have one. Otherwise, if you only intend to be told about the vertex cover, enter "C".'), "yellow", ["bold"])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
-
 else:
-  answer = ENV['vc_sol_val']
+  answer = [int(i) for i in ENV['vc_sol_val'].split()]
 
 size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
 
 if answer[0] == 'C' or answer[0] == 'c':
-  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum vertex cover is: {opt_sol}.'), "green", ["bold"])
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum vertex cover is: {size_opt}.'), "green", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum vertex cover is: '), "green", ["bold"], end='') 
+  TAc.print(LANG.render_feedback("best-sol", f'{opt_sol}.'), "white", ["bold"])
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum vertex cover is: '), "green", ["bold"], end='')
+  TAc.print(LANG.render_feedback("size-sol", f'{size_opt}.'), "white", ["bold"])
 else:
   right_sol = vcl.verify_vc(answer, instance['graph'])
   size_ans = len(answer)

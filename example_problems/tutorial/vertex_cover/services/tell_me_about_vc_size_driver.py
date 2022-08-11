@@ -17,11 +17,8 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
-    ('weighted',bool),
-    ('sol_type',str),
-    ('plot',bool),
+    ('size',int),
     ('seed',str),
-    ('download',bool),
     ('lang',str)
 ]
 
@@ -31,6 +28,10 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = '
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
+
+if ENV['size'] > ENV['num_vertices']:
+  TAc.print(LANG.render_feedback("invalid-k", f'\nERROR: size k can\'t be higher than the number of vertices.\n'), "red", ["bold"])
+  exit(0)
 
 ## Input Sources
 if TALf.exists_input_file('instance'):
@@ -65,13 +66,6 @@ elif ENV["source"] == 'terminal':
   G.add_nodes_from([int(v) for v in range(ENV['num_vertices'])])
   G.add_edges_from(edges)
 
-  if ENV['weighted']:
-    i = 0
-
-    for v in G.nodes():
-      G.add_node(v, weight=int(l[i]))
-      i += 1
-
   instance['graph'] = G
 
   instance_str = vcl.instance_to_str(instance, format_name=ENV['instance_format'])
@@ -79,7 +73,7 @@ elif ENV["source"] == 'terminal':
 
 elif ENV["source"] == 'randgen_1':
   # Get random instance
-  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'], ENV['weighted'])[0]
+  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
 
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
@@ -89,20 +83,31 @@ else: # take instance from catalogue
 TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
 TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
 
-content = vcl.solutions(ENV['sol_type'], instance, ENV['instance_format'])
+if not ENV['size']: # manual insertion
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured size k of the vertex cover: if there is a vertex cover of size at least k, you will get a positive answer. Otherwise, if you only intend to be told about the size k of the vertex cover, enter "0".'), "yellow", ["bold"])
+  answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
+  answer = int(answer[0])
 
-TAc.print(LANG.render_feedback("all-solutions-title", f"Here are possible solutions for the given instance:"), "green", ["bold"])
+else:
+  answer = ENV['size']
+  
+if answer > instance['num_vertices']:
+  TAc.print(LANG.render_feedback("invalid-k", f'ERROR: size k can\'t be higher than the number of vertices.'), "red", ["bold"])
+  exit(0)
 
-for key in content.keys():
-  #TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: {content[key]}'), "white",["bold"])
-  TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: '), "yellow",["bold"], flush=True, end='')
-  TAc.print(LANG.render_feedback("solutions", f'{content[key]}'), "white",["bold"], flush=True)
+size, vc = vcl.calculate_minimum_vc(instance['graph'])
 
-if ENV["download"]:
-  TALf.str2output_file(content,f'all_solutions.txt')
+if answer == 0 or answer == 0:
+  TAc.print(LANG.render_feedback("best-sol", f'Size k of the minimum vertex cover is: {size}.'), "green", ["bold"])
+else:
 
-if ENV['plot']:
-  vcl.plot_graph(instance['graph'])
+  if answer == size:
+    TAc.OK()
+    TAc.print(LANG.render_feedback("right-exact-sol", f'We agree, the graph has a vertex cover of size exactly {answer}.'), "green", ["bold"])
+  elif answer > size:
+    TAc.print(LANG.render_feedback("right-sol", f'Yes, the graph has a vertex cover of size at least {answer}.'), "yellow", ["bold"])
+  else:
+    TAc.NO()
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the graph don\'t have a vertex cover of size at least {answer}.'), "red", ["bold"])
 
 exit(0)
-
