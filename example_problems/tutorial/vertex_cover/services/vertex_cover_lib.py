@@ -59,12 +59,14 @@ def instance_to_txt_str(instance, format_name="with_vertices"):
     if format_name == "with_vertices":
       num_vertices = instance['num_vertices']
       num_edges = instance['graph'].number_of_edges()
-      output += f'{num_vertices} {num_edges}\n'
+      weighted = instance['weighted']
+      output += f'{num_vertices} {num_edges} {weighted}\n'
 
-    if 'weighted' in instance:
+    if instance['weighted']:
       for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
         output += f'{w} '
-
+      output += '\n'
+    elif not instance['weighted'] and format_name == "simple":
       output += '\n'
       
     graph = instance['graph'].edges()
@@ -98,21 +100,27 @@ def get_instance_from_txt(instance_as_str, format_name):
     instance = {}
 
     str_to_arr = instance_as_str.split('\n')
+
+    if str_to_arr[0] == '':
+      instance['weighted'] = 0
+    else:
+      instance['weighted'] = 1
+
     G = nx.Graph()
 
     if format_name != "with_vertices":
-      if 'weighted' in instance:
+      if instance['weighted']:
         weights = str_to_arr[0].split()
         edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
       else:
-        edges = str_to_arr[0].replace(', ', ',').replace(')(',') (').split()
+        edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
 
       edges = [eval (t) for t in edges]
       G.add_edges_from(edges)
 
       i = 0
       for v in G.nodes():
-        if 'weighted' in instance:
+        if instance['weighted']:
           G.add_node(v, weight=weights[i])
         else:
           G.add_node(v, weight=1)
@@ -121,20 +129,16 @@ def get_instance_from_txt(instance_as_str, format_name):
       instance['graph'] = G
       instance['num_vertices'] = len([v for v in list(G.nodes())])
 
-      if 'weighted' in instance:
-        instance['exact_sol'] = int(str_to_arr[2])
-        instance['sol'] = str_to_arr[3]
-      else:
-        instance['exact_sol'] = int(str_to_arr[1])
-        instance['sol'] = str_to_arr[2]
+      instance['exact_sol'] = int(str_to_arr[2])
+      instance['sol'] = str_to_arr[3]
 
     else:
-      v_e_split = str_to_arr[0].split(' ')
-      instance['num_vertices'] = int(v_e_split[0])
-      instance['num_edges'] = int(v_e_split[1])
+      v_e_w_split = str_to_arr[0].split(' ')
+      instance['num_vertices'] = int(v_e_w_split[0])
+      instance['num_edges'] = int(v_e_w_split[1])
+      instance['weighted'] = int(v_e_w_split[2])
       
-      #if instance['weighted']:
-      if 'weighted' in instance:
+      if instance['weighted']:
         weights = str_to_arr[1].split()
         edges = str_to_arr[2].replace(', ', ',').replace(')(',') (').split()
       else:
@@ -142,10 +146,10 @@ def get_instance_from_txt(instance_as_str, format_name):
       edges = [eval (t) for t in edges]
 
       G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
+
       i = 0
       for v in G.nodes():
-        #if instance['weighted']:
-        if 'weighted' in instance:
+        if instance['weighted']:
           G.add_node(v, weight=weights[i])
         else:
           G.add_node(v, weight=1)
@@ -154,8 +158,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       G.add_edges_from(edges)
       instance['graph'] = G
 
-      #if instance['weighted']:
-      if 'weighted' in instance:
+      if instance['weighted']:
         instance['exact_sol'] = int(str_to_arr[3])
         instance['sol'] = str_to_arr[4]
       else:
@@ -233,8 +236,7 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
     instance['num_edges'] = num_edges
     instance['graph'] = random_graph(num_vertices, num_edges, seed, weighted)
     instance['seed'] = seed
-    if weighted == 1:
-      instance['weighted'] = weighted
+    instance['weighted'] = weighted
 
     num_vertices = math.ceil(scaling_factor * num_vertices)
     num_edges = math.ceil(scaling_factor * num_edges)
