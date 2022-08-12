@@ -228,7 +228,10 @@ def inspect_subgraph(graph,node,edges,search=True):
     nodes.remove(node)
     graph=nx.subgraph(graph,nodes)
     f_player_w=True
+    response_values=[]
     for neighbor in neighbors:
+        #f_player_w=True
+        #response_values=[]
         subgraph=cut_graph(graph,neighbor)
         subedges=nx.edges(subgraph,neighbor)
         subnodes=get_nodes(subgraph)
@@ -240,9 +243,14 @@ def inspect_subgraph(graph,node,edges,search=True):
                 f_player_w=False
                 indexes.append(index)
         if f_player_w:
-            return True
+            #return True
+            response_values.append(True)
         else:
-            return inspect_subgraph(subgraphs[index],neighbor,subedges,not(search))
+            for index in indexes:
+                there_are_moves=inspect_subgraph(subgraphs[index],neighbor,subedges,not(search))
+                response_values.append(there_are_moves)
+    return all(response_values)
+        
 
 def find_move(graph,node):
     (u,v),nodes=find_winning_move_on_graph_not_winning(graph,node)
