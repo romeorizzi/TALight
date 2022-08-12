@@ -24,6 +24,9 @@ info_requested = ENV['info_requested']
 lang = ENV['lang']
 
 graph=gl.generate_graph_from_input(ENV['graph'])
+if not(ENV['starting_node'] in gl.get_nodes(graph)):
+    TAc.print(LANG.render_feedback("graph-illegal-start-node", '# We have a problem. The starting node is not valid because is not a node of the graph.'), "red", ["bold"])
+    exit(0)
 #print(gl.get_edges(graph))
 f_player_w = gl.first_player_win(graph)
 

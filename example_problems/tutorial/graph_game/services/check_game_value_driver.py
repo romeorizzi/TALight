@@ -22,6 +22,9 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE:
 graph=gl.generate_graph_from_input(ENV['graph'])
+if not(ENV['starting_node'] in gl.get_nodes(graph)):
+    TAc.print(LANG.render_feedback("graph-illegal-start-node", '# We have a problem. The starting node is not valid because is not a node of the graph.'), "red", ["bold"])
+    exit(0)
 f_player_w = gl.first_player_win(graph)
 moves=gl.find_winning_moves_on_graph_not_winning(graph,ENV['starting_node'],True)
 #print(f"grundy_val={grundy_val}")

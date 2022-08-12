@@ -73,11 +73,15 @@ def watch(graph,start_node, first_to_move, second_to_move):
         return
     TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
     f_player_w = gl.first_player_win(graph)
-    moves=gl.find_winning_moves_on_graph_not_winning(graph,start_node,True)
-    moves.extend(gl.find_winning_moves(graph,start_node,True))
-    win_moves=list(dict.fromkeys(moves))
+    win_moves=[]
+    if not(f_player_w):
+        win_moves=gl.find_winning_moves_on_graph_not_winning(graph,start_node,True)
+    #win_moves.extend(gl.find_winning_moves(graph,start_node,True))
+    else:
+        win_moves=gl.find_winning_moves(graph,start_node,True)
+    win_moves=list(dict.fromkeys(win_moves))
     if ENV["watch"] == 'watch_winner':
-        if not(f_player_w) and moves==[]:
+        if not(f_player_w) and win_moves==[]:
             TAc.print(LANG.render_feedback("graph-watch-winner-who-moves-loses", f'{second_to_move} ahead, since \'{gl.get_edges(graph)}\' is a who-moves-loses configuration.'), "blue")
         else:
             TAc.print(LANG.render_feedback("graph-watch-winner-who-moves-wins", f'{first_to_move} ahead, since \'{gl.get_edges(graph)}\' is a who-moves-wins configuration.'), "blue")
@@ -134,7 +138,7 @@ while True:
         TAc.print(LANG.render_feedback("graph-your-turn", f'# It is your turn to move on the graph \'{gl.get_edges(graph)}\' starting from node {start_node} to a new node. The edge must be an edge of the current graph.'), "yellow", ["bold"])
     else:
         TAc.print(LANG.render_feedback("graph-player-turn", f'# It is the turn of player {n_player} to move from graph \'{gl.get_edges(graph)}\' starting from node {start_node} to a new node. The edge must be an edge of the current graph.'), "yellow", ["bold"])
-    TAc.print(LANG.render_feedback("graph-user-move", f'# Please, insert your move just underneath the current graph as reported here: '), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("graph-user-move", f'# Please, insert your move just underneath the current graph and the starting node as reported here: '), "yellow", ["bold"])
 
     TAc.print(LANG.render_feedback("graph-prompt", f'{gl.get_edges(graph)} {start_node}'), "yellow", ["bold"])
     new_u, new_v = TALinput(int, 2, TAc=TAc)
@@ -155,9 +159,6 @@ while True:
 
     if len(new_graph)==1: # TALight has no valid move available and loses the match. The user wins.
         I_have_lost()
-
-    
-    
 
     if ENV['opponent'] == 'computer':
         watch(new_graph,start_node, first_to_move=I_AM, second_to_move=YOU_ARE)

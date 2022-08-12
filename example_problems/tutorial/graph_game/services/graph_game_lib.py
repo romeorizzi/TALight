@@ -2,6 +2,7 @@
 
 import networkx as nx
 import matplotlib.pyplot as plt
+import itertools
 
 def player_flip(n_player):
     if n_player==1:
@@ -121,34 +122,30 @@ def find_perfect_matching(graph):
             return matching
         edges.append(edges.pop(0))
     return []
+
+def find_perfect_matchings(graph,rmv_dup=False):
+    if len(graph)%2!=0:
+        return []
+    edges=get_edges(graph)
+    edges=list(edges)
+    matching=find_matching(edges)
+    p_matchings=[]
+    if len(matching)==len(graph)//2:
+        p_matchings.append(matching)
+    first_edge=edges.pop(0)
+    edges.append(first_edge)
+    while edges[0]!=first_edge:
+        matching=find_matching(edges)
+        if len(matching)==len(graph)//2:
+            p_matchings.append(matching)
+        edges.append(edges.pop(0))
+    if rmv_dup:
+        p_matchings.sort()
+        p_matchings=list(k for k,_ in itertools.groupby(p_matchings))
+    return p_matchings
         
 def first_player_win(graph):
     return find_perfect_matching(graph)!=[]
-
-def format_path(path):
-    if path==None:
-        return
-    f_path=''
-    for node in path:
-        if f_path=='':
-            f_path=f_path+str(node)
-        else:
-            f_path=f_path+'->'+str(node)
-    return [f_path]  
-
-def format_paths(paths):
-    if paths==[]:
-        return None
-    list_paths=[]
-    for path in paths:
-        f_path=''
-        for node in path:
-            if f_path=='':
-                f_path=f_path+str(node)
-            else:
-                f_path=f_path+'->'+str(node)
-        list_paths.append(f_path)
-    return list_paths
 
 def print_graph(graph):
     nx.draw_networkx(graph)
@@ -175,35 +172,77 @@ def find_winning_move(graph,node):
             return (node,u)
 
 def find_winning_moves(graph,node,rmv_dup=False):
-    matching=find_perfect_matching(graph)
-    edges=get_edges(graph)
-    moves=list(set(edges).intersection(matching))
+    matchings=find_perfect_matchings(graph)
     win_moves=[]
-    for move in moves:
-        u,v=move
-        if u==node:
-            win_moves.append((node,v))
-        if v==node:
-            win_moves.append((node,u))
+    for matching in matchings:
+        edges=get_edges(graph)
+        moves=list(set(edges).intersection(matching))
+        for move in moves:
+            u,v=move
+            if u==node:
+                win_moves.append((node,v))
+            if v==node:
+                win_moves.append((node,u))
     if rmv_dup:
         win_moves=list(dict.fromkeys(win_moves))
     return win_moves
 
-def find_winning_move_on_graph_not_winning(graph,node):
+def find_winning_move_on_graph_not_winning(graph,node):#,search=False):
+    neighbors=nx.neighbors(graph,node)
     nodes=get_nodes(graph)
     nodes.remove(node)
-    subgraphs=get_subgraphs(nx.subgraph(graph,nodes))
-    for sub in subgraphs:
-        if not(first_player_win(sub)):
-            edges=get_edges(graph)
-            nodes=get_nodes(sub)
-            for edge in edges:
-                u,v=edge
-                if u==node and v in nodes:
-                    return (node,v),nodes
-                if v==node and u in nodes:
-                    return (node,u),nodes
+    graph=nx.subgraph(graph,nodes)
+    f_player_w=True
+    for neighbor in neighbors:
+        subgraph=cut_graph(graph,neighbor)
+        edges=nx.edges(subgraph,neighbor)
+        subnodes=get_nodes(subgraph)
+        subnodes.remove(neighbor)
+        subgraphs=get_subgraphs(nx.subgraph(subgraph,subnodes))
+        indexes=[]
+        for index,sub in enumerate(subgraphs):
+            if not(first_player_win(sub)):#==search:
+                f_player_w=False
+                indexes.append(index)
+        if f_player_w:
+            return(node,neighbor),nodes
+        else:
+            for index in indexes:
+                there_are_moves=inspect_subgraph(subgraphs[index],neighbor,edges)#,not(search))
+            if there_are_moves:
+                return (node,neighbor),nodes
     return (None,None),nodes
+
+def inspect_subgraph(graph,node,edges,search=True):
+    if len(graph)==1:
+        return not(search)
+    if len(graph)==2:
+        return search
+    graph=nx.Graph(graph)
+    for edge in edges:
+        u,v=edge
+        if (u==node and v in get_nodes(graph)) or (v==node and u in get_nodes(graph)):
+            add_edge(graph,u,v)
+    neighbors=nx.neighbors(graph,node)
+    nodes=get_nodes(graph)
+    nodes.remove(node)
+    graph=nx.subgraph(graph,nodes)
+    f_player_w=True
+    for neighbor in neighbors:
+        subgraph=cut_graph(graph,neighbor)
+        subedges=nx.edges(subgraph,neighbor)
+        subnodes=get_nodes(subgraph)
+        subnodes.remove(neighbor)
+        subgraphs=get_subgraphs(nx.subgraph(subgraph,subnodes))
+        indexes=[]
+        for index,sub in enumerate(subgraphs):
+            if first_player_win(sub)==search:
+                f_player_w=False
+                indexes.append(index)
+        if f_player_w:
+            return True
+        else:
+            return inspect_subgraph(subgraphs[index],neighbor,subedges,not(search))
 
 def find_move(graph,node):
     (u,v),nodes=find_winning_move_on_graph_not_winning(graph,node)
@@ -217,21 +256,31 @@ def find_move(graph,node):
         if v==node:
             return (node,u),nodes
 
-def find_winning_moves_on_graph_not_winning(graph,node,rmv_dup=False):
+def find_winning_moves_on_graph_not_winning(graph,node,rmv_dup=False,search=False):
+    neighbors=nx.neighbors(graph,node)
     nodes=get_nodes(graph)
     nodes.remove(node)
-    subgraphs=get_subgraphs(nx.subgraph(graph,nodes))
+    graph=nx.subgraph(graph,nodes)
+    f_player_w=True
     moves=[]
-    for sub in subgraphs:
-        if not(first_player_win(sub)):
-            edges=get_edges(graph)
-            nodes=get_nodes(sub)
-            for edge in edges:
-                u,v=edge
-                if u==node and v in nodes:
-                    moves.append((node,v))
-                if v==node and u in nodes:
-                    moves.append((node,u))
+    for neighbor in neighbors:
+        subgraph=cut_graph(graph,neighbor)
+        edges=nx.edges(subgraph,neighbor)
+        subnodes=get_nodes(subgraph)
+        subnodes.remove(neighbor)
+        subgraphs=get_subgraphs(nx.subgraph(subgraph,subnodes))
+        indexes=[]
+        for index,sub in enumerate(subgraphs):
+            if not(first_player_win(sub)):#==search:
+                f_player_w=False
+                indexes.append(index)
+        if f_player_w:
+            moves.append((node,neighbor))
+        else:
+            for index in indexes:
+                there_are_moves=inspect_subgraph(subgraphs[index],neighbor,edges)#,not(search))
+            if there_are_moves:
+                moves.append((node,neighbor))
     if rmv_dup:
         moves=list(dict.fromkeys(moves))
     return moves
