@@ -89,9 +89,9 @@ ind_set = ' '.join(map(str, ind_set))
 
 if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("best-sol", f'A possible (maximum) independent set is: '), "green", ["bold"], end='')
-  TAc.print(LANG.render_feedback("best-sol", f'{ind_set}.'), "white", ["bold"])
+  TAc.print(f'{ind_set}.', "white", ["bold"])
   TAc.print(LANG.render_feedback("size-sol", f'The size of the maximum independent set is: '), "green", ["bold"], end='')
-  TAc.print(LANG.render_feedback("size-sol", f'{instance["num_vertices"] - size_opt}.'), "white", ["bold"])
+  TAc.print(f'{instance["num_vertices"] - size_opt}.', "white", ["bold"])
 else:
   ind_set_check = True
   vc_sol = vcl.verify_vc(answer, instance['graph'])
@@ -118,7 +118,7 @@ else:
         TAc.OK()
         TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid maximum independent set for the graph.'), "green", ["bold"])
       elif size_ans < (instance['num_vertices'] - size_opt):
-        TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid independent set for the graph, but it\'s not maximum (your size is {size_ans}).'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid independent set for the graph (not maximum).'), "yellow", ["bold"])
     else:
       TAc.NO()
       TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid independent set for the graph.'), "red", ["bold"])

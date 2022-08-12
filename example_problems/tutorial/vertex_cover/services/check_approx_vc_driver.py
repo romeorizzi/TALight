@@ -17,7 +17,6 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
-    ('weighted',bool),
     ('seed',str),
     ('vc_sol_val',str),
     ('display',bool),
@@ -51,24 +50,9 @@ elif ENV["source"] == 'terminal':
     TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
     exit(0)
 
-  if ENV['weighted']:
-    TAc.print(LANG.render_feedback("insert-line", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
-    l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
-
-    if len(l) != ENV['num_vertices']:
-      TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weight ({len(l)} instead of {ENV["num_vertices"]})\n'), "red", ["bold"])
-      exit(0)
-
   G = nx.Graph()
   G.add_nodes_from([int(v) for v in range(ENV['num_vertices'])])
   G.add_edges_from(edges)
-
-  if ENV['weighted']:
-    i = 0
-
-    for v in G.nodes():
-      G.add_node(v, weight=int(l[i]))
-      i += 1
 
   instance['graph'] = G
 
@@ -77,7 +61,7 @@ elif ENV["source"] == 'terminal':
 
 elif ENV["source"] == 'randgen_1':
   # Get random instance
-  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'], ENV['weighted'])[0]
+  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
 
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
@@ -104,11 +88,11 @@ else:
 
 if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is: '), "green", ["bold"], end='')
-  TAc.print(LANG.render_feedback("best-sol", f'{appr_sol}.'), "white", ["bold"])
+  TAc.print(f'{appr_sol}.', "white", ["bold"])
   TAc.print(LANG.render_feedback("min-maximal-matching", f'A possible maximal matching is: '), "green", ["bold"], end='')
-  TAc.print(LANG.render_feedback("min-maximal-matching", f'{max_matching}.'), "white", ["bold"])
+  TAc.print(f'{max_matching}.', "white", ["bold"])
   TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is: '), "green", ["bold"], end='')
-  TAc.print(LANG.render_feedback("size-sol", f'{size_sol}.'), "white", ["bold"])
+  TAc.print(f'{size_sol}.', "white", ["bold"])
 else:
   size_ans = 2 * (len([eval(t) for t in answer]))
   right_sol = vcl.verify_approx_vc(answer, instance['graph'])
@@ -116,9 +100,9 @@ else:
   if right_sol:
     if size_ans == size_sol:
       TAc.OK()
-      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "green", ["bold"])
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "white", ["bold"])
     elif size_ans > size_sol:
-      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. There may be a better approximation (your matching is {size_ans/2}).'), "yellow", ["bold"])
+      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. You can improve your approximation.'), "yellow", ["bold"])
     else:
       TAc.OK()
       TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it\'s better than mine!'), "green", ["bold"])

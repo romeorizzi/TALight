@@ -61,6 +61,12 @@ def instance_to_txt_str(instance, format_name="with_vertices"):
       num_edges = instance['graph'].number_of_edges()
       output += f'{num_vertices} {num_edges}\n'
 
+    if 'weighted' in instance:
+      for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
+        output += f'{w} '
+
+      output += '\n'
+      
     graph = instance['graph'].edges()
 
     output += f'{"".join(map(str, graph))}\n'
@@ -92,30 +98,69 @@ def get_instance_from_txt(instance_as_str, format_name):
     instance = {}
 
     str_to_arr = instance_as_str.split('\n')
+    G = nx.Graph()
 
     if format_name != "with_vertices":
-      edges = str_to_arr[0].replace(', ', ',').replace(')(',') (').split()
+      if 'weighted' in instance:
+        weights = str_to_arr[0].split()
+        edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
+      else:
+        edges = str_to_arr[0].replace(', ', ',').replace(')(',') (').split()
+
       edges = [eval (t) for t in edges]
-      G = nx.Graph()
       G.add_edges_from(edges)
+
+      i = 0
+      for v in G.nodes():
+        if 'weighted' in instance:
+          G.add_node(v, weight=weights[i])
+        else:
+          G.add_node(v, weight=1)
+        i += 1
+
       instance['graph'] = G
       instance['num_vertices'] = len([v for v in list(G.nodes())])
-      instance['exact_sol'] = int(str_to_arr[1])
-      instance['sol'] = str_to_arr[2]
+
+      if 'weighted' in instance:
+        instance['exact_sol'] = int(str_to_arr[2])
+        instance['sol'] = str_to_arr[3]
+      else:
+        instance['exact_sol'] = int(str_to_arr[1])
+        instance['sol'] = str_to_arr[2]
 
     else:
       v_e_split = str_to_arr[0].split(' ')
       instance['num_vertices'] = int(v_e_split[0])
       instance['num_edges'] = int(v_e_split[1])
       
-      edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
+      #if instance['weighted']:
+      if 'weighted' in instance:
+        weights = str_to_arr[1].split()
+        edges = str_to_arr[2].replace(', ', ',').replace(')(',') (').split()
+      else:
+        edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
       edges = [eval (t) for t in edges]
-      G = nx.Graph()
+
       G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
+      i = 0
+      for v in G.nodes():
+        #if instance['weighted']:
+        if 'weighted' in instance:
+          G.add_node(v, weight=weights[i])
+        else:
+          G.add_node(v, weight=1)
+        i = i+1
+
       G.add_edges_from(edges)
       instance['graph'] = G
-      instance['exact_sol'] = int(str_to_arr[2])
-      instance['sol'] = str_to_arr[3]
+
+      #if instance['weighted']:
+      if 'weighted' in instance:
+        instance['exact_sol'] = int(str_to_arr[3])
+        instance['sol'] = str_to_arr[4]
+      else:
+        instance['exact_sol'] = int(str_to_arr[2])
+        instance['sol'] = str_to_arr[3]
     
     return instance
 
@@ -188,6 +233,8 @@ def instances_generator(num_instances, scaling_factor: float, num_vertices: int,
     instance['num_edges'] = num_edges
     instance['graph'] = random_graph(num_vertices, num_edges, seed, weighted)
     instance['seed'] = seed
+    if weighted == 1:
+      instance['weighted'] = weighted
 
     num_vertices = math.ceil(scaling_factor * num_vertices)
     num_edges = math.ceil(scaling_factor * num_edges)

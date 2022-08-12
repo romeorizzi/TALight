@@ -96,7 +96,7 @@ TAc.print(LANG.render_feedback("all-solutions-title", f"Here are possible soluti
 for key in content.keys():
   #TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: {content[key]}'), "white",["bold"])
   TAc.print(LANG.render_feedback("solutions", f'Solution for service {key}: '), "yellow",["bold"], flush=True, end='')
-  TAc.print(LANG.render_feedback("solutions", f'{content[key]}'), "white",["bold"], flush=True)
+  TAc.print(f'{content[key]}', "white",["bold"], flush=True)
 
 if ENV["download"]:
   TALf.str2output_file(content,f'all_solutions.txt')
