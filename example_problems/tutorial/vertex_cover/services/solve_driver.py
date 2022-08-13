@@ -41,6 +41,7 @@ elif ENV["source"] == 'terminal':
   instance = {}
   instance['num_vertices'] = ENV['num_vertices']
   instance['num_edges'] = ENV['num_edges']
+  instance['weighted'] = ENV['weighted']
 
   TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
 

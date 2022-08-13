@@ -105,6 +105,10 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'Genera un grafo con nodi pesati'
+      plot:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra la rappresentazione visuale del minumum vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -158,6 +162,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Numero degli archi che connettono i vertici del grafo'
+      plot:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra la rappresentazione visuale della 2-approssimazione del vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -211,6 +219,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Numero degli archi che connettono i vertici del grafo'
+      plot:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra la rappresentazione visuale della 2-approssimazione del minimo vertex cover pesato'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'

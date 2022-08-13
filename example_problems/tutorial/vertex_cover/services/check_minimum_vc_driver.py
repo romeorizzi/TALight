@@ -17,6 +17,7 @@ args_list = [
     ('num_vertices',int),
     ('num_edges',int),
     ('weighted',bool),
+    ('plot',bool),
     ('seed',str),
     ('vc_sol_val',str),
     ('display',bool),
@@ -38,6 +39,7 @@ elif ENV["source"] == 'terminal':
   instance = {}
   instance['num_vertices'] = ENV['num_vertices']
   instance['num_edges'] = ENV['num_edges']
+  instance['weighted'] = ENV['weighted']
 
   TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
 
@@ -96,10 +98,10 @@ else:
 size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
 
 if answer[0] == 'C' or answer[0] == 'c':
-  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum vertex cover is: '), "green", ["bold"], end='') 
-  TAc.print(f'{opt_sol}.', "white", ["bold"])
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum vertex cover is: '), "green", ["bold"], end='')
-  TAc.print(f'{size_opt}.', "white", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum vertex cover is: '), "green", ["bold"], flush=True, end='') 
+  TAc.print(f'{opt_sol}.', "white", ["bold"], flush=True)
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(f'{size_opt}.', "white", ["bold"], flush=True)
 else:
   right_sol = vcl.verify_vc(answer, instance['graph'])
   size_ans = len(answer)
@@ -107,11 +109,14 @@ else:
   if right_sol:
     if size_ans == size_opt:
       TAc.OK()
-      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid minimum vertex cover for the graph.'), "green", ["bold"])
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid minimum vertex cover for the graph.'), "green", ["bold"], flush=True)
     elif size_ans > size_opt:
-      TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid vertex cover for the graph, but it`s not minimum (your size is {size_ans}).'), "yellow", ["bold"])
+      TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid vertex cover for the graph, but it`s not minimum (your size is {size_ans}).'), "yellow", ["bold"], flush=True)
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph.'), "red", ["bold"], flush=True)
+
+if ENV['plot']:
+  vcl.plot_mvc(instance['graph'],opt_sol)
 
 exit(0)

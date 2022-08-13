@@ -17,6 +17,7 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
+    ('plot',bool),
     ('seed',str),
     ('vc_sol_val',str),
     ('display',bool),
@@ -87,12 +88,12 @@ else:
   size_sol = len([int(i) for i in appr_sol.split() ])
 
 if answer[0] == 'C' or answer[0] == 'c':
-  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is: '), "green", ["bold"], end='')
-  TAc.print(f'{appr_sol}.', "white", ["bold"])
-  TAc.print(LANG.render_feedback("min-maximal-matching", f'A possible maximal matching is: '), "green", ["bold"], end='')
-  TAc.print(f'{max_matching}.', "white", ["bold"])
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is: '), "green", ["bold"], end='')
-  TAc.print(f'{size_sol}.', "white", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(f'{appr_sol}.', "white", ["bold"], flush=True)
+  TAc.print(LANG.render_feedback("min-maximal-matching", f'A possible maximal matching is: '), "green", ["bold"], flush=True,  end='')
+  TAc.print(f'{max_matching}.', "white", ["bold"], flush=True)
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(f'{size_sol}.', "white", ["bold"], flush=True)
 else:
   size_ans = 2 * (len([eval(t) for t in answer]))
   right_sol = vcl.verify_approx_vc(answer, instance['graph'])
@@ -100,12 +101,12 @@ else:
   if right_sol:
     if size_ans == size_sol:
       TAc.OK()
-      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "white", ["bold"])
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "white", ["bold"], flush=True)
     elif size_ans > size_sol:
-      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. You can improve your approximation.'), "yellow", ["bold"])
+      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. You can improve your approximation.'), "yellow", ["bold"], flush=True)
     else:
       TAc.OK()
-      TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it\'s better than mine!'), "green", ["bold"])
+      TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it\'s better than mine!'), "green", ["bold"], flush=True)
       
       if ENV['source'] == 'catalogue' and instance['exact_sol'] == 0:
         path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances')
@@ -117,6 +118,9 @@ else:
 
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation vertex cover for the graph.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation vertex cover for the graph.'), "red", ["bold"], flush=True)
+
+if ENV['plot']:
+  vcl.plot_2app_vc(instance['graph'], appr_sol, max_matching)
 
 exit(0)

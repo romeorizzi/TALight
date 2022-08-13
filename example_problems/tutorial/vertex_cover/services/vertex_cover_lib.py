@@ -59,7 +59,7 @@ def instance_to_txt_str(instance, format_name="with_vertices"):
     if format_name == "with_vertices":
       num_vertices = instance['num_vertices']
       num_edges = instance['graph'].number_of_edges()
-      weighted = instance['weighted']
+      weighted = int(instance['weighted'])
       output += f'{num_vertices} {num_edges} {weighted}\n'
 
     if instance['weighted']:
@@ -111,6 +111,7 @@ def get_instance_from_txt(instance_as_str, format_name):
     if format_name != "with_vertices":
       if instance['weighted']:
         weights = str_to_arr[0].split()
+        G.add_nodes_from([i for i in range(len(weights))])
         edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
       else:
         edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
@@ -545,21 +546,75 @@ def verify_approx_vc(matching, graph):
   return 1
 
 '''
-VARIE
+VARIE: PLOT
 '''
 def plot_graph(graph):
-  nx.draw_networkx(graph)
+  pos = nx.spring_layout(graph, seed=3113794652)
+  nx.draw_networkx(graph,pos,node_size=500,width=2,with_labels=True)
   ax = plt.gca()
+  ax.set_title('Graph')
   ax.margins(0.20)
   plt.axis("off")
 
   plt.show()
-  
+ 
+def plot_mvc(graph, vertices, weighted=0):
+  pos = nx.spring_layout(graph, seed=3113794652)
+  vertices = [int(i) for i in vertices.split()]
+  color_map = []
+  for node in graph.nodes():
+    if node in vertices:
+      color_map.append('red')
+    else:
+      color_map.append('#00b4d9')
+  if not weighted:
+    nx.draw_networkx(graph,pos,node_color=color_map,node_size=500,width=2,with_labels=True)
+  else:
+    labels = nx.get_node_attributes(graph, 'weight') 
+    nx.draw_networkx(graph,pos,node_color=color_map,node_size=500,width=2,with_labels=True)
+    for v in graph.nodes():
+      x,y=pos[v]
+      plt.text(x,y+0.15,s=labels[v], bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='center')
+  ax = plt.gca()
+  if not weighted:
+    ax.set_title('Minimum Vertex Cover (red nodes)')
+  else:
+    ax.set_title('Approximated Minimum Weighted Vertex Cover (red nodes)')
+  ax.margins(0.20)
+  plt.axis("off")
+
+  plt.show()
+
+def plot_2app_vc(graph, vertices, edges):
+  pos = nx.spring_layout(graph, seed=3113794652)
+  vertices = [int(i) for i in vertices.split()]
+  v_color_map = []
+  e_color_map = []
+  for node in graph.nodes():
+    if node in vertices:
+      v_color_map.append('red')
+    else:
+      v_color_map.append('#00b4d9')
+  edges = edges.replace(', ', ',')
+  edges = [eval(t) for t in edges.split()]
+  edges = [tuple(sorted(t)) for t in edges]
+  for e in graph.edges():
+    if e in edges:
+      #e_color_map.append('red')
+      e_color_map.append('black')
+    else:
+      e_color_map.append('lightgrey')
+  nx.draw_networkx(graph,pos,node_color=v_color_map,node_size=500,edge_color=e_color_map,width=2,with_labels=True)            
+  ax = plt.gca()
+  ax.set_title('2-approximated Vertex Cover')
+  ax.margins(0.20)
+  plt.axis("off")
+
+  plt.show()
 
 '''
 GOAL SUMMARIES
 '''
-# Da rivedere per VC
 def print_goal_summary(goal,testcases,num_testcases_passed,num_testcases_correct_ans,num_testcases_wrong_ans,out_of_time, TAc,LANG):
   TAc.print(LANG.render_feedback("summary", f'\n# SUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'), "white", ["bold"])
 
