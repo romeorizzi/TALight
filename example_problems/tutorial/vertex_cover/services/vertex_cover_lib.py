@@ -320,17 +320,28 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
 
     else:
       if instance['num_vertices'] <= VMAX:
-        size, vc = calculate_minimum_vc(instance['graph'])
-        sols['calculate_minimum_vc'] = f"{vc}"
-        sols['vertex_cover_size'] = f"{size}"
+        if not instance['weighted']:
+          size, vc = calculate_minimum_vc(instance['graph'])
+          sols['calculate_minimum_vc'] = f"{vc}"
+          sols['vertex_cover_size'] = f"{size}"
+        else:
+          vc, size, weight = calculate_minimum_weight_vc(instance['graph'])
+          sols['calculate_minimum_weight_vc'] = f"{vc}"
+          sols['calculate_minimum_weight_vc_size'] = f"{size}"
+          sols['calculate_minimum_weight_vc_weight'] = f"{weight}"
       else:
         sols['calculate_minimum_vc'] = 'Instance too big! Please, use approximation.'
 
   elif sol_type == 'approx':
-    size, vc, max_matching = calculate_approx_vc(instance['graph'])
-    #vc1 = nx.approximation.min_weighted_vertex_cover(instance['graph'])
-    sols['calculate_approx_vc'] = f"{vc}"
-    sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
+    if not instance['weighted']:
+      size, vc, max_matching = calculate_approx_vc(instance['graph'])
+      sols['calculate_approx_vc'] = f"{vc}"
+      sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
+    else:
+      vc, size, weight = calculate_weighted_approx_vc(instance['graph'])
+      sols['calculate_weighted_approx_vc'] = f"{vc}"
+      sols['calculate_weighted_approx_vc_size'] = f"{size}"
+      sols['calculate_weighted_approx_vc_weight'] = f"{weight}"
 
   elif sol_type == 'both':
     # Caso di istanza da catalogo
@@ -338,7 +349,7 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
       if instance['exact_sol'] == 1:
         size_min, vc_min = calculate_minimum_vc(instance['graph'])
         sols['calculate_minimum_vc'] = f"{vc_min}"
-        sols['vertex_cover_size'] = f"{size_min}"
+        sols['calculate_minimum_vc_size'] = f"{size_min}"
 
       size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
       sols['calculate_2-approx_vc'] = f"{vc_appr}"
@@ -347,16 +358,27 @@ def solutions(sol_type,instance,instance_format=DEFAULT_INSTANCE_FORMAT):
     # Istanza random
     else:
       if int(instance['num_vertices']) <= VMAX:
-        size_min, vc_min = calculate_minimum_vc(instance['graph'])
-        sols['calculate_minimum_vc'] = f"{vc_min}"
-        sols['vertex_cover_size'] = f"{size_min}"
+        if not instance['weighted']:
+          size_min, vc_min = calculate_minimum_vc(instance['graph'])
+          sols['calculate_minimum_vc'] = f"{vc_min}"
+          sols['vertex_cover_size'] = f"{size_min}"
+        else:
+          vc, size, weight = calculate_minimum_weight_vc(instance['graph'])
+          sols['calculate_minimum_weight_vc'] = f"{vc}"
+          sols['calculate_weighted_vc_size'] = f"{size}"
+          sols['calculate_weighted_vc_weight'] = f"{weight}"
       else:
         sols['calculate_minimum_vc'] = 'Instance too big! Please, use approximation.'
 
-      size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
-
-      sols['calculate_2-approx_vc'] = f"{vc_appr}"
-      sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
+      if not instance['weighted']:
+        size_appr, vc_appr, max_matching = calculate_approx_vc(instance['graph'], 'greedy')
+        sols['calculate_2-approx_vc'] = f"{vc_appr}"
+        sols['calculate_2-approx_vc_matching'] = f"{max_matching}"
+      else:
+        vc_appr, size_appr, weight_appr = calculate_weighted_approx_vc(instance['graph'])
+        sols['calculate_weighted_approx_vc'] = f"{vc_appr}"
+        sols['calculate_weighted_approx_vc_size'] = f"{size_appr}"
+        sols['calculate_weighted_approx_vc_weight'] = f"{weight_appr}"
 
   return sols
 
