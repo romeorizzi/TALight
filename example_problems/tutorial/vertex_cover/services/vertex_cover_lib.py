@@ -243,7 +243,7 @@ def get_instance_from_dat(instance_as_str, format_name):
   if instance['weighted']:
     i = 0
     for v in G.nodes():
-      G.add_node(v, weight=weights[i]
+      G.add_node(v, weight=weights[i])
       i = i+1
 
   G.add_edges_from(edges)
