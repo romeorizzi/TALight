@@ -16,7 +16,6 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
-    ('weighted',bool),
     ('plot',bool),
     ('seed',str),
     ('vc_sol_val',str),
@@ -64,13 +63,6 @@ elif ENV["source"] == 'terminal':
   G.add_nodes_from([int(v) for v in range(ENV['num_vertices'])])
   G.add_edges_from(edges)
 
-  if ENV['weighted']:
-    i = 0
-
-    for v in G.nodes():
-      G.add_node(v, weight=int(l[i]))
-      i += 1
-
   instance['graph'] = G
 
   instance_str = vcl.instance_to_str(instance, format_name=ENV['instance_format'])
@@ -78,7 +70,7 @@ elif ENV["source"] == 'terminal':
 
 elif ENV["source"] == 'randgen_1':
   # Get random instance
-  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'], ENV['weighted'])[0]
+  instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
 
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))

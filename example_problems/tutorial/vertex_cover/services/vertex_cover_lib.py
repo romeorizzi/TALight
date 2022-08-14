@@ -12,8 +12,8 @@ from termcolor import colored
 from contextlib import redirect_stdout
 from networkx.algorithms import approximation
 
-AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_vertices':'with_vertices.txt', 'vc_dat':'.dat'},'solution':{'all_solutions': 'all_solutions.txt'}}
-DEFAULT_INSTANCE_FORMAT='with_vertices'
+AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_info':'with_info.txt', 'vc_dat':'.dat'},'solution':{'all_solutions': 'all_solutions.txt'}}
+DEFAULT_INSTANCE_FORMAT='with_info'
 DEFAULT_SOLUTION_FORMAT='all_solutions'
 
 def format_name_to_file_extension(format_name, format_gender):
@@ -51,12 +51,12 @@ def instance_to_str(instance, format_name=DEFAULT_INSTANCE_FORMAT):
     if format_primary == 'txt':
         return instance_to_txt_str(instance, format_name)
 
-def instance_to_txt_str(instance, format_name="with_vertices"):
+def instance_to_txt_str(instance, format_name="with_info"):
     """Of the given <instance>, this function returns the .txt string in format <format_name>"""
     assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
     output= f''
 
-    if format_name == "with_vertices":
+    if format_name == "with_info":
       num_vertices = instance['num_vertices']
       num_edges = instance['graph'].number_of_edges()
       weighted = int(instance['weighted'])
@@ -108,7 +108,7 @@ def get_instance_from_txt(instance_as_str, format_name):
 
     G = nx.Graph()
 
-    if format_name != "with_vertices":
+    if format_name != "with_info":
       if instance['weighted']:
         weights = str_to_arr[0].split()
         G.add_nodes_from([i for i in range(len(weights))])
@@ -168,6 +168,10 @@ def get_instance_from_txt(instance_as_str, format_name):
     
     return instance
 
+'''
+Aggiorna la soluzione approssimata nel caso in cui l'utente ne abbia trovata
+una migliore rispetto a quella memorizzata nell'istanza
+'''
 def update_instance_txt(path, file, new_data):
   for format_gender in AVAILABLE_FORMATS['instance']:
     format_name = AVAILABLE_FORMATS['instance'][format_gender]
@@ -179,18 +183,31 @@ def update_instance_txt(path, file, new_data):
       lines[-2] = f'{new_data}\n'
       open(full_path, 'w').writelines(lines)
 
-# Da rivedere per VC
+'''
+DAT
+'''
 def instance_to_dat_str(instance,format_name='vc_dat'):
   """Of the given <instance>, this function returns the .dat string in format <format_name>"""
   assert format_name in AVAILABLE_FORMATS['instance'], f'Format_name `{format_name}` unsupported for objects of category `instance`.'
   graph = instance['graph']
   num_vertices = instance['num_vertices']
   num_edges = instance['num_edges']
+  weighted = instance['weighted']
 
   output = f"param num_vertices := {num_vertices};            # Number of vertices in the graph\n"
   output += f"param num_edges := {num_edges};                 # Number of edges in the graph\n"
+  output += f"param weighted := {weighted};                   # Weighted graph or not\n"
   output += "param: EDGES OF THE GRAPH "
   output += f":= {list(graph.edges())};\n"
+
+  if weighted == 1:
+    weights = []
+
+    for n,w in nx.get_node_attributes(graph, 'weight').items():
+      weights.append(w)
+
+    output += f'param weights := {weights}'
+
   if 'risp' in instance:
       if 'exact_sol' in instance:
         if instance['exact_sol'] == 1:
@@ -212,10 +229,23 @@ def get_instance_from_dat(instance_as_str, format_name):
 
   instance['num_vertices'] = int(get_param(split_instance[0])) # assign num_vertices
   instance['num_edges'] = int(get_param(split_instance[1])) # assign num_edges
-  edges = list(ast.literal_eval(get_param(split_instance[2]).replace("] [","],[").replace(", ",",").replace(')(',') ('))) # DA VERIFICARE!
+  instance['weighted'] = int(get_param(split_instance[2])) # assign num_edges
+
+  if not instance['weighted']:
+    edges = list(ast.literal_eval(get_param(split_instance[3]).replace("] [","],[").replace(", ",",").replace(')(',') ('))) # DA VERIFICARE!
+  else:
+    weights = list(ast.literal_eval(get_param(split_instance[3]).replace("] [","],["))) # DA VERIFICARE!
+    edges = list(ast.literal_eval(get_param(split_instance[4]).replace("] [","],[").replace(", ",",").replace(')(',') ('))) # DA VERIFICARE!
 
   G = nx.Graph()
   G.add_nodes_from([c for v in range(instance['num_vertices'])])
+
+  if instance['weighted']:
+    i = 0
+    for v in G.nodes():
+      G.add_node(v, weight=weights[i]
+      i = i+1
+
   G.add_edges_from(edges)
   instance['graph'] = G
 
@@ -442,9 +472,51 @@ def calculate_minimum_vc(graph):
   # return OptVC
   return size, ' '.join(map(str,res))
 
-## Calcolo una 2-approssimazione del VC. La scelta dell'arco è greedy,
-## Quindi in teoria dovrei avere sempre la miglior approssimazione
-## possibile...
+'''
+Calcolo il vertex cover esatto su un grafo pesato. Non essendoci
+algoritmi "buoni" ed essendo estremamente complicato definire un
+lower bound per adattare l'algoritmo branch and bound per grafi
+non pesati, ricorro alle riduzioni tra problemi: calcolo la 
+massima clique sul grafo complementare, la quale sarà anche un
+massimo independet set per il grafo principale. Gli archi che non
+fanno parte del massimo independent set saranno il mio vertex
+cover di peso minimo
+'''
+def calculate_minimum_weight_vc(graph):
+  weights = []
+  vc = []
+
+  for n,w in nx.get_node_attributes(graph, 'weight').items():
+    weights.append(w)
+
+  G_1 = nx.complement(graph)
+
+  # Per qualche motivo facendo il grafo complementare perdo
+  # i pesi sui nodi e devo rimettercel a mano...
+  i = 0
+  for v in G_1.nodes():
+    G_1.add_node(v, weight=weights[i])
+    i += 1
+
+  # max_weight_clique() utilizza anch'esso un algoritmo
+  # di branch and bound per trovare la clique di peso 
+  # massimo
+  clique, w_clique = nx.max_weight_clique(G_1)
+
+  for v in graph.nodes():
+    if v not in clique:
+      vc.append(v)
+
+  size_vc = len(vc)
+  weight_vc = sum(weights) - w_clique
+
+  return ' '.join(map(str, vc)), size_vc, weight_vc
+
+'''
+Calcolo una 2-approssimazione del VC. La scelta dell'arco è greedy,
+Quindi in teoria dovrei avere sempre la miglior approssimazione
+possibile...
+'''
 def calculate_approx_vc(graph, mode='random'):
   curG = graph.copy()
   visited = []
@@ -500,6 +572,22 @@ def calculate_approx_vc(graph, mode='random'):
 
   return size, ' '.join(map(str,c)), ' '.join(map(str, max_matching))
 
+'''
+Calcolo una 2-approssimazione per il grafo pesato
+'''
+def calculate_weighted_approx_vc(graph):
+  appr_sol = nx.approximation.min_weighted_vertex_cover(graph)
+  size_sol = len(appr_sol)
+
+  weight_sol = 0
+
+  for n,w in nx.get_node_attributes(graph, 'weight').items():
+    if n in appr_sol:
+      weight_sol += w
+
+  return ' '.join(map(str, appr_sol)), size_sol, weight_sol
+
+  
 ## Verifico se un vertex cover fornito in input è un vc valido per il grafo
 def verify_vc(vertices, graph):
   edges_list = list(graph.edges())
@@ -558,7 +646,7 @@ def plot_graph(graph):
 
   plt.show()
  
-def plot_mvc(graph, vertices, weighted=0):
+def plot_mvc(graph, vertices, weighted=0, approx=0):
   pos = nx.spring_layout(graph, seed=3113794652)
   vertices = [int(i) for i in vertices.split()]
   color_map = []
@@ -579,7 +667,10 @@ def plot_mvc(graph, vertices, weighted=0):
   if not weighted:
     ax.set_title('Minimum Vertex Cover (red nodes)')
   else:
-    ax.set_title('Approximated Minimum Weighted Vertex Cover (red nodes)')
+    if approx == 0:
+      ax.set_title('Minimum Weight Vertex Cover (red nodes)')
+    else:
+      ax.set_title('2-Approximated Minimum Weight Vertex Cover (red nodes)')
   ax.margins(0.20)
   plt.axis("off")
 

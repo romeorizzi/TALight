@@ -5,10 +5,8 @@ from multilanguage import Env, Lang, TALcolors
 from TALinputs import TALinput
 from TALfiles import TALfilesHelper
 
-import os
 import random
 import networkx as nx
-from networkx.algorithms import approximation
 import vertex_cover_lib as vcl
 
 # METADATA OF THIS TAL_SERVICE:
@@ -92,7 +90,6 @@ if ENV['display']:
       TAc.print(f'{w}', "white", ["bold"], end=' ')
 
     print('\n')
-    
 
 if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured approximated vertex cover for this weighted graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
@@ -101,35 +98,35 @@ else:
   answer = ENV['vc_sol_val']
 
 if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
-  #appr_sol = nx.approximation.min_weighted_vertex_cover(instance['graph'])
-  #size_sol = len(appr_sol)
-  appr_sol, size_sol, weight_sol = vcl.calculate_weighted_approx_vc(instance['graph'])
+  vc_sol, size_sol, weight_sol = vcl.calculate_minimum_weight_vc(instance['graph'])
 else:
-  appr_sol = instance['sol'].replace(')(',' ').replace('(','').replace(')','').replace(',','')
-  appr_sol = [int(i) for i in appr_sol.split()]
-  size_sol = len(appr_sol)
+  vc_sol = instance['sol']
+  #vc_sol = [int(i) for i in appr_sol.split()]
+  size_sol = len(vc_sol)
 
 if answer[0] == 'C' or answer[0] == 'c':
-  TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
-  TAc.print(f'{appr_sol}.', "white", ["bold"], flush=True)
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(f'{vc_sol}.', "white", ["bold"], flush=True)
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
   TAc.print(f'{size_sol}.', "white", ["bold"], flush=True)
-  TAc.print(LANG.render_feedback("weight-sol", f'The weight of the 2-approximated weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(LANG.render_feedback("weight-sol", f'The weight of the minimum weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
   TAc.print(f'{weight_sol}.', "white", ["bold"], flush=True)
 
 else:
-  size_ans = 2 * (len([str(t) for t in answer]))
+  right_sol = vcl.verify_vc(answer, instance['graph'])
+  size_ans = len(answer)
 
-  if size_ans == size_sol:
-    TAc.OK()
-    TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "green", ["bold"], flush=True)
-  elif size_ans > size_sol:
-    TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. You can improve your approximation).'), "yellow", ["bold"], flush=True)
+  if right_sol:
+    if size_ans == size_opt:
+      TAc.OK()
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid minimum vertex cover for the graph.'), "green", ["bold"], flush=True)
+    elif size_ans > size_opt:
+      TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid vertex cover for the graph, but it`s not minimum (your size is {size_ans}).'), "yellow", ["bold"], flush=True)
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation vertex cover for the graph.'), "red", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph.'), "red", ["bold"], flush=True)
 
 if ENV['plot']:
-  vcl.plot_mvc(instance['graph'], appr_sol, 1, 1)
+  vcl.plot_mvc(instance['graph'],vc_sol,1)
 
 exit(0)

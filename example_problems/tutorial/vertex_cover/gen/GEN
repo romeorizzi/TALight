@@ -7,13 +7,13 @@
 #     seed (int) seed generating the small triangle
 
 add_format: simple.txt
-add_format: with_vertices.txt
+add_format: with_info.txt
 
 #collection: instances_hardcoded
 #COPY: instances_hardcoded/instance_001.simple.txt
-#COPY: instances_hardcoded/instance_001.with_len.txt
+#COPY: instances_hardcoded/instance_001.with_info.txt
 #COPY: instances_hardcoded/instance_002.simple.txt
-#COPY: instances_hardcoded/instance_002.with_len.txt
+#COPY: instances_hardcoded/instance_002.with_info.txt
 
 collection: vertices_at_most_20
 #                randgen,    num_vertices,  num_edges,  seed,     weighted,

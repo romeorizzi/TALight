@@ -48,11 +48,11 @@ services:
         default: random_seed
         explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
       instance_format:
-        regex: ^(simple|with_vertices|vc_dat)$
-        default: with_vertices
+        regex: ^(simple|with_info|vc_dat)$
+        default: with_info
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[simple] Contiene solo il grafo'
-        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+        explain2: '[with_info] Contiene il grado con il numero di vertici'
       silent:
         regex: ^(0|1)$
         default: 0
@@ -87,11 +87,11 @@ services:
         default: 1
         explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
       instance_format:
-        regex: ^(simple|with_vertices|vc_dat)$
-        default: with_vertices
+        regex: ^(simple|with_info|vc_dat)$
+        default: with_info
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[simple] Contiene solo il grafo'
-        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+        explain2: '[with_info] Contiene il grado con il numero di vertici'
       num_vertices:
         #regex: ^([1-9][0-9]*)$
         regex: ^([1-9]|[1-4][0-9]|50)$
@@ -148,11 +148,11 @@ services:
         default: 1
         explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
       instance_format:
-        regex: ^(simple|with_vertices|vc_dat)$
-        default: with_vertices
+        regex: ^(simple|with_info|vc_dat)$
+        default: with_info
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[simple] Contiene solo il grafo'
-        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+        explain2: '[with_info] Contiene il grado con il numero di vertici'
       num_vertices:
         #regex: ^([1-9][0-9]*)$
         regex: ^([1-9]|[1-9][0-9]|1[0-2][0-9]|130)$
@@ -205,11 +205,11 @@ services:
         default: 1
         explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
       instance_format:
-        regex: ^(simple|with_vertices|vc_dat)$
-        default: with_vertices
+        regex: ^(simple|with_info|vc_dat)$
+        default: with_info
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[simple] Contiene solo il grafo'
-        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+        explain2: '[with_info] Contiene il grado con il numero di vertici'
       num_vertices:
         #regex: ^([1-9][0-9]*)$
         regex: ^([1-9]|[1-9][0-9]|1[0-2][0-9]|130)$
@@ -262,11 +262,11 @@ services:
         default: 1
         explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
       instance_format:
-        regex: ^(simple|with_vertices|vc_dat)$
-        default: with_vertices
+        regex: ^(simple|with_info|vc_dat)$
+        default: with_info
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[simple] Contiene solo il grafo'
-        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+        explain2: '[with_info] Contiene il grado con il numero di vertici'
       num_vertices:
         #regex: ^([1-9][0-9]*)$
         regex: ^([1-9]|[1-4][0-9]|50)$
@@ -315,11 +315,11 @@ services:
         default: 1
         explain: 'Questo argomento viene preso in considerazione quando source=catalogue. Viene utilizzato per identificare una particolare istanza all`interno del catalogo delle istanze archiviate sul server. L`intero catalogo è pubblico, cioè è contenuto nel file \''vertex_cover.tar\'' che viene scaricato sulla tua macchina digitando `rtal get vertex_cover`. Inoltre, se si tiene l`intero repository con il problema in locale (tutti i sorgenti), questo catalogo viene creato automaticamente emettendo `make` per una configurazione completa del problema sul server. Questo catalogo è organizzato in raccolte di istanze con la stessa origine o altre caratteristiche comuni.'
       instance_format:
-        regex: ^(simple|with_vertices|vc_dat)$
-        default: with_vertices
+        regex: ^(simple|with_info|vc_dat)$
+        default: with_info
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[simple] Contiene solo il grafo'
-        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+        explain2: '[with_info] Contiene il grado con il numero di vertici'
       num_vertices:
         #regex: ^([1-9][0-9]*)$
         regex: ^([1-9]|[1-4][0-9]|50)$
@@ -386,11 +386,11 @@ services:
         default: random_seed
         explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
       instance_format:
-        regex: ^(with_vertices|simple|vc_dat)$
-        default: with_vertices
+        regex: ^(with_info|simple|vc_dat)$
+        default: with_info
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[simple] Contiene solo il grafo'
-        explain2: '[with_vertices] Contiene il grado con il numero di vertici'
+        explain2: '[with_info] Contiene il grado con il numero di vertici'
         explain2: '[vertex_cover_dat] Contiene il grafo con il numero di vertici, in formato .dat'
       silent:
         regex: ^(0|1)$
