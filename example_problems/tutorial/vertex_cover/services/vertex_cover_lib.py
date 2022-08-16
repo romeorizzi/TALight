@@ -599,6 +599,7 @@ def calculate_approx_vc(graph, mode='random'):
         visited.append(e)
 
   size = len(c)
+  c.sort()
 
   return size, ' '.join(map(str,c)), ' '.join(map(str, max_matching))
 
