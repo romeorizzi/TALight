@@ -80,7 +80,7 @@ def instance_to_txt_str(instance, format_name="with_info"):
         else:
           output += '0\n'
 
-      output += f'{instance["risp"]}'
+      output += f'{instance["risp"]}\n'
 
     #output += '\n'
 
@@ -164,7 +164,10 @@ def get_instance_from_txt(instance_as_str, format_name):
         instance['sol'] = str_to_arr[4]
       else:
         instance['exact_sol'] = int(str_to_arr[2])
-        instance['sol'] = str_to_arr[3]
+        if instance['exact_sol']:
+          instance['sol'] = str_to_arr[3]
+        else:
+          instance['sol'] = f'{str_to_arr[3]}\n{str_to_arr[4]}'
     
     return instance
 
@@ -172,7 +175,7 @@ def get_instance_from_txt(instance_as_str, format_name):
 Aggiorna la soluzione approssimata nel caso in cui l'utente ne abbia trovata
 una migliore rispetto a quella memorizzata nell'istanza
 '''
-def update_instance_txt(path, file, new_data):
+def update_instance_txt(path, file, new_data, weighted=0):
   for format_gender in AVAILABLE_FORMATS['instance']:
     format_name = AVAILABLE_FORMATS['instance'][format_gender]
     if format_name.split('.')[1] == 'txt':
@@ -180,7 +183,12 @@ def update_instance_txt(path, file, new_data):
       full_path = os.path.join(path, instance_filename)
 
       lines = open(full_path, 'r').readlines()
-      lines[-2] = f'{new_data}\n'
+
+      if weighted:
+        lines[-2] = f'{new_data}\n'
+      else:
+        lines[-3:-1] = f'{new_data}\n'
+
       open(full_path, 'w').writelines(lines)
 
 '''

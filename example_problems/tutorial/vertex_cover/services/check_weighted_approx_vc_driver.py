@@ -81,7 +81,11 @@ elif ENV["source"] == 'randgen_1':
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
   instance = vcl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
-  TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
+  if instance['weighted']:
+    TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
+  else:
+    TAc.print(LANG.render_feedback("graph-not-weighted", f'The instance with instance_id={ENV["instance_id"]} does not contain a weighte graph. Aborting.'), "red", ["bold"])
+    exit(0)
 
 if ENV['display']:
   TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
@@ -95,17 +99,22 @@ if ENV['display']:
     
 
 if ENV['vc_sol_val'] == '0': # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured approximated vertex cover for this weighted graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured approximated vertex cover for this weighted graph if you have one (format: integer numbers separated by spaces). Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
 else:
   answer = ENV['vc_sol_val']
+
+weight_ans = 0
+for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
+  if str(n) in answer:
+    weight_ans += w 
 
 if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
   #appr_sol = nx.approximation.min_weighted_vertex_cover(instance['graph'])
   #size_sol = len(appr_sol)
   appr_sol, size_sol, weight_sol = vcl.calculate_weighted_approx_vc(instance['graph'])
 else:
-  appr_sol = instance['sol'].replace(')(',' ').replace('(','').replace(')','').replace(',','')
+  appr_sol = instance['sol']
   appr_sol = [int(i) for i in appr_sol.split()]
   size_sol = len(appr_sol)
 
@@ -118,16 +127,30 @@ if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(f'{weight_sol}.', "white", ["bold"], flush=True)
 
 else:
-  size_ans = 2 * (len([str(t) for t in answer]))
+  right_sol = vcl.verify_vc(answer, instance['graph'])
+  size_ans = len(answer)
+ 
+  # Da vedere se effettivamente anche qui il numero di vertici deve essere pari... 
+  if right_sol and (size_ans % 2 == 0):
+    if weight_ans == weight_sol:
+      TAc.OK()
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation weighted vertex cover for the graph (weight={weight_ans}).'), "green", ["bold"], flush=True)
+    elif weight_ans > weight_sol:
+      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation weighted vertex cover for the graph (weight={weight_ans}). You can improve your approximation.'), "yellow", ["bold"], flush=True)
+    else:
+      TAc.OK()
+      TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation weighted vertex cover for the graph (weight={weight_ans}) and it\'s better than mine ({weight_sol})!'), "green", ["bold"], flush=True)
+      
+      if ENV['source'] == 'catalogue' and instance['exact_sol'] == 0:
+        path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances')
+        instance_filename = f'instance_{str(ENV["instance_id"]).zfill(3)}'
+        answer = ' '.join(map(str, answer))
+        answer = f'{answer}'
 
-  if size_ans == size_sol:
-    TAc.OK()
-    TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'), "green", ["bold"], flush=True)
-  elif size_ans > size_sol:
-    TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation vertex cover for the graph. You can improve your approximation).'), "yellow", ["bold"], flush=True)
+        vcl.update_instance_txt(path, instance_filename, answer)
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation vertex cover for the graph.'), "red", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation weighted vertex cover for the graph.'), "red", ["bold"], flush=True)
 
 if ENV['plot']:
   vcl.plot_mvc(instance['graph'], appr_sol, 1, 1)

@@ -16,13 +16,24 @@ def main(num_vertices, num_edges, seed, weighted, file_full_extension):
     instance = vcl.instances_generator(1, 1, num_vertices, num_edges, seed, weighted)[0]
 
     if num_vertices <= EXACT_LIMIT:
-      size, sol = vcl.calculate_minimum_vc(instance['graph'])
+      if not weighted:
+        size, sol = vcl.calculate_minimum_vc(instance['graph'])
+      else:
+        sol, size, weight = vcl.calculate_minimum_weight_vc(instance['graph'])
+
       instance['exact_sol'] = True
       instance['risp'] = sol
+
     else:
-      size, sol, max_matching = vcl.calculate_approx_vc(instance['graph'])
-      instance['exact_sol'] = False
-      instance['risp'] = max_matching
+      if not weighted:
+        size, sol, max_matching = vcl.calculate_approx_vc(instance['graph'])
+        instance['exact_sol'] = False
+        instance['risp'] = f'{sol}\n{max_matching}'
+        #instance['risp'] = max_matching
+      else:
+        sol, size, weight = vcl.calculate_weighted_approx_vc(instance['graph'])
+        instance['exact_sol'] = False
+        instance['risp'] = sol
 
     # Generate selected output
     print(vcl.instance_to_str(instance, vcl.file_extension_to_format_name(file_full_extension)))
