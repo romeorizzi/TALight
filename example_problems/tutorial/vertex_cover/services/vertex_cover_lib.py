@@ -307,9 +307,22 @@ def random_graph(num_vertices, num_edges, seed, weighted):
     
   return G
 
-def print_graph(num_vertices, num_edges, graph, instance_format=DEFAULT_INSTANCE_FORMAT):
-  print(f'{num_vertices} {num_edges}')
-  print(f'{" ".join(map(str,graph))}')
+'''
+Stampa l'istanza del grafo per le eval
+'''
+def print_graph(num_vertices, num_edges, graph, weighted=0, instance_format=DEFAULT_INSTANCE_FORMAT):
+  print(f'{num_vertices} {num_edges} {weighted}')
+
+  if weighted:
+    weights = []
+
+    for n,w in nx.get_node_attributes(graph, 'weight').items():
+      weights.append(w)
+
+    print(f'{" ".join(map(str,weights))}')
+
+  edges = list(graph.edges())
+  print(f'{" ".join(map(str,edges))}')
 
 
 '''

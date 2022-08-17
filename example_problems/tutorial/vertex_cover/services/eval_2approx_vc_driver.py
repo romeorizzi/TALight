@@ -67,7 +67,8 @@ def test(instance):
   TAc.print(num_edges, "yellow", ["bold"])
   TAc.print(LANG.render_feedback("print-graph", f'\n# The graph is:\n'), "white", ["bold"])
 
-  vcl.print_graph(num_vertices, num_edges, list(graph.edges()))
+  #vcl.print_graph(num_vertices, num_edges, list(graph.edges()))
+  vcl.print_graph(num_vertices, num_edges, graph)
 
   TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is a 2-approximation vertex cover for this graph?'), "white", ["bold"])
 

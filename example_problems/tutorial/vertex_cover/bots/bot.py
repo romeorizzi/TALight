@@ -11,8 +11,8 @@ from datetime import datetime
 from bot_lib import Bot
 
 parser = argparse.ArgumentParser(description="I am a bot for the TALight problem `Vertex Cover`. In a never ending loop (until I get the '# WE HAVE FINISHED' line), I read an input instances from stdin and I write my answer for it on stdout.")
-parser.add_argument('--minimum', action='store_true', help="Use this option to select the recursive solution method.")
-parser.add_argument('--approx', action='store_true', help="Use this option to select the dynamic programming solution method.")
+parser.add_argument('--minimum', action='store_true', help="Use this option to calculate a minimum vertex cover for the graph.")
+parser.add_argument('--approx', action='store_true', help="Use this option to calculate a 2-approximated vertex cover for the graph.")
 args = parser.parse_args()
 
 print(f"""# I am a bot for the TALight problem `Vertex Cover`. Call me like this:
@@ -190,9 +190,66 @@ def calculate_approx_vc(graph, mode='random'):
 
   return size, ' '.join(map(str,c))
 
+'''
+Calcolo il vertex cover esatto su un grafo pesato. Non essendoci
+algoritmi "buoni" ed essendo estremamente complicato definire un
+lower bound per adattare l'algoritmo branch and bound per grafi
+non pesati, ricorro alle riduzioni tra problemi: calcolo la 
+massima clique sul grafo complementare, la quale sarà anche un
+massimo independet set per il grafo principale. Gli archi che non
+fanno parte del massimo independent set saranno il mio vertex
+cover di peso minimo
+'''
+def calculate_minimum_weight_vc(graph):
+  weights = []
+  vc = []
+
+  for n,w in nx.get_node_attributes(graph, 'weight').items():
+    weights.append(w)
+
+  G_1 = nx.complement(graph)
+
+  # Per qualche motivo facendo il grafo complementare perdo
+  # i pesi sui nodi e devo rimettercel a mano...
+  i = 0
+  for v in G_1.nodes():
+    G_1.add_node(v, weight=weights[i])
+    i += 1
+
+  # max_weight_clique() utilizza anch'esso un algoritmo
+  # di branch and bound per trovare la clique di peso 
+  # massimo
+  clique, w_clique = nx.max_weight_clique(G_1)
+
+  for v in graph.nodes():
+    if v not in clique:
+      vc.append(v)
+
+  size_vc = len(vc)
+  weight_vc = sum(weights) - w_clique
+
+  return ' '.join(map(str, vc)), size_vc, weight_vc
+
+'''
+Calcolo una 2-approssimazione per il grafo pesato
+'''
+def calculate_weighted_approx_vc(graph):
+  appr_sol = nx.approximation.min_weighted_vertex_cover(graph)
+  size_sol = len(appr_sol)
+
+  weight_sol = 0
+
+  for n,w in nx.get_node_attributes(graph, 'weight').items():
+    if n in appr_sol:
+      weight_sol += w
+
+  return ' '.join(map(str, appr_sol)), size_sol, weight_sol
+
 
 while True:
-  vertices,num_edges = map(int, BOT.input().split())
+  vertices,num_edges,weighted = map(int, BOT.input().split())
+  if weighted:
+    weights = [int(i) for i in BOT.input().split()]
   graph = BOT.input()
   graph = graph.replace(', ',',').split()
   edges = [eval(t) for t in graph]
@@ -200,13 +257,29 @@ while True:
   G = nx.Graph()
   G.add_nodes_from([int(v) for v in range(vertices)])
   G.add_edges_from(edges)
+
+  if weighted:
+    i = 0
+    for v in G.nodes():
+      G.add_node(v, weight=weights[i])
+      i += 1
   
   if args.minimum:
-    size,answer = calculate_minimum_vc(G)
+    if not weighted:
+      size,answer = calculate_minimum_vc(G)
+      weight = 0
+    else:
+      answer,size,weight = calculate_minimum_weight_vc(G)
   elif args.approx:
-    size,answer = calculate_approx_vc(G)
+    if not weighted:
+      size,answer = calculate_approx_vc(G)
+      weight=0
+    else:
+      answer,size,weight = calculate_weighted_approx_vc(G)
   else:
     size,answer = calculate_minimum_vc(G)
-  
+ 
   BOT.print(size)
   BOT.print(answer)
+  if weighted:
+    BOT.print(weight) 

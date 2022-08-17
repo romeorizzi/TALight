@@ -40,7 +40,7 @@ if ENV['goal'] == 'feasible':
   NUM_INSTANCES = 5
   scaling_factor = 1.4
 
-  instances['feasible'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices, num_edges)
+  instances['feasible'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices, num_edges, 'random_seed', 1)
 
 # INSTANCES FOR GOAL = minimum
 if ENV['goal'] == 'minimum':
@@ -51,15 +51,13 @@ if ENV['goal'] == 'minimum':
   NUM_INSTANCES = 7
   scaling_factor = 1.4
 
-  instances['minimum'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices, num_edges)
+  instances['minimum'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices, num_edges, 'random_seed', 1)
 
 # FUNCTION TESTING ONE SINGLE TESTCASE: 
 def test(instance):
   graph = instance['graph']
   num_vertices = instance['num_vertices']
   num_edges = instance['num_edges']
-  #num_vertices = graph.number_of_nodes()
-  #num_edges = graph.number_of_edges()
 
   TAc.print(LANG.render_feedback("graph-size",'# We have this number of vertices in the graph: '), "white", ["bold"], end='')
   TAc.print(num_vertices, "yellow", ["bold"])
@@ -67,25 +65,25 @@ def test(instance):
   TAc.print(num_edges, "yellow", ["bold"])
   TAc.print(LANG.render_feedback("print-graph", f'\n# The graph is:\n'), "white", ["bold"])
 
-  #vcl.print_graph(num_vertices, num_edges, list(graph.edges()))
-  vcl.print_graph(num_vertices, num_edges, graph)
+  vcl.print_graph(num_vertices, num_edges, graph, 1)
 
-  TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is the minimum vertex cover for this graph?'), "white", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is the minimum weight vertex cover for this graph?'), "white", ["bold"])
 
   start = monotonic()
   size_answer = TALinput(str, line_recognizer=lambda val,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
   answer = TALinput(str, line_recognizer=lambda val,TAc,LANG:True, TAc=TAc, LANG=LANG)
+  weight_answer = TALinput(str, line_recognizer=lambda val,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
   #answer = ' '.join(map(str, answer))
   end = monotonic()
   instance['measured_time'] = end-start
 
   if ENV['goal'] != 'feasible':
     check = vcl.verify_vc(answer, graph)
-    size,vc = vcl.calculate_minimum_vc(graph)
+    vc,size,weight = vcl.calculate_minimum_weight_vc(graph)
     ok = False
 
     if check:
-      if int(size_answer) == size:
+      if int(weight_answer) == weight:
         ok = True
   else:
     ok = vcl.verify_vc(answer, graph)

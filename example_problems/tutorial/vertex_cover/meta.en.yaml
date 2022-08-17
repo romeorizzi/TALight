@@ -135,7 +135,7 @@ services:
   ##
   check_weighted_minimum_vc:
     evaluator: [python, services/check_weighted_minimum_vc_driver.py]
-    description: 'This service checks if your vertex cover it`s the minimum vertex cover for the given graph or not'
+    description: 'This service checks if your vertex cover it`s the minimum weight vertex cover for the given graph or not'
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
@@ -162,10 +162,6 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Number of edges that connect the vertices of the graph'
-      weighted:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Generates a graph with weighted nodes'
       plot:
         regex: ^(0|1)$
         default: 0
@@ -196,7 +192,7 @@ services:
   ##
   check_approx_vc:
     evaluator: [python, services/check_approx_vc_driver.py]
-    description: 'This service checks if your approximation of the vertex cover it`s correct or not'
+    description: 'This service checks if your approximation of the weighted vertex cover it`s correct or not'
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
@@ -476,6 +472,31 @@ services:
   eval_minimum_vc:
     description: 'This service evaluates your code which calculates the minimum vertex cover for a given graph.'
     evaluator: [python, services/eval_minimum_vc_driver.py]
+    files:
+      - sourcecode
+    args:
+      goal:
+        explain: 'Set your goal (efficient includes also correct).'
+        regex: ^(feasible|minimum)$
+        default: feasible
+      code_lang: 
+        explain: 'The more we know about your bot the better we can estimate the efficiency of your algorithm.'
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      seed:
+        explain: 'Specify the numeric code (any integer in the interval [100000,999999]) to replicate the very same behaviour as in a previous call to this service. When this argument is left to its default value (random_seed) then the service chooses a seed at random, communicates it to the user, and proceeds deterministically from that seed.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+
+  ##
+  ## EVAL_MINIMUM_WEIGHT_VC
+  ##
+  eval_minimum_weight_vc:
+    description: 'This service evaluates your code which calculates the minimum vertex cover for a given graph.'
+    evaluator: [python, services/eval_minimum_weight_vc_driver.py]
     files:
       - sourcecode
     args:
