@@ -620,9 +620,8 @@ def calculate_approx_vc(graph, mode='random'):
 Calcolo una 2-approssimazione per il grafo pesato
 '''
 def calculate_weighted_approx_vc(graph):
-  appr_sol = nx.approximation.min_weighted_vertex_cover(graph)
+  appr_sol = nx.approximation.min_weighted_vertex_cover(graph, weight='weight')
   size_sol = len(appr_sol)
-
   weight_sol = 0
 
   for n,w in nx.get_node_attributes(graph, 'weight').items():

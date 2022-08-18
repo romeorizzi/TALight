@@ -234,7 +234,7 @@ def calculate_minimum_weight_vc(graph):
 Calcolo una 2-approssimazione per il grafo pesato
 '''
 def calculate_weighted_approx_vc(graph):
-  appr_sol = nx.approximation.min_weighted_vertex_cover(graph)
+  appr_sol = nx.approximation.min_weighted_vertex_cover(graph, weight='weight')
   size_sol = len(appr_sol)
 
   weight_sol = 0
@@ -273,7 +273,7 @@ while True:
   elif args.approx:
     if not weighted:
       size,answer = calculate_approx_vc(G)
-      weight=0
+      weight = 0
     else:
       answer,size,weight = calculate_weighted_approx_vc(G)
   else:
