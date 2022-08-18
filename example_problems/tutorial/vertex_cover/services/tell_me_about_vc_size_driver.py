@@ -17,7 +17,9 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
-    ('size',int),
+    ('opt_val_sol',int),
+    ('plot',bool),
+    ('plot_sol',bool),
     ('seed',str),
     ('lang',str)
 ]
@@ -29,7 +31,7 @@ TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
-if ENV['size'] > ENV['num_vertices']:
+if ENV['opt_val_sol'] > ENV['num_vertices']:
   TAc.print(LANG.render_feedback("invalid-k", f'\nERROR: size k can\'t be higher than the number of vertices.\n'), "red", ["bold"])
   exit(0)
 
@@ -54,14 +56,6 @@ elif ENV["source"] == 'terminal':
     TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
     exit(0)
 
-  if ENV['weighted']:
-    TAc.print(LANG.render_feedback("insert-line", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
-    l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
-
-    if len(l) != ENV['num_vertices']:
-      TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weight ({len(l)} instead of {ENV["num_vertices"]})\n'), "red", ["bold"])
-      exit(0)
-
   G = nx.Graph()
   G.add_nodes_from([int(v) for v in range(ENV['num_vertices'])])
   G.add_edges_from(edges)
@@ -80,16 +74,18 @@ else: # take instance from catalogue
   instance = vcl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
   TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
 
-TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
-TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
+TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"], flush=True)
+TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], flush=True)
 
-if not ENV['size']: # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured size k of the vertex cover: if there is a vertex cover of size at least k, you will get a positive answer. Otherwise, if you only intend to be told about the size k of the vertex cover, enter "0".'), "yellow", ["bold"])
+if not ENV['opt_val_sol']: # manual insertion
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured size k of the vertex cover: if there is a vertex cover of size at least k, you will get a positive answer. Otherwise, if you only intend to be told about the size k of the vertex cover, enter 0.'), "yellow", ["bold"], flush=True)
+  if ENV['plot']:
+    vcl.plot_graph(instance['graph'])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
   answer = int(answer[0])
 
 else:
-  answer = ENV['size']
+  answer = ENV['opt_val_sol']
   
 if answer > instance['num_vertices']:
   TAc.print(LANG.render_feedback("invalid-k", f'ERROR: size k can\'t be higher than the number of vertices.'), "red", ["bold"])
@@ -97,17 +93,22 @@ if answer > instance['num_vertices']:
 
 size, vc = vcl.calculate_minimum_vc(instance['graph'])
 
-if answer == 0 or answer == 0:
-  TAc.print(LANG.render_feedback("best-sol", f'Size k of the minimum vertex cover is: {size}.'), "green", ["bold"])
+if answer == 0:
+  TAc.print(LANG.render_feedback("best-sol", f'Size k of the minimum vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(f'{size}.', "white", ["bold"], flush=True)
 else:
 
   if answer == size:
     TAc.OK()
-    TAc.print(LANG.render_feedback("right-exact-sol", f'We agree, the graph has a vertex cover of size exactly {answer}.'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("right-exact-sol", f'We agree, the graph has a vertex cover of size exactly '), "green", ["bold"], flush=True, end='')
+    TAc.print(f'{answer}.', "white", ["bold"], flush=True)
   elif answer > size:
-    TAc.print(LANG.render_feedback("right-sol", f'Yes, the graph has a vertex cover of size at least {answer}.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("right-sol", f'Yes, the graph has a vertex cover of size at least '), "yellow", ["bold"], flush=True, end='')
+    TAc.print(f'{answer}.', "white", ["bold"], flush=True)
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the graph don\'t have a vertex cover of size at least {answer}.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the graph don\'t have a vertex cover of size at least {answer}.'), "red", ["bold"], flush=True)
 
+if ENV['plot_sol']:
+  vcl.plot_mvc(instance['graph'], vc)
 exit(0)

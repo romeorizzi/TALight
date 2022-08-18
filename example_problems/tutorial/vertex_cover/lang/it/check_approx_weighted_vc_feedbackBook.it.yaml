@@ -6,7 +6,7 @@ feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servi
 # NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 successful-load: 'Istanza caricata con successo'
 waiting-line: '#? In attesa del grafo\nFormato degli archi: {{x,y}}{{w,z}}...{{n,m}} \n'
-insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici:'
+insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici e {ENV["num_edges"]} archi:'
 wrong-edges-number: 'Numero degli archi errato (({len(edges)} invece di {ENV["num_edges"]})\n'
 insert-weights: 'Inserisci i pesi per i nodi del grafo, Formato: numeri interi separati da spazi:'
 wrong-weights-number: '\nNumero di pesi errato ({len(l)} invece di {ENV["num_vertices"]})\n'

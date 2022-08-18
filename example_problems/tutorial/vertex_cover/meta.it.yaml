@@ -382,12 +382,20 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Numero degli archi che connettono i vertici del grafo'
+      plot:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra la rappresentazione visuale del grafo'
+      plot_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra la soluzione per la taglia minima del vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
         default: random_seed
         explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
-      size:
+      opt_val_sol:
         regex: ^(\d*)$
         default: 0
         explain: 'Usa questo argomento per dire al servizio quello che ritieni la taglia del vertex cover. Lascia questo argomento al suo valore predefinito nel caso in cui non hai congetture e intendi utilizzare questo servizio solo per ottenere il valore ottimale. Una soluzione per una determinata taglia k di vertex cover è un numero intero non negativo.'
