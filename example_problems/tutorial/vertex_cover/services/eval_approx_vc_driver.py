@@ -27,9 +27,9 @@ instances = {}
 goals = []
 
 if ENV['code_lang'] == 'compiled':
-  MAX_TIME = 1
+  MAX_TIME = 0.5
 else:
-  MAX_TIME = 2
+  MAX_TIME = 1
 
 # INSTANCES FOR GOAL = correct
 if ENV['goal'] == 'feasible':
@@ -48,8 +48,8 @@ if ENV['goal'] == 'big_instances':
 
   num_vertices = 80
   num_edges = 130
-  NUM_INSTANCES = 5
-  scaling_factor = 1.4
+  NUM_INSTANCES = 7
+  scaling_factor = 1.6
 
   instances['big_instances'] = vcl.instances_generator(NUM_INSTANCES, scaling_factor, num_vertices, num_edges)
 
