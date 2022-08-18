@@ -7,6 +7,7 @@ feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servi
 successful-load: 'Istanza caricata con successo'
 waiting-line: '#? In attesa del grafo\nFormato degli archi: {{x,y}}{{w,z}}...{{n,m}} \n'
 insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici:'
+wrong-edges-number: 'Numero degli archi errato (({len(edges)} invece di {ENV["num_edges"]})\n'
 instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo'
 this-is-the-instance: '\nEcco l`istanza:\n'
 insert-opt-value: '\nScrivi qui quello che ritieni sia il vertex cover per questo grafo, se ne hai uno. Altrimenti, se vuoi conoscere la risposta corretta inserisci "C".'

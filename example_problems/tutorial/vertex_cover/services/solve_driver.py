@@ -55,7 +55,7 @@ elif ENV["source"] == 'terminal':
     exit(0)
 
   if ENV['weighted']:
-    TAc.print(LANG.render_feedback("insert-line", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("insert-weights", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
     l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
     if len(l) != ENV['num_vertices']:
