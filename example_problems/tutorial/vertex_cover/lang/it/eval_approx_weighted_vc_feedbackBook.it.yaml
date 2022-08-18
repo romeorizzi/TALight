@@ -7,7 +7,7 @@ feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servi
 graph-num-nodes: '# Abbiamo questo numero di vertici nel grafo: '
 graph-num-edges: '# Abbiamo questo numero di archi nel grafo: '
 print-graph: '\nIl grafo è:\n'
-best-sol-question: '\n# Qual è il vertex cover per questo grafo?'
+best-sol-question: '\n# Qual è la 2-approssimazione del vertex cover di peso minimo per questo grafo?'
 
 # SUMMARIES
 summary: '\n# RIEPILOGO RISULTATI PER IL GOAL "{goal}":\n'

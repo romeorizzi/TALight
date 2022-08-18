@@ -52,11 +52,11 @@ elif ENV["source"] == 'terminal':
     TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
     exit(0)
 
-  TAc.print(LANG.render_feedback("insert-line", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-weights", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
   if len(l) != ENV['num_vertices']:
-    TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weight ({len(l)} instead of {ENV["num_vertices"]})\n'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weights ({len(l)} instead of {ENV["num_vertices"]})\n'), "red", ["bold"])
     exit(0)
 
   G = nx.Graph()
@@ -84,7 +84,7 @@ else: # take instance from catalogue
   if instance['weighted']:
     TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
   else:
-    TAc.print(LANG.render_feedback("graph-not-weighted", f'The instance with instance_id={ENV["instance_id"]} does not contain a weighte graph. Aborting.'), "red", ["bold"])
+    TAc.print(LANG.render_feedback("graph-not-weighted", f'The instance with instance_id={ENV["instance_id"]} does not contain a weighted graph. Aborting.'), "red", ["bold"])
     exit(0)
 
 if ENV['display']:
@@ -137,12 +137,12 @@ else:
   if is_vertex_cover and (weight_ans <= 2 * min_weight_sol):
     if weight_ans == weight_sol:
       TAc.OK()
-      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation weighted vertex cover for the graph (weight={weight_ans}).'), "green", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid 2-approximation of the weighted vertex cover for the graph (weight={weight_ans}).'), "green", ["bold"], flush=True)
     elif weight_ans > weight_sol:
-      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation weighted vertex cover for the graph (weight={weight_ans}). You can improve your approximation.'), "yellow", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("right-sol", f'The solution you provided is a valid 2-approximation of the weighted vertex cover for the graph (weight={weight_ans}). You can improve your approximation.'), "yellow", ["bold"], flush=True)
     else:
       TAc.OK()
-      TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation weighted vertex cover for the graph (weight={weight_ans}) and it\'s better than mine ({weight_sol})!'), "green", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation of the weighted vertex cover for the graph (weight={weight_ans}) and it\'s better than mine ({weight_sol})!'), "green", ["bold"], flush=True)
       
       if ENV['source'] == 'catalogue' and instance['exact_sol'] == 0:
         path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances')
@@ -155,9 +155,9 @@ else:
     TAc.NO()
     TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation weighted vertex cover for the graph.'), "red", ["bold"], flush=True)
     if not is_vertex_cover:
-      TAc.print(LANG.render_feedback("reason-wrong-sol-no_vc", f'Not a vertex cover'), "red", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("reason-wrong-sol-no_vc", f'Not a vertex cover.'), "red", ["bold"], flush=True)
     else:
-      TAc.print(LANG.render_feedback("reason-wrong-sol-weight", f'Your solution weight: {weight_ans}; max 2-approximation weight: {2 * min_weight_sol}'), "red", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("reason-wrong-sol-weight", f'Your solution weight: {weight_ans}; max 2-approximation weight: {2 * min_weight_sol}.'), "red", ["bold"], flush=True)
 
 if ENV['plot']:
   vcl.plot_mvc(instance['graph'], appr_sol, 1, 1)

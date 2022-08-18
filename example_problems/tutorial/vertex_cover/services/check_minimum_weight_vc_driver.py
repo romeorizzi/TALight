@@ -50,7 +50,7 @@ elif ENV["source"] == 'terminal':
     TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
     exit(0)
 
-  TAc.print(LANG.render_feedback("insert-line", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-weights", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
   l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
   if len(l) != ENV['num_vertices']:
@@ -92,7 +92,7 @@ if ENV['display']:
     print('\n')
 
 if ENV['vc_sol_val'] == '0': # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured approximated vertex cover for this weighted graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured minimum weight vertex cover for this graph if you have one. Otherwise, if you only intend to be told about the minimum weight vertex cover, enter "C".'), "yellow", ["bold"])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
 else:
   answer = ENV['vc_sol_val']
@@ -105,11 +105,11 @@ else:
   size_sol = len(vc_sol)
 
 if answer[0] == 'C' or answer[0] == 'c':
-  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(LANG.render_feedback("best-sol", f'A possible minimum weight vertex cover is: '), "green", ["bold"], flush=True, end='')
   TAc.print(f'{vc_sol}.', "white", ["bold"], flush=True)
-  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum weight vertex cover is: '), "green", ["bold"], flush=True, end='')
   TAc.print(f'{size_sol}.', "white", ["bold"], flush=True)
-  TAc.print(LANG.render_feedback("weight-sol", f'The weight of the minimum weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
+  TAc.print(LANG.render_feedback("weight-sol", f'The weight of the minimum weight vertex cover is: '), "green", ["bold"], flush=True, end='')
   TAc.print(f'{weight_sol}.', "white", ["bold"], flush=True)
 
 else:
@@ -119,12 +119,12 @@ else:
   if right_sol:
     if size_ans == size_opt:
       TAc.OK()
-      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid minimum vertex cover for the graph.'), "green", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid minimum weight vertex cover for the graph.'), "green", ["bold"], flush=True)
     elif size_ans > size_opt:
-      TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid vertex cover for the graph, but it`s not minimum (your size is {size_ans}).'), "yellow", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid minimum weight vertex cover for the graph.'), "red", ["bold"], flush=True)
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph.'), "red", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid minimum vertex cover for the graph.'), "red", ["bold"], flush=True)
 
 if ENV['plot']:
   vcl.plot_mvc(instance['graph'],vc_sol,1)

@@ -58,15 +58,15 @@ def test(instance):
   num_vertices = instance['num_vertices']
   num_edges = instance['num_edges']
 
-  TAc.print(LANG.render_feedback("graph-size",'# We have this number of vertices in the graph: '), "white", ["bold"], end='')
+  TAc.print(LANG.render_feedback("graph-num-nodes",'# We have this number of vertices in the graph: '), "white", ["bold"], end='')
   TAc.print(num_vertices, "yellow", ["bold"])
-  TAc.print(LANG.render_feedback("graph-size",'# We have this number of edges in the graph: '), "white", ["bold"], end='')
+  TAc.print(LANG.render_feedback("graph-num-edges",'# We have this number of edges in the graph: '), "white", ["bold"], end='')
   TAc.print(num_edges, "yellow", ["bold"])
   TAc.print(LANG.render_feedback("print-graph", f'\n# The graph is:\n'), "white", ["bold"])
 
   vcl.print_graph(num_vertices, num_edges, graph, 1)
 
-  TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is a 2-approximation vertex cover for this graph?'), "white", ["bold"])
+  TAc.print(LANG.render_feedback("best-sol-question", f'\n# Which is a 2-approximation weighted vertex cover for this graph?'), "white", ["bold"])
 
   start = monotonic()
   size_answer = TALinput(str, line_recognizer=lambda val,TAc,LANG:True, TAc=TAc, LANG=LANG)[0]
@@ -85,7 +85,6 @@ def test(instance):
     if ENV['goal'] == 'small_instances':
       vc_sol, size_exact_sol, min_weight_sol = vcl.calculate_minimum_weight_vc(instance['graph'])
 
-      print(f'# {weight_answer} {2 * min_weight_sol}')
       if int(weight_answer) <= 2 * min_weight_sol:
         ok=True
     else:

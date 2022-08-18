@@ -61,9 +61,9 @@ def test(instance):
   #num_vertices = graph.number_of_nodes()
   #num_edges = graph.number_of_edges()
 
-  TAc.print(LANG.render_feedback("graph-size",'# We have this number of vertices in the graph: '), "white", ["bold"], end='')
+  TAc.print(LANG.render_feedback("graph-num-nodes",'# We have this number of vertices in the graph: '), "white", ["bold"], end='')
   TAc.print(num_vertices, "yellow", ["bold"])
-  TAc.print(LANG.render_feedback("graph-size",'# We have this number of edges in the graph: '), "white", ["bold"], end='')
+  TAc.print(LANG.render_feedback("graph-num-edges",'# We have this number of edges in the graph: '), "white", ["bold"], end='')
   TAc.print(num_edges, "yellow", ["bold"])
   TAc.print(LANG.render_feedback("print-graph", f'\n# The graph is:\n'), "white", ["bold"])
 

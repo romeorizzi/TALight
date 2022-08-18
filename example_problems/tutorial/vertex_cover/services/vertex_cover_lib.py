@@ -756,7 +756,7 @@ def print_goal_summary(goal,testcases,num_testcases_passed,num_testcases_correct
     if t['answer_correct'] == True:
       TAc.print(LANG.render_feedback("right-ans", f'# TestCase {i}: Correct answer! Took time {t["measured_time"]} on your machine.\n'), "green")
     elif t['answer_correct'] == False:
-      TAc.print(LANG.render_feedback("wrong-ans", f'# NO! You gave the wrong solution for the instance with this parameters:\n#num_vertices = {t["num_vertices"]}, seed = {t["seed"]}.\n'), "yellow")
+      TAc.print(LANG.render_feedback("wrong-ans", f'# NO! You gave the wrong solution for the instance with this parameters:\n#num_vertices = {t["num_vertices"]}, num_edges={t["num_edges"]}, seed = {t["seed"]}.\n'), "yellow")
     else:
       TAc.print(LANG.render_feedback("out-of-time-ans", f'# The evaluation has been stopped since your solution took too much time on this or previous instances. The parameters of this instance are:\n#num_vertices = {t["num_vertices"]}, seed = {t["seed"]}.\n'), "white")
        
