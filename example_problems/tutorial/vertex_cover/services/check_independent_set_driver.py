@@ -16,6 +16,8 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
+    ('plot',bool),
+    ('plot_sol',bool),
     ('seed',str),
     ('vc_sol_val',str),
     ('display',bool),

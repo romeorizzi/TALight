@@ -5,12 +5,13 @@ feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servi
 
 # NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 invalid-k: '\nERRORE: la taglia k non può essere maggiore del numero dei vertici.\n'
-successful-load: 'Istanza caricata con successo'
+successful-load: 'Istanza caricata con successo.'
 waiting-line: '#? In attesa del grafo\nFormato del grafo: (x,y) (w,z) ... (n,m) \n'
 insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici e {ENV["num_edges"]} archi:'
-wrong-edges-number: 'Numero degli archi errato (({len(edges)} invece di {ENV["num_edges"]})\n'
-instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo'
+wrong-edges-number: '\nNumero degli archi errato (({len(edges)} invece di {ENV["num_edges"]})\n'
+instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo.'
 this-is-the-instance: '\nEcco l`istanza:\n'
+insert-opt-value: '\nScrivi qui quella che ritieni essere la taglia k del vertex cover: if esiste un vertex cover di taglia almeno k, avrai una risposta positiva. Altrimenti, se intendi solamente sapere della taglia k del vertex cover, inserisci 0.'
 best-sol: 'La taglia k del minimo vertex cover è: '
 right-exact-sol: 'Corretto, il grafo ha un vertex cover minimo di taglia esattamente '
 right-sol: 'Sì, il grafo ha un vertex cover di taglia almeno '

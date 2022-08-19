@@ -32,7 +32,7 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 if ENV['opt_val_sol'] > ENV['num_vertices']:
-  TAc.print(LANG.render_feedback("invalid-k", f'\nERROR: size k can\'t be higher than the number of vertices.\n'), "red", ["bold"])
+  TAc.print(LANG.render_feedback("invalid-k", f'\nERROR: size k can\'t be greater than the number of vertices.\n'), "red", ["bold"])
   exit(0)
 
 ## Input Sources
@@ -78,7 +78,7 @@ TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\
 TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], flush=True)
 
 if not ENV['opt_val_sol']: # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured size k of the vertex cover: if there is a vertex cover of size at least k, you will get a positive answer. Otherwise, if you only intend to be told about the size k of the vertex cover, enter 0.'), "yellow", ["bold"], flush=True)
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured size k of the vertex cover: if exists a vertex cover of size at least k, you will get a positive answer. Otherwise, if you only intend to be told about the size k of the vertex cover, enter 0.'), "yellow", ["bold"], flush=True)
   if ENV['plot']:
     vcl.plot_graph(instance['graph'])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
@@ -107,7 +107,7 @@ else:
     TAc.print(f'{answer}.', "white", ["bold"], flush=True)
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the graph don\'t have a vertex cover of size at least {answer}.'), "red", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the graph does not have a vertex cover of size at least {answer}.'), "red", ["bold"], flush=True)
 
 if ENV['plot_sol']:
   vcl.plot_mvc(instance['graph'], vc)

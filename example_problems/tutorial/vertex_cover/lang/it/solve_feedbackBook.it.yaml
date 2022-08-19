@@ -6,10 +6,10 @@ feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servi
 # NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 successful-load: 'Istanza caricata con successo'
 waiting-line: '#? In attesa del grafo\nFormato del grafo: (x,y) (w,z) ... (n,m) \n'
-insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici:'
-wrong-edges-number: 'Numero degli archi errato (({len(edges)} invece di {ENV["num_edges"]})\n'
+insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici e {ENV["num_edges"]}:'
+wrong-edges-number: '\nNumero degli archi errato (({len(edges)} invece di {ENV["num_edges"]})\n'
 insert-weights: 'Inserire il peso dei nodi. Formato: numeri interi separati da spazi:'
-wrong-weights-number: 'Il numero di pesi inseriti è errato ({len(l)} instead of {ENV["num_vertices"]})\n'
+wrong-weights-number: '\nIl numero di pesi inseriti è errato ({len(l)} instead of {ENV["num_vertices"]})\n'
 instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo'
 this-is-the-instance: '\nEcco l`istanza:\n'
 all-solutions-title: 'Ecco le possibili soluzioni per l`istanza data:'
