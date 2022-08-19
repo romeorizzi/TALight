@@ -754,6 +754,33 @@ def plot_2app_vc(graph, vertices, edges):
 
   plt.show()
 
+def plot_indset(graph, vertices, weighted=0):
+  pos = nx.spring_layout(graph, seed=3113794652)
+  vertices = [int(i) for i in vertices.split()]
+  color_map = []
+  for node in graph.nodes():
+    if node in vertices:
+      color_map.append('red')
+    else:
+      color_map.append('#00b4d9')
+  if not weighted:
+    nx.draw_networkx(graph,pos,node_color=color_map,node_size=500,width=2,with_labels=True)
+  else:
+    labels = nx.get_node_attributes(graph, 'weight')
+    nx.draw_networkx(graph,pos,node_color=color_map,node_size=500,width=2,with_labels=True)
+    for v in graph.nodes():
+      x,y=pos[v]
+      plt.text(x,y+0.15,s=labels[v], bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='center')
+  ax = plt.gca()
+  if not weighted:
+    ax.set_title('Maximum Independent Set (red nodes)')
+  else:
+    ax.set_title('Maximum Weight Independent Set (red nodes)')
+  ax.margins(0.20)
+  plt.axis("off")
+
+  plt.show()
+
 '''
 GOAL SUMMARIES
 '''
