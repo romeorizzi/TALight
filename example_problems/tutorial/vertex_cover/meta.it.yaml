@@ -104,7 +104,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra la rappresentazione visuale del minumum vertex cover'
+        explain: 'Mostra il plot del grafo'
+      plot_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra il plot del minumum vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -161,7 +165,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra la rappresentazione visuale del minumum vertex cover'
+        explain: 'Mostra il plot del grafo'
+      plot_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra il plot con la soluzione del vertex cover di peso minimo'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -218,7 +226,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra la rappresentazione visuale della 2-approssimazione del vertex cover'
+        explain: 'Mostra il plot del grafo'
+      plot_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra il plot con la soluzione della 2-approssimazione del vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -275,7 +287,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra la rappresentazione visuale della 2-approssimazione del minimo vertex cover pesato'
+        explain: 'Mostra il plot del grafo'
+      plot_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Mostra il plot con la soluzione della 2-approssimazione del minimo vertex cover pesato'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'

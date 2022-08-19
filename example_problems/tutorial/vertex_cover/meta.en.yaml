@@ -108,6 +108,10 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
+        explain: 'Plot graph'
+      plot_sol:
+        regex: ^(0|1)$
+        default: 0
         explain: 'Plot graph with minimum vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
@@ -165,7 +169,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph with minimum vertex cover'
+        explain: 'Plot graph'
+      plot_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Plot graph with minimum weight vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -220,6 +228,10 @@ services:
         default: 11
         explain: 'Number of edges that connect the vertices of the graph'
       plot:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Plot graph'
+      plot_sol:
         regex: ^(0|1)$
         default: 0
         explain: 'Plot graph with 2-approximated vertex cover'
@@ -280,7 +292,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph with minimum vertex cover'
+        explain: 'Plot graph'
+      plot_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Plot graph with the solution of the approximated vertex cover'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'

@@ -18,6 +18,7 @@ args_list = [
     ('num_vertices',int),
     ('num_edges',int),
     ('plot',bool),
+    ('plot_sol',bool),
     ('seed',str),
     ('vc_sol_val',str),
     ('display',bool),
@@ -67,14 +68,16 @@ elif ENV["source"] == 'randgen_1':
 else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
   instance = vcl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
-  TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"], flush=True)
   
 if ENV['display']:
-  TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
-  TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"])
+  TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"], flush=True)
+  TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], flush=True)
 
 if ENV['vc_sol_val'] == '0': # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured maximal matching for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured maximal matching for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"], flush=True)
+  if ENV['plot']:
+    vcl.plot_graph(instance['graph'])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
 else:
   #answer = [eval(t) for t in ENV['vc_sol_val'].split()]
@@ -129,7 +132,7 @@ else:
     TAc.NO()
     TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation vertex cover for the graph.'), "red", ["bold"], flush=True)
 
-if ENV['plot']:
+if ENV['plot_sol']:
   vcl.plot_2app_vc(instance['graph'], appr_sol, max_matching)
 
 exit(0)

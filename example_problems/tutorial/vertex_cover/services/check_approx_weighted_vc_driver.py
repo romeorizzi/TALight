@@ -19,6 +19,7 @@ args_list = [
     ('num_vertices',int),
     ('num_edges',int),
     ('plot',bool),
+    ('plot_sol',bool),
     ('seed',str),
     ('vc_sol_val',str),
     ('display',bool),
@@ -82,24 +83,26 @@ else: # take instance from catalogue
   instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
   instance = vcl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
   if instance['weighted']:
-    TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"], flush=True)
   else:
     TAc.print(LANG.render_feedback("graph-not-weighted", f'The instance with instance_id={ENV["instance_id"]} does not contain a weighted graph. Aborting.'), "red", ["bold"])
     exit(0)
 
 if ENV['display']:
-  TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"])
-  TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], end='')
+  TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"], flush=True)
+  TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], flush=True, end='')
 
   if not 'weighted' in instance:
     for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
-      TAc.print(f'{w}', "white", ["bold"], end=' ')
+      TAc.print(f'{w}', "white", ["bold"], flush=True, end=' ')
 
-    print('\n')
+    print('\n', flush=True)
     
 
 if ENV['vc_sol_val'] == '0': # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured approximated vertex cover for this weighted graph if you have one (format: integer numbers separated by spaces). Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"])
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured approximated vertex cover for this weighted graph if you have one (format: integer numbers separated by spaces). Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"], flush=True)
+  if ENV['plot']:
+    vcl.plot_graph(instance['graph'],1)
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
 else:
   answer = ENV['vc_sol_val']
@@ -159,7 +162,7 @@ else:
     else:
       TAc.print(LANG.render_feedback("reason-wrong-sol-weight", f'Your solution weight: {weight_ans}; max 2-approximation weight: {2 * min_weight_sol}.'), "red", ["bold"], flush=True)
 
-if ENV['plot']:
+if ENV['plot_sol']:
   vcl.plot_mvc(instance['graph'], appr_sol, 1, 1)
 
 exit(0)

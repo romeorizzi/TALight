@@ -679,9 +679,17 @@ def verify_approx_vc(matching, graph):
 '''
 VARIE: PLOT
 '''
-def plot_graph(graph):
+def plot_graph(graph, weighted=0):
   pos = nx.spring_layout(graph, seed=3113794652)
-  nx.draw_networkx(graph,pos,node_size=500,width=2,with_labels=True)
+  #nx.draw_networkx(graph,pos,node_size=500,width=2,with_labels=True)
+  if not weighted:
+    nx.draw_networkx(graph,pos,node_color='#00b4d9',node_size=500,width=2,with_labels=True)
+  else:
+    labels = nx.get_node_attributes(graph, 'weight')
+    nx.draw_networkx(graph,pos,node_color='#00b4d9',node_size=500,width=2,with_labels=True)
+    for v in graph.nodes():
+      x,y=pos[v]
+      plt.text(x,y+0.15,s=labels[v], bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='center')
   ax = plt.gca()
   ax.set_title('Graph')
   ax.margins(0.20)
