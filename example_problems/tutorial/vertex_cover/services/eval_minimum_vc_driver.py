@@ -27,9 +27,9 @@ instances = {}
 goals = []
 
 if ENV['code_lang'] == 'compiled':
-  MAX_TIME = 1
+  MAX_TIME = 0.5
 else:
-  MAX_TIME = 2
+  MAX_TIME = 1
 
 # INSTANCES FOR GOAL = correct
 if ENV['goal'] == 'feasible':

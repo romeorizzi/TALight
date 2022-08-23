@@ -140,12 +140,13 @@ def get_instance_from_txt(instance_as_str, format_name):
       instance['weighted'] = int(v_e_w_split[2])
       
       if instance['weighted']:
-        weights = str_to_arr[1].split()
+        weights = [int(w) for w in str_to_arr[1].split()]
         edges = str_to_arr[2].replace(', ', ',').replace(')(',') (').split()
       else:
         edges = str_to_arr[1].replace(', ', ',').replace(')(',') (').split()
       edges = [eval (t) for t in edges]
 
+      G.add_edges_from(edges)
       G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
 
       i = 0
@@ -156,7 +157,6 @@ def get_instance_from_txt(instance_as_str, format_name):
           G.add_node(v, weight=1)
         i = i+1
 
-      G.add_edges_from(edges)
       instance['graph'] = G
 
       if instance['weighted']:
