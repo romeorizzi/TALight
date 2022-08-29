@@ -28,9 +28,13 @@ services:
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
       type_seq:
-        regex: ^([1-2])$
+        regex: ^(1|2)$
         default: 1
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza dove posizioni consecutive possono presentare lo stesso colore, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
+      print_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Stampa la rappresentazione grafica del collage.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
@@ -66,7 +70,7 @@ services:
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
-        default: catalogue
+        default: randgen_1
         explain: 'Le istanze possono provenire dal catalogo o essere generate sul posto. Scegli un`opzione tra:\n [catalogue] il servizio restituirà un`istanza prelevata dal catalogo delle istanze memorizzate sul server. Le istanze nel catalogo sono numerate progressivamente a partire da 1. Usa l`argomento `instance_id` per specificare l`istanza che ti interessa. Chiamare questo servizio potrebbe non essere il modo più conveniente per ottenere un`istanza dal catalogo: l`intero catalogo è pubblico, cioè è contenuto nel file \''collage.tar\'' che ti viene scaricato sul tuo computer utilizzando il comando `rtal get collage`. Inoltre, se mantieni l`intero repository con il problema in locale (tutte le fonti), questo catalogo viene creato automaticamente digitando `make` per una configurazione completa del problema sulla tua macchina (questo è un passaggio necessario quando si imposta il problema su un server).\n [randgen_1] il servizio fornisce l`istanza pseudo-casuale prodotta dal generatore pseudo-casuale. Ogni generatore richiede all`utente di specificare un insieme di valori per i parametri necessari (come ad esempio il `seed`) al fine di ottenere in modo univoco l`istanza risultante. Questo set dipende dal generatore. I valori validi per questo set di parametri (chiamato "descrittore di istanza") offrono una "descrizione di istanza" che specifica in modo univoco l`istanza w.r.t. quel generatore. Assicurati quindi di passare i valori desiderati per tutti gli argomenti di servizio corrispondenti ai parametri richiesti dal generatore. Si noti che passando la stessa configurazione di valori si ottiene la stessa istanza. Ciò è utile poiché garantisce la riproducibilità di qualsiasi esperimento e la possibilità di utilizzare ed esplorare una stessa istanza con diversi servizi di questo problema.\n [terminal] il servizio utilizzerà un`istanza collage che inserirai manualmente, riga per riga.'
       instance_id:
         regex: ^([1-9][0-9]*)$
@@ -89,7 +93,7 @@ services:
         default: 4
         explain: 'Numero di colori che compongono l`arcobaleno'
       type_seq:
-        regex: ^([1-2])$
+        regex: ^(1|2)$
         default: 1
         explain: 'Modalità di generazione dell`arcobaleno: l`opzione [1] genera una sequenza dove posizioni consecutive possono presentare lo stesso colore, mentre l`opzione [2] genera una sequenza senza colori uguali adiacenti.'
       seed:
@@ -102,6 +106,10 @@ services:
         regex: ^(0|[1-9][0-9]{0,5})$
         default: 0
         explain: 'Usa questo argomento per dire al servizio quello che ritieni sia il numero minimo di fogli del collage. Lascia questo argomento al suo valore predefinito nel caso in cui non hai congetture e intendi utilizzare questo servizio solo per ottenere il valore ottimale. Una soluzione per una determinata istanza di collage è un numero intero non negativo.'
+      print_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Stampa la rappresentazione grafica del collage.'
       silent:
         regex: ^(0|1)$
         default: 0

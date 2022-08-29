@@ -28,9 +28,13 @@ services:
         default: 4
         explain: 'Number of colors of the rainbow'
       type_seq:
-        regex: ^([1-2])$
+        regex: ^(1|2)$
         default: 1
         explain: 'Rainbow generation mode: option [1] generates a sequence where adjacent positions may have the same color, option [2] generates a sequence without adjacent equal colors.'
+      print_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Print the graphical representation of the collage.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -65,7 +69,7 @@ services:
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
-        default: catalogue
+        default: randgen_1
         explain: 'Instances might either come from the catalogue or be generated on the spot. Choose an option among:\n     [catalogue] the service will return an instance taken from the catalogue of instances stored on the server. The instances in the catalogue are progressively numbered starting from 1. Use the argument `instance_id` to specify the instance you are interested into. Calling this service might not be the most convenient way to get an instance from the catalogue: the whole catalogue is public, that is, it is contained in the file \''collage.tar\'' you get downloaded on your machine by issuing `rtal get collage`. Also, if you hold the whole repo with the problem in local (all sources) then this catalogue is automatically created issuing `make` for a complete set up of the problem on your machine (this is a necessary step when setting up the problem on a server).\n     [randgen_1] the service delivers you the pseudo-random instance produced by the named pseudo-random generator. Every generator requires the user to specify a set of values for the needed parameters (like e.g. the `seed`) in order to univokely obtain the resulting instance. This set depends on the generator. Valid values for this set of parameters (called the "instance descriptor") offer an "instance description" that univokely specifies the instance w.r.t. that generator. Make then sure to pass the desired values for all the service arguments corresponding to the parameters needed by the selected generator. Notice that passing the very same configuration of values you get the very same instance. This is helpful since it guarantees the reproducibility of any experiment and the possibility to use and explore a same instance with different services of this problem.\n     [terminal] the service will use a collage instance that you will insert manually, line by line.'
       instance_id:
         regex: ^([1-9][0-9]*)$
@@ -88,12 +92,12 @@ services:
         default: 4
         explain: 'Number of colors of the rainbow'
       type_seq:
-        regex: ^([1-2])$
+        regex: ^(1|2)$
         default: 1
         explain: 'Rainbow generation mode: option [1] generates a sequence where adjacent positions may have the same color, option [2] generates a sequence without adjacent equal colors.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
-        regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
+        regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
         regex-URL: 'https://extendsclass.com/regex/90e74ec'
         default: random_seed
         explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
@@ -101,6 +105,10 @@ services:
         regex: ^(0|[1-9][0-9]{0,5})$
         default: 0
         explain: 'Use this argument to tell the service what you conjecture to be the number of sheets of the collage. Leave this argument to its default value in case you have non conjecture and only intend to use this service to be told about the optimum value. A solution for a given collage instance is a non-negative integer number.'
+      print_sol:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Print the graphical representation of the collage.'
       silent:
         regex: ^(0|1)$
         default: 0

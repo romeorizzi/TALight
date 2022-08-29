@@ -14,5 +14,6 @@ wrong-elements-number: 'Expected {ENV["seq_len"]} elements for line, but receive
 this-is-the-instance: '\nThis is the instance:\n'
 insert-opt-value: '\nWrite here your conjectured optimal value for this collage if you have one. Otherwise, if you only intend to be told about the optimal value, enter 0.'
 best-sol: 'The solution value is {sheets}.'
+print-sol: 'Here is the graphical solution:'
 right-best-sol: 'We agree, the solution value you provided is the right one.'
 wrong-best-sol: 'We don\''t agree, the solution value you provided is not the right one.'

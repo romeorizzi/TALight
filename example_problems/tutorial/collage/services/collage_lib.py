@@ -172,11 +172,8 @@ def random_rainbow(seq_len:int, num_col:int, type_seq:int, seed:int):
   random.seed(seed)
   rainbow = []
 
-  if type_seq == 0:
-    pass
-
   # Random con colori uguali adiacenti
-  elif type_seq == 1:
+  if type_seq == 1:
     values = [i for i in range (num_col)]
 
     for row in range(0,seq_len):
@@ -219,10 +216,17 @@ def print_rainbow(rainbow, instance_format=DEFAULT_INSTANCE_FORMAT):
 '''
 SOLUZIONI
 '''
-def solutions(instance,instance_format=DEFAULT_INSTANCE_FORMAT):
+def solutions(instance, print_sol, instance_format=DEFAULT_INSTANCE_FORMAT):
     sols = {}
-    sheets = calculate_sheets(instance['rainbow'])
-    sols['calculate_sheets'] = f"{sheets}"
+    if print_sol:
+      sheets, sol = calculate_sheets(instance['rainbow'], print_sol)
+      sols['calculate_sheets'] = f"{sheets}"
+      print_sol = '\n'.join(map(str, reversed(sol.split('\n'))))
+      sols['print_sol'] = f"\n{print_sol}\n"
+    else:
+      sheets = calculate_sheets(instance['rainbow'], print_sol)
+      sols['calculate_sheets'] = f"{sheets}"
+
 
     return sols
 
@@ -260,9 +264,51 @@ def PD(n):
         for k in range(i+1, j+1):
           if seq[k] == seq[i]:
             memo[i][j] = min(memo[i][j], memo[i+1][k-1] + memo[k][j])
-  return memo[0][n-1]
+  #return memo[0][n-1]
+  sheets = memo[0][n-1]
 
-def calculate_sheets(rainbow):
+  foglio_sotto = None
+  buf = []
+  counti = 0
+  sol = ''
+
+  while i<n and n>0:
+    if seq[i] == seq[n-1]:
+      for k in range(i,n):
+        if seq[n-1] != foglio_sotto:
+          sol += str(seq[n-1]) + ' '
+        else:
+          sol += '  '
+
+      sol += ' '.join(map(str,reversed(buf))) +'\n'
+
+      counti = i+1
+      for z in range(counti):
+        sol += '  '
+
+      buf = []
+      foglio_sotto = seq[n-1]
+
+      i+=1
+      n-=1
+
+    elif memo[i][n-2] >= memo[i+1][n-1]:
+      if seq[i] != foglio_sotto:
+        sol += str(seq[i]) + ' '
+      else:
+        sol += '  '
+      i+=1
+
+    else:
+      if seq[n-1] != foglio_sotto:
+        buf.append(seq[n-1])
+      else:
+        sol += '  '
+      n-=1
+
+  return sheets, sol
+
+def calculate_sheets(rainbow, print_sol):
   seq_len = len(rainbow)
   n=0
   prev=-1
@@ -275,9 +321,12 @@ def calculate_sheets(rainbow):
       prev = tmp
       n += 1
 
-  risp=Min(0,n-1)
-  #risp=PD(n)
-  return risp
+  if not print_sol:
+    risp = Min(0,n-1)
+    return risp
+  else:
+    risp, sol = PD(n)
+    return risp, sol
 
 
 '''
