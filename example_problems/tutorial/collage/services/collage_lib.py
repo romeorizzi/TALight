@@ -274,7 +274,7 @@ def PD(n):
 
   while i<n and n>0:
     if seq[i] == seq[n-1]:
-      for k in range(i,n):
+      for h in range(i,n):
         if seq[n-1] != foglio_sotto:
           sol += str(seq[n-1]) + ' '
         else:
@@ -292,7 +292,8 @@ def PD(n):
       i+=1
       n-=1
 
-    elif memo[i][n] >= memo[i+1][n-1]:
+    #elif memo[i][n] >= memo[i+1][n-1]:
+    elif memo[i][n-2] >= memo[i+1][n-1]:
       if seq[i] != foglio_sotto:
         sol += str(seq[i]) + ' '
       else:
