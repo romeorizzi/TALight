@@ -292,7 +292,7 @@ def PD(n):
       i+=1
       n-=1
 
-    elif memo[i][n-2] >= memo[i+1][n-1]:
+    elif memo[i][n] >= memo[i+1][n-1]:
       if seq[i] != foglio_sotto:
         sol += str(seq[i]) + ' '
       else:
