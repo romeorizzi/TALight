@@ -59,6 +59,8 @@ def instance_to_txt_str(instance, format_name="with_info"):
     if format_name == "with_info":
       num_vertices = instance['num_vertices']
       num_edges = instance['graph'].number_of_edges()
+      if 'weighted' not in instance:
+        instance['weighted'] = 0
       weighted = int(instance['weighted'])
       output += f'{num_vertices} {num_edges} {weighted}\n'
 
