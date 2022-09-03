@@ -133,7 +133,7 @@ if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(f'{weight_sol}.', "white", ["bold"], flush=True)
 
 else:
-  is_vertex_cover = vcl.verify_vc(answer, instance['graph'])
+  is_vertex_cover, rem_edges = vcl.verify_vc(answer, instance['graph'])
   vc_sol, size_exact_sol, min_weight_sol = vcl.calculate_minimum_weight_vc(instance['graph'])
   size_ans = len(answer)
 
@@ -158,11 +158,19 @@ else:
     TAc.NO()
     TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid 2-approximation weighted vertex cover for the graph.'), "red", ["bold"], flush=True)
     if not is_vertex_cover:
-      TAc.print(LANG.render_feedback("reason-wrong-sol-no_vc", f'Not a vertex cover.'), "red", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("reason-wrong-sol-no_vc", f'Not a vertex cover. Edges not covered: '), "red", ["bold"], flush=True, end='')
+      for t in rem_edges:
+        TAc.print(f'{t} ', "red", ["bold"], flush=True, end='')
+      print('\n')
     else:
       TAc.print(LANG.render_feedback("reason-wrong-sol-weight", f'Your solution weight: {weight_ans}; max 2-approximation weight: {2 * min_weight_sol}.'), "red", ["bold"], flush=True)
 
 if ENV['plot_sol']:
-  vcl.plot_mvc(instance['graph'], appr_sol, 1, 1)
+  if answer[0] != 'C' and answer[0] != 'c':
+    answer = ' '.join(map(str,answer))
+    vcl.plot_mvc(instance['graph'], answer, rem_edges, 1, 1)
+  else:
+    #vcl.plot_mvc(instance['graph'], appr_sol, instance['graph'].edges(), 1, 1)
+    vcl.plot_mvc(instance['graph'], appr_sol, [], 1, 1)
 
 exit(0)

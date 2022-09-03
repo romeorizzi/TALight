@@ -97,7 +97,7 @@ if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("size-sol", f'The size of the minimum vertex cover is: '), "green", ["bold"], flush=True, end='')
   TAc.print(f'{size_opt}.', "white", ["bold"], flush=True)
 else:
-  right_sol = vcl.verify_vc(answer, instance['graph'])
+  right_sol, rem_edges = vcl.verify_vc(answer, instance['graph'], 1)
   size_ans = len(answer)
 
   if right_sol:
@@ -108,9 +108,18 @@ else:
       TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid vertex cover for the graph. However it`s not minimum (your size is {size_ans}).'), "yellow", ["bold"], flush=True)
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph.'), "red", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph. Edges not covered: '), "red", ["bold"], flush=True, end='')
+    for t in rem_edges:
+      TAc.print(f'{t} ', "red", ["bold"], flush=True, end='')
+    print('\n')
 
 if ENV['plot_sol']:
-  vcl.plot_mvc(instance['graph'],opt_sol)
+  if answer[0] != 'C' and answer[0] != 'c':
+    answer = ' '.join(map(str,answer))
+    vcl.plot_mvc(instance['graph'], answer, rem_edges)
+  else:
+    #vcl.plot_mvc(instance['graph'], opt_sol, instance['graph'].edges())
+    vcl.plot_mvc(instance['graph'], opt_sol, [])
+    
 
 exit(0)

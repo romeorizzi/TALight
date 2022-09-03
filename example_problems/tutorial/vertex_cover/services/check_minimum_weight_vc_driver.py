@@ -93,19 +93,28 @@ if ENV['display']:
     print('\n', flush=True)
 
 if ENV['vc_sol_val'] == '0': # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured minimum weight vertex cover for this graph if you have one. Otherwise, if you only intend to be told about the minimum weight vertex cover, enter "C".'), "yellow", ["bold"], flush=True)
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured minimum weight vertex cover for this graph if you have one (format: integers separated by spaces). Otherwise, if you only intend to be told about the minimum weight vertex cover, enter "C".'), "yellow", ["bold"], flush=True)
   if ENV['plot']:
     vcl.plot_graph(instance['graph'], 1)
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 else:
   answer = ENV['vc_sol_val']
 
+weight_ans = 0
+for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
+  if str(n) in answer:
+    weight_ans += w
+
 if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
   vc_sol, size_sol, weight_sol = vcl.calculate_minimum_weight_vc(instance['graph'])
 else:
   vc_sol = instance['sol']
-  #vc_sol = [int(i) for i in appr_sol.split()]
+  vc_sol = [int(i) for i in vc_sol.split()]
   size_sol = len(vc_sol)
+
+  weight_sol = 0
+  for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
+    weight_sol += w
 
 if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("best-sol", f'A possible minimum weight vertex cover is: '), "green", ["bold"], flush=True, end='')
@@ -116,20 +125,29 @@ if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(f'{weight_sol}.', "white", ["bold"], flush=True)
 
 else:
-  right_sol = vcl.verify_vc(answer, instance['graph'])
+  is_vertex_cover, rem_edges = vcl.verify_vc(answer, instance['graph'], 1)
   size_ans = len(answer)
 
-  if right_sol:
-    if size_ans == size_opt:
+  if is_vertex_cover:
+    if weight_ans == weight_sol:
       TAc.OK()
       TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid minimum weight vertex cover for the graph.'), "green", ["bold"], flush=True)
-    elif size_ans > size_opt:
+    #elif weight_ans  weight_sol:
+    else:
       TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid minimum weight vertex cover for the graph.'), "red", ["bold"], flush=True)
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid minimum vertex cover for the graph.'), "red", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("no-vc-sol", f'We don\'t agree, the solution you provided is not a valid vertex cover for the graph. Edges not covered: '), "red", ["bold"], flush=True, end='')
+    for t in rem_edges:
+      TAc.print(f'{t} ', "red", ["bold"], flush=True, end='')
+    print('\n')
 
 if ENV['plot_sol']:
-  vcl.plot_mvc(instance['graph'],vc_sol,1)
+  if answer[0] != 'C' and answer[0] != 'c':
+    answer = ' '.join(map(str,answer))
+    vcl.plot_mvc(instance['graph'], answer, rem_edges, 1)
+  else:
+    #vcl.plot_mvc(instance['graph'], opt_sol, instance['graph'].edges())
+    vcl.plot_mvc(instance['graph'], vc_sol, [], 1)
 
 exit(0)

@@ -21,5 +21,5 @@ right-best-sol: 'We agree, the solution you provided is a valid 2-approximation 
 right-sol: 'The solution you provided is a valid 2-approximation of the weighted vertex cover for the graph (weight={weight_ans}). You can improve your approximation.'
 new-best-sol: 'Great! The solution you provided is a valid 2-approximation of the weighted vertex cover for the graph (weight={weight_ans}) and it`s better than mine ({weight_sol})!'
 wrong-sol: 'We don`t agree, the solution you provided is not a valid 2-approximation weighted vertex cover for the graph.'
-reason-wrong-sol-no_vc: 'Not a vertex cover.'
+reason-wrong-sol-no_vc: 'Not a vertex cover. Edges not covered: '
 reason-wrong-sol-weight: 'Your solution weight: {weight_ans}; max 2-approximation weight: {2 * min_weight_sol}.'

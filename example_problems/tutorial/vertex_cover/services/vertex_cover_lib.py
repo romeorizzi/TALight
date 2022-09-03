@@ -634,7 +634,7 @@ def calculate_weighted_approx_vc(graph):
 
   
 ## Verifico se un vertex cover fornito in input è un vc valido per il grafo
-def verify_vc(vertices, graph):
+def verify_vc(vertices, graph, ret_edges=0):
   edges_list = list(graph.edges())
   vertices = list(map(int, vertices))
 
@@ -646,9 +646,15 @@ def verify_vc(vertices, graph):
         break
 
   if(len(edges_list) > 0):
-    return 0
+    if not ret_edges:
+      return 0
+    else:
+      return 0, edges_list
   else:
-    return 1
+    if not ret_edges:
+      return 1
+    else:
+      return 1, edges_list
 
 ## Verifico se il vc approssimato fornito dall'utente è tale
 def verify_approx_vc(matching, graph):
@@ -699,24 +705,35 @@ def plot_graph(graph, weighted=0):
 
   plt.show()
  
-def plot_mvc(graph, vertices, weighted=0, approx=0):
+def plot_mvc(graph, vertices, edges, weighted=0, approx=0):
   pos = nx.spring_layout(graph, seed=3113794652)
   vertices = [int(i) for i in vertices.split()]
-  color_map = []
+  v_color_map = []
+  e_color_map = []
+
   for node in graph.nodes():
     if node in vertices:
-      color_map.append('red')
+      v_color_map.append('red')
     else:
-      color_map.append('#00b4d9')
+      v_color_map.append('#00b4d9')
+
+  for e in graph.edges():
+    if e in edges:
+      e_color_map.append('black')
+    else:
+      e_color_map.append('lightgrey')
+
   if not weighted:
-    nx.draw_networkx(graph,pos,node_color=color_map,node_size=500,width=2,with_labels=True)
+    nx.draw_networkx(graph,pos,node_color=v_color_map,node_size=500,edge_color=e_color_map,width=2,with_labels=True)
   else:
     labels = nx.get_node_attributes(graph, 'weight') 
-    nx.draw_networkx(graph,pos,node_color=color_map,node_size=500,width=2,with_labels=True)
+    nx.draw_networkx(graph,pos,node_color=v_color_map,node_size=500,edge_color=e_color_map,width=2,with_labels=True)
     for v in graph.nodes():
       x,y=pos[v]
       plt.text(x,y+0.15,s=labels[v], bbox=dict(facecolor='white', alpha=0.5),horizontalalignment='center')
+
   ax = plt.gca()
+
   if not weighted:
     ax.set_title('Minimum Vertex Cover (red nodes)')
   else:
@@ -724,6 +741,7 @@ def plot_mvc(graph, vertices, weighted=0, approx=0):
       ax.set_title('Minimum Weight Vertex Cover (red nodes)')
     else:
       ax.set_title('2-Approximated Minimum Weight Vertex Cover (red nodes)')
+
   ax.margins(0.20)
   plt.axis("off")
 
