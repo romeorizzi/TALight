@@ -15,4 +15,6 @@ best-sol: 'Un possibile independent set (massimo) è: '
 size-sol: 'La taglia dell`independent set massimo è: '
 right-best-sol: 'Perfetto, la soluzione che hai fornito è un independent set massimo valido per il grafo.'
 right-sol-not-min: 'La soluzione che hai fornito è un independent set valido per il grafo. Tuttavia non è di taglia massima (la tua taglia è {size_ans}).'
-wrong-sol: 'Spiacente, la soluzione che hai fornito NON è un independent set valido per il grafo.'
+wrong-sol: 'Spiacente, la soluzione che hai fornito NON è un independent set valido per il grafo. Questi archi collegano i nodi: '
+vertex-cover: 'Spiacente, la soluzione che hai fornito NON è un independent set valido per il grafo: hai fornito un vertex cover.'
+

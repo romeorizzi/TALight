@@ -82,12 +82,17 @@ if ENV['display']:
   TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], flush=True)
 
 if ENV['vc_sol_val'] == '0': # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured vertex cover for this graph if you have one. Otherwise, if you only intend to be told about the vertex cover, enter "C".'), "yellow", ["bold"], flush=True)
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured vertex cover for this graph if you have one (format: integers separated by spaces). Otherwise, if you only intend to be told about the vertex cover, enter "C".'), "yellow", ["bold"], flush=True)
   if ENV['plot']:
     vcl.plot_graph(instance['graph'])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 else:
   answer = [int(i) for i in ENV['vc_sol_val'].split()]
+
+for v in answer:
+  if int(v) not in instance['graph'].nodes():
+    TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
+    exit(0)
 
 size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
 
@@ -121,5 +126,4 @@ if ENV['plot_sol']:
     #vcl.plot_mvc(instance['graph'], opt_sol, instance['graph'].edges())
     vcl.plot_mvc(instance['graph'], opt_sol, [])
     
-
 exit(0)

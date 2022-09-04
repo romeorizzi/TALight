@@ -87,6 +87,11 @@ if ENV['vc_sol_val'] == '0': # manual insertion
 else:
   answer = ENV['vc_sol_val']
 
+for v in answer:
+  if int(v) not in instance['graph'].nodes():
+    TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
+    exit(0)
+
 opt_sol, size_opt, weight_opt = vcl.calculate_minimum_weight_vc(instance['graph'])
 opt_sol = opt_sol.split()
 opt_sol = [int(x) for x in opt_sol]
@@ -123,6 +128,7 @@ else:
   edges = list(instance['graph'].edges())
 
   if not vc_sol:
+    rem_edges = []
     # Controllo che i nodi non siano collegati da un arco
     for i in range(size_ans -1):
       for ii in range(i+1,size_ans):
@@ -131,25 +137,33 @@ else:
 
         if edge in edges:
           ind_set_check = False
+          rem_edges.append(edge)
           break
 
-      if not ind_set_check:
-        break
+      #if not ind_set_check:
+      #  break
 
     if ind_set_check:
       if weight_ans == weight_indset:
         TAc.OK()
         TAc.print(LANG.render_feedback("right-best-sol", f'We agree, the solution you provided is a valid maximum weight independent set for the graph.'), "green", ["bold"], flush=True)
       elif weight_ans > weight_indset:
-        TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is a valid independent set for the graph (not maximum).'), "yellow", ["bold"], flush=True)
+        TAc.print(LANG.render_feedback("right-sol-not-min", f'The solution you provided is not a maximum weight independent set.'), "yellow", ["bold"], flush=True)
     else:
       TAc.NO()
-      TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid maximum weight independent set for the graph.'), "red", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid maximum weight independent set for the graph. These edges connect nodes: '), "red", ["bold"], flush=True)
+      for t in rem_edges:
+        TAc.print(f'{t} ', "red", ["bold"], flush=True, end='')
+      print('\n')
   else:
     TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the solution you provided is not a valid independent set for the graph.'), "red", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("vertex-cover", f'We don\'t agree, the solution you provided is not a valid independent set for the graph: you provide a vertex cover.'), "red", ["bold"], flush=True)
 
 if ENV['plot_sol']:
-  vcl.plot_indset(instance['graph'], ind_set,1)
+  if answer[0] != 'C' and answer[0] != 'c':
+    answer = ' '.join(map(str,answer))
+    vcl.plot_indset(instance['graph'], answer, rem_edges, 1)
+  else:
+    vcl.plot_indset(instance['graph'], ind_set, [], 1)
 
 exit(0)
