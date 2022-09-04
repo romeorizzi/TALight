@@ -657,32 +657,46 @@ def verify_vc(vertices, graph, ret_edges=0):
       return 1, edges_list
 
 ## Verifico se il vc approssimato fornito dall'utente è tale
-def verify_approx_vc(matching, graph):
+def verify_approx_vc(matching, graph, ret_edges=0):
   curG = graph.copy()
   max_matching = [eval(t) for t in matching]
-
+  
   visited = []
   
-  while curG.number_of_edges() != 0:
-    for e in max_matching:
-      e = tuple(sorted(e))
-      if e not in visited:
-        curG.remove_edge(e[0],e[1])
-      else: 
+  for e in max_matching:
+    e = tuple(sorted(e))
+    if e not in visited:
+      curG.remove_edge(e[0],e[1])
+    else: 
+      if ret_edges == 1:
+        return 0, 1, e
+      else:
         return 0
 
-      for v in e:
-        for e1 in list(curG.edges())[:]:
-          if v in e1 and e1 not in visited:
-            curG.remove_edge(e1[0],e1[1])
-            visited.append(e1)
+    for v in e:
+      for e1 in list(curG.edges())[:]:
+        if v in e1 and e1 not in visited:
+          curG.remove_edge(e1[0],e1[1])
+          visited.append(e1)
+
+  if curG.number_of_edges() != 0:
+    if ret_edges == 1:
+      return 0, 2, curG.edges()
+    else:
+      return 0
 
   for e in max_matching:
     for v in e:
       if v in visited:
-        return 0
+        if ret_edges == 1:
+          return 0, 3, v
+        else:
+          return 0
 
-  return 1
+  if ret_edges == 1:
+    return 1, 0, []
+  else:
+    return 1
 
 '''
 VARIE: PLOT

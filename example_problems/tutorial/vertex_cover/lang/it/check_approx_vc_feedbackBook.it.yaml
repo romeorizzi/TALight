@@ -18,3 +18,7 @@ right-best-sol: 'Perfetto, la soluzione che hai fornito è una 2-approssimazione
 right-sol: 'La soluzione che hai fornito è una 2-approssimazione valida del vertex cover per il grafo. Puoi migliorare la tua approssimazione.'
 new-best-sol: 'Grande! La soluzione che hai fornito è una 2-approssimazione valida del vertex cover per il grafo ed è migliore della mia!'
 wrong-sol: 'Spiacente, la soluzione che hai fornito NON è una 2-approssimazione del vertex cover valida per il grafo.'
+edge-incident: 'Motivo: arco {data} incidente ad un altro.'
+not-vertex-cover: 'Motivo: non è un vertex cover. Archi non coperti: '
+node-already-visited: 'Motivo: vertice {data} già visitato.'
+edge-not-in-graph: 'Arco {e} non presente nel grafo. Interrompo.'

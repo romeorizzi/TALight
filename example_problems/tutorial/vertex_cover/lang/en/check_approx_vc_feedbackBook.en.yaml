@@ -18,3 +18,7 @@ right-best-sol: 'We agree, the solution you provided is a valid 2-approximation 
 right-sol: 'The solution you provided is a valid 2-approximation vertex cover for the graph. You can improve your approximation.'
 new-best-sol: 'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it`s better than mine!'
 wrong-sol: 'We don`t agree, the solution you provided is not a valid 2-approximation vertex cover for the graph.'
+edge-incident: 'Reason: edge {data} incident to another one.'
+not-vertex-cover: 'Reason: not a vertex cover. Edges not covered: '
+node-already-visited: 'Reason: vertex {data} already visited.'
+edge-not-in-graph: 'Edge {e} not in the graph. Aborting.'
