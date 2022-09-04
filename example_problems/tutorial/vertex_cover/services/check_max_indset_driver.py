@@ -80,10 +80,11 @@ if ENV['vc_sol_val'] == '0': # manual insertion
 else:
   answer = ENV['vc_sol_val']
 
-for v in answer:
-  if int(v) not in instance['graph'].nodes():
-    TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
-    exit(0)
+if answer[0] != 'C' and answer[0] != 'c':
+  for v in answer:
+    if int(v) not in instance['graph'].nodes():
+      TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
+      exit(0)
 
 size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
 opt_sol = opt_sol.split()
