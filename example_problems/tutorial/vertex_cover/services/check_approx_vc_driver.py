@@ -83,6 +83,13 @@ else:
   #answer = [eval(t) for t in ENV['vc_sol_val'].split()]
   answer = ENV['vc_sol_val']
 
+if answer[0] != 'C' and answer[0] != 'c':
+  for t in answer:
+    if eval(t) not in instance['graph'].edges():
+      #TAc.print(LANG.render_feedback("edge-not-in-graph", f'Edge {eval(t)} is not an edge of the graph. Aborting'), "red", ["bold"], flush=True)
+      TAc.print(f'Edge {eval(t)} is not an edge of the graph. Aborting', "red", ["bold"], flush=True)
+      exit(0)
+
 if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
   size_sol,appr_sol,max_matching = vcl.calculate_approx_vc(instance['graph'], 'greedy')
 else:
