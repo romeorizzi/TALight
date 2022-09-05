@@ -11,6 +11,7 @@ import vertex_cover_lib as vcl
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('source',str),
+    ('collection',str),
     ('instance_id',int),
     ('instance_format',str),
     ('num_vertices',int),
@@ -41,7 +42,8 @@ if ENV['source'] != 'catalogue':
     instance_str = vcl.instance_to_str(instance, format_name=ENV['instance_format'])
     output_filename = f"random_instance_{ENV['seed']}.{ENV['instance_format']}.txt"
 else: # Get instance from catalogue
-    instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
+    #instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
+    instance_str = TALf.get_catalogue_instancefile_as_str_from_id_collection_and_ext(ENV["collection"], ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
     instance = vcl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
     output_filename = f"instance_{ENV['instance_id']}.{ENV['instance_format']}.txt"
 

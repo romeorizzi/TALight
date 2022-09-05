@@ -12,6 +12,7 @@ import vertex_cover_lib as vcl
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
     ('source',str),
+    ('collection',str),
     ('instance_id',int),
     ('instance_format',str),
     ('num_vertices',int),
@@ -64,7 +65,8 @@ elif ENV["source"] == 'randgen_1':
   instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
 
 else: # take instance from catalogue
-  instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
+  #instance_str = TALf.get_catalogue_instancefile_as_str_from_id_and_ext(ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
+  instance_str = TALf.get_catalogue_instancefile_as_str_from_id_collection_and_ext(ENV["collection"], ENV["instance_id"], format_extension=vcl.format_name_to_file_extension(ENV["instance_format"],'instance'))
   instance = vcl.get_instance_from_str(instance_str, instance_format_name=ENV["instance_format"])
   TAc.print(LANG.render_feedback("instance-from-catalogue-successful", f'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'), "yellow", ["bold"], flush=True)
 
