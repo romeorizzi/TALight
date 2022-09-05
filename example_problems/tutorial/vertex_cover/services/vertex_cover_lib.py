@@ -12,9 +12,9 @@ from termcolor import colored
 from contextlib import redirect_stdout
 from networkx.algorithms import approximation
 
-AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_info':'with_info.txt', 'vc_dat':'.dat'},'solution':{'all_solutions': 'all_solutions.txt'}}
+AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_info':'with_info.txt', 'vc_dat':'.dat'},'solution':{'exact_sol': 'exact_sol.txt', 'approx_sol':'approx_sol.txt'}}
 DEFAULT_INSTANCE_FORMAT='with_info'
-DEFAULT_SOLUTION_FORMAT='all_solutions'
+DEFAULT_SOLUTION_FORMAT='exact_sol'
 
 def format_name_to_file_extension(format_name, format_gender):
     assert format_gender in AVAILABLE_FORMATS, f'No format has been adopted for objects of the gender `{format_gender}`.'
