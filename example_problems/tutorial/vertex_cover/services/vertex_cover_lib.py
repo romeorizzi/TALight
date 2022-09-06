@@ -83,6 +83,9 @@ def instance_to_txt_str(instance, format_name="with_info"):
           output += '0\n'
 
       output += f'{instance["risp"]}\n'
+      
+      if 'risp_weight' in instance:
+        output += f'{instance["risp_weight"]}\n'
 
     #output += '\n'
 
@@ -134,6 +137,9 @@ def get_instance_from_txt(instance_as_str, format_name):
 
       instance['exact_sol'] = int(str_to_arr[2])
       instance['sol'] = str_to_arr[3]
+      
+      if instance['weighted']:
+        instance['sol_weight'] = str_to_arr[4]
 
     else:
       v_e_w_split = str_to_arr[0].split(' ')
@@ -164,6 +170,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       if instance['weighted']:
         instance['exact_sol'] = int(str_to_arr[3])
         instance['sol'] = str_to_arr[4]
+        instance['sol_weight'] = str_to_arr[5]
       else:
         instance['exact_sol'] = int(str_to_arr[2])
         if instance['exact_sol']:
@@ -187,7 +194,8 @@ def update_instance_txt(path, file, new_data, weighted=0):
       lines = open(full_path, 'r').readlines()
 
       if weighted:
-        lines[-2] = f'{new_data}\n'
+        #lines[-2] = f'{new_data}\n'
+        lines[-3] = f'{new_data}\n'
       else:
         lines[-3:-1] = f'{new_data}\n'
 

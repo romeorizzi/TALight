@@ -88,14 +88,23 @@ if answer[0] != 'C' and answer[0] != 'c':
       TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
       exit(0)
 
-size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
-opt_sol = opt_sol.split()
-opt_sol = [int(x) for x in opt_sol]
 ind_set = []
 
-for v in range(instance['num_vertices']):
-  if v not in opt_sol:
-    ind_set.append(v)
+if (ENV['source'] == "catalogue" and instance['exact_sol'] != 1) or (ENV['source'] != "catalogue"):
+  size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
+  opt_sol = opt_sol.split()
+  opt_sol = [int(x) for x in opt_sol]
+
+  for v in range(instance['num_vertices']):
+    if v not in opt_sol:
+      ind_set.append(v)
+
+else:
+  for v in instance['graph'].nodes():
+    if v not in [int(i) for i in instance['sol'].split()]:
+      ind_set.append(v)
+
+    size_opt = len(instance['sol'].split())
 
 ind_set = ' '.join(map(str, ind_set))
 

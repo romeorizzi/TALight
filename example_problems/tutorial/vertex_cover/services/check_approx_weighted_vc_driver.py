@@ -127,10 +127,13 @@ else:
   appr_sol = [int(i) for i in appr_sol.split()]
   size_sol = len(appr_sol)
 
+  weight_sol = instance['sol_weight']
+
+  '''
   weight_sol = 0
   for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
     weight_sol += w
-  
+  '''
 
 if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated weighted vertex cover is: '), "green", ["bold"], flush=True, end='')
@@ -156,10 +159,11 @@ else:
       TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation of the weighted vertex cover for the graph (weight={weight_ans}) and it\'s better than mine ({weight_sol})!'), "green", ["bold"], flush=True)
       
       if ENV['source'] == 'catalogue' and not instance['exact_sol']:
-        path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances')
+        #path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances')
+        path=os.path.join(ENV.META_DIR, 'instances_catalogue', ENV['collection'])
         instance_filename = f'instance_{str(ENV["instance_id"]).zfill(3)}'
         answer = ' '.join(map(str, answer))
-        answer = f'{answer}'
+        answer = f'{answer}\n{weight_ans}'
 
         vcl.update_instance_txt(path, instance_filename, answer)
   else:

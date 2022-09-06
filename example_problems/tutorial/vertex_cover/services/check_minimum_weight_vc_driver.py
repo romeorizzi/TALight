@@ -121,9 +121,13 @@ else:
   vc_sol = [int(i) for i in vc_sol.split()]
   size_sol = len(vc_sol)
 
+  weight_sol = instance['sol_weight']
+
+  '''
   weight_sol = 0
   for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
     weight_sol += w
+  '''
 
 if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("best-sol", f'A possible minimum weight vertex cover is: '), "green", ["bold"], flush=True, end='')

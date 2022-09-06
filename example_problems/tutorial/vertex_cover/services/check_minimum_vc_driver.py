@@ -97,7 +97,11 @@ if answer[0] != 'C' and answer[0] != 'c':
       TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
       exit(0)
 
-size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
+if (ENV['source'] == "catalogue" and instance['exact_sol'] != 1) or (ENV['source'] != "catalogue"):
+  size_opt, opt_sol = vcl.calculate_minimum_vc(instance['graph'])
+else:
+  opt_sol = instance['sol']
+  size_opt = len(instance['sol'].split())
 
 if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("best-sol", f'A possible minimum vertex cover is: '), "green", ["bold"], flush=True, end='') 

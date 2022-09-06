@@ -133,7 +133,8 @@ else:
       TAc.print(LANG.render_feedback("new-best-sol", f'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it\'s better than mine!'), "green", ["bold"], flush=True)
       
       if ENV['source'] == 'catalogue' and not instance['exact_sol'] and not instance['weighted']:
-        path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances')
+        #path=os.path.join(ENV.META_DIR, 'instances_catalogue', 'all_instances')
+        path=os.path.join(ENV.META_DIR, 'instances_catalogue', ENV['collection'])
         instance_filename = f'instance_{str(ENV["instance_id"]).zfill(3)}'
         answer = ' '.join(map(str, answer))
         risp = f'{answer.replace(",", " ").replace("(", "").replace(")","")}'
