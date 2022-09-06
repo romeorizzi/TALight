@@ -17,3 +17,6 @@ best-sol: 'The solution value is {sheets}.'
 print-sol: 'Here is the graphical solution:'
 right-best-sol: 'We agree, the solution value you provided is the right one.'
 wrong-best-sol: 'We don\''t agree, the solution value you provided is not the right one.'
+wrong-best-sol-gt: 'Your solution has more sheets than the right one.'
+wrong-best-sol-lt: 'Your solution has less sheets than the right one.'
+

@@ -108,6 +108,10 @@ else:
   else:
     TAc.NO()
     TAc.print(LANG.render_feedback("wrong-best-sol", f'We don\'t agree, the solution value you provided is not the right one.'), "red", ["bold"])
+    if answer > sheets:
+      TAc.print(LANG.render_feedback("wrong-best-sol-gt", f'Your solution has more sheets than the right one.'), "red", ["bold"])
+    elif answer < sheets:
+      TAc.print(LANG.render_feedback("wrong-best-sol-lt", f'Your solution has less sheets than the right one.'), "red", ["bold"])
     
 if ENV['print_sol']:
   sol_arr = sol.split('\n')
