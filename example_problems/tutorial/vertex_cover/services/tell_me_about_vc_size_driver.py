@@ -93,7 +93,11 @@ if answer > instance['num_vertices']:
   TAc.print(LANG.render_feedback("invalid-k", f'ERROR: size k can\'t be higher than the number of vertices.'), "red", ["bold"])
   exit(0)
 
-size, vc = vcl.calculate_minimum_vc(instance['graph'])
+if (ENV['source'] == "catalogue" and instance['exact_sol'] != 1) or (ENV['source'] != "catalogue"):
+  size, vc = vcl.calculate_minimum_vc(instance['graph'])
+else:
+  vc = instance['sol']
+  size = len(instance['sol'].split())
 
 if answer == 0:
   TAc.print(LANG.render_feedback("best-sol", f'Size k of the minimum vertex cover is: '), "green", ["bold"], flush=True, end='')
