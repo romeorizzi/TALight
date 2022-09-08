@@ -9,7 +9,7 @@ services:
       pwd:
         regex: ^(.*)$
         default: ""
-        explain: di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema).
+        explain: "di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema)."
 
       # section with the instance assigned to the problem-solver/student:
       n:
@@ -27,13 +27,13 @@ services:
       forbidden_edges:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad evitare questi archi
+        explain: "ci interessano gli MST tenuti ad evitare questi archi"
         example1: "il valore di default [], dove nessun arco è proibito, offre il nostro primo running example"
         example2: "il valore [1] offre il nostro secondo running example, dove l'arco e1 è il solo arco ad essere proibito"
       forced_edges:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad includere questi archi
+        explain: "ci interessano gli MST tenuti ad includere questi archi"
       query_edge:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
@@ -60,7 +60,7 @@ services:
       num_opt_sols:
         regex: ^(.*)$
         default: 2
-        explain: il numero di soluzioni ottime differenti
+        explain:  "il numero di soluzioni ottime differenti"
         example1: "2 è la risposta corretta per il Caso d'Esempio 1 (tutti i valori al loro default)"
         example2: "1 è la risposta corretta per il Caso d'Esempio 2 (dove un arco è proibito)"
       list_opt_sols:
@@ -68,24 +68,23 @@ services:
         default: "[[0,1],[0,2]]"
         explain: "la lista di tutte le soluzioni ottime (in qualsiasi ordine)"
         example: "il valore di default è risposta corretta per il Caso d'Esempio 1 (ma scambiare le due soluzioni nell'elenco, o gli elementi all'interno di una stessa sottolista, non farebbe differenza); per il Caso d'Esempio 2, si ometta la seconda ed ultima soluzione della lista"
-
       edge_profile:
         regex: ^(.*)$
         default: "in_all"
-        explain: expected one string among:\n     [in_all] if the query arc belongs to all MSTs.\n     [in_no] if the query arc belongs to no MSTs.\n     [in_some_but_not_in_all] if the query arc belongs to some MST but there also exist MSTs that do not use the query arc."
+        explain: "expected one string among: [in_all] if the query arc belongs to all MSTs. [in_no] if the query arc belongs to no MSTs. [in_some_but_not_in_all] if the query arc belongs to some MST but there also exist MSTs that do not use the query arc."
         example: "il valore di default è risposta corretta per il Caso d'Esempio 1"
-      cyc_cert:
+      cyc_cert:  #FIXME: rappresenta un ciclo, se in quel ciclo il query_edge è quello di peso strettamente maggiore allora non è in nessuna soluzione.
         regex: ^(.*)$
         default: "[]"
-        explain: expected a cyclic sequence of edges. The sequence is left empty in case no certificate cycle is present.
-      edgecut_cert:
+        explain: "expected a cyclic sequence of edges. The sequence is left empty in case no certificate cycle is present."
+      edgecut_cert:  #FIXME: nel momento in cui noi andiamo a tagliare mst(albero) nel query_edge, automaticamente ci da le due shore, dimostriamo che tutti gli archi del grafo che connetto le due shore, hanno peso strettamente maggiore rispetto al query_edge( query_edge deve essere l'arco di peso strettamente minore)
         regex: ^(.*)$
         default: "[0,1]"
-        explain: expected a cut of the graph in the form of a list of edges
+        explain: "expected a cut of the graph in the form of a list of edges"
         example: "[0,1] would be the correct edgecut certificate per il Caso d'Esempio 1. Indeed to prove that arc e0 is in all optimal solution consider that arc e0 is the one of strictly minimum cost in the cut comprising the arcs e0 and e1."
-      cutshore_cert:
+      cutshore_cert:  #FIXME: date le due shore dal taglio, ne restituiamo quella più piccola.
         regex: ^(.*)$
-        explain: expected a cut of the graph in the form of a non-empty list of nodes leaving out at least one node. These nodes form one shore of the intended cut.
+        explain: "expected a cut of the graph in the form of a non-empty list of nodes leaving out at least one node. These nodes form one shore of the intended cut."
         default: "[0]"
         example: "[0] would be the correct cutshore certificate per il Caso d'Esempio 1. Indeed to prove that arc e0 is in all optimal solution consider that arc e0 is the one of strictly minimum cost in the cut separating node v0 from the other nodes of the graph."
 
@@ -173,15 +172,14 @@ services:
       forbidden_edges:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad evitare questi archi
-        example1: Il primo esempio corrisponde ai valori di dafault, dove nessun arco è proibito.
+        explain: "ci interessano gli MST tenuti ad evitare questi archi"
+        example1: "Il primo esempio corrisponde ai valori di dafault, dove nessun arco è proibito."
         example2: "Come secondo esempio, si consideri `forbidden_edges=[0]` dove e0=v0-v1 è il solo arco proibito."
- 
       forced_edges:
         regex: ^(.*)$
         default: "[]"
-        explain: ci interessano gli MST tenuti ad includere questi archi
-        example1: Il primo esempio corrisponde ai valori di dafault, dove nessun arco è obbligato.
+        explain: "ci interessano gli MST tenuti ad includere questi archi"
+        example1: "Il primo esempio corrisponde ai valori di dafault, dove nessun arco è obbligato."
         example2: "Come secondo esempio, si consideri `forbidden_edges=[1]` dove e1=v0-v2 è il solo arco obbligato."
       query_edge:
         regex: ^(0|[1-9][0-9]*)$
@@ -203,8 +201,8 @@ services:
         explain1: "[opt_sol] una soluzione ottima, ossia un insieme di archi che costituisca un MST per l'istanza assegnata (considerati anche gli eventuali vincoli aggiuntivi)"
         explain2: '[opt_val] il minimo costo di una soluzione ammissibile (=somma dei costi degli archi inclusi nella soluzione)'
         explain3: '[num_opt_sols] il numero di soluzioni ottime differenti'
-        explain4: '[list_opt_sols] la lista di tutte le soluzioni ottime (in qualsiasi ordine)'
-        explain5: "[edge_profile] analisi se l'oracle_edge appartenga a tutte, oppure nessuna, oppure alcune ma non tutte le soluzioni ottime, coi relativi certificati di ciclo o di taglio (il certificato di taglio viene fornito sia come insieme di archi che come l'insieme di nodi nella shore più piccola)"
+        explain4: '[list_opt_sols] la lista di tutte le soluzioni ottime (in qualsiasi ordine)' #FIXME: |
+        explain5: "[edge_profile] analisi se l'query_edge appartenga a tutte, oppure nessuna, oppure alcune ma non tutte le soluzioni ottime, coi relativi certificati di ciclo o di taglio (il certificato di taglio viene fornito sia come insieme di archi che come l'insieme di nodi nella shore più piccola)"
         example1: "-a request_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
         example2: "-a request_dict=\"{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}\""
         example3: "se lasci il valore di default (il dizionario vuoto {}) allora ottieni risposta a tutte le possibili domande per cui un solutore è già stato implementato. In tale caso i nomi impiegati nel responso dell'oracolo saranno quelli standard, come quelli nell'Esempio 1"
@@ -242,7 +240,7 @@ services:
       service:
         regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
         default: synopsis
-        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+        explain: "any string without space characters but meant to specify one of the services of the problem %(problem)s"
       metafile:
         regex: ^(default|en|it|[a-zA-Z0-9_]+)$
         default: default

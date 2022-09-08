@@ -1,0 +1,109 @@
+---
+name: graphs_min_spanning_trees
+title: Alberi in un grafo
+tags:
+- grafi
+- buone caratterizzazioni
+- cicli e tagli
+- algoritmi classici su reti
+
+modes: ['free', 'with_checks', 'with_applets']
+
+instance:
+  n: 4
+  m: 7
+  edges: "[({0,1},1),({1,2},2),({1,2},3),({2,3},1),({2,3},1),({2,3},1),({3,0},1)]"
+  forbidden_edges: "[]"
+  forced_edges: "[]"
+
+pages:
+  teoria:
+    https://cms.di.univr.it/home/RO/explain/mst
+
+
+tasks:
+  - 1:
+      general_description_before_task:
+        - {"context":only_instance, "rendition":format_method, "content":"Ogni richiesta del presente esercizio farà riferimento al grafo $G$ offerto nel seguente riquadro. Il grafo $G$ ha __{n}__ nodi, labellati coi primi __{n}__ numeri naturali e __{m}__ archi pesati, labellati coi primi __{m}__ numeri naturali. La lista ordinata degli archi è __{edges}__. Nel grafo forziamo gli archi __{forced_edges}__ e limitiamo gli archi __{forbidden_edges}__. In particolare, si vuole avere un'analisi approfondita di __{query_edge}__. Ecco una rappresentazione di $G$ (da quì puoi scaricarti $G$ in vari formati):\n\n"}
+        - {"context":only_instance, "rendition":from_code, "content":"edge_weighted_graph_2picture(n={n},m={m},edges=[{edges}])"}
+      #     applet_scope: ['download']
+
+      tot_points: 70
+      pt_formato_OK: 0
+      pt_feasibility_OK: 1
+      pt_consistency_OK: 0
+      goals: ['opt_sol', 'opt_val']
+      request: {"context":also_task, "content":'Fornire un albero ricoprente di peso minimo e specificarne il peso complessivo.'}
+      init_answ_cell_msg: "#Inserisci la tua risposta in forma di lista di archi da prendere (esempio: [0, 3, 4, 6])\n opt_sol{task_number}=[]\n #Specificare il peso della soluzione introdotta (un intero, la somma dei pesi degli archi presi):\n opt_val{task_number}=-1"
+      verif: {'TALight_problem_name':'RO_mst', 'checkers':['TALight', 'embedded_in_notebook']}
+      # applet_scope: ['color','drag','download','editweight']
+      # applet_states: ['selection','all_download']
+
+  - 2:
+      tot_points: 60
+      pt_formato_OK: 0
+      pt_feasibility_OK: 0
+      pt_consistency_OK: 0
+      goals: ['num_opt_sols']
+      request: {"context":also_task, "content":'Specificare quanti siano gli alberi ricoprenti di peso minimo.'}
+      init_answ_cell_msg: "#Inserisci la tua risposta (un intero, il numero di soluzioni ottime diverse):\n opt_val{task_number}=-1"
+      verif: {'TALight_problem_name':'RO_mst', 'checkers':['TALight', 'embedded_in_notebook']}
+      # applet_scope: ['color','drag','download','editweight']
+      # applet_states: ['selection','all_download']
+
+
+  - 3:
+      tot_points: 60
+      pt_formato_OK: 1
+      pt_feasibility_OK: 59
+      pt_consistency_OK: 0
+      goals: ['query_edge']
+      query_edge: 0
+      cut_cert_type: free
+      request: {"context":also_task, "content":"Dire, certificandolo, se l'arco ${query_edge}$ appartenga a tutti, oppure a nessuno, oppure a qualcuno ma non tutti gli alberi ricoprenti di peso minimo."}
+      init_answ_cell_msg: "#Inserisci la tua risposta (una stringa tra 'in_all', 'in_no', 'in_some_but_not_in_all'):\ncertificate{task_number}=''\n#Inserisci la tua risposta (una stringa tra 'in_all', 'in_no', 'in_some_but_not_in_all'):\ncertificate{task_number}=''\n#Specificare i certificati necessari a convalidare la tua catalogazione. Se serve un certificato di taglio, puoi limitarti a fornirlo solo come lista degli archi costituenti il taglio (esempio: [0,3,7,2]), oppure solo come lista dei nodi di una delle due shore del taglio (se offri entrambe le descrizioni del taglio certificante verrà verificata la consistenza tra di esse). Se serve un certificato di ciclo, la lista degli archi costituenti il ciclo deve essere ordinata come da una percorrenza del ciclo:\n cyc_cert{task_number}=[0,3,7,2]\n edgecut_cert{task_number}=[0,3,7,2]\n cutshore_cert{task_number}=[0,3,7,2]"
+      verif: {'TALight_problem_name':'RO_mst', 'checkers':['TALight', 'embedded_in_notebook']}
+      # applet_scope: ['color','drag','download','editweight']
+      # applet_states: ['selection','all_download']
+
+
+  - 4:
+      tot_points: 60
+      pt_formato_OK: 1
+      pt_feasibility_OK: 59
+      pt_consistency_OK: 0
+      goals: ['query_edge']
+      query_edge: 4
+      cut_cert_type: free
+      request: {"context":also_task, "content":"Dire, certificandolo, se l'arco ${query_edge}$ appartenga a tutti, oppure a nessuno, oppure a qualcuno ma non tutti gli alberi ricoprenti di peso minimo."}
+      init_answ_cell_msg: "#Inserisci la tua risposta (una stringa tra 'in_all', 'in_no', 'in_some_but_not_in_all'):\ncertificate{task_number}=''\n#Inserisci la tua risposta (una stringa tra 'in_all', 'in_no', 'in_some_but_not_in_all'):\ncertificate{task_number}=''\n#Specificare i certificati necessari a convalidare la tua catalogazione. Se serve un certificato di taglio, puoi limitarti a fornirlo solo come lista degli archi costituenti il taglio (esempio: [0,3,7,2]), oppure solo come lista dei nodi di una delle due shore del taglio (se offri entrambe le descrizioni del taglio certificante verrà verificata la consistenza tra di esse). Se serve un certificato di ciclo, la lista degli archi costituenti il ciclo deve essere ordinata come da una percorrenza del ciclo:\ncyc_cert{task_number}=[0,3,7,2]\nedgecut_cert{task_number}=[0,3,7,2]\ncutshore_cert{task_number}=[0,3,7,2]"
+      verif: {'TALight_problem_name':'RO_mst', 'checkers':['TALight', 'embedded_in_notebook']}
+      # applet_scope: ['color','drag','download','editweight']
+      # applet_states: ['selection','all_download']
+
+  - 5:
+      tot_points: 60
+      pt_formato_OK: 1
+      pt_feasibility_OK: 59
+      pt_consistency_OK: 0
+      goals: ['query_edge']
+      query_edge: 5
+      cut_cert_type: free
+      request: {"context":also_task, "content":"Dire, certificandolo, se l'arco ${query_edge}$ appartenga a tutti, oppure a nessuno, oppure a qualcuno ma non tutti gli alberi ricoprenti di peso minimo."}
+      init_answ_cell_msg: "#Inserisci la tua risposta (una stringa tra 'in_all', 'in_no', 'in_some_but_not_in_all'):\ncertificate{task_number}=''\n#Inserisci la tua risposta (una stringa tra 'in_all', 'in_no', 'in_some_but_not_in_all'):\ncertificate{task_number}=''\n#Specificare i certificati necessari a convalidare la tua catalogazione. Se serve un certificato di taglio, puoi limitarti a fornirlo solo come lista degli archi costituenti il taglio (esempio: [0,3,7,2]), oppure solo come lista dei nodi di una delle due shore del taglio (se offri entrambe le descrizioni del taglio certificante verrà verificata la consistenza tra di esse). Se serve un certificato di ciclo, la lista degli archi costituenti il ciclo deve essere ordinata come da una percorrenza del ciclo:\ncyc_cert{task_number}=[0,3,7,2]\nedgecut_cert{task_number}=[0,3,7,2]\ncutshore_cert{task_number}=[0,3,7,2]"
+      verif: {'TALight_problem_name':'RO_mst', 'checkers':['TALight', 'embedded_in_notebook']}
+      # applet_scope: ['color','drag','download','editweight']
+      # applet_states: ['selection','all_download']
+
+  - 6:
+      tot_points: 40
+      pt_formato_OK: 0
+      pt_feasibility_OK: 1
+      pt_consistency_OK: 0
+      forced_edges: "[4]"
+      goals: ['opt_sol', 'opt_val']
+      request: {"context":also_task, "content":"Fornire un albero ricoprente di peso minimo tra quelli forzati a contenere l'arco __${forced_edges}$__. Specificare il peso complessivo della tua soluzione."}
+      init_answ_cell_msg: "#Inserisci la tua risposta in forma di lista di archi da prendere (esempio: [0, 3, 4, 6])\nopt_sol{task_number}=[]\n#Specificare il peso della soluzione introdotta (un intero, la somma dei pesi degli archi presi):\nopt_val{task_number}=-1"
+      verif: {'TALight_problem_name':'RO_mst', 'checkers':['TALight', 'embedded_in_notebook']}
+      # applet_scope: ['color','drag','download','editweight']
+      # applet_states: ['selection','all_download']
