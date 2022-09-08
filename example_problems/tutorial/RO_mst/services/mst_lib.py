@@ -6,14 +6,14 @@ from typing import Dict
 from RO_verify_submission_gen_prob_lib import verify_submission_gen
 
 # specifiche dell'istanza del problema
-instance_objects_spec = {
+instance_objects_spec = [
     ('n', int),                 # numero di nodi
     ('m', int),                 # numero di archi
     ('edges', str),             # lista degli archi
     ('forbidden_edges', str),   # lista indici degli archi da escludere
     ('forced_edges', str),      # lista indici degli archi obbligati
     ('query_edge', str)         # indice arco da esaminare
-}
+]
 
 # specifiche delle risposte dell'utente
 answer_objects_spec = {
@@ -63,11 +63,12 @@ def check_isolated_nodes_by_forbidden(n: int, edges: list, forbidden_edges: list
     return len(nodes_found) != n
 
 
-def check_tree(tree: list, n: int, edges: list) -> bool:
+def check_tree(tree: list, edges: list, n: int) -> bool:
     """
     Verifica se la lista di archi corrisponde a un albero.
     """
-    graph = nx.MultiGraph(n)
+    graph = nx.MultiGraph()
+    graph.add_nodes_from(list(range(n)))
     for i in tree:
         u, v = list(edges[i][0])    # edges[i] == ({u, v}, w)
         graph.add_edge(u, v)
@@ -163,7 +164,7 @@ class Graph:
         self.edges = []     # lista degli archi, [(u, v, weight, label), ...]
         self.adjacency = [[[] for _ in range(vertices)] for _ in range(vertices)]   # matrice di adiacenza
 
-    def add_edge(self, u: int, v: int, weight: float, label: int) -> None:
+    def add_edge(self, u: int, v: int, weight: float, label: int):
         """
         Aggiungi un arco al grafo.
         """
@@ -171,7 +172,7 @@ class Graph:
         self.adjacency[u][v].append({'weight': weight, 'label': label})
         self.adjacency[v][u].append({'weight': weight, 'label': label})
 
-    def add_all_edges(self, edges: list) -> None:
+    def add_all_edges(self, edges: list):
         """
         Aggiungi una lista di archi pesati, nel formato [({u,v}, w), ...], al grafo attuale.
         """
@@ -236,7 +237,7 @@ class Graph:
 
         return mst, tot_weight  # ritorno lista indice archi es.([0, 2]), peso totale
 
-    def __find_substitute(self, cut: int, tree: set, excluded: set) -> int | None:
+    def __find_substitute(self, cut: int, tree: set, excluded: set):
         """
         Trova un sostituto ideale per l'arco cut
         """
@@ -335,7 +336,7 @@ class Graph:
 
         return list(shore), edgecut
 
-    def __find_cyc_cert(self, visited_nodes: list, visited_edges: list, excluded: list, u: int, target: int) -> list | None:
+    def __find_cyc_cert(self, visited_nodes: list, visited_edges: list, excluded: list, u: int, target: int):
         """
         Trova un certificato di ciclo attraverso DFS.
         """
@@ -395,7 +396,7 @@ class Graph:
                         subtree2.add(v)     # aggiungi v al sotto-albero
 
         # se esistono elementi in comune tra i subtree allora la divisione dell'edgecut non è netta
-        return len(subtree1.intersection(subtree2)) != 0
+        return len(subtree1.intersection(subtree2)) == 0
 
     def check_cyc_cert(self, cyc_cert: list, excluded: list) -> bool:
         """
@@ -444,18 +445,20 @@ def solver(input_to_oracle: dict) -> dict:
     list_opt_sols = graph.all_mst(forced_edges, forbidden_edges)
     num_opt_sols = len(list_opt_sols)
     count = [query_edge in sol for sol in list_opt_sols].count(True)
-    edge_profile = {}
+    cutshore_cert = []
+    edgecut_cert = []
+    cyc_cert = []
     if count == len(list_opt_sols):
-        edge_profile['answ'] = 'in_all'
-        edge_profile['cutshore_cert'], edge_profile['edgecut_cert'] = \
+        edge_profile = 'in_all'
+        cutshore_cert, edgecut_cert = \
             graph.find_cutshore_and_edgecut(query_edge, list(filter(lambda x: query_edge in x, list_opt_sols))[0], set(forbidden_edges))
     elif count > 0:
-        edge_profile['answ'] = 'in_some_but_not_in_all'
-        edge_profile['cutshore_cert'], edge_profile['edgecut_cert'] = \
+        edge_profile = 'in_some_but_not_in_all'
+        cutshore_cert, edgecut_cert = \
             graph.find_cutshore_and_edgecut(query_edge, list(filter(lambda x: query_edge in x, list_opt_sols))[0], set(forbidden_edges))
     else:
-        edge_profile['answ'] = 'in_no'
-        edge_profile['cyc_cert'] = graph.find_cyc_cert(query_edge, forbidden_edges)
+        edge_profile = 'in_no'
+        cyc_cert = graph.find_cyc_cert(query_edge, forbidden_edges)
 
     print(f"input_to_oracle={input_to_oracle}", file=stderr)
     input_data = input_to_oracle["input_data_assigned"]
@@ -662,7 +665,7 @@ class verify_submission_problem_specific(verify_submission_gen):
         edges = ast.literal_eval(self.I.edges)
         forbidden_edges = ast.literal_eval(self.I.forbidden_edges)
         forced_edges = ast.literal_eval(self.I.forced_edges)
-        query_edge = ast.literal_eval(self.I.query_edge)
+        query_edge = self.I.query_edge
 
         if 'opt_sol' in self.goals:
             g = self.goals['opt_sol']
@@ -712,7 +715,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                     return sef.feasibility_NO(g, f"Come '{g.alias}' hai immesso '{g.answ}', ma alcune delle soluzioni "
                                                  f"non rappresentano un albero, pertanto la lista delle soluzioni non"
                                                  f" è valida.")
-                if not check_spanning(answ, n, edges):
+                if not check_spanning(tree, edges, n):
                     return sef.feasibility_NO(g, f"Come '{g.alias}' hai immesso '{g.answ}', ma alcune delle soluzioni "
                                                  f"non coprono tutti nodi, pertanto la lista delle soluzioni non è "
                                                  f"valida.")
@@ -860,7 +863,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             list_opt_sols_g = self.goals['list_opt_sols']
             opt_val_g = self.goals['opt_val']
             list_opt_sols_answ = ast.literal_eval(list_opt_sols_g.answ)
-            sols_weights = [sum([edges[i][2] for i in tree]) for tree in list_opt_sols_answ]
+            sols_weights = [sum([edges[i][1] for i in tree]) for tree in list_opt_sols_answ]
             if any(weight != opt_val_g.answ for weight in sols_weights):
                 return sef.consistency_NO(['list_opt_sols', 'opt_val'],
                                           f"Il peso totale di alcune delle soluzioni in '{list_opt_sols_g.alias}' e "
@@ -896,7 +899,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             cutshore_cert_g = self.goals['cutshore_cert']
             edgecut_cert = ast.literal_eval(edgecut_cert_g.answ)
             cutshore_cert = ast.literal_eval(cutshore_cert_g.answ)
-            if any(((u in cutshore_cert) == (v in cutshore_cert)) for u, v, _, _ in list(filter(lambda x: x[3] in edgecut_cert, edges))):
+            if any(((u in cutshore_cert) == (v in cutshore_cert)) for u, v in [list(edges[i][0]) for i in edgecut_cert]):
                 # dopo aver estratto gli archi dell'edgecut dalla lista degli edges, verifica che ognuno di questi archi non colleghino due nodi nella stessa shore
                 return sef.consistency_NO(['edgecut_cert', 'cutshore_cert'],
                                           f"{cutshore_cert_g.answ} e {edgecut_cert_g.answ} non corrispondono allo "
@@ -919,7 +922,7 @@ class verify_submission_problem_specific(verify_submission_gen):
         edges = ast.literal_eval(self.I.edges)
         forbidden_edges = ast.literal_eval(self.I.forbidden_edges)
         forced_edges = ast.literal_eval(self.I.forced_edges)
-        query_edge = ast.literal_eval(self.I.query_edge)
+        query_edge = self.I.query_edge
 
         # verifica che opt_val sia effettivamente ottimo
         if 'opt_val' in self.goals:
@@ -971,7 +974,6 @@ class verify_submission_problem_specific(verify_submission_gen):
                 if 'edgecut_cert' in self.goals:
                     edgecut_cert_g = self.goals['edgecut_cert']
                     edgecut_cert_answ: list = ast.literal_eval(edgecut_cert_g.answ)
-                    edgecut_cert_answ.remove(query_edge)
                     if any([w <= edges[query_edge][2] for _, _, w, _ in list(filter(lambda x: x[3] in edgecut_cert_answ, edges))]):
                         # ogni peso dell'edgecut sia <= query_edge
                         return sef.optimality_NO(g, f"Secondo il certificato {edgecut_cert_g.alias}, il {g.alias} non "

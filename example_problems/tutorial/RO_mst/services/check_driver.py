@@ -8,7 +8,7 @@ from multilanguage import Env, Lang, TALcolors
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = PSL.instance_objects_spec  # + PSL.additional_infos_spec
-args_list += [(key, 'yaml') for key in PSL.answer_objects_spec]
+args_list += [(key, PSL.answer_objects_spec[key]) for key in PSL.answer_objects_spec]
 args_list += [
     ('pwd', str),
     ('input_data_assigned', 'yaml'),
@@ -44,8 +44,8 @@ input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec, args_lis
 # print(f"input_data_assigned={input_data_assigned}", file=stderr)
 
 PSL.check_instance_consistency(input_data_assigned)
-request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(
-    ENV, PSL.answer_objects_spec, PSL.answer_objects_implemented)
+request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals \
+    = RO_io.check_and_standardization_of_request_answer_consistency(ENV, PSL.answer_objects_spec, PSL.answer_objects_implemented)
 all_data = {"input_data_assigned": input_data_assigned, "long_answer": long_answer_dict, "request": name_of}
 # print(f"all_data={all_data}", file=stderr)
 
