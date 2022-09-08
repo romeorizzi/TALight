@@ -12,7 +12,7 @@ instance_objects_spec = [
     ('edges', str),             # lista degli archi
     ('forbidden_edges', str),   # lista indici degli archi da escludere
     ('forced_edges', str),      # lista indici degli archi obbligati
-    ('query_edge', str)         # indice arco da esaminare
+    ('query_edge', int)         # indice arco da esaminare
 ]
 
 # specifiche delle risposte dell'utente
