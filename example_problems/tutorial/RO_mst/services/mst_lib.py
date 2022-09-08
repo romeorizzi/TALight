@@ -350,7 +350,6 @@ class Graph:
                         if edge['label'] not in excluded and edge['label'] not in visited_edges:
                             if (path := self.__find_cyc_cert(visited_nodes, visited_edges + [edge['label']], excluded, v, target)) is not None:
                                 return path
-                    return None
         else:
             return None
 
