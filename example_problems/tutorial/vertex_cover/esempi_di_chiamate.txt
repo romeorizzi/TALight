@@ -1,0 +1,14 @@
+Note:
+- installare versione sufficientemente aggiornata di networkx
+- avviare il daemon rtald con:
+      rtald -d /home/romeo/TALight/example_problems/tutorial
+
+CLI examples:
+
+rtal connect vertex_cover synopsis
+
+rtal connect vertex_cover synopsis -aservice=check_minimum_vc
+
+rtal connect vertex_cover check_minimum_vc -aseed=474327
+
+rtal connect vertex_cover check_minimum_vc -a plot -a plot_sol
