@@ -4,26 +4,26 @@ public_folder: public
 services:
   check:
     evaluator: [python, services/check_driver.py]
-    description: "given a graph with weighs on its edges, together with an alleged minimum spanning tree (MST) in the form of a subset of its edges, this service checks it and gives feedback about its feasibility, possibly subject to further constraints. The service can also check its optimality but this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server. The service may also check the list of optimal solutions (or their number) provided by the student, or an analysis regarding a specific query edge."
+    description: "Given a graph with weighs on its edges, together with an alleged minimum spanning tree (MST) in the form of a subset of its edges, this service checks it and gives feedback about its feasibility, possibly subject to further constraints. The service can also check its optimality but this information is not made accessible to the student during an exam or exam simulation; it is rather stored on the server. The service may also check the list of optimal solutions (or their number) provided by the student, or an analysis regarding a specific query edge."
     args:
       pwd:
         regex: ^(.*)$
         default: ""
-        explain: "di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema)."
+        explain: "Di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema)."
 
       # section with the instance assigned to the problem-solver/student:
       n:
         regex: ^(0|[1-9][0-9]*)$
         default: 3
-        explain: "numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1. (Parleremo ad esempio del nodo v2.)" 
+        explain: "Numero di nodi del grafo in input. I nodi sono etichettati coi numeri da 0 a n-1. (Parleremo ad esempio del nodo v2.)"
       m:
         regex: ^(0|[1-9][0-9]*)$
         default: 3
-        explain: "numero di archi del grafo in input. Gli archi sono labellati coi numeri da 0 a m-1. (Parleremo ad esempio dell'arco e1.)" 
+        explain: "Numero di archi del grafo in input. Gli archi sono etichettati coi numeri da 0 a m-1. (Parleremo ad esempio dell'arco e1.)"
       edges:
         regex: ^(.*)$
         default: "[({0,1},4),({0,2},5),({1,2},5)]"
-        explain: "lista degli archi (tutti non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti. Nel running example (default) abbiamo 3 archi: e0=v0-v1 di peso 4, e1=v0-v2 di peso 5, e e2=v1-v2 di peso 5."
+        explain: "Lista degli archi (tutti non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti. Nel running example (default) abbiamo 3 archi: e0=v0-v1 di peso 4, e1=v0-v2 di peso 5, e e2=v1-v2 di peso 5."
       forbidden_edges:
         regex: ^(.*)$
         default: "[]"
@@ -33,38 +33,38 @@ services:
       forced_edges:
         regex: ^(.*)$
         default: "[]"
-        explain: "ci interessano gli MST tenuti ad includere questi archi"
+        explain: "Ci interessano gli MST tenuti ad includere questi archi"
       query_edge:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: "specifica l'arco che andrebbe eventualmente analizzato. Ad esempio, da catalogare in base alla sua appartenenza a tutte, o nessuna, o alcune ma non tutte le soluzioni ottime."
+        explain: "Specifica l'arco che andrebbe eventualmente analizzato. Ad esempio, da catalogare in base alla sua appartenenza a tutte, o nessuna, o alcune ma non tutte le soluzioni ottime."
       CAP_FOR_NUM_SOLS:
         regex: ^([1-9][0-9]*)$
         default: 10
-        explain: "se il problem solver invia una lista di soluzioni ammissibili, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque conpleta se raggiunge questa soglia)"
+        explain: "Se il problem solver invia una lista di soluzioni ammissibili, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque completa se raggiunge questa soglia)"
       CAP_FOR_NUM_OPT_SOLS:
         regex: ^([1-9][0-9]*)$
         default: 10
-        explain: "se il problem solver invia una lista di soluzioni otime, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque conpleta se raggiunge questa soglia)"
+        explain: "Se il problem solver invia una lista di soluzioni ottime, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque completa se raggiunge questa soglia)"
 
 
       # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a input_data_assigned=\"{'n':3,'m':3,'edges':[({0,1},4),({0,2},5),({1,2},5)],'forbidden_edges':[],'forced_edges':[],'query_edge':0}\" offre un modo alternativo per immettere il Caso d'Esempio 1, quello con ogni argomento lasciato al valore di default."
-        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+        example: "-a input_data_assigned=\"{'n':3,'m':3,'edges':'[({0,1},4),({0,2},5),({1,2},5)]','forbidden_edges':'[]','forced_edges':'[]','query_edge':0}\" offre un modo alternativo per immettere il Caso d'Esempio 1, quello con ogni argomento lasciato al valore di default."
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # section with the answer of the student to be evaluated and provided a feedback with
       opt_sol:
         regex: ^(.*)$
         default: "[0, 1]"
-        example: "[0, 1] indica la lista di archi [e0, e1]. Questi archi costituiscono una delle due soluzioni ottime per il Caso d'Esempio 1. L'altra soluzione corretta serebbe [0, 2], che è anche l'unica soluzione per il Caso d'Esempio 2."
-        explain: "una soluzione ottima per l'istanza assegnata, ossia un MST per il grafo assegnato"
+        example: "[0, 1] indica la lista di archi [e0, e1]. Questi archi costituiscono una delle due soluzioni ottime per il Caso d'Esempio 1. L'altra soluzione corretta sarebbe [0, 2], che è anche l'unica soluzione per il Caso d'Esempio 2."
+        explain: "Una soluzione ottima per l'istanza assegnata, ossia un MST per il grafo assegnato"
       opt_val:
         regex: ^(.*)$
         default: 9
-        explain: 'il minimo costo (=somma dei costi sugli archi) di una soluzione ammissibile (=spanning tree soggetto ad eventuali vincoli aggiuntivi)'
+        explain: 'Il minimo costo (=somma dei costi sugli archi) di una soluzione ammissibile (=spanning tree soggetto ad eventuali vincoli aggiuntivi)'
         example: "9 è la risposta corretta per i Casi d'Esempio 1 e 2"
       num_opt_sols:
         regex: ^(.*)$
@@ -75,23 +75,23 @@ services:
       list_opt_sols:
         regex: ^(.*)$
         default: "[[0,1],[0,2]]"
-        explain: "la lista di tutte le soluzioni ottime (in qualsiasi ordine)"
-        example: "il valore di default è risposta corretta per il Caso d'Esempio 1 (ma scambiare le due soluzioni nell'elenco, o gli elementi all'interno di una stessa sottolista, non farebbe differenza); per il Caso d'Esempio 2, si ometta la seconda ed ultima soluzione della lista"
+        explain: "La lista di tutte le soluzioni ottime (in qualsiasi ordine)"
+        example: "Il valore di default è risposta corretta per il Caso d'Esempio 1 (ma scambiare le due soluzioni nell'elenco, o gli elementi all'interno di una stessa sottolista, non farebbe differenza); per il Caso d'Esempio 2, si ometta la seconda ed ultima soluzione della lista"
       edge_profile:
         regex: ^(.*)$
         default: "in_all"
-        explain: "expected one string among: [in_all] if the query arc belongs to all MSTs. [in_no] if the query arc belongs to no MSTs. [in_some_but_not_in_all] if the query arc belongs to some MST but there also exist MSTs that do not use the query arc."
-        example: "il valore di default è risposta corretta per il Caso d'Esempio 1"
-      cyc_cert:  #FIXME: rappresenta un ciclo, se in quel ciclo il query_edge è quello di peso strettamente maggiore allora non è in nessuna soluzione.
+        explain: "Expected one string among: [in_all] if the query arc belongs to all MSTs. [in_no] if the query arc belongs to no MSTs. [in_some_but_not_in_all] if the query arc belongs to some MST but there also exist MSTs that do not use the query arc."
+        example: "Il valore di default è risposta corretta per il Caso d'Esempio 1"
+      cyc_cert:
         regex: ^(.*)$
         default: "[]"
         explain: "expected a cyclic sequence of edges. The sequence is left empty in case no certificate cycle is present."
-      edgecut_cert:  #FIXME: nel momento in cui noi andiamo a tagliare mst(albero) nel query_edge, automaticamente ci da le due shore, dimostriamo che tutti gli archi del grafo che connetto le due shore, hanno peso strettamente maggiore rispetto al query_edge( query_edge deve essere l'arco di peso strettamente minore)
+      edgecut_cert:
         regex: ^(.*)$
         default: "[0,1]"
         explain: "expected a cut of the graph in the form of a list of edges"
         example: "[0,1] would be the correct edgecut certificate per il Caso d'Esempio 1. Indeed to prove that arc e0 is in all optimal solution consider that arc e0 is the one of strictly minimum cost in the cut comprising the arcs e0 and e1."
-      cutshore_cert:  #FIXME: date le due shore dal taglio, ne restituiamo quella più piccola.
+      cutshore_cert:
         regex: ^(.*)$
         explain: "expected a cut of the graph in the form of a non-empty list of nodes leaving out at least one node. These nodes form one shore of the intended cut."
         default: "[0]"
@@ -103,15 +103,15 @@ services:
         default: "{}"
         example1: "-a answer_dict=\"{'opt_sol':['A', 'B'], 'opt_val':30}\""
         example2: "-a answer_dict=\"{'opt_sol1':['A', 'B'], 'opt_val1':30}\""
-        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della conegna del task/richiesta di esercizio, (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`answer_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della consegna del task/richiesta di esercizio, (2) collezionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento ('answer_dict'). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
 
       alias_dict:
         regex: ^(.*)$
         example: "{'opt_val1':'opt_val','opt_sol1':'opt_sol'}"
         default: "{}"
-        explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
+        explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica degli oggetti di risposta sottomessi alla valutazione.'
 
-      # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
+      # sezione con gli argomenti che specificano il formato della stringa di feedback e della conformazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyter notebook, browser, ...) (2) il file di output (certificati di sottomissione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova o esame.
       color_implementation:
         regex: ^(ANSI|html|None)$
         default: ANSI
@@ -169,11 +169,11 @@ services:
       n:
         regex: ^(0|[1-9][0-9]*)$
         default: 3
-        explain: "numero di nodi del grafo in input. I nodi sono labellati coi numeri da 0 a n-1. (Parleremo ad esempio del nodo v2.)" 
+        explain: "numero di nodi del grafo in input. I nodi sono etichettati coi numeri da 0 a n-1. (Parleremo ad esempio del nodo v2.)"
       m:
         regex: ^(0|[1-9][0-9]*)$
         default: 3
-        explain: "numero di archi del grafo in input. Gli archi sono labellati coi numeri da 0 a m-1. (Parleremo ad esempio dell'arco e1.)" 
+        explain: "numero di archi del grafo in input. Gli archi sono etichettati coi numeri da 0 a m-1. (Parleremo ad esempio dell'arco e1.)"
       edges:
         regex: ^(.*)$
         default: "[({0,1},4),({0,2},5),({1,2},5)]"
@@ -182,13 +182,13 @@ services:
         regex: ^(.*)$
         default: "[]"
         explain: "ci interessano gli MST tenuti ad evitare questi archi"
-        example1: "Il primo esempio corrisponde ai valori di dafault, dove nessun arco è proibito."
+        example1: "Il primo esempio corrisponde ai valori di default, dove nessun arco è proibito."
         example2: "Come secondo esempio, si consideri `forbidden_edges=[0]` dove e0=v0-v1 è il solo arco proibito."
       forced_edges:
         regex: ^(.*)$
         default: "[]"
         explain: "ci interessano gli MST tenuti ad includere questi archi"
-        example1: "Il primo esempio corrisponde ai valori di dafault, dove nessun arco è obbligato."
+        example1: "Il primo esempio corrisponde ai valori di default, dove nessun arco è obbligato."
         example2: "Come secondo esempio, si consideri `forbidden_edges=[1]` dove e1=v0-v2 è il solo arco obbligato."
       query_edge:
         regex: ^(0|[1-9][0-9]*)$
@@ -197,29 +197,25 @@ services:
       CAP_FOR_NUM_SOLS:
         regex: ^([1-9][0-9]*)$
         default: 10
-        explain: il numero di soluzioni ammissibili ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
-      CAP_FOR_NUM_OPT_SOLS:
-        regex: ^([1-9][0-9]*)$
-        default: 10
-        explain: il numero di soluzioni ottime ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+        explain: "il numero di soluzioni ottime ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia"
 
       # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a input_data_assigned=\"{'n':3,'m':3,'edges':[({0,1},4),({0,2},6),({1,2},5)],'forbidden_edges':[],'forced_edges':[],'query_edge':0}\" offre un modo alternativo per immettere il Caso d'Esempio 1, quello con ogni argomento lasciato al valore di default."
-        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+        example: "-a input_data_assigned=\"{'n':3,'m':3,'edges':'[({0,1},4),({0,2},6),({1,2},5)]','forbidden_edges':'[]','forced_edges':'[]','query_edge':0}\" offre un modo alternativo per immettere il Caso d'Esempio 1, quello con ogni argomento lasciato al valore di default."
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
-      # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare ad ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
+      # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare a ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'oracolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'oracolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una ri-denominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
         explain1: "[opt_sol] una soluzione ottima, ossia un insieme di archi che costituisca un MST per l'istanza assegnata (considerati anche gli eventuali vincoli aggiuntivi)"
         explain2: '[opt_val] il minimo costo di una soluzione ammissibile (=somma dei costi degli archi inclusi nella soluzione)'
         explain3: '[num_opt_sols] il numero di soluzioni ottime differenti'
-        explain4: '[list_opt_sols] la lista di tutte le soluzioni ottime (in qualsiasi ordine)' #FIXME: |
-        explain5: "[edge_profile] analisi se l'query_edge appartenga a tutte, oppure nessuna, oppure alcune ma non tutte le soluzioni ottime, coi relativi certificati di ciclo o di taglio (il certificato di taglio viene fornito sia come insieme di archi che come l'insieme di nodi nella shore più piccola)"
+        explain4: '[list_opt_sols] la lista di tutte le soluzioni ottime (in qualsiasi ordine)'
+        explain5: "[edge_profile] analisi se il query_edge appartenga a tutte, oppure nessuna, oppure alcune ma non tutte le soluzioni ottime, coi relativi certificati di ciclo o di taglio (il certificato di taglio viene fornito sia come insieme di archi che come l'insieme di nodi nella shore più piccola)"
         example1: "-a request_dict=\"{'opt_sol': 'opt_sol', 'opt_val': 'opt_val'}\""
         example2: "-a request_dict=\"{'opt_sol': 'opt_sol1', 'opt_val': 'opt_val1'}\""
         example3: "se lasci il valore di default (il dizionario vuoto {}) allora ottieni risposta a tutte le possibili domande per cui un solutore è già stato implementato. In tale caso i nomi impiegati nel responso dell'oracolo saranno quelli standard, come quelli nell'Esempio 1"
@@ -252,7 +248,7 @@ services:
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
-    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis."
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currently, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis."
     args:
       service:
         regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
