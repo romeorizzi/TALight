@@ -43,12 +43,20 @@ elif ENV["source"] == 'terminal':
   instance['num_vertices'] = ENV['num_vertices']
   instance['num_edges'] = ENV['num_edges']
 
-  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
+  #TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
+  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\n'), "yellow")
 
-  TAc.print(LANG.render_feedback("insert-line", f'Enter graph containing {ENV["num_vertices"]} vertices and {ENV["num_edges"]} edges:'), "yellow", ["bold"])
-  l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
+  TAc.print(LANG.render_feedback("insert-edges", f'Given {ENV["num_vertices"]} vertices labelled with the naturals in the interval [0,{ENV["num_vertices"]-1}], you are now expected to enter {ENV["num_edges"]} edges. To specify an edge, simply enter its two endonodes separated by spaces.'), "yellow", ["bold"])
+  edges = []
+  for i in range(1,1+ENV["num_edges"]):
+    TAc.print(LANG.render_feedback("insert-edge", f'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}],  separated by spaces.'), "yellow", ["bold"])
+    u,v = TALinput(int, 2, TAc=TAc)
+    edges.append([u,v])
 
-  edges = [eval(t) for t in l]
+  for u,v in edges:
+    if u not in range(ENV['num_vertices']) or v not in range(ENV['num_vertices']):
+      TAc.print(f'Edge ({u}, {v}) is not a valid edge for the graph. Aborting.\n', "red", ["bold"], flush=True)
+      exit(0)
 
   if len(edges) != ENV['num_edges']:
     TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
@@ -60,6 +68,11 @@ elif ENV["source"] == 'terminal':
   if len(l) != ENV['num_vertices']:
     TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weights ({len(l)} instead of {ENV["num_vertices"]})\n'), "red", ["bold"])
     exit(0)
+
+  for w in l:
+    if not w.isdigit():
+      TAc.print(LANG.render_feedback("wrong-weights-format", f'\nWeights must be integer numbers. Aborting.\n'), "red", ["bold"])
+      exit(0)
 
   G = nx.Graph()
   G.add_nodes_from([int(v) for v in range(ENV['num_vertices'])])
@@ -129,11 +142,6 @@ else:
 
   weight_sol = instance['sol_weight']
 
-  '''
-  weight_sol = 0
-  for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
-    weight_sol += w
-  '''
 
 if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated weighted vertex cover is: '), "green", ["bold"], flush=True, end='')

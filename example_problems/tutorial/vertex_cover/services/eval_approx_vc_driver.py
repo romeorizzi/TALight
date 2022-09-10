@@ -80,12 +80,9 @@ def test(instance):
   instance['measured_time'] = end-start
 
   ans = []
-  edges = ''
 
   for i in range(0, len(answer), 2):
-    edges = '(' + answer[i] + ',' + answer[i+1] + ')'
-
-    ans.append(edges)
+    ans.append((int(answer[i]), int(answer[i+1])))
 
   if ENV['goal'] == 'feasible':
     size,vc = vcl.calculate_minimum_vc(graph)

@@ -667,7 +667,8 @@ def verify_vc(vertices, graph, ret_edges=0):
 ## Verifico se il vc approssimato fornito dall'utente è tale
 def verify_approx_vc(matching, graph, ret_edges=0):
   curG = graph.copy()
-  max_matching = [eval(t) for t in matching]
+  #max_matching = [eval(t) for t in matching]
+  max_matching = matching
   
   visited = []
   
@@ -779,8 +780,8 @@ def plot_2app_vc(graph, vertices, edges):
       v_color_map.append('red')
     else:
       v_color_map.append('#00b4d9')
-  edges = edges.replace(', ', ',')
-  edges = [eval(t) for t in edges.split()]
+  #edges = edges.replace(', ', ',')
+  #edges = [eval(t) for t in edges.split()]
   edges = [tuple(sorted(t)) for t in edges]
   for e in graph.edges():
     if e in edges:

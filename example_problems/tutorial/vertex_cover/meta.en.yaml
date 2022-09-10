@@ -148,7 +148,7 @@ services:
   ##
   check_minimum_vc:
     evaluator: [python, services/check_minimum_vc_driver.py]
-    description: 'This service checks if your vertex cover it`s the minimum vertex cover for the given graph or not'
+    description: 'This service checks if your vertex cover is the minimum vertex cover for the given graph or not'
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
@@ -179,10 +179,6 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Number of edges that connect the vertices of the graph'
-      weighted:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Generates a graph with weighted nodes'
       plot:
         regex: ^(0|1)$
         default: 0
@@ -217,7 +213,7 @@ services:
   ##
   check_minimum_weight_vc:
     evaluator: [python, services/check_minimum_weight_vc_driver.py]
-    description: 'This service checks if your vertex cover it`s the minimum weight vertex cover for the given graph or not'
+    description: 'This service checks if your vertex cover is the minimum weight vertex cover for the given graph or not'
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
@@ -282,7 +278,7 @@ services:
   ##
   check_approx_vc:
     evaluator: [python, services/check_approx_vc_driver.py]
-    description: 'This service checks if your approximation of the weighted vertex cover it`s correct or not'
+    description: 'This service checks if your approximation of the weighted vertex cover is correct or not'
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
@@ -348,7 +344,7 @@ services:
   ##
   check_approx_weighted_vc:
     evaluator: [python, services/check_approx_weighted_vc_driver.py]
-    description: 'This service checks if your approximation of the vertex cover it`s correct or not'
+    description: 'This service checks if your approximation of the vertex cover is correct or not'
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
