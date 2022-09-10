@@ -5,8 +5,10 @@ feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servi
 
 # NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 successful-load: 'Istanza caricata con successo.'
-waiting-line: '#? In attesa del grafo\nFormato del grafo: (x,y) (w,z) ... (n,m) \n'
-insert-line: 'Inserisci il grafo formato da {ENV["num_vertices"]} vertici e {ENV["num_edges"]} archi:'
+waiting-line: '#? In attesa del grafo.\n'
+insert-edges: 'Dati {ENV["num_vertices"]} vertici etichettati con numeri naturali [0,{ENV["num_vertices"]-1}], dovresti ora inserire {ENV["num_edges"]} archi. Per specificare un arco, inserisci semplicemente i d
+ue endpoint separati da spazi.'
+insert-edge: 'Inserisci i due endpoint dell`arco {i}: inserisci cioè una linea composta da due numeri naturali nell`intervallo [0,{ENV["num_vertices"]-1}], separati da spazi.'
 wrong-edges-number: '\nNumero di archi errato ({len(edges)} invece di {ENV["num_edges"]})\n'
 instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo.'
 this-is-the-instance: '\nEcco l`istanza:\n'

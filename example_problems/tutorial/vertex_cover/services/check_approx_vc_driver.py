@@ -95,6 +95,7 @@ if ENV['vc_sol_val'] == '0': # manual insertion
       TAc.print(LANG.render_feedback("invalid-input", f'Input must be an integer number or "C". Aborting.\n'), "red", ["bold"], flush=True)
       exit(0)
 
+    TAc.print(LANG.render_feedback("waiting-matching", f'Please, provide the maximal matching:'), "yellow", ["bold"], flush=True)
     answer = []
     for i in range(int(choice[0])):
       TAc.print(LANG.render_feedback("insert-edge", f'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}],  separated by spaces.'), "yellow", ["bold"], flush=True)

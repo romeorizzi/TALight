@@ -108,26 +108,12 @@ total_weight = 0
 for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
   total_weight += w
 
-# Check parametri
-if not ENV['weighted']:
-  if ENV['upper_bound'] > ENV['num_vertices']:
-    TAc.print(LANG.render_feedback("invalid-upper-bound", f'\nERROR: upper bound can\'t be greater than the number of vertices.\n'), "red", ["bold"])
-    exit(0)
-else:
-  if ENV['upper_bound'] > total_weight:
-    TAc.print(LANG.render_feedback("invalid-upper-bound-weighted", f'\nERROR: upper bound can\'t be greater than the number of vertices.\n'), "red", ["bold"])
-    exit(0)
-
-if ENV['lower_bound'] <= 0:
-  TAc.print(LANG.render_feedback("invalid-lower-bound", f'\nERROR: lower bound must be greater than 0.\n'), "red", ["bold"])
-  exit(0)
-
 # Calcolo soluzione
 if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
   if ENV['weighted']:
     vc_sol, size_sol, weight_sol = vcl.calculate_minimum_weight_vc(instance['graph'])
   else:
-    vc_sol, size_sol = vcl.calculate_minimum_vc(instance['graph'])
+    size_sol, vc_sol = vcl.calculate_minimum_vc(instance['graph'])
 else:
   vc_sol = instance['sol']
   vc_sol = [int(i) for i in vc_sol.split()]
@@ -139,41 +125,64 @@ else:
 TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"], flush=True)
 TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], flush=True)
 
-TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured size k of the vertex cover: if exists a vertex cover of size at least k, you will get a positive answer. Otherwise, if you only intend to be told about the size k of the vertex cover, enter 0.'), "yellow", ["bold"], flush=True)
+if ENV['weighted']:
+  TAc.print(LANG.render_feedback("nocover-weight", f'\nNo cover weight of the graph: {total_weight}\n'), "white", ["bold"], flush=True)
 
 if ENV['plot']:
   vcl.plot_graph(instance['graph'])
 
-answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
-answer = int(answer[0])
-
-  
-if answer > instance['num_vertices']:
-  TAc.print(LANG.render_feedback("invalid-k", f'ERROR: size k can\'t be higher than the number of vertices.'), "red", ["bold"])
-  exit(0)
-
-if (ENV['source'] == "catalogue" and instance['exact_sol'] != 1) or (ENV['source'] != "catalogue"):
-  size, vc = vcl.calculate_minimum_vc(instance['graph'])
+# controlli lb / ub
+if not ENV['lower_bound']:
+  TAc.print(LANG.render_feedback("insert-lower-bound", 'Insert lower bound: '), "yellow", ["bold"], flush=True)
+  lower_bound = TALinput(int, 1, TAc=TAc)[0]
 else:
-  vc = instance['sol']
-  size = len(instance['sol'].split())
+  lower_bound = ENV['lower_bound'] + 1
 
-if answer == 0:
-  TAc.print(LANG.render_feedback("best-sol", f'Size k of the minimum vertex cover is: '), "green", ["bold"], flush=True, end='')
-  TAc.print(f'{size}.', "white", ["bold"], flush=True)
+if not ENV['upper_bound']:
+  TAc.print(LANG.render_feedback("insert-upper-bound", 'Insert upper bound: '), "yellow", ["bold"], flush=True)
+  upper_bound = TALinput(int, 1, TAc=TAc)[0]
 else:
+  upper_bound = ENV['upper_bound']
 
-  if answer == size:
+if not ENV['weighted']:
+  if upper_bound > instance['num_vertices']:
+    TAc.print(LANG.render_feedback("wrong-ub-value", f'Upper bound must be lower than {instance["num_vertices"] - 1}. Aborting.\n'), "red", ["bold"], flush=True)
+    exit(0)
+  if upper_bound < lower_bound:
+    TAc.print(LANG.render_feedback("wrong-lb-ub-value", f'Upper bound must be greater than lower bound . Aborting.\n'), "red", ["bold"], flush=True)
+  if lower_bound <= 0:
+    TAc.print(LANG.render_feedback("wrong-lb-value", f'Lower bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
+    exit(0)
+else:
+  if upper_bound > total_weight:
+    TAc.print(LANG.render_feedback("wrong-ub-value-w", f'Upper bound must be lower than {total_weight}. Aborting.\n'), "red", ["bold"], flush=True)
+    exit(0)
+  if upper_bound < lower_bound:
+    TAc.print(LANG.render_feedback("wrong-lb-ub-value", f'Upper bound must be greater than lower bound . Aborting.\n'), "red", ["bold"], flush=True)
+  if lower_bound <= 0:
+    TAc.print(LANG.render_feedback("wrong-lb-value", f'Lower bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
+    exit(0)
+
+ 
+if not ENV['weighted']:
+  if int(size_sol) <= upper_bound and int(size_sol) >= lower_bound:
     TAc.OK()
-    TAc.print(LANG.render_feedback("right-exact-sol", f'We agree, the graph has a vertex cover of size exactly '), "green", ["bold"], flush=True, end='')
-    TAc.print(f'{answer}.', "white", ["bold"], flush=True)
-  elif answer > size:
-    TAc.print(LANG.render_feedback("right-sol", f'Yes, the graph has a vertex cover of size at least '), "yellow", ["bold"], flush=True, end='')
-    TAc.print(f'{answer}.', "white", ["bold"], flush=True)
-  else:
-    TAc.NO()
-    TAc.print(LANG.render_feedback("wrong-sol", f'We don\'t agree, the graph does not have a vertex cover of size at least {answer}.'), "red", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("size-in-interval", f'We agree, the size of the vertex cover is contained in the interval {upper_bound}-{lower_bound}'), "green", ["bold"], flush=True, end='')
+  elif int(size_sol) > upper_bound:
+    TAc.print(LANG.render_feedback("size-too-high", f'The size of the vertex cover is out the given interval {upper_bound}-{lower_bound}. Hint: try a higher upper bound!'), "red", ["bold"], flush=True, end='')
+  elif int(size_sol) < lower_bound:
+    TAc.print(LANG.render_feedback("size-too-low", f'The size of the vertex cover is out the given interval {upper_bound}-{lower_bound}. Hint: try a smaller lower bound!'), "red", ["bold"], flush=True, end='')
+  print('\n')
+else:
+  if weight_sol <= upper_bound and weight_sol >= lower_bound:
+    TAc.OK()
+    TAc.print(LANG.render_feedback("weight-in-interval-", f'We agree, the minimum weught of the vertex cover is contained in the interval {upper_bound}-{lower_bound}'), "green", ["bold"], flush=True, end='')
+  elif weight_sol > upper_bound:
+    TAc.print(LANG.render_feedback("weight-too-high", f'The minimum weight of the vertex cover is out the given interval {upper_bound}-{lower_bound}. Hint: try a higher upper bound!'), "red", ["bold"], flush=True, end='')
+  elif weight_sol < lower_bound:
+    TAc.print(LANG.render_feedback("weight-too-low", f'The minimum weight of the vertex cover is out the given interval {upper_bound}-{lower_bound}. Hint: try a smaller lower bound!'), "red", ["bold"], flush=True, end='')
+  print('\n')
 
 if ENV['plot_sol']:
-  vcl.plot_mvc(instance['graph'], vc)
+  vcl.plot_mvc(instance['graph'], vc_sol)
 exit(0)
