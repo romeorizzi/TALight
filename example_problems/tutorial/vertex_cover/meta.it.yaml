@@ -465,11 +465,11 @@ services:
 
 
   ##
-  ## TELL_ME_ABOUT_VC_SIZE --> L'utente deve fornire il suo vc e il sistema dice se è corretto o no
+  ## BOUNDS
   ##
-  tell_me_about_vc_size:
-    evaluator: [python, services/tell_me_about_vc_size_driveer.py]
-    description: 'Questo servizio verifica se il tuo vertex cover è il vertex cover minimo per il grafo dato oppure no'
+  bounds:
+    evaluator: [python, services/bounds_driver.py]
+    description: 'With respect to a reference (possibly weighted) graph G (which can be proposed by the service itself or by the problem solver) this service prompts the student for bounds (lower, upper, or both) on the minimum size/cost of a minimum size/weight vertex cover of G. A node cover of G is a set X of nodes such that every edge of G has at least one endpoint in S. A matching of G is a set of edges F such that no two edges in F have endpoints in common. For each bound declared, the problem solver should also provide a proof of validity in the form of an easily verifyiable certificate (more precisely, it should be possible to verify the certificate in polynomial time). Clearly, a node cover of size UB (resp., of total weight UB) is a valid certificate that the the minimum size (resp., minimum weight) of a node cover is at most UB. At the same time, a matching F of cardinality LB is a valid certificate that the minimum size of a node cover is at least UB. Indeed, every node cover should take at leat one of the two endpoint from each of the edges in F, and all these endnodes are distinct nodes. One possible goal for the problem solver is to provide both a lower bound and an upper bound (with certificates in the languages suggested above). Computing the minimum size of a vertex cover is an APX-hard problem, but can be 2-approximated. For this reason, a further viable and interesting challenge for the problem solver is to make sure that his upper bound is always at most the double of his lower bound. The problem solver could actually design a bot that interacts with this service so as to assure that this challenge is always reached. In the case of a weighted graph, then the notion of matching can be generalized as follows. Let w be the mapping that assigns to every node its weight. A function f that assigns a natural number to every edge of the graph is called a w-matching if for every node v of the graph the sum of the values taken by f on the edges incident to v is at most w(v). The value of a w-matching is the sum of the values taken by f over all the edges of G. It can be noticed that whenever a w-matching of value LB exists then every node cover of G has total weight at least LB.'
     args:
       source:
         regex: ^(catalogue|randgen_1|terminal)$
@@ -490,41 +490,49 @@ services:
         default: with_info
         explain: 'Utilizzare questo argomento per scegliere il formato del file .txt contenente l`istanza. Puoi anche richiedere l`istanza come già espressa all`interno di specifici formati di file di dati che abbiamo deciso di supportare.'
         explain1: '[simple] Contiene solo il grafo'
-        explain2: '[with_info] Contiene il grado con il numero di vertici'
+        explain2: '[with_info] Contiene il grado e le informazioni sul numero di vertici, sul numero di archi e se i nodi sono pesati'
       num_vertices:
         #regex: ^([1-9][0-9]*)$
         regex: ^([1-9]|[1-4][0-9]|50)$
         default: 8
-        explain: 'Numero dei vertici del grafo'
+        explain: 'Numero di vertici che compongono il grafo.'
       num_edges:
         regex: ^([1-9][0-9]*)$
         default: 11
-        explain: 'Numero degli archi che connettono i vertici del grafo'
+        explain: 'Numero di archi che connettono i vertici del grafo.'
+      weighted:
+        regex: ^(0|1)$
+        default: 0
+        explain: 'Genera un grafo con nodi pesati.'
+      upper_bound:
+        regex: ^([1-9][0-9]*)$
+        default: 0
+        explain: 'Impostare questo argomento su un valore diverso da zero per specificare un limite superiore sulla dimensione/peso minimo del vertex cover nel grafico specificato. Quando lo fai, devi anche fornire un certificato per il tuo limite superiore.'
+      lower_bound:
+        regex: ^([1-9][0-9]*)$
+        default: 0
+        explain: 'Impostare questo argomento su un valore diverso da zero per specificare un limite inferiore sulla dimensione/peso minimo del vertex cover nel grafico specificato. Quando lo fai, devi anche fornire un certificato per il tuo limite superiore.'
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra la rappresentazione visuale del grafo'
+        explain: 'Plotta il grafo.'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra la soluzione per la taglia minima del vertex cover'
+        explain: 'Plotta il grafo con la soluzione del problema.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
         default: random_seed
         explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
-      opt_val_sol:
-        regex: ^(\d*)$
-        default: 0
-        explain: 'Usa questo argomento per dire al servizio quello che ritieni la taglia del vertex cover. Lascia questo argomento al suo valore predefinito nel caso in cui non hai congetture e intendi utilizzare questo servizio solo per ottenere il valore ottimale. Una soluzione per una determinata taglia k di vertex cover è un numero intero non negativo.'
       silent:
         regex: ^(0|1)$
         default: 0
-        explain: 'Se questo flag è impostato su 1, verrà stampata solo l`istanza. In questo modo, se reindirizzi l`output su file (>) otterrai un file di istanza valido per gli altri servizi.'
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
       display:
         regex: ^(0|1)$
         default: 1
-        explain: 'Se questo flag è impostato su 1, il file di istanza viene mostrato dal servizio.'
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
       lang:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: en

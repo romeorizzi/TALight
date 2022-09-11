@@ -32,6 +32,8 @@ TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
 
+weighted = ENV['weighted']
+
 # START CODING YOUR SERVICE:
 ## Input Sources
 if TALf.exists_input_file('instance'):
@@ -42,6 +44,8 @@ elif ENV["source"] == 'terminal':
   instance = {}
   instance['num_vertices'] = ENV['num_vertices']
   instance['num_edges'] = ENV['num_edges']
+
+  instance['weighted'] = ENV['weighted']
 
   #TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
   TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\n'), "yellow")
@@ -54,20 +58,20 @@ elif ENV["source"] == 'terminal':
     edges.append([u,v])
 
   for u,v in edges:
-    if u not in range(ENV['num_vertices']) or v not in range(ENV['num_vertices']):
+    if u not in range(instance['num_vertices']) or v not in range(instance['num_vertices']):
       TAc.print(f'Edge ({u}, {v}) is not a valid edge for the graph. Aborting.\n', "red", ["bold"], flush=True)
       exit(0)
 
-  if len(edges) != ENV['num_edges']:
-    TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
+  if len(edges) != instance['num_edges']:
+    TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {instance["num_edges"]})\n'), "red", ["bold"])
     exit(0)
 
-  if ENV['weighted']:
+  if instance['weighted']:
     TAc.print(LANG.render_feedback("insert-weights", f'Enter nodes weights. Format: integers separated by spaces:'), "yellow", ["bold"])
     l = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
-    if len(l) != ENV['num_vertices']:
-      TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weights ({len(l)} instead of {ENV["num_vertices"]})\n'), "red", ["bold"])
+    if len(l) != instance['num_vertices']:
+      TAc.print(LANG.render_feedback("wrong-weights-number", f'\nWrong number of weights ({len(l)} instead of {instance["num_vertices"]})\n'), "red", ["bold"])
       exit(0)
 
     for w in l:
@@ -76,12 +80,12 @@ elif ENV["source"] == 'terminal':
         exit(0)
 
   G = nx.Graph()
-  G.add_nodes_from([int(v) for v in range(ENV['num_vertices'])])
+  G.add_nodes_from([int(v) for v in range(instance['num_vertices'])])
   G.add_edges_from(edges)
 
   i = 0
 
-  for v in G.nodes():
+  for v in sorted(G.nodes()):
     G.add_node(v, weight=int(l[i]))
     i += 1
 
@@ -92,7 +96,7 @@ elif ENV["source"] == 'terminal':
 
 elif ENV["source"] == 'randgen_1':
   # Get random instance
-  if not ENV['weighted']:
+  if not weighted:
     instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'])[0]
   else:
     instance = vcl.instances_generator(1, 1, ENV['num_vertices'], ENV['num_edges'], ENV['seed'], 1)[0]
@@ -111,7 +115,7 @@ for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
 # Calcolo soluzione
 #if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
 if ENV['source'] != "catalogue":
-  if ENV['weighted']:
+  if weighted:
     vc_sol, size_sol, weight_sol = vcl.calculate_minimum_weight_vc(instance['graph'])
   else:
     size_sol, vc_sol = vcl.calculate_minimum_vc(instance['graph'])
@@ -120,17 +124,18 @@ else:
   #vc_sol = [int(i) for i in vc_sol.split()]
   size_sol = len(vc_sol)
 
-  if ENV['weighted']:
+  if instance['weighted']:
+    weighted = instance['weighted']
     weight_sol = int(instance['sol_weight'])
 
 TAc.print(LANG.render_feedback("this-is-the-instance", '\nThis is the instance:\n'), "white", ["bold"], flush=True)
 TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], flush=True)
 
-if ENV['weighted']:
+if weighted:
   TAc.print(LANG.render_feedback("nocover-weight", f'\nNo cover weight of the graph: {total_weight}\n'), "white", ["bold"], flush=True)
 
 if ENV['plot']:
-  if ENV['weighted']:
+  if weighted:
     vcl.plot_graph(instance['graph'], 1)
   else:
     vcl.plot_graph(instance['graph'])
@@ -151,7 +156,7 @@ if not ENV['upper_bound']:
 else:
   upper_bound = ENV['upper_bound']
 
-if not ENV['weighted']:
+if not weighted:
   if upper_bound > instance['num_vertices']:
     TAc.print(LANG.render_feedback("wrong-ub-value", f'Upper bound must be lower than {instance["num_vertices"] - 1}. Aborting.\n'), "red", ["bold"], flush=True)
     exit(0)
@@ -171,7 +176,7 @@ else:
     exit(0)
 
  
-if not ENV['weighted']:
+if not weighted:
   if int(size_sol) <= upper_bound and int(size_sol) >= lower_bound:
     TAc.OK()
     TAc.print(LANG.render_feedback("size-in-interval", f'We agree, the size of the vertex cover is contained in the interval {lower_bound}-{upper_bound}'), "green", ["bold"], flush=True, end='')
@@ -183,7 +188,7 @@ if not ENV['weighted']:
 else:
   if weight_sol <= upper_bound and weight_sol >= lower_bound:
     TAc.OK()
-    TAc.print(LANG.render_feedback("weight-in-interval-", f'We agree, the minimum weught of the vertex cover is contained in the interval {lower_bound}-{upper_bound}'), "green", ["bold"], flush=True, end='')
+    TAc.print(LANG.render_feedback("weight-in-interval", f'We agree, the minimum weught of the vertex cover is contained in the interval {lower_bound}-{upper_bound}'), "green", ["bold"], flush=True, end='')
   elif weight_sol > upper_bound:
     TAc.print(LANG.render_feedback("weight-too-high", f'The minimum weight of the vertex cover is outside the given interval {lower_bound}-{upper_bound}. Hint: try a higher upper bound!'), "red", ["bold"], flush=True, end='')
   elif weight_sol < lower_bound:
@@ -191,7 +196,7 @@ else:
   print('\n')
 
 if ENV['plot_sol']:
-  if ENV['weighted']:
+  if weighted:
     vcl.plot_mvc(instance['graph'], vc_sol, [], 1)
   else:
     vcl.plot_mvc(instance['graph'], vc_sol, [])

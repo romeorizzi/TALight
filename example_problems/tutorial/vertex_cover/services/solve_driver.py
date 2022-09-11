@@ -83,7 +83,7 @@ elif ENV["source"] == 'terminal':
   if ENV['weighted']:
     i = 0
 
-    for v in G.nodes():
+    for v in sorted(G.nodes()):
       G.add_node(v, weight=int(l[i]))
       i += 1
 
