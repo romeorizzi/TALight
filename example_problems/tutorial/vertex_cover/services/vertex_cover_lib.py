@@ -65,7 +65,7 @@ def instance_to_txt_str(instance, format_name="with_info"):
       output += f'{num_vertices} {num_edges} {weighted}\n'
 
     if instance['weighted']:
-      for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
+      for n,w in sorted(nx.get_node_attributes(instance['graph'], 'weight').items()):
         output += f'{w} '
       output += '\n'
     elif not instance['weighted'] and format_name == "simple":
@@ -125,9 +125,9 @@ def get_instance_from_txt(instance_as_str, format_name):
       G.add_edges_from(edges)
 
       i = 0
-      for v in G.nodes():
+      for v in sorted(G.nodes()):
         if instance['weighted']:
-          G.add_node(v, weight=weights[i])
+          G.add_node(v, weight=weights[v])
         else:
           G.add_node(v, weight=1)
         i += 1
@@ -158,7 +158,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
 
       i = 0
-      for v in G.nodes():
+      for v in sorted(G.nodes()):
         if instance['weighted']:
           G.add_node(v, weight=weights[i])
         else:
