@@ -2,13 +2,102 @@ Note:
 - installare versione sufficientemente aggiornata di networkx
 - avviare il daemon rtald con:
       rtald -d /home/romeo/TALight/example_problems/tutorial
+- Nella cartella "utilities" ci sono alcuni script di test che richiamano, appunto
+i vari servizi. Utilizzare (anche) questi script come referenza per le varie
+chiamate
 
 CLI examples:
 
 rtal connect vertex_cover synopsis
-
 rtal connect vertex_cover synopsis -aservice=check_minimum_vc
 
-rtal connect vertex_cover check_minimum_vc -aseed=474327
+rtal connect vertex_cover -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover -aweighted=1
+rtal connect vertex_cover -asource=randgen_1
+rtal connect vertex_cover -asource=terminal
+rtal connect vertex_cover -asource=catalogue -ainstance_id=10
 
+## gimme_instance
+rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance=simple
+rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance=with_info
+rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -aweighted=1 -ainstance=simple
+rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -aweighted=1 -ainstance=with_info
+rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=20 -anum_edges=30 -ainstance=simple
+rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=20 -anum_edges=30 -ainstance=with_info
+rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=20 -anum_edges=30 -aweighted=1 -ainstance=simple
+rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=20 -anum_edges=30 -aweighted=1 -ainstance=with_info
+rtal connect vertex_cover gimme_instance -asource=catalogue -ainstance_id=9 -ainstance_format=simple
+rtal connect vertex_cover gimme_instance -asource=catalogue -ainstance_id=9 -ainstance_format=with_len
+rtal connect vertex_cover gimme_instance -asource=catalogue -ainstance_id=15 -ainstance_format=simple
+rtal connect vertex_cover gimme_instance -asource=catalogue -ainstance_id=15 -ainstance_format=with_len
+rtal connect vertex_cover gimme_instance -asource=catalogue -ainstance_id=30 -ainstance_format=simple
+rtal connect vertex_cover gimme_instance -asource=catalogue -ainstance_id=42 -ainstance_format=with_len
+rtal connect vertex_cover gimme_instance -asource=catalogue -ainstance_id=42 -ainstance_format=simple
+rtal connect vertex_cover gimme_instance -aseed=123456 -ainstance_format=with_len
+rtal connect vertex_cover gimme_instance -aseed=123456 -ainstance_format=simple
+
+## chech_minimum_vc
+rtal connect vertex_cover check_minimum_vc -asource=randgen_1
+rtal connect vertex_cover check_minimum_vc -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=with_info
+rtal connect vertex_cover check_minimum_vc -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=simple
+rtal connect vertex_cover check_minimum_vc -asource=catalogue -ainstance_format=with_info
+rtal connect vertex_cover check_minimum_vc -asource=catalogue -ainstance_format=simple
+rtal connect vertex_cover check_minimum_vc -asource=terminal -anum_vertices=8 -anum_edges=11
+rtal connect vertex_cover check_minimum_vc -aseed=474327
 rtal connect vertex_cover check_minimum_vc -a plot -a plot_sol
+
+## check_minimum_weight_vc
+rtal connect vertex_cover check_minimum_weight_vc -asource=randgen_1
+rtal connect vertex_cover check_minimum_weight_vc -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=with_info
+rtal connect vertex_cover check_minimum_weight_vc -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=simple
+rtal connect vertex_cover check_minimum_weight_vc -asource=catalogue -ainstance_format=with_info
+rtal connect vertex_cover check_minimum_weight_vc -asource=catalogue -ainstance_format=simple
+rtal connect vertex_cover check_minimum_weight_vc -asource=terminal -anum_vertices=8 -anum_edges=11
+rtal connect vertex_cover check_minimum_weight_vc -aseed=474327
+rtal connect vertex_cover check_minimum_weight_vc -a plot -a plot_sol
+
+## check_approx_vc
+rtal connect vertex_cover check_approx_vc -asource=randgen_1
+rtal connect vertex_cover check_approx_vc -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=with_info
+rtal connect vertex_cover check_approx_vc -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=simple
+rtal connect vertex_cover check_approx_vc -asource=catalogue -ainstance_id=32 -ainstance_format=with_info
+rtal connect vertex_cover check_approx_vc -asource=catalogue -ainstance_id=32 -ainstance_format=simple
+rtal connect vertex_cover check_approx_vc -asource=terminal -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover check_approx_vc -asource=terminal -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover check_approx_vc -aseed=474327
+rtal connect vertex_cover check_approx_vc -a plot -a plot_sol
+
+## check_approx_weighted_vc
+rtal connect vertex_cover check_approx_weighted_vc -asource=randgen_1
+rtal connect vertex_cover check_approx_weighted_vc -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=with_info
+rtal connect vertex_cover check_approx_weighted_vc -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=simple
+rtal connect vertex_cover check_approx_weighted_vc -asource=catalogue -ainstance_id=32 -ainstance_format=with_info
+rtal connect vertex_cover check_approx_weighted_vc -asource=catalogue -ainstance_id=32 -ainstance_format=simple
+rtal connect vertex_cover check_approx_weighted_vc -asource=terminal -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover check_approx_weighted_vc -asource=terminal -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover check_approx_weighted_vc -aseed=474327
+rtal connect vertex_cover check_approx_weighted_vc -a plot -a plot_sol
+
+## bounds
+rtal connect vertex_cover bounds -asource=randgen_1
+rtal connect vertex_cover bounds -asource=terminal
+rtal connect vertex_cover bounds -asource=catalogue
+rtal connect vertex_cover bounds -alower_bound=3 -aupper_bound=5
+rtal connect vertex_cover bounds -weighted=1 -aplot=1
+
+
+## eval_minimum_vc
+rtal connect -e vertex_cover eval_minimum_vc -agoal=feasible -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --minimum
+rtal connect -e vertex_cover eval_minimum_vc -agoal=minimum -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --minimum
+
+## eval_minimum_weight_vc
+rtal connect -e vertex_cover eval_minimum_weight_vc -agoal=feasible -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --minimum
+rtal connect -e vertex_cover eval_minimum_weight_vc -agoal=minimum -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --minimum
+
+## eval_approx_vc
+rtal connect -e vertex_cover eval_approx_vc -agoal=small_instances -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --approx
+rtal connect -e vertex_cover eval_approx_vc -agoal=big_instances -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --approx
+
+## eval_approx_weighted_vc
+rtal connect -e vertex_cover eval_approx_weighted_vc -agoal=small_instances -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --approx
+rtal connect -e vertex_cover eval_approx_weighted_vc -agoal=big_instances -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --approx
