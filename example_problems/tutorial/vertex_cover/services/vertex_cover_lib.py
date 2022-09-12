@@ -65,7 +65,7 @@ def instance_to_txt_str(instance, format_name="with_info"):
       output += f'{num_vertices} {num_edges} {weighted}\n'
 
     if instance['weighted']:
-      for n,w in nx.get_node_attributes(instance['graph'], 'weight').items():
+      for n,w in sorted(nx.get_node_attributes(instance['graph'], 'weight').items()):
         output += f'{w} '
       output += '\n'
     elif not instance['weighted'] and format_name == "simple":
@@ -125,9 +125,9 @@ def get_instance_from_txt(instance_as_str, format_name):
       G.add_edges_from(edges)
 
       i = 0
-      for v in G.nodes():
+      for v in sorted(G.nodes()):
         if instance['weighted']:
-          G.add_node(v, weight=weights[i])
+          G.add_node(v, weight=weights[v])
         else:
           G.add_node(v, weight=1)
         i += 1
@@ -158,7 +158,7 @@ def get_instance_from_txt(instance_as_str, format_name):
       G.add_nodes_from([int(n) for n in range(instance['num_vertices'])])
 
       i = 0
-      for v in G.nodes():
+      for v in sorted(G.nodes()):
         if instance['weighted']:
           G.add_node(v, weight=weights[i])
         else:
@@ -539,7 +539,7 @@ def calculate_minimum_weight_vc(graph):
   weights = []
   vc = []
 
-  for n,w in nx.get_node_attributes(graph, 'weight').items():
+  for n,w in sorted(nx.get_node_attributes(graph, 'weight').items()):
     weights.append(w)
 
   G_1 = nx.complement(graph)
@@ -547,7 +547,7 @@ def calculate_minimum_weight_vc(graph):
   # Per qualche motivo facendo il grafo complementare perdo
   # i pesi sui nodi e devo rimettercel a mano...
   i = 0
-  for v in G_1.nodes():
+  for v in sorted(G_1.nodes()):
     G_1.add_node(v, weight=weights[i])
     i += 1
 
@@ -667,7 +667,8 @@ def verify_vc(vertices, graph, ret_edges=0):
 ## Verifico se il vc approssimato fornito dall'utente è tale
 def verify_approx_vc(matching, graph, ret_edges=0):
   curG = graph.copy()
-  max_matching = [eval(t) for t in matching]
+  #max_matching = [eval(t) for t in matching]
+  max_matching = matching
   
   visited = []
   
@@ -779,8 +780,8 @@ def plot_2app_vc(graph, vertices, edges):
       v_color_map.append('red')
     else:
       v_color_map.append('#00b4d9')
-  edges = edges.replace(', ', ',')
-  edges = [eval(t) for t in edges.split()]
+  #edges = edges.replace(', ', ',')
+  #edges = [eval(t) for t in edges.split()]
   edges = [tuple(sorted(t)) for t in edges]
   for e in graph.edges():
     if e in edges:

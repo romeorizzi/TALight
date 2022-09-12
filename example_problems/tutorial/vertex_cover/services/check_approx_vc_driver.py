@@ -42,14 +42,20 @@ elif ENV["source"] == 'terminal':
   instance['num_vertices'] = ENV['num_vertices']
   instance['num_edges'] = ENV['num_edges']
 
-  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
+  #TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m)\n'), "yellow")
+  TAc.print(LANG.render_feedback("waiting-line", f'#? Waiting for the graph.\n'), "yellow")
 
   TAc.print(LANG.render_feedback("insert-edges", f'Given {ENV["num_vertices"]} vertices labelled with the naturals in the interval [0,{ENV["num_vertices"]-1}], you are now expected to enter {ENV["num_edges"]} edges. To specify an edge, simply enter its two endonodes separated by spaces.'), "yellow", ["bold"])
   edges = []
   for i in range(1,1+ENV["num_edges"]):
-     TAc.print(LANG.render_feedback("insert-edge", f'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}],  separated by spaces.'), "yellow", ["bold"])
-     u,v = TALinput(int, 2, TAc=TAc)
-     edges.append([u,v])
+    TAc.print(LANG.render_feedback("insert-edge", f'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}],  separated by spaces.'), "yellow", ["bold"])
+    u,v = TALinput(int, 2, TAc=TAc)
+    edges.append([u,v])
+
+  for u,v in edges:
+    if u not in range(ENV['num_vertices']) or v not in range(ENV['num_vertices']):
+      TAc.print(f'Edge ({u}, {v}) is not a valid edge for the graph. Aborting.\n', "red", ["bold"], flush=True)
+      exit(0)
 
   if len(edges) != ENV['num_edges']:
     TAc.print(LANG.render_feedback("wrong-edges-number", f'\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'), "red", ["bold"])
@@ -79,19 +85,31 @@ if ENV['display']:
   TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"], flush=True)
 
 if ENV['vc_sol_val'] == '0': # manual insertion
-  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured maximal matching for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"], flush=True)
+  TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured maximal matching size for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"], flush=True)
   if ENV['plot']:
     vcl.plot_graph(instance['graph'])
-  answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
-else:
-  #answer = [eval(t) for t in ENV['vc_sol_val'].split()]
-  answer = ENV['vc_sol_val']
 
-if answer[0] != 'C' and answer[0] != 'c':
+  choice = TALinput(str, 1, TAc=TAc)
+  if choice[0] != 'C' and choice[0] != 'c':
+    if not choice[0].isdigit():
+      TAc.print(LANG.render_feedback("invalid-input", f'Input must be an integer number or "C". Aborting.\n'), "red", ["bold"], flush=True)
+      exit(0)
+
+    TAc.print(LANG.render_feedback("waiting-matching", f'Please, provide the maximal matching:'), "yellow", ["bold"], flush=True)
+    answer = []
+    for i in range(int(choice[0])):
+      TAc.print(LANG.render_feedback("insert-edge", f'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}],  separated by spaces.'), "yellow", ["bold"], flush=True)
+      u,v = TALinput(int, 2, TAc=TAc)
+      answer.append((u,v))
+
+else:
+  answer = [eval(t) for t in ENV['vc_sol_val'].split()]
+  choice = ' '
+
+if choice[0] != 'C' and choice[0] != 'c':
   for t in answer:
-    if eval(t) not in instance['graph'].edges():
-      #TAc.print(LANG.render_feedback("edge-not-in-graph", f'Edge {eval(t)} is not an edge of the graph. Aborting'), "red", ["bold"], flush=True)
-      TAc.print(f'Edge {eval(t)} is not an edge of the graph. Aborting', "red", ["bold"], flush=True)
+    if t not in instance['graph'].edges():
+      TAc.print(LANG.render_feedback("edge-not-in-graph", f'Edge {t} is not an edge of the graph. Aborting.\n'), "red", ["bold"], flush=True)
       exit(0)
 
 if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
@@ -107,7 +125,7 @@ else:
   else:
     size_sol,appr_sol,max_matching = vcl.calculate_approx_vc(instance['graph'], 'greedy')
 
-if answer[0] == 'C' or answer[0] == 'c':
+if choice[0] == 'C' or choice[0] == 'c':
   TAc.print(LANG.render_feedback("best-sol", f'A possible 2-approximated vertex cover is: '), "green", ["bold"], flush=True, end='')
   TAc.print(f'{appr_sol}.', "white", ["bold"], flush=True)
   TAc.print(LANG.render_feedback("min-maximal-matching", f'A possible maximal matching is: '), "green", ["bold"], flush=True,  end='')
@@ -115,13 +133,12 @@ if answer[0] == 'C' or answer[0] == 'c':
   TAc.print(LANG.render_feedback("size-sol", f'The size of the 2-approximated vertex cover is: '), "green", ["bold"], flush=True, end='')
   TAc.print(f'{size_sol}.', "white", ["bold"], flush=True)
 else:
-  check_edges_in_graph = [eval(t) for t in answer]
-  for e in check_edges_in_graph:
+  for e in answer:
     if e not in instance['graph'].edges():
       TAc.print(LANG.render_feedback("edge-not-in-graph", f'Edge {e} not in the graph. Aborting.'), "red", ["bold"], flush=True)
       exit(0)
 
-  size_ans = 2 * (len([eval(t) for t in answer]))
+  size_ans = 2 * (len(answer))
   is_vertex_cover, reason, data = vcl.verify_approx_vc(answer, instance['graph'], 1)
 
   if is_vertex_cover:
@@ -162,10 +179,9 @@ else:
   print()
         
 if ENV['plot_sol']:
-  if answer[0] != 'C' and answer[0] != 'c':
+  if choice[0] != 'C' and choice[0] != 'c':
     vertices = ' '.join(map(str, answer)).replace('(', '').replace(') (',' ').replace(')','').replace(',',' ')
-    matching = ' '.join(map(str, answer)).replace(',', ', ')
-    vcl.plot_2app_vc(instance['graph'], vertices, matching)
+    vcl.plot_2app_vc(instance['graph'], vertices, answer)
   else:
     vcl.plot_2app_vc(instance['graph'], appr_sol, max_matching)
 

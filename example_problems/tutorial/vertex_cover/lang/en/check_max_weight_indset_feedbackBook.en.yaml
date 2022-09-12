@@ -6,8 +6,10 @@ feedback_source: '# This feedback in english comes from the dictionary of the ph
 
 # NOW THE PROBLEM SERVICE SPECIFIC SECTION:
 successful-load: 'The file you have associated to `instance` filehandler has been successfully loaded.'
-waiting-line: '#? Waiting for the graph.\nGraph format: (x,y) (w,z) ... (n,m) \n'
-insert-line: 'Enter graph containing {ENV["num_vertices"]} vertices and {ENV["num_edges"]} edges:'
+waiting-line: '#? Waiting for the graph.\n'
+insert-edges: 'Given {ENV["num_vertices"]} vertices labelled with the naturals in the interval [0,{ENV["num_vertices"]-1}], you are now expected to enter {ENV["num_edges"]} edges. To specify an edge, simply ente
+r its two endnodes separated by spaces.'
+insert-edge: 'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}], separated by spaces.'
 wrong-edges-number: '\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'
 insert-weights: 'Enter nodes weights. Format: integers separated by spaces:'
 wrong-weights-number: '\nWrong number of weights ({len(l)} instead of {ENV["num_vertices"]})\n'
