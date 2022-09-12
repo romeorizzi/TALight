@@ -27,3 +27,5 @@ size-too-low: 'La taglia del vertex cover è fuori dall`intervallo dato {lower_b
 weight-in-interval: 'Corretto, il peso minimo del vertex cover è contenuto nell`intervallo {lower_bound}-{upper_bound}'
 weight-too-high: 'Il peso minimo del vertex cover è fuori dall`intervallo dato {lower_bound}-{upper_bound}. Suggerimento: prova con un upper bound più grande!'
 weight-too-low: 'Il peso minimo del vertex_cover è fuori dall`intervallo dato {lower_bound}-{upper_bound}. Suggerimento: prova con un lower bound più piccolo!'
+goal: 'Hai raggiunto il goal! La taglia del vertex cover è esattamente {size_sol}!'
+goal-w: 'Hai raggiunto il goal! Il peso minimo del vertex cover è esattamente {weight_sol}!'

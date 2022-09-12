@@ -27,4 +27,5 @@ size-too-low: 'The size of the vertex cover is outside the given interval {lower
 weight-in-interval: 'We agree, the minimum of the vertex cover is contained in the interval {lower_bound}-{upper_bound}'
 weight-too-high: 'The minimum weight of the vertex cover is outside the given interval {lower_bound}-{upper_bound}. Hint: try a higher upper bound!'
 weight-too-low: 'The minimum weight of the vertex cover is outside the given interval {lower_bound}-{upper_bound}. Hint: try a smaller lower bound!'
-
+goal: 'You reached the goal! The size of the vertex cover is exactly {size_sol}!'
+goal-w: 'You reached the goal! The minimum weight of the vertex cover is exactly {weight_sol}!'

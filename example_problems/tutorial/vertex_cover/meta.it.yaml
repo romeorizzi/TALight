@@ -256,6 +256,7 @@ services:
         regex: ^.*^ # Deve essere una stringa contenente i (supposti) vertici del vc
         default: 0
         explain: 'Usa questo argomento per dire al servizio quello che ritieni siano i vertici appartenenti al vertex cover. Lascia questo argomento al suo valore predefinito nel caso in cui non hai congetture e intendi utilizzare questo servizio solo per ottenere il valore ottimale. Una soluzione per una determinata istanza di vertex cover è una sequenza di numeri interi non negativi.'
+        example: '(0,1) (2,5) (4,7'
       silent:
         regex: ^(0|1)$
         default: 0
