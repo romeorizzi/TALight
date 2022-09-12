@@ -25,6 +25,12 @@ def die_or_overcome(succeed_or_die):
             print(LANG.render_feedback("operation-not-necessary", ' We overcome this problem by resorting on the information hardcoded within the meta.yaml file set as default by whom has deployed the problem on the server you are receiving this information from. Hope that getting the problem specific information from this file is good enough for you (it is reasonable to expect that the metafile set as default is the most updated one).'), file=out)
         return None
 
+def regex_with_single_match_for_sure(regex:str):
+    for c in regex:
+        if c in '[]\.*+?{}|()':
+            return False
+    return True
+    
 def load_meta_yaml_file(meta_yaml_file, succeed_or_die):
     try:
         import ruamel.yaml
@@ -93,6 +99,12 @@ else:
         TAc.print("   " + LANG.render_feedback('example-tagged', f'Example {i} [{meta_yaml_book["services"][ENV["service"]]["example"+str(i)][0]}]') +": ", ["bold"], end="")
         print(meta_yaml_book['services'][ENV['service']]['example'+str(i)][1])
       i += 1
+args_eliminanda = []
+for arg in meta_yaml_book['services'][ENV['service']]['args']:
+    if regex_with_single_match_for_sure(meta_yaml_book['services'][ENV['service']]['args'][arg]['regex']):
+        args_eliminanda.append(arg)
+for arg in args_eliminanda:
+    del meta_yaml_book['services'][ENV['service']]['args'][arg]
 if len(meta_yaml_book['services'][ENV['service']]['args']) > 0:
     TAc.print(LANG.render_feedback("the-num-arguments", f'\nThe service {ENV["service"]} has {len(meta_yaml_book["services"][ENV["service"]]["args"])} arguments:'), "green", ["bold"])
     for a,i in zip(meta_yaml_book['services'][ENV['service']]['args'],range(1,1+len(meta_yaml_book['services'][ENV['service']]['args']))):

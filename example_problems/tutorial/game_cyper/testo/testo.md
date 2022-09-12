@@ -32,15 +32,13 @@ nella seconda riga di `stdout` devi indicare il valore di una cifra che Martina 
 
 ## Assunzioni
 - $1 \leq N \leq 10\,000\,000$
-- $0 \leq k \leq 9$
-- 
 
 ## Esempi
 
 | input from stdin | &nbsp;&nbsp;&nbsp;&nbsp; | output to stdout |
 | ---------------- | ------------------------ | ---------------- |
-| 16               | &nbsp;                   | 1 6              |
-
+| 16               | &nbsp;                   | 1                |
+|                  | &nbsp;                   | 6                |
 
 ## Subtask
 
