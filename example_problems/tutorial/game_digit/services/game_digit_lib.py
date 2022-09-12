@@ -55,7 +55,7 @@ def find_winning_move_nim(n, nim=0):
         t=t//10
     return None
 
-def find_winning_moves_cypher_game_nim(n,nim=0,rmv_dup=False):
+def find_winning_moves_game_digit_nim(n,nim=0,rmv_dup=False):
     win_moves = find_winning_moves_nim(n,nim,rmv_dup)
     win_moves_with_nim={(None,None)}
     for move in win_moves:
@@ -66,10 +66,10 @@ def find_winning_moves_cypher_game_nim(n,nim=0,rmv_dup=False):
     return win_moves_with_nim
 
 def winning_moves_nim(n, nim):
-    cypher_game_grundy_value = grundy_val(n)
+    game_digit_grundy_value = grundy_val(n)
     win_moves={(None,None)}
     for i in range(1, nim+1):
-        if grundy_sum(cypher_game_grundy_value, nim-i)==0:
+        if grundy_sum(game_digit_grundy_value, nim-i)==0:
             win_moves.add((n,nim-i))
     win_moves.discard((None,None))
     return win_moves
@@ -79,11 +79,11 @@ def computer_move_nim(n, nim):
     if grundy_sum(n_grundy_val, nim) == 0:
         games = []
         if n != 0:
-            games.append('cypher_game')
+            games.append('game_digit')
         if nim > 0:
             games.append('nim')
         selected_game = random.choice(games)
-        if selected_game == 'cypher_game':
+        if selected_game == 'game_digit':
             new_n=random.choice(find_all_moves(n, True))
             return new_n,nim
         else:
@@ -103,13 +103,13 @@ def grundy_val(n):
     if n%10==0:
         return 0
     t=n
-    cyphers=[]
+    digits=[]
     while t>0:
         sub=t%10
         if sub!=0:
-            cyphers.append(sub)
+            digits.append(sub)
         t=t//10
-    if len(set(cyphers))==1 or (n>0 and n<10) or (len(set(cyphers))==2 and 0 in set(cyphers)):
+    if len(set(digits))==1 or (n>0 and n<10) or (len(set(digits))==2 and 0 in set(digits)):
         return 1
     val1=[0,1,1,1,1,1,1,1,1,1]
     val2=[]
@@ -119,8 +119,8 @@ def grundy_val(n):
             moves=find_all_moves(actual_num,True)
             values=[]
             for move in moves:
-                cypher2=actual_num%10
-                if move<actual_num-cypher2:
+                digit2=actual_num%10
+                if move<actual_num-digit2:
                     values.append(val1[move%10])
                 else:
                     values.append(val2[move%10])

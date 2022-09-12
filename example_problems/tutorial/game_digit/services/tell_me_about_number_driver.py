@@ -3,10 +3,10 @@
 from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
-import cypher_game_lib as cl
+import game_digit_lib as cl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="cypher_game"
+problem="game_digit"
 service="tell_me_about_number"
 args_list = [
     ('number',int),

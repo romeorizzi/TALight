@@ -7,7 +7,7 @@ services:
     description: use this service to check out your belief about a certain number to be a winning configuration (i.e., the first player to move has a winning strategy).
     args:
       number:
-        regex: ^([1-9][0-9]{0,50})$
+        regex: ^(0|[1-9][0-9]{0,50})$
         default: 0
         explain: The number that you believe to be a first-to-move-wins configuration of the game.
       value:
@@ -42,7 +42,7 @@ services:
         default: it
   check_grundy_value:
     evaluator: [python, services/check_game_value_driver.py]
-    description: use this service to check out your conjectured grundy value for a certain number of the cypher_game.
+    description: use this service to check out your conjectured grundy value for a certain number of the game_digit.
     args:
       number:
         regex: ^([1-9][0-9]{0,50})$
@@ -61,7 +61,7 @@ services:
         default: it
   tell_me_about_number:
     evaluator: [python, services/tell_me_about_number_driver.py]
-    description: use with caution this spoilering service in order to get more or less detailed information about a certain number of the cypher_game.
+    description: use with caution this spoilering service in order to get more or less detailed information about a certain number of the game_digit.
     args:
       number:
         regex: ^([1-9][0-9]{0,50})$
@@ -79,9 +79,9 @@ services:
         default: it
   play:
     evaluator: [python, services/play_driver.py]
-    description: use this service if you want to play a match of the cypher_game against our player. You can choose the starting number and whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect cypher_game play -aTALight_first_to_move=1 -anumber=24 -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e cypher_game play -aTALight_first_to_move=1 -anumber=24 -awatch=watch_winner -- bots/my_cypher_game_player.py']
+    description: use this service if you want to play a match of the game_digit against our player. You can choose the starting number and whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
+    example1: [experiment in a direct use, '\n     rtal connect game_digit play -aTALight_first_to_move=1 -anumber=24 -awatch=no_watch']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play -aTALight_first_to_move=1 -anumber=24 -awatch=watch_winner -- bots/my_game_digit_player.py']
     args:
       number:
         regex: ^([1-9][0-9]{0,50})$
@@ -109,9 +109,9 @@ services:
         default: it
   play_random:
     evaluator: [python, services/play_driver.py]
-    description: use this service if you want to play a match of the cypher_game against our player. The starting number is random. You can choose whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect cypher_game play_random -aTALight_first_to_move=1 -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e cypher_game play_random -aTALight_first_to_move=1 -awatch=watch_winner -- bots/my_cypher_game_player.py']
+    description: use this service if you want to play a match of the game_digit against our player. The starting number is random. You can choose whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
+    example1: [experiment in a direct use, '\n     rtal connect game_digit play_random -aTALight_first_to_move=1 -awatch=no_watch']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_random -aTALight_first_to_move=1 -awatch=watch_winner -- bots/my_game_digit_player.py']
     args:
       number:
         regex: ^$
@@ -141,9 +141,9 @@ services:
         default: it
   play_val_measuring_game:
     evaluator: [python, services/play_val_measuring_game_driver.py]
-    description: use this service if you want to play a match of the MeasuringGame(cypher_game) against our player. You can choose the starting number and whether to be first or second to move. You can also choose to play against another person. The MeasuringGame(cypher_game) game is defined as the game sum of a cypher_game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a cypher_game position. You can ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect cypher_game play_val_measuring_game -aTALight_first_to_move=1 -anumber=24 -anim=0']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e cypher_game play_val_measuring_game -aTALight_first_to_move=1 -anumber=24 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_cypher_game_player.py']
+    description: use this service if you want to play a match of the MeasuringGame(game_digit) against our player. You can choose the starting number and whether to be first or second to move. You can also choose to play against another person. The MeasuringGame(game_digit) game is defined as the game sum of a game_digit and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a game_digit position. You can ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
+    example1: [experiment in a direct use, '\n     rtal connect game_digit play_val_measuring_game -aTALight_first_to_move=1 -anumber=24 -anim=0']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_val_measuring_game -aTALight_first_to_move=1 -anumber=24 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_game_digit_player.py']
     args:
       number:
         regex: ^([1-9][0-9]{0,50})$
@@ -152,7 +152,7 @@ services:
       nim:
         regex: ^(0|[1-9][0-9]{0,50})$
         default: 0
-        explain: The height of the pile in the nim game. This will be precisely the Nim value of the cypher_game number if and only if the whole compound configuration (cypher_game number + one pile Nim configuration) is a lost configuration for the first to move player. 
+        explain: The height of the pile in the nim game. This will be precisely the Nim value of the game_digit number if and only if the whole compound configuration (game_digit number + one pile Nim configuration) is a lost configuration for the first to move player. 
       TALight_first_to_move:
         regex: ^(0|1)$
         default: 0
@@ -174,9 +174,9 @@ services:
         default: it
   play_val_measuring_game_random:
     evaluator: [python, services/play_val_measuring_game_driver.py]
-    description: use this service if you want to play a match of the MeasuringGame(cypher_game) against our player. The starting number is random. You can choose whether to be first or second to move. You can also choose to play against another person. The MeasuringGame(cypher_game) game is defined as the game sum of a cypher_game and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a cypher_game position. You can ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect cypher_game play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e cypher_game play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_cypher_game_player.py']
+    description: use this service if you want to play a match of the MeasuringGame(game_digit) against our player. The starting number is random. You can choose whether to be first or second to move. You can also choose to play against another person. The MeasuringGame(game_digit) game is defined as the game sum of a game_digit and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a game_digit position. You can ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
+    example1: [experiment in a direct use, '\n     rtal connect game_digit play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_game_digit_player.py']
     args:
       number:
         regex: ^$
@@ -185,7 +185,7 @@ services:
       nim:
         regex: ^(0|[1-9][0-9]{0,50})$
         default: 0
-        explain: The height of the pile in the nim game. This will be precisely the Nim value of the cypher_game number if and only if the whole compound configuration (cypher_game number + one pile Nim configuration) is a lost configuration for the first to move player. 
+        explain: The height of the pile in the nim game. This will be precisely the Nim value of the game_digit number if and only if the whole compound configuration (game_digit number + one pile Nim configuration) is a lost configuration for the first to move player. 
       TALight_first_to_move:
         regex: ^(0|1)$
         default: 0

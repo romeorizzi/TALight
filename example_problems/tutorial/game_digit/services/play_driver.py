@@ -4,10 +4,10 @@ from TALinputs import TALinput
 from multilanguage import Env, Lang, TALcolors
 
 import random
-import cypher_game_lib as cl
+import game_digit_lib as cl
 
 # METADATA OF THIS TAL_SERVICE:
-problem="cypher_game"
+problem="game_digit"
 service="play"
 
 args_list = [
@@ -91,7 +91,7 @@ if ENV["TALight_first_to_move"] == 1 and ENV['opponent'] == 'computer': # if the
         
     # TALight makes its move updating the new number:
     new_number=cl.computer_move(number)
-    TAc.print(LANG.render_feedback("numb-server-move", f'# My move is from number \'{number}\' to new number \'{new_number}\'.'), "green", ["bold"])
+    TAc.print(LANG.render_feedback("numb-server-move", f'# My move is from number {number} to the new number {new_number}={number}-{number-new_number} obtained from the previous one by subtracting from it one of its digits ({number-new_number}).'), "green", ["bold"])
     number=new_number
 
 n_player=1
@@ -107,9 +107,9 @@ while True:
         else:
             watch(number, first_to_move=PLAYER_2_IS, second_to_move=PLAYER_1_IS)
     if ENV['opponent'] == 'computer':  
-        TAc.print(LANG.render_feedback("numb-your-turn", f'# It is your turn to move from number \'{number}\' to a new number of the game. The new number must be the old number subtracted with ONE of its cyphers.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("numb-your-turn", f'# It is your turn to move from number \'{number}\' to a new number produced according to the rules of the game. Each new number must be obtained from the previous one by subtracting one of its digits to its value.'), "yellow", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("numb-player-turn", f'# It is the turn of player {n_player} to move from number \'{number}\' to a new number of the game. The new number must be the old number subtracted with ONE of its cyphers.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("numb-player-turn", f'# It is the turn of player {n_player} to move from number \'{number}\' to a new number produced according to the rules of the game. Each new number must be obtained from the previous one by subtracting one of its digits to its value.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("numb-user-move", f'# Please, insert the new number just underneath the current number as reported here: '), "yellow", ["bold"])
 
     TAc.print(LANG.render_feedback("numb-prompt", f'{number}'), "yellow", ["bold"])
@@ -119,7 +119,7 @@ while True:
         TAc.print(LANG.render_feedback("numb-dull-move", '# We have a problem. You can\'t pass. You must move on the game.'), "red", ["bold"])
         exit(0)
     if not cl.verify_move(number, new_number):
-        TAc.print(LANG.render_feedback("numb-illegal-move", '# We have a problem. Your move is not valid. You must subtract ONE cypher of the number.'), "red", ["bold"])
+        TAc.print(LANG.render_feedback("numb-illegal-move", f'# We have a problem. Your move is not valid. Your viable options were those numbers that could have been obtained from {number} by subtracting to it one of its digits (as in its decimal representation). That is, you had to choose and subtract from {number} precisely one among {", ".join(str(number - valid_new_number) for valid_new_number in cl.find_all_moves(number,True))}, hence returning one among {", ".join(str(valid_new_number) for valid_new_number in cl.find_all_moves(number,True))}.'), "red", ["bold"])
         exit(0)
 
     if new_number==0: # TALight has no valid move available and loses the match. The user wins.
@@ -128,7 +128,7 @@ while True:
     if ENV['opponent'] == 'computer':
         watch(new_number, first_to_move=I_AM, second_to_move=YOU_ARE)
         number=cl.computer_move(new_number) # TALight makes its move
-        TAc.print(LANG.render_feedback("numb-server-move", f'# My move is from number \'{new_number}\' to new number \'{number}\' subtracting the cypher \'{new_number-number}\'.'), "green", ["bold"])
+        TAc.print(LANG.render_feedback("numb-server-move", f'# My move is from number {new_number} to the new number {number}={new_number}-{new_number-number} obtained from the previous one by subtracting from it one of its digits ({new_number-number}).'), "green", ["bold"])
     else:
         n_player=cl.player_flip(n_player)
         number=new_number
