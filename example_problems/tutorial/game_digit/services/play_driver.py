@@ -58,28 +58,28 @@ PLAYER_2_IS = LANG.render_feedback("Player-2-is", 'Player 2 is')
 def watch(number, first_to_move, second_to_move):
     assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS] 
     assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS]
-    if ENV["watch"] == 'no_watch':
+    if ENV["watch"] == 'none':
         return
     TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
-    if ENV["watch"] == 'watch_winner':
+    if ENV["watch"] == 'winner':
         if(cl.grundy_val(number) == 0):
-            TAc.print(LANG.render_feedback("numb-watch-winner-who-moves-loses", f'{second_to_move} ahead, since \'{number}\' is a who-moves-loses number.'), "blue")
+            TAc.print(LANG.render_feedback("numb-watch-winner-who-moves-loses", f'{second_to_move} ahead, since {number} is a who-moves-loses number.'), "blue")
         else:
-            TAc.print(LANG.render_feedback("numb-watch-winner-who-moves-wins", f'{first_to_move} ahead, since \'{number}\' is a who-moves-wins number.'), "blue")
+            TAc.print(LANG.render_feedback("numb-watch-winner-who-moves-wins", f'{first_to_move} ahead, since {number} is a who-moves-wins number.'), "blue")
     elif ENV['watch'] == 'num_winning_moves' :
         win_moves = cl.find_winning_move(number)
         if len(win_moves) > 0:
-            TAc.print(LANG.render_feedback("numb-num-winning-moves-n", f'the current number \'{number}\' admits {len(win_moves)} winning moves'), "blue")
+            TAc.print(LANG.render_feedback("numb-num-winning-moves-n", f'the current number {number} admits {len(win_moves)} winning moves'), "blue")
         else:
-            TAc.print(LANG.render_feedback("numb-num-winning-moves-0", f'the current number \'{number}\' admits no winning move'), "blue")
+            TAc.print(LANG.render_feedback("numb-num-winning-moves-0", f'the current number {number} admits no winning move'), "blue")
     elif ENV['watch'] == 'list_winning_moves':
         win_moves = cl.find_winning_move(number)
         if len(win_moves) > 0:
-            TAc.print(LANG.render_feedback("numb-list-one-winning-move", f'for the current number \'{number}\' the winning move is \'{win_moves[0]}\''), "blue")
+            TAc.print(LANG.render_feedback("numb-list-one-winning-move", f'for the current number {number} the winning move is {win_moves[0]}'), "blue")
         else:
-            TAc.print(LANG.render_feedback("numb-list-none-winning-moves", f'the current number \'{number}\' admits no winning move'), "blue")
-    elif ENV['watch'] == 'watch_grundy_val':
-        TAc.print(LANG.render_feedback("numb-watch-grundy-val", f'the current number \'{number}\' has grundy value {cl.grundy_val(number)}'), "blue")
+            TAc.print(LANG.render_feedback("numb-list-none-winning-moves", f'the current number {number} admits no winning move'), "blue")
+    elif ENV['watch'] == 'grundy_val':
+        TAc.print(LANG.render_feedback("numb-watch-grundy-val", f'the current number {number} has grundy value {cl.grundy_val(number)}'), "blue")
 
 
 
@@ -107,9 +107,9 @@ while True:
         else:
             watch(number, first_to_move=PLAYER_2_IS, second_to_move=PLAYER_1_IS)
     if ENV['opponent'] == 'computer':  
-        TAc.print(LANG.render_feedback("numb-your-turn", f'# It is your turn to move from number \'{number}\' to a new number produced according to the rules of the game. Each new number must be obtained from the previous one by subtracting one of its non-zero digits to its value.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("numb-your-turn", f'# It is your turn to move from number {number} to a new number produced according to the rules of the game. Each new number must be obtained from the previous one by subtracting one of its non-zero digits to its value.'), "yellow", ["bold"])
     else:
-        TAc.print(LANG.render_feedback("numb-player-turn", f'# It is the turn of player {n_player} to move from number \'{number}\' to a new number produced according to the rules of the game. Each new number must be obtained from the previous one by subtracting one of its non-zero digits to its value.'), "yellow", ["bold"])
+        TAc.print(LANG.render_feedback("numb-player-turn", f'# It is the turn of player {n_player} to move from number {number} to a new number produced according to the rules of the game. Each new number must be obtained from the previous one by subtracting one of its non-zero digits to its value.'), "yellow", ["bold"])
     TAc.print(LANG.render_feedback("numb-user-move", f'# Please, insert the new number just underneath the current number as reported here: '), "yellow", ["bold"])
 
     TAc.print(LANG.render_feedback("numb-prompt", f'{number}'), "yellow", ["bold"])
