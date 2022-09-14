@@ -28,6 +28,10 @@ services:
         regex: ^([1-3][0-9]|[1-9]|40)$
         default: 4
         regex-explained: The number has a maximum of 40 decimal digits.
+      goal:
+        regex: ^(any|reduced)$
+        default: any
+        explain: Your goal could be to produce `any` fraction equivalent to the given decimal number, or the reduced one where the numerator and denominator are relative prime numbers.
       whole_number_digits:
         regex: ^([1-2][0-9]|[1-9]|30)$
         default: 2
@@ -37,4 +41,19 @@ services:
         regex: ^(hardcoded|en|it)$
         default: hardcoded
 
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis."
+    args:
+      service:
+        regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+      metafile:
+        regex: ^(default|en|it|[a-zA-Z0-9_]+)$
+        default: default
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it|[a-zA-Z0-9_]+)$
+        default: en
 ...
