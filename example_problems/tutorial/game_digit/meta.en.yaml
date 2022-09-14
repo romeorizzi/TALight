@@ -92,8 +92,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
+        regex: ^(none|winner|grundy_val|num_winning_moves|list_winning_moves)$
+        default: none
         explain: The user can choose which informations should be displayed about any number that will face during the match.
 # vedere il problema lcs
       seed:
@@ -122,8 +122,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
+        regex: ^(none|winner|grundy_val|num_winning_moves|list_winning_moves)$
+        default: none
         explain: The user can choose which informations should be displayed about any number that will face during the match.
 # vedere il problema lcs
       seed:
@@ -158,8 +158,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
+        regex: ^(none|winner|grundy_val|num_winning_moves|list_winning_moves)$
+        default: none
         explain: The user can choose which informations should be displayed about any number that will face during the match.
       seed:
         regex: ^0$
@@ -191,8 +191,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
+        regex: ^(none|winner|grundy_val|num_winning_moves|list_winning_moves)$
+        default: none
         explain: The user can choose which informations should be displayed about any number that will face during the match.
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
