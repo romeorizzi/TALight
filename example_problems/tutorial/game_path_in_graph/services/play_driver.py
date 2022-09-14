@@ -69,7 +69,7 @@ PLAYER_2_IS = LANG.render_feedback("Player-2-is", 'Player 2 is')
 def watch(graph,start_node, first_to_move, second_to_move):
     assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS] 
     assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS]
-    if ENV["watch"] == 'no_watch':
+    if ENV["watch"] == 'none':
         return
     TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
     f_player_w = gl.first_player_win(graph)
@@ -80,7 +80,7 @@ def watch(graph,start_node, first_to_move, second_to_move):
     else:
         win_moves=gl.find_winning_moves(graph,start_node,True)
     win_moves=list(dict.fromkeys(win_moves))
-    if ENV["watch"] == 'watch_winner':
+    if ENV["watch"] == 'winner':
         if not(f_player_w) and win_moves==[]:
             TAc.print(LANG.render_feedback("graph-watch-winner-who-moves-loses", f'{second_to_move} ahead, since \'{gl.get_edges(graph)}\' is a who-moves-loses configuration.'), "blue")
         else:
