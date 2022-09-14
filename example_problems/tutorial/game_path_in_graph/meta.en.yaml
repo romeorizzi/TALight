@@ -76,8 +76,8 @@ services:
   play:
     evaluator: [python, services/play_driver.py]
     description: use this service if you want to play a match of the graph_game against our player. You can choose the starting graph and whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect graph_game play -aTALight_first_to_move=1 -agraph="(11 2)(5 3)" -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e graph_game play -aTALight_first_to_move=1 -agraph="(11 2)(5 3)" -awatch=watch_winner -- bots/my_graph_game_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect graph_game play -aTALight_first_to_move=1 -agraph="(11 2)(5 3)" -awatch=none']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e graph_game play -aTALight_first_to_move=1 -agraph="(11 2)(5 3)" -awatch=winner -- bots/my_graph_game_player.py']
     args:
       graph:
         regex: ^(\(\d* \d*\)){0,50}$
@@ -93,8 +93,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|num_winning_moves|list_winning_moves|print_current_graph)$
-        default: no_watch
+        regex: ^(none|winner|num_winning_moves|list_winning_moves|print_current_graph)$
+        default: none
         explain: The user can choose which informations should be displayed about any graph that will face during the match.
 # vedere il problema lcs
       seed:
@@ -111,8 +111,8 @@ services:
   play_random:
     evaluator: [python, services/play_driver.py]
     description: use this service if you want to play a match of the graph_game against our player. The starting graph is random. You can choose whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect graph_game play_random -aTALight_first_to_move=1 -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e graph_game play_random -aTALight_first_to_move=1 -awatch=watch_winner -- bots/my_graph_game_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect graph_game play_random -aTALight_first_to_move=1 -awatch=none']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e graph_game play_random -aTALight_first_to_move=1 -awatch=winner -- bots/my_graph_game_player.py']
     args:
       graph:
         regex: ^$
@@ -127,8 +127,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|num_winning_moves|list_winning_moves|print_current_graph)$
-        default: no_watch
+        regex: ^(none|winner|num_winning_moves|list_winning_moves|print_current_graph)$
+        default: none
         explain: The user can choose which informations should be displayed about any graph that will face during the match.
 # vedere il problema lcs
       seed:
