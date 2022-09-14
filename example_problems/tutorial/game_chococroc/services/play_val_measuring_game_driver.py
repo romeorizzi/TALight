@@ -71,10 +71,10 @@ PLAYER_2_IS = LANG.render_feedback("Player-2-is", 'Player 2 is')
 def watch(m,n,nim, first_to_move, second_to_move):
     assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS, PLAYER_1_IS, PLAYER_2_IS]
     assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS, PLAYER_1_IS, PLAYER_2_IS]
-    if ENV["watch"] == 'no_watch':
+    if ENV["watch"] == 'none':
         return
     TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
-    if ENV["watch"] == 'watch_winner':
+    if ENV["watch"] == 'winner':
         if(cl.grundy_sum(cl.grundy_val(m, n), nim) == 0):
             TAc.print(LANG.render_feedback("watch-winner-who-moves-loses", f'{second_to_move} ahead, since <chococroc({m},{n}) + nim({nim})> is a who-moves-loses configuration.'), "blue")
         else:
@@ -102,7 +102,7 @@ def watch(m,n,nim, first_to_move, second_to_move):
             TAc.print(LANG.render_feedback("list-one-winning-move", f'# for the current configuration <chococroc({m},{n}) + nim({nim})> the winning move is {win_moves_with_nim}'), "blue")
         else:
             TAc.print(LANG.render_feedback("list-none-winning-moves", f'# the current configuration <chococroc({m},{n}) + nim({nim})> admits no winning move'), "blue")
-    elif ENV['watch'] == 'watch_grundy_val':
+    elif ENV['watch'] == 'grundy_val':
         TAc.print(LANG.render_feedback("watch-grundy-val", f'# the current configuration <chococroc({m},{n}) + nim({nim})> has grundy value {cl.grundy_sum(cl.grundy_val(m, n), nim)}'), "blue")
 
 
