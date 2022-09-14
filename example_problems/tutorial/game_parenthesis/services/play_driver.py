@@ -66,10 +66,10 @@ PLAYER_2_IS = LANG.render_feedback("Player-2-is", 'Player 2 is')
 def watch(formula, first_to_move, second_to_move):
     assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS] 
     assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS]
-    if ENV["watch"] == 'no_watch':
+    if ENV["watch"] == 'none':
         return
     TAc.print(f'# watch={ENV["watch"]}: ', "blue", end='')
-    if ENV["watch"] == 'watch_winner':
+    if ENV["watch"] == 'winner':
         if(pl.grundy_val(formula) == 0):
             TAc.print(LANG.render_feedback("par-watch-winner-who-moves-loses", f'{second_to_move} ahead, since \'{formula}\' is a who-moves-loses configuration.'), "blue")
         else:
@@ -90,7 +90,7 @@ def watch(formula, first_to_move, second_to_move):
             TAc.print('# The duplicates are removed, if the result formula is the same', "blue")
         else:
             TAc.print(LANG.render_feedback("par-list-none-winning-moves", f'the current formula \'{formula}\' admits no winning move'), "blue")
-    elif ENV['watch'] == 'watch_grundy_val':
+    elif ENV['watch'] == 'grundy_val':
         TAc.print(LANG.render_feedback("par-watch-grundy-val", f'the current formula \'{formula}\' has grundy value {pl.grundy_val(formula)}'), "blue")
 
 
