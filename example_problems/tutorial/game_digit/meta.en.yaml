@@ -80,8 +80,8 @@ services:
   play:
     evaluator: [python, services/play_driver.py]
     description: use this service if you want to play a match of the game_digit against our player. You can choose the starting number and whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect game_digit play -aTALight_first_to_move=1 -anumber=24 -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play -aTALight_first_to_move=1 -anumber=24 -awatch=watch_winner -- bots/my_game_digit_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect game_digit play -aTALight_first_to_move=1 -anumber=24 -awatch=none']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play -aTALight_first_to_move=1 -anumber=24 -awatch=winner -- bots/my_game_digit_player.py']
     args:
       number:
         regex: ^([1-9][0-9]{0,50})$
@@ -110,8 +110,8 @@ services:
   play_random:
     evaluator: [python, services/play_driver.py]
     description: use this service if you want to play a match of the game_digit against our player. The starting number is random. You can choose whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect game_digit play_random -aTALight_first_to_move=1 -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_random -aTALight_first_to_move=1 -awatch=watch_winner -- bots/my_game_digit_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect game_digit play_random -aTALight_first_to_move=1 -awatch=none']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_random -aTALight_first_to_move=1 -awatch=winner -- bots/my_game_digit_player.py']
     args:
       number:
         regex: ^$
@@ -143,7 +143,7 @@ services:
     evaluator: [python, services/play_val_measuring_game_driver.py]
     description: use this service if you want to play a match of the MeasuringGame(game_digit) against our player. You can choose the starting number and whether to be first or second to move. You can also choose to play against another person. The MeasuringGame(game_digit) game is defined as the game sum of a game_digit and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a game_digit position. You can ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
     example1: [experiment in a direct use, '\n     rtal connect game_digit play_val_measuring_game -aTALight_first_to_move=1 -anumber=24 -anim=0']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_val_measuring_game -aTALight_first_to_move=1 -anumber=24 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_game_digit_player.py']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_val_measuring_game -aTALight_first_to_move=1 -anumber=24 -anim=0 -awatch=grundy_val -- bots/my_measuring_game_digit_player.py']
     args:
       number:
         regex: ^([1-9][0-9]{0,50})$
@@ -176,7 +176,7 @@ services:
     evaluator: [python, services/play_val_measuring_game_driver.py]
     description: use this service if you want to play a match of the MeasuringGame(game_digit) against our player. The starting number is random. You can choose whether to be first or second to move. You can also choose to play against another person. The MeasuringGame(game_digit) game is defined as the game sum of a game_digit and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a game_digit position. You can ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
     example1: [experiment in a direct use, '\n     rtal connect game_digit play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_game_digit_player.py']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game_digit play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -awatch=grundy_val -- bots/my_measuring_game_digit_player.py']
     args:
       number:
         regex: ^$
