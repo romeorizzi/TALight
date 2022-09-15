@@ -16,6 +16,8 @@ rtal connect vertex_cover -aweighted=1
 rtal connect vertex_cover -asource=randgen_1
 rtal connect vertex_cover -asource=terminal
 rtal connect vertex_cover -asource=catalogue -ainstance_id=10
+rtal connect vertex_cover -asource=randgen_1 -aplot=1
+rtal connect vertex_cover -asource=randgen_1 -aweighted=1 -aplot=1
 
 ## gimme_instance
 rtal connect vertex_cover gimme_instance -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance=simple
@@ -44,7 +46,7 @@ rtal connect vertex_cover check_minimum_vc -asource=catalogue -ainstance_format=
 rtal connect vertex_cover check_minimum_vc -asource=catalogue -ainstance_format=simple
 rtal connect vertex_cover check_minimum_vc -asource=terminal -anum_vertices=8 -anum_edges=11
 rtal connect vertex_cover check_minimum_vc -aseed=474327
-rtal connect vertex_cover check_minimum_vc -a plot -a plot_sol
+rtal connect vertex_cover check_minimum_vc -aplot=1 -aplot_sol=1
 
 ## check_minimum_weight_vc
 rtal connect vertex_cover check_minimum_weight_vc -asource=randgen_1
@@ -54,7 +56,7 @@ rtal connect vertex_cover check_minimum_weight_vc -asource=catalogue -ainstance_
 rtal connect vertex_cover check_minimum_weight_vc -asource=catalogue -ainstance_format=simple
 rtal connect vertex_cover check_minimum_weight_vc -asource=terminal -anum_vertices=8 -anum_edges=11
 rtal connect vertex_cover check_minimum_weight_vc -aseed=474327
-rtal connect vertex_cover check_minimum_weight_vc -a plot -a plot_sol
+rtal connect vertex_cover check_minimum_weight_vc -aplot=1 -aplot_sol=1
 
 ## check_approx_vc
 rtal connect vertex_cover check_approx_vc -asource=randgen_1
@@ -65,7 +67,7 @@ rtal connect vertex_cover check_approx_vc -asource=catalogue -ainstance_id=32 -a
 rtal connect vertex_cover check_approx_vc -asource=terminal -anum_vertices=10 -anum_edges=15
 rtal connect vertex_cover check_approx_vc -asource=terminal -anum_vertices=10 -anum_edges=15
 rtal connect vertex_cover check_approx_vc -aseed=474327
-rtal connect vertex_cover check_approx_vc -a plot -a plot_sol
+rtal connect vertex_cover check_approx_vc -aplot=1 -aplot_sol=1
 
 ## check_approx_weighted_vc
 rtal connect vertex_cover check_approx_weighted_vc -asource=randgen_1
@@ -76,7 +78,30 @@ rtal connect vertex_cover check_approx_weighted_vc -asource=catalogue -ainstance
 rtal connect vertex_cover check_approx_weighted_vc -asource=terminal -anum_vertices=10 -anum_edges=15
 rtal connect vertex_cover check_approx_weighted_vc -asource=terminal -anum_vertices=10 -anum_edges=15
 rtal connect vertex_cover check_approx_weighted_vc -aseed=474327
-rtal connect vertex_cover check_approx_weighted_vc -a plot -a plot_sol
+rtal connect vertex_cover check_approx_weighted_vc -aplot=1 -aplot_sol=1
+
+# check_max_indset
+rtal connect vertex_cover check_max_indset -asource=randgen_1
+rtal connect vertex_cover check_max_indset -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=with_info
+rtal connect vertex_cover check_max_indset -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=simple
+rtal connect vertex_cover check_max_indset -asource=catalogue -ainstance_id=32 -ainstance_format=with_info
+rtal connect vertex_cover check_max_indset -asource=catalogue -ainstance_id=32 -ainstance_format=simple
+rtal connect vertex_cover check_max_indset -asource=terminal -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover check_max_indset -asource=terminal -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover check_max_indset -aseed=474327
+rtal connect vertex_cover check_max_indset -aplot=1 -aplot_sol=1
+
+
+# check_max_weight_indset
+rtal connect vertex_cover check_max_weight_indset -asource=randgen_1
+rtal connect vertex_cover check_max_weight_indset -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=with_info
+rtal connect vertex_cover check_max_weight_indset -asource=randgen_1 -anum_vertices=10 -anum_edges=15 -ainstance_format=simple
+rtal connect vertex_cover check_max_weight_indset -asource=catalogue -ainstance_id=32 -ainstance_format=with_info
+rtal connect vertex_cover check_max_weight_indset -asource=catalogue -ainstance_id=32 -ainstance_format=simple
+rtal connect vertex_cover check_max_weight_indset -asource=terminal -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover check_max_weight_indset -asource=terminal -anum_vertices=10 -anum_edges=15
+rtal connect vertex_cover check_max_weight_indset -aseed=474327
+rtal connect vertex_cover check_max_weight_indset -aplot=1 -aplot_sol=1
 
 ## bounds
 rtal connect vertex_cover bounds -asource=randgen_1
