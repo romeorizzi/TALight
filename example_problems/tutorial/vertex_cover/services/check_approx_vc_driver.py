@@ -183,6 +183,6 @@ if ENV['plot_sol']:
     vertices = ' '.join(map(str, answer)).replace('(', '').replace(') (',' ').replace(')','').replace(',',' ')
     vcl.plot_2app_vc(instance['graph'], vertices, answer)
   else:
-    vcl.plot_2app_vc(instance['graph'], appr_sol, max_matching)
+    vcl.plot_2app_vc(instance['graph'], appr_sol, [eval(t) for t in max_matching.replace(', ',',').split()])
 
 exit(0)

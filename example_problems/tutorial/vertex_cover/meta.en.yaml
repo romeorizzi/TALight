@@ -504,6 +504,10 @@ services:
         regex: ^(0|1)$
         default: 0
         explain: 'Generates a graph with weighted nodes'
+      goal_2apx:
+        regex: ^(0|1)$
+        default: 1
+        explain: 'The problem solver poses himself the goal to 2-approximate the optimum value for this problem'
       upper_bound:
         regex: ^([1-9][0-9]*)$
         default: 0
