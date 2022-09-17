@@ -260,7 +260,7 @@ while True:
 
   if weighted:
     i = 0
-    for v in G.nodes():
+    for v in sorted(G.nodes()):
       G.add_node(v, weight=weights[i])
       i += 1
   

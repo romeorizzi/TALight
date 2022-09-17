@@ -700,6 +700,31 @@ services:
         regex: ^(hardcoded|hardcoded_ext|en|it)$
         default: hardcoded
 
+  ##
+  ## EVAL_APPROX_WEIGHTED_VC
+  ##
+  eval_bounds:
+    description: 'Questo servizio valuta il tuo codice per calcolare la 2-approsimazione del vertex cover pesato per un dato grafo'
+    evaluator: [python, services/eval_bounds_driver.py]
+    files:
+      - sourcecode
+    args:
+      goal:
+        explain: 'Specifica il goal.'
+        regex: ^(lower_bound|upper_bound|both_bounds|2apx)$
+        default: 2apx
+      code_lang: 
+        explain: 'Speficica il linguaggio con cui è scritto il bot. Più conosciamo del tuo bot, più possiamo stimare l`efficienza del tuo algoritmo.'
+        regex: ^(python|java|nodejs|compiled)$
+        default: python
+      seed:
+        explain: 'Quando questo argomento viene lasciato al suo valore predefinito (random_seed), il servizio sceglie un seme a caso e lo comunica all`utente oltre che all`istanza pseudo-casuale generata. Altrimenti, come seme, puoi utilizzare qualsiasi numero intero compreso tra 100000 e 999999.'
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        default: random_seed
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+
 
   ##
   ## ALTRO
