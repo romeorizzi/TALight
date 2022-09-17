@@ -469,7 +469,7 @@ services:
   ## BOUNDS
   ##
   bounds:
-    evaluator: [python, services/bounds_driver.py]
+    evaluator: [python, services/boundaries_driver.py]
     description: 'With respect to a reference (possibly weighted) graph G (which can be proposed by the service itself or by the problem solver) this service prompts the student for bounds (lower, upper, or both) on the minimum size/cost of a minimum size/weight vertex cover of G. A node cover of G is a set X of nodes such that every edge of G has at least one endpoint in S. A matching of G is a set of edges F such that no two edges in F have endpoints in common. For each bound declared, the problem solver should also provide a proof of validity in the form of an easily verifyiable certificate (more precisely, it should be possible to verify the certificate in polynomial time). Clearly, a node cover of size UB (resp., of total weight UB) is a valid certificate that the the minimum size (resp., minimum weight) of a node cover is at most UB. At the same time, a matching F of cardinality LB is a valid certificate that the minimum size of a node cover is at least UB. Indeed, every node cover should take at leat one of the two endpoint from each of the edges in F, and all these endnodes are distinct nodes. One possible goal for the problem solver is to provide both a lower bound and an upper bound (with certificates in the languages suggested above). Computing the minimum size of a vertex cover is an APX-hard problem, but can be 2-approximated. For this reason, a further viable and interesting challenge for the problem solver is to make sure that his upper bound is always at most the double of his lower bound. The problem solver could actually design a bot that interacts with this service so as to assure that this challenge is always reached. In the case of a weighted graph, then the notion of matching can be generalized as follows. Let w be the mapping that assigns to every node its weight. A function f that assigns a natural number to every edge of the graph is called a w-matching if for every node v of the graph the sum of the values taken by f on the edges incident to v is at most w(v). The value of a w-matching is the sum of the values taken by f over all the edges of G. It can be noticed that whenever a w-matching of value LB exists then every node cover of G has total weight at least LB.'
     args:
       source:
@@ -501,18 +501,18 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Numero di archi che connettono i vertici del grafo.'
-      weighted:
+      #weighted:
+      #  regex: ^(0|1)$
+      #  default: 0
+      #  explain: 'Genera un grafo con nodi pesati.'
+      goal:
+        regex: ^(lower_bound|upper_bound|both_bounds|2apx)$
+        default: 2apx
+        explain: 'The problem solver poses himself the goal to 2-approximate the optimum value for this problem'
+      print_sol_bounds:
         regex: ^(0|1)$
         default: 0
-        explain: 'Genera un grafo con nodi pesati.'
-      upper_bound:
-        regex: ^([1-9][0-9]*)$
-        default: 0
-        explain: 'Impostare questo argomento su un valore diverso da zero per specificare un limite superiore sulla dimensione/peso minimo del vertex cover nel grafico specificato. Quando lo fai, devi anche fornire un certificato per il tuo limite superiore.'
-      lower_bound:
-        regex: ^([1-9][0-9]*)$
-        default: 0
-        explain: 'Impostare questo argomento su un valore diverso da zero per specificare un limite inferiore sulla dimensione/peso minimo del vertex cover nel grafico specificato. Quando lo fai, devi anche fornire un certificato per il tuo limite superiore.'
+        explain: 'Stampa la soluzione con i bounds'
       plot:
         regex: ^(0|1)$
         default: 0

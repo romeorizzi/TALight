@@ -22,7 +22,7 @@ args_list = [
     ('instance_format',str),
     ('num_vertices',int),
     ('num_edges',int),
-    ('weighted',bool),
+    #('weighted',bool),
     ('goal',str),
     ('print_sol_bounds',bool),
     ('plot',bool),
@@ -37,7 +37,8 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = '
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
-weighted = ENV['weighted']
+#weighted = ENV['weighted']
+weighted = 0
 
 ## Input Sources
 if TALf.exists_input_file('instance'):
@@ -129,7 +130,7 @@ if ENV['plot']:
 if not ENV['print_sol_bounds']:
   ## Input lb, up e check
   if ENV['goal'] == 'lower_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
-    TAc.print(LANG.render_feedback("insert-lb", f'Enter you conjectured lower bound: '), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("insert-lb", f'Enter you conjectured lower bound: '), "yellow", ["bold"], flush=True)
     lower_bound = TALinput(int, 1, TAc=TAc)[0]
     if lower_bound <= 0:
       TAc.print(LANG.render_feedback("wrong-lb-value-0", f'Lower bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
@@ -148,8 +149,12 @@ if not ENV['print_sol_bounds']:
       TAc.print(LANG.render_feedback("wrong-nodes-number-match", f'Wrong number of nodes (they must be {lower_bound}). Aborting.\n'), "red", ["bold"], flush=True)
       exit(0)
 
+    if not vcl.verify_lb(lb_match, instance['graph']):
+      TAc.print(LANG.render_feedback("invalid-lb-match", f'The lower bound you provided is not valid.\n'), "red", ["bold"], flush=True)
+      exit(0)
+
   if ENV['goal'] == 'upper_bound' or ENV['goal'] == 'both_bounds'  or ENV['goal'] == '2apx':
-    TAc.print(LANG.render_feedback("insert-ub", f'Enter you conjectured upper bound: '), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("insert-ub", f'Enter you conjectured upper bound: '), "yellow", ["bold"], flush=True)
     upper_bound = TALinput(int, 1, TAc=TAc)[0]
     if upper_bound <= 0:
       TAc.print(LANG.render_feedback("wrong-ub-value-0", f'Upper bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
@@ -161,27 +166,20 @@ if not ENV['print_sol_bounds']:
       TAc.print(LANG.render_feedback("wrong-ub-value-2", f'Upper bound too low. Aborting.\n'), "red", ["bold"], flush=True)
       exit(0)
   
-    TAc.print(LANG.render_feedback("insert-cover-ub", f'Enter you conjectured cover for upper bound (integers separated by spaces): '), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("insert-cover-ub", f'Enter you conjectured cover for upper bound (integers separated by spaces): '), "yellow", ["bold"], flush=True)
     ub_cover = TALinput(int, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
     if len(ub_cover) != upper_bound:
       TAc.print(LANG.render_feedback("wrong-nodes-number-cover", f'Wrong number of nodes (they must be {upper_bound}). Aborting.\n'), "red", ["bold"], flush=True)
       exit(0)
 
-  if 'lower_bound' in locals() and 'upper_bound' in locals():
-    if lower_bound > upper_bound:
-      TAc.print(LANG.render_feedback("wrong-lb-ub-value", f'Lower bound can\'t be greater than the upper bound. Aborting.\n'), "red", ["bold"], flush=True)
-      exit(0)
-
-  ## verifica lb e ub
-  if ENV['goal'] == 'lower_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
-    if not vcl.verify_lb(lb_match, instance['graph']):
-      TAc.print(LANG.render_feedback("invalid-lb-match", f'The lower bound you provided is not valid.\n'), "red", ["bold"], flush=True)
-      exit(0)
-
-  if ENV['goal'] == 'upper_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
     if not vcl.verify_ub(ub_cover, instance['graph']):
       TAc.print(LANG.render_feedback("invalid-ub-cover", f'The upper bound you provided is not valid.\n'), "red", ["bold"], flush=True)
+      exit(0)
+
+  if 'lower_bound' in locals() and 'upper_bound' in locals():
+    if lower_bound > upper_bound:
+      TAc.print(LANG.render_feedback("wrong-lb-ub-value", f'Upper bound must be greater than the lower bound. Aborting.\n'), "red", ["bold"], flush=True)
       exit(0)
 
   if ENV['goal'] == '2apx':
@@ -197,6 +195,9 @@ if ENV['print_sol_bounds']:
   TAc.print(f'{" ".join(map(str, sorted(S)))}', "white", ["bold"], flush=True)
   TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
   TAc.print(f'{" ".join(map(str, sorted(S_1)))}\n', "white", ["bold"], flush=True)
+  
+  if ENV['plot_sol']:
+    vcl.plot_mvc(instance['graph'], vc_sol, [])
 else:
   if ENV['goal'] == 'lower_bound':
     TAc.OK()

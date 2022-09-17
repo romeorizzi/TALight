@@ -500,10 +500,10 @@ services:
         regex: ^([1-9][0-9]*)$
         default: 11
         explain: 'Number of edges that connect the vertices of the graph'
-      weighted:
-        regex: ^(0|1)$
-        default: 0
-        explain: 'Generates a graph with weighted nodes'
+      #weighted:
+      #  regex: ^(0|1)$
+      #  default: 0
+      #  explain: 'Generates a graph with weighted nodes'
       goal:
         regex: ^(lower_bound|upper_bound|both_bounds|2apx)$
         default: 2apx

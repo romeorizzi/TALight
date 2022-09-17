@@ -720,7 +720,7 @@ def calculate_bounds(graph):
   S = [] # Lower bound
   VminS = []
 
-  while sum_deg < CurG.number_of_edges():
+  while sum_deg < CurG.number_of_edges() and i <= len(deg_list):
     sum_deg += deg_list[i][1]
     S.append(deg_list[i][0])
     i += 1 
@@ -756,17 +756,35 @@ def verify_ub(ub_cover, graph):
   ok = True
   CurG = graph.copy()
 
+  deg_list = list(CurG.degree(ub_cover))
+  deg_list.sort(key=lambda tup: tup[1], reverse=True)
+
+  i = 0
+  sum_deg = 0
+  S = [] # Lower bound
+
+  num_edges = CurG.number_of_edges()
+  while sum_deg < num_edges and i <= len(deg_list):
+    sum_deg += deg_list[i][1]
+    S.append(deg_list[i][0])
+    CurG.remove_node(deg_list[i][0])
+    i += 1
+
   # In pratica: nel node cover non devono esserci
   # nodi di grado zero, mentre i nodi fuori dal
   # node cover devono avere tutti grado zero
+  tmp = []
   for v in ub_cover:
-    if CurG.degree(v) == 0:
+    if v not in S:
+      tmp.append(v)
+  for v1 in tmp:
+    if CurG.degree(v1) == 0:
       ok = False
     else:
-      CurG.remove_node(v)
+      CurG.remove_node(v1)
 
-  for v1 in list(CurG.nodes())[:]:
-    if CurG.degree(v1) != 0:
+  for v2 in list(CurG.nodes())[:]:
+    if CurG.degree(v2) != 0:
       ok = False
 
   return ok
