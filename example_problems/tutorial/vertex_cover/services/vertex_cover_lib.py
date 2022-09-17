@@ -708,6 +708,70 @@ def verify_approx_vc(matching, graph, ret_edges=0):
     return 1
 
 '''
+BOUNDS
+'''
+def calculate_bounds(graph):
+  CurG = graph.copy()
+  deg_list = list(CurG.degree())
+  deg_list.sort(key=lambda tup: tup[1], reverse=True)
+
+  i = 0
+  sum_deg = 0
+  S = [] # Lower bound
+  VminS = []
+
+  while sum_deg < CurG.number_of_edges():
+    sum_deg += deg_list[i][1]
+    S.append(deg_list[i][0])
+    i += 1 
+ 
+  for v in list(CurG.nodes())[:]:
+    if v not in S:
+      VminS.append(v)
+    else:
+      CurG.remove_node(v)
+
+  S_1 = S.copy() # Upper bound
+
+  for v in list(CurG.nodes())[:]:
+    if CurG.degree(v) > 0:
+      S_1.append(v)
+      CurG.remove_node(v)
+
+  return len(S), S, len(S_1), S_1
+
+def verify_lb(lb_match, graph):
+  ok = True
+  sum_deg = 0
+
+  for v in lb_match:
+    sum_deg += graph.degree(v)
+
+  if sum_deg < graph.number_of_edges():
+    ok = False
+
+  return ok
+
+def verify_ub(ub_cover, graph):
+  ok = True
+  CurG = graph.copy()
+
+  # In pratica: nel node cover non devono esserci
+  # nodi di grado zero, mentre i nodi fuori dal
+  # node cover devono avere tutti grado zero
+  for v in ub_cover:
+    if CurG.degree(v) == 0:
+      ok = False
+    else:
+      CurG.remove_node(v)
+
+  for v1 in list(CurG.nodes())[:]:
+    if CurG.degree(v1) != 0:
+      ok = False
+
+  return ok
+
+'''
 VARIE: PLOT
 '''
 def plot_graph(graph, weighted=0):

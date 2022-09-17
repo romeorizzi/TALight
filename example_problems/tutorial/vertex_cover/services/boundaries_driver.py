@@ -24,6 +24,7 @@ args_list = [
     ('num_edges',int),
     ('weighted',bool),
     ('goal',str),
+    ('print_sol_bounds',bool),
     ('plot',bool),
     ('plot_sol',bool),
     ('seed',str),
@@ -116,131 +117,114 @@ TAc.print(vcl.instance_to_str(instance,ENV["instance_format"]), "white", ["bold"
 if weighted:
   TAc.print(LANG.render_feedback("nocover-weight", f'No cover weight of the graph: {no_cover_weight}\n'), "white", ["bold"], flush=True)
 
+## Calcolo soluzione esatta e bounds esatti
 size_sol, vc_sol = vcl.calculate_minimum_vc(instance['graph'])
+lb, S, ub, S_1 = vcl.calculate_bounds(instance['graph'])
 
 if ENV['plot']:
-  #thr1 = threading.Thread(target=vcl.plot_graph,args=(instance['graph']))
+  #thr1 = threading.Thread(target=vcl.plot_graph,args=(instance['graph'],))
   #thr1.start()
   vcl.plot_graph(instance['graph'])
 
-## Input lb, up e check
-if ENV['goal'] == 'lower_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
-  TAc.print(LANG.render_feedback("insert-lb", f'Enter you conjectured lower bound: '), "yellow", ["bold"])
-  lower_bound = TALinput(int, 1, TAc=TAc)[0]
-  if lower_bound <= 0:
-    TAc.print(LANG.render_feedback("wrong-lb-value-0", f'Lower bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
-    exit(0)
-  if lower_bound > instance['num_vertices']:
-    TAc.print(LANG.render_feedback("wrong-lb-value-1", f'Lower bound must be less or equal to {instance["num_vertices"]}. Aborting.\n'), "red", ["bold"], flush=True)
-    exit(0)
+if not ENV['print_sol_bounds']:
+  ## Input lb, up e check
+  if ENV['goal'] == 'lower_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
+    TAc.print(LANG.render_feedback("insert-lb", f'Enter you conjectured lower bound: '), "yellow", ["bold"])
+    lower_bound = TALinput(int, 1, TAc=TAc)[0]
+    if lower_bound <= 0:
+      TAc.print(LANG.render_feedback("wrong-lb-value-0", f'Lower bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
+      exit(0)
+    if lower_bound > instance['num_vertices']:
+      TAc.print(LANG.render_feedback("wrong-lb-value-1", f'Lower bound must be less or equal to {instance["num_vertices"]}. Aborting.\n'), "red", ["bold"], flush=True)
+      exit(0)
+    if lower_bound > size_sol:
+      TAc.print(LANG.render_feedback("wrong-lb-value-2", f'Lower bound too high. Aborting.\n'), "red", ["bold"], flush=True)
+      exit(0)
   
-  TAc.print(LANG.render_feedback("insert-match-lb", f'Enter you conjectured match for lower bound (integers separated by spaces): '), "yellow", ["bold"])
-  lb_match = TALinput(int, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
+    TAc.print(LANG.render_feedback("insert-match-lb", f'Enter you conjectured match for lower bound (integers separated by spaces): '), "yellow", ["bold"])
+    lb_match = TALinput(int, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
-  if len(lb_match) != lower_bound:
-    TAc.print(LANG.render_feedback("wrong-nodes-number-match", f'Wrong number of nodes (they must be {lower_bound}). Aborting.\n'), "red", ["bold"], flush=True)
-    exit(0)
-
-if ENV['goal'] == 'upper_bound' or ENV['goal'] == 'both_bounds'  or ENV['goal'] == '2apx':
-  TAc.print(LANG.render_feedback("insert-ub", f'Enter you conjectured upper bound: '), "yellow", ["bold"])
-  upper_bound = TALinput(int, 1, TAc=TAc)[0]
-  if upper_bound <= 0:
-    TAc.print(LANG.render_feedback("wrong-ub-value-0", f'Upper bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
-    exit(0)
-  if upper_bound > instance['num_vertices']:
-    TAc.print(LANG.render_feedback("wrong-ub-value-1", f'Upper bound must be less or equal to {instance["num_vertices"]}. Aborting.\n'), "red", ["bold"], flush=True)
-    exit(0)
-
-  TAc.print(LANG.render_feedback("insert-cover-ub", f'Enter you conjectured cover for upper bound (integers separated by spaces): '), "yellow", ["bold"])
-  ub_cover = TALinput(int, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
-
-  if len(ub_cover) != upper_bound:
-    TAc.print(LANG.render_feedback("wrong-nodes-number-cover", f'Wrong number of nodes (they must be {upper_bound}). Aborting.\n'), "red", ["bold"], flush=True)
-    exit(0)
-
-if 'lower_bound' in locals() and 'upper_bound' in locals():
-  if lower_bound > upper_bound:
-    TAc.print(LANG.render_feedback("wrong-lb-ub-value", f'Lower bound can\'t be greater than upper bound. Aborting.\n'), "red", ["bold"], flush=True)
-    exit(0)
-
-## Ordino i nodi per grado
-CurG = instance['graph'].copy()
-deg_list = list(CurG.degree())
-deg_list.sort(key=lambda tup: tup[1], reverse=True)
-
-sum_deg = 0
-i = 0
-S = [] # Lower bound
-VminS = []
-
-while sum_deg < instance['num_edges']:
-  sum_deg += deg_list[i][1]
-  S.append(deg_list[i][0])
-  i += 1
-
-for v in list(CurG.nodes())[:]:
-  if v not in S:
-    VminS.append(v)
-  else:
-    CurG.remove_node(v)
-
-if ENV['goal'] == 'lower_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
-  if lower_bound != len(S):
-    TAc.print(LANG.render_feedback("invalid-lb-size", f'The size of the lower bound you provided is not correct.\n'), "red", ["bold"], flush=True) 
-    exit(0)
-  for i in lb_match:
-    if i not in S:
-      TAc.print(LANG.render_feedback("invalid-lb-match", f'The lower bound match you provided is not a valid match.\n'), "red", ["bold"], flush=True)
+    if len(lb_match) != lower_bound:
+      TAc.print(LANG.render_feedback("wrong-nodes-number-match", f'Wrong number of nodes (they must be {lower_bound}). Aborting.\n'), "red", ["bold"], flush=True)
       exit(0)
 
-S_1 = S.copy() # Upper bound
+  if ENV['goal'] == 'upper_bound' or ENV['goal'] == 'both_bounds'  or ENV['goal'] == '2apx':
+    TAc.print(LANG.render_feedback("insert-ub", f'Enter you conjectured upper bound: '), "yellow", ["bold"])
+    upper_bound = TALinput(int, 1, TAc=TAc)[0]
+    if upper_bound <= 0:
+      TAc.print(LANG.render_feedback("wrong-ub-value-0", f'Upper bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
+      exit(0)
+    if upper_bound > instance['num_vertices']:
+      TAc.print(LANG.render_feedback("wrong-ub-value-1", f'Upper bound must be less or equal to {instance["num_vertices"]}. Aborting.\n'), "red", ["bold"], flush=True)
+      exit(0)
+    if upper_bound < size_sol:
+      TAc.print(LANG.render_feedback("wrong-ub-value-2", f'Upper bound too low. Aborting.\n'), "red", ["bold"], flush=True)
+      exit(0)
+  
+    TAc.print(LANG.render_feedback("insert-cover-ub", f'Enter you conjectured cover for upper bound (integers separated by spaces): '), "yellow", ["bold"])
+    ub_cover = TALinput(int, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 
-for v in list(CurG.nodes())[:]:
-  if CurG.degree(v) > 0:
-    S_1.append(v)
-    CurG.remove_node(v)
-
-if ENV['goal'] == 'upper_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
-  if upper_bound != len(S_1):
-    TAc.print(LANG.render_feedback("invalid-ub-size", f'The size of the upper bound you provided is not correct.\n'), "red", ["bold"], flush=True)
-    exit(0)
-  for i in ub_cover:
-    if i not in S_1:
-      TAc.print(LANG.render_feedback("invalid-ub-cover", f'The upper bound node cover you provided is not a valid node cover.\n'), "red", ["bold"], flush=True)
+    if len(ub_cover) != upper_bound:
+      TAc.print(LANG.render_feedback("wrong-nodes-number-cover", f'Wrong number of nodes (they must be {upper_bound}). Aborting.\n'), "red", ["bold"], flush=True)
       exit(0)
 
-if ENV['goal'] == '2apx':
-  if upper_bound > 2 * lower_bound:
-    TAc.print(LANG.render_feedback("not-2apx", f'The upper bound is more than two times of the lower bound. Approximation is not correct.\n'), "red", ["bold"], flush=True)
-    exit(0)
+  if 'lower_bound' in locals() and 'upper_bound' in locals():
+    if lower_bound > upper_bound:
+      TAc.print(LANG.render_feedback("wrong-lb-ub-value", f'Lower bound can\'t be greater than the upper bound. Aborting.\n'), "red", ["bold"], flush=True)
+      exit(0)
 
-if ENV['goal'] == 'lower_bound':
-  TAc.OK()
-  TAc.print(LANG.render_feedback("goal-lb-reached", f'Vertex cover has a lower bound equal to {lower_bound}.'), "green", ["bold"], flush=True)
-  TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
-  TAc.print(f'{" ".join(map(str, sorted(S)))}\n', "white", ["bold"], flush=True)
-elif ENV['goal'] == 'upper_bound':
-  TAc.OK()
-  TAc.print(LANG.render_feedback("goal-ub-reached", f'Vertex cover has an upper bound equal to {upper_bound}.'), "green", ["bold"], flush=True)
-  TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
-  TAc.print(f'{" ".join(map(str, sorted(S_1)))}\n', "white", ["bold"], flush=True)
-elif ENV['goal'] == 'both_bounds':
-  TAc.OK()
-  TAc.print(LANG.render_feedback("goal-both-reached", f'Bounds for the vertex cover are included in the range {lower_bound}-{upper_bound}.'), "green", ["bold"], flush=True)
+  ## verifica lb e ub
+  if ENV['goal'] == 'lower_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
+    if not vcl.verify_lb(lb_match, instance['graph']):
+      TAc.print(LANG.render_feedback("invalid-lb-match", f'The lower bound you provided is not valid.\n'), "red", ["bold"], flush=True)
+      exit(0)
+
+  if ENV['goal'] == 'upper_bound' or ENV['goal'] == 'both_bounds' or ENV['goal'] == '2apx':
+    if not vcl.verify_ub(ub_cover, instance['graph']):
+      TAc.print(LANG.render_feedback("invalid-ub-cover", f'The upper bound you provided is not valid.\n'), "red", ["bold"], flush=True)
+      exit(0)
+
+  if ENV['goal'] == '2apx':
+    if upper_bound > 2 * lower_bound:
+      TAc.print(LANG.render_feedback("not-2apx", f'The upper bound is more than two times of the lower bound. Approximation is not correct.\n'), "red", ["bold"], flush=True)
+      exit(0)
+
+## Stampa messaggi
+if ENV['print_sol_bounds']:
+  TAc.print(LANG.render_feedback("sol-bounds", f'Bounds for the vertex cover are included in the range '), "green", ["bold"], flush=True, end='')
+  TAc.print(f'{lb}-{ub}', "white", ["bold"], flush=True)
   TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
   TAc.print(f'{" ".join(map(str, sorted(S)))}', "white", ["bold"], flush=True)
   TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
   TAc.print(f'{" ".join(map(str, sorted(S_1)))}\n', "white", ["bold"], flush=True)
-  if ENV['plot_sol']:
-    vcl.plot_mvc(instance['graph'], vc_sol, [])
-elif ENV['goal'] == '2apx':
-  TAc.OK()
-  TAc.print(LANG.render_feedback("goal-2apx-reached", f'Bounds for the vertex cover are included in the range {lower_bound}-{upper_bound}. Upper bound is {upper_bound/lower_bound} times the lower bound.'), "green", ["bold"], flush=True)
-  TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
-  TAc.print(f'{" ".join(map(str, sorted(S)))}', "white", ["bold"], flush=True)
-  TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
-  TAc.print(f'{" ".join(map(str, sorted(S_1)))}\n', "white", ["bold"], flush=True)
-  if ENV['plot_sol']:
-    vcl.plot_mvc(instance['graph'], vc_sol, [])
+else:
+  if ENV['goal'] == 'lower_bound':
+    TAc.OK()
+    TAc.print(LANG.render_feedback("goal-lb-reached", f'Vertex cover has a lower bound equal to {lower_bound}.'), "green", ["bold"], flush=True)
+    TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
+    TAc.print(f'{" ".join(map(str, sorted(lb_match)))}\n', "white", ["bold"], flush=True)
+  elif ENV['goal'] == 'upper_bound':
+    TAc.OK()
+    TAc.print(LANG.render_feedback("goal-ub-reached", f'Vertex cover has an upper bound equal to {upper_bound}.'), "green", ["bold"], flush=True)
+    TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
+    TAc.print(f'{" ".join(map(str, sorted(ub_coveer)))}\n', "white", ["bold"], flush=True)
+  elif ENV['goal'] == 'both_bounds':
+    TAc.OK()
+    TAc.print(LANG.render_feedback("goal-both-reached", f'Bounds for the vertex cover are included in the range {lower_bound}-{upper_bound}.'), "green", ["bold"], flush=True)
+    TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
+    TAc.print(f'{" ".join(map(str, sorted(lb_match)))}', "white", ["bold"], flush=True)
+    TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
+    TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
+    if ENV['plot_sol']:
+      vcl.plot_mvc(instance['graph'], vc_sol, [])
+  elif ENV['goal'] == '2apx':
+    TAc.OK()
+    TAc.print(LANG.render_feedback("goal-2apx-reached", f'Bounds for the vertex cover are included in the range {lower_bound}-{upper_bound}. Upper bound is {upper_bound/lower_bound} times the lower bound.'), "green", ["bold"], flush=True)
+    TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
+    TAc.print(f'{" ".join(map(str, sorted(lb_match)))}', "white", ["bold"], flush=True)
+    TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
+    TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
+    if ENV['plot_sol']:
+      vcl.plot_mvc(instance['graph'], vc_sol, [])
 
 exit(0)
