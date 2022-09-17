@@ -104,12 +104,17 @@ rtal connect vertex_cover check_max_weight_indset -aseed=474327
 rtal connect vertex_cover check_max_weight_indset -aplot=1 -aplot_sol=1
 
 ## bounds
+rtal connect vertex_cover bounds 
 rtal connect vertex_cover bounds -asource=randgen_1
 rtal connect vertex_cover bounds -asource=terminal
 rtal connect vertex_cover bounds -asource=catalogue
-rtal connect vertex_cover bounds -alower_bound=3 -aupper_bound=5
-rtal connect vertex_cover bounds -weighted=1 -aplot=1
-
+rtal connect vertex_cover bounds -agoal=lower_bound
+rtal connect vertex_cover bounds -agoal=upper_bound
+rtal connect vertex_cover bounds -agoal=both_bounds
+rtal connect vertex_cover bounds -agoal=2apx
+rtal connect vertex_cover bounds -aplot=1
+rtal connect vertex_cover bounds -agoal=both_bounds -aplot=1
+rtal connect vertex_cover bounds -aplot=1 -aplot_sol=1
 
 ## eval_minimum_vc
 rtal connect -e vertex_cover eval_minimum_vc -agoal=feasible -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --minimum
@@ -126,3 +131,9 @@ rtal connect -e vertex_cover eval_approx_vc -agoal=big_instances -- ~/TALight/ex
 ## eval_approx_weighted_vc
 rtal connect -e vertex_cover eval_approx_weighted_vc -agoal=small_instances -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --approx
 rtal connect -e vertex_cover eval_approx_weighted_vc -agoal=big_instances -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --approx
+
+## eval_bounds
+rtal connect -e vertex_cover eval_bounds -agoal=lower_bound -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bounds_bot.py
+rtal connect -e vertex_cover eval_bounds -agoal=upper_bound -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bounds_bot.py
+rtal connect -e vertex_cover eval_bounds -agoal=both_bounds -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bounds_bot.py
+rtal connect -e vertex_cover eval_bounds -agoal=2apx -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bounds_bot.py
