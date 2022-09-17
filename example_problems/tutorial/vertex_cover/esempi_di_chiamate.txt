@@ -108,13 +108,18 @@ rtal connect vertex_cover bounds
 rtal connect vertex_cover bounds -asource=randgen_1
 rtal connect vertex_cover bounds -asource=terminal
 rtal connect vertex_cover bounds -asource=catalogue
+rtal connect vertex_cover bounds -asource=catalogue -ainstance_id=10
 rtal connect vertex_cover bounds -agoal=lower_bound
-rtal connect vertex_cover bounds -agoal=upper_bound
+rtal connect vertex_cover bounds -agoal=lower_bound -aseed=837035
+rtal connect vertex_cover bounds -agoal=upper_bound 
+rtal connect vertex_cover bounds -agoal=upper_bound -aseed=837035
 rtal connect vertex_cover bounds -agoal=both_bounds
 rtal connect vertex_cover bounds -agoal=2apx
+rtal connect vertex_cover bounds -agoal=2apx -aseed=837035
 rtal connect vertex_cover bounds -aplot=1
-rtal connect vertex_cover bounds -agoal=both_bounds -aplot=1
+rtal connect vertex_cover bounds -agoal=both_bounds -aplot=1 -aseed=837035
 rtal connect vertex_cover bounds -aplot=1 -aplot_sol=1
+rtal connect vertex_cover bounds -aprint_sol_bounds=1
 
 ## eval_minimum_vc
 rtal connect -e vertex_cover eval_minimum_vc -agoal=feasible -- ~/TALight/example_problems/tutorial/vertex_cover/bots/bot.py --minimum
