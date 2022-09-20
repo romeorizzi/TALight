@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Based on https://www.researchgate.net/publication/327764548_A_polynomial-time_algorithm_to_obtain_bounds_for_the_vertex_cover_number
+NOTE: 2-apx is not guaranteed!
 '''
 from sys import stderr
 
@@ -181,14 +182,9 @@ if not ENV['print_sol_bounds']:
       TAc.print(LANG.render_feedback("invalid-ub-cover", f'The upper bound you provided is not valid.\n'), "red", ["bold"], flush=True)
       exit(0)
 
-  #if 'lower_bound' in locals() and 'upper_bound' in locals():
-  #  if lower_bound > upper_bound:
-  #    TAc.print(LANG.render_feedback("wrong-lb-ub-value", f'Upper bound must be greater than the lower bound. Aborting.\n'), "red", ["bold"], flush=True)
-  #    exit(0)
-
   if ENV['goal'] == '2apx':
     if upper_bound > 2 * lower_bound:
-      TAc.print(LANG.render_feedback("not-2apx", f'The upper bound is more than two times of the lower bound. Approximation is not correct.\n'), "red", ["bold"], flush=True)
+      TAc.print(LANG.render_feedback("not-2apx", f'The upper bound is more than two times of the lower bound. 2-approximation not reached (upper bound is {upper_bound/lower_bound} times the lower bound).\n'), "red", ["bold"], flush=True)
       exit(0)
 
 ## Stampa messaggi
@@ -224,7 +220,7 @@ else:
       vcl.plot_mvc(instance['graph'], vc_sol, [])
   elif ENV['goal'] == '2apx':
     TAc.OK()
-    TAc.print(LANG.render_feedback("goal-2apx-reached", f'Bounds for the vertex cover are {lower_bound}-{upper_bound}. Upper bound is {upper_bound/lower_bound} times the lower bound.'), "green", ["bold"], flush=True)
+    TAc.print(LANG.render_feedback("goal-2apx-reached", f'Bounds for the vertex cover are {lower_bound}-{upper_bound}. 2-approximation reached (upper bound is {upper_bound/lower_bound} times the lower bound).'), "green", ["bold"], flush=True)
     TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(lb_match)))}', "white", ["bold"], flush=True)
     TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')

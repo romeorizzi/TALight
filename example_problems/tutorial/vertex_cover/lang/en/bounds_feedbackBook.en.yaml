@@ -30,10 +30,10 @@ wrong-lb-ub-value: 'Upper bound must be greater than the lower bound. Aborting.\
 insert-cover-ub: 'Enter your conjectured node cover for upper bound (integers separated by spaces): '
 wrong-nodes-number-cover: 'Wrong number of nodes (they must be {upper_bound}). Aborting.\n'
 invalid-ub-cover: 'The upper bound you provided is not valid.\n'
-not-2apx: 'The upper bound is more than two times of the lower bound. Approximation is not correct.\n'
+not-2apx: 'The upper bound is more than two times of the lower bound. 2-approximation not reached (upper bound is {upper_bound/lower_bound} times the lower bound).\n'
 sol-bounds: 'Bounds for the vertex cover are '
 goal-lb-reached: 'Vertex cover has a lower bound equal to {lower_bound}.'
 goal-ub-reached: 'Vertex cover has an upper bound equal to {upper_bound}.'
 goal-both-reached: 'Bounds for the vertex cover are {lower_bound}-{upper_bound}.'
-goal-2apx-reached: 'Bounds for the vertex cover are {lower_bound}-{upper_bound}. Upper bound is {upper_bound/lower_bound} times the lower bound.'
+goal-2apx-reached: 'Bounds for the vertex cover are {lower_bound}-{upper_bound}. 2-approximation reached (upper bound is {upper_bound/lower_bound} times the lower bound).'
 
