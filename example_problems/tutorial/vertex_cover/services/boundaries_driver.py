@@ -208,7 +208,7 @@ else:
     TAc.OK()
     TAc.print(LANG.render_feedback("goal-ub-reached", f'Vertex cover has an upper bound equal to {upper_bound}.'), "green", ["bold"], flush=True)
     TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
-    TAc.print(f'{" ".join(map(str, sorted(ub_coveer)))}\n', "white", ["bold"], flush=True)
+    TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
   elif ENV['goal'] == 'both_bounds':
     TAc.OK()
     TAc.print(LANG.render_feedback("goal-both-reached", f'Bounds for the vertex cover are {lower_bound}-{upper_bound}.'), "green", ["bold"], flush=True)

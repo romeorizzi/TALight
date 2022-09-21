@@ -744,10 +744,14 @@ def verify_lb(lb_match, graph):
   ok = True
   sum_deg = 0
 
+  count= 1
   for v in lb_match:
     sum_deg += graph.degree(v)
+    if sum_deg >= graph.number_of_edges():
+      break
+    count += 1
 
-  if sum_deg < graph.number_of_edges():
+  if sum_deg < graph.number_of_edges() or count < len(lb_match):
     ok = False
 
   return ok
@@ -767,8 +771,12 @@ def verify_ub(ub_cover, graph):
   while sum_deg < num_edges and i <= len(deg_list):
     sum_deg += deg_list[i][1]
     S.append(deg_list[i][0])
-    CurG.remove_node(deg_list[i][0])
+    #CurG.remove_node(deg_list[i][0])
     i += 1
+
+  for v in list(CurG.nodes())[:]:
+    if v in S:
+      CurG.remove_node(v)
 
   # In pratica: nel node cover non devono esserci
   # nodi di grado zero, mentre i nodi fuori dal
