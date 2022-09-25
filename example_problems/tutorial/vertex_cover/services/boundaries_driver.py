@@ -220,22 +220,32 @@ if ENV['print_sol_bounds']:
   TAc.print(f'{" ".join(map(str, sorted(S_1)))}\n', "white", ["bold"], flush=True)
   
   if ENV['plot_sol']:
-    proc = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
-    proc.start()
+    if ENV['plot']:
+      proc.terminate()
+    proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
+    proc1.start()
     #vcl.plot_mvc(instance['graph'], vc_sol, [])
 else:
-  #if ENV['plot']:
-  #  proc.terminate()
   if ENV['goal'] == 'lower_bound':
     TAc.OK()
     TAc.print(LANG.render_feedback("goal-lb-reached", f'Vertex cover has a lower bound equal to {lower_bound}.'), "green", ["bold"], flush=True)
     TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(lb_match)))}\n', "white", ["bold"], flush=True)
+    if ENV['plot_sol']:
+      if ENV['plot']:
+        proc.terminate()
+      proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
+      proc1.start()
   elif ENV['goal'] == 'upper_bound':
     TAc.OK()
     TAc.print(LANG.render_feedback("goal-ub-reached", f'Vertex cover has an upper bound equal to {upper_bound}.'), "green", ["bold"], flush=True)
     TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
+    if ENV['plot_sol']:
+      if ENV['plot']:
+        proc.terminate()
+      proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
+      proc1.start()
   elif ENV['goal'] == 'both_bounds':
     TAc.OK()
     TAc.print(LANG.render_feedback("goal-both-reached", f'Bounds for the vertex cover are {lower_bound}-{upper_bound}.'), "green", ["bold"], flush=True)
@@ -244,6 +254,8 @@ else:
     TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
     if ENV['plot_sol']:
+      if ENV['plot']:
+        proc.terminate()
       proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
       proc1.start()
       #vcl.plot_mvc(instance['graph'], vc_sol, [])
@@ -255,6 +267,10 @@ else:
     TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
     if ENV['plot_sol']:
-      vcl.plot_mvc(instance['graph'], vc_sol, [])
+      if ENV['plot']:
+        proc.terminate()
+      proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
+      proc1.start()
+      #vcl.plot_mvc(instance['graph'], vc_sol, [])
 
 exit(0)
