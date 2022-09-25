@@ -9,6 +9,7 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 import vertex_cover_lib as vcl
+import multiprocessing
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -118,7 +119,9 @@ if ENV["download"]:
   TALf.str2output_file(content,f'all_solutions.txt')
 
 if ENV['plot']:
-  vcl.plot_graph(instance['graph'])
+  proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],))
+  proc.start()
+  #vcl.plot_graph(instance['graph'])
 
 exit(0)
 

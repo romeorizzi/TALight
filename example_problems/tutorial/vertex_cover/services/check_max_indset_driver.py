@@ -8,6 +8,7 @@ from TALfiles import TALfilesHelper
 import random
 import networkx as nx
 import vertex_cover_lib as vcl
+import multiprocessing
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -86,7 +87,9 @@ if ENV['display']:
 if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured maximum independent set for this graph if you have one. Otherwise, if you only intend to be told about the independent set, enter "C".'), "yellow", ["bold"], flush=True)
   if ENV['plot']:
-    vcl.plot_graph(instance['graph'])
+    proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],))
+    proc.start()
+    #vcl.plot_graph(instance['graph'])
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 else:
   answer = ENV['vc_sol_val']
@@ -95,6 +98,8 @@ if answer[0] != 'C' and answer[0] != 'c':
   for v in answer:
     if int(v) not in instance['graph'].nodes():
       TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
+      if ENV['plot']:
+        proc.terminate()
       exit(0)
 
 ind_set = []
@@ -162,10 +167,16 @@ else:
     TAc.print(LANG.render_feedback("vertex_cover", f'We don\'t agree, the solution you provided is not a valid independent set for the graph: you provided a vertex cover.'), "red", ["bold"], flush=True)
 
 if ENV['plot_sol']:
+  if ENV['plot']:
+    proc.terminate()
   if answer[0] != 'C' and answer[0] != 'c':
     answer = ' '.join(map(str,answer))
-    vcl.plot_indset(instance['graph'], answer, rem_edges)
+    proc1 = multiprocessing.Process(target=vcl.plot_indset, args=(instance['graph'], answer, rem_edges))
+    proc1.start()
+    #vcl.plot_indset(instance['graph'], answer, rem_edges)
   else:
-    vcl.plot_indset(instance['graph'], ind_set, [])
+    proc1 = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'], ind_set, []))
+    proc1.start()
+    #vcl.plot_indset(instance['graph'], ind_set, [])
 
 exit(0)

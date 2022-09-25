@@ -10,6 +10,7 @@ import random
 import networkx as nx
 from networkx.algorithms import approximation
 import vertex_cover_lib as vcl
+import multiprocessing
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -117,7 +118,9 @@ if ENV['display']:
 if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured approximated vertex cover for this weighted graph if you have one (format: integer numbers separated by spaces). Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"], flush=True)
   if ENV['plot']:
-    vcl.plot_graph(instance['graph'],1)
+    proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],))
+    proc.start()
+    #vcl.plot_graph(instance['graph'],1)
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG) # a quanto pare è un array: ogni elemento separato da spazio nella stringa è un elemento dell'array...
 else:
   answer = ENV['vc_sol_val']
@@ -126,6 +129,8 @@ if answer[0] != 'C' and answer[0] != 'c':
   for v in answer:
     if int(v) not in instance['graph'].nodes():
       TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
+      if ENV['plot']:
+        proc.terminate()
       exit(0)
 
 weight_ans = 0
@@ -186,11 +191,16 @@ else:
       TAc.print(LANG.render_feedback("reason-wrong-sol-weight", f'Your solution weight: {weight_ans}; max 2-approximation weight: {2 * min_weight_sol}.'), "red", ["bold"], flush=True)
 
 if ENV['plot_sol']:
+  if ENV['plot']:
+    proc.terminate()
   if answer[0] != 'C' and answer[0] != 'c':
     answer = ' '.join(map(str,answer))
-    vcl.plot_mvc(instance['graph'], answer, rem_edges, 1, 1)
+    proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],answer,rem_edges,1,1))
+    proc1.start()
+    #vcl.plot_mvc(instance['graph'], answer, rem_edges, 1, 1)
   else:
-    #vcl.plot_mvc(instance['graph'], appr_sol, instance['graph'].edges(), 1, 1)
-    vcl.plot_mvc(instance['graph'], appr_sol, [], 1, 1)
+    proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],appr_sol,[],1,1))
+    proc1.start()
+    #vcl.plot_mvc(instance['graph'], appr_sol, [], 1, 1)
 
 exit(0)

@@ -8,6 +8,7 @@ from TALfiles import TALfilesHelper
 import random
 import networkx as nx
 import vertex_cover_lib as vcl
+import multiprocessing
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -110,7 +111,9 @@ if ENV['display']:
 if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured minimum weight vertex cover for this graph if you have one (format: integers separated by spaces). Otherwise, if you only intend to be told about the minimum weight vertex cover, enter "C".'), "yellow", ["bold"], flush=True)
   if ENV['plot']:
-    vcl.plot_graph(instance['graph'], 1)
+    proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],1))
+    proc.start()
+    #vcl.plot_graph(instance['graph'], 1)
   answer = TALinput(str, line_recognizer=lambda val,TAc, LANG: True, TAc=TAc, LANG=LANG)
 else:
   answer = ENV['vc_sol_val']
@@ -120,6 +123,8 @@ if answer[0] != 'C' and answer[0] != 'c':
   for v in answer:
     if int(v) not in instance['graph'].nodes():
       TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
+      if ENV['plot']:
+        proc.terminate()
       exit(0)
 
 weight_ans = 0
@@ -164,11 +169,16 @@ else:
     print('\n')
 
 if ENV['plot_sol']:
+  if ENV['plot']:
+    proc.terminate()
   if answer[0] != 'C' and answer[0] != 'c':
     answer = ' '.join(map(str,answer))
-    vcl.plot_mvc(instance['graph'], answer, rem_edges, 1)
+    proc1 = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],answer,rem_edges,1))
+    proc1.start()
+    #vcl.plot_mvc(instance['graph'], answer, rem_edges, 1)
   else:
-    #vcl.plot_mvc(instance['graph'], opt_sol, instance['graph'].edges())
-    vcl.plot_mvc(instance['graph'], vc_sol, [], 1)
+    proc1 = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],vc_sol,[],1))
+    proc1.start()
+    #vcl.plot_mvc(instance['graph'], vc_sol, [], 1)
 
 exit(0)

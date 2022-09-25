@@ -9,6 +9,7 @@ import os
 import random
 import networkx as nx
 import vertex_cover_lib as vcl
+import multiprocessing
 
 # METADATA OF THIS TAL_SERVICE:
 args_list = [
@@ -87,12 +88,16 @@ if ENV['display']:
 if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured maximal matching size for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"], flush=True)
   if ENV['plot']:
-    vcl.plot_graph(instance['graph'])
+    proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],))
+    proc.start()
+    #vcl.plot_graph(instance['graph'])
 
   choice = TALinput(str, 1, TAc=TAc)
   if choice[0] != 'C' and choice[0] != 'c':
     if not choice[0].isdigit():
       TAc.print(LANG.render_feedback("invalid-input", f'Input must be an integer number or "C". Aborting.\n'), "red", ["bold"], flush=True)
+      if ENV['plot']:
+        proc.terminate()
       exit(0)
 
     TAc.print(LANG.render_feedback("waiting-matching", f'Please, provide the maximal matching:'), "yellow", ["bold"], flush=True)
@@ -110,6 +115,8 @@ if choice[0] != 'C' and choice[0] != 'c':
   for t in answer:
     if t not in instance['graph'].edges():
       TAc.print(LANG.render_feedback("edge-not-in-graph", f'Edge {t} is not an edge of the graph. Aborting.\n'), "red", ["bold"], flush=True)
+      if ENV['plot']:
+        proc.terminate()
       exit(0)
 
 if (ENV['source'] == "catalogue" and instance['exact_sol'] == 1) or (ENV['source'] != "catalogue"):
@@ -136,6 +143,8 @@ else:
   for e in answer:
     if e not in instance['graph'].edges():
       TAc.print(LANG.render_feedback("edge-not-in-graph", f'Edge {e} not in the graph. Aborting.'), "red", ["bold"], flush=True)
+      if ENV['plot']:
+        proc.terminate()
       exit(0)
 
   size_ans = 2 * (len(answer))
@@ -179,10 +188,16 @@ else:
   print()
         
 if ENV['plot_sol']:
+  if ENV['plot']:
+    proc.terminate()
   if choice[0] != 'C' and choice[0] != 'c':
     vertices = ' '.join(map(str, answer)).replace('(', '').replace(') (',' ').replace(')','').replace(',',' ')
-    vcl.plot_2app_vc(instance['graph'], vertices, answer)
+    proc1 = multiprocessing.Process(target=vcl.plot_2app_vc, args=(instance['graph'],vertices,answer))
+    proc1.start()
+    #vcl.plot_2app_vc(instance['graph'], vertices, answer)
   else:
-    vcl.plot_2app_vc(instance['graph'], appr_sol, [eval(t) for t in max_matching.replace(', ',',').split()])
+    proc1 = multiprocessing.Process(target=vcl.plot_2app_vc, args=(instance['graph'],appr_sol,[eval(t) for t in max_matching.replace(', ',',').split()]))
+    proc1.start()
+    #vcl.plot_2app_vc(instance['graph'], appr_sol, [eval(t) for t in max_matching.replace(', ',',').split()])
 
 exit(0)
