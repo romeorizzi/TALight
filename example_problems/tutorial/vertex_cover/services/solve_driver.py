@@ -36,7 +36,7 @@ TALf = TALfilesHelper(TAc, ENV)
 # START CODING YOUR SERVICE:
 
 chk_backend = False
-if matplotlib.get_backend() in vcl.backends:
+if matplotlib.get_backend().lower() in map(str.lower,vcl.backends):
   chk_backend = True
 
 ## Input Sources

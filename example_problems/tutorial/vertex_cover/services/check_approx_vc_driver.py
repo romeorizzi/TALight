@@ -35,7 +35,7 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = '
 TALf = TALfilesHelper(TAc, ENV)
 
 chk_backend = False
-if matplotlib.get_backend() in vcl.backends:
+if matplotlib.get_backend().lower() in map(str.lower,vcl.backends):
   chk_backend = True
 
 ## Input Sources

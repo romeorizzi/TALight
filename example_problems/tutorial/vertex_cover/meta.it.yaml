@@ -45,7 +45,7 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra la rappresentazione visuale del grafo'
+        explain: 'Mostra la rappresentazione visuale del grafo. Funziona solo su installazioni locali di TALight.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -112,11 +112,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot del grafo'
+        explain: 'Mostra il plot del grafo. Funziona solo su installazioni locali di TALight.'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot del minumum vertex cover'
+        explain: 'Mostra il plot del minumum vertex cover. Funziona solo su installazioni locali di TALight.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -177,11 +177,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot del grafo'
+        explain: 'Mostra il plot del grafo. Funziona solo su installazioni locali di TALight.'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot con la soluzione del vertex cover di peso minimo'
+        explain: 'Mostra il plot con la soluzione del vertex cover di peso minimo. Funziona solo su installazioni locali di TALight.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -242,11 +242,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot del grafo'
+        explain: 'Mostra il plot del grafo. Funziona solo su installazioni locali di TALight.'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot con la soluzione della 2-approssimazione del vertex cover'
+        explain: 'Mostra il plot con la soluzione della 2-approssimazione del vertex cover. Funziona solo su installazioni locali di TALight.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -308,11 +308,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot del grafo'
+        explain: 'Mostra il plot del grafo. Funziona solo su installazioni locali di TALight.'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot con la soluzione della 2-approssimazione del minimo vertex cover pesato'
+        explain: 'Mostra il plot con la soluzione della 2-approssimazione del minimo vertex cover pesato. Funziona solo su installazioni locali di TALight.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -373,11 +373,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot del grafo'
+        explain: 'Mostra il plot del grafo. Funziona solo su installazioni locali di TALight.'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot con la soluzione del massimo independent set'
+        explain: 'Mostra il plot con la soluzione del massimo independent set. Funziona solo su installazioni locali di TALight.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -438,11 +438,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot del grafo'
+        explain: 'Mostra il plot del grafo. Funziona solo su installazioni locali di TALight.'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Mostra il plot con la soluzione del massimo independent set'
+        explain: 'Mostra il plot con la soluzione del massimo independent set. Funziona solo su installazioni locali di TALight.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -516,11 +516,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plotta il grafo.'
+        explain: 'Plotta il grafo. Funziona solo su installazioni locali di TALight.'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plotta il grafo con la soluzione del problema.'
+        explain: 'Plotta il grafo con la soluzione del problema. Funziona solo su installazioni locali di TALight.'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
