@@ -9,6 +9,7 @@ import os
 import random
 import networkx as nx
 import vertex_cover_lib as vcl
+import matplotlib
 import multiprocessing
 
 # METADATA OF THIS TAL_SERVICE:
@@ -32,6 +33,10 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
+
+chk_backend = False
+if matplotlib.get_backend() in vcl.backends:
+  chk_backend = True
 
 ## Input Sources
 if TALf.exists_input_file('instance'):
@@ -87,7 +92,7 @@ if ENV['display']:
 
 if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured maximal matching size for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'), "yellow", ["bold"], flush=True)
-  if ENV['plot']:
+  if ENV['plot'] and chk_backend:
     proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],))
     proc.start()
     #vcl.plot_graph(instance['graph'])
@@ -96,7 +101,7 @@ if ENV['vc_sol_val'] == '0': # manual insertion
   if choice[0] != 'C' and choice[0] != 'c':
     if not choice[0].isdigit():
       TAc.print(LANG.render_feedback("invalid-input", f'Input must be an integer number or "C". Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
@@ -115,7 +120,7 @@ if choice[0] != 'C' and choice[0] != 'c':
   for t in answer:
     if t not in instance['graph'].edges():
       TAc.print(LANG.render_feedback("edge-not-in-graph", f'Edge {t} is not an edge of the graph. Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
@@ -143,7 +148,7 @@ else:
   for e in answer:
     if e not in instance['graph'].edges():
       TAc.print(LANG.render_feedback("edge-not-in-graph", f'Edge {e} not in the graph. Aborting.'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
@@ -187,7 +192,7 @@ else:
     
   print()
         
-if ENV['plot_sol']:
+if ENV['plot_sol'] and chk_backend:
   if ENV['plot']:
     proc.terminate()
   if choice[0] != 'C' and choice[0] != 'c':

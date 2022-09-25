@@ -7,6 +7,7 @@ from TALfiles import TALfilesHelper
 
 import random
 import networkx as nx
+import matplotlib
 import matplotlib.pyplot as plt
 import vertex_cover_lib as vcl
 import multiprocessing
@@ -33,6 +34,10 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = '
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
+
+chk_backend = False
+if matplotlib.get_backend() in vcl.backends:
+  chk_backend = True
 
 ## Input Sources
 if TALf.exists_input_file('instance'):
@@ -118,7 +123,7 @@ for key in content.keys():
 if ENV["download"]:
   TALf.str2output_file(content,f'all_solutions.txt')
 
-if ENV['plot']:
+if ENV['plot'] and chk_backend:
   proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],))
   proc.start()
   #vcl.plot_graph(instance['graph'])

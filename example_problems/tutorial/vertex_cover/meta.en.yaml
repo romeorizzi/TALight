@@ -44,7 +44,7 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot the graph'
+        explain: 'Plot the graph (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -111,11 +111,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph'
+        explain: 'Plot graph (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph with minimum vertex cover'
+        explain: 'Plot graph with minimum vertex cover (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -176,11 +176,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph'
+        explain: 'Plot graph (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph with minimum weight vertex cover'
+        explain: 'Plot graph with minimum weight vertex cover (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -241,11 +241,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph'
+        explain: 'Plot graph (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph with 2-approximated vertex cover'
+        explain: 'Plot graph with 2-approximated vertex cover (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -308,11 +308,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph'
+        explain: 'Plot graph (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph with the solution of the approximated vertex cover'
+        explain: 'Plot graph with the solution of the approximated vertex cover (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -373,11 +373,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph'
+        explain: 'Plot graph (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph with maximum independet set'
+        explain: 'Plot graph with maximum independet set (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -438,11 +438,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph'
+        explain: 'Plot graph (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot graph with maximum independet set'
+        explain: 'Plot graph with maximum independet set (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'
@@ -515,11 +515,11 @@ services:
       plot:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot the graph'
+        explain: 'Plot the graph (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       plot_sol:
         regex: ^(0|1)$
         default: 0
-        explain: 'Plot the solution for the minimum size of the vertex cover'
+        explain: 'Plot the solution for the minimum size of the vertex cover (works only on local TALight installations, so don`t call it if you are using TALight remotely)'
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$
         regex-explained: 'either the string "random_seed" or a decimal number of precisely 6 digits'

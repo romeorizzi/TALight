@@ -4,6 +4,7 @@ import sys
 import random
 import math
 import networkx as nx
+import matplotlib
 import matplotlib.pyplot as plt
 
 from random import randint
@@ -15,6 +16,9 @@ from networkx.algorithms import approximation
 AVAILABLE_FORMATS = {'instance':{'simple':'simple.txt', 'with_info':'with_info.txt', 'vc_dat':'.dat'},'solution':{'exact_sol': 'exact_sol.txt', 'approx_sol':'approx_sol.txt'}}
 DEFAULT_INSTANCE_FORMAT='with_info'
 DEFAULT_SOLUTION_FORMAT='exact_sol'
+
+## Backends for matplotlib
+backends = ['TkAgg', 'GtAgg', 'GtkAgg', 'Gtk3Agg', 'Gtk4Agg', 'GTK3Cairo', 'GTK4Cairo', 'wxAgg', 'macosx'] 
 
 def format_name_to_file_extension(format_name, format_gender):
     assert format_gender in AVAILABLE_FORMATS, f'No format has been adopted for objects of the gender `{format_gender}`.'

@@ -11,6 +11,7 @@ from TALfiles import TALfilesHelper
 
 import random
 import networkx as nx
+import matplotlib
 import matplotlib.pyplot as plt
 import vertex_cover_lib as vcl
 import multiprocessing
@@ -36,6 +37,10 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
+
+chk_backend = False
+if matplotlib.get_backend() in vcl.backends:
+  chk_backend = True
 
 # START CODING YOUR SERVICE:
 #weighted = ENV['weighted']
@@ -123,7 +128,7 @@ if weighted:
 size_sol, vc_sol = vcl.calculate_minimum_vc(instance['graph'])
 lb, S, ub, S_1 = vcl.calculate_bounds(instance['graph'])
 
-if ENV['plot']:
+if ENV['plot'] and chk_backend:
   proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],))
   proc.start()
 
@@ -134,16 +139,18 @@ if not ENV['print_sol_bounds']:
     lower_bound = TALinput(int, 1, TAc=TAc)[0]
     if lower_bound <= 0:
       TAc.print(LANG.render_feedback("wrong-lb-value-0", f'Lower bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
     if lower_bound > instance['num_vertices']:
       TAc.print(LANG.render_feedback("wrong-lb-value-1", f'Lower bound must be less or equal to {instance["num_vertices"]}. Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
     if lower_bound > size_sol:
       TAc.print(LANG.render_feedback("wrong-lb-value-2", f'Lower bound too high. Aborting.\n'), "red", ["bold"], flush=True)
+      if ENV['plot'] and chk_backend:
+        proc.terminate()
       exit(0)
   
     TAc.print(LANG.render_feedback("insert-match-lb", f'Enter your conjectured match for lower bound (integers separated by spaces): '), "yellow", ["bold"])
@@ -151,13 +158,13 @@ if not ENV['print_sol_bounds']:
 
     if len(lb_match) != lower_bound:
       TAc.print(LANG.render_feedback("wrong-nodes-number-match", f'Wrong number of nodes (they must be {lower_bound}). Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
     if not vcl.verify_lb(lb_match, instance['graph']):
       TAc.print(LANG.render_feedback("invalid-lb-match", f'The lower bound you provided is not valid.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
@@ -166,23 +173,23 @@ if not ENV['print_sol_bounds']:
     upper_bound = TALinput(int, 1, TAc=TAc)[0]
     if upper_bound <= 0:
       TAc.print(LANG.render_feedback("wrong-ub-value-0", f'Upper bound must be greater than 0. Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
     if upper_bound > instance['num_vertices']:
       TAc.print(LANG.render_feedback("wrong-ub-value-1", f'Upper bound must be less or equal to {instance["num_vertices"]}. Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
     if upper_bound < size_sol:
       TAc.print(LANG.render_feedback("wrong-ub-value-2", f'Upper bound too low. Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
     if 'lower_bound' in locals():
       if lower_bound > upper_bound:
         TAc.print(LANG.render_feedback("wrong-lb-ub-value", f'Upper bound must be greater than the lower bound. Aborting.\n'), "red", ["bold"], flush=True)
-        if ENV['plot']:
+        if ENV['plot'] and chk_backend:
           proc.terminate()
         exit(0)
   
@@ -191,20 +198,20 @@ if not ENV['print_sol_bounds']:
 
     if len(ub_cover) != upper_bound:
       TAc.print(LANG.render_feedback("wrong-nodes-number-cover", f'Wrong number of nodes (they must be {upper_bound}). Aborting.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
     if not vcl.verify_ub(ub_cover, instance['graph']):
       TAc.print(LANG.render_feedback("invalid-ub-cover", f'The upper bound you provided is not valid.\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
   if ENV['goal'] == '2apx':
     if upper_bound > 2 * lower_bound:
       TAc.print(LANG.render_feedback("not-2apx", f'The upper bound is more than two times of the lower bound. 2-approximation not reached (upper bound is {upper_bound/lower_bound} times the lower bound).\n'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
@@ -219,7 +226,7 @@ if ENV['print_sol_bounds']:
   TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
   TAc.print(f'{" ".join(map(str, sorted(S_1)))}\n', "white", ["bold"], flush=True)
   
-  if ENV['plot_sol']:
+  if ENV['plot_sol'] and chk_backend:
     if ENV['plot']:
       proc.terminate()
     proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
@@ -231,7 +238,7 @@ else:
     TAc.print(LANG.render_feedback("goal-lb-reached", f'Vertex cover has a lower bound equal to {lower_bound}.'), "green", ["bold"], flush=True)
     TAc.print(f'Lower bound match: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(lb_match)))}\n', "white", ["bold"], flush=True)
-    if ENV['plot_sol']:
+    if ENV['plot_sol'] and chk_backend:
       if ENV['plot']:
         proc.terminate()
       proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
@@ -241,7 +248,7 @@ else:
     TAc.print(LANG.render_feedback("goal-ub-reached", f'Vertex cover has an upper bound equal to {upper_bound}.'), "green", ["bold"], flush=True)
     TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
-    if ENV['plot_sol']:
+    if ENV['plot_sol'] and chk_backend:
       if ENV['plot']:
         proc.terminate()
       proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
@@ -253,7 +260,7 @@ else:
     TAc.print(f'{" ".join(map(str, sorted(lb_match)))}', "white", ["bold"], flush=True)
     TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
-    if ENV['plot_sol']:
+    if ENV['plot_sol'] and chk_backend:
       if ENV['plot']:
         proc.terminate()
       proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))
@@ -266,7 +273,7 @@ else:
     TAc.print(f'{" ".join(map(str, sorted(lb_match)))}', "white", ["bold"], flush=True)
     TAc.print(f'Upper bound node cover: ', "green", ["bold"], flush=True, end='')
     TAc.print(f'{" ".join(map(str, sorted(ub_cover)))}\n', "white", ["bold"], flush=True)
-    if ENV['plot_sol']:
+    if ENV['plot_sol'] and chk_backend:
       if ENV['plot']:
         proc.terminate()
       proc1 = multiprocessing.Process(target=vcl.plot_mvc, args=(instance['graph'],vc_sol,[]))

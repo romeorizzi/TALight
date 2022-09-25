@@ -8,6 +8,7 @@ from TALfiles import TALfilesHelper
 import random
 import networkx as nx
 import vertex_cover_lib as vcl
+import matplotlib
 import multiprocessing
 
 # METADATA OF THIS TAL_SERVICE:
@@ -31,6 +32,10 @@ ENV =Env(args_list)
 TAc =TALcolors(ENV)
 LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now')
 TALf = TALfilesHelper(TAc, ENV)
+
+chk_backend = False
+if matplotlib.get_backend() in vcl.backends:
+  chk_backend = True
 
 ## Input Sources
 if TALf.exists_input_file('instance'):
@@ -86,7 +91,7 @@ if ENV['display']:
 
 if ENV['vc_sol_val'] == '0': # manual insertion
   TAc.print(LANG.render_feedback("insert-opt-value", f'\nWrite here your conjectured vertex cover for this graph if you have one (format: integers separated by spaces). Otherwise, if you only intend to be told about the vertex cover, enter "C".'), "yellow", ["bold"], flush=True)
-  if ENV['plot']:
+  if ENV['plot'] and chk_backend:
     proc = multiprocessing.Process(target=vcl.plot_graph, args=(instance['graph'],))
     proc.start()
     #vcl.plot_graph(instance['graph'])
@@ -98,7 +103,7 @@ if answer[0] != 'C' and answer[0] != 'c':
   for v in answer:
     if int(v) not in instance['graph'].nodes():
       TAc.print(LANG.render_feedback("node-not-in-graph", f'Vertex {v} is not a vertex of the graph. Aborting'), "red", ["bold"], flush=True)
-      if ENV['plot']:
+      if ENV['plot'] and chk_backend:
         proc.terminate()
       exit(0)
 
@@ -130,7 +135,7 @@ else:
       TAc.print(f'{t} ', "red", ["bold"], flush=True, end='')
     print('\n')
 
-if ENV['plot_sol']:
+if ENV['plot_sol'] and chk_backend:
   if ENV['plot']:
     proc.terminate()
   if answer[0] != 'C' and answer[0] != 'c':
