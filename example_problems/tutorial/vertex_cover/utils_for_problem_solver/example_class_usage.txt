@@ -1,0 +1,7 @@
+import plot_vc_instance as pl
+
+G = pl.Plot()
+G.import_instance('/path/to/instance.txt')
+print(G.graph) # debug
+
+G.plot_graph()

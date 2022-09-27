@@ -1,3 +1,12 @@
+'''
+Usare i metodi di questa classe per fare il plot dei grafi a partire da
+una istanza in formato txt del vertex cover (ottenibile con il servizio
+gimme_instance o facendo copia-incolla su file di quanto mostrato a video
+dagli altri servizi).
+L'uso di questa classe è consigliato qualora si utilizzi il server remoto di
+TALight (che non supporta il plotting) invece di una installazione locale (che
+invece supporta il plotting).
+'''
 from sys import stderr
 
 import networkx as nx
@@ -12,20 +21,20 @@ class Plot:
 
   def import_instance(self, full_path:str):
     lines = open(full_path, 'r').readlines()
-    self.num_vertices = lines[0].split()[0]
-    self.num_edges = lines[0].split()[1]
-    self.weighted = lines[0].split()[2]
+    self.num_vertices = int(lines[0].split()[0])
+    self.num_edges = int(lines[0].split()[1])
+    self.weighted = int(lines[0].split()[2])
 
     if self.weighted:
       weights = lines[1]
       edges = lines[2].replace(', ',',').replace(')(',') (')
     else:
-      edges = lines[2].replace(', ',',').replace(')(',') (')
+      edges = lines[1].replace(', ',',').replace(')(',') (')
 
-    edges = [eval (t) for t in edges]
+    edges = [eval (t) for t in edges.split()]
     self.graph = nx.Graph()
-    self.graph.add_edges_from(edges)
     self.graph.add_nodes_from([int(n) for n in range(self.num_vertices)])
+    self.graph.add_edges_from(edges)
 
     i = 0
     for v in sorted(self.graph.nodes()):
@@ -37,6 +46,9 @@ class Plot:
       
 
   def plot_graph(self):
+    '''
+    Plot no cover graph
+    '''
     pos = nx.spring_layout(self.graph, seed=3113794652)
     #nx.draw_networkx(graph,pos,node_size=500,width=2,with_labels=True)
     if not self.weighted:
@@ -55,6 +67,10 @@ class Plot:
     plt.show()
 
   def plot_mvc(self, vertices:str, edges:list, approx=0):
+    '''
+    Plot minimum vertex cover (also weighted) and minimum weight
+    approximated vertex cover
+    '''
     pos = nx.spring_layout(self.graph, seed=3113794652)
     vertices = [int(i) for i in vertices.split()]
     v_color_map = []
@@ -97,6 +113,10 @@ class Plot:
     plt.show()
 
   def plot_2apx_vc(self, vertices:str, edges:list):
+    '''
+    Plot not weighted 2-approximated vertex cover. Edges are in format
+    (a,b) (c,d) ... (y,z)
+    '''
     pos = nx.spring_layout(self.graph, seed=3113794652)
     vertices = [int(i) for i in vertices.split()]
     v_color_map = []
@@ -124,6 +144,9 @@ class Plot:
     plt.show()
 
   def plot_indset(self, vertices:str, edges:list, weighted=0):
+    '''
+    Plot independent set
+    '''
     pos = nx.spring_layout(self.graph, seed=3113794652)
     vertices = [int(i) for i in vertices.split()]
     v_color_map = []
