@@ -82,7 +82,7 @@ class Plot:
       else:
         v_color_map.append('#00b4d9')
 
-    for e in graph.edges():
+    for e in self.graph.edges():
       if e in edges:
         e_color_map.append('black')
       else:

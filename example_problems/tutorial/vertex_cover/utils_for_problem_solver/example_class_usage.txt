@@ -5,3 +5,5 @@ G.import_instance('/path/to/instance.txt')
 print(G.graph) # debug
 
 G.plot_graph()
+G.plot_mvc('0 1 2', [(5,7)])
+G.plot_2apx_mvc('0 1 2', [(5,7) (2,3)])
