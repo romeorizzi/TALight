@@ -1,6 +1,6 @@
 [package]
 name = "rtal"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["Dario Ostuni <dario.ostuni@gmail.com>"]
 edition = "2021"
 
@@ -40,8 +40,11 @@ sanitize-filename = "0.4"
 twox-hash = "1"
 tempfile = "3"
 chrono = "0.4"
-pyo3 = { version = "0.16", features = ["extension-module"] }
-pythonize = "0.16"
+pyo3 = { version = "0.16", features = ["extension-module"], optional = true }
+pythonize = { version = "0.16", optional = true }
+
+[features]
+python = ["dep:pyo3", "dep:pythonize"]
 
 [target.'cfg(unix)'.dependencies]
 nix = "0.24"

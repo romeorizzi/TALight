@@ -1,3 +1,4 @@
+#![cfg(python)]
 #[allow(dead_code)]
 mod problem;
 mod proto;
