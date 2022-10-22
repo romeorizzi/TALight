@@ -62,26 +62,66 @@ def sum_of_vals_over(instance, ordered_list_of_elems):
 # Una classe per rappresentare un oggetto graph
 class Graph:
     # Costruttore
-    def __init__(self, edges, n):
+    def __init__(self, arcs, n = 0, labels = [], arcs_removed = [], arcs_added = [], focus_node = '1', focus_arc = ('1','2',5), partial_to = {}, partial_from = {}):
  
-        # Un elenco di elenchi per rappresentare un elenco di adiacenze
-        self.adjList = [[] for _ in range(n)]
+        #Assegnamo a V il numero dei vertici
+        self.V = n
+        
+        #Assegnamo a E la lista degli archi
+        self.E = arcs
  
-        # aggiunge archi al graph diretto
-        for (src, dest) in edges:
-            self.adjList[src].append(dest)
-
+		# Un elenco di elenchi per rappresentare un elenco di adiacenze
+		self.adjList = dict()
+		
+		# gestione degli archi rimossi sul grafo D'
+		for arc in arcs_removed:
+			arcs.remove(arc)	
+		
+		# gestione degli archi aggiunti sul grafo D'
+		for arc in arcs_added:
+			arcs.append(arc)
+		
+		# archi aggiornati del grafo D'
+		self.E1 = arcs			
+		
+		# Valori di default iniziali
+		self.arcs_rem = arcs_removed
+		self.arcs_add = arcs_added
+		self.focus_n = focus_node
+		self.focus_a = focus_arc
+		    
+		if len(labels) == 0:
+			
+			# aggiunge archi al graph diretto
+			for (head, tail, delay) in arcs:
+				if(type(head) == type(str)):
+					self.adjList[head].append([tail,delay])
+				else:
+					self.adjList[str(head)].append([str(tail),delay])	
+			
+		else:
+			n = len(labels)
+        	self.V = n
+			guard = 0
+			# aggiunge archi al graph diretto
+			for (head, tail, delay) in arcs:
+				if guard == 0:
+					self.adjList['0'].append([head,0])
+					guard = 1
+				
+				self.adjList[head].append([tail,delay])
+'''
 def to_graph(nodes, lst_tup):
-    edges={}
+    arcs={}
     for node in nodes:
-        edges[node] = nodes.index(node)
+        arcs[node] = nodes.index(node)
     new_lst_tup = []
     for arc in lst_tup:
-        new_lst_tup.append((edges[arc[0]],edges[arc[1]]))
+        new_lst_tup.append((arcs[arc[0]],arcs[arc[1]]))
 
     D = Graph(new_lst_tup, len(nodes))
     return D
-
+'''
 def isDAG(graph, n):
  
     # tiene traccia del rilevamento o meno di un vertice
@@ -104,23 +144,175 @@ def isDAG(graph, n):
         # controlla se (u, v) forma un back-edge.
         for v in graph.adjList[u]:
  
-            # Se il tempo di partenza del vertice `v` è maggiore di uguale
-            # all'ora di partenza di `u`, formano un back edge.
+            # Se il tempo di partenza del vertice `v` è maggiore o uguale
+            # all'ora di partenza di `u`, formano un ciclo.
  
             # Si noti che `departure[u]` sarà uguale a `departure[v]`
             # solo se `u = v`, cioè il vertice contiene un arco a se stesso
-            if departure[u] <= departure[v]:
-                return 2
             if departure[u] == departure[v]:
                 return 1
-    # senza bordi posteriori
+            if departure[u] <= departure[v]:
+                return 2
+    # senza cicli
     return 0
-
+'''
 def get_nodes_from_arcs(arcs):
     lst = []
     for arc in arcs:
         lst.append((arc[0],arc[1]))
     return lst
+'''
+	
+def topologicalSortUtil(v, visited, stack, graph):
+ 
+        # Mark the current node as visited.
+        visited[v] = True
+ 
+        # Recur for all the vertices adjacent to this vertex
+        for i in graph[v]:
+            i= i[0]
+            if visited[i] == False:
+                topologicalSortUtil(i, visited, stack, graph)
+ 
+        # Push current vertex to stack which stores result
+        stack.append(v)
+ 
+    # The function to do Topological Sort. It uses recursive
+    # topologicalSortUtil()
+def topologicalSort(graph):
+    # Mark all the vertices as not visited
+    visited = [False]*len(graph)
+    stack = []
+
+    # Call the recursive helper function to store Topological
+    # Sort starting from all vertices one by one
+    for i in range(len(graph)):
+        if visited[i] == False:
+            topologicalSortUtil(i, visited, stack,graph)
+
+    # Print contents of the stack
+    print(stack[::-1])  # return list in reverse order
+    
+    for arc in graph[stack[0]]:
+        if arc[0] == stack[-1]:
+            return True
+    return False
+    
+"""
+d = {1: [[4,1]], 2: [[3,3]], 0:[[5,4]], 5:[[2,0],[0,6]], 3:[[1,6]], 4:[[0,5],[1,9]]}
+print(sorted(d))
+print(topologicalSort(d))
+"""
+
+class PriorityQueue(object):
+    def __init__(self):
+        self.queue = []
+ 
+    def __str__(self):
+        return ' '.join([str(i) for i in self.queue])
+ 
+    def get(self):
+        retVal = self.queue[0]
+        self.queue.remove(retVal)
+        return retVal
+        
+    # for checking if the queue is empty
+    def isEmpty(self):
+        return len(self.queue) == 0
+ 
+    # for inserting an element in the queue
+    def insert(self, data):
+        self.queue.append(data)
+ 
+    # for popping an element based on Priority
+    def delete(self):
+        try:
+            max_val = 0
+            for i in range(len(self.queue)):
+                if self.queue[i] > self.queue[max_val]:
+                    max_val = i
+            item = self.queue[max_val]
+            del self.queue[max_val]
+            return item
+        except IndexError:
+            print()
+            exit()
+
+def getNeighbors(adjList,node):
+    neighbors = []
+    for neighbor in adjList[node]:
+        neighbors.append(neighbor[0])
+    return neighbors
+    
+def getCostOfNeighbor(adjList,start,end):
+    for neigh in adjList[start]:
+        if neigh[0] == end:
+            return neigh[1]
+    return 'inf'
+
+def dijkstra(graph, start_vertex):
+    D = {v:[float('inf'),[]] for v in graph.adjList.keys()}
+    D[start_vertex][0] = 0
+    D[start_vertex][1] = start_vertex
+    
+    visited = dict()
+
+    pq = PriorityQueue()
+    pq.insert((0, start_vertex))
+
+    while not pq.isEmpty():
+        (dist, current_vertex) = pq.get()
+        visited.update({current_vertex : None})
+
+        for neighbor in graph.adjList.keys():
+            neighbors = getNeighbors(graph.adjList,current_vertex)
+            if neighbor in neighbors:
+                for n in neighbors:
+                    if n == neighbor:
+                        distance = getCostOfNeighbor(graph.adjList,current_vertex,n)
+                        old_cost = D[neighbor][0]
+                        new_cost = D[current_vertex][0] + distance
+                        if new_cost < old_cost:
+                            pq.insert((new_cost, neighbor))
+                            D[neighbor][0] = new_cost
+                            D[neighbor][1] = D[current_vertex][1]+neighbor
+    return D
+
+
+def getCostOfNeighbor_max(adjList,start,end):
+    for neigh in adjList[start]:
+        if neigh[0] == end:
+            return neigh[1]
+    return 0
+
+def dijkstra_max(graph, start_vertex):
+    D = {v:[float(0),[]] for v in graph.adjList.keys()}
+    D[start_vertex][0] = 0
+    D[start_vertex][1] = start_vertex
+    
+    visited = dict()
+
+    pq = PriorityQueue()
+    pq.insert((0, start_vertex))
+
+    while not pq.isEmpty():
+        (dist, current_vertex) = pq.get()
+        visited.update({current_vertex : None})
+
+        for neighbor in graph.adjList.keys():
+            neighbors = getNeighbors(graph.adjList,current_vertex)
+            if neighbor in neighbors:
+                for n in neighbors:
+                    if n == neighbor:
+                        distance = getCostOfNeighbor(graph.adjList,current_vertex,n)
+                        old_cost = D[neighbor][0]
+                        new_cost = D[current_vertex][0] + distance
+                        if new_cost > old_cost and neighbor not in D[current_vertex][1]:
+                            pq.insert((new_cost, neighbor))
+                            D[neighbor][0] = new_cost
+                            D[neighbor][1] = D[current_vertex][1]+neighbor
+    return D
+
 
 def check_instance_consistency(instance):
     #print(f"instance={instance}", file=stderr)
