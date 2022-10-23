@@ -2,7 +2,7 @@
 from sys import stderr
 from typing import Optional, List, Dict, Callable
 
-from RO_verify_submission_gen_prob_lib import verify_submission_gen
+#from RO_verify_submission_gen_prob_lib import verify_submission_gen
 
 instance_objects_spec = [
     ('n',int),
@@ -63,66 +63,88 @@ def sum_of_vals_over(instance, ordered_list_of_elems):
 class Graph:
     # Costruttore
     def __init__(self, arcs, n = 0, labels = [], arcs_removed = [], arcs_added = [], focus_node = '1', focus_arc = ('1','2',5), partial_to = {}, partial_from = {}):
- 
+        
         #Assegnamo a V il numero dei vertici
         self.V = n
         
         #Assegnamo a E la lista degli archi
         self.E = arcs
- 
-		# Un elenco di elenchi per rappresentare un elenco di adiacenze
-		self.adjList = dict()
-		
-		# gestione degli archi rimossi sul grafo D'
-		for arc in arcs_removed:
-			arcs.remove(arc)	
-		
-		# gestione degli archi aggiunti sul grafo D'
-		for arc in arcs_added:
-			arcs.append(arc)
-		
-		# archi aggiornati del grafo D'
-		self.E1 = arcs			
-		
-		# Valori di default iniziali
-		self.arcs_rem = arcs_removed
-		self.arcs_add = arcs_added
-		self.focus_n = focus_node
-		self.focus_a = focus_arc
-		    
-		if len(labels) == 0:
-			
-			# aggiunge archi al graph diretto
-			for (head, tail, delay) in arcs:
-				if(type(head) == type(str)):
-					self.adjList[head].append([tail,delay])
-				else:
-					self.adjList[str(head)].append([str(tail),delay])	
-			
-		else:
-			n = len(labels)
+        
+        # Un elenco di elenchi per rappresentare un elenco di adiacenze
+        self.adjList = dict()
+        
+        # gestione degli archi rimossi sul grafo D'
+        for arc in arcs_removed:
+        	arcs.remove(arc)	
+        
+        # gestione degli archi aggiunti sul grafo D'
+        for arc in arcs_added:
+        	arcs.append(arc)
+        
+        # archi aggiornati del grafo D'
+        self.E1 = arcs			
+        
+        # Valori di default iniziali
+        self.arcs_rem = arcs_removed
+        self.arcs_add = arcs_added
+        self.focus_n = focus_node
+        self.focus_a = focus_arc
+            
+        if len(labels) == 0:
+        	
+        	# aggiunge archi al graph diretto
+        	for (head, tail, delay) in arcs:
+        		if(type(head) == type(str)):
+        			self.adjList[head].append([tail,delay])
+        		else:
+        			self.adjList[str(head)].append([str(tail),delay])	
+        	
+        else:
+        	n = len(labels)
         	self.V = n
-			guard = 0
-			# aggiunge archi al graph diretto
-			for (head, tail, delay) in arcs:
-				if guard == 0:
-					self.adjList['0'].append([head,0])
-					guard = 1
+        	guard = 0
+        	# aggiunge archi al graph diretto
+        	for (head, tail, delay) in arcs:
+        		if guard == 0:
+        			self.adjList['0'].append([head,0])
+        			guard = 1
+        		
+        		self.adjList[head].append([tail,delay])
 				
-				self.adjList[head].append([tail,delay])
-'''
-def to_graph(nodes, lst_tup):
-    arcs={}
-    for node in nodes:
-        arcs[node] = nodes.index(node)
-    new_lst_tup = []
-    for arc in lst_tup:
-        new_lst_tup.append((arcs[arc[0]],arcs[arc[1]]))
+# Perform DFS on the graph and set the departure time of all vertices of the graph
+def DFS(graph, v, discovered, departure, time, trad, trad_rev):
+    
+ 
+    # mark the current node as discovered
+    discovered[v] = True
+ 
+    # do for every edge (v, u)
+    l = []
+    for key in graph.adjList[trad[v]]:
+        l.append(key[0])
+    for u in l:
+        # if `u` is not yet discovered
+        if not discovered[trad_rev[u]]:
+            time = DFS(graph, trad_rev[u], discovered, departure, time, trad, trad_rev)
+ 
+    # ready to backtrack
+    # set departure time of vertex `v`
+    departure[v] = time
+    time = time + 1
+ 
+    return time
 
-    D = Graph(new_lst_tup, len(nodes))
-    return D
-'''
-def isDAG(graph, n):
+def isDAG(graph):
+    
+    n = len(graph.adjList)
+    
+    trad = {}
+    trad_rev = {}
+    
+    for i in range(n):
+        trad[i] = list(graph.adjList.keys())[i][0]
+        trad_rev[list(graph.adjList.keys())[i][0]] = i
+
  
     # tiene traccia del rilevamento o meno di un vertice
     discovered = [False] * n
@@ -136,32 +158,26 @@ def isDAG(graph, n):
     # per visitare tutte le componenti connesse di un grafo
     for i in range(n):
         if not discovered[i]:
-            time = DFS(graph, i, discovered, departure, time)
+            time = DFS(graph, i, discovered, departure, time, trad, trad_rev)
  
     # controlla se il dato graph diretto è DAG o meno
     for u in range(n):
  
         # controlla se (u, v) forma un back-edge.
-        for v in graph.adjList[u]:
+        l = []
+        for key in graph.adjList[trad[u]]:
+            l.append(key[0])
+        for v in l:
  
             # Se il tempo di partenza del vertice `v` è maggiore o uguale
             # all'ora di partenza di `u`, formano un ciclo.
  
             # Si noti che `departure[u]` sarà uguale a `departure[v]`
             # solo se `u = v`, cioè il vertice contiene un arco a se stesso
-            if departure[u] == departure[v]:
-                return 1
-            if departure[u] <= departure[v]:
-                return 2
+            if departure[u] <= departure[trad_rev[v]]:
+                return False
     # senza cicli
-    return 0
-'''
-def get_nodes_from_arcs(arcs):
-    lst = []
-    for arc in arcs:
-        lst.append((arc[0],arc[1]))
-    return lst
-'''
+    return True
 	
 def topologicalSortUtil(v, visited, stack, graph):
  
@@ -197,12 +213,6 @@ def topologicalSort(graph):
         if arc[0] == stack[-1]:
             return True
     return False
-    
-"""
-d = {1: [[4,1]], 2: [[3,3]], 0:[[5,4]], 5:[[2,0],[0,6]], 3:[[1,6]], 4:[[0,5],[1,9]]}
-print(sorted(d))
-print(topologicalSort(d))
-"""
 
 class PriorityQueue(object):
     def __init__(self):
@@ -352,6 +362,25 @@ def critical_nodes_to(table,start,end):
     nodes = critical_path_to(table,start,end)
     nodes.pop(-1)
     return nodes
+    
+def critical_arcs_to(table,start,end):
+    path = critical_path_to(table,start,end)
+    arcs = []
+    old_node = None
+    for node in path:
+        if old_node is None:
+            old_node = node
+            continue
+        arcs.append((old_node,node))
+        old_node = node
+    return arcs
+    
+def sensible_to_focus_arc(table,start,focus_arc):
+    result = dict()
+    for key in table.keys():
+        arcs = critical_arcs_to(table,start,key)
+        result[key] = focus_arc in arcs
+    return result
 
 
 def check_instance_consistency(instance):
@@ -394,68 +423,8 @@ def check_instance_consistency(instance):
         if (arc not in instance["arcs"] and arc not in instance["arcs_added"]):
             print('ERRORE: L\'arco {} non è presente in "arcs_added" nè in "arcs"'.format(arc))
             exit(0)
-
-
-
-    '''
-    if len(instance["costs"]) != n:
-        print(f'Errore: len(instance["costs"])={len(instance["costs"])} != {n}=len(instance["labels"])')    
-        exit(0)
-    if len(instance["vals"]) != n:
-        print(f'Errore: len(instance["vals"])={len(instance["vals"])=} != {n}=len(instance["labels"])')    
-        exit(0)
-    for ele in instance["forced_in"]:
-        if ele not in instance["labels"]:
-            print(f'Errore: the element {ele} containd in the list `forced_in` is not contained in the list `labels` = {instance["labels"]}.\nIndeed, `forced_in` = {instance["forced_in"]}.')
-            exit(0)
-    for ele in instance["forced_out"]:
-        if ele not in instance["labels"]:
-            print(f'Errore: the element {ele} containd in the list `forced_out` is not contained in the list `labels` = {instance["labels"]}.\nIndeed, `forced_out` = {instance["forced_out"]}.')
-            exit(0)
-        if ele in instance["forced_in"]:
-            print(f'Errore: the element {ele} is containd BOTH in the list `forced_out` and in the list `forced_in` = {instance["forced_in"]}.\nIndeed, `forced_out` = {instance["forced_out"]}.')
-            exit(0)
-    LB = instance["LB"]
-    UB = instance["UB"]
-    if len(UB)+len(LB) > 0:
-        if len(UB)*len(LB)==0:
-            print(f'Errore: delle liste UB ed LB non puoi averne esattamente una vuota. O sono entrambe vuote o entrambe devono essere lunghe quanto la lista `labels`')
-            exit(0)
-        if len(forced_out)+len(forced_in) > 0:
-            print(f'Errore: quando le liste `forced_out` e/o `forced_in` sono impostate a liste NON vuote le liste `UB` e `LB` devono essere lasciate vuote')    
-            exit(0)
-        if len(UB) != n:
-            print(f'Errore: len(instance["UB"])={len(UB)=} != {n}=len(instance["labels"])')    
-            exit(0)
-        if len(LB) != n:
-            print(f'Errore: len(instance["LB"])={len(LB)=} != {n}=len(instance["labels"])')    
-            exit(0)
-    else:
-        LB = [0]*n
-        UB = [1]*n        
-    cost_forced_in = 0
-    for ele,indx in zip(instance["labels"],range(n)):
-        if LB[indx] > UB[indx]:
-            print(f'Errore: UB[{ele}]= {UB[ele]}>LB{LB[ele]} =LB[{ele}].')
-            exit(0)
-        if ele in instance["forced_in"]:
-            LB[indx] = 1
-        if ele in instance["forced_out"]:
-            UB[indx] = 0
-        cost_forced_in += LB[indx]*instance["costs"][indx]
-    if cost_forced_in > instance["Knapsack_Capacity"]:
-        if len(instance["forced_in"]) > 0:
-            print(f'Errore: il costo/peso complessivo degli elementi obbligati ({cost_forced_in}) già eccede la capacità dello zaino {instance["Knapsack_Capacity"]}')
-        else:
-            print(f'Errore: il prodotto scalare del vettore `cost` e il vettore dei lower bounds `LB` già eccede la capacità dello zaino {instance["Knapsack_Capacity"]}')
-        exit(0)
-    if instance["CAP_FOR_NUM_SOLS"] > limits["CAP_FOR_NUM_SOLS"]:
-        print('Errore: non è consentito settare `CAP_FOR_NUM_SOLS` a {instance["CAP_FOR_NUM_SOLS"]} > {limits["CAP_FOR_NUM_SOLS"]}"]}')
-        exit(0)
-    if instance["CAP_FOR_NUM_OPT_SOLS"] > limits["CAP_FOR_NUM_OPT_SOLS"]:
-        print('Errore: non è consentito settare `CAP_FOR_NUM_OPT_SOLS` a {instance["CAP_FOR_NUM_OPT_SOLS"]} > {limits["CAP_FOR_NUM_OPT_SOLS"]}"]}')
-        exit(0)
-    '''
+            
+'''
         
 def solver(input_to_oracle):
     #print(f"input_to_oracle={input_to_oracle}",file=stderr)
@@ -611,3 +580,10 @@ class verify_submission_problem_specific(verify_submission_gen):
             else:
                 SEF.optimality_OK(g_sol, f"Confermo l'ottimailtà della soluzione {g_sol.alias}={g_sol.answ}.", "")
         return True
+        '''
+    
+G = Graph([])
+G.adjList = {'1': [['4',1]], '2': [['3',3]], '0':[['5',4],['4',15]], '5':[['2',0],['0',6]], '3':[['1',6]], '4':[['0',5],['1',9]]}
+    
+print(isDAG(G))
+print(sensible_to_focus_arc(get_DP_table_path(G,dijkstra_opt),'0',('2','3')))
