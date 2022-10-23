@@ -250,7 +250,7 @@ def getCostOfNeighbor(adjList,start,end):
             return neigh[1]
     return 'inf'
 
-def dijkstra(graph, start_vertex):
+def dijkstra_opt(graph, start_vertex):
     D = {v:[float('inf'),[]] for v in graph.adjList.keys()}
     D[start_vertex][0] = 0
     D[start_vertex][1] = start_vertex
@@ -275,7 +275,9 @@ def dijkstra(graph, start_vertex):
                         if new_cost < old_cost:
                             pq.insert((new_cost, neighbor))
                             D[neighbor][0] = new_cost
-                            D[neighbor][1] = D[current_vertex][1]+neighbor
+                            D[neighbor][1] = D[current_vertex][1]+' '+neighbor
+    for key in D.keys():
+        D[key] = [D[key][0], D[key][1].split(' ')]
     return D
 
 
@@ -310,8 +312,46 @@ def dijkstra_max(graph, start_vertex):
                         if new_cost > old_cost and neighbor not in D[current_vertex][1]:
                             pq.insert((new_cost, neighbor))
                             D[neighbor][0] = new_cost
-                            D[neighbor][1] = D[current_vertex][1]+neighbor
+                            D[neighbor][1] = D[current_vertex][1]+' '+neighbor
+    for key in D.keys():
+        D[key] = [D[key][0], D[key][1].split(' ')]
     return D
+   
+
+def get_DP_table(G, algo):
+    DP_rows={}
+    for nodoK in sorted(G.adjList):
+        dijks = algo(G,nodoK)
+        for key in dijks.keys():
+            dijks[key] = dijks[key][0]
+        DP_rows[nodoK] = dijks
+    return DP_rows
+
+def get_DP_table_path(G,algo):
+    DP_rows={}
+    for nodoK in sorted(G.adjList):
+        dijks = algo(G,nodoK)
+        for key in dijks.keys():
+            dijks[key] = dijks[key][1]
+        DP_rows[nodoK] = dijks
+    return DP_rows
+    
+def min_time_to(table,start,end):
+    return table[start][end]
+    
+def min_time_from(table,start,end):
+    return table[end][start]
+    
+def latest_time_to(table,start,end):
+    return table[start][end]
+    
+def critical_path_to(table,start,end):
+    return table[start][end]
+    
+def critical_nodes_to(table,start,end):
+    nodes = critical_path_to(table,start,end)
+    nodes.pop(-1)
+    return nodes
 
 
 def check_instance_consistency(instance):
