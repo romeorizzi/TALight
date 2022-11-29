@@ -116,7 +116,7 @@ class TestPathGenerators(unittest.TestCase):
                  [0, 0, 1, 1, 1],
                  [1, 0, 0, 0, 1],
                  [1, 1, 1, 0, 1]]
-        path = [(0,0), (0,1), (0,2), (1,2), (1,3), (1,4), (2,4), (3,4)]
+        path = [(0, 0), (0, 1), (0, 2), (1, 2), (1, 3), (1, 4), (2, 4), (3, 4)]
         table = dptable_opt_from(field, diag=False)
         self.assertEqual(path, build_opt_path(table, diag=False))
 
@@ -125,14 +125,14 @@ class TestPathGenerators(unittest.TestCase):
                  [1, 0, 1, 1, 1],
                  [1, 0, 0, 0, 1],
                  [1, 1, 1, 1, 1]]
-        expect = [[(0,0), (0,1), (0,2), (1,2), (1,3), (1,4), (2,4), (3,4)],
-                 [(0,0), (1,0), (2,0), (3,0), (3,1), (3,2), (3,3), (3,4)]]
+        expect = [[(0, 0), (0, 1), (0, 2), (1, 2), (1, 3), (1, 4), (2, 4), (3, 4)],
+                  [(0, 0), (1, 0), (2, 0), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]
         table = dptable_opt_from(field, diag=False)
         actual = build_all_opt_path(field, table, diag=False)
         self.assertEqual(sorted(expect), sorted(actual))
 
-        expect = [[(0,0), (0,1), (0,2), (1,2), (1,3), (1,4), (2,4), (3,4)],
-                 [(0,0), (1,0), (2,0), (3,0), (3,1), (3,2), (3,3), (3,4)]]
+        expect = [[(0, 0), (0, 1), (0, 2), (1, 2), (1, 3), (1, 4), (2, 4), (3, 4)],
+                  [(0, 0), (1, 0), (2, 0), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]
         table = dptable_opt_from(field, diag=True)
         actual = build_all_opt_path(field, table, diag=True)
         self.assertEqual(sorted(expect), sorted(actual))

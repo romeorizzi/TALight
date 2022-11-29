@@ -2,7 +2,7 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List, Tuple, TypeVar
 
 from RO_verify_submission_gen_prob_lib import verify_submission_gen
 
@@ -64,9 +64,10 @@ answer_objects_implemented = ['num_paths','num_opt_paths','opt_val','opt_path','
 limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
 
 
+_T = TypeVar("_T")
 
-_Cell = tuple[int, int]
-_Grid = list[list[int]]
+_Cell = Tuple[int, int]
+_Grid = List[List[_T]]
 
 
 def _xmap(x: int) -> int:
@@ -92,7 +93,7 @@ def parse_cell(cell: str) -> _Cell:
     return (row, col)
 
 
-def free(field: _Grid, row: int, col: int) -> bool:
+def free(field: _Grid[int], row: int, col: int) -> bool:
     """Checks whether a cell is free or forbidden."""
     if field:
         return field[row][col] != -1
@@ -142,7 +143,7 @@ def check_instance_consistency(instance):
             exit(0)
 
 
-def dptable_num_to(g: _Grid, diag: bool = False) -> _Grid:
+def dptable_num_to(grid: _Grid[int], diag: bool = False) -> _Grid:
     """
     Build a DP table suitable for counting the number of paths.
     Construction starts from the cell in the top-left corner.
@@ -151,37 +152,37 @@ def dptable_num_to(g: _Grid, diag: bool = False) -> _Grid:
         f:    game field table
         diag: allow diagonal moves
     """
-    assert check_matrix_shape(g)
-    assert free(g, 0, 0) and free(g, -1, -1)
+    assert check_matrix_shape(grid)
+    assert free(grid, 0, 0) and free(grid, -1, -1)
 
-    ROWS, COLS = len(g), len(g[0])
+    ROWS, COLS = len(grid), len(grid[0])
     t = [[0 for _ in range(COLS)] for _ in range(ROWS)]
     # NOTE: cells default to zero, in some cases there is no need to assing values
     t[0][0] = 1
     for i in range(1, COLS):
-        if free(g, 0, i):
+        if free(grid, 0, i):
             t[0][i] = t[0][i - 1]
 
     for i in range(1, ROWS):
-        if free(g, i, 0):
+        if free(grid, i, 0):
             t[i][0] = t[i - 1][0]
 
     if diag:
         for i in range(1, ROWS):
             for j in range(1, COLS):
-                if free(g, i, j):
+                if free(grid, i, j):
                     t[i][j] = t[i][j - 1] + t[i - 1][j] + t[i - 1][j - 1]
 
     else:
         for i in range(1, ROWS):
             for j in range(1, COLS):
-                if free(g, i, j):
+                if free(grid, i, j):
                     t[i][j] = t[i][j - 1] + t[i - 1][j]
 
     return t
 
 
-def dptable_num_from(g: _Grid, diag: bool = False) -> _Grid:
+def dptable_num_from(g: _Grid[int], diag: bool = False) -> _Grid:
     """
     Build a DP table suitable for counting the number of paths.
     Construction starts from the cell in the bottom-right corner.
@@ -411,11 +412,11 @@ def dptable_num_opt_from(f: _Grid, diag: bool = False) -> _Grid:
     return as_tuple_matrix(t)
 
 
-def as_tuple_matrix(table: list[list[NumOptCell]]) -> list[list[_Cell]]:
+def as_tuple_matrix(table: _Grid[NumOptCell]) -> _Grid[Tuple[int, int]]:
     return [[(x.count, x.value) for x in row] for row in table]
 
 
-def build_opt_path(dptable: _Grid, diag: bool = False) -> list[_Cell]:
+def build_opt_path(dptable: _Grid, diag: bool = False) -> List[_Cell]:
     ROWS, COLS = len(dptable), len(dptable[0])
     row, col = 0, 0
     path = []
@@ -430,11 +431,11 @@ def build_opt_path(dptable: _Grid, diag: bool = False) -> list[_Cell]:
     return path
 
 
-def build_all_opt_path(f: _Grid, dptable: _Grid, diag: bool = False) -> list[list[_Cell]]:
+def build_all_opt_path(f: _Grid[int], dptable: _Grid, diag: bool = False) -> _Grid[_Cell]:
     ROWS, COLS = len(f), len(f[0])
     paths = []
 
-    def _build_exclude_diag(path: list[_Cell]):
+    def _build_exclude_diag(path: List[_Cell]):
         if (cell := path[-1]) != (ROWS - 1, COLS - 1):  # not last cell
             row, col = cell
             value_on_opt_path = dptable[row][col] - f[row][col]
@@ -448,7 +449,7 @@ def build_all_opt_path(f: _Grid, dptable: _Grid, diag: bool = False) -> list[lis
         else:
             paths.append(path)
 
-    def _build_include_diag(path: list[_Cell]):
+    def _build_include_diag(path: List[_Cell]):
         if (cell := path[-1]) != (ROWS - 1, COLS - 1):  # not last cell
             row, col = cell
             value_on_opt_path = dptable[row][col] - f[row][col]
@@ -497,7 +498,7 @@ def solver(input_to_oracle):
     through = parse_cell(INSTANCE["cell_through"])
 
 
-    def splitgrids(g: _Grid) -> tuple[_Grid, _Grid]:
+    def splitgrids(g: _Grid) -> Tuple[_Grid, _Grid]:
         """
         Simplify the task as a pair of grid problems:
             1. subgrid from 'cell_from' to 'cell_through'
