@@ -9,11 +9,11 @@ services:
       # section with the instance assigned to the problem-solver/student:
       grid:
         regex: ^(.*)$
-        default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
+        default: "[ [0, 1, 0, 3, 0], [-1, 2,-1,-1, 0], [0, 0, 2, 1, 0], [0,-1, 0, 1, 1] ]"
         explain: "the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value."
       budget:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: 1
         explain: "a path is not admissible if the sum of the negative numbers encountered along the path, inverted in sign, exceeds the budget"
       diag:
         regex: ^(0|1)$
@@ -80,13 +80,13 @@ services:
         explain: "the list of all optimum paths"
       DPtable_num_to:
         regex: ^(.*)$
-        default: "[]"
-        example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
         explain: "the DP table meant to tell the number of paths from top-left cell to the generic cell"
       DPtable_num_from:
         regex: ^(.*)$
-        default: "[]"
-        example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
         explain: "the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
       DPtable_opt_to:
         regex: ^(.*)$
@@ -109,7 +109,7 @@ services:
       answer_dict:
         regex: ^(.*)$
         default: "{}"
-        example1: "-a answer_dict=\"{'num_paths1':28, 'num_opt_paths1':4}\""
+        example1: "-a answer_dict=\"{'num_paths':10, 'num_opt_paths':2}\""
         explain: "There are two options for passing to this TALight service the anwer to be evaluated and provided a feedback with. Either you use a separate argument for each possible object type comprising your answer, or you callect them all within one single dictionary that you pass through this one argument ('answer_dict'). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty string) then the first option is assumed, which may be better when experiencing the service from the CLI. Otherwise, the string passed through 'answer_dict' is read as yaml to obtain the dictionary containing the answer of the student. An answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type represented by the standard name attached to it (e.g., like 'opt_sol' or 'opt_val'). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible answer objects, and their names, by inspecting the complete list of arguments to this service). You can use these standard names as the keys of the dictionary 'answer_dict', so that each object in the answer of the student is clearly tagged with its type. However, the companion argument 'alias_dict' allows for more freedom: it allows you to introduce custom names, defined in terms of the standard ones (just an aliasing) and to attach them to the objects comprising your answer, using them as keys in your 'answer_dict' dictionary. In this way the feedback provided by the service will be closer to the context faced by the student. Therefore, the argument 'answer_dict' expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary 'alias_dict'. Moreover, for every key-value pair in 'answer_dict', the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary 'alias_dict'. Put in other words, when using Option (2) you can rename the available objects (for more proximity to the problem solver in its own context) by means of the ancillary argument 'alias_dict', that makes sense only in tandem with this one."
 
       alias_dict:
@@ -182,11 +182,11 @@ services:
       # section with a possible instance to the problem:
       grid:
         regex: ^(.*)$
-        default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
+        default: "[ [0, 1, 0, 3, 0], [-1, 2,-1,-1, 0], [0, 0, 2, 1, 0], [0,-1, 0, 1, 1] ]"
         explain: "the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value."
       budget:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: 1
         explain: "a path is not admissible if the sum of the negative numbers encountered along the path, inverted in sign, exceeds the budget"
       diag:
         regex: ^(0|1)$
@@ -225,7 +225,7 @@ services:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a input_data_assigned=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
+        example: "-a input_data_assigned=\"{'grid':[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ],'diag':1}\""
         explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument ('input_data_assigned'). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to 'input_data_assigned' is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like 'costs' or 'vals'). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
 
       # section characterizing the answer requested to the oracle and the ad-hoc naming for the objects comprising it (the standard names can of course be used):
