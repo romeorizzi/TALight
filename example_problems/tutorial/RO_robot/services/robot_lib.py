@@ -63,7 +63,6 @@ request_setups = {
 answer_objects_implemented = ['num_paths','num_opt_paths','opt_val','opt_path','list_opt_paths','DPtable_num_to','DPtable_num_from','DPtable_opt_to','DPtable_opt_from','DPtable_num_opt_to','DPtable_num_opt_from']
 limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
 
-
 _T = TypeVar("_T")
 
 _Cell = Tuple[int, int]
@@ -102,16 +101,24 @@ def free(field: _Grid[int], row: int, col: int) -> bool:
 
 
 def check_matrix_shape(f: _Grid) -> bool:
+    print("\ncheck_matrix_shape")
+    print(f)
     """Checks if matrix is empty."""
     if not f:
         return False
 
+
     """Checks if list is a matrix."""
     cols = len(f[0])
 
+    print("ciao 1")
+
     for row in f:
+        print(row)
         if len(row) != cols:
             return False
+
+    print("ciao 2")
 
     return True
 
@@ -493,8 +500,8 @@ def solver(input_to_oracle):
     grid = INSTANCE["grid"]
     diag = INSTANCE["diag"]
     budget = INSTANCE["budget"]
-    source = parse_cell(INSTANCE["cell_to"])
-    target = parse_cell(INSTANCE["cell_from"])
+    source = parse_cell(INSTANCE["cell_from"])
+    target = parse_cell(INSTANCE["cell_to"])
     through = parse_cell(INSTANCE["cell_through"])
 
 
@@ -510,17 +517,24 @@ def solver(input_to_oracle):
 
         # source and target cells restrict the admissible area
         # of the original grid to a rectangle subset
-        for x in range(source[0], through[0] + 1):
-            print(x)
-            for y in range(source[0], through[0] + 1):
-                print(y)
+        
+        print(grid)
+        print(source) 
+        print(through)
+        print(target)
+        #for x in range(source[0], through[0] + 1):
+        #    print(x)
+        #    for y in range(source[1], through[1] + 1):
+        #        print(y)
         top_left_slice = [g[x][y] for x in range(source[0], through[0] + 1)
-                          for y in range(source[0], through[0] + 1)]
+                          for y in range(source[1], through[1] + 1)]
         
         # through cell creates a chokepoint in the grid
         bottom_right_slice = [g[x][y] for x in range(through[0], target[0] + 1) 
                               for y in range(through[1], target[1] + 1)]
 
+        print(top_left_slice)
+        print(bottom_right_slice)
         return top_left_slice, bottom_right_slice
 
     def fusegrids(tl_slice: _Grid, br_slice: _Grid) -> _Grid:
