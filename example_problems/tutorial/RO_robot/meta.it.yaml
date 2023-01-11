@@ -4,33 +4,33 @@ public_folder: public
 services:
   check:
     evaluator: [python, services/check_driver.py]
-    description: "l'input al problem solver è una griglia rettangolare mxn dove un robot parte dalla cella (1,'A') in alto a sinistra e deve portarsi nella cella (m,'A'+(n-1)) in basso a destra evitando di passare per le celle proibite, denotate da un numero negativo nella griglia (di fatto, una matrice di interi). Le celle di valore zero non hanno alcun effetto sul robot mentre le celle di valore positivo rappresentano premi da accumulare (si sommano). Ad ogni passo il robot può spostarsi alla cella immediatamente sottostante oppure alla immediata destra di quella dove si trova attualmente. Se l'argomento `diag` del servizio è settato ad 1 allora il robot può anche muoversi diagonalmente, ossia passare direttamente dalla cella (i,j) alla cella (i+1,j+1). La prima richiesta è quella di contare quanti sono i cammini diversi che non passino per alcuna cella proibita. Il concetto di proibizione può però essere rilassato assegnado al robot un budget di spesa; un cammino sarà ammissibile se la somma dei numeri negativi incontrati lungo il percorso, invertita in segno, non eccede il budged di spesa. Tra i cammini ammissibili si potrà poi richiedere quello che raccoglie un massimo ammontare complessivo di premi. E al problem solver si potrà richiedere di calcolare il numero di cammini ottimi o anche di listarli.  Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnategli di questo Problema Robot in una delle sue molte varianti possibili. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze attive (sia per un problema specifico che metodologiche); se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere estensibili e aperti a promuovere la collaborazione tra problem-makers/insegnanti (nonchè a relativizzare e superare la separazione tra essi e i problem-solvers/trainees). Dal sistema dove organizzi i tuoi esami/esercitazioni, entro un esercizio centrato su un'istanza del Problema Robot, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Solo per dare una prima idea, potrai imporre vincoli aggiuntivi su singoli elementi che ridefiniscano l'ammissibilità delle soluzioni e puoi controllare/validare tabelle di programmazione dinamica sottomesse dallo studente  (anche per varianti della domanda standard che mettano in gioco la competenza della programmazione dinamica). Viene inoltre gestita la situazione in cui il risolutore di problemi potrebbe aver ricevuto una tabella DP parziale e il suo compito era di completarla (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti)."    
+    description: "l'input al problem solver è una griglia rettangolare mxn dove un robot parte dalla cella (1,'A') in alto a sinistra e deve portarsi nella cella (m,'A'+(n-1)) in basso a destra evitando di passare per le celle proibite, denotate da un numero negativo nella griglia (di fatto, una matrice di interi). Le celle di valore zero non hanno alcun effetto sul robot mentre le celle di valore positivo rappresentano premi da accumulare (si sommano). Ad ogni passo il robot può spostarsi alla cella immediatamente sottostante oppure alla immediata destra di quella dove si trova attualmente. Se l'argomento 'diag' del servizio è settato ad 1 allora il robot può anche muoversi diagonalmente, ossia passare direttamente dalla cella (i,j) alla cella (i+1,j+1). La prima richiesta è quella di contare quanti sono i cammini diversi che non passino per alcuna cella proibita. Il concetto di proibizione può però essere rilassato assegnado al robot un budget di spesa; un cammino sarà ammissibile se la somma dei numeri negativi incontrati lungo il percorso, invertita in segno, non eccede il budged di spesa. Tra i cammini ammissibili si potrà poi richiedere quello che raccoglie un massimo ammontare complessivo di premi. E al problem solver si potrà richiedere di calcolare il numero di cammini ottimi o anche di listarli.  Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnategli di questo Problema Robot in una delle sue molte varianti possibili. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze attive (sia per un problema specifico che metodologiche); se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere estensibili e aperti a promuovere la collaborazione tra problem-makers/insegnanti (nonchè a relativizzare e superare la separazione tra essi e i problem-solvers/trainees). Dal sistema dove organizzi i tuoi esami/esercitazioni, entro un esercizio centrato su un'istanza del Problema Robot, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Solo per dare una prima idea, potrai imporre vincoli aggiuntivi su singoli elementi che ridefiniscano l'ammissibilità delle soluzioni e puoi controllare/validare tabelle di programmazione dinamica sottomesse dallo studente  (anche per varianti della domanda standard che mettano in gioco la competenza della programmazione dinamica). Viene inoltre gestita la situazione in cui il risolutore di problemi potrebbe aver ricevuto una tabella DP parziale e il suo compito era di completarla (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti)."    
     args:
       # sezione con i dati dell'istanza assegnati al problem-solver/studente:
       grid:
         regex: ^(.*)$
-        default: "[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ]"
-        explain: the grid is a matrix, the forbiddend cells are tagged with -1. On the other cells we report their gain value.
+        default: "[ [0, 1, 0, 3, 0], [-1, 2,-1,-1, 0], [0, 0, 2, 1, 0], [0,-1, 0, 1, 1] ]"
+        explain: "la griglia è una matrice, le celle proibite sono contrassegnate con -1. Sulle altre celle riportiamo il loro valore di guadagno."
       budget:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
-        explain: a path is not admissible if the sum of the negative numbers encountered along the path, inverted in sign, exceeds the budget
+        default: 1
+        explain: "un percorso non è ammissibile se la somma dei numeri negativi incontrati lungo il percorso, di segno invertito, supera il budget"
       diag:
         regex: ^(0|1)$
         default: 0
-        explain: "set this flag to 1 if the robot can move also diagonally, i.e., directly from cell (i,j) to cell (i+1,j+1)"
+        explain: "imposta questo flag a 1 se il robot può muoversi anche in diagonale, cioè direttamente dalla cella (i,j) alla cella (i+1,j+1)"
       cell_from:
         regex: ^(.*)$
         default: "['1','A']"
-        explain: "assuming the argument `cell_from` is set to (3,'C'), then only the paths that start from cell (3,'C') are feasible. Row 1 is the one at the top, column 'A' is the leftmost one."
+        explain: "supponendo che l'argomento 'cell_from' sia impostato su (3,'C'), allora sono possibili solo i percorsi che iniziano dalla cella (3,'C'). La riga 1 è quella in alto, la colonna 'A' è quella più a sinistra."
       cell_to:
         regex: ^(.*)$
         default: "['4','E']"
-        explain: "assuming the argument `cell_from` is set to (3,'C'), then only the paths that end in cell (3,'C') are feasible. Row 1 is the one at the top, column 'A' is the leftmost one."
+        explain: "supponendo che l'argomento 'cell_from' sia impostato su (3,'C'), solo i percorsi che terminano nella cella (3,'C') sono possibili. La riga 1 è quella in alto, la colonna 'A' è quella più a sinistra."
       cell_through:
         regex: ^(.*)$
         default: "['3','C']"
-        explain: "in order for a path to be feasible it must also visit cell (3,'C'). Row 1 is the one at the top, column 'A' is the leftmost one."
+        explain: "perché un percorso sia percorribile deve visitare anche la cella (3,'C'). La riga 1 è quella in alto, la colonna 'A' è quella più a sinistra."
       CAP_FOR_NUM_SOLS:
         regex: ^([1-9][0-9]*)$
         default: 10
@@ -44,85 +44,89 @@ services:
       partialDP_to:
         regex: ^(.*)$
         default: "[]"
-        explain: "a partial DP table is one where some entries have been concealed (overwriting a -1 on top of them). The teacher can decide to provide such tables as inputs to the student, and this service is better to be communicated them for providing more customized feedback to the student. This argument is actually a generic DP table, with `partialDP_to[cell]` measuring some quantity relative to the paths that end into `cell`. For example, with reference to the functional `number of feasible paths`, we would have: partialDP_to = [ [ -1, 1, -1, 1, 1], [ 1, 2, 3, 0, 1], [ 0, 2, 5, -1, 6], [ 0, 0, 5, -1, -1] ]."
+        explain: "una tabella DP parziale è quella in cui alcune voci sono state nascoste (sovrascrivendo un -1 sopra di esse). L'insegnante può decidere di fornire tali tabelle come input allo studente, e questo servizio è meglio che gli venga comunicato per fornire un feedback più personalizzato allo studente. Questo argomento è in realtà una tabella DP generica, con 'partialDP_to[cell]' che misura una quantità relativa ai percorsi che terminano in 'cell'. Ad esempio, con riferimento al funzionale 'numero di cammini ammissibili', avremmo: partialDP_to = [ [ -1, 1, -1, 1, 1], [ 1, 2, 3, 0, 1], [ 0 , 2, 5, -1, 6], [ 0, 0, 5, -1, -1] ]."
       partialDP_from:
         regex: ^(.*)$
         default: "[]"
-        explain: "see the above explanation for the argument `partialDP_to`. For the same functional and for the `gris` indicated above, we would have: partialDP_to = [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3, -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
+        explain: "vedere la spiegazione sopra per l'argomento 'partialDP_to'. Per lo stesso funzionale e per il 'gris' sopra indicato, avremmo: partialDP_to = [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3 , -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
 
       # sezione modalità API, sempre per far pervenire al servizio l'input ricevuto dal problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
         example: "-a input_data_assigned=\"{'grid':[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ],'diag':1}\""
-        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti/elementi che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `grid`, o `diag`, o `cell_from`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento ('input_data_assigned'). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece 'input_data_assigned' è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento 'input_data_assigned' viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti/elementi che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come 'grid', o 'diag', o 'cell_from'). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
       num_paths:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: il numero di percorsi ammissibili, come filtrato dai vincoli aggiuntivi (gli argomenti che lo influenzano, dopo `grid`, sono `diag`, `budget`, `cell_from`, `cell_to`, `cell_through`)
+        explain: "il numero di percorsi ammissibili, come filtrato dai vincoli aggiuntivi (gli argomenti che lo influenzano, dopo 'grid', sono 'diag', 'budget', 'cell_from', 'cell_to', 'cell_through')"
       num_opt_paths:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: il numero di percorsi ammissibili che raccolgono il massimo premio totale possibile
+        explain: "il numero di percorsi ammissibili che raccolgono il massimo premio totale possibile"
       opt_val:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: il massimo totale in premi che un percorso fattibile può raccogliere
+        explain: "il massimo totale in premi che un percorso fattibile può raccogliere"
       opt_path:
         regex: ^(.*)$
         default: "[]"
-        explain: un percorso che raccoglie il massimo premio totale possibile
+        explain: "un percorso che raccoglie il massimo premio totale possibile"
       list_opt_paths:
         regex: ^(.*)$
         default: "[]"
-        explain: la lista di tutti i percorsi di interesse ottimi
+        explain: "la lista di tutti i percorsi di interesse ottimi"
       DPtable_num_to:
         regex: ^(.*)$
-        default: "[]"
-        example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30]]"
-        explain: la tabella di programmazione dinamica che dice il numero di percorsi dalla cella in alto a sinista alla generica cella
+        default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        explain: "la tabella di programmazione dinamica che dice il numero di percorsi dalla cella in alto a sinista alla generica cella"
       DPtable_num_from:
         regex: ^(.*)$
-        default: "[]"
-        example: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        explain: la tabella di programmazione dinamica che dice il numero di percorsi dalla cella generica alla cella in basso a destra
+        default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        explain: "la tabella di programmazione dinamica che dice il numero di percorsi dalla cella generica alla cella in basso a destra"
       DPtable_opt_to:
         regex: ^(.*)$
         default: "[]"
-        explain: la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella in alto a sinistra alla cella generica
+        explain: "la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella in alto a sinistra alla cella generica"
       DPtable_opt_from:
         regex: ^(.*)$
         default: "[]"
-        explain: la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella generica alla cella in basso a destra
+        explain: "la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella generica alla cella in basso a destra"
       DPtable_num_opt_to:
         regex: ^(.*)$
         default: "[]"
-        explain: la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella in alto a sinistra alla cella generica
+        explain: "la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella in alto a sinistra alla cella generica"
       DPtable_num_opt_from:
         regex: ^(.*)$
         default: "[]"
-        explain: la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella generica alla cella in basso a destra
+        explain: "la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella generica alla cella in basso a destra"
+      
       # sezione modalità API, sempre per far pervenire le risposte del problem-solver:
       answer_dict:
         regex: ^(.*)$
         default: "{}"
-        example1: "-a answer_dict=\"{'opt_sol':['A', 'B'], 'opt_val':30}\""
-        example2: "-a answer_dict=\"{'opt_sol1':['A', 'B'], 'opt_val1':30}\""
-        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della conegna del task/richiesta di esercizio, (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`answer_dict`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
+        example1: "-a answer_dict=\"{'num_paths':10, 'num_opt_paths':2}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della conegna del task/richiesta di esercizio, (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento ('answer_dict'). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece 'answer_dict' è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento 'answer_dict' viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come 'opt_sol' o 'opt_val'). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario 'answer_dict', così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare 'alias_dict' che assume significato solo in tandem a questo. L'argomento 'alias_dict' ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario 'answer_dict' che del dizionario 'alias_dict', come relativi valori nel dizionario 'alias_dict' colloca i relativi nomi standard mentre nel dizionario 'answer_dict' disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
 
       alias_dict:
         regex: ^(.*)$
-        example: "{'opt_val1':'opt_val','opt_sol1':'opt_sol'}"
         default: "{}"
-        explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica deglio oggetti di risposta sottomessi alla valutazione.'
-
-      # sezione con argomenti che modificano i setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
+        explain: "questo argomento (una stringa da leggere come yaml) è un dizionario degli oggetti che compongono la soluzione che l'istruttore ha chiesto al risolutore di problemi su un dato esercizio/compito/richiesta. Le chiavi sono i nomi che l'istruttore ha assegnato ai tipi di oggetto standard coinvolti nella richiesta, i valori corrispondenti dovrebbero essere tra i seguenti:"
+        explain1: "[num_paths] il numero di percorsi possibili"
+        explain2: "[num_opt_paths] il numero di cammini di valore massimo"
+        explain3: "[opt_val] il valore massimo di un cammino ammissibile"
+        explain4: "[opt_path] un percorso di massimo valore"
+        explain5: "[list_opt_paths] l'elenco di tutti i cammini ottimali"
+        explain6: "[DPtable_num_to] la tabella DP intendeva indicare il numero di percorsi dalla cella in alto a sinistra alla cella generica"
+        explain7: "[DPtable_num_from] la tabella DP intendeva indicare il numero di percorsi dalla cella generica alla cella in basso a destra"
+        explain8: "[DPtable_opt_to] la tabella DP intende indicare il valore massimo di un percorso fattibile spostandosi dalla cella in alto a sinistra alla cella generica"
+        explain9: "[DPtable_opt_from] la tabella DP intendeva indicare il valore massimo di un percorso fattibile spostandosi dalla cella generica alla cella in basso a destra"
+        explain10: "[DPtable_num_opt_to] la tabella DP intendeva indicare il numero di percorsi ottimali dalla cella in alto a sinistra alla cella generica"
+        explain11: "[DPtable_num_opt_from] la tabella DP intendeva indicare il numero di percorsi ottimali dalla cella generica alla cella in basso a destra."
 
       # sezione con gli argomenti che specificano il formato della stringa di feedback e della confromazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyther notebook, browser, ...) (2) il file di output (certificati di sottomizzione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova od esame
       color_implementation:
@@ -169,75 +173,77 @@ services:
 
   oracle:
     evaluator: [python, services/oracle_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
+    description: "dato un insieme di oggetti, ognuno con il suo peso e costo, e un budget totale (Knapsack_Capacity), questo servizio calcola e restituisce una soluzione ottima al problema dello zaino: un sottoinsieme di valore massimo degli oggetti non eccedente il budget. Utilizzando gli argomenti del servizio è possibile imporre ulteriori vincoli alle soluzioni praticabili e proporre diverse varianti didattiche della sfida, in quanto idonee sia per le sessioni formative che per gli esami. Al servizio può anche essere richiesta la restituzione di tabelle di programmazione dinamiche."
     args:
       pwd:
         regex: ^(.*)$
         explain: "tale servizio non deve essere messo a disposizione degli studenti almeno durante le prove d'esame. Impostare una password privata per impedire accessi non autorizzati."
 
-      # sezione con i dati che specificano un'istanza del problema:
-      labels:
+      # sezione con una possibile istanza del problema:
+      grid:
         regex: ^(.*)$
-        default: "['A', 'B', 'C']"
-        explain: nomi degli oggetti
-      costs:
-        regex: ^(.*)$
-        default: "[2, 3, 4]"
-        explain: costi degli oggetti
-      vals:
-        regex: ^(.*)$
-        default: "[13, 17, 19]"
-        explain: i valori degli oggetti
-      Knapsack_Capacity:
+        default: "[ [0, 1, 0, 3, 0], [-1, 2,-1,-1, 0], [0, 0, 2, 1, 0], [0,-1, 0, 1, 1] ]"
+        explain: "la griglia è una matrice, le celle proibite sono contrassegnate con -1. Sulle altre celle riportiamo il loro valore di guadagno."
+      budget:
         regex: ^(0|[1-9][0-9]*)$
-        default: 5
-        explain: una soluzione (un sottoinsieme degli oggetti) è ammissibile se la somma complessiva dei costi non eccede Knapsack_Capacity
-      forced_out:
+        default: 1
+        explain: "un percorso non è ammissibile se la somma dei numeri negativi incontrati lungo il percorso, di segno invertito, supera il budget"
+      diag:
+        regex: ^(0|1)$
+        default: 0
+        explain: "imposta questo flag a 1 se il robot può spostarsi anche nella cella della colonna e della riga successive"
+      partialDP_to:
         regex: ^(.*)$
         default: "[]"
-        explain: la soluzione è tenuta ad evitare questi oggetti
-      forced_in:
+        explain: "una tabella DP parziale in cui sono state nascoste alcune voci (sovrascrivendo un -1 sopra di esse). Ad esempio: [ [ -1, 1, -1, 1, 1], [ 1, 2, 3, 0, 1], [ 0, 2, 5, -1, 6], [ 0, 0, 5, -1, -1]]."
+      partialDP_from:
         regex: ^(.*)$
         default: "[]"
-        explain: la soluzione è tenuta ad includere questi oggetti
+        explain: "una tabella DP parziale in cui sono state nascoste alcune voci (sovrascrivendo un -1 sopra di esse). Ad esempio: [ [ 16, 10, -1, 1, 1], [ 6, 6, 3, -1, 1], [ 0, 3, -1, 2, 1], [ 0, 0, 1, 1, -1] ]."
+      cell_from:
+        regex: ^(.*)$
+        default: "[1,'A']"
+        explain: "sono percorribili solo i cammini che partono dalla cella [1,'A']. La riga 1 è quella in alto, la colonna 'A' è quella più a sinistra."
+      cell_to:
+        regex: ^(.*)$
+        default: "[4,'E']"
+        explain: "sono percorribili solo i percorsi che partono dalla cella [4,'E']. La riga 1 è quella in alto, la colonna 'A' è quella più a sinistra."
+      cell_through:
+        regex: ^(.*)$
+        default: "[3,'C']"
+        explain: "sono percorribili solo i cammini che partono dalla cella (3,'C'). La riga 1 è quella in alto, la colonna 'A' è quella più a sinistra."
       CAP_FOR_NUM_SOLS:
         regex: ^([1-9][0-9]*)$
         default: 10
-        explain: il numero di soluzioni ammissibili ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+        explain: "il numero di soluzioni fattibili restituite dal servizio, quando richiesto di fornire il proprio elenco, sarà limitato a tale valore"
       CAP_FOR_NUM_OPT_SOLS:
         regex: ^([1-9][0-9]*)$
         default: 10
-        explain: il numero di soluzioni ottime ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia
+        explain: "il numero di soluzioni ottimali restituite dal servizio, quando richiesto di fornire la propria lista, sarà limitato a questo valore"
 
       # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
       input_data_assigned:
         regex: ^(.*)$
         default: "{}"
-        example: "-a input_data_assigned=\"{'labels':['A','B','C'],'costs':[3,5,7],'vals':[2,4,5], 'Knapsack_Capacity':30}\""
-        explain: "Vi sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) è più indicata quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (la stringa vuota) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+        example: "-a input_data_assigned=\"{'grid':[ [ 0, 0, 0, 3, 0], [ 0, 2, 0, -1, 0], [ -1, 0, 1, 0, 0], [ 0, -1, 0, 0, 0] ],'diag':1}\""
+        explain: "Vi sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezzionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento ('input_data_assigned'). La (2) è più indicata quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece 'input_data_assigned' è lasciato al suo valore di default (la stringa vuota) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento 'input_data_assigned' viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come 'costs' o 'vals'). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare ad ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'orcolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
-        explain1: '[num_paths] il numero di percorsi ammissibili, come filtrato dai vincoli aggiuntivi (gli argomenti che lo influenzano, dopo `grid`, sono `diag`, `budget`, `cell_from`, `cell_to`, `cell_through`)'
-        explain2: '[num_opt_paths] il numero di percorsi ammissibili che raccolgono il massimo premio totale possibile'
-        explain3: '[opt_val] il massimo totale in premi che un percorso fattibile può raccogliere'
-        explain4: '[opt_path] un percorso che raccoglie il massimo premio totale possibile'
-        explain5: '[list_opt_paths] la lista di tutti i percorsi di interesse ottimi'
-        explain6: '[DPtable_num_to] la tabella di programmazione dinamica che dice il numero di percorsi dalla cella in alto a sinista alla generica cella'
-        explain7: '[DPtable_num_from] la tabella di programmazione dinamica che dice il numero di percorsi dalla cella generica alla cella in basso a destra'
-        explain8: '[DPtable_opt_to] la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella in alto a sinistra alla cella generica'
-        explain9: '[DPtable_opt_from] la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella generica alla cella in basso a destra'
-        explain10: '[DPtable_num_opt_to] la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella in alto a sinistra alla cella generica'
-        explain11: '[DPtable_num_opt_from] la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella generica alla cella in basso a destra'
-
-      # sezione con argomenti che modificano i setup
-      request_setups:
-        regex: ^(.*)$
-        default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'orcolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione 'key'-'value' nel dizionario, il servizio 'oracle' computerà un oggetto il cui tipo è 'key' (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato 'value' (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per 'key' sono i seguenti:"
+        explain1: "[num_paths] il numero di percorsi ammissibili, come filtrato dai vincoli aggiuntivi (gli argomenti che lo influenzano, dopo 'grid', sono 'diag', 'budget', 'cell_from', 'cell_to', 'cell_through')"
+        explain2: "[num_opt_paths] il numero di percorsi ammissibili che raccolgono il massimo premio totale possibile"
+        explain3: "[opt_val] il massimo totale in premi che un percorso fattibile può raccogliere"
+        explain4: "[opt_path] un percorso che raccoglie il massimo premio totale possibile"
+        explain5: "[list_opt_paths] la lista di tutti i percorsi di interesse ottimi"
+        explain6: "[DPtable_num_to] la tabella di programmazione dinamica che dice il numero di percorsi dalla cella in alto a sinista alla generica cella"
+        explain7: "[DPtable_num_from] la tabella di programmazione dinamica che dice il numero di percorsi dalla cella generica alla cella in basso a destra"
+        explain8: "[DPtable_opt_to] la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella in alto a sinistra alla cella generica"
+        explain9: "[DPtable_opt_from] la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella generica alla cella in basso a destra"
+        explain10: "[DPtable_num_opt_to] la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella in alto a sinistra alla cella generica"
+        explain11: "[DPtable_num_opt_from] la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella generica alla cella in basso a destra."
 
       # sezione con argomenti per determinare i canali di uscita e scegliere i formati dell'output:
       color_implementation:
@@ -267,7 +273,7 @@ services:
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
-    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis." 
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, 'meta.yaml' is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument 'metafile' you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument 'lang' only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument 'service' in your next call to the service synopsis." 
     args:
       service:
         regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$

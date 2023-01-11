@@ -62,7 +62,6 @@ limits = {
     'CAP_FOR_NUM_OPT_SOLS': 100
 }
 
-
 _T = TypeVar("_T")
 
 _Cell = Tuple[int, int]
@@ -99,19 +98,27 @@ def free(field: _Mat[int], row: int, col: int) -> bool:
     return field[row][col] != -1
 
 
-def check_matrix_shape(f: _Mat) -> bool:
+def check_matrix_shape(f: _Grid) -> bool:
+    print("\ncheck_matrix_shape")
+    print(f)
     """Checks if matrix is empty."""
     if not f:
         return False
+
 
     """Checks if list is a matrix."""
     cols = len(f[0])
     if cols == 0:
         return False
 
+    print("ciao 1")
+
     for row in f:
+        print(row)
         if len(row) != cols:
             return False
+
+    print("ciao 2")
 
     return True
 
@@ -536,17 +543,24 @@ def solver(input_to_oracle):
 
         # source and target cells restrict the admissible area
         # of the original grid to a rectangle subset
-        for x in range(source[0], through[0] + 1):
-            print(x)
-            for y in range(source[0], through[0] + 1):
-                print(y)
+        
+        print(grid)
+        print(source) 
+        print(through)
+        print(target)
+        #for x in range(source[0], through[0] + 1):
+        #    print(x)
+        #    for y in range(source[1], through[1] + 1):
+        #        print(y)
         top_left_slice = [g[x][y] for x in range(source[0], through[0] + 1)
-                          for y in range(source[0], through[0] + 1)]
-
+                          for y in range(source[1], through[1] + 1)]
+        
         # through cell creates a chokepoint in the grid
         bottom_right_slice = [g[x][y] for x in range(through[0], target[0] + 1)
                               for y in range(through[1], target[1] + 1)]
 
+        print(top_left_slice)
+        print(bottom_right_slice)
         return top_left_slice, bottom_right_slice
 
     def fusegrids(tl_slice: _Mat, br_slice: _Mat) -> _Mat:
