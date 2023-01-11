@@ -2,7 +2,7 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Dict, List, Tuple, TypeVar
+from typing import Dict, Final, List, Tuple, TypeVar
 
 from RO_verify_submission_gen_prob_lib import verify_submission_gen
 
@@ -42,37 +42,37 @@ answer_objects_spec = {
     # the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.
     "DPtable_num_opt_from": "matrix_of_int",
 }
-answer_objects_implemented = [
-    "num_paths",
-    "num_opt_paths",
-    "opt_val",
-    "opt_path",
-    "list_opt_paths",
-    "DPtable_num_to",
-    "DPtable_num_from",
-    "DPtable_opt_to",
-    "DPtable_opt_from",
-    "DPtable_num_opt_to",
-    "DPtable_num_opt_from",
-]
-request_setups = {
-    "MAX_NUM_SOLS_IN_LIST": 10,
-    "MAX_NUM_OPT_SOLS_IN_LIST": 30,
-}
 
-answer_objects_implemented = ['num_paths','num_opt_paths','opt_val','opt_path','list_opt_paths','DPtable_num_to','DPtable_num_from','DPtable_opt_to','DPtable_opt_from','DPtable_num_opt_to','DPtable_num_opt_from']
-limits = {'CAP_FOR_NUM_SOLS':100,'CAP_FOR_NUM_OPT_SOLS':100}
+answer_objects_implemented = [
+    'num_paths',
+    'num_opt_paths',
+    'opt_val',
+    'opt_path',
+    'list_opt_paths',
+    'DPtable_num_to',
+    'DPtable_num_from',
+    'DPtable_opt_to',
+    'DPtable_opt_from',
+    'DPtable_num_opt_to',
+    'DPtable_num_opt_from'
+]
+
+limits = {
+    'CAP_FOR_NUM_SOLS': 100,
+    'CAP_FOR_NUM_OPT_SOLS': 100
+}
 
 
 _T = TypeVar("_T")
 
 _Cell = Tuple[int, int]
-_Grid = List[List[_T]]
+_Mat = List[List[_T]]
 
 
 def _xmap(x: int) -> int:
     """Map internal x coordinate of a cell to a human-readable format."""
     return x + 1
+
 
 def _ymap(y: int) -> str:
     """Map internal y coordinate of a cell to a human-readable format."""
@@ -93,27 +93,31 @@ def parse_cell(cell: str) -> _Cell:
     return (row, col)
 
 
-def free(field: _Grid[int], row: int, col: int) -> bool:
+def free(field: _Mat[int], row: int, col: int) -> bool:
     """Checks whether a cell is free or forbidden."""
-    if field:
-        return field[row][col] != -1
-    else:
-        return False
+    assert field is not None
+    return field[row][col] != -1
 
 
-def check_matrix_shape(f: _Grid) -> bool:
+def check_matrix_shape(f: _Mat) -> bool:
     """Checks if matrix is empty."""
     if not f:
         return False
 
     """Checks if list is a matrix."""
     cols = len(f[0])
+    if cols == 0:
+        return False
 
     for row in f:
         if len(row) != cols:
             return False
 
     return True
+
+def check_same_shape(g1: _Mat, g2: _Mat) -> bool:
+    """Check if two matrices have the same shape"""
+    return len(g1) == len(g2) and len(g1[0]) == len(g2[0])
 
 
 def check_instance_consistency(instance):
@@ -143,14 +147,17 @@ def check_instance_consistency(instance):
             exit(0)
 
 
-def dptable_num_to(grid: _Grid[int], diag: bool = False) -> _Grid:
+def dptable_num_to(grid: _Mat[int], diag: bool = False) -> _Mat:
     """
-    Build a DP table suitable for counting the number of paths.
+    Build an acceleration table suitable for counting the number of paths.
     Construction starts from the cell in the top-left corner.
 
     Args:
         f:    game field table
         diag: allow diagonal moves
+
+    Returns:
+        A table where each cell contains the maximum utility value of any path starting from it.
     """
     assert check_matrix_shape(grid)
     assert free(grid, 0, 0) and free(grid, -1, -1)
@@ -179,12 +186,13 @@ def dptable_num_to(grid: _Grid[int], diag: bool = False) -> _Grid:
                 if free(grid, i, j):
                     t[i][j] = t[i][j - 1] + t[i - 1][j]
 
+    assert check_same_shape(grid, t)
     return t
 
 
-def dptable_num_from(g: _Grid[int], diag: bool = False) -> _Grid:
+def dptable_num_from(g: _Mat[int], diag: bool = False) -> _Mat:
     """
-    Build a DP table suitable for counting the number of paths.
+    Build an accelerator table suitable for counting the number of paths.
     Construction starts from the cell in the bottom-right corner.
 
     Args:
@@ -219,18 +227,24 @@ def dptable_num_from(g: _Grid[int], diag: bool = False) -> _Grid:
                 if free(g, i, j):
                     t[i][j] = t[i][j + 1] + t[i + 1][j]
 
+    assert check_same_shape(g, t)
     return t
 
 
-def dptable_opt_to(g: _Grid, diag: bool = False) -> _Grid:
+def dptable_opt_to(g: _Mat, diag: bool = False) -> _Mat:
     """
-    Build a DP table suitable for finding the maximum value.
+    Build an accelerator table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
 
     Args:
         f:    game field table
         diag: allow diagonal moves
+
+    Returns:
+        A table where each cell contains the maximum utility value
+        of any path that starts from that cell.
     """
+    assert g is not None
     assert check_matrix_shape(g)
     assert free(g, 0, 0) and free(g, -1, -1)
 
@@ -262,14 +276,18 @@ def dptable_opt_to(g: _Grid, diag: bool = False) -> _Grid:
     return t
 
 
-def dptable_opt_from(g: _Grid, diag: bool = False) -> _Grid:
+def dptable_opt_from(g: _Mat, diag: bool = False) -> _Mat:
     """
-    Build a DP table suitable for finding the maximum value.
+    Build an accelerator table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
 
     Args:
         f:    game field table
         diag: allow diagonal moves
+
+    Returns:
+        A table where each cell contains the maximum utility value
+        of any path that ends at that cell.
     """
     assert check_matrix_shape(g)
     assert free(g, 0, 0) and free(g, -1, -1)
@@ -308,7 +326,7 @@ class NumOptCell:
     value: int  # the optimal value of a path ending at this cell
 
 
-def dptable_num_opt_to(f: _Grid, diag: bool = False) -> _Grid:
+def dptable_num_opt_to(f: _Mat, diag: bool = False) -> _Mat:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -360,7 +378,7 @@ def dptable_num_opt_to(f: _Grid, diag: bool = False) -> _Grid:
     return as_tuple_matrix(t)
 
 
-def dptable_num_opt_from(f: _Grid, diag: bool = False) -> _Grid:
+def dptable_num_opt_from(f: _Mat, diag: bool = False) -> _Mat:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -412,26 +430,35 @@ def dptable_num_opt_from(f: _Grid, diag: bool = False) -> _Grid:
     return as_tuple_matrix(t)
 
 
-def as_tuple_matrix(table: _Grid[NumOptCell]) -> _Grid[Tuple[int, int]]:
+def as_tuple_matrix(table: _Mat[NumOptCell]) -> _Mat[Tuple[int, int]]:
     return [[(x.count, x.value) for x in row] for row in table]
 
+# TODO: is it actually required if we also need to compute all optimal paths?
+def build_opt_path(dptable: _Mat, diag: bool = False) -> List[_Cell]:
+    assert dptable is not None
 
-def build_opt_path(dptable: _Grid, diag: bool = False) -> List[_Cell]:
     ROWS, COLS = len(dptable), len(dptable[0])
-    row, col = 0, 0
+    FULL_PATH_LEN = ROWS + COLS - 1
     path = []
+    row, col = 0, 0
+
+    # TODO: simplify edge cases by adding unwalkable border at edges?
     if diag:
-        while ():
+        while len(path) < FULL_PATH_LEN:
             pass
 
     else:
-        while ():
+        while len(path) < FULL_PATH_LEN:
             pass
 
     return path
 
 
-def build_all_opt_path(f: _Grid[int], dptable: _Grid, diag: bool = False) -> _Grid[_Cell]:
+def build_all_opt_path(f: _Mat[int], dptable: _Mat, diag: bool = False) -> _Mat[_Cell]:
+    assert f is not None
+    assert dptable is not None
+    assert len(f) == len(dptable) and len(f[0]) == len(dptable[0])
+
     ROWS, COLS = len(f), len(f[0])
     paths = []
 
@@ -464,7 +491,7 @@ def build_all_opt_path(f: _Grid[int], dptable: _Grid, diag: bool = False) -> _Gr
             if row < (ROWS - 1) and col < (COLS - 1):
                 if dptable[row + 1][col + 1] == value_on_opt_path:
                     _build_include_diag(path + [(row + 1, col + 1)])
-        else:
+        else:  # last cell, path is complete
             paths.append(path)
 
     if diag:
@@ -474,7 +501,7 @@ def build_all_opt_path(f: _Grid[int], dptable: _Grid, diag: bool = False) -> _Gr
     return paths
 
 
-def conceal(dptable: _Grid):
+def conceal(dptable: _Mat):
     """
     Conceals some cells of the table
     """
@@ -487,18 +514,17 @@ def conceal(dptable: _Grid):
 def solver(input_to_oracle):
     assert input_to_oracle is not None
     _LOGGER.debug("input = %s", input_to_oracle)
-    INSTANCE = input_to_oracle["input_data_assigned"]
+    instance: Final[dict] = input_to_oracle["input_data_assigned"]
 
     # extract and parse inputs
-    grid = INSTANCE["grid"]
-    diag = INSTANCE["diag"]
-    budget = INSTANCE["budget"]
-    source = parse_cell(INSTANCE["cell_to"])
-    target = parse_cell(INSTANCE["cell_from"])
-    through = parse_cell(INSTANCE["cell_through"])
+    grid: Final = instance["grid"]
+    diag: Final = instance["diag"]
+    budget: Final = instance["budget"]
+    source: Final = parse_cell(instance["cell_to"])
+    target: Final = parse_cell(instance["cell_from"])
+    through: Final = parse_cell(instance["cell_through"])
 
-
-    def splitgrids(g: _Grid) -> Tuple[_Grid, _Grid]:
+    def splitgrids(g: _Mat) -> Tuple[_Mat, _Mat]:
         """
         Simplify the task as a pair of grid problems:
             1. subgrid from 'cell_from' to 'cell_through'
@@ -516,14 +542,14 @@ def solver(input_to_oracle):
                 print(y)
         top_left_slice = [g[x][y] for x in range(source[0], through[0] + 1)
                           for y in range(source[0], through[0] + 1)]
-        
+
         # through cell creates a chokepoint in the grid
-        bottom_right_slice = [g[x][y] for x in range(through[0], target[0] + 1) 
+        bottom_right_slice = [g[x][y] for x in range(through[0], target[0] + 1)
                               for y in range(through[1], target[1] + 1)]
 
         return top_left_slice, bottom_right_slice
 
-    def fusegrids(tl_slice: _Grid, br_slice: _Grid) -> _Grid:
+    def fusegrids(tl_slice: _Mat, br_slice: _Mat) -> _Mat:
         """
         Fills a full size grid
 
@@ -551,7 +577,6 @@ def solver(input_to_oracle):
 
         return table
 
-
     # top-left subgrid, bottom-right subgrid
     subtables = [[f(g, diag=diag) for g in splitgrids(grid)] for f in [
         dptable_num_to,
@@ -564,7 +589,6 @@ def solver(input_to_oracle):
     (DPtable_num_to, DPtable_num_from,
      DPtable_opt_to, DPtable_opt_from,
      DPtable_num_opt_to, DPtable_num_opt_from) = [fusegrids(*t) for t in subtables]
-
 
     # retrieve and format outputs
     # TODO: adapt solutions to different 'from' and 'to' cells
@@ -581,8 +605,9 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF, input_data_assigned: Dict, long_answer_dict: Dict):#, request_setups: str):
-        super().__init__(SEF, input_data_assigned, long_answer_dict)#, request_setups)
+    # , request_setups: str):
+    def __init__(self, SEF, input_data_assigned: Dict, long_answer_dict: Dict):
+        super().__init__(SEF, input_data_assigned, long_answer_dict)  # , request_setups)
 
     def verify_format(self, SEF):
         if not super().verify_format(SEF):

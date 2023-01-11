@@ -3,19 +3,20 @@ import unittest
 from robot_lib import *
 
 
-class TestInputParsing(unittest.TestCase):
+class InputParsing(unittest.TestCase):
 
     def test_cell_parsing(self):
         cells = [
             ("(a,10)", (0, 10)),
             ("(A,99)", (0, 99)),
+            ("(z,11)", (25, 11)),
         ]
         for i, (cell, expect) in enumerate(cells):
             with self.subTest(i=i):
                 self.assertEqual(expect, parse_cell(cell))
 
 
-class TestDPTableGenerators(unittest.TestCase):
+class DPTableGenerators(unittest.TestCase):
 
     def test_num_to_cell(self):
         field = [[0,  0, -1,  0, 0],
@@ -109,7 +110,7 @@ class TestDPTableGenerators(unittest.TestCase):
         self.assertEqual(include, dptable_num_opt_from(field, diag=True))
 
 
-class TestPathGenerators(unittest.TestCase):
+class PathGenerators(unittest.TestCase):
 
     def test_single_opt_path(self):
         field = [[1, 1, 1, 0, 1],
