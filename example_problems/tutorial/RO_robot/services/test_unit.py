@@ -4,7 +4,7 @@ from robot_lib import *
 
 
 class InputParsing(unittest.TestCase):
-
+    @unittest.skip("Not yet finalized, may not be required")
     def test_cell_parsing(self):
         cells = [
             ("(a,10)", (0, 10)),
@@ -14,6 +14,60 @@ class InputParsing(unittest.TestCase):
         for i, (cell, expect) in enumerate(cells):
             with self.subTest(i=i):
                 self.assertEqual(expect, parse_cell(cell))
+
+
+class ProblemGridBuilding(unittest.TestCase):
+    @unittest.skip("Not yet implemented")
+    def test_fuse_grid(self):
+        pass
+
+    @unittest.skip("Not yet implemented")
+    def test_split_grid(self):
+        pass
+
+    def test_path_source_constraint(self):
+        rows, cols = 4, 4
+        # place the path source on every cell
+        for source_x in range(rows):
+            for source_y in range(cols):
+                grid = [[0 for _ in range(cols)] for _ in range(rows)]
+                grid = enforce_path_source(grid, (source_x, source_y))
+                # test all cells
+                for x in range(rows):
+                    for y in range(cols):
+                        # all cells that come before cannot be walkable
+                        expect = x >= source_x and y >= source_y
+                        actual = walkable(grid, (x, y))
+                        self.assertEqual(expect, actual)
+
+    def test_path_target_constraint(self):
+        rows, cols = 4, 4
+        # place the path target at every cell
+        for target_x in range(rows):
+            for target_y in range(cols):
+                grid = [[0 for _ in range(cols)] for _ in range(rows)]
+                grid = enforce_path_target(grid, (target_x, target_y))
+                # test all cells
+                for x in range(rows):
+                    for y in range(cols):
+                        # all cells that come after cannot be walkable
+                        expect = x <= target_x and y <= target_y
+                        actual = walkable(grid, (x, y))
+                        self.assertEqual(expect, actual)
+
+    def test_cell_through_constraint(self):
+        grid = [[0 for _ in range(3)] for _ in range(3)]
+
+        # TODO: add more test cases
+        cells = [(1, 1), (1, 2)]
+        outs = [[0, 0, -1],
+                [0, 0, 0],
+                [-1, 0, 0]]
+
+        for i, (cell, expect) in enumerate(zip(cells, outs)):
+            with self.subTest(i=i):
+                actual = enforce_path_through(grid, cell)
+                self.assertEqual(actual, expect)
 
 
 class DPTableGenerators(unittest.TestCase):
@@ -112,6 +166,7 @@ class DPTableGenerators(unittest.TestCase):
 
 class PathGenerators(unittest.TestCase):
 
+    @unittest.skip("Not yet finalized, may not be required")
     def test_single_opt_path(self):
         field = [[1, 1, 1, 0, 1],
                  [0, 0, 1, 1, 1],

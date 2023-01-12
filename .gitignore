@@ -55,3 +55,6 @@ TEMA_OGGI*
 
 # IntelliJ
 .idea/
+
+# logs
+.logs/

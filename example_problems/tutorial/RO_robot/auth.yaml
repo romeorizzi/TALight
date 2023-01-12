@@ -1,0 +1,5 @@
+%YAML 1.2
+---
+tokens:
+  - tester # just for testers
+save_directory: .logs
