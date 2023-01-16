@@ -21,6 +21,7 @@ def request(service: str, args: List[str] = []) -> List[str]:
 
 
 # NOTE: both 'rtald' and 'rtal' should ideally be in PATH
+@unittest.skip("Not yet finalized, must handle resource cleanup after the tests")
 class ShellAliasesTest(unittest.TestCase):
     def test_run_server_from_shell(self):
         # assert "./rtal/target/release" in os.environ["PATH"].split(";")
@@ -33,6 +34,7 @@ class ShellAliasesTest(unittest.TestCase):
         sp.check_call("rtal --help", shell=True)
 
 
+@unittest.skip("Not yet finalized, must handle resource cleanup after the tests")
 class ClientServerIntegration(unittest.TestCase):
 
     def test_server_and_client_startup(self):

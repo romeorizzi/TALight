@@ -4,6 +4,7 @@ import logging
 from dataclasses import dataclass
 from typing import Dict, Final, List, Tuple, TypeVar
 
+from RO_verify_submission_gen_prob_lib import verify_submission_gen
 
 _UNWALKABLE = -1
 """Magic value of a cell that cannot be traversed."""
@@ -118,6 +119,11 @@ def check_matrix_shape(f: _Mat) -> bool:
 
     return True
 
+def check_budget_bounds(budget: int) -> bool:
+    """Check if the allocated budget is within the bounds specified by the problem."""
+    # TODO: finalize the value of the upper bound
+    return 0 < budget <= 100
+
 def check_contains_cell(grid: _Mat, cell: _Cell) -> bool:
     """Check if the coordinates map to a valid cell."""
     assert grid is not None
@@ -161,7 +167,91 @@ def check_instance_consistency(instance):
             exit(0)
 
 
-def dptable_num_to(grid: _Mat[int], budget: int, diag: bool = False) -> _Mat:
+def budget_table(grid: _Mat, budget: int) -> _Mat:
+    assert check_matrix_shape(grid)
+    assert budget > 0
+
+    rows, cols = shape(grid)
+
+    # budget left at cell
+    b = [[max(-grid[x][y], 0) for y in range(cols)] for x in range(rows)]
+    for i in range(1, cols):
+        b[0][i] = b[0][i - 1] + grid[0][i]
+
+    for i in range(1, rows):
+        b[i][0] = b[i - 1][0] + grid[i][0]
+
+    for i in range(1, rows):
+        for j in range(1, cols):
+            b[i][j] = min()
+
+
+def cost(grid: _Mat, cell: _Cell) -> int:
+    """Cost on the budget to traverse a cell."""
+    x, y = cell
+    # only cells with negative values have a cost
+    return max(-grid[x][y], 0)
+
+
+def build_cost_table(grid: _Mat) -> _Mat:
+    assert grid is not None
+    rows, cols = shape(grid)
+    costs = [[cost(grid, (row, col)) for col in range(cols)] for row in range(rows)]
+    assert shape(costs) == shape(grid)
+    return costs
+
+
+def dptable_num_to_with_budget(grid: _Mat[int], budget: int, diag: bool = False) -> _Mat:
+    assert check_matrix_shape(grid)
+    assert check_budget_bounds(budget)
+
+    rows, cols = shape(grid)
+    dptable = [[[0 for _ in range(cols)] for _ in range(rows)] for _ in range(budget)]
+    
+    for b in range(budget):
+        assert shape(dptable[b]) == shape(grid)
+    
+    costs = build_cost_table(grid)
+    dptable[0][0][0] = 1
+    for row in range(rows - 1):
+        for col in range(cols - 1):
+            for b in range(budget):
+                # try moving vertically
+                c = costs[row + 1][col] + b
+                assert c >= 0
+                if c < budget:
+                    dptable[c][row + 1][col] += dptable[b][row][col]
+
+                # try moving horizontally
+                c = costs[row][col + 1] + b
+                assert c >= 0
+                if c < budget:
+                    dptable[c][row][col + 1] += dptable[b][row][col]
+
+                if diag:
+                    # try moving diagonally
+                    c = costs[row + 1][col + 1] + b
+                    assert c >= 0
+                    if c < budget:
+                        dptable[c][row + 1][col + 1] += dptable[b][row][col]
+
+    for row in range(rows - 1):
+        for b in range(budget):
+            c = costs[row][-1] + b
+            if c < budget:
+                dptable[c][row + 1][-1] += dptable[b][row][-1]
+
+    for col in range(cols - 1):
+        for b in range(budget):
+            c = costs[-1][col] + b
+            assert c >= 0
+            if c < budget:
+                dptable[c][-1][col + 1] += dptable[b][-1][col]
+
+    return dptable
+
+
+def dptable_num_to(grid: _Mat[int], diag: bool = False) -> _Mat:
     """
     Build an acceleration table suitable for counting the number of paths.
     Construction starts from the cell in the top-left corner.
@@ -176,34 +266,46 @@ def dptable_num_to(grid: _Mat[int], budget: int, diag: bool = False) -> _Mat:
     assert check_matrix_shape(grid)
 
     rows, cols = shape(grid)
-    t = [[0 for _ in range(cols)] for _ in range(rows)]
+
+    b = [[0 for _ in range(cols)] for _ in range(rows)]  # budget left at cell
+    for i in range(1, cols):
+        b[0][i] = b[0][i - 1] + min(grid[0][i])
+
+    for i in range(1, rows):
+        b[i][0] = b[i - 1][0] + min(grid[i][0])
+
+    for i in range(1, rows):
+        for j in range(1, cols):
+            b[i]
+
+    t = [[0 for _ in range(cols)]
+         for _ in range(rows)]  # number of paths at cell
     # NOTE: cells default to zero, in some cases there is no need to assing values
     t[0][0] = 1
     for i in range(1, cols):
-        if walkable(grid, (0, i)):
+        newbudget = b[0][i - 1] - min(grid[0][i], 0)
+        if newbudget < budget:
             t[0][i] = t[0][i - 1]
+            b[0][i] = newbudget
 
     for i in range(1, rows):
+        newbudget = b[i - 1][0] - min(grid[i][0], 0)
         if walkable(grid, (i, 0)):
             t[i][0] = t[i - 1][0]
 
-    if diag:
-        for i in range(1, rows):
-            for j in range(1, cols):
-                if walkable(grid, (i, j)):
+    for i in range(1, rows):
+        for j in range(1, cols):
+            if walkable(grid, (i, j)):
+                if diag:
                     t[i][j] = t[i][j - 1] + t[i - 1][j] + t[i - 1][j - 1]
-
-    else:
-        for i in range(1, rows):
-            for j in range(1, cols):
-                if walkable(grid, (i, j)):
+                else:
                     t[i][j] = t[i][j - 1] + t[i - 1][j]
 
     assert shape(grid) == shape(t)
     return t
 
 
-def dptable_num_from(g: _Mat[int], budget: int, diag: bool = False) -> _Mat:
+def dptable_num_from(g: _Mat[int], diag: bool = False) -> _Mat:
     """
     Build an accelerator table suitable for counting the number of paths.
     Construction starts from the cell in the bottom-right corner.
@@ -243,7 +345,7 @@ def dptable_num_from(g: _Mat[int], budget: int, diag: bool = False) -> _Mat:
     return t
 
 
-def dptable_opt_to(g: _Mat, budget: int, diag: bool = False) -> _Mat:
+def dptable_opt_to(g: _Mat, diag: bool = False) -> _Mat:
     """
     Build an accelerator table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -287,7 +389,7 @@ def dptable_opt_to(g: _Mat, budget: int, diag: bool = False) -> _Mat:
     return t
 
 
-def dptable_opt_from(g: _Mat, budget: int, diag: bool = False) -> _Mat:
+def dptable_opt_from(g: _Mat, diag: bool = False) -> _Mat:
     """
     Build an accelerator table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -336,7 +438,7 @@ class NumOptCell:
     value: int  # the optimal value of a path ending at this cell
 
 
-def dptable_num_opt_to(g: _Mat, budget: int, diag: bool = False) -> _Mat:
+def dptable_num_opt_to(g: _Mat, diag: bool = False) -> _Mat:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -387,7 +489,7 @@ def dptable_num_opt_to(g: _Mat, budget: int, diag: bool = False) -> _Mat:
     return as_tuple_matrix(t)
 
 
-def dptable_num_opt_from(g: _Mat, budget: int, diag: bool = False) -> _Mat:
+def dptable_num_opt_from(g: _Mat, diag: bool = False) -> _Mat:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -672,7 +774,6 @@ def solver(input_to_oracle):
     #  DPtable_opt_to, DPtable_opt_from,
     #  DPtable_num_opt_to, DPtable_num_opt_from) = [fusegrids(*t) for t in subtables]
 
-
     DPtable_num_to = dptable_num_to(problem, budget, diag=diag)
     DPtable_num_from = dptable_num_from(problem, budget, diag=diag)
 
@@ -694,3 +795,62 @@ def solver(input_to_oracle):
     for std_name, ad_hoc_name in input_to_oracle["request"].items():
         oracle_answers[ad_hoc_name] = locals()[std_name]
     return oracle_answers
+
+
+class verify_submission_problem_specific(verify_submission_gen):
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, request_setups:Dict):
+        super().__init__(SEF,input_data_assigned, long_answer_dict, request_setups)
+
+    def verify_format(self, SEF):
+        if not super().verify_format(SEF):
+            return False
+        if 'opt_val' in self.goals:
+            g = self.goals['opt_val']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
+        if 'num_opt_sols' in self.goals:
+            g = self.goals['num_opt_sols']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
+        if 'opt_sol' in self.goals:
+            g = self.goals['opt_sol']
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di oggetti (esempio ['{self.I.labels[0]}','{self.I.labels[2]}']). Hai invece immesso `{g.answ}`.")
+            for ele in g.answ:
+                if ele not in self.I.labels:
+                    return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {self.I.labels}.")
+            SEF.format_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        return True
+                
+    def set_up_and_cash_handy_data(self):
+        if 'opt_sol' in self.goals:
+            self.sum_vals = sum([val for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
+            self.sum_costs = sum([cost for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
+            
+    def verify_feasibility(self, SEF):
+        if not super().verify_feasibility(SEF):
+            return False
+        if 'opt_sol' in self.goals:
+            g = self.goals['opt_sol']
+            for ele in g.answ:
+                if ele in self.I.forced_out:
+                    return SEF.feasibility_NO(g, f"L'oggetto `{ele}` da tè inserito nella lista `{g.alias}` è tra quelli proibiti. Gli oggetti proibiti per la Richiesta {str(SEF.task_number)}, sono {self.I.forced_out}.")
+            for ele in self.I.forced_in:
+                if ele not in g.answ:
+                    return SEF.feasibility_NO(g, f"Nella lista `{g.alias}` hai dimenticato di inserire l'oggetto `{ele}` che invece è forzato. Gli oggetti forzati per la Richiesta {str(SEF.task_number)} sono {self.I.forced_in}.")
+            if self.sum_costs > self.I.Knapsack_Capacity:
+                return SEF.feasibility_NO(g, f"La tua soluzione in `{g.alias}` ha costo {self.sum_costs} > Knapsack_Capacity e quindi NON è ammissibile in quanto fora il budget per la Richiesta {str(SEF.task_number)}. La soluzione da tè inserita ricomprende il sottoinsieme di oggetti `{g.alias}`= {g.answ}.")
+            SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
+        return True
+                
+    def verify_consistency(self, SEF):
+        if not super().verify_consistency(SEF):
+            return False
+        if 'opt_val' in self.goals and 'opt_sol' in self.goals:
+            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol'];
+            if self.sum_vals != g_val.answ:
+                return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {self.sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
+            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.", "")
+        return True

@@ -72,6 +72,24 @@ class ProblemGridBuilding(unittest.TestCase):
 
 class DPTableGenerators(unittest.TestCase):
 
+    def test_cost_table_building(self):
+        grids = [
+                [[1, 2, 3, 4]],
+                [[-1, 1], [1, -1]],
+                [[100, -100], [0, -10000], [1000, 10000]],
+        ]
+        for g in grids:
+            with self.subTest(g=g):
+                costs = build_cost_table(g)
+                rows, cols = shape(costs)
+                for row in range(rows):
+                    for col in range(cols):
+                        if g[row][col] >= 0:
+                            self.assertEqual(costs[row][col], 0)
+                        else:
+                            self.assertEqual(costs[row][col], -g[row][col])
+
+
     def test_num_to_cell(self):
         field = [[0,  0, -1,  0, 0],
                  [0,  0,  0,  0, 0],
@@ -163,6 +181,16 @@ class DPTableGenerators(unittest.TestCase):
         self.assertEqual(exclude, dptable_num_opt_from(field, diag=False))
         self.assertEqual(include, dptable_num_opt_from(field, diag=True))
 
+
+    def test_num_to_with_budget(self):
+        testcases = [
+            ([[1, 2, 3, 4]], [[[1, 1, 1, 1]]]),
+            ([[1, 2, -1, 4]], [[[1, 1, 1, 0]]]),
+        ]
+        for grid, expect in testcases:
+            with self.subTest(grid=grid, expect=expect):
+                actual = dptable_num_to_with_budget(grid, budget=1, diag=False)
+                self.assertEqual(expect, actual)
 
 class PathGenerators(unittest.TestCase):
 
