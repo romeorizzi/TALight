@@ -39,7 +39,7 @@ async fn handle_raw_socket<T: AsyncRead + AsyncWrite + Unpin>(
             return;
         }
     };
-    let client = Client::new(websocket, args);
+    let client = Client::new(websocket, args, &address);
     client.start(&address).await;
 }
 
