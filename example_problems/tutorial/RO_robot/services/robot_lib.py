@@ -167,24 +167,6 @@ def check_instance_consistency(instance):
             exit(0)
 
 
-def budget_table(grid: _Mat, budget: int) -> _Mat:
-    assert check_matrix_shape(grid)
-    assert budget > 0
-
-    rows, cols = shape(grid)
-
-    # budget left at cell
-    b = [[max(-grid[x][y], 0) for y in range(cols)] for x in range(rows)]
-    for i in range(1, cols):
-        b[0][i] = b[0][i - 1] + grid[0][i]
-
-    for i in range(1, rows):
-        b[i][0] = b[i - 1][0] + grid[i][0]
-
-    for i in range(1, rows):
-        for j in range(1, cols):
-            b[i][j] = min()
-
 
 def cost(grid: _Mat, cell: _Cell) -> int:
     """Cost on the budget to traverse a cell."""
@@ -194,7 +176,10 @@ def cost(grid: _Mat, cell: _Cell) -> int:
 
 
 def build_cost_table(grid: _Mat) -> _Mat:
+    """Build the cost table associated with a grid."""
     assert grid is not None
+    assert check_matrix_shape(grid)
+
     rows, cols = shape(grid)
     costs = [[cost(grid, (row, col)) for col in range(cols)] for row in range(rows)]
     assert shape(costs) == shape(grid)
@@ -213,34 +198,39 @@ def dptable_num_to_with_budget(grid: _Mat[int], budget: int, diag: bool = False)
     
     costs = build_cost_table(grid)
     dptable[0][0][0] = 1
+    # iterate on each cell of the grid, except the last row and column
     for row in range(rows - 1):
         for col in range(cols - 1):
+
+            # iterate on all budget values that we may have when reaching the cell
             for b in range(budget):
-                # try moving vertically
+                # try moving vertically by checking the cost of the move
                 c = costs[row + 1][col] + b
                 assert c >= 0
                 if c < budget:
                     dptable[c][row + 1][col] += dptable[b][row][col]
 
-                # try moving horizontally
+                # try moving horizontally by checking the cost of the move
                 c = costs[row][col + 1] + b
                 assert c >= 0
                 if c < budget:
                     dptable[c][row][col + 1] += dptable[b][row][col]
 
                 if diag:
-                    # try moving diagonally
+                    # try moving diagonally by checking the cost of the move
                     c = costs[row + 1][col + 1] + b
                     assert c >= 0
                     if c < budget:
                         dptable[c][row + 1][col + 1] += dptable[b][row][col]
 
+    # iterate on the last column, we can only move vertically
     for row in range(rows - 1):
         for b in range(budget):
             c = costs[row][-1] + b
             if c < budget:
                 dptable[c][row + 1][-1] += dptable[b][row][-1]
 
+    # iterate on the last row, we can only move horizontally
     for col in range(cols - 1):
         for b in range(budget):
             c = costs[-1][col] + b
