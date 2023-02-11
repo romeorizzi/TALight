@@ -20,24 +20,22 @@ services:
         regex: ^(0|[1-9][0-9]*)$
         default: 3
         explain: "Numero di archi del grafo in input. Gli archi sono etichettati coi numeri da 0 a m-1. (Parleremo ad esempio dell'arco e1.)"
+      s:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "Nodo sorgente dal quale calcolare l'albero dei cammini minimi. Specificare un numero da 0 a n-1. (Il nodo v0 è il nodo sorgente di dafault.)"
+      t:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "Nodo destinazione verso il quale calcolare il cammino minimo. Specificare un numero da 0 a n-1."
       edges:
         regex: ^(.*)$
-        default: "[({0,1},4),({0,2},5),({1,2},5)]"
-        explain: "Lista degli archi (tutti non diretti); la terza componente di ogni tripla è il peso dell'arco. Archi paralleli sono consentiti. Nel running example (default) abbiamo 3 archi: e0=v0-v1 di peso 4, e1=v0-v2 di peso 5, e e2=v1-v2 di peso 5."
-      forbidden_edges:
-        regex: ^(.*)$
-        default: "[]"
-        explain: "ci interessano gli MST tenuti ad evitare questi archi"
-        example1: "il valore di default [], dove nessun arco è proibito, offre il nostro primo running example"
-        example2: "il valore [1] offre il nostro secondo running example, dove l'arco e1 è il solo arco ad essere proibito"
-      forced_edges:
-        regex: ^(.*)$
-        default: "[]"
-        explain: "Ci interessano gli MST tenuti ad includere questi archi"
+        default: "[({0,1},8),({0,2},3),({1,2},4),((1,2),1)]"
+        explain: "Lista degli archi (si usano le parentesi tonde per quelli diretti, le grafe per quelli non diretti); la terza componente di ogni tripla è il peso dell'arco. Se due archi hanno entrambi per estremi gli stessi nodi u e v, allora devono essere necessariamente diretti ed in senso opposto. Nel running example (default) abbiamo 3 archi non-diretti: e0=v0-v1 di peso 8, e1=v0-v2 di peso 3, e e2=v1-v2 di peso 4, e l'arco e3 diretto da v1 a v2 e peso 1."
       query_edge:
         regex: ^(0|[1-9][0-9]*)$
         default: 0
-        explain: "Specifica l'arco che andrebbe eventualmente analizzato. Ad esempio, da catalogare in base alla sua appartenenza a tutte, o nessuna, o alcune ma non tutte le soluzioni ottime."
+        explain: "Specifica l'arco che andrebbe eventualmente analizzato. Ad esempio, da catalogare in base alla sua appartenenza a tutti gli alberi dei cammini minimi, o nessuno, o alcuni ma non tutti."
       CAP_FOR_NUM_SOLS:
         regex: ^([1-9][0-9]*)$
         default: 10
@@ -56,46 +54,51 @@ services:
         explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
 
       # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
-      opt_sol:
+      opt_dist:
+        regex: ^(.*)$
+        default: 9
+        explain: 'Il minimo costo (=somma delle lunghezze degli archi attraversati) di un cammino da s a t che rispetti i sensi unici'
+        example: "9 è la risposta corretta per i Casi d'Esempio 1 e 2"
+      opt_dists:
+        regex: ^(.*)$
+        default: "[0, 7, 4]"
+        explain: "Le distanze minime di ciascun nodo dal nodo sorgente."
+        example: "9 è la risposta corretta per i Casi d'Esempio 1 e 2"
+      opt_path:
         regex: ^(.*)$
         default: "[0, 1]"
         example: "[0, 1] indica la lista di archi [e0, e1]. Questi archi costituiscono una delle due soluzioni ottime per il Caso d'Esempio 1. L'altra soluzione corretta sarebbe [0, 2], che è anche l'unica soluzione per il Caso d'Esempio 2."
         explain: "Una soluzione ottima per l'istanza assegnata, ossia un MST per il grafo assegnato"
-      opt_val:
+      opt_tree:
         regex: ^(.*)$
-        default: 9
-        explain: 'Il minimo costo (=somma dei costi sugli archi) di una soluzione ammissibile (=spanning tree soggetto ad eventuali vincoli aggiuntivi)'
-        example: "9 è la risposta corretta per i Casi d'Esempio 1 e 2"
-      num_opt_sols:
+        default: "[0, 2, 0]"
+        example: "Codifica un albero dei cammini minimi, precisando il padre di ciascun nodo. ... [0, 1] indica la lista di archi [e0, e1]. Questi archi costituiscono una delle due soluzioni ottime per il Caso d'Esempio 1. L'altra soluzione corretta sarebbe [0, 2], che è anche l'unica soluzione per il Caso d'Esempio 2."
+        explain: "Codifica un albero dei cammini minimi, precisando il padre di ciascun nodo."
+
+      num_opt_paths:
         regex: ^(.*)$
         default: 2
         explain:  "il numero di soluzioni ottime differenti"
         example1: "2 è la risposta corretta per il Caso d'Esempio 1 (tutti i valori al loro default)"
         example2: "1 è la risposta corretta per il Caso d'Esempio 2 (dove un arco è proibito)"
-      list_opt_sols:
+      num_opt_trees:
+      list_opt_paths:
         regex: ^(.*)$
         default: "[[0,1],[0,2]]"
         explain: "La lista di tutte le soluzioni ottime (in qualsiasi ordine)"
         example: "Il valore di default è risposta corretta per il Caso d'Esempio 1 (ma scambiare le due soluzioni nell'elenco, o gli elementi all'interno di una stessa sottolista, non farebbe differenza); per il Caso d'Esempio 2, si ometta la seconda ed ultima soluzione della lista"
+      list_opt_trees:
       edge_profile:
         regex: ^(.*)$
         default: "in_all"
-        explain: "Expected one string among: [in_all] if the query arc belongs to all MSTs. [in_no] if the query arc belongs to no MSTs. [in_some_but_not_in_all] if the query arc belongs to some MST but there also exist MSTs that do not use the query arc."
+        explain: "Expected one string among: [in_all] if the query arc belongs to all shortest path trees (SPT). [in_no] if the query arc belongs to no SPT. [in_some_but_not_in_all] if the query arc belongs to some SPT but there also exist SPTs that do not use the query arc."
         example: "Il valore di default è risposta corretta per il Caso d'Esempio 1"
-      cyc_cert:
+      nodes_relying_on_query_edge:
         regex: ^(.*)$
-        default: "[]"
-        explain: "expected a cyclic sequence of edges. The sequence is left empty in case no certificate cycle is present."
-      edgecut_cert:
-        regex: ^(.*)$
-        default: "[0,1]"
-        explain: "expected a cut of the graph in the form of a list of edges"
-        example: "[0,1] would be the correct edgecut certificate per il Caso d'Esempio 1. Indeed to prove that arc e0 is in all optimal solution consider that arc e0 is the one of strictly minimum cost in the cut comprising the arcs e0 and e1."
-      cutshore_cert:
-        regex: ^(.*)$
-        explain: "expected a cut of the graph in the form of a non-empty list of nodes leaving out at least one node. These nodes form one shore of the intended cut."
-        default: "[0]"
-        example: "[0] would be the correct cutshore certificate per il Caso d'Esempio 1. Indeed to prove that arc e0 is in all optimal solution consider that arc e0 is the one of strictly minimum cost in the cut separating node v0 from the other nodes of the graph."
+        default: "[1,2]"
+        example: ""
+        explain: "La lista dei nodi che si allontanerebbero dalla sorgente qualora l'arco di query venisse rimosso dal grafo."
+	
 
       # sezione modalità API, sempre per far pervenire le risposte del problem-solver:
       answer_dict:
