@@ -121,6 +121,7 @@ class std_eval_feedback:
         self.voice_OK(f"Consistenza tra `{'` e `'.join([goal_std_name for goal_std_name in goals])}`", positive_enforcement, note)
 
     def optimality_NO(self, goal, explanation):
+        # ANCORA DA CAPIRE COME GESTIRE:
         # as for now, comment/decomment:
         self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = True)
         #self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = False)
@@ -129,6 +130,7 @@ class std_eval_feedback:
         return False
         
     def optimality_OK(self, goal, positive_enforcement, note):
+        # ANCORA DA CAPIRE COME GESTIRE:
         # as for now, comment/decomment:
         self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = True)
         #self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = False)

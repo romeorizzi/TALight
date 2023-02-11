@@ -474,7 +474,7 @@ def solver(input_to_oracle: dict) -> dict:
     return oracle_answers
 
 
-class VerifySubmissionProblemSpecific(verify_submission_gen):
+class verify_submission_problem_specific(verify_submission_gen):
     """
     Classe per la verifica delle soluzioni sottomesse dal problem solver.
     """
