@@ -15,6 +15,7 @@ wrong-service-name: '\nAhi, hai chiesto informazioni su {ENV["service"]} ma esso
 service-of: '   (servizio del problema "{ENV.problem}")'
 info-source: ' [le informazioni problema-specifiche per questo quadro SYNOPSIS provengono dal file \''{meta_yaml_file}\'']'
 the-num-arguments: '\nIl servizio {ENV["service"]} ha {len(meta_yaml_book["services"][ENV["service"]]["args"])} argomenti:'
+problem_description: 'Descrizione generale del problema "{ENV.problem}"'
 description: Descrizione generale del servizio
 example: Esempio
 note: Nota
