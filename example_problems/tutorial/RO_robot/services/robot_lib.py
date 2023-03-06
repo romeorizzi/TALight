@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Dict, Final, List, Tuple, TypeVar
 
 from RO_verify_submission_gen_prob_lib import verify_submission_gen
+from RO_std_eval_lib import std_eval_feedback
 
 _UNWALKABLE = -1
 """Magic value of a cell that cannot be traversed."""
@@ -24,26 +25,38 @@ additional_infos_spec = [
     ("partialDP_from", "matrix_of_int"),
 ]
 answer_objects_spec = {
-    "num_paths": "int",                       # the number of feasible paths
+    # the number of feasible paths
+    "num_paths": "int", 
+
     # the number of feasible paths that collect the maximum total prize
     "num_opt_paths": "int",
+
     # the maximum total prize a feasible path can collect
     "opt_val": "int",
+
     # a path collecting the maximum possible total prize
     "opt_path": "list_of_cell",
-    "list_opt_paths": "list_of_list_of_cell",  # the list of all optimum paths
+
+    # the list of all optimum paths
+    "list_opt_paths": "list_of_list_of_cell",
+
     # the DP table meant to tell the number of paths from top-left cell to the generic cell
-    "DPtable_num_to": "matrix_of_int",
+    "DPtable_num_to": "matrix_of_matrix_of_int",
+
     # the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
-    "DPtable_num_from": "matrix_of_int",
+    "DPtable_num_from": "matrix_of_matrix_of_int",
+
     # the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
-    "DPtable_opt_to": "matrix_of_int",
+    "DPtable_opt_to": "matrix_of_matrix_of_int",
+
     # the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
-    "DPtable_opt_from": "matrix_of_int",
+    "DPtable_opt_from": "matrix_of_matrix_of_int",
+
     # the DP table meant to tell the number of optimal paths from top-left cell to the generic cell"
-    "DPtable_num_opt_to": "matrix_of_int",
+    "DPtable_num_opt_to": "matrix_of_matrix_of_int",
+
     # the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.
-    "DPtable_num_opt_from": "matrix_of_int",
+    "DPtable_num_opt_from": "matrix_of_matrix_of_int",
 }
 
 answer_objects_implemented = [
@@ -788,59 +801,74 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):#, request_setups:Dict):
-        super().__init__(SEF,input_data_assigned, long_answer_dict)#, request_setups)
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):
+        super().__init__(SEF,input_data_assigned, long_answer_dict)
 
-    def verify_format(self, SEF):
+    def verify_format(self, SEF: std_eval_feedback):
         if not super().verify_format(SEF):
             return False
-        if 'opt_val' in self.goals:
-            g = self.goals['opt_val']
-            if type(g.answ) != int:
-                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
-        if 'num_opt_sols' in self.goals:
-            g = self.goals['num_opt_sols']
-            if type(g.answ) != int:
-                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
-        if 'opt_sol' in self.goals:
-            g = self.goals['opt_sol']
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di oggetti (esempio ['{self.I.labels[0]}','{self.I.labels[2]}']). Hai invece immesso `{g.answ}`.")
-            for ele in g.answ:
-                if ele not in self.I.labels:
-                    return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere uno degli elementi disponibili. L'elemento `{ele}` da tè inserito non è tra questi. Gli oggetti disponibili sono {self.I.labels}.")
-            SEF.format_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+
+        # TODO: format checks
+
         return True
                 
     def set_up_and_cash_handy_data(self):
         if 'opt_sol' in self.goals:
             self.sum_vals = sum([val for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
             self.sum_costs = sum([cost for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
+
+        self.beg = parse_cell(self.I.cell_from)
+        self.mid = parse_cell(self.I.cell_through)
+        self.end = parse_cell(self.I.cell_to)
+
+        rows, cols = shape(self.I.grid)
+        self.dptable_shape = (rows, cols, self.I.budget)
             
-    def verify_feasibility(self, SEF):
+    def verify_feasibility(self, SEF: std_eval_feedback):
         if not super().verify_feasibility(SEF):
             return False
-        if 'opt_sol' in self.goals:
-            g = self.goals['opt_sol']
-            for ele in g.answ:
-                if ele in self.I.forced_out:
-                    return SEF.feasibility_NO(g, f"L'oggetto `{ele}` da tè inserito nella lista `{g.alias}` è tra quelli proibiti. Gli oggetti proibiti per la Richiesta {str(SEF.task_number)}, sono {self.I.forced_out}.")
-            for ele in self.I.forced_in:
-                if ele not in g.answ:
-                    return SEF.feasibility_NO(g, f"Nella lista `{g.alias}` hai dimenticato di inserire l'oggetto `{ele}` che invece è forzato. Gli oggetti forzati per la Richiesta {str(SEF.task_number)} sono {self.I.forced_in}.")
-            if self.sum_costs > self.I.Knapsack_Capacity:
-                return SEF.feasibility_NO(g, f"La tua soluzione in `{g.alias}` ha costo {self.sum_costs} > Knapsack_Capacity e quindi NON è ammissibile in quanto fora il budget per la Richiesta {str(SEF.task_number)}. La soluzione da tè inserita ricomprende il sottoinsieme di oggetti `{g.alias}`= {g.answ}.")
-            SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
+ 
+        if 'num_paths' in self.goals:
+            if self.goals['num_paths'].answ < 0:
+                pass
+
+        if 'num_opt_paths' in self.goals:
+            if self.goals['num_opt_paths'].answ < 0:
+                pass
+
+        if 'opt_val' in self.goals:
+            if not self.goals['num_opt_paths']:
+                pass
+
+        if 'opt_path' is self.goals:
+            path = self.goals['opt_path'].answ
+            if len(path) != self.path_len:
+                return SEF.feasibility_NO(
+                    'opt_path', "Wrong path length")
+
+        if 'list_opt_path':
+            paths = self.goals['list_opt_path'].answ
+            for path in paths:
+                if len(path) != self.path_len:
+                    return SEF.feasibility_NO(
+                        'list_opt_path', "Wrong path length")
+
+        dptables = [
+            'DPtable_num_to', 'DPtable_num_from',
+            'DPtable_opt_to', 'DPtable_opt_from',
+            'DPtable_num_opt_to', 'DPtable_num_opt_from'
+        ]
+        for dptable in dptables:
+            if dptable in self.goals:
+                if shape(self.goals[dptable]) != self.dptable_shape:
+                    return SEF.feasibility_NO(dptable, f"")
+        
         return True
                 
-    def verify_consistency(self, SEF):
+    def verify_consistency(self, SEF: std_eval_feedback):
         if not super().verify_consistency(SEF):
             return False
-        if 'opt_val' in self.goals and 'opt_sol' in self.goals:
-            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol'];
-            if self.sum_vals != g_val.answ:
-                return SEF.consistency_NO(['opt_val','opt_sol'], f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {self.sum_vals}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
-            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = somma dei valori sugli oggetti in `{g_sol.alias}`.", "")
+
+        # TODO: consistency checks
+        
         return True

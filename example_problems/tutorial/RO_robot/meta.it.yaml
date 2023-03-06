@@ -80,13 +80,15 @@ services:
         explain: "la lista di tutti i percorsi di interesse ottimi"
       DPtable_num_to:
         regex: ^(.*)$
-        default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        default: "[]"
+        # default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        # example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
         explain: "la tabella di programmazione dinamica che dice il numero di percorsi dalla cella in alto a sinista alla generica cella"
       DPtable_num_from:
         regex: ^(.*)$
-        default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        default: "[]"
+        # default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        #example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
         explain: "la tabella di programmazione dinamica che dice il numero di percorsi dalla cella generica alla cella in basso a destra"
       DPtable_opt_to:
         regex: ^(.*)$
