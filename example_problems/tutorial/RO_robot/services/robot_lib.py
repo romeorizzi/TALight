@@ -26,7 +26,7 @@ additional_infos_spec = [
 ]
 answer_objects_spec = {
     # the number of feasible paths
-    "num_paths": "int", 
+    "num_paths": "int",
 
     # the number of feasible paths that collect the maximum total prize
     "num_opt_paths": "int",
@@ -100,9 +100,9 @@ def _map(x, y):
 
 def parse_cell(cell: str) -> _Cell:
     # Take row and col
-    #cell = cell[1:-1]
-    #row, col = cell.split(",")
-    #row, col = ord(row.lower()) - ord("a"), int(col)
+    # cell = cell[1:-1]
+    # row, col = cell.split(",")
+    # row, col = ord(row.lower()) - ord("a"), int(col)
     row, col = cell
     row, col = int(row) - 1, ord(col.lower()) - ord("a")
     return (row, col)
@@ -132,10 +132,12 @@ def check_matrix_shape(f: _Mat) -> bool:
 
     return True
 
+
 def check_budget_bounds(budget: int) -> bool:
     """Check if the allocated budget is within the bounds specified by the problem."""
-    # TODO: finalize the value of the upper bound
-    return 0 < budget <= 100
+    # TODO: finalize the value of the upper bound in yaml file
+    return 0 < budget < 100
+
 
 def check_contains_cell(grid: _Mat, cell: _Cell) -> bool:
     """Check if the coordinates map to a valid cell."""
@@ -151,6 +153,48 @@ def shape(grid: _Mat) -> Tuple[int, int]:
         (number of rows, number of columns) of matrix
     """
     return len(grid), len(grid[0])
+
+
+def check_cell_contiguity(c0: _Cell, c1: _Cell, diag: bool) -> bool:
+    """
+    Check if a cell can be reached from another one with a valid single move.
+
+    c0:   source cell
+    c1:   target cell
+    diag: allow diagonal moves
+    """
+    assert c0 is not None
+    assert c1 is not None
+
+    # try horizontal move from c0 to c1
+    if c1[0] == (c0[0] + 1) and c1[1] == c0[1]:
+        return True
+
+    # try vertical move from c0 to c1
+    if c1[0] == c0[0] and c1[1] == (c0[1] + 1):
+        return True
+
+    # try diagonal move from c0 to c1
+    if diag and c1[0] == (c0[0] + 1) and c1[1] == (c0[1] + 1):
+        return True
+
+    return False
+
+
+def check_path_feasible(path: List[_Cell], diag: bool) -> bool:
+    """
+    Check if a path can be traversed from cell to cell with valid moves.
+
+    path: sequence of cells
+    diag: allow diagonal moves
+    """
+    assert path is not None
+
+    for i in range(len(path) - 1):
+        if not check_cell_contiguity(path[i], path[i + 1], diag=diag):
+            return False
+
+    return True
 
 
 def check_instance_consistency(instance):
@@ -180,21 +224,20 @@ def check_instance_consistency(instance):
             exit(0)
 
 
-
-def cost(grid: _Mat, cell: _Cell) -> int:
-    """Cost on the budget to traverse a cell."""
-    x, y = cell
-    # only cells with negative values have a cost
-    return max(-grid[x][y], 0)
-
-
 def build_cost_table(grid: _Mat) -> _Mat:
     """Build the cost table associated with a grid."""
     assert grid is not None
     assert check_matrix_shape(grid)
 
+    def cost(grid: _Mat, cell: _Cell) -> int:
+        """Cost on the budget to traverse a cell."""
+        x, y = cell
+        # only cells with negative values have a cost
+        return max(-grid[x][y], 0)
+
     rows, cols = shape(grid)
-    costs = [[cost(grid, (row, col)) for col in range(cols)] for row in range(rows)]
+    costs = [[cost(grid, (row, col)) for col in range(cols)]
+             for row in range(rows)]
     assert shape(costs) == shape(grid)
     return costs
 
@@ -204,11 +247,12 @@ def dptable_num_to_with_budget(grid: _Mat[int], budget: int, diag: bool = False)
     assert check_budget_bounds(budget)
 
     rows, cols = shape(grid)
-    dptable = [[[0 for _ in range(cols)] for _ in range(rows)] for _ in range(budget)]
-    
+    dptable = [[[0 for _ in range(cols)] for _ in range(rows)]
+               for _ in range(budget)]
+
     for b in range(budget):
         assert shape(dptable[b]) == shape(grid)
-    
+
     costs = build_cost_table(grid)
     dptable[0][0][0] = 1
     # iterate on each cell of the grid, except the last row and column
@@ -801,8 +845,8 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):
-        super().__init__(SEF,input_data_assigned, long_answer_dict)
+    def __init__(self, SEF, input_data_assigned: Dict, long_answer_dict: Dict):
+        super().__init__(SEF, input_data_assigned, long_answer_dict)
 
     def verify_format(self, SEF: std_eval_feedback):
         if not super().verify_format(SEF):
@@ -811,11 +855,13 @@ class verify_submission_problem_specific(verify_submission_gen):
         # TODO: format checks
 
         return True
-                
+
     def set_up_and_cash_handy_data(self):
         if 'opt_sol' in self.goals:
-            self.sum_vals = sum([val for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
-            self.sum_costs = sum([cost for ele,cost,val in zip(self.I.labels,self.I.costs,self.I.vals) if ele in self.goals['opt_sol'].answ])
+            self.sum_vals = sum([val for ele, cost, val in zip(
+                self.I.labels, self.I.costs, self.I.vals) if ele in self.goals['opt_sol'].answ])
+            self.sum_costs = sum([cost for ele, cost, val in zip(
+                self.I.labels, self.I.costs, self.I.vals) if ele in self.goals['opt_sol'].answ])
 
         self.beg = parse_cell(self.I.cell_from)
         self.mid = parse_cell(self.I.cell_through)
@@ -823,35 +869,21 @@ class verify_submission_problem_specific(verify_submission_gen):
 
         rows, cols = shape(self.I.grid)
         self.dptable_shape = (rows, cols, self.I.budget)
-            
+
     def verify_feasibility(self, SEF: std_eval_feedback):
         if not super().verify_feasibility(SEF):
             return False
- 
-        if 'num_paths' in self.goals:
-            if self.goals['num_paths'].answ < 0:
-                pass
-
-        if 'num_opt_paths' in self.goals:
-            if self.goals['num_opt_paths'].answ < 0:
-                pass
-
-        if 'opt_val' in self.goals:
-            if not self.goals['num_opt_paths']:
-                pass
 
         if 'opt_path' is self.goals:
             path = self.goals['opt_path'].answ
-            if len(path) != self.path_len:
-                return SEF.feasibility_NO(
-                    'opt_path', "Wrong path length")
+            if not check_path_feasible(path, diag=self.I.diag):
+                return SEF.feasibility_NO('opt_path', f"Path {path} cannot be followed by valid moves")
 
         if 'list_opt_path':
-            paths = self.goals['list_opt_path'].answ
-            for path in paths:
-                if len(path) != self.path_len:
-                    return SEF.feasibility_NO(
-                        'list_opt_path', "Wrong path length")
+            g = self.goals['list_opt_path']
+            for path in g.answ:
+                if not check_path_feasible(path, diag=self.I.diag):
+                    return SEF.feasibility_NO('list_opt_path', f"Path {path} cannot be followed by valid moves")
 
         dptables = [
             'DPtable_num_to', 'DPtable_num_from',
@@ -862,13 +894,13 @@ class verify_submission_problem_specific(verify_submission_gen):
             if dptable in self.goals:
                 if shape(self.goals[dptable]) != self.dptable_shape:
                     return SEF.feasibility_NO(dptable, f"")
-        
+
         return True
-                
+
     def verify_consistency(self, SEF: std_eval_feedback):
         if not super().verify_consistency(SEF):
             return False
 
         # TODO: consistency checks
-        
+
         return True
