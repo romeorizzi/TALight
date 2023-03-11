@@ -295,10 +295,13 @@ def dptable_num_to_with_budget(grid: _Mat[int], budget: int, diag: bool = False)
             if c < budget:
                 dptable[c][-1][col + 1] += dptable[b][-1][col]
 
+    print("Calcolo path")
+    print(dptable)
+
     return dptable
 
 
-def dptable_num_to(grid: _Mat[int], diag: bool = False) -> _Mat:
+def dptable_num_to(grid: _Mat[int], budget: int , diag: bool) -> _Mat:
     """
     Build an acceleration table suitable for counting the number of paths.
     Construction starts from the cell in the top-left corner.
@@ -315,41 +318,75 @@ def dptable_num_to(grid: _Mat[int], diag: bool = False) -> _Mat:
     rows, cols = shape(grid)
 
     b = [[0 for _ in range(cols)] for _ in range(rows)]  # budget left at cell
-    for i in range(1, cols):
-        b[0][i] = b[0][i - 1] + min(grid[0][i])
 
-    for i in range(1, rows):
-        b[i][0] = b[i - 1][0] + min(grid[i][0])
+    #for i in range(1, cols):
+    #    b[0][i] = b[0][i - 1] + min(grid[0][i]) # non puoi richiedere il minimo di un intero
 
-    for i in range(1, rows):
-        for j in range(1, cols):
-            b[i]
+    #for i in range(1, rows):
+    #    b[i][0] = b[i - 1][0] + min(grid[i][0])
 
-    t = [[0 for _ in range(cols)]
-         for _ in range(rows)]  # number of paths at cell
+    #for i in range(1, rows):
+    #    for j in range(1, cols):
+    #        b[i]
+
+    for i in range(0, rows):
+        for j in range(0, cols):
+            if i == 0 and j == 0:
+                    b[i][j] = budget
+            elif diag:
+                if i-1 < 0 or j-1 < 0:
+                    if grid[i][j] != -1:
+                        b[i][j] = max(b[i][j - 1], b[i - 1][j])
+                    else:
+                        b[i][j] = max(b[i][j - 1], b[i - 1][j]) -1
+                else:
+                    if grid[i][j] != -1:
+                        b[i][j] = max(b[i][j - 1], b[i - 1][j])
+                    else:
+                        b[i][j] = max(b[i][j - 1], b[i - 1][j], b[i - 1][j - 1]) -1
+            else:
+                if grid[i][j] != -1:
+                    b[i][j] = max(b[i][j - 1], b[i - 1][j])
+                else:
+                    b[i][j] = max(b[i][j - 1], b[i - 1][j]) -1
+
+
+    t = [[0 for _ in range(cols)] for _ in range(rows)]  # number of paths at cell
+
     # NOTE: cells default to zero, in some cases there is no need to assing values
-    t[0][0] = 1
-    for i in range(1, cols):
-        newbudget = b[0][i - 1] - min(grid[0][i], 0)
-        if newbudget < budget:
-            t[0][i] = t[0][i - 1]
-            b[0][i] = newbudget
+    #t[0][0] = 1
+    #for i in range(1, cols):
+    #    newbudget = b[0][i - 1] - min(grid[0][i], 0)
+    #    if newbudget < budget:
+    #        t[0][i] = t[0][i - 1]
+    #        b[0][i] = newbudget
 
-    for i in range(1, rows):
-        newbudget = b[i - 1][0] - min(grid[i][0], 0)
-        if walkable(grid, (i, 0)):
-            t[i][0] = t[i - 1][0]
+    #for i in range(1, rows):
+    #    newbudget = b[i - 1][0] - min(grid[i][0], 0)
+    #    if walkable(grid, (i, 0)):
+    #        t[i][0] = t[i - 1][0]
 
-    for i in range(1, rows):
-        for j in range(1, cols):
+    for i in range(0, rows):
+        for j in range(0, cols):
             if walkable(grid, (i, j)):
-                if diag:
-                    t[i][j] = t[i][j - 1] + t[i - 1][j] + t[i - 1][j - 1]
+                if i == 0 and j == 0:
+                    t[i][j] = 1
+                elif diag:
+                    if i-1 < 0 or j-1 < 0:
+                        t[i][j] = t[i][j - 1] + t[i - 1][j]
+                    else:
+                        t[i][j] = t[i][j - 1] + t[i - 1][j] + t[i - 1][j - 1]
                 else:
                     t[i][j] = t[i][j - 1] + t[i - 1][j]
 
+    
+
     assert shape(grid) == shape(t)
-    return t
+    assert shape(grid) == shape(b)
+
+    mat = [t, b]
+
+    return mat
 
 
 def dptable_num_from(g: _Mat[int], diag: bool = False) -> _Mat:
@@ -800,13 +837,15 @@ def solver(input_to_oracle):
     target: Final = parse_cell(instance["cell_to"])
     through: Final = parse_cell(instance["cell_through"])
 
-    print("from", source, "through", through, "to", target)
-    problem = enforce_path_source(grid, source)
-    print("problem", *problem, sep="\n")
-    problem = enforce_path_target(problem, target)
-    print("problem", *problem, sep="\n")
-    problem = enforce_path_through(problem, through)
-    print("problem", *problem, sep="\n")
+    print("From:", source, "Through:", through, "To:", target)
+    print("Diagonal movement:", diag)
+    #problem = enforce_path_source(grid, source)
+    #p = enforce_path_source(grid, source)
+    #print("problem", *problem, sep="\n")
+    #problem = enforce_path_target(problem, target)
+    #print("problem", *problem, sep="\n")
+    #problem = enforce_path_through(problem, through)
+    #print("problem", *problem, sep="\n")
 
     # top-left subgrid, bottom-right subgrid
     # subtables = [[f(g, diag=diag) for g in splitgrids(grid)] for f in [
@@ -821,7 +860,12 @@ def solver(input_to_oracle):
     #  DPtable_opt_to, DPtable_opt_from,
     #  DPtable_num_opt_to, DPtable_num_opt_from) = [fusegrids(*t) for t in subtables]
 
-    DPtable_num_to = dptable_num_to(problem, budget, diag=diag)
+    print("\nProblem", *grid, sep="\n")
+
+    DPtable_num_to = dptable_num_to(grid, budget, diag)
+    print("\nPath & Budget", *DPtable_num_to, sep="\n")
+
+
     DPtable_num_from = dptable_num_from(problem, budget, diag=diag)
 
     DPtable_opt_to = dptable_opt_to(problem, budget, diag=diag)
@@ -874,12 +918,13 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_feasibility(SEF):
             return False
 
-        if 'opt_path' is self.goals:
+        if 'opt_path' == self.goals:
             path = self.goals['opt_path'].answ
+            print(path)
             if not check_path_feasible(path, diag=self.I.diag):
                 return SEF.feasibility_NO('opt_path', f"Path {path} cannot be followed by valid moves")
 
-        if 'list_opt_path':
+        if 'list_opt_path' == self.goals:
             g = self.goals['list_opt_path']
             for path in g.answ:
                 if not check_path_feasible(path, diag=self.I.diag):
