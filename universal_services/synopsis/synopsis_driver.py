@@ -8,7 +8,7 @@ from multilanguage import Env, Lang, TALcolors
 problem=os.path.split(environ["TAL_META_DIR"])[-1]
 args_list = [
     ('service',str),
-    ('with_problem_info',bool),
+#    ('with_problem_info',bool),
     ('metafile',str),
 ]
 
@@ -65,7 +65,8 @@ if environ["TAL_metafile"] not in ["main","default"]:
 if meta_yaml_book == None:
     meta_yaml_file = os.path.join(environ["TAL_META_DIR"],"meta.yaml")
     meta_yaml_book = load_meta_yaml_file(meta_yaml_file, succeed_or_die = True)
-    
+
+"""
 if ENV['with_problem_info']:
     if "description" in meta_yaml_book:
         #CLEANED-OUT f-string
@@ -73,6 +74,7 @@ if ENV['with_problem_info']:
         for line in meta_yaml_book['description'].split('\n'):
             #CLEANED-OUT f-string
             print("   "+line % {'problem':problem} )
+"""
 
 if ENV['service'] not in meta_yaml_book['services']:
     TAc.print(LANG.render_feedback("wrong-service-name", f'\nSorry, you asked information about service "{ENV["service"]}" which however does not appear among the services currently offered for problem "{problem}".'), "red", ["bold"])
