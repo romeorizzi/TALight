@@ -185,8 +185,7 @@ def topologicalSortUtil(v, visited, stack, graph):
     visited[v] = True
 
     # Recur for all the vertices adjacent to this vertex
-    for i in graph[v]:
-        i = i[0]
+    for i in getNeighbors(G.adjList, v):
         if visited[i] == False:
             topologicalSortUtil(i, visited, stack, graph)
 
@@ -199,22 +198,26 @@ def topologicalSortUtil(v, visited, stack, graph):
 
 def topologicalSort(graph):
     # Mark all the vertices as not visited
-    visited = [False]*len(graph)
+    visited = dict()
+    for k in graph.adjList.keys():
+        visited[k] = False
     stack = []
 
     # Call the recursive helper function to store Topological
     # Sort starting from all vertices one by one
-    for i in range(len(graph)):
+    for i in graph.adjList.keys():
         if visited[i] == False:
             topologicalSortUtil(i, visited, stack, graph)
 
     # Print contents of the stack
-    print(stack[::-1])  # return list in reverse order
+    #print(stack[::-1])  # return list in reverse order
 
-    for arc in graph[stack[0]]:
-        if arc[0] == stack[-1]:
-            return True
-    return False
+    for arc in graph.adjList[stack[0]]:
+        if arc[0] != stack[-1]:
+            return (True, stack[::-1])
+    if graph.adjList[stack[0]] == []:
+        return (True, stack[::-1])
+    return (False, stack[::-1])
 
 
 class PriorityQueue(object):
@@ -553,15 +556,19 @@ class verify_submission_problem_specific(verify_submission_gen):
 
         if 'cert_YES' in self.goals:
             cert_YES_g = self.goals['cert_YES']
-            if type(cert_YES_g) != bool:
-                return sef.format_NO(cert_YES_g, f"Come cert_YES hai immesso '{cert_YES_g}' dove era invece richiesto di immettere un booleano.")
-            sef.format_OK(is_a_DAG_g, f"Come cert_YES hai immesso un booleano come richiesto.", f"Ovviamente durante lo svolgimento dell'esame non posso dirti se il valore immesso sia poi il valore giusto, ma il formato è comunque corretto.")
-
+            if type(cert_YES_g) != list:
+                return sef.format_NO(cert_YES_g, f"Come cert_YES hai immesso '{cert_YES_g}' dove era invece richiesto di immettere una lista di stringhe.")
+            if any(type(node) != str for node in cert_YES_g):
+                return sef.format_NO(cert_YES_g, f"Come cert_YES hai immesso '{cert_YES_g}' dove era invece richiesto di immettere una lista di stringhe.")
+            sef.format_OK(cert_YES_g, f"Come cert_YES hai immesso una lista di stringhe come richiesto.", f"Ovviamente durante lo svolgimento dell'esame non posso dirti se il valore immesso sia poi il valore giusto, ma il formato è comunque corretto.")
+        
         if 'cert_NO' in self.goals:
             cert_NO_g = self.goals['cert_NO']
-            if type(cert_NO_g) != bool:
-                return sef.format_NO(cert_NO_g, f"Come cert_NO hai immesso '{cert_NO_g}' dove era invece richiesto di immettere un booleano.")
-            sef.format_OK(is_a_DAG_g, f"Come cert_NO hai immesso un booleano come richiesto.", f"Ovviamente durante lo svolgimento dell'esame non posso dirti se il valore immesso sia poi il valore giusto, ma il formato è comunque corretto.")
+            if type(cert_NO_g) != list:
+                return sef.format_NO(cert_NO_g, f"Come cert_NO hai immesso '{cert_NO_g}' dove era invece richiesto di immettere una lista di stringhe.")
+            if any(type(node) != str for node in cert_NO_g):
+                return sef.format_NO(cert_NO_g, f"Come cert_NO hai immesso '{cert_NO_g}' dove era invece richiesto di immettere una lista di stringhe.")
+            sef.format_OK(cert_NO_g, f"Come cert_NO hai immesso una lista di stringhe come richiesto.", f"Ovviamente durante lo svolgimento dell'esame non posso dirti se il valore immesso sia poi il valore giusto, ma il formato è comunque corretto.")
 
         if 'earliest_time_for_focus_node' in self.goals:
             earliest_time_for_focus_node_g = self.goals['earliest_time_for_focus_node']
@@ -699,6 +706,18 @@ class verify_submission_problem_specific(verify_submission_gen):
         #arcs_added = self.input_data_assigned['arcs_added']
         #focus_node = self.input_data_assigned['focus_node']
         #focus_arc = self.input_data_assigned['focus_arc']
+
+        if 'cert_YES' in self.goals:
+            cert_YES_g = self.goals['cert_YES']
+            if any(node not in labels for node in cert_YES_g):
+                return sef.feasibility_NO(cert_YES_g, f"Nel cert_YES hai immesso '{cert_YES_g}' dove sono presenti nodi non esistenti.")
+            sef.feasibility_OK(cert_YES_g, f"Nel cert_YES hai immesso correttamente nodi esistenti.")
+
+        if 'cert_NO' in self.goals:
+            cert_NO_g = self.goals['cert_NO']
+            if any(node not in labels for node in cert_NO_g):
+                return sef.feasibility_NO(cert_NO_g, f"Nel cert_NO hai immesso '{cert_NO_g}' dove sono presenti nodi non esistenti.")
+            sef.feasibility_OK(cert_NO_g, f"Nel cert_NO hai immesso correttamente nodi esistenti.")
 
         if 'earliest_time_to_focus_node' in self.goals:
             earliest_time_to_focus_node_g = self.goals['earliest_time_to_focus_node']
@@ -963,8 +982,8 @@ class verify_submission_problem_specific(verify_submission_gen):
 
         return True
 
-#G = Graph([])
-#G.adjList = {'1': [['4', 1]], '2': [['3', 3]], '0': [['5', 4], ['4', 15]], '5': [
+# G = Graph([])
+# G.adjList = {'1': [['4', 1]], '2': [['3', 3]], '0': [['5', 4], ['4', 15]], '5': [
 #    ['2', 0], ['0', 6]], '3': [['1', 6]], '4': [['0', 5], ['1', 9]]}
 
 # print(isDAG(G))
