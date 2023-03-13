@@ -22,8 +22,8 @@ additional_infos_spec = [
 ]
 answer_objects_spec = {
     'is_a_DAG': bool,
-    'cert_YES': bool,
-    'cert_NO': bool,
+    'cert_YES': list,
+    'cert_NO': list,
     'earliest_time_for_focus_node': int,
     'critical_path_to_focus_node': list,
     'nodes_sensible_to_focus_arc': list,
