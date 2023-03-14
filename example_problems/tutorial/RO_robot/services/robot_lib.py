@@ -224,22 +224,30 @@ def check_instance_consistency(instance):
             exit(0)
 
 
+def value(content_inside_cell: int) -> int:
+    """The solution value of a cell."""
+    # only cells with positive content have a value
+    return max(content_inside_cell, 0)
+
+
+def cost(content_inside_cell: int) -> int:
+    """The solution cost on the budget of a cell."""
+    # only cells with negative content have a cost
+    return max(-content_inside_cell, 0)
+
+
 def build_cost_table(grid: _Mat) -> _Mat:
     """Build the cost table associated with a grid."""
     assert grid is not None
     assert check_matrix_shape(grid)
 
-    def cost(grid: _Mat, cell: _Cell) -> int:
-        """Cost on the budget to traverse a cell."""
-        x, y = cell
-        # only cells with negative values have a cost
-        return max(-grid[x][y], 0)
-
     rows, cols = shape(grid)
-    costs = [[cost(grid, (row, col)) for col in range(cols)]
+    costs = [[cost(grid[row][col]) for col in range(cols)]
              for row in range(rows)]
+    
     assert shape(costs) == shape(grid)
     return costs
+
 
 
 def dptable_num_to_with_budget(grid: _Mat[int], budget: int, diag: bool = False) -> _Mat:
@@ -429,46 +437,61 @@ def dptable_num_from(g: _Mat[int], diag: bool = False) -> _Mat:
     return t
 
 
-def dptable_opt_to(g: _Mat, diag: bool = False) -> _Mat:
+def dptable_opt_to(g: _Mat, budget: int, diag: bool = False) -> _Mat:
     """
     Build an accelerator table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
 
     Args:
-        f:    game field table
-        diag: allow diagonal moves
+        g:      game grid
+        budget: max cost allowed for a valid path
+        diag:   allow diagonal moves
 
     Returns:
         A table where each cell contains the maximum utility value
-        of any path that starts from that cell.
+        of any path that end at that cell.
     """
     assert g is not None
+    assert budget >= 0
     assert check_matrix_shape(g)
 
+    # TODO: set max value of budget as budget+1
+
+    maxcost = budget + 1
     rows, cols = shape(g)
-    t = [[0 for _ in range(cols)] for _ in range(rows)]
+    # 3d matrix in the format M[row][col][budget]
+    t = [[[0 for _ in range(maxcost)] for _ in range(cols)] for _ in range(rows)]
 
-    t[0][0] = g[0][0]
-    for i in range(1, cols):
-        if walkable(g, (0, i)):
-            t[0][i] = g[0][i] + t[0][i - 1]
+    # initialize first cell
+    for b in range(maxcost):
+        t[0][0][b] = value(g[0][0])
 
-    for i in range(1, rows):
-        if walkable(g, (i, 0)):
-            t[i][0] = g[i][0] + t[i - 1][0]
+    for row in range(rows):
+        for col in range(cols):
+            
+            max_cost_at_previous_cell = maxcost - cost(g[row][col])
+            # check moves that don't exceed the budget
+            for b in range(max_cost_at_previous_cell):
+                # budget left after executing a move
+                b1 = b + cost(g[row][col])
 
-    if diag:
-        for i in range(1, rows):
-            for j in range(1, cols):
-                if walkable(g, (i, j)):
-                    t[i][j] = g[i][j] + \
-                        max([t[i][j - 1], t[i - 1][j], t[i - 1][j - 1]])
+                # try horizontal move
+                if col > 0:
+                    opt_val = t[row][col - 1][b] + value(g[row][col])
+                    # update only if better solution
+                    t[row][col][b1] = max(opt_val, t[row][col][b1])
 
-    else:
-        for i in range(1, rows):
-            for j in range(1, cols):
-                if walkable(g, (i, j)):
-                    t[i][j] = g[i][j] + max(t[i][j - 1], t[i - 1][j])
+                # try vertical move
+                if row > 0:
+                    opt_val = t[row - 1][col][b] + value(g[row][col])
+                    # update only if better solution
+                    t[row][col][b1] = max(opt_val, t[row][col][b1])
+
+                # try diagonal move
+                if diag and col > 0 and row > 0:
+                    opt_val = t[row - 1][col - 1][b] + value(g[row][col])
+                    # update only if better solution
+                    t[row][col][b1] = max(opt_val, t[row][col][b1])
 
     return t
 
@@ -484,7 +507,7 @@ def dptable_opt_from(g: _Mat, diag: bool = False) -> _Mat:
 
     Returns:
         A table where each cell contains the maximum utility value
-        of any path that ends at that cell.
+        of any path that starts from that cell.
     """
     assert check_matrix_shape(g)
 
