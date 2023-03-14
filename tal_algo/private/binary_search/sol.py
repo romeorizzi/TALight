@@ -21,11 +21,12 @@ if __name__ == "__main__":
             print("?", mid, flush=True)
             ans = my_input()
             assert ans in {'<','>','='}
-            if ans == '>':
-                lo = mid+1
+            if ans == '=':
+                lo = mid
+                hi = mid + 1
             elif ans == '<':
                 hi = mid
             else:
-                hi = mid
+                lo = mid+1
         print("!", lo, flush=True)
         print(f"Case #{t+1:03} q:", q, file=stderr)
