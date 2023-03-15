@@ -309,7 +309,7 @@ def dptable_num_to_with_budget(grid: _Mat[int], budget: int, diag: bool = False)
     return dptable
 
 
-def dptable_num_to(grid: _Mat[int], budget: int , diag: bool) -> _Mat:
+def dptable_num_to(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
     """
     Build an acceleration table suitable for counting the number of paths.
     Construction starts from the cell in the top-left corner.
@@ -325,79 +325,46 @@ def dptable_num_to(grid: _Mat[int], budget: int , diag: bool) -> _Mat:
 
     rows, cols = shape(grid)
 
-    b = [[0 for _ in range(cols)] for _ in range(rows)]  # budget left at cell
+    mat = [[[0 for _ in range(budget+1)] for _ in range(cols)] for _ in range(rows)]  # number of paths at cell
 
-    #for i in range(1, cols):
-    #    b[0][i] = b[0][i - 1] + min(grid[0][i]) # non puoi richiedere il minimo di un intero
-
-    #for i in range(1, rows):
-    #    b[i][0] = b[i - 1][0] + min(grid[i][0])
-
-    #for i in range(1, rows):
-    #    for j in range(1, cols):
-    #        b[i]
-
-    for i in range(0, rows):
-        for j in range(0, cols):
-            if i == 0 and j == 0:
-                    b[i][j] = budget
-            elif diag:
-                if i-1 < 0 or j-1 < 0:
-                    if grid[i][j] != -1:
-                        b[i][j] = max(b[i][j - 1], b[i - 1][j])
+    for x in range(0, rows):
+        for y in range(0, cols):
+            for b in range(0, budget+1): #NOTE: I fill as many matrices as my budget
+                if (walkable(grid, (x, y))):
+                    if x == 0 and y == 0:
+                        mat[x][y][b] = 1 #NOTE: The first cell is always one
+                    elif diag:
+                        if x-1 < 0 or y-1 < 0:
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
+                        else:
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b]
                     else:
-                        b[i][j] = max(b[i][j - 1], b[i - 1][j]) -1
-                else:
-                    if grid[i][j] != -1:
-                        b[i][j] = max(b[i][j - 1], b[i - 1][j])
+                        mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
+                elif b != 0: #NOTE: I fill the cells only if I'm not in the zero matrix
+                    if diag:
+                        if x-1 < 0 or y-1 < 0:
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
+                        else:
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b]
                     else:
-                        b[i][j] = max(b[i][j - 1], b[i - 1][j], b[i - 1][j - 1]) -1
-            else:
-                if grid[i][j] != -1:
-                    b[i][j] = max(b[i][j - 1], b[i - 1][j])
-                else:
-                    b[i][j] = max(b[i][j - 1], b[i - 1][j]) -1
+                        mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
 
 
-    t = [[0 for _ in range(cols)] for _ in range(rows)]  # number of paths at cell
+    # NOTE: Change Values in a specific row
+    for y in range(through[1]+1, cols):
+        for b in range(0, budget+1):
+            mat[through[0]][y][b] = 0
 
-    # NOTE: cells default to zero, in some cases there is no need to assing values
-    #t[0][0] = 1
-    #for i in range(1, cols):
-    #    newbudget = b[0][i - 1] - min(grid[0][i], 0)
-    #    if newbudget < budget:
-    #        t[0][i] = t[0][i - 1]
-    #        b[0][i] = newbudget
-
-    #for i in range(1, rows):
-    #    newbudget = b[i - 1][0] - min(grid[i][0], 0)
-    #    if walkable(grid, (i, 0)):
-    #        t[i][0] = t[i - 1][0]
-
-    for i in range(0, rows):
-        for j in range(0, cols):
-            if walkable(grid, (i, j)):
-                if i == 0 and j == 0:
-                    t[i][j] = 1
-                elif diag:
-                    if i-1 < 0 or j-1 < 0:
-                        t[i][j] = t[i][j - 1] + t[i - 1][j]
-                    else:
-                        t[i][j] = t[i][j - 1] + t[i - 1][j] + t[i - 1][j - 1]
-                else:
-                    t[i][j] = t[i][j - 1] + t[i - 1][j]
-
-    
-
-    assert shape(grid) == shape(t)
-    assert shape(grid) == shape(b)
-
-    mat = [t, b]
+    # NOTE: Change Values after through
+    for x in range(through[0]+1, rows):
+        for y in range(0, cols):
+            for b in range(0, budget+1):
+                mat[x][y][b] = 0
 
     return mat
 
 
-def dptable_num_from(g: _Mat[int], diag: bool = False) -> _Mat:
+def dptable_num_from(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
     """
     Build an accelerator table suitable for counting the number of paths.
     Construction starts from the cell in the bottom-right corner.
@@ -406,35 +373,46 @@ def dptable_num_from(g: _Mat[int], diag: bool = False) -> _Mat:
         f:    game field table
         diag: allow diagonal moves
     """
-    assert check_matrix_shape(g)
+    assert check_matrix_shape(grid)
 
-    rows, cols = shape(g)
-    t = [[0 for _ in range(cols)] for _ in range(rows)]
+    rows, cols = shape(grid)
 
-    # NOTE: cells default to zero, in some cases there is no need to assing values
-    t[-1][-1] = 1
-    for i in reversed(range(cols - 1)):
-        if walkable(g, (-1, i)):
-            t[-1][i] = t[-1][i + 1]
+    mat = [[[0 for _ in range(budget+1)] for _ in range(cols)] for _ in range(rows)]  # number of paths at cell
 
-    for i in reversed(range(rows - 1)):
-        if walkable(g, (i, -1)):
-            t[i][-1] = t[i + 1][-1]
+    for x in range(0, rows):
+        for y in range(0, cols):
+            for b in range(0, budget+1): #NOTE: I fill as many matrices as my budget              
+                if (walkable(grid, (x, y))):
+                    if x == 0 and y == 0:
+                        mat[x][y][b] = 1 #NOTE: The first cell is always one
+                    elif diag:
+                        if x-1 < 0 or y-1 < 0:
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
+                        else:
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b]
+                    else:
+                        mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
+                elif b != 0: #NOTE: I fill the cells only if I'm not in the zero matrix
+                    if diag:
+                        if x-1 < 0 or y-1 < 0:
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
+                        else:
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b]
+                    else:
+                        mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
 
-    if diag:
-        for i in reversed(range(rows - 1)):
-            for j in reversed(range(cols - 1)):
-                if walkable(g, (i, j)):
-                    t[i][j] = t[i][j + 1] + t[i + 1][j] + t[i + 1][j + 1]
+    # NOTE: Change Values before through
+    for x in range(0, through[0]):
+        for y in range(0, cols):
+            for b in range(0, budget+1):
+                mat[x][y][b] = 0
 
-    else:
-        for i in reversed(range(rows - 1)):
-            for j in reversed(range(cols - 1)):
-                if walkable(g, (i, j)):
-                    t[i][j] = t[i][j + 1] + t[i + 1][j]
+    # NOTE: Change Values in a specific row
+    for y in range(0, through[1]):
+        for b in range(0, budget+1):
+            mat[through[0]][y][b] = 0
 
-    assert shape(g) == shape(t)
-    return t
+    return mat
 
 
 def dptable_opt_to(g: _Mat, budget: int, diag: bool = False) -> _Mat:
@@ -860,7 +838,7 @@ def solver(input_to_oracle):
     target: Final = parse_cell(instance["cell_to"])
     through: Final = parse_cell(instance["cell_through"])
 
-    print("From:", source, "Through:", through, "To:", target)
+    print("\nFrom:", source, "Through:", through, "To:", target)
     print("Diagonal movement:", diag)
     #problem = enforce_path_source(grid, source)
     #p = enforce_path_source(grid, source)
@@ -885,11 +863,10 @@ def solver(input_to_oracle):
 
     print("\nProblem", *grid, sep="\n")
 
-    DPtable_num_to = dptable_num_to(grid, budget, diag)
-    print("\nPath & Budget", *DPtable_num_to, sep="\n")
-
-
-    DPtable_num_from = dptable_num_from(problem, budget, diag=diag)
+    DPtable_num_to = dptable_num_to(grid, budget, diag, through)
+    print("\nDPtable_num_to", *DPtable_num_to, sep="\n")
+    DPtable_num_from = dptable_num_from(grid, budget, diag, through)
+    print("\nDPtable_num_from", *DPtable_num_from, sep="\n")
 
     DPtable_opt_to = dptable_opt_to(problem, budget, diag=diag)
     DPtable_opt_from = dptable_opt_from(problem, budget, diag=diag)
