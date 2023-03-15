@@ -16,60 +16,6 @@ class InputParsing(unittest.TestCase):
                 self.assertEqual(expect, parse_cell(cell))
 
 
-class ProblemGridBuilding(unittest.TestCase):
-    @unittest.skip("Not yet implemented")
-    def test_fuse_grid(self):
-        pass
-
-    @unittest.skip("Not yet implemented")
-    def test_split_grid(self):
-        pass
-
-    def test_path_source_constraint(self):
-        rows, cols = 4, 4
-        # place the path source on every cell
-        for source_x in range(rows):
-            for source_y in range(cols):
-                grid = [[0 for _ in range(cols)] for _ in range(rows)]
-                grid = enforce_path_source(grid, (source_x, source_y))
-                # test all cells
-                for x in range(rows):
-                    for y in range(cols):
-                        # all cells that come before cannot be walkable
-                        expect = x >= source_x and y >= source_y
-                        actual = walkable(grid, (x, y))
-                        self.assertEqual(expect, actual)
-
-    def test_path_target_constraint(self):
-        rows, cols = 4, 4
-        # place the path target at every cell
-        for target_x in range(rows):
-            for target_y in range(cols):
-                grid = [[0 for _ in range(cols)] for _ in range(rows)]
-                grid = enforce_path_target(grid, (target_x, target_y))
-                # test all cells
-                for x in range(rows):
-                    for y in range(cols):
-                        # all cells that come after cannot be walkable
-                        expect = x <= target_x and y <= target_y
-                        actual = walkable(grid, (x, y))
-                        self.assertEqual(expect, actual)
-
-    def test_cell_through_constraint(self):
-        grid = [[0 for _ in range(3)] for _ in range(3)]
-
-        # TODO: add more test cases
-        cells = [(1, 1), (1, 2)]
-        outs = [[0, 0, -1],
-                [0, 0, 0],
-                [-1, 0, 0]]
-
-        for i, (cell, expect) in enumerate(zip(cells, outs)):
-            with self.subTest(i=i):
-                actual = enforce_path_through(grid, cell)
-                self.assertEqual(actual, expect)
-
-
 class DPTableGenerators(unittest.TestCase):
 
     def test_cost_table_building(self):
@@ -88,7 +34,6 @@ class DPTableGenerators(unittest.TestCase):
                             self.assertEqual(costs[row][col], 0)
                         else:
                             self.assertEqual(costs[row][col], -g[row][col])
-
 
     def test_num_to_cell(self):
         field = [[0,  0, -1,  0, 0],
@@ -123,14 +68,16 @@ class DPTableGenerators(unittest.TestCase):
         self.assertEqual(include, dptable_num_from(field, diag=True))
 
     def test_opt_to_cell(self):
-        field = [[0,  0, -1,  0, 0],
-                 [0,  2,  0,  4, 0],
-                 [3,  0,  0, -1, 0],
-                 [0, -1,  5,  0, 0]]
-        exclude = [[0,  0,  0,  0,  0],
-                   [0,  2,  2,  6,  6],
-                   [3,  3,  3,  0,  6],
-                   [3,  0,  8,  8,  8]]
+        budget = 1
+        field = [[0, -1, +2],
+                 [0, +1, 0],
+                 [+2, -1, 0]]
+        exclude = [[[0, 0, 0],
+                   [0, 0, 0],
+                   [0, 0, 0]],
+                   [[0, 0, 0],
+                    [0, 0, 0],
+                    [0, 0, 0]]]
         include = [[0,  0,  0,  0,  0],
                    [0,  2,  2,  6,  6],
                    [3,  3,  3,  0,  6],
@@ -181,7 +128,6 @@ class DPTableGenerators(unittest.TestCase):
         self.assertEqual(exclude, dptable_num_opt_from(field, diag=False))
         self.assertEqual(include, dptable_num_opt_from(field, diag=True))
 
-
     def test_num_to_with_budget(self):
         testcases = [
             ([[1, 2, 3, 4]], [[[1, 1, 1, 1]]]),
@@ -191,6 +137,7 @@ class DPTableGenerators(unittest.TestCase):
             with self.subTest(grid=grid, expect=expect):
                 actual = dptable_num_to_with_budget(grid, budget=1, diag=False)
                 self.assertEqual(expect, actual)
+
 
 class PathGenerators(unittest.TestCase):
 

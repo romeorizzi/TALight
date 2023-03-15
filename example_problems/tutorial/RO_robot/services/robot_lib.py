@@ -244,10 +244,9 @@ def build_cost_table(grid: _Mat) -> _Mat:
     rows, cols = shape(grid)
     costs = [[cost(grid[row][col]) for col in range(cols)]
              for row in range(rows)]
-    
+
     assert shape(costs) == shape(grid)
     return costs
-
 
 
 def dptable_num_to_with_budget(grid: _Mat[int], budget: int, diag: bool = False) -> _Mat:
@@ -438,7 +437,8 @@ def dptable_opt_to(g: _Mat, budget: int, diag: bool = False) -> _Mat:
     maxcost = budget + 1
     rows, cols = shape(g)
     # 3d matrix in the format M[row][col][budget]
-    t = [[[0 for _ in range(maxcost)] for _ in range(cols)] for _ in range(rows)]
+    t = [[[0 for _ in range(maxcost)] for _ in range(cols)]
+         for _ in range(rows)]
 
     # initialize first cell
     for b in range(maxcost):
@@ -446,7 +446,7 @@ def dptable_opt_to(g: _Mat, budget: int, diag: bool = False) -> _Mat:
 
     for row in range(rows):
         for col in range(cols):
-            
+
             max_cost_at_previous_cell = maxcost - cost(g[row][col])
             # check moves that don't exceed the budget
             for b in range(max_cost_at_previous_cell):
@@ -707,123 +707,6 @@ def conceal(dptable: _Mat):
         dptable[row][col] = -1
 
 
-def enforce_path_source(grid: _Mat, cell: _Cell) -> _Mat:
-    assert grid is not None
-    assert cell is not None
-    assert check_contains_cell(grid, cell)
-
-    rows, cols = shape(grid)
-    cx, cy = cell
-    out: Final = list(grid)
-
-    # make all cells before the path source unwalkable
-    for x in range(rows):
-        for y in range(cols):
-            if x < cx or y < cy:
-                out[x][y] = _UNWALKABLE
-
-    assert shape(out) == shape(grid)
-    return grid
-
-
-def enforce_path_target(grid: _Mat, cell: _Cell) -> _Mat:
-    assert grid is not None
-    assert cell is not None
-    assert check_contains_cell(grid, cell)
-
-    out: Final = list(grid)
-
-    # make all cells after the path target unwalkable
-    rows, cols = shape(grid)
-    cx, cy = cell
-    for x in range(rows):
-        for y in range(cols):
-            if x > cx or y > cy:
-                out[x][y] = _UNWALKABLE
-
-    assert shape(out) == shape(grid)
-    return grid
-
-
-def enforce_path_through(grid: _Mat, cell: _Cell) -> _Mat:
-    """
-    Create a copy of a grid that enforces the constraint of
-    having all valid solution pass through a specific cell.
-
-    Returns:
-        a new grid which incorporates the constraint
-    """
-    assert grid is not None
-    assert cell is not None
-    assert check_contains_cell(grid, cell)
-
-    rows, cols = len(grid[0]), len(grid)
-    tx, ty = cell
-
-    out = list(grid)
-    # make lower-left corner unwalkable
-    for x in range(0, tx):
-        for y in range(ty + 1, rows):
-            out[x][y] = _UNWALKABLE
-
-    # make upper-right corner unwalkable
-    for x in range(tx + 1, cols):
-        for y in range(0, ty):
-            out[x][y] = _UNWALKABLE
-
-    assert shape(grid) == shape(out)
-    return out
-
-
-def splitgrids(g: _Mat, source: _Cell, through: _Cell, target: _Cell) -> Tuple[_Mat, _Mat]:
-    """
-    Simplify the task as a pair of grid problems:
-        1. subgrid from 'cell_from' to 'cell_through'
-        2. subgrid from 'cell_through' to 'cell_to'
-
-    Returns:
-        the top-left and the bottom-right subgrids
-    """
-
-    top_left_slice = [g[x][y] for x in range(source[0], through[0] + 1)
-                      for y in range(source[1], through[1] + 1)]
-
-    # through cell creates a chokepoint in the grid
-    bottom_right_slice = [g[x][y] for x in range(through[0], target[0] + 1)
-                          for y in range(through[1], target[1] + 1)]
-
-    return top_left_slice, bottom_right_slice
-
-
-def fusegrids(tl_slice: _Mat, br_slice: _Mat) -> _Mat:
-    """
-    Fills a full size grid
-
-    Args:
-        tl_slice: top-left subgrid, from 'cell_from' to 'cell_through
-        br_slice: bottom-right subgrig, from 'cell_through' to 'cell_to'
-    """
-    assert check_matrix_shape(tl_slice)
-    assert check_matrix_shape(br_slice)
-
-    rows, cols = shape(grid)
-    table = [[0 for _ in range(cols)] for _ in range(rows)]
-
-    # place each subgrid in appropriate spot
-    margins = [(source, through), (through, target)]
-    for subgrid, cellmin, cellmax in zip([tl_slice, br_slice], margins):
-        rows, cols = len(subgrid), len(subgrid[0])
-        assert rows == cellmax[0] - cellmin[0]
-        assert cols == cellmax[1] - cellmin[1]
-
-        # copy over dptable
-        for x in range(rows):
-            for y in range(cols):
-                table[cellmin[0] + x][cellmin[1] + y] = subgrid[x][y]
-
-    return table
-
-
 def solver(input_to_oracle):
     assert input_to_oracle is not None
     # _LOGGER.debug("input = %s", input_to_oracle)
@@ -840,13 +723,6 @@ def solver(input_to_oracle):
 
     print("\nFrom:", source, "Through:", through, "To:", target)
     print("Diagonal movement:", diag)
-    #problem = enforce_path_source(grid, source)
-    #p = enforce_path_source(grid, source)
-    #print("problem", *problem, sep="\n")
-    #problem = enforce_path_target(problem, target)
-    #print("problem", *problem, sep="\n")
-    #problem = enforce_path_through(problem, through)
-    #print("problem", *problem, sep="\n")
 
     # top-left subgrid, bottom-right subgrid
     # subtables = [[f(g, diag=diag) for g in splitgrids(grid)] for f in [
@@ -871,14 +747,19 @@ def solver(input_to_oracle):
     DPtable_opt_to = dptable_opt_to(problem, budget, diag=diag)
     DPtable_opt_from = dptable_opt_from(problem, budget, diag=diag)
 
-    DPtable_num_opt_to = dptable_num_opt_to(problem, budget, diag=diag)
-    DPtable_num_opt_from = dptable_num_opt_from(problem, budget, diag=diag)
+    DPtable_num_opt_to = dptable_num_opt_to(grid, budget, diag=diag)
+    DPtable_num_opt_from = dptable_num_opt_from(grid, budget, diag=diag)
 
-    # retrieve and format outputs
+    # first move from <source> cell to <through> cell
+    # then move from <through> cell to <target> cell
     # TODO: adapt solutions to different 'from' and 'to' cells
-    num_paths = DPtable_num_to[-1][-1]
-    num_opt_paths = DPtable_num_opt_to[-1][-1]
-    opt_val = DPtable_opt_to[-1][-1]
+    x, y = through
+    num_paths = sum([DPtable_num_to[x][y][b] * DPtable_num_from[x][y][b]
+                    for b in range(budget + 1)])
+    opt_val = sum([DPtable_opt_to[x][y][b] * DPtable_opt_from[x][y][b]
+                    for b in range(budget + 1)])
+    num_opt_paths = sum([DPtable_num_opt_to[x][y][b] * DPtable_num_opt_from[x][y][b]
+                         for b in range(budget + 1)])
     list_opt_paths = build_all_opt_path(grid, DPtable_opt_from, diag=diag)
     opt_path = list_opt_paths[0] if len(list_opt_paths) > 0 else []
 
