@@ -523,7 +523,7 @@ class NumOptCell:
     value: int  # the optimal value of a path ending at this cell
 
 
-def dptable_num_opt_to(g: _Mat, diag: bool = False) -> _Mat:
+def dptable_num_opt_to(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -532,49 +532,159 @@ def dptable_num_opt_to(g: _Mat, diag: bool = False) -> _Mat:
         g:    game field table
         diag: allow diagonal moves
     """
-    assert check_matrix_shape(g)
+    
+    assert check_matrix_shape(grid)
 
-    rows, cols = shape(g)
-    # NOTE: store (num_of_paths, opt_value) for each cell
-    t = [[NumOptCell(count=0, value=0) for _ in range(cols)]
-         for _ in range(rows)]
+    rows, cols = shape(grid)
 
-    t[0][0].count = 1
-    t[0][0].value = g[0][0]
-    for i in range(1, cols):  # fill first row
-        if walkable(g, (0, i)):
-            t[0][i].count = t[0][i - 1].count
-            t[0][i].value = g[0][i] + t[0][i - 1].value
+    mat = [[[0 for _ in range((budget+1)*2)] for _ in range(cols)] for _ in range(rows)]  # number of paths at cell
 
-    for i in range(1, rows):  # fill first column
-        if walkable(g, (i, 0)):
-            t[i][0].count = t[i - 1][0].count
-            t[i][0].value = g[i][0] + t[i - 1][0].value
+    for x in range(0, rows):
+        for y in range(0, cols):
+            for b in range(0, (budget+1)*2, 2): #NOTE: I fill as many matrices as my budget
+                if (walkable(grid, (x, y))):
+                    #NOTE: Calculate the first cell
+                    if x == 0 and y == 0:
+                        if b % 2 == 0:
+                            mat[x][y][b] = 1 #NOTE: The first cell is always one
+                        else:
+                            mat[x][y][b] = grid[x][y]
 
-    if diag:
-        for i in range(1, rows):
-            for j in range(1, cols):
-                if walkable(g, (i, j)):
-                    neighbors = [t[i][j - 1], t[i - 1][j], t[i - 1][j - 1]]
-                    maxvalue = max(neighbors, key=lambda x: x.value).value
-                    t[i][j].count = sum(map(lambda x: x.count,
-                                            filter(lambda x: x.value == maxvalue, neighbors)))
-                    t[i][j].value = g[i][j] + maxvalue
+                    #NOTE: Diagonal movement = TRUE
+                    elif diag:
 
-    else:
-        for i in range(1, rows):
-            for j in range(1, cols):
-                if walkable(g, (i, j)):
-                    neighbors = [t[i][j - 1], t[i - 1][j]]
-                    maxvalue = max(neighbors, key=lambda x: x.value).value
-                    t[i][j].count = sum(map(lambda x: x.count,
-                                            filter(lambda x: x.value == maxvalue, neighbors)))
-                    t[i][j].value = g[i][j] + maxvalue
+                        if x-1 < 0 or y-1 < 0:
+                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
 
-    return as_tuple_matrix(t)
+                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                            mat[x][y][b+1] = opt + grid[x][y] #NOTE: optt
+
+                        else:
+                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1], mat[x - 1][y - 1][b+1])
+
+                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y - 1][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]#NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y - 1][b]#NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] + mat[x - 1][y - 1][b]#NOTE: num
+
+                            mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
+
+                    #NOTE: Diagonal movement = False
+                    else:
+                        opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
+
+                        if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
+
+                        elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                        elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                        mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
+
+                #NOTE: I fill the cells only if I'm not in the zero matrix
+                elif b > 1:
+                    #NOTE: Diagonal movement = TRUE
+                    if diag:
+                        
+                        if x-1 < 0 or y-1 < 0:
+                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
+
+                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                            mat[x][y][b+1] = opt #NOTE: optt
+
+                        else:
+                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1], mat[x - 1][y - 1][b+1])
+
+                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y - 1][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]#NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y - 1][b]#NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] + mat[x - 1][y - 1][b]#NOTE: num
+
+                            mat[x][y][b+1] = opt #NOTE: opt
+
+                    #NOTE: Diagonal movement = False
+                    else:
+                        opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
+
+                        if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
+
+                        elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+                            
+                        elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                        mat[x][y][b+1] = opt #NOTE: opt
+
+    # NOTE: Change Values in a specific row
+    for y in range(through[1]+1, cols):
+        for b in range(0, (budget+1)*2, 2):
+            mat[through[0]][y][b] = 0
+            mat[through[0]][y][b+1] = 0
+
+    # NOTE: Change Values after through
+    for x in range(through[0]+1, rows):
+        for y in range(0, cols):
+            for b in range(0, (budget+1)*2, 2):
+                mat[x][y][b] = 0
+                mat[x][y][b+1] = 0
+
+    return mat
 
 
-def dptable_num_opt_from(g: _Mat, diag: bool = False) -> _Mat:
+def dptable_num_opt_from(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
     """
     Build a DP table suitable for finding the maximum value.
     Construction starts from the cell in the bottom-right corner.
@@ -583,46 +693,156 @@ def dptable_num_opt_from(g: _Mat, diag: bool = False) -> _Mat:
         g:    game field table
         diag: allow diagonal moves
     """
-    assert check_matrix_shape(g)
+    
+    assert check_matrix_shape(grid)
 
-    rows, cols = shape(g)
-    # NOTE: store (num_of_paths, opt_value) for each cell
-    t = [[NumOptCell(count=0, value=0) for _ in range(cols)]
-         for _ in range(rows)]
+    rows, cols = shape(grid)
 
-    t[-1][-1].count = 1
-    t[-1][-1].value = g[-1][-1]
-    for i in reversed(range(cols - 1)):  # fill last row
-        if walkable(g, (-1, i)):
-            t[-1][i].count = t[-1][i + 1].count
-            t[-1][i].value = g[-1][i] + t[-1][i + 1].value
+    mat = [[[0 for _ in range((budget+1)*2)] for _ in range(cols)] for _ in range(rows)]  # number of paths at cell
 
-    for i in reversed(range(rows - 1)):  # fill last column
-        if walkable(g, (i, -1)):
-            t[i][-1].count = t[i + 1][-1].count
-            t[i][-1].value = g[i][-1] + t[i + 1][-1].value
+    for x in range(0, rows):
+        for y in range(0, cols):
+            for b in range(0, (budget+1)*2, 2): #NOTE: I fill as many matrices as my budget
+                if (walkable(grid, (x, y))):
+                    #NOTE: Calculate the first cell
+                    if x == 0 and y == 0:
+                        if b % 2 == 0:
+                            mat[x][y][b] = 1 #NOTE: The first cell is always one
+                        else:
+                            mat[x][y][b] = grid[x][y]
 
-    if diag:
-        for i in reversed(range(rows - 1)):
-            for j in reversed(range(cols - 1)):
-                if walkable(g, (i, j)):
-                    neighbors = [t[i][j + 1], t[i + 1][j], t[i + 1][j + 1]]
-                    maxvalue = max(neighbors, key=lambda x: x.value).value
-                    t[i][j].count = sum(map(lambda x: x.count,
-                                            filter(lambda x: x.value == maxvalue, neighbors)))
-                    t[i][j].value = g[i][j] + maxvalue
+                    #NOTE: Diagonal movement = TRUE
+                    elif diag:
 
-    else:
-        for i in reversed(range(rows - 1)):
-            for j in reversed(range(cols - 1)):
-                if walkable(g, (i, j)):
-                    neighbors = [t[i][j + 1], t[i + 1][j]]
-                    maxvalue = max(neighbors, key=lambda x: x.value).value
-                    t[i][j].count = sum(map(lambda x: x.count,
-                                            filter(lambda x: x.value == maxvalue, neighbors)))
-                    t[i][j].value = g[i][j] + maxvalue
+                        if x-1 < 0 or y-1 < 0:
+                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
 
-    return as_tuple_matrix(t)
+                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                            mat[x][y][b+1] = opt + grid[x][y] #NOTE: optt
+
+                        else:
+                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1], mat[x - 1][y - 1][b+1])
+
+                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y - 1][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]#NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y - 1][b]#NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] + mat[x - 1][y - 1][b]#NOTE: num
+
+                            mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
+
+                    #NOTE: Diagonal movement = False
+                    else:
+                        opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
+
+                        if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
+
+                        elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                        elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                        mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
+
+                #NOTE: I fill the cells only if I'm not in the zero matrix
+                elif b > 1:
+                    #NOTE: Diagonal movement = TRUE
+                    if diag:
+                        
+                        if x-1 < 0 or y-1 < 0:
+                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
+
+                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                            mat[x][y][b+1] = opt #NOTE: optt
+
+                        else:
+                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1], mat[x - 1][y - 1][b+1])
+
+                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y - 1][b] #NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]#NOTE: num
+
+                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y - 1][b]#NOTE: num
+
+                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
+                                mat[x][y][b] = mat[x - 1][y][b] + mat[x - 1][y - 1][b]#NOTE: num
+
+                            mat[x][y][b+1] = opt #NOTE: opt
+
+                    #NOTE: Diagonal movement = False
+                    else:
+                        opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
+
+                        if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
+
+                        elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
+                            
+                        elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
+                            mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
+
+                        mat[x][y][b+1] = opt #NOTE: opt
+
+    # NOTE: Change Values before through
+    for x in range(0, through[0]):
+        for y in range(0, cols):
+            for b in range(0, (budget+1)*2, 2):
+                mat[x][y][b] = 0
+                mat[x][y][b+1] = 0
+
+    # NOTE: Change Values in a specific row
+    for y in range(0, through[1]):
+        for b in range(0, (budget+1)*2, 2):
+            mat[through[0]][y][b] = 0
+            mat[through[0]][y][b+1] = 0
+
+    return mat
 
 
 def as_tuple_matrix(table: _Mat[NumOptCell]) -> _Mat[Tuple[int, int]]:
@@ -744,11 +964,13 @@ def solver(input_to_oracle):
     DPtable_num_from = dptable_num_from(grid, budget, diag, through)
     print("\nDPtable_num_from", *DPtable_num_from, sep="\n")
 
+    DPtable_num_opt_to = dptable_num_opt_to(grid, budget, diag, through)
+    print("\nDPtable_num_opt_to", *DPtable_num_opt_to, sep="\n")
+    DPtable_num_opt_from = dptable_num_opt_from(grid, budget, diag, through)
+    print("\nDPtable_num_opt_from", *DPtable_num_opt_from, sep="\n")
+
     DPtable_opt_to = dptable_opt_to(problem, budget, diag=diag)
     DPtable_opt_from = dptable_opt_from(problem, budget, diag=diag)
-
-    DPtable_num_opt_to = dptable_num_opt_to(grid, budget, diag=diag)
-    DPtable_num_opt_from = dptable_num_opt_from(grid, budget, diag=diag)
 
     # first move from <source> cell to <through> cell
     # then move from <through> cell to <target> cell
