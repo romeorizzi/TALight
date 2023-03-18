@@ -22,8 +22,8 @@ additional_infos_spec = [
 ]
 answer_objects_spec = {
     'is_a_DAG': bool,
-    'cert_YES': list,
-    'cert_NO': list,
+    'cert_YES': bool,
+    'cert_NO': bool,
     'earliest_time_for_focus_node': int,
     'critical_path_to_focus_node': list,
     'nodes_sensible_to_focus_arc': list,
@@ -132,6 +132,12 @@ def DFS(graph, v, discovered, departure, time, trad, trad_rev):
     time = time + 1
 
     return time
+    
+def get_nodes_from_arcs(arcs):
+    lst = []
+    for arc in arcs:
+        lst.append((arc[0],arc[1]))
+    return lst
 
 
 def isDAG(graph):
@@ -301,6 +307,11 @@ def dijkstra_opt(graph, start_vertex):
             D[key] = [D[key][0], D[key][1].split(' ')]
     return D
 
+def getCostOfNeighbor_max(adjList,start,end):
+    for neigh in adjList[start]:
+        if neigh[0] == end:
+            return neigh[1]
+    return 0
 
 def dijkstra_max(graph, start_vertex):
     D = {v: [float(0), []] for v in graph.adjList.keys()}
@@ -354,20 +365,16 @@ def get_DP_table_path(G, algo):
         DP_rows[nodoK] = dijks
     return DP_rows
 
-def min_path_from(table, start, end):
+def path_from(table, start, end):
     return table[end][start]
 
 
-def latest_path_to(table, start, end):
-    return table[start][end]
-
-
-def critical_path_to_focus_node(table, start, end):
+def path_to(table, start, end):
     return table[start][end]
 
 
 def critical_arcs_to_node(table, start, end):
-    path = critical_path_to_focus_node(table, start, end)
+    path = path_to(table, start, end)
     arcs = []
     old_node = None
     for node in path:
@@ -458,25 +465,25 @@ def delay_sum(graph, path):
 def min_time_to(G: Graph, DPT, start):
     res = dict()
     for k in sorted(G.adjList.keys()):
-        res[k] = delay_sum(G, critical_path_to_focus_node(DPT, start, k))
+        res[k] = delay_sum(G, path_to(DPT, start, k))
     return res
     
 def min_time_from(G, DPT, start):
     res = dict()
     for k in sorted(G.adjList.keys()):
-        res[k] = delay_sum(G, min_path_from(DPT, start, k))
+        res[k] = delay_sum(G, path_from(DPT, start, k))
     return res
     
 def latest_time_to(G, DPT, start):
     res = dict()
     for k in sorted(G.adjList.keys()):
-        res[k] = delay_sum(G, latest_path_to(DPT, start, k))
+        res[k] = delay_sum(G, path_to(DPT, start, k))
     return res
     
 def critical_path_to(G, DPT, start):
     res = dict()
     for k in sorted(G.adjList.keys()):
-        res[k] = min_time_to(DPT, start, k)
+        res[k] = path_to(DPT, start, k)
     return res
 
 
@@ -508,14 +515,14 @@ def solver(input_to_oracle: dict) -> dict:
     graph = Graph(arcs, n, labels, arcs_removed, arcs_added, focus_node, focus_arc)
 
     is_a_DAG = isDAG(graph)
-    cert_YES = topologicalSort(graph)
-    cert_NO = topologicalSort(graph)
+    cert_YES = topologicalSort(graph)[1]
+    cert_NO = topologicalSort(graph)[1]
     earliest_time_for_focus_node = delay_sum(graph, critical_path_to_focus_node(get_DP_table_path(graph,dijkstra_opt), '0', focus_node))
     critical_path_to_focus_node = critical_path_to_focus_node(get_DP_table_path(graph,dijkstra_opt), '0', focus_node)
-    nodes_sensible_to_focus_arc = sensible_to_focus_arc(get_DP_table_path(graph,dijkstra_opt), '0', focus_arc)
+    nodes_sensible_to_focus_arc = nodes_sensible_to_focus_arc(get_DP_table_path(graph,dijkstra_opt), '0', focus_arc)
     latest_time_for_focus_node = delay_sum(graph, latest_time_to(get_DP_table_path(graph,dijkstra_max), '0', focus_node))
-    critical_path_from_focus_node = latest_time_to(get_DP_table_path(G,dijkstra_max), '0', focus_node)
-    min_time_to = min_time_to(graph, get_DP_table_path(G,dijkstra_opt), '0')
+    critical_path_from_focus_node = critical_path_to(get_DP_table_path(graph,dijkstra_max), '0', focus_node)
+    min_time_to = get_DP_table_path(graph,dijkstra_opt)
     min_time_from = min_time_from(graph, get_DP_table_path(graph,dijkstra_opt), '0')
     latest_time_to = latest_time_to(graph, get_DP_table_path(graph,dijkstra_max), '0')
     critical_path_to = critical_path_to(graph, get_DP_table_path(graph,dijkstra_opt), '0')
@@ -531,6 +538,11 @@ def solver(input_to_oracle: dict) -> dict:
         oracle_answers[ad_hoc_name] = locals()[std_name]
     print(oracle_answers)
     return oracle_answers
+
+def coalesce(a ,b):
+    if a is not None:
+        return a
+    return b
 
 class verify_submission_problem_specific(verify_submission_gen):
     """
@@ -698,8 +710,6 @@ class verify_submission_problem_specific(verify_submission_gen):
         """
         if not super().verify_feasibility(sef):
             return False
-        
-        n = self.input_data_assigned['n']
         labels = self.input_data_assigned['labels']
         #arcs = self.input_data_assigned['arcs']
         #arcs_removed = self.input_data_assigned['arcs_removed']
@@ -815,75 +825,58 @@ class verify_submission_problem_specific(verify_submission_gen):
         """
         if not super().verify_consistency(sef):
             return False
+        
+        focus_node = self.input_data_assigned['focus_node']
 
-        edges = ast.literal_eval(self.I.edges)
+        if 'cert_YES' in self.goals and 'cert_NO' in self.goals:
+            cert_YES_g = self.goals['cert_YES']
+            cert_NO_g = self.goals['cert_NO']
+            if len(coalesce(cert_YES_g, [])) > 0 and len(coalesce(cert_NO_g, [])) > 0:
+                return sef.consistency_NO("Hai inserito sia cert_YES che cert_NO, non è consistente.")
+            sef.consistency_OK("Le risposte inserite per cert_YES e cert_NO sono consistenti.")
 
-        # la soluzione ottima opt_sol deve avere lo stesso peso dichiarato in opt_val
-        if 'opt_sol' in self.goals and 'opt_val' in self.goals:
-            opt_sol_g = self.goals['opt_sol']
-            opt_val_g = self.goals['opt_val']
-            opt_sol_answ = ast.literal_eval(opt_sol_g.answ)
-            if (tot := sum([edges[i][1] for i in opt_sol_answ])) != opt_val_g.answ:
-                return sef.consistency_NO(['opt_val', 'opt_sol'], f"La somma dei pesi degli archi in '{opt_sol_g.alias}' è {tot}, che è diverso dal valore immesso in '{opt_val_g.alias}' ({opt_val_g.answ}).")
-            sef.consistency_OK(['opt_sol', 'opt_val'], f"Il peso totale di '{opt_sol_g.alias}' è effettivamente {tot}, come immesso in '{opt_val_g.alias}'.", f"Ora resta da verificare l'ottimalità di entrambi.")
+        if 'earliest_time_for_focus_node' in self.goals and 'critical_path_to_focus_node' in self.goals:
+            earliest_time_for_focus_node_g = self.goals['earliest_time_for_focus_node']
+            critical_path_to_focus_node_g = self.goals['critical_path_to_focus_node']
+            if earliest_time_for_focus_node_g != delay_sum(critical_path_to_focus_node_g):
+                return sef.consistency_NO("La somma dei pesi degli archi del critical_path_to_focus_node non corrisponde al earliest_time_for_focus_node che hai inserito.")
+            sef.consistency_OK("earliest_time_for_focus_node e somma dei pesi degli archi del critical_path_to_focus_node corrispondono.")
 
-        # tutte gli mst della lista list_opt_sols devono avere lo stesso peso
-        if 'list_opt_sols' in self.goals:
-            list_opt_sols_g = self.goals['list_opt_sols']
-            answ = ast.literal_eval(list_opt_sols_g.answ)
-            answ_no_reps = []
-            # verifica che in list_op_sols non ci siano delle soluzioni ripetute
-            for tree in answ:
-                new_tree = set(tree)
-                if new_tree not in answ_no_reps:
-                    answ_no_reps.append(new_tree)
-                else:
-                    return sef.consistency_NO(['list_opt_sols'], f"All'interno di '{list_opt_sols_g.alias}' sono presenti delle soluzioni ripetute, pertanto la lista delle soluzioni non è valida.")
-            # verifica che le soluzioni in list_opt_sols abbiano lo stesso peso
-            sols_weights = [sum([edges[i][1] for i in tree]) for tree in answ]
-            if len(set(sols_weights)) != 1:
-                return sef.consistency_NO(['list_opt_sols'], f"Non tutte le soluzioni in '{list_opt_sols_g.alias}' hanno lo stesso peso, pertanto la lista delle soluzioni non è valida.")
-            sef.consistency_OK(['list_opt_sols'], f"Tutte le soluzioni in '{self.goals}' hanno lo stesso peso.", f"Ora resta da verificare l'ottimalità.")
+        if 'latest_time_for_focus_node' in self.goals and 'critical_path_from_focus_node' in self.goals:
+            latest_time_for_focus_node_g = self.goals['latest_time_for_focus_node']
+            critical_path_from_focus_node_g = self.goals['critical_path_from_focus_node']
+            if latest_time_for_focus_node_g != delay_sum(critical_path_from_focus_node_g):
+                return sef.consistency_NO("La somma dei pesi degli archi del critical_path_from_focus_node non corrisponde al latest_time_for_focus_node che hai inserito.")
+            sef.consistency_OK("latest_time_for_focus_node e somma dei pesi degli archi del critical_path_from_focus_node corrispondono.")
 
-        # verifica che list_opt_sols contenga lo stesso numero di soluzioni dichiarate in num_opt_sols
-        if 'list_opt_sols' in self.goals and 'num_opt_sols' in self.goals:
-            list_opt_sols_g = self.goals['list_opt_sols']
-            num_opt_sols_g = self.goals['num_opt_sols']
-            list_opt_sols_answ = ast.literal_eval(list_opt_sols_g.answ)
-            if num_opt_sols_g.answ != len(list_opt_sols_answ):
-                return sef.consistency_NO(['list_opt_sols', 'num_opt_sols'], f"Come '{list_opt_sols_g.alias}' hai inserito '{list_opt_sols_g.answ}', ma essa presenta un numero di soluzioni diverso dal valore '{num_opt_sols_g.alias}' immesso, {num_opt_sols_g.answ}.")
-            sef.consistency_OK(['list_opt_sols', 'opt_val'], f"Il numero di soluzioni in '{list_opt_sols_g.alias}' corrisponde al valore {num_opt_sols_g.answ} inserito in '{num_opt_sols_g.alias}'.", f"Ora resta da verificare l'ottimalità.")
+        if 'min_time_to' in self.goals and 'critical_path_to_focus_node' in self.goals:
+            min_time_to_g = self.goals['min_time_to']
+            critical_path_to_focus_node_g = self.goals['critical_path_to_focus_node']
+            if min_time_to_g[focus_node] != delay_sum(critical_path_to_focus_node_g):
+                return sef.consistency_NO("La somma dei pesi degli archi del critical_path_to_focus_node non corrisponde al valore nella DP table min_time_to.")
+            sef.consistency_OK("La somma dei pesi degli archi del critical_path_to_focus_node corrisponde al valore nella DP table min_time_to.")
 
-        # il peso di ogni soluzione in list_opt_sols deve essere quello dichiarato in opt_val
-        if 'list_opt_sols' in self.goals and 'opt_val' in self.goals:
-            list_opt_sols_g = self.goals['list_opt_sols']
-            opt_val_g = self.goals['opt_val']
-            list_opt_sols_answ = ast.literal_eval(list_opt_sols_g.answ)
-            sols_weights = [sum([edges[i][1] for i in tree]) for tree in list_opt_sols_answ]
-            if any(weight != opt_val_g.answ for weight in sols_weights):
-                return sef.consistency_NO(['list_opt_sols', 'opt_val'], f"Il peso totale di alcune delle soluzioni in '{list_opt_sols_g.alias}' e il valore di '{opt_val_g.alias}', {opt_val_g.answ}, non corrispondono.")
-            sef.consistency_OK(['list_opt_sols', 'opt_val'], f"Il peso totale di ogni soluzione in '{list_opt_sols_g.alias}' corrisponde al valore {opt_val_g.answ} inserito in '{opt_val_g.alias}'.", f"Ora resta da verificare l'ottimalità.")
-       
-        # se si dichiara un edge_profile devono essere presenti i relativi certificati
-        if 'edge_profile' in self.goals:
-            edge_profile_g = self.goals['edge_profile']
-            if edge_profile_g.answ in ['in_all', 'in_some_but_not_in_all'] and 'edgecut_cert' not in self.goals and 'cutshore_cert' not in self.goals:
-                return sef.consistency_NO(['edge_profile', 'edgecut_cert', 'cutshore_cert'], f"Come {edge_profile_g.alias} hai inserito {edge_profile_g.answ}, ma non hai inserito né un cutshore_cert né un edgecut_cert, pertanto '{edge_profile_g.alias}' non può essere certificata.")
-            sef.consistency_OK(['edge_profile', 'edgecut_cert', 'cutshore_cert'], f"Hai inserito i certificati adatti al {edge_profile_g.alias} dichiarato.", f"Ora resta da verificare la correttezza.")
-            if edge_profile_g.answ == 'in_no' and 'cyc_cert' not in self.goals:
-                return sef.consistency_NO(['edge_profile', 'edgecut_cert', 'cutshore_cert'], f"Come {edge_profile_g.alias} hai inserito {edge_profile_g.answ}, ma non hai inserito un cyc_cert, pertanto {edge_profile_g.alias} non può essere certificato.")
-            sef.consistency_OK(['edge_profile', 'cyc_cert'], f"Hai inserito i certificati adatti al {edge_profile_g.alias} dichiarato.", f"Ora resta da verificare la correttezza.")
+        if 'latest_time_to' in self.goals and 'critical_path_from_focus_node' in self.goals:
+            latest_time_to_g = self.goals['latest_time_to']
+            critical_path_from_focus_node_g = self.goals['critical_path_from_focus_node']
+            if latest_time_to_g[focus_node] != delay_sum(critical_path_from_focus_node_g):
+                return sef.consistency_NO("La somma dei pesi degli archi del critical_path_from_focus_node non corrisponde al valore nella DP table latest_time_to.")
+            sef.consistency_OK("La somma dei pesi degli archi del critical_path_from_focus_node corrisponde al valore nella DP table latest_time_to.")
 
-        # edgecut_cert e cutshore_cert devono esprimere lo stesso cut del grafo
-        if 'edgecut_cert' in self.goals and 'cutshore_cert' in self.goals:
-            edgecut_cert_g = self.goals['edgecut_cert']
-            cutshore_cert_g = self.goals['cutshore_cert']
-            edgecut_cert = ast.literal_eval(edgecut_cert_g.answ)
-            cutshore_cert = ast.literal_eval(cutshore_cert_g.answ)
-            if any(((u in cutshore_cert) == (v in cutshore_cert)) for u, v in [list(edges[i][0]) for i in edgecut_cert]):
-                # dopo aver estratto gli archi dell'edgecut dalla lista degli edges, verifica che ognuno di questi archi non colleghino due nodi nella stessa shore
-                return sef.consistency_NO(['edgecut_cert', 'cutshore_cert'], f"{cutshore_cert_g.answ} e {edgecut_cert_g.answ} non corrispondono allo stesso cut del grafo.")
-            sef.consistency_OK(['edgecut_cert', 'cutshore_cert'], f"{cutshore_cert_g.answ} e {edgecut_cert_g.answ} corrispondono allo stesso cut.", f"Ora resta da verificare la correttezza.")
+        if 'critical_path_to' in self.goals and 'critical_path_to_focus_node' in self.goals:
+            critical_path_to_g = self.goals['critical_path_to']
+            critical_path_from_focus_node_g = self.goals['critical_path_to_focus_node']
+            if critical_path_to_g[focus_node] != critical_path_to_focus_node_g:
+                return sef.consistency_NO("Il critical_path_to_focus_node non corrisponde al relativo valore nella DP table critical_path_to.")
+            sef.consistency_OK("Il critical_path_to_focus_node corrisponde al relativo valore nella DP table critical_path_to.")
+
+        if 'critical_nodes_to' in self.goals and 'critical_path_to_focus_node' in self.goals:
+            critical_nodes_to_g = self.goals['critical_nodes_to']
+            critical_path_from_focus_node_g = self.goals['critical_path_to_focus_node']
+            critical_path_from_focus_node_g.pop(-1)
+            if critical_nodes_to_g[focus_node] != critical_path_to_focus_node_g:
+                return sef.consistency_NO("Il critical_path_to_focus_node non corrisponde alla DP table critical_nodes_to.")
+            sef.consistency_OK("Il critical_path_to_focus_node corrisponde alla DP table critical_nodes_to.")
 
         return True
 
@@ -894,97 +887,102 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_optimality(sef):
             return False
 
-        edges = ast.literal_eval(self.I.edges)
-        forbidden_edges = ast.literal_eval(self.I.forbidden_edges)
-        forced_edges = ast.literal_eval(self.I.forced_edges)
-        query_edge = self.I.query_edge
-
         # verifica che opt_val sia effettivamente ottimo
-        if 'opt_val' in self.goals:
-            opt_val_g = self.goals['opt_val']
-            true_answ = sef.oracle_dict['opt_val']
-            if opt_val_g.answ != true_answ:
-                return sef.optimality_NO(opt_val_g, f"Come '{opt_val_g.alias}' ha inserito '{opt_val_g.answ}', tuttavia esso non è il valore minimo possibile, {true_answ}, pertanto il valore non è corretto.")
-            sef.optimality_OK(opt_val_g, f"'{opt_val_g.alias}'={true_answ} è effettivamente il valore ottimo.", "")
+        if 'is_a_DAG' in self.goals:
+            is_a_DAG_g = self.goals['is_a_DAG']
+            if is_a_DAG_g != isDAG(self.graph):
+                return sef.optimality_NO(is_a_DAG_g, f"Come is_a_DAG ha inserito '{is_a_DAG_g}', la risposta però è errata.")
+            sef.optimality_OK(is_a_DAG_g, f"'{is_a_DAG_g}' è la risposta corretta.")
 
-        # verifica che la soluzione opt_sol sia una delle possibili soluzioni ottime
-        if 'opt_sol' in self.goals:
-            opt_sol_g = self.goals['opt_sol']
-            answ = ast.literal_eval(opt_sol_g.answ)
-            list_opt_sols = [set(tree) for tree in self.graph.all_mst(forced_edges, forbidden_edges)]
-            if set(answ) not in list_opt_sols:
-                return sef.optimality_NO(opt_sol_g, f"Come '{opt_sol_g.alias}' hai inserito {opt_sol_g.answ}, ma essa non è tra le soluzioni ottime, pertanto la soluzione inserita non è corretta.")
-            sef.optimality_OK(opt_sol_g, f"{opt_sol_g.alias}={opt_sol_g.answ} é effettivamente una possibile soluzione ottima.", "")
+        if 'cert_YES' in self.goals:
+            cert_YES_g = self.goals['cert_YES']
+            if cert_YES_g != topologicalSort(self.graph)[1] or True != topologicalSort(self.graph)[0]:
+                return sef.optimality_NO(cert_YES_g, f"Come cert_YES ha inserito '{cert_YES_g}', non è però la risposta corretta.")
+            sef.optimality_OK(cert_YES_g, f"'{cert_YES_g}' è la risposta corretta.")
 
-        # a questo punto che ho controllato che le soluzioni dello studente sono tutte diverse e ammissibili e ottime controllare che siano in numero sufficiente.
-        if 'num_opt_sols' in self.goals:
-            num_opt_sols_g = self.goals['num_opt_sols']
-            true_answ = sef.oracle_dict['num_opt_sols']
-            if not (self.I.cap_for_num_sols <= num_opt_sols_g.answ or not self.I.cap_for_num_sols <= true_answ) and num_opt_sols_g.answ <= true_answ:
-                return sef.optimality_NO(num_opt_sols_g, f"Il valore {num_opt_sols_g.answ} inserito in '{num_opt_sols_g.alias}' differisce dal numero di soluzioni ottime corretto ({true_answ}). {'Il numero di soluzioni trovato non è quello massimo ma è sufficientemente ampio per questo esercizio.' if num_opt_sols_g.answ < true_answ else ''}")
-            sef.optimality_OK(num_opt_sols_g, f"'{num_opt_sols_g.alias}' = {num_opt_sols_g.answ} è effettivamente il numero corretto di soluzioni ottime.", "")
 
-        # verifica che la lista delle soluzioni sia corretta (in numero e ottimalità)
-        if 'list_opt_sols' in self.goals:
-            list_opt_sols_g = self.goals['list_opt_sols']
-            answ = ast.literal_eval(list_opt_sols_g.answ)
-            if len(answ) < self.I.cap_for_num_sols:
-                return sef.optimality_NO(list_opt_sols_g, f"In '{list_opt_sols_g.alias}' hai inserito un numero di soluzioni pari a {len(answ)}, ma il questo numero non è sufficiente.")
-            true_list_opt_sols = [set(tree) for tree in self.graph.all_mst(self.I.forced_edges, self.I.forbidden_edges)]
-            for tree in answ:
-                if set(tree) not in true_list_opt_sols:
-                    return sef.optimality_NO(list_opt_sols_g, f"Come '{list_opt_sols_g.alias}' hai inserito {list_opt_sols_g.answ}, ma alcune delle soluzioni al suo interno non sono ottimali.")
-            sef.optimality_OK(list_opt_sols_g, f"Come {list_opt_sols_g.alias} hai inserito {list_opt_sols_g.answ}, ed effettivamente questa rappresenta una lista di soluzioni ottimali sufficientemente numerosa.", "")
+        if 'cert_NO' in self.goals:
+            cert_NO_g = self.goals['cert_NO']
+            if cert_NO_g != topologicalSort(self.graph)[1] or True == topologicalSort(self.graph)[0]:
+                return sef.optimality_NO(cert_NO_g, f"Come cert_NO ha inserito '{cert_NO_g}', non è però la risposta corretta.")
+            sef.optimality_OK(cert_NO_g, f"'{cert_NO_g}' è la risposta corretta.")
 
-        # verifica che edge profile sia corretto con relativi certificati
-        if 'edge_profile' in self.goals:
-            # Controlliamo solo il certificato e diamo informazione solo di King Arthur. (Ossia: o diciamo che il certificato è stato verificato ed è corretto oppure esprimiamo nello specifico che problemi ci siano nel certificato. Poi, eventualmente, verifichiamo la coerenza tra i certificati forniti (ove corretti) e la catalogazione consegnata.)
-            edge_profile_g = self.goals['edge_profile']
-            if edge_profile_g.answ == 'in_all':
-                if 'edgecut_cert' in self.goals:
-                    edgecut_cert_g = self.goals['edgecut_cert']
-                    edgecut_cert_answ: list = ast.literal_eval(edgecut_cert_g.answ)
-                    if any([w <= edges[query_edge][2] for _, _, w, _ in list(filter(lambda x: x[3] in edgecut_cert_answ, edges))]):
-                        # ogni peso dell'edgecut sia <= query_edge
-                        return sef.optimality_NO(edge_profile_g, f"Secondo il certificato {edgecut_cert_g.alias}, il {edge_profile_g.alias} non è l'arco strettamente minore.")
-                    sef.optimality_OK(edge_profile_g, f"Il certificato {edgecut_cert_g.alias} effettivamente dimostra che {edge_profile_g.alias} deve appartenere a tutte le soluzioni ottime.", f"Tuttavia non ho modo di dirti su il '{edge_profile_g.alias}' che hai inserito sia quello corretto.")
-                if 'cutshore_cert' in self.goals:
-                    cutshore_cert_g = self.goals['cutshore_cert']
-                    cutshore_cert_answ: list = ast.literal_eval(cutshore_cert_g.answ)
-                    if any([w <= edges[query_edge][2] for u, v, w, l in edges if ((u in cutshore_cert_answ) ^ (v in cutshore_cert_answ)) and l != query_edge]):
-                        # arco con peso minore
-                        return sef.optimality_NO(edge_profile_g, f"Secondo il certificato {cutshore_cert_g.alias}, il '{edge_profile_g.alias}' non è l'arco strettamente minore.")
-                    sef.optimality_OK(edge_profile_g, f"Il certificato {cutshore_cert_g.alias} effettivamente dimostra che '{edge_profile_g.alias}' deve appartenere a tutte le soluzioni ottime.", f"Tuttavia non ho modo di dirti su il '{edge_profile_g.alias}' che hai inserito sia quello corretto.")
-            if edge_profile_g.answ == 'in_some_but_not_in_all':
-                if 'edgecut_cert' in self.goals:
-                    edgecut_cert_g = self.goals['edgecut_cert']
-                    edgecut_cert_answ: list = ast.literal_eval(edgecut_cert_g.answ)
-                    edgecut_cert_answ.remove(query_edge)
-                    if any([w < edges[query_edge][2] for _, _, w, _ in list(filter(lambda x: x[3] in edgecut_cert_answ, edges))]):
-                        # query_edge non è uno dei pesi minori
-                        return sef.optimality_NO(edge_profile_g, f"Secondo il certificato {edgecut_cert_g.alias}, il {edge_profile_g.alias} non è uno degli archi di peso minimo. pertanto il certificato non dimostra la tua risposta per '{edge_profile_g.alias}' ({edge_profile_g.answ}).")
-                    sef.optimality_OK(edge_profile_g, f"Il certificato {edgecut_cert_g.alias} effettivamente dimostra che {edge_profile_g.alias} appartiene ad alcune delle soluzioni ottime.", f"Tuttavia non ho modo di dirti su il '{edge_profile_g.alias}' che hai inserito sia quello corretto.")
-                if 'cutshore_cert' in self.goals:
-                    cutshore_cert_g = self.goals['cutshore_cert']
-                    cutshore_cert_answ: list = ast.literal_eval(cutshore_cert_g.answ)
-                    if any([w < edges[query_edge][2] for u, v, w, l in edges if ((u in cutshore_cert_answ) ^ (v in cutshore_cert_answ)) and l != query_edge]):
-                        # query_edge non è uno dei pesi minori
-                        return sef.optimality_NO(edge_profile_g, f"Secondo il certificato {cutshore_cert_g.alias}, il {edge_profile_g.alias} non è l'arco di peso strettamente minore.")
-                    sef.optimality_OK(edge_profile_g, f"Il certificato {cutshore_cert_g.alias} effettivamente dimostra che {edge_profile_g.alias} appartiene ad alcune delle soluzioni ottime.", f"Tuttavia non ho modo di dirti su il '{edge_profile_g.alias}' che hai inserito sia quello corretto.")
-            if edge_profile_g.answ == 'in_no':
-                if 'cyc_cert' in self.goals:
-                    cyc_cert_g = self.goals['cyc_cert']
-                    cyc_cert_answ: list = ast.literal_eval(cyc_cert_g.answ)
-                    if any([w >= edges[query_edge][2] for _, _, w, _ in list(filter(lambda x: x[3] in cyc_cert_answ, edges))]):
-                        # query_edge è quello strettamente maggiore nel ciclo
-                        return sef.optimality_NO(edge_profile_g, f"Secondo il certificato {cyc_cert_g.alias}, il {edge_profile_g.alias} non è l'arco strettamente maggiore.")
-                    sef.optimality_OK(edge_profile_g, f"Il certificato {cyc_cert_g.alias} effettivamente dimostra che {edge_profile_g.alias} non appartiene a nessuna delle soluzioni ottime.", f"Tuttavia non ho modo di dirti su il '{edge_profile_g.alias}' che hai inserito sia quello corretto.")
+        if 'earliest_time_to_focus_node' in self.goals:
+            earliest_time_to_focus_node_g = self.goals['earliest_time_to_focus_node']
+            if earliest_time_to_focus_node_g != delay_sum(self.graph, critical_path_to_focus_node(get_DP_table_path(self.graph, dijkstra_opt), '0', self.graph.focus_node)):
+                return sef.optimality_NO(earliest_time_to_focus_node_g, f"Come earliest_time_to_focus_node hai immesso '{earliest_time_to_focus_node_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(earliest_time_to_focus_node_g, f"Come earliest_time_to_focus_node hai immesso la soluzione ottima.")
+
+        if 'latest_time_for_focus_node' in self.goals:
+            latest_time_for_focus_node_g = self.goals['latest_time_for_focus_node']
+            if latest_time_for_focus_node_g != delay_sum(self.graph, latest_time_to(get_DP_table_path(self.graph, dijkstra_max), '0', self.graph.focus_node)):
+                return sef.optimality_NO(latest_time_for_focus_node_g, f"Come latest_time_for_focus_node hai immesso '{latest_time_for_focus_node_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(latest_time_for_focus_node_g, f"Come latest_time_for_focus_node hai immesso la soluzione ottima.")
+
+        if 'critical_path_to_focus_node' in self.goals:
+            critical_path_to_focus_node_g = self.goals['critical_path_to_focus_node']
+            if critical_path_to_focus_node(get_DP_table_path(self.graph, dijkstra_opt), '0', self.graph.focus_node) != critical_path_to_focus_node_g:
+                return sef.optimality_NO(critical_path_to_focus_node_g, f"Nel critical_path_to_focus_node hai immesso '{critical_path_to_focus_node_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(critical_path_to_focus_node_g, f"Nel critical_path_to_focus_node hai immesso la soluzione ottima.")
+
+        if 'nodes_sensible_to_focus_arc' in self.goals:
+            nodes_sensible_to_focus_arc_g = self.goals['nodes_sensible_to_focus_arc']
+            if sensible_to_focus_arc(get_DP_table_path(self.graph, dijkstra_opt), '0', self.graph.focus_arc) != nodes_sensible_to_focus_arc_g:
+                return sef.optimality_NO(nodes_sensible_to_focus_arc_g, f"Nel nodes_sensible_to_focus_arc hai immesso '{nodes_sensible_to_focus_arc_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(nodes_sensible_to_focus_arc_g, f"Nel nodes_sensible_to_focus_arc hai immesso la soluzione ottima.")
+
+        if 'critical_path_from_focus_node' in self.goals:
+            critical_path_from_focus_node_g = self.goals['critical_path_from_focus_node']
+            if latest_time_to(get_DP_table_path(G,dijkstra_max), '0', self.graph.focus_node) != critical_path_from_focus_node_g:
+                return sef.optimality_NO(critical_path_from_focus_node_g, f"Nel critical_path_from_focus_node hai immesso '{critical_path_from_focus_node_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(critical_path_from_focus_node_g, f"Nel critical_path_from_focus_node hai immesso la soluzione ottima.")
+
+        if 'min_time_to' in self.goals:
+            min_time_to_g = self.goals['min_time_to']
+            if min_time_to(self.graph, get_DP_table_path(G,dijkstra_opt), '0') != min_time_to_g:
+                return sef.optimality_NO(min_time_to_g, f"Nel min_time_to hai immesso '{min_time_to_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(min_time_to_g, f"Nel min_time_to hai immesso la soluzione ottima")
+            
+        if 'min_time_from' in self.goals:
+            min_time_from_g = self.goals['min_time_from']
+            if min_time_from(self.graph, get_DP_table_path(self.graph, dijkstra_opt), '0') != min_time_from_g:
+                return sef.optimality_NO(min_time_from_g, f"Nel min_time_from hai immesso '{min_time_from_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(min_time_from_g, f"Nel min_time_from hai immesso la soluzione ottima")
+
+        if 'latest_time_to' in self.goals:
+            latest_time_to_g = self.goals['latest_time_to']
+            if latest_time_to(self.graph, get_DP_table_path(self.graph, dijkstra_max), '0') != latest_time_to_g:
+                return sef.optimality_NO(latest_time_to_g, f"Nel latest_time_to hai immesso '{latest_time_to_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(latest_time_to_g, f"Nel latest_time_to hai immesso la soluzione ottima")
+
+        if 'critical_path_to' in self.goals:
+            critical_path_to_g = self.goals['critical_path_to']
+            if critical_path_to(self.graph, get_DP_table_path(self.graph, dijkstra_opt), '0') != critical_path_to_g:
+                return sef.optimality_NO(critical_path_to_g, f"Nel critical_path_to hai immesso '{critical_path_to_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(critical_path_to_g, f"Come critical_path_to hai immesso la soluzione ottima.")
+
+        if 'critical_nodes_to' in self.goals:
+            critical_nodes_to_g = self.goals['critical_nodes_to']
+            if critical_nodes_to(self.graph, get_DP_table_path(self.graph,dijkstra_opt), '0') != critical_nodes_to_g:
+                return sef.optimality_NO(critical_nodes_to_g, f"Nel critical_nodes_to hai immesso '{critical_nodes_to_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(critical_nodes_to_g, f"Come critical_nodes_to hai immesso la soluzione ottima.")
+
+        if 'critical_arcs_to' in self.goals:
+            critical_arcs_to_g = self.goals['critical_arcs_to']
+            if critical_arcs_to(self.graph, get_DP_table_path(self.graph,dijkstra_opt), '0') != critical_arcs_to_g:
+                return sef.optimality_NO(critical_arcs_to_g, f"Come chiavi hai immesso '{critical_arcs_to_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(critical_arcs_to_g, f"Nel critical_arcs_to hai immesso la soluzione ottima.")
+
+        if 'sensible_to_focus_arc' in self.goals:
+            sensible_to_focus_arc_g = self.goals['sensible_to_focus_arc']
+            if sensible_to_focus_arc(get_DP_table_path(self.graph,dijkstra_opt), '0', self.focus_arc) != sensible_to_focus_arc_g:
+                return sef.optimality_NO(sensible_to_focus_arc_g, f"Nel sensible_to_focus_arc hai immesso '{sensible_to_focus_arc_g}' ma non è il risultato ottimo.")
+            sef.optimality_OK(sensible_to_focus_arc_g, f"Nel sensible_to_focus_arc hai immesso la soluzione ottima.")
 
         return True
 
-# G = Graph([])
-# G.adjList = {'1': [['4', 1]], '2': [['3', 3]], '0': [['5', 4], ['4', 15]], '5': [
-#    ['2', 0], ['0', 6]], '3': [['1', 6]], '4': [['0', 5], ['1', 9]]}
-
-# print(isDAG(G))
-# print(delay_sum(G, latest_time_to(get_DP_table_path(G,dijkstra_max), '0', '4')))
+G = Graph([])
+G.adjList = {'1': [['4', 1]], '2': [['3', 3]], '0': [['5', 4], ['4', 15]], '5': [
+   ['2', 0], ['0', 6]], '3': [['1', 6]], '4': [['0', 5], ['1', 9]]}
+print(isDAG(G))
+print(delay_sum(G, latest_time_to(get_DP_table_path(G,dijkstra_max), '0', '4')))
