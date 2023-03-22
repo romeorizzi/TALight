@@ -28,6 +28,6 @@ if ENV['n'] != 'free' and 2*int(ENV['n']) != len_input:
 
 if not ENV["silent"]:
     TAc.OK()
-    TAc.print(LANG.render_feedback("ok", f' Your string is a well-formed formula with {len_input/2} pairs of parentheses.'), "yellow", ["bold"])
+    TAc.print(LANG.render_feedback("ok", f' Your string is a well-formed formula with {len_input//2} pairs of parentheses.'), "yellow", ["bold"])
 
 exit(0)
