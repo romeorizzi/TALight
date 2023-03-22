@@ -910,50 +910,167 @@ def build_opt_path(dptable: _Mat, diag: bool = False) -> List[_Cell]:
     return path
 
 
-def build_all_opt_path(f: _Mat[int], dptable: _Mat, diag: bool = False) -> _Mat[_Cell]:
-    assert f is not None
-    assert dptable is not None
-    assert shape(f) == shape(dptable)
+def build_all_opt_path(grid: _Mat[int], dptable_opt_to: _Mat[int], dptable_opt_from: _Mat[int], diag: bool, through) -> _Mat[_Cell]:
+    assert grid is not None
+    assert dptable_opt_to is not None
+    assert dptable_opt_from is not None
+    assert shape(grid) == shape(dptable_opt_to)
+    assert shape(grid) == shape(dptable_opt_from)
 
-    rows, cols = shape(f)
+    rows, cols = shape(grid)
+    rows -= 1
+    cols -= 1
     paths = []
 
     def _build_exclude_diag(path: List[_Cell]):
-        if (cell := path[-1]) != (rows - 1, cols - 1):  # not last cell
-            row, col = cell
-            value_on_opt_path = dptable[row][col] - f[row][col]
-            if row < (rows - 1):  # check the cell in the next row
-                if dptable[row + 1][col] == value_on_opt_path:
-                    _build_exclude_diag(path + [(row + 1, col)])
 
-            if col < (cols - 1):  # check the cell in the next column
-                if dptable[row][col + 1] == value_on_opt_path:
-                    _build_exclude_diag(path + [(row, col + 1)])
-        else:
-            paths.append(path)
+        #NOTE: I save the coordinates from where to start
+        row = path[0][0]
+        col = path[0][1]
+
+        #Note: Calculate the path for matrix "dptable_opt_from"
+        while not (row == through[0] and col == through[1]):
+            if col - 1 >= 0:
+                left = dptable_opt_from[row][col-1][0]
+            else:
+                left = -1
+
+            if row - 1 >= 0:
+                up = dptable_opt_from[row-1][col][0]
+            else:
+                up = -1
+            
+            if (left > up):
+                path.append((row, col-1))
+                col -= 1
+            else:
+                path.append((row-1, col))
+                row -= 1
+
+        #Note: Calculate the path for matrix "dptable_opt_to"
+        while not (row == 0 and col == 0):
+            if col - 1 >= 0:
+                left = dptable_opt_to[row][col-1][0]
+            else:
+                left = -1
+
+            if row - 1 >= 0:
+                up = dptable_opt_to[row-1][col][0]
+            else:
+                up = -1
+            
+            if (left > up):
+                path.append((row, col-1))
+                col -= 1
+            else:
+                path.append((row-1, col))
+                row -= 1
+
+        #Note: I reverse the matrix and return it
+        path.reverse()
+        paths.extend(path)
+
+        #if (cell := path[-1]) != (rows - 1, cols - 1):  # not last cell
+        #    row, col = cell
+        #    value_on_opt_path = dptable[row][col] - grid[row][col]
+        #    if row < (rows - 1):  # check the cell in the next row
+        #        if dptable[row + 1][col] == value_on_opt_path:
+        #            _build_exclude_diag(path + [(row + 1, col)])
+
+        #    if col < (cols - 1):  # check the cell in the next column
+        #        if dptable[row][col + 1] == value_on_opt_path:
+        #            _build_exclude_diag(path + [(row, col + 1)])
+        #else:
+        #    paths.append(path)
 
     def _build_include_diag(path: List[_Cell]):
-        if (cell := path[-1]) != (rows - 1, cols - 1):  # not last cell
-            row, col = cell
-            value_on_opt_path = dptable[row][col] - f[row][col]
-            if row < (rows - 1):  # check the cell in the next row
-                if dptable[row + 1][col] == value_on_opt_path:
-                    _build_include_diag(path + [(row + 1, col)])
+        
+        #NOTE: I save the coordinates from where to start
+        row = path[0][0]
+        col = path[0][1]
 
-            if col < (cols - 1):  # check the cell in the next column
-                if dptable[row][col + 1] == value_on_opt_path:
-                    _build_include_diag(path + [(row, col + 1)])
+        #Note: Calculate the path for matrix "dptable_opt_from"
+        while not (row == through[0] and col == through[1]):
+            if col - 1 >= 0:
+                left = dptable_opt_from[row][col-1][0]
+            else:
+                left = -1
 
-            if row < (rows - 1) and col < (cols - 1):
-                if dptable[row + 1][col + 1] == value_on_opt_path:
-                    _build_include_diag(path + [(row + 1, col + 1)])
-        else:  # last cell, path is complete
-            paths.append(path)
+            if col - 1 >= 0 and row - 1 >= 0:
+                obl = dptable_opt_from[row-1][col-1][0]
+            else:
+                obl = -1                
+
+            if row - 1 >= 0:
+                up = dptable_opt_from[row-1][col][0]
+            else:
+                up = -1
+            
+            if (left > up and left > obl):
+                path.append((row, col-1))
+                col -= 1
+            elif (obl > up and obl > left):
+                path.append((row-1, col-1))
+                row -= 1
+                col -= 1
+            else:
+                path.append((row-1, col))
+                row -= 1
+
+        #Note: Calculate the path for matrix "dptable_opt_to"
+        while not (row == 0 and col == 0):
+            if col - 1 >= 0:
+                left = dptable_opt_to[row][col-1][0]
+            else:
+                left = -1
+
+            if col - 1 >= 0 and row - 1 >= 0:
+                obl = dptable_opt_from[row-1][col-1][0]
+            else:
+                obl = -1 
+
+            if row - 1 >= 0:
+                up = dptable_opt_to[row-1][col][0]
+            else:
+                up = -1
+            
+            if (left > up and left > obl):
+                path.append((row, col-1))
+                col -= 1
+            elif (obl > up and obl > left):
+                path.append((row-1, col-1))
+                row -= 1
+                col -= 1
+            else:
+                path.append((row-1, col))
+                row -= 1
+
+        #Note: I reverse the matrix and return it
+        path.reverse()
+        paths.extend(path)
+
+        #if (cell := path[-1]) != (rows - 1, cols - 1):  # not last cell
+        #    row, col = cell
+        #    value_on_opt_path = dptable[row][col] - grid[row][col]
+        #    if row < (rows - 1):  # check the cell in the next row
+        #        if dptable[row + 1][col] == value_on_opt_path:
+        #            _build_include_diag(path + [(row + 1, col)])
+
+        #    if col < (cols - 1):  # check the cell in the next column
+        #        if dptable[row][col + 1] == value_on_opt_path:
+        #            _build_include_diag(path + [(row, col + 1)])
+
+        #    if row < (rows - 1) and col < (cols - 1):
+        #        if dptable[row + 1][col + 1] == value_on_opt_path:
+        #            _build_include_diag(path + [(row + 1, col + 1)])
+        #else:  # last cell, path is complete
+        #    paths.append(path)
 
     if diag:
-        _build_include_diag([(0, 0)])
+        _build_include_diag([(rows, cols)])
     else:
-        _build_exclude_diag([(0, 0)])
+        _build_exclude_diag([(rows, cols)])
+
     return paths
 
 
@@ -1034,7 +1151,9 @@ def solver(input_to_oracle):
     num_opt_paths = sum([DPtable_num_opt_to[x][y][b] * DPtable_num_opt_from[x][y][b]
                          for b in range(budget + 1)])
 
-    list_opt_paths = build_all_opt_path(grid, DPtable_opt_from, diag)
+    list_opt_paths = build_all_opt_path(grid, DPtable_opt_to, DPtable_opt_from, diag, through)
+    print("\nList_opt_paths", list_opt_paths, sep="\n")
+
     opt_path = list_opt_paths[0] if len(list_opt_paths) > 0 else []
 
     oracle_answers = {}
