@@ -1,0 +1,31 @@
+CLI examples:
+
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra check
+
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra check -a n=3 -a m=3 -a s=0 -a t=2 -a edges='[({0,1},8),({0,2},3),((1,2),1)]' -a query_edge=0 -a CAP_FOR_NUM_SOLS=10 -a CAP_FOR_NUM_OPT_SOLS=10
+
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra check -a input_data_assigned="{'n': 3, 'm': 3, 's': 0, 't': 2, 'edges': [({0,1},8),({0,2},3),((1,2),1)], 'query_edge': 0, 'CAP_FOR_NUM_SOLS': 10, 'CAP_FOR_NUM_OPT_SOLS': 10}" -a alias_dict="{'opt_sol_MIA': 'opt_dist'}" -a answer_dict="{'opt_sol_MIA': 3, 'opt_dists' : [0,8,3]}"
+
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra check  -a pwd=tmppwd -a task=3 -a input_data_assigned="{'n': 3, 'm': 3, 's': 0, 't': 2, 'edges': '[({0,1},8),({0,2},3),((1,2),1)]', 'query_edge': 0, 'CAP_FOR_NUM_SOLS': 10, 'CAP_FOR_NUM_OPT_SOLS': 10}" -a alias_dict="{'opt_sol_MIA': 'opt_dist'}" -a answer_dict="{'opt_sol_MIA': 3, 'opt_dists' : [0,8,3]}" -a with_oracle
+
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra check  -a pwd=tmppwd -a task=3 -a input_data_assigned="{'n': 3, 'm': 3, 's': 0, 't': 2, 'edges': '[({0,1},8),({0,2},3),((1,2),1)]', 'query_edge': 0, 'CAP_FOR_NUM_SOLS': 10, 'CAP_FOR_NUM_OPT_SOLS': 10}" -a alias_dict="{'opt_sol_MIA': 'opt_dist'}" -a answer_dict="{'opt_sol_MIA': 0, 'opt_dists' : []}" -a with_oracle
+
+
+
+# SERVIZIO ORACLE
+CLI:
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra oracle -a pwd=tmppwd
+
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra oracle -a pwd=tmppwd  -a request_dict="{'opt_dist': 'min_distance', 'opt_path': 'shortest_path'}"
+
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra oracle -a pwd=tmppwd -a input_data_assigned="{'n': 3, 'm': 3, 's': 0, 't': 2, 'edges': '[({0,1},8),({0,2},3),((1,2),1)]', 'query_edge': 0, 'CAP_FOR_NUM_SOLS': 10, 'CAP_FOR_NUM_OPT_SOLS': 10}" -a with_opening_message 
+
+rtal connect -x _0123456789_Romeo_Rizzi  RO_dijkstra oracle -a pwd=tmppwd -a n=3 -a m=3 -a s=0 -a t=2 -a edges='[({0,1},8),({0,2},3),((1,2),1)]' -a query_edge=0
+
+#test albero non valido
+rtal connect -x _0123456789_Andrea  RO_dijkstra check -a n=4 -a m=3 -a edges="[({0,1},1), ({1,2},1), ({2,3},1)]" -a opt_dists=[0,1,2,3] -a opt_path=[0,1] -a opt_tree=[-1,0,3,2]
+rtal connect -x _0123456789_Andrea  RO_dijkstra check -a n=4 -a m=3 -a edges="[({0,1},1), ({1,2},1), ({2,3},1)]" -a opt_dist=2 -a opt_dists=[0,1,2,3] -a opt_path=[0,1] -a opt_tree=[-1,0,1,2] -a list_opt_paths=[[0,1]] -a list_opt_trees=[[-1,0,1,2]] -a nodes_relying_on_query_edge=[0,1,2]
+
+# test paths con lunghezze differenti in list_opt_paths
+rtal connect -x _0123456789_Andrea  RO_dijkstra check -a n=4 -a m=4 -a edges="[({0,1},1), ({1,2},1), ({2,3},1), ({0,3},5)]" -a t=3 -a query_edge=3 -a opt_dist=2 -a opt_dists=[0,1,2,3] -a opt_path=[0,1,2] -a opt_tree=[-1,0,1,2] -a list_opt_paths=[[0,1,2],[3]] -a list_opt_trees=[[-1,0,1,2]] -a nodes_relying_on_query_edge=[0,1,2] -a edge_profile="in_no"
+

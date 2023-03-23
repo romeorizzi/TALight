@@ -3,6 +3,7 @@ from sys import stderr
 from typing import Optional, List, Dict, Callable
 from types import SimpleNamespace
 from copy import deepcopy
+import RO_std_io_lib as RO_io
 
 class verify_submission_gen:
     def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, oracle_response:Dict = None):
@@ -46,16 +47,12 @@ class verify_submission_gen:
         if not self.verify_consistency(SEF):
             return whole_feedback_dict(SEF.non_spoilering_feedback)
         feedback_dict = whole_feedback_dict(SEF.feedback_when_all_non_spoilering_checks_passed())
-        return feedback_dict
-        # ANCORA DA CAPIRE COME GESTIRE:
+        
         also_optimal = self.verify_optimality(SEF)
-        if also_optimal:
-            feedback_dict['spoilering']['feedback_string'] += "(also optimality was checked for the positive, all points are safe)"
-            feedback_dict['spoilering']['pt_safe'] += feedback_dict['spoilering']['pt_maybe']
-        else:
-            feedback_dict['spoilering']['feedback_string'] = SEF.all_feedback_so_far
-            feedback_dict['spoilering']['pt_out'] += feedback_dict['spoilering']['pt_maybe']
-        feedback_dict['spoilering']['pt_maybe'] = 0
+        if not also_optimal: return whole_feedback_dict(SEF.non_spoilering_feedback)
+        else: feedback_dict = whole_feedback_dict(SEF.feedback_when_all_optimality_checks_passed())
+        
+        return feedback_dict
 
 def whole_feedback_dict(non_spoilering_feedback):
     feedback_dict = {}

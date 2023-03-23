@@ -1,0 +1,1 @@
+C:/Users/Andrea/TALight/universal_services/synopsis/synopsis_driver.py

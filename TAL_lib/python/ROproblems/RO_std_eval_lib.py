@@ -3,6 +3,9 @@ from sys import stderr
 from typing import Optional, List, Dict, Callable
 import termcolor 
 from ansi2html import Ansi2HTMLConverter
+
+import RO_std_io_lib as RO_io
+
 ansi2html = Ansi2HTMLConverter(inline = True)
 
 class std_eval_feedback:
@@ -123,20 +126,32 @@ class std_eval_feedback:
     def optimality_NO(self, goal, explanation):
         # ANCORA DA CAPIRE COME GESTIRE:
         # as for now, comment/decomment:
-        self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = True)
-        #self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = False)
-        pt_safe = self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK
-        #self.evaluation_format(explanation,pt_safe=pt_safe,pt_out=self.pt_tot-pt_safe)
+        if RO_io.get_current_status() == 'correction_phase':
+            self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation)
+            pt_safe = self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK
+            self.evaluation_format(explanation,pt_safe=pt_safe,pt_out=self.pt_tot-pt_safe)
+        else:
+            self.voice_NO(f"Ottimalità di `{goal.alias}`", explanation, spoilering = True)
         return False
         
     def optimality_OK(self, goal, positive_enforcement, note):
-        # ANCORA DA CAPIRE COME GESTIRE:
-        # as for now, comment/decomment:
-        self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = True)
-        #self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = False)
-        
+        # Se lo status è 'correction_phase', tutti i feedback sull'ottimalità vengono inseriti come non spoilering, in modo da poterli poi visualizzare
+        if RO_io.get_current_status() == 'correction_phase':
+            self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note)
+        else:
+            self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = True)        
             
     def feedback_when_all_non_spoilering_checks_passed(self):
-        self.evaluation_format(f"Quanto sottomesso{'' if self.task_number < 0 else ' per la Richiesta '+str(self.task_number)} ha superato tutti i miei controlli. Ovviamente in sede di esame non posso esprimermi sull'ottimalità di valori e di soluzioni immesse. Il mio controllo e supporto si è limitato alla compatibilità di formato, all'ammissibilità, e alla consistenza dei dati immessi.", pt_safe=self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK,pt_out=0)
+        if RO_io.get_current_status() == 'correction_phase':
+            self.evaluation_format(f"Quanto sottomesso{'' if self.task_number < 0 else ' per la Richiesta '+str(self.task_number)} ha superato tutti i miei controlli. In fase di correzione posso esprimermi sull'ottimalità di valori e di soluzioni immesse.\n", pt_safe=self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK,pt_out=0)
+        else:
+            self.evaluation_format(f"Quanto sottomesso{'' if self.task_number < 0 else ' per la Richiesta '+str(self.task_number)} ha superato tutti i miei controlli. Ovviamente in sede di esame non posso esprimermi sull'ottimalità di valori e di soluzioni immesse. Il mio controllo e supporto si è limitato alla compatibilità di formato, all'ammissibilità, e alla consistenza dei dati immessi.\n", pt_safe=self.pt_formato_OK + self.pt_feasibility_OK + self.pt_consistency_OK,pt_out=0)
+        return self.non_spoilering_feedback
+    
+    def feedback_when_all_optimality_checks_passed(self):
+        if RO_io.get_current_status() == 'correction_phase':
+            pt_safe = self.pt_tot
+            self.evaluation_format("Tutte le soluzioni immesse sono ottime",pt_safe=pt_safe,pt_out=self.pt_tot-pt_safe)
+
         return self.non_spoilering_feedback
 
