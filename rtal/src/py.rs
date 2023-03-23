@@ -10,11 +10,11 @@ use pyo3::exceptions::PyRuntimeError as PRE;
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
 use pythonize::pythonize;
+use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet};
 use std::net::TcpStream;
 use tracing::warn;
 use tungstenite::{connect, stream::MaybeTlsStream, Message, WebSocket};
-use twox_hash::xxh3::hash128;
 use util::{BinaryDataHeader, BUFFER_SIZE};
 
 fn oneshot_request(
@@ -61,7 +61,7 @@ fn send_binary_data(
     let header = BinaryDataHeader {
         name: name.to_string(),
         size: data.len(),
-        hash: hash128(data),
+        hash: Sha256::digest(data).into(),
     };
     let serialized_header = match serde_json::to_string(&header) {
         Ok(x) => x,
@@ -105,7 +105,7 @@ fn recv_binary_data(
         };
         buffer.append(&mut data);
     }
-    if hash128(&buffer) != header.hash {
+    if Into::<[u8; 32]>::into(Sha256::digest(&buffer)) != header.hash {
         return Err(format!("Received corrupted binary data"));
     }
     Ok((header.name, buffer))

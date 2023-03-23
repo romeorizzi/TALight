@@ -1,9 +1,9 @@
 use futures_util::{Sink, SinkExt, Stream, StreamExt};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::fmt::Display;
 use tokio_tungstenite::tungstenite::Error as TsError;
 use tokio_tungstenite::tungstenite::Message;
-use twox_hash::xxh3::hash128;
 
 pub const BUFFER_SIZE: usize = 1 << 20;
 
@@ -11,7 +11,7 @@ pub const BUFFER_SIZE: usize = 1 << 20;
 pub struct BinaryDataHeader {
     pub name: String,
     pub size: usize,
-    pub hash: u128,
+    pub hash: [u8; 32],
 }
 
 pub async fn send_binary_data<T: Sink<Message> + Unpin>(
@@ -25,7 +25,7 @@ where
     let header = BinaryDataHeader {
         name: name.to_string(),
         size: data.len(),
-        hash: hash128(data),
+        hash: Sha256::digest(data).into(),
     };
     let serialized_header = match serde_json::to_string(&header) {
         Ok(x) => x,
@@ -79,7 +79,7 @@ pub async fn recv_binary_data<U: Stream<Item = Result<Message, TsError>> + Unpin
         };
         buffer.append(&mut data);
     }
-    if hash128(&buffer) != header.hash {
+    if Into::<[u8; 32]>::into(Sha256::digest(&buffer)) != header.hash {
         return Err(format!("Received corrupted binary data"));
     }
     Ok((header.name, buffer))
