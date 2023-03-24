@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub const MAGIC: &str = "rtal";
-pub const VERSION: u64 = 3;
+pub const VERSION: u64 = 4;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Request {
