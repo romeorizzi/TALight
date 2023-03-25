@@ -1093,6 +1093,7 @@ class verify_submission_problem_specific(verify_submission_gen):
         s = self.I.s
         t = self.I.t
         query_edge = self.I.query_edge
+        cap_for_num_opt_sols = self.I.CAP_FOR_NUM_OPT_SOLS
 
         # verifica che opt_dist sia effettivamente la distanza minima 
         if 'opt_dist' in self.goals:
@@ -1110,7 +1111,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             true_answ = self.graph.get_all_shortest_path_lengths()
             for idx, i in enumerate(opt_dists_g.answ):
                 if i != true_answ[idx]:
-                    return sef.optimality_NO(opt_dists_g, f"Come '{opt_dists_g.alias}' ha inserito '{opt_dists_g.answ}', tuttavia esso non contiene le distanze minime dal nodo {s}, pertanto il valore non è ottimo.")
+                    return sef.optimality_NO(opt_dists_g, f"Come '{opt_dists_g.alias}' ha inserito '{opt_dists_g.answ}', tuttavia esso non contiene le distanze minime dal nodo {s}, pertanto il valore non è ottimo. La soluzione ottima sarebbe: {true_answ}.")
             sef.optimality_OK(opt_dists_g, f"'{opt_dists_g.alias}'={true_answ} è effettivamente il risultato ottimo.", f"")
 
         list_true_paths_trees = self.graph.get_all_shortest_path_trees()
@@ -1120,14 +1121,14 @@ class verify_submission_problem_specific(verify_submission_gen):
         if 'opt_path' in self.goals:
             opt_path_g = self.goals['opt_path']
             if opt_path_g.answ not in list_true_paths:
-                return sef.optimality_NO(opt_path_g, f"Come '{opt_path_g.alias}' ha inserito '{opt_path_g.answ}', tuttavia esso non è uno dei cammini minimi dal nodo {s} al nodo {t}, pertanto la soluzione non è ottima.")
+                return sef.optimality_NO(opt_path_g, f"Come '{opt_path_g.alias}' ha inserito '{opt_path_g.answ}', tuttavia esso non è uno dei cammini minimi dal nodo {s} al nodo {t}, pertanto la soluzione non è ottima. Una possibile soluzione ottima sarebbe stata: {list_true_paths[0]}.")
             sef.optimality_OK(opt_path_g, f"'{opt_path_g.alias}'={opt_path_g.answ} è effettivamente un risultato ottimo.", f"")
 
         # verifico che opt_tree sia effettivamente un albero dei cammini minimi
         if 'opt_tree' in self.goals:
             opt_tree_g = self.goals['opt_tree']
             if opt_tree_g.answ not in list_true_paths_trees:
-                return sef.optimality_NO(opt_tree_g, f"Come '{opt_tree_g.alias}' ha inserito '{opt_tree_g.answ}', tuttavia esso non è uno degli alberi dei cammini minimi con radice nel nodo {s}, pertanto la soluzione non è ottima.")
+                return sef.optimality_NO(opt_tree_g, f"Come '{opt_tree_g.alias}' ha inserito '{opt_tree_g.answ}', tuttavia esso non è uno degli alberi dei cammini minimi con radice nel nodo {s}, pertanto la soluzione non è ottima. Una possibile soluzione ottima sarebbe stata: {list_true_paths_trees[0]}.")
             sef.optimality_OK(opt_tree_g, f"'{opt_tree_g.alias}'={opt_tree_g.answ} è effettivamente un risultato ottimo.", f"")
 
         # verifico che num_opt_paths sia effettivamente il numero di cammini minimi differenti
@@ -1135,7 +1136,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             num_opt_paths_g = self.goals['num_opt_paths']
             true_answ = self.graph.get_num_shortest_paths()
             if num_opt_paths_g.answ != true_answ:
-                return sef.optimality_NO(num_opt_paths_g, f"Come '{num_opt_paths_g.alias}' ha inserito '{num_opt_paths_g.answ}', tuttavia esso non è l'esatto numero di cammini minimi dal nodo {s} al nodo {t}, pertanto il valore non è ottimo.")
+                return sef.optimality_NO(num_opt_paths_g, f"Come '{num_opt_paths_g.alias}' ha inserito '{num_opt_paths_g.answ}', tuttavia esso non è l'esatto numero di cammini minimi dal nodo {s} al nodo {t}, pertanto il valore non è ottimo. La soluzione ottima sarebbe: {true_answ}.")
             sef.optimality_OK(num_opt_paths_g, f"'{num_opt_paths_g.alias}'={num_opt_paths_g.answ} è effettivamente il risultato ottimo.", f"")
 
         # verifico che num_opt_trees sia effettivamente il numero di alberi dei cammini minimi differenti
@@ -1143,27 +1144,27 @@ class verify_submission_problem_specific(verify_submission_gen):
             num_opt_trees_g = self.goals['num_opt_trees']
             true_answ = self.graph.get_num_shortest_path_trees()
             if num_opt_trees_g.answ != true_answ:
-                return sef.optimality_NO(num_opt_trees_g, f"Come '{num_opt_trees_g.alias}' ha inserito '{num_opt_trees_g.answ}', tuttavia esso non è l'esatto numero di alberi dei cammini minimi con radice nel nodo {s}, pertanto il valore non è ottimo.")
+                return sef.optimality_NO(num_opt_trees_g, f"Come '{num_opt_trees_g.alias}' ha inserito '{num_opt_trees_g.answ}', tuttavia esso non è l'esatto numero di alberi dei cammini minimi con radice nel nodo {s}, pertanto il valore non è ottimo. La soluzione ottima sarebbe: {true_answ}.")
             sef.optimality_OK(num_opt_trees_g, f"'{num_opt_trees_g.alias}'={num_opt_trees_g.answ} è effettivamente il risultato ottimo.", f"")
 
         # verifico che list_opt_paths contenga effettivamente tutti cammini minimi
         if 'list_opt_paths' in self.goals:
             list_opt_paths_g = self.goals['list_opt_paths']
             if len(list_opt_paths_g.answ) != self.graph.get_num_shortest_paths() and self.graph.get_num_shortest_paths() <= self.I.CAP_FOR_NUM_SOLS:
-                return sef.optimality_NO(list_opt_paths_g, f"In '{list_opt_paths_g.alias}' hai inserito un numero di soluzioni pari a {len(list_opt_paths_g.answ)}, ma esse non sono tutte e sole le soluzioni ottime.")
+                return sef.optimality_NO(list_opt_paths_g, f"In '{list_opt_paths_g.alias}' hai inserito un numero di soluzioni pari a {len(list_opt_paths_g.answ)}, ma esse non sono tutte e sole le soluzioni ottime. Ecco alcune delle soluzioni ottime: {list_true_paths[:cap_for_num_opt_sols]}.")
             for path in list_opt_paths_g.answ:
                 if path not in list_true_paths:
-                    return sef.optimality_NO(list_opt_paths_g, f"Come '{list_opt_paths_g.alias}' ha inserito '{list_opt_paths_g.answ}', tuttavia uno dei percorsi immessi non è un cammino minimo dal nodo {s} al nodo {t}, pertanto la soluzione non è ottima.")
+                    return sef.optimality_NO(list_opt_paths_g, f"Come '{list_opt_paths_g.alias}' ha inserito '{list_opt_paths_g.answ}', tuttavia uno dei percorsi immessi non è un cammino minimo dal nodo {s} al nodo {t}, pertanto la soluzione non è ottima. Ecco alcune delle soluzioni ottime: {list_true_paths[:cap_for_num_opt_sols]}.")
             sef.optimality_OK(list_opt_paths_g, f"'{list_opt_paths_g.alias}'={list_opt_paths_g.answ} è effettivamente un insieme di risultati ottimi.", f"")
 
         # verifico che list_opt_trees contenga effettivamente tutti cammini minimi
         if 'list_opt_trees' in self.goals:
             list_opt_trees_g = self.goals['list_opt_trees']
             if len(list_opt_trees_g.answ) != self.graph.get_num_shortest_path_trees() and self.graph.get_num_shortest_path_trees() <= self.I.CAP_FOR_NUM_SOLS:
-                return sef.optimality_NO(list_opt_trees_g, f"In '{list_opt_trees_g.alias}' hai inserito un numero di soluzioni pari a {len(list_opt_trees_g.answ)},  ma esse non sono tutte e sole le soluzioni ottime.")
+                return sef.optimality_NO(list_opt_trees_g, f"In '{list_opt_trees_g.alias}' hai inserito un numero di soluzioni pari a {len(list_opt_trees_g.answ)},  ma esse non sono tutte e sole le soluzioni ottime. Ecco alcune delle soluzioni ottime: {list_true_paths_trees[:cap_for_num_opt_sols]}.")
             for tree in list_opt_trees_g.answ:
                 if tree not in list_true_paths_trees:
-                    return sef.optimality_NO(list_opt_trees_g, f"Come '{list_opt_trees_g.alias}' ha inserito '{list_opt_trees_g.answ}', tuttavia uno degli alberi immessi non è un albero dei cammini minimi con radice nel nodo {s}, pertanto la soluzione non è ottima.")
+                    return sef.optimality_NO(list_opt_trees_g, f"Come '{list_opt_trees_g.alias}' ha inserito '{list_opt_trees_g.answ}', tuttavia uno degli alberi immessi non è un albero dei cammini minimi con radice nel nodo {s}, pertanto la soluzione non è ottima. Ecco alcune delle soluzioni ottime: {list_true_paths_trees[:cap_for_num_opt_sols]}.")
             sef.optimality_OK(list_opt_trees_g, f"'{list_opt_trees_g.alias}'={list_opt_trees_g.answ} è effettivamente un insieme di risultati ottimi.", f"")
 
         # verifico che edge_profile sia effettivamente il risultato corretto per il query edge
@@ -1171,7 +1172,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             edge_profile_g = self.goals['edge_profile']
             true_answ = self.graph.compute_edge_profile(query_edge)
             if edge_profile_g.answ != true_answ:
-                return sef.optimality_NO(edge_profile_g, f"Come '{edge_profile_g.alias}' ha inserito '{edge_profile_g.answ}', tuttavia esso non è l'edge profile per il query edge {query_edge}, pertanto la soluzione non è ottima.")
+                return sef.optimality_NO(edge_profile_g, f"Come '{edge_profile_g.alias}' ha inserito '{edge_profile_g.answ}', tuttavia esso non è l'edge profile per il query edge {query_edge}, pertanto la soluzione non è ottima. La soluzione ottima sarebbe: {true_answ}.")
             sef.optimality_OK(edge_profile_g, f"'{edge_profile_g.alias}'={edge_profile_g.answ} è effettivamente la soluzione ottima.", f"")
 
         # verifico che nodes_relying_on_query_edge sia effettivamente l'insieme di nodi che dipendono dal query edge
@@ -1179,10 +1180,10 @@ class verify_submission_problem_specific(verify_submission_gen):
             nodes_relying_on_query_edge_g = self.goals['nodes_relying_on_query_edge']
             true_answ = self.graph.get_nodes_relying_on_query_edge(query_edge)
             if len(true_answ) != len(nodes_relying_on_query_edge_g.answ):
-                return sef.optimality_NO(nodes_relying_on_query_edge_g, f"Come '{nodes_relying_on_query_edge_g.alias}' ha inserito '{nodes_relying_on_query_edge_g.answ}', tuttavia esso non contiene tutti i nodi che dipendono dal query edge, pertanto la soluzione non è ottima.")
+                return sef.optimality_NO(nodes_relying_on_query_edge_g, f"Come '{nodes_relying_on_query_edge_g.alias}' ha inserito '{nodes_relying_on_query_edge_g.answ}', tuttavia esso non contiene tutti i nodi che dipendono dal query edge, pertanto la soluzione non è ottima. La soluzione ottima sarebbe: {true_answ}.")
             for node in nodes_relying_on_query_edge_g.answ:
                 if node not in true_answ:
-                    return sef.optimality_NO(nodes_relying_on_query_edge_g, f"Come '{nodes_relying_on_query_edge_g.alias}' ha inserito '{nodes_relying_on_query_edge_g.answ}', tuttavia esso non contiene tutti e solo i nodi che dipendono dal query edge, pertanto la soluzione non è ottima.")
+                    return sef.optimality_NO(nodes_relying_on_query_edge_g, f"Come '{nodes_relying_on_query_edge_g.alias}' ha inserito '{nodes_relying_on_query_edge_g.answ}', tuttavia esso non contiene tutti e solo i nodi che dipendono dal query edge, pertanto la soluzione non è ottima. La soluzione ottima sarebbe: {true_answ}.")
             sef.optimality_OK(nodes_relying_on_query_edge_g, f"'{nodes_relying_on_query_edge_g.alias}'={nodes_relying_on_query_edge_g.answ} è effettivamente la soluzione ottima.", f"")
 
         return True
