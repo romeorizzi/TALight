@@ -41,7 +41,21 @@ def check_access_rights(ENV,TALf, require_pwd = False):
     if require_TALtoken and ENV.LOG_FILES == None:
         for error_stream in [stdout,stderr]:
             print("Errore (RO_std_io_lib): Il servizio è stato chiamato senza access token. Modalità attualmente non consentita.", file=error_stream)
-        exit(0)    
+        exit(0)
+
+def get_current_status():
+    current_status_filename = os.path.join(os.path.expanduser("~"),'TALight','exam_sessions','current_status.yaml')
+    if not os.path.exists(current_status_filename):
+        for error_stream in [stdout,stderr]:
+            print(f'Errore (RO_std_io_lib): Non trovo il file: `{current_status_filename}`)', file=error_stream)
+        exit(1)
+    with open(current_status_filename, 'r') as stream:
+        try:
+            current_status_yaml = ruamel.yaml.safe_load(stream)
+        except:
+            TAc.print(LANG.render_feedback("current_status-unparsable", f'Error: the file \'{current_status_filename}\' could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
+            exit(1)
+    return current_status_yaml['current_status']
 
             
 def dict_of_instance(instance_objects,args_list,ENV):
