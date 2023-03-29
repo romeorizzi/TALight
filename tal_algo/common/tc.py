@@ -15,7 +15,8 @@ class TC:
         self.exam = "TAL_META_EXP_TOKEN" in environ and "TAL_EXT_EXAM_DB" in environ
 
     def run(self, gen_tc, check_tc):
-        output = open(join(environ["TAL_META_OUTPUT_FILES"], "result.txt"), "w")
+        output = open(
+            join(environ["TAL_META_OUTPUT_FILES"], "result.txt"), "w")
         total_tc = sum(map(lambda x: x[0], self.data))
         print(total_tc, flush=True)
         tc_ok = 0
@@ -26,7 +27,13 @@ class TC:
                 stdout.flush()
                 start = time()
                 try:
-                    result = check_tc(*tc_data)
+                    ret = check_tc(*tc_data)
+                    msg = None
+                    if isinstance(ret, tuple):
+                        result = ret[0]
+                        msg = ret[1]
+                    else:
+                        result = ret
                     if time() - start > self.tl:
                         print(f"Case #{tcn:03}: TLE", file=output)
                     elif result:
@@ -34,9 +41,15 @@ class TC:
                         tc_ok += 1
                     else:
                         print(f"Case #{tcn:03}: WA", file=output)
+                    if msg is not None:
+                        print(file=output)
+                        print(msg, file=output)
+                        print(file=output)
                 except Exception as e:
                     print(f"Case #{tcn:03}: RE", file=output)
-                    print("".join(traceback.format_tb(e.__traceback__)), file=stderr)
+                    print(file=stderr)
+                    print("".join(traceback.format_tb(
+                        e.__traceback__)), e, file=stderr)
                 tcn += 1
         print(file=output)
         print(f"Score: {tc_ok}/{total_tc}", file=output)
@@ -50,7 +63,8 @@ class TC:
                     environ["TAL_META_CODENAME"],
                     environ["TAL_META_EXP_ADDRESS"],
                     tc_ok,
-                    open(join(environ["TAL_META_INPUT_FILES"], "source"), "rb").read(),
+                    open(join(environ["TAL_META_INPUT_FILES"],
+                         "source"), "rb").read(),
                 ),
             )
             db.commit()
