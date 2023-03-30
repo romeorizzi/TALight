@@ -35,15 +35,6 @@ services:
       lang:
         regex: ^(en|it)$
         default: it
-  help:
-    evaluator: [python, services/help/help_driver.py]
-    args:
-      page:
-        regex: ^(append_1|check_1|change_bin|help|synopsis)$
-        default: help
-      lang:
-        regex: ^(en|it)$
-        default: it
 
   synopsis:
     evaluator: [python, services/synopsis/synopsis_driver.py]
