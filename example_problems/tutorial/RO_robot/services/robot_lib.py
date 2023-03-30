@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 
-import logging
 from dataclasses import dataclass
 from typing import Dict, Final, List, Tuple, TypeVar
+
+import numpy as np
 
 from RO_verify_submission_gen_prob_lib import verify_submission_gen
 from RO_std_eval_lib import std_eval_feedback
 
-_UNWALKABLE = -1
-"""Magic value of a cell that cannot be traversed."""
-
-_LOGGER = logging.getLogger(__package__).getChild("robot")
 
 instance_objects_spec = [
     ("grid", "matrix_of_int"),
@@ -81,39 +78,28 @@ limits = {
 _T = TypeVar("_T")
 
 _Cell = Tuple[int, int]
+_Path = list[_Cell]
 _Mat = List[List[_T]]
 
-
-def _xmap(x: int) -> int:
-    """Map internal x coordinate of a cell to a human-readable format."""
-    return x + 1
-
-
-def _ymap(y: int) -> str:
-    """Map internal y coordinate of a cell to a human-readable format."""
-    return chr(ord('A') + y)
+@dataclass
+class Instance:
+    grid: np.ndarray
+    cost: int
+    diag: bool
+    beg: _Cell
+    mid: _Cell
+    end: _Cell
 
 
 def _map(x, y):
-    return f"({_xmap(x)},{_ymap(y)})"
+    return f"({str(x + 1)},{chr(ord('A') + y)})"
 
 
-def parse_cell(cell: str) -> _Cell:
-    # Take row and col
-    # cell = cell[1:-1]
-    # row, col = cell.split(",")
-    # row, col = ord(row.lower()) - ord("a"), int(col)
-    row, col = cell
+def parse_cell(coords: list[str]) -> _Cell:
+    # the format specification is [row, col]
+    row, col = coords
     row, col = int(row) - 1, ord(col.lower()) - ord("a")
     return (row, col)
-
-
-def walkable(grid: _Mat[int], cell: _Cell) -> bool:
-    """Checks whether a cell is free or forbidden."""
-    assert grid is not None
-    assert cell is not None
-    x, y = cell
-    return grid[x][y] != _UNWALKABLE
 
 
 def check_matrix_shape(f: _Mat) -> bool:
@@ -136,7 +122,7 @@ def check_matrix_shape(f: _Mat) -> bool:
 def check_budget_bounds(budget: int) -> bool:
     """Check if the allocated budget is within the bounds specified by the problem."""
     # TODO: finalize the value of the upper bound in yaml file
-    return 0 < budget < 100
+    return 0 <= budget < 100
 
 
 def check_contains_cell(grid: _Mat, cell: _Cell) -> bool:
@@ -198,7 +184,6 @@ def check_path_feasible(path: List[_Cell], diag: bool) -> bool:
 
 
 def check_instance_consistency(instance):
-    _LOGGER.debug("instance = %s", instance)
     grid = instance['grid']
     rows, cols = shape(grid)
     # TODO: ask whether this check is necessary for the type 'matrix_of_int'
@@ -224,13 +209,13 @@ def check_instance_consistency(instance):
             exit(0)
 
 
-def value(content_inside_cell: int) -> int:
-    """The solution value of a cell."""
+def cellgain(content_inside_cell: int) -> int:
+    """The solution gain of a cell."""
     # only cells with positive content have a value
     return max(content_inside_cell, 0)
 
 
-def cost(content_inside_cell: int) -> int:
+def cellcost(content_inside_cell: int) -> int:
     """The solution cost on the budget of a cell."""
     # only cells with negative content have a cost
     return max(-content_inside_cell, 0)
@@ -242,834 +227,331 @@ def build_cost_table(grid: _Mat) -> _Mat:
     assert check_matrix_shape(grid)
 
     rows, cols = shape(grid)
-    costs = [[cost(grid[row][col]) for col in range(cols)]
+    costs = [[cellcost(grid[row][col]) for col in range(cols)]
              for row in range(rows)]
 
     assert shape(costs) == shape(grid)
     return costs
 
 
-def dptable_num_to_with_budget(grid: _Mat[int], budget: int, diag: bool = False) -> _Mat:
-    assert check_matrix_shape(grid)
-    assert check_budget_bounds(budget)
-
-    rows, cols = shape(grid)
-    dptable = [[[0 for _ in range(cols)] for _ in range(rows)]
-               for _ in range(budget)]
-
-    for b in range(budget):
-        assert shape(dptable[b]) == shape(grid)
-
-    costs = build_cost_table(grid)
-    dptable[0][0][0] = 1
-    # iterate on each cell of the grid, except the last row and column
-    for row in range(rows - 1):
-        for col in range(cols - 1):
-
-            # iterate on all budget values that we may have when reaching the cell
-            for b in range(budget):
-                # try moving vertically by checking the cost of the move
-                c = costs[row + 1][col] + b
-                assert c >= 0
-                if c < budget:
-                    dptable[c][row + 1][col] += dptable[b][row][col]
-
-                # try moving horizontally by checking the cost of the move
-                c = costs[row][col + 1] + b
-                assert c >= 0
-                if c < budget:
-                    dptable[c][row][col + 1] += dptable[b][row][col]
-
-                if diag:
-                    # try moving diagonally by checking the cost of the move
-                    c = costs[row + 1][col + 1] + b
-                    assert c >= 0
-                    if c < budget:
-                        dptable[c][row + 1][col + 1] += dptable[b][row][col]
-
-    # iterate on the last column, we can only move vertically
-    for row in range(rows - 1):
-        for b in range(budget):
-            c = costs[row][-1] + b
-            if c < budget:
-                dptable[c][row + 1][-1] += dptable[b][row][-1]
-
-    # iterate on the last row, we can only move horizontally
-    for col in range(cols - 1):
-        for b in range(budget):
-            c = costs[-1][col] + b
-            assert c >= 0
-            if c < budget:
-                dptable[c][-1][col + 1] += dptable[b][-1][col]
-
-    print("Calcolo path")
-    print(dptable)
-
-    return dptable
-
-
-def dptable_num_to(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
+def dp_num_to(grid: np.ndarray, cell: _Cell, budget: int, diag: bool) -> np.ndarray:
     """
-    Construct a table that calculates the optimal path for each path 
-    from the top left cell to the throw cell.
+    Construct a table that calculates the number of paths
+    from a specific cell to any cell.
 
     Args:
-        grid: game table
-        budget: initial budget 
-        diag: allow diagonal moves
-        through: arrive cell
+        grid:   game table
+        cell:   reference cell
+        budget: max budget for a path 
+        diag:   allow diagonal moves
 
     Returns:
-        Table containing the optimal path for each road from the top left cell to the throw cell.
+        DP table
     """
-    assert check_matrix_shape(grid)
+    row0, col0 = cell
+    rows, cols = grid.shape
+    # NOTE: matrix format [budget][rows][cols]
+    mat = np.zeros((budget + 1, rows, cols), dtype=np.intc)
+    for b in range(budget + 1):
+        if cellcost(grid[row0][col0]) <= b:
+            mat[b][row0][col0] = 1
 
-    rows, cols = shape(grid)
+    # NOTE: start iteration from the reference cell
+    for b in range(budget + 1):  # iterate on all possible values of budget
+        for x in range(row0, rows):
+            for y in range(col0, cols):
+                cost_at_prev_cell = b - cellcost(grid[x][y])
+                if cost_at_prev_cell >= 0:
+                    # move from the top cell if there is a previous row
+                    if x > 0:
+                        mat[b][x][y] += mat[cost_at_prev_cell][x - 1][y]
 
-    mat = [[[0 for _ in range(budget+1)] for _ in range(cols)] for _ in range(rows)]  #NOTE: Matrix [x][y][b]
+                    # move from the left cell if there is a previous col
+                    if y > 0:
+                        mat[b][x][y] += mat[cost_at_prev_cell][x][y - 1]
 
-    for x in range(0, rows):
-        for y in range(0, cols):
-            for b in range(0, budget+1): #NOTE: I fill as many matrices as my budget
-                if (walkable(grid, (x, y))):
-                    if x == 0 and y == 0:
-                        mat[x][y][b] = 1 #NOTE: The first cell is always one
-                    elif diag:
-                        if x-1 < 0 or y-1 < 0:
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
-                        else:
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b]
-                    else:
-                        mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
-                elif b != 0: #NOTE: I fill the cells only if I'm not in the zero matrix
-                    if diag:
-                        if x-1 < 0 or y-1 < 0:
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
-                        else:
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b]
-                    else:
-                        mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
-
-
-    # NOTE: Change Values in a specific row
-    for y in range(through[1]+1, cols):
-        for b in range(0, budget+1):
-            mat[through[0]][y][b] = 0
-
-    # NOTE: Change Values after through
-    for x in range(through[0]+1, rows):
-        for y in range(0, cols):
-            for b in range(0, budget+1):
-                mat[x][y][b] = 0
+                    # move diagonally from the top-left cell
+                    if diag and x > 0 and y > 0:
+                        mat[b][x][y] += mat[cost_at_prev_cell][x - 1][y - 1]
 
     return mat
 
 
-def dptable_num_from(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
+def dp_num_from(grid: np.ndarray, cell: _Cell, budget: int, diag: bool) -> np.ndarray:
     """
-    Construct a table that calculates the optimal path for each path 
-    from the throw cell to the bottom right cell.
+    Construct a table that calculates the number of paths
+    from any cell to a specific cell.
 
     Args:
-        grid: game table
-        budget: initial budget 
-        diag: allow diagonal moves
-        through: arrive cell
+        grid:   game table
+        cell:   reference cell
+        budget: max budget for a valid path 
+        diag:   allow diagonal moves
 
     Returns:
-        Table containing the optimal path for each road from the throw cell to the bottom right cell.
+        DP table
     """
-    assert check_matrix_shape(grid)
-
-    rows, cols = shape(grid)
-
-    mat = [[[0 for _ in range(budget+1)] for _ in range(cols)] for _ in range(rows)]  #NOTE: Matrix [x][y][b]
-
-    for x in range(0, rows):
-        for y in range(0, cols):
-            for b in range(0, budget+1): #NOTE: I fill as many matrices as my budget              
-                if (walkable(grid, (x, y))):
-                    if x == 0 and y == 0:
-                        mat[x][y][b] = 1 #NOTE: The first cell is always one
-                    elif diag:
-                        if x-1 < 0 or y-1 < 0:
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
-                        else:
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b]
-                    else:
-                        mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
-                elif b != 0: #NOTE: I fill the cells only if I'm not in the zero matrix
-                    if diag:
-                        if x-1 < 0 or y-1 < 0:
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
-                        else:
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b]
-                    else:
-                        mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]
-
-    # NOTE: Change Values before through
-    for x in range(0, through[0]):
-        for y in range(0, cols):
-            for b in range(0, budget+1):
-                mat[x][y][b] = 0
-
-    # NOTE: Change Values in a specific row
-    for y in range(0, through[1]):
-        for b in range(0, budget+1):
-            mat[through[0]][y][b] = 0
-
-    return mat
+    # flip both the field and the reference cell
+    grid = np.flip(grid)
+    # cells are zero-indexed, so we need to offset the coordinates
+    cell = (grid.shape[0] - cell[0] - 1, grid.shape[1] - cell[1] - 1)
+    result = dp_num_to(grid, cell, budget, diag)
+    # also flip the result back, but only on the grid axis
+    assert result.shape == (budget + 1, *grid.shape),\
+        "The expected dptable format is [budget][row][col]"
+    return np.flip(result, (1, 2))
 
 
-def dptable_opt_to(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
+def dp_opt_to(grid: np.ndarray, cell: _Cell, budget: int, diag: bool) -> np.ndarray:
     """
     Build a table that calculates the maximum gain for each path 
-    from the top left cell to the launch cell.
+    from a specific cell to any cell.
 
     Args:
-        grid: game table
-        budget: initial budget 
-        diag: allow diagonal moves
-        through: arrive cell
+        grid:   game table
+        cell:   reference cell
+        budget: max budget for a valid path
+        diag:   allow diagonal moves
 
     Returns:
-        Table containing the maximum gain for each street from the top left cell to the launch cell.
+        DP table
     """
-    assert check_matrix_shape(grid)
+    row0, col0 = cell
+    rows, cols = grid.shape
+    # NOTE: matrix format [budget][rows][cols]
+    mat = np.full((budget + 1, rows, cols), fill_value=-1, dtype=np.intc)
+    for b in range(budget + 1):
+        if cellcost(grid[row0][col0]) <= b:
+            mat[b][row0][col0] = cellgain(grid[row0][col0])
 
-    rows, cols = shape(grid)
+    # NOTE: start iteration from the reference cell
+    for b in range(budget + 1):  # iterate on all possible values of budget
+        for x in range(row0, rows):
+            for y in range(col0, cols):
+                prev_cost = b - cellcost(grid[x][y])
+                if prev_cost >= 0:
+                    v = cellgain(grid[x][y])
+                    # move from the top cell if there is a previous row
+                    if x > 0 and mat[prev_cost][x - 1][y] != -1:
+                        mat[b][x][y] = max(mat[b][x][y],
+                                           mat[prev_cost][x - 1][y] + v)
 
-    mat = [[[0 for _ in range(budget+1)] for _ in range(cols)] for _ in range(rows)]  #NOTE: Matrix [x][y][b]
+                    # move from the left cell if there is a previous col
+                    if y > 0 and mat[prev_cost][x][y - 1] != -1:
+                        mat[b][x][y] = max(mat[b][x][y],
+                                           mat[prev_cost][x][y - 1] + v)
 
-    for x in range(0, rows):
-        for y in range(0, cols):
-            for b in range(0, budget+1): #NOTE: I fill as many matrices as my budget
-                if (walkable(grid, (x, y))):
-                    if x == 0 and y == 0:
-                        mat[x][y][b] = grid[x][y] #NOTE: The first cell always has the gain value it possesses
-                    elif diag:
-                        if x-1 < 0 or y-1 < 0:
-                            opt = max(mat[x][y - 1][b], mat[x - 1][y][b])
-                            mat[x][y][b] = opt + grid[x][y] #NOTE: opt
-
-                        else:
-                            opt = max(mat[x][y - 1][b], mat[x - 1][y][b], mat[x - 1][y - 1][b])
-                            mat[x][y][b] = opt + grid[x][y] #NOTE: opt
-
-                    else:
-                        opt = max(mat[x][y - 1][b], mat[x - 1][y][b])
-                        mat[x][y][b] = opt + grid[x][y] #NOTE: opt
-
-                elif b != 0: #NOTE: I fill the cells only if I'm not in the zero matrix
-                    if diag:
-                        if x-1 < 0 or y-1 < 0:
-                            opt = max(mat[x][y - 1][b], mat[x - 1][y][b])
-                            mat[x][y][b] = opt #NOTE: opt
-
-                        else:
-                            opt = max(mat[x][y - 1][b], mat[x - 1][y][b], mat[x - 1][y - 1][b])
-                            mat[x][y][b] = opt #NOTE: opt
-
-                    else:
-                        opt = max(mat[x][y - 1][b], mat[x - 1][y][b])
-                        mat[x][y][b] = opt #NOTE: opt
-
-
-    # NOTE: Change Values in a specific row
-    for y in range(through[1]+1, cols):
-        for b in range(0, budget+1):
-            mat[through[0]][y][b] = 0
-
-    # NOTE: Change Values after through
-    for x in range(through[0]+1, rows):
-        for y in range(0, cols):
-            for b in range(0, budget+1):
-                mat[x][y][b] = 0
+                    # move diagonally from the top-left cell
+                    if diag and x > 0 and y > 0 and mat[prev_cost][x - 1][y - 1] != -1:
+                        mat[b][x][y] = max(mat[b][x][y],
+                                           mat[prev_cost][x - 1][y - 1] + v)
 
     return mat
 
 
-def dptable_opt_from(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
+def dp_opt_from(grid: np.ndarray, cell: _Cell, budget: int, diag: bool) -> np.ndarray:
     """
     Build a table that calculates the maximum gain for each path 
-    from the throw cell to the bottom right cell.
+    from any cell to a specific cell.
 
     Args:
-        grid: game table
-        budget: initial budget 
-        diag: allow diagonal moves
-        through: arrive cell
+        grid:   game table
+        cell:   reference cell
+        budget: max budget for a valid path
+        diag:   allow diagonal moves
 
     Returns:
-        Table containing the maximum gain for each street from the throw cell to the bottom right cell.
+        DP table
     """
-    assert check_matrix_shape(grid)
-
-    rows, cols = shape(grid)
-
-    mat = [[[0 for _ in range(budget+1)] for _ in range(cols)] for _ in range(rows)]  #NOTE: Matrix [x][y][b]
-
-    for x in range(0, rows):
-        for y in range(0, cols):
-            for b in range(0, budget+1): #NOTE: I fill as many matrices as my budget
-                if (walkable(grid, (x, y))):
-                    if x == 0 and y == 0:
-                        mat[x][y][b] = grid[x][y] #NOTE: The first cell always has the gain value it possesses
-                    elif diag:
-                        if x-1 < 0 or y-1 < 0:
-                            opt = max(mat[x][y - 1][b], mat[x - 1][y][b])
-                            mat[x][y][b] = opt + grid[x][y] #NOTE: opt
-
-                        else:
-                            opt = max(mat[x][y - 1][b], mat[x - 1][y][b], mat[x - 1][y - 1][b])
-                            mat[x][y][b] = opt + grid[x][y] #NOTE: opt
-
-                    else:
-                        opt = max(mat[x][y - 1][b], mat[x - 1][y][b])
-                        mat[x][y][b] = opt + grid[x][y] #NOTE: opt
-
-                elif b != 0: #NOTE: I fill the cells only if I'm not in the zero matrix
-                    if diag:
-                        if x-1 < 0 or y-1 < 0:
-                            opt = max(mat[x][y - 1][b], mat[x - 1][y][b])
-                            mat[x][y][b] = opt #NOTE: opt
-
-                        else:
-                            opt = max(mat[x][y - 1][b], mat[x - 1][y][b], mat[x - 1][y - 1][b])
-                            mat[x][y][b] = opt #NOTE: opt
-
-                    else:
-                        opt = max(mat[x][y - 1][b], mat[x - 1][y][b])
-                        mat[x][y][b] = opt #NOTE: opt
+    # flip both the field and the reference cell
+    grid = np.flip(grid)
+    # cells are zero-indexed, so we need to offset the coordinates
+    cell = (grid.shape[0] - cell[0] - 1, grid.shape[1] - cell[1] - 1)
+    result = dp_opt_to(grid, cell, budget, diag)
+    # also flip the result back, but only on the grid axis
+    assert result.shape == (budget + 1, *grid.shape),\
+        "The expected dptable format is [budget][row][col]"
+    return np.flip(result, (1, 2))
 
 
-    # NOTE: Change Values before through
-    for x in range(0, through[0]):
-        for y in range(0, cols):
-            for b in range(0, budget+1):
-                mat[x][y][b] = 0
+def dp_num_opt_to(
+        grid: np.ndarray, cell: _Cell, dptable: np.ndarray, budget: int, diag: bool
+) -> np.ndarray:
+    """
+    Build a table that calculates the number of optimal paths
+    from any cell to a specific cell.
 
-    # NOTE: Change Values in a specific row
-    for y in range(0, through[1]):
-        for b in range(0, budget+1):
-            mat[through[0]][y][b] = 0
+    Args:
+        grid:   game table
+        cell:   reference cell
+        budget: max budget for a valid path
+        diag:   allow diagonal moves
+        dptable:
+
+    Returns:
+        DP table
+    """
+    row0, col0 = cell
+    rows, cols = grid.shape
+    # NOTE: matrix format [budget][rows][cols]
+    mat = np.zeros((budget + 1, rows, cols), dtype=np.intc)
+    for b in range(budget + 1):
+        if cellcost(grid[row0][col0]) <= b:
+            mat[b][row0][col0] = 1
+
+    # NOTE: start iteration from the reference cell
+    for x in range(cell[0], rows):
+        for y in range(cell[1], cols):
+            for b in range(budget + 1):
+                # the budget left at a previous cell required to move in the current cell
+                # with the current total budget
+                bud = b - cellcost(grid[x][y])
+
+                # the optimal value of a path that gets at the current
+                opt = dptable[bud][x][y] - cellgain(grid[x][y])
+
+                if x > 0:  # can move by row
+                    if dptable[bud][x - 1][y] == opt:  # and the path is optimal
+                        mat[b][x][y] += mat[bud][x - 1][y]
+
+                if y > 0:  # can move by column
+                    if dptable[bud][x][y - 1] == opt:  # and the path is optimal
+                        mat[b][x][y] += mat[bud][x][y - 1]
+
+                if diag and x > 0 and y > 0:  # can move diagonally
+                    if dptable[bud][x - 1][y - 1] == opt:  # and the path is optimal
+                        mat[b][x][y] += mat[bud][x - 1][y - 1]
 
     return mat
 
 
-@dataclass
-class NumOptCell:
-    count: int  # the count of optimal paths ending at this cell
-    value: int  # the optimal value of a path ending at this cell
-
-
-def dptable_num_opt_to(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
-    """
-    Builds a table that calculates the optimal path based on the gain obtained along the road 
-    and the path of the road, starting from the top left cell to the throw cell.
-
-    Args:
-        grid: game table
-        budget: initial budget 
-        diag: allow diagonal moves
-        through: arrive cell
-
-    Returns:
-        Table containing the optimal path for each road from the top left cell to the throw cell.
-    """
-    
-    assert check_matrix_shape(grid)
-
-    rows, cols = shape(grid)
-
-    mat = [[[0 for _ in range((budget+1)*2)] for _ in range(cols)] for _ in range(rows)]  #NOTE: Matrix [x][y][b]
-
-    for x in range(0, rows):
-        for y in range(0, cols):
-            for b in range(0, (budget+1)*2, 2): #NOTE: Fill two values for each cycle one for gain and one for path
-                if (walkable(grid, (x, y))):
-                    #NOTE: Calculate the first cell
-                    if x == 0 and y == 0:
-                        if b % 2 == 0:
-                            mat[x][y][b] = 1 #NOTE: The first cell is always one
-                        else:
-                            mat[x][y][b] = grid[x][y] #NOTE: the first cell always has the gain value it possesses
-
-                    elif diag:
-                        if x-1 < 0 or y-1 < 0:
-                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
-
-                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                            mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
-
-                        else:
-                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1], mat[x - 1][y - 1][b+1])
-
-                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y - 1][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]#NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y - 1][b]#NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] + mat[x - 1][y - 1][b]#NOTE: num
-
-                            mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
-
-                    else:
-                        opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
-
-                        if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
-
-                        elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                        elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                        mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
-
-                #NOTE: I fill the cells only if I'm not in the zero matrix
-                elif b > 1:
-
-                    if diag:
-                        if x-1 < 0 or y-1 < 0:
-                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
-
-                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                            mat[x][y][b+1] = opt #NOTE: optt
-
-                        else:
-                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1], mat[x - 1][y - 1][b+1])
-
-                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y - 1][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]#NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y - 1][b]#NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] + mat[x - 1][y - 1][b]#NOTE: num
-
-                            mat[x][y][b+1] = opt #NOTE: opt
-
-                    else:
-                        opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
-
-                        if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
-
-                        elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-                            
-                        elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                        mat[x][y][b+1] = opt #NOTE: opt
-
-    # NOTE: Change Values in a specific row
-    for y in range(through[1]+1, cols):
-        for b in range(0, (budget+1)*2, 2):
-            mat[through[0]][y][b] = 0
-            mat[through[0]][y][b+1] = 0
-
-    # NOTE: Change Values after through
-    for x in range(through[0]+1, rows):
-        for y in range(0, cols):
-            for b in range(0, (budget+1)*2, 2):
-                mat[x][y][b] = 0
-                mat[x][y][b+1] = 0
-
-    return mat
-
-
-def dptable_num_opt_from(grid: _Mat[int], budget: int , diag: bool, through) -> _Mat:
-    """
-    Builds a table that calculates the optimal path based on the gain obtained along the road 
-    and the path of the road, starting from the throw cell to the bottom right cell.
-
-    Args:
-        grid: game table
-        budget: initial budget 
-        diag: allow diagonal moves
-        through: arrive cell
-
-    Returns:
-        Table containing the optimal path for each street from the throw cell to the bottom right cell.
-    """
-    
-    assert check_matrix_shape(grid)
-
-    rows, cols = shape(grid)
-
-    mat = [[[0 for _ in range((budget+1)*2)] for _ in range(cols)] for _ in range(rows)]  #NOTE: Matrix [x][y][b]
-
-    for x in range(0, rows):
-        for y in range(0, cols):
-            for b in range(0, (budget+1)*2, 2): #NOTE: Fill two values for each cycle one for gain and one for path
-                if (walkable(grid, (x, y))):
-                    #NOTE: Calculate the first cell
-                    if x == 0 and y == 0:
-                        if b % 2 == 0:
-                            mat[x][y][b] = 1 #NOTE: The first cell is always one
-                        else:
-                            mat[x][y][b] = grid[x][y] #NOTE: the first cell always has the gain value it possesses 
-
-                    elif diag:
-                        if x-1 < 0 or y-1 < 0:
-                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
-
-                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                            mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
-
-                        else:
-                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1], mat[x - 1][y - 1][b+1])
-
-                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y - 1][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]#NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y - 1][b]#NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] + mat[x - 1][y - 1][b]#NOTE: num
-
-                            mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
-
-                    else:
-                        opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
-
-                        if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
-
-                        elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                        elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                        mat[x][y][b+1] = opt + grid[x][y] #NOTE: opt
-
-                #NOTE: I fill the cells only if I'm not in the zero matrix
-                elif b > 1:
-
-                    if diag:
-                        if x-1 < 0 or y-1 < 0:
-                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
-
-                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                            mat[x][y][b+1] = opt #NOTE: optt
-
-                        else:
-                            opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1], mat[x - 1][y - 1][b+1])
-
-                            if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] + mat[x - 1][y - 1][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y - 1][b] #NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt != mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b]#NOTE: num
-
-                            elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y - 1][b]#NOTE: num
-
-                            elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1] and opt == mat[x - 1][y - 1][b+1]):
-                                mat[x][y][b] = mat[x - 1][y][b] + mat[x - 1][y - 1][b]#NOTE: num
-
-                            mat[x][y][b+1] = opt #NOTE: opt
-
-                    else:
-                        opt = max(mat[x][y - 1][b+1], mat[x - 1][y][b+1])
-
-                        if(opt == mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x][y - 1][b] + mat[x - 1][y][b] #NOTE: num
-
-                        elif(opt == mat[x][y - 1][b+1] and opt != mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x][y - 1][b] #NOTE: num
-                            
-                        elif(opt != mat[x][y - 1][b+1] and opt == mat[x - 1][y][b+1]):
-                            mat[x][y][b] = mat[x - 1][y][b] #NOTE: num
-
-                        mat[x][y][b+1] = opt #NOTE: opt
-
-    # NOTE: Change Values before through
-    for x in range(0, through[0]):
-        for y in range(0, cols):
-            for b in range(0, (budget+1)*2, 2):
-                mat[x][y][b] = 0
-                mat[x][y][b+1] = 0
-
-    # NOTE: Change Values in a specific row
-    for y in range(0, through[1]):
-        for b in range(0, (budget+1)*2, 2):
-            mat[through[0]][y][b] = 0
-            mat[through[0]][y][b+1] = 0
-
-    return mat
-
-
-def as_tuple_matrix(table: _Mat[NumOptCell]) -> _Mat[Tuple[int, int]]:
-    return [[(x.count, x.value) for x in row] for row in table]
-
-
-def build_opt_path(dptable: _Mat, diag: bool = False) -> List[_Cell]:
-    # TODO: is it actually required if we also need to compute all optimal paths?
-    assert dptable is not None
-
-    ROWS, COLS = len(dptable), len(dptable[0])
-    FULL_PATH_LEN = ROWS + COLS - 1
-    path = []
-    row, col = 0, 0
-
-    # TODO: simplify edge cases by adding unwalkable border at edges?
-    # if diag:
-    #     while len(path) < FULL_PATH_LEN:
-    #         pass
-
-    # else:
-    #     while len(path) < FULL_PATH_LEN:
-    #         pass
-
-    return path
-
-
-def build_all_opt_path(grid: _Mat[int], dptable_opt_to: _Mat[int], dptable_opt_from: _Mat[int], diag: bool, through) -> _Mat[_Cell]:
-    assert grid is not None
-    assert dptable_opt_to is not None
-    assert dptable_opt_from is not None
-    assert shape(grid) == shape(dptable_opt_to)
-    assert shape(grid) == shape(dptable_opt_from)
-
-    rows, cols = shape(grid)
-    rows -= 1
-    cols -= 1
+def dp_num_opt_from(
+        grid: np.ndarray, cell: _Cell, dptable: np.ndarray, budget: int, diag: bool
+) -> np.ndarray:
+    # flip both the field and the reference cell
+    grid = np.flip(grid)
+    assert dptable.shape == (budget + 1, *grid.shape),\
+        "The expected dptable format is [budget][row][col]"
+    dptable = np.flip(dptable, (1, 2))
+    # cells are zero-indexed, so we need to offset the coordinates
+    cell = (grid.shape[0] - cell[0] - 1, grid.shape[1] - cell[1] - 1)
+    result = dp_num_opt_to(grid, cell, dptable, budget, diag)
+    # also flip the result back, but only on the grid axis
+    assert result.shape == (budget + 1, *grid.shape),\
+        "The expected dptable format is [budget][row][col]"
+    return np.flip(result, (1, 2))
+
+
+def opt_paths_beg_to_mid(
+        p: Instance, opt_beg2any: np.ndarray, cost: int
+) -> list[_Path]:
+    assert cost >= 0
     paths = []
 
-    def _build_exclude_diag(path: List[_Cell]):
+    def build(path: list[_Cell], c: int):
+        x, y = path[-1]
 
-        #NOTE: I save the coordinates from where to start
-        row = path[0][0]
-        col = path[0][1]
+        # check if we have reached the end
+        if (x, y) == p.beg:
+            # NOTE: the build process is reversed, so flip the path order
+            path.reverse()
+            paths.append(path)
+            return
 
-        #Note: Calculate the path for matrix "dptable_opt_from"
-        while not (row == through[0] and col == through[1]):
-            if col - 1 >= 0:
-                left = dptable_opt_from[row][col-1][0]
-            else:
-                left = -1
+        # remove the cost of the current cell
+        opt = opt_beg2any[c][x][y]
+        c1 = c - cellcost(p.grid[x][y])
+        assert c1 >= 0, "Underflowed minimum cost"
 
-            if row - 1 >= 0:
-                up = dptable_opt_from[row-1][col][0]
-            else:
-                up = -1
-            
-            if (left > up):
-                path.append((row, col-1))
-                col -= 1
-            else:
-                path.append((row-1, col))
-                row -= 1
+        # if the result path is optimal, keep building from the cell in the previuos row
+        if x > p.beg[0]:
+            if opt_beg2any[c1][x - 1][y] + cellgain(p.grid[x - 1][y]) == opt:
+                build(path + [(x - 1, y)], c1)
 
-        #Note: Calculate the path for matrix "dptable_opt_to"
-        while not (row == 0 and col == 0):
-            if col - 1 >= 0:
-                left = dptable_opt_to[row][col-1][0]
-            else:
-                left = -1
+        # if the result path is optimal, keep building from the cell in the previuos column
+        if y > p.beg[1]:
+            if opt_beg2any[c1][x][y - 1] + cellgain(p.grid[x][y - 1]) == opt:
+                build(path + [(x, y - 1)], c1)
 
-            if row - 1 >= 0:
-                up = dptable_opt_to[row-1][col][0]
-            else:
-                up = -1
-            
-            if (left > up):
-                path.append((row, col-1))
-                col -= 1
-            else:
-                path.append((row-1, col))
-                row -= 1
+        # if the result path is optimal, keep building from the cell in the previuos diagonal
+        if p.diag and x > p.beg[0] and y > p.beg[1]:
+            if opt_beg2any[c1][x - 1][y - 1] + cellgain(p.grid[x - 1][y - 1]) == opt:
+                build(path + [(x - 1, y - 1)], c1)
 
-        #Note: I reverse the matrix and return it
-        path.reverse()
-        paths.extend(path)
+    # NOTE: for this case the build process is reversed,
+    # starting from the <mid> cell and moving towards the <beg> cell
+    build([p.mid], cost)
+    return paths
 
-        #if (cell := path[-1]) != (rows - 1, cols - 1):  # not last cell
-        #    row, col = cell
-        #    value_on_opt_path = dptable[row][col] - grid[row][col]
-        #    if row < (rows - 1):  # check the cell in the next row
-        #        if dptable[row + 1][col] == value_on_opt_path:
-        #            _build_exclude_diag(path + [(row + 1, col)])
 
-        #    if col < (cols - 1):  # check the cell in the next column
-        #        if dptable[row][col + 1] == value_on_opt_path:
-        #            _build_exclude_diag(path + [(row, col + 1)])
-        #else:
-        #    paths.append(path)
+def opt_paths_mid_to_end(
+        p: Instance, opt_any2end: np.ndarray, cost: int
+) -> list[_Path]:
+    assert cost >= 0
+    paths = []
 
-    def _build_include_diag(path: List[_Cell]):
-        
-        #NOTE: I save the coordinates from where to start
-        row = path[0][0]
-        col = path[0][1]
+    def build(path: list[_Cell], c: int):
+        x, y = path[-1]
 
-        #Note: Calculate the path for matrix "dptable_opt_from"
-        while not (row == through[0] and col == through[1]):
-            if col - 1 >= 0:
-                left = dptable_opt_from[row][col-1][0]
-            else:
-                left = -1
+        # check if we have reached the end
+        if (x, y) == p.end:
+            # NOTE: the build process is reversed, so flip the path order
+            paths.append(path)
+            return
 
-            if col - 1 >= 0 and row - 1 >= 0:
-                obl = dptable_opt_from[row-1][col-1][0]
-            else:
-                obl = -1                
+        # remove the cost of the current cell
+        opt = opt_any2end[c][x][y]
+        c1 = c + cellcost(p.grid[x][y])
+        assert c1 <= cost, "Overflowed maximum cost"
 
-            if row - 1 >= 0:
-                up = dptable_opt_from[row-1][col][0]
-            else:
-                up = -1
-            
-            if (left > up and left > obl):
-                path.append((row, col-1))
-                col -= 1
-            elif (obl > up and obl > left):
-                path.append((row-1, col-1))
-                row -= 1
-                col -= 1
-            else:
-                path.append((row-1, col))
-                row -= 1
+        # if the result path is optimal, keep building from the cell in the previuos row
+        if x < p.end[0]:
+            if opt_any2end[c1][x + 1][y] + cellgain(p.grid[x + 1][y]) == opt:
+                build(path + [(x + 1, y)], c1)
 
-        #Note: Calculate the path for matrix "dptable_opt_to"
-        while not (row == 0 and col == 0):
-            if col - 1 >= 0:
-                left = dptable_opt_to[row][col-1][0]
-            else:
-                left = -1
+        # if the result path is optimal, keep building from the cell in the previuos column
+        if y < p.end[1]:
+            if opt_any2end[c1][x][y + 1] + cellgain(p.grid[x][y + 1]) == opt:
+                build(path + [(x, y + 1)], c1)
 
-            if col - 1 >= 0 and row - 1 >= 0:
-                obl = dptable_opt_from[row-1][col-1][0]
-            else:
-                obl = -1 
+        # if the result path is optimal, keep building from the cell in the previuos diagonal
+        if p.diag and x < p.end[0] and y < p.end[1]:
+            if opt_any2end[c1][x + 1][y + 1] + cellgain(p.grid[x + 1][y + 1]) == opt:
+                build(path + [(x + 1, y + 1)], c1)
 
-            if row - 1 >= 0:
-                up = dptable_opt_to[row-1][col][0]
-            else:
-                up = -1
-            
-            if (left > up and left > obl):
-                path.append((row, col-1))
-                col -= 1
-            elif (obl > up and obl > left):
-                path.append((row-1, col-1))
-                row -= 1
-                col -= 1
-            else:
-                path.append((row-1, col))
-                row -= 1
+    build([p.mid], cost)
+    return paths
 
-        #Note: I reverse the matrix and return it
-        path.reverse()
-        paths.extend(path)
 
-        #if (cell := path[-1]) != (rows - 1, cols - 1):  # not last cell
-        #    row, col = cell
-        #    value_on_opt_path = dptable[row][col] - grid[row][col]
-        #    if row < (rows - 1):  # check the cell in the next row
-        #        if dptable[row + 1][col] == value_on_opt_path:
-        #            _build_include_diag(path + [(row + 1, col)])
+def build_opt_paths(
+        p: Instance, opt_beg2any: np.ndarray, opt_any2end: np.ndarray
+) -> list[_Path]:
 
-        #    if col < (cols - 1):  # check the cell in the next column
-        #        if dptable[row][col + 1] == value_on_opt_path:
-        #            _build_include_diag(path + [(row, col + 1)])
+    # list all cost combinations for the subpaths with associated complete path value
+    midx, midy = p.mid
+    solutions = list[tuple[int, int, int]]()
+    for c0, c1 in zip(range(p.cost + 1), reversed(range(p.cost + 1))):
+        value = opt_beg2any[c0][midx][midy] + opt_any2end[c1][midx][midy]
+        solutions.append((c0, c1, value))
 
-        #    if row < (rows - 1) and col < (cols - 1):
-        #        if dptable[row + 1][col + 1] == value_on_opt_path:
-        #            _build_include_diag(path + [(row + 1, col + 1)])
-        #else:  # last cell, path is complete
-        #    paths.append(path)
+    assert len(solutions) > 0
 
-    if diag:
-        _build_include_diag([(rows, cols)])
-    else:
-        _build_exclude_diag([(rows, cols)])
+    # find all cost combinations for the subpaths that provide a path with the optimal value
+    opt = max(map(lambda x: x[-1], solutions))
+    solutions = [(c0, c1) for c0, c1, value in solutions if value == opt]
+    assert len(solutions) > 0
+
+    # find all paths that produce the optimal value as sum
+    paths = list[_Path]()
+    for c0, c1 in solutions:
+        paths_beg_to_mid = opt_paths_beg_to_mid(p, opt_beg2any=opt_beg2any, cost=c0)
+        paths_mid_to_end = opt_paths_mid_to_end(p, opt_any2end=opt_any2end, cost=c1)
+        # merge all possible subpaths combinations
+        for p0 in paths_beg_to_mid:
+            for p1 in paths_mid_to_end:
+                # the checkpoint cell <mid> appears in both paths,
+                # so we remove it from the end of the beg->mid path
+                paths.append(p0[:-1] + p1)
 
     return paths
 
@@ -1084,77 +566,137 @@ def conceal(dptable: _Mat):
         dptable[row][col] = -1
 
 
+def query_num(num_beg2any: np.ndarray, num_any2end: np.ndarray, through: _Cell):
+    """
+    Compute metric <num> from paths.
+
+    Args:
+        num_beg2any: dptable from the top-left cell to a generic cell
+        num_any2end: dptable from a generic cell to the bottom-right cell
+        through: checkpoint cell
+
+    Return:
+        num of paths that start from A, go through B and end at C
+    """
+    assert num_beg2any.shape == num_any2end.shape
+    x, y = through
+    budget = num_beg2any.shape[0]  # dptable matrix is [budget][row][col]
+
+    solutions = list[int]()
+    for b0, b1 in zip(range(budget), reversed(range(budget))):
+        num_A_to_B = num_beg2any[b0][x][y]
+        num_B_to_C = num_any2end[b1][x][y]
+        solutions.append(num_A_to_B * num_B_to_C)
+
+    # pick all the solutions
+    return sum(solutions)
+
+
+def query_opt(opt_beg2any: np.ndarray, opt_any2end: np.ndarray, through: _Cell):
+    assert opt_beg2any.shape == opt_any2end.shape
+    x, y = through
+    budget = opt_beg2any.shape[0]  # dptable matrix is [budget][row][col]
+
+    solutions = list[int]()
+    for b0, b1 in zip(range(budget), reversed(range(budget))):
+        opt_A_to_B = opt_beg2any[b0][x][y]
+        opt_B_to_C = opt_any2end[b1][x][y]
+        solutions.append(opt_A_to_B + opt_B_to_C)
+
+    # pick the best solution
+    return max(solutions)
+
+
+def query_num_opt(
+        opt_beg2any: np.ndarray,
+        opt_any2end: np.ndarray,
+        num_opt_beg2any: np.ndarray,
+        num_opt_any2end: np.ndarray,
+        through: _Cell):
+
+    assert opt_beg2any.shape == opt_any2end.shape
+    assert num_opt_beg2any.shape == num_opt_any2end.shape
+    x, y = through
+    budget = num_opt_beg2any.shape[0]  # dptable matrix is [budget][row][col]
+
+    solutions = list[tuple[int, int]]()
+    for b0, b1 in zip(range(budget), reversed(range(budget))):
+        opt_A_to_B = opt_beg2any[b0][x][y]
+        num_opt_A_to_B = num_opt_beg2any[b0][x][y]
+
+        opt_B_to_C = opt_any2end[b1][x][y]
+        num_opt_B_to_C = num_opt_any2end[b1][x][y]
+
+        num = num_opt_A_to_B * num_opt_B_to_C
+        opt = opt_A_to_B + opt_B_to_C
+        solutions.append((num, opt))
+
+    # pick all solutions that provide the optimal total path value
+    opt_total_val = max(map(lambda x: x[1], solutions))
+    opt_solutions = [x[0] for x in solutions if x[1] == opt_total_val]
+    return sum(opt_solutions)
+
+
 def solver(input_to_oracle):
     assert input_to_oracle is not None
-    # _LOGGER.debug("input = %s", input_to_oracle)
+
     instance: Final[dict] = input_to_oracle["input_data_assigned"]
-    print(input_to_oracle)
 
     # extract and parse inputs
-    grid: Final = instance["grid"]
+    grid: Final = np.array(instance["grid"])
     diag: Final = instance["diag"]
     budget: Final = instance["budget"]
-    source: Final = parse_cell(instance["cell_from"])
-    target: Final = parse_cell(instance["cell_to"])
-    through: Final = parse_cell(instance["cell_through"])
+    beg: Final = parse_cell(instance["cell_from"])
+    end: Final = parse_cell(instance["cell_to"])
+    mid: Final = parse_cell(instance["cell_through"])
 
-    print("\nFrom:", source, "Through:", through, "To:", target)
-    print("Diagonal movement:", diag)
+    expected_dptable_shape = (budget + 1, *grid.shape)
 
-    # top-left subgrid, bottom-right subgrid
-    # subtables = [[f(g, diag=diag) for g in splitgrids(grid)] for f in [
-    #     dptable_num_to,
-    #     dptable_num_from,
-    #     dptable_opt_to,
-    #     dptable_opt_from,
-    #     dptable_num_opt_to,
-    #     dptable_num_opt_from]]
+    DPtable_num_to = dp_num_to(
+        grid, cell=beg, budget=budget, diag=diag)
+    assert DPtable_num_to.shape == expected_dptable_shape
+    DPtable_num_from = dp_num_from(
+        grid, cell=end, budget=budget, diag=diag)
+    assert DPtable_num_to.shape == expected_dptable_shape
 
-    # (DPtable_num_to, DPtable_num_from,
-    #  DPtable_opt_to, DPtable_opt_from,
-    #  DPtable_num_opt_to, DPtable_num_opt_from) = [fusegrids(*t) for t in subtables]
+    DPtable_opt_to = dp_opt_to(
+        grid, cell=beg, budget=budget, diag=diag)
+    assert DPtable_opt_to.shape == expected_dptable_shape
+    DPtable_opt_from = dp_opt_from(
+        grid, cell=end, budget=budget, diag=diag)
+    assert DPtable_opt_from.shape == expected_dptable_shape
 
-    print("\nProblem", *grid, sep="\n")
+    DPtable_num_opt_to = dp_num_opt_to(
+        grid, beg, DPtable_opt_to, budget, diag)
+    assert DPtable_num_opt_to.shape == expected_dptable_shape
+    DPtable_num_opt_from = dp_num_opt_from(
+        grid, end, DPtable_opt_from, budget, diag)
+    assert DPtable_num_opt_from.shape == expected_dptable_shape
 
-    ##
-    # NOTE: DPtable_num
-    ##
-    DPtable_num_to = dptable_num_to(grid, budget, diag, through)
-    print("\nDPtable_num_to", *DPtable_num_to, sep="\n")
-    DPtable_num_from = dptable_num_from(grid, budget, diag, through)
-    print("\nDPtable_num_from", *DPtable_num_from, sep="\n")
-    
-    ##
-    # NOTE: DPtable_opt
-    ##
-    DPtable_opt_to = dptable_opt_to(grid, budget, diag, through)
-    print("\nDPtable_opt_to", *DPtable_opt_to, sep="\n")
-    DPtable_opt_from = dptable_opt_from(grid, budget, diag, through)
-    print("\nDPtable_opt_from", *DPtable_opt_from, sep="\n")
+    num_paths = query_num(DPtable_num_to, DPtable_num_from, mid)
+    opt_val = query_opt(DPtable_opt_to, DPtable_opt_from, mid)
+    num_opt_paths = query_num_opt(DPtable_opt_to, DPtable_opt_from,
+                                  DPtable_num_opt_to, DPtable_num_opt_from, mid)
 
-    ##
-    # NOTE: DPtable_num_opt
-    ##
-    DPtable_num_opt_to = dptable_num_opt_to(grid, budget, diag, through)
-    print("\nDPtable_num_opt_to", *DPtable_num_opt_to, sep="\n")
-    DPtable_num_opt_from = dptable_num_opt_from(grid, budget, diag, through)
-    print("\nDPtable_num_opt_from", *DPtable_num_opt_from, sep="\n")
-
-    # first move from <source> cell to <through> cell
-    # then move from <through> cell to <target> cell
-    # TODO: adapt solutions to different 'from' and 'to' cells
-    x, y = through
-    num_paths = sum([DPtable_num_to[x][y][b] * DPtable_num_from[x][y][b]
-                    for b in range(budget + 1)])
-    opt_val = sum([DPtable_opt_to[x][y][b] * DPtable_opt_from[x][y][b]
-                    for b in range(budget + 1)])
-    num_opt_paths = sum([DPtable_num_opt_to[x][y][b] * DPtable_num_opt_from[x][y][b]
-                         for b in range(budget + 1)])
-
-    list_opt_paths = build_all_opt_path(grid, DPtable_opt_to, DPtable_opt_from, diag, through)
-    print("\nList_opt_paths", list_opt_paths, sep="\n")
+    problem = Instance(
+        grid=grid,
+        cost=budget,
+        diag=diag,
+        beg=beg,
+        mid=mid,
+        end=end,
+    )
+    list_opt_paths = build_opt_paths(problem, DPtable_opt_to, DPtable_opt_from)
 
     opt_path = list_opt_paths[0] if len(list_opt_paths) > 0 else []
+
+    # convert dptable to standard python (nested) lists
+    DPtable_num_to = DPtable_num_to.tolist()
+    DPtable_num_from = DPtable_num_from.tolist()
+    DPtable_opt_to = DPtable_opt_to.tolist()
+    DPtable_opt_from = DPtable_opt_from.tolist()
+    DPtable_num_opt_to = DPtable_num_opt_to.tolist()
+    DPtable_num_opt_from = DPtable_num_opt_from.tolist()
 
     oracle_answers = {}
     for std_name, ad_hoc_name in input_to_oracle["request"].items():
