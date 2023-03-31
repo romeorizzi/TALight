@@ -1,1 +1,1 @@
-../bagno/tc.py
+../../common/tc.py

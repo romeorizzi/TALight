@@ -12,15 +12,6 @@ Dario si chiede quale sia quindi il numero massimo di Chicken McNuggets che non
 è possibile ordinare dato un insieme $S$ di $n$ dimensioni di scatole
 disponibili. Aiuta Dario a trovare la risposta!
 
-## Assunzioni
-
-Sono presenti le seguenti `size`, dove il default è `big`:
-
-* `small`: $n \leq 5$, $\max(S) \leq 50$
-* `big`: $n \leq 250$, $\max(S) \leq 1000$
-
-Il tempo limite per testcase è di $1$ secondo.
-
 ## Input
 La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
 istanze del problema. Ogni istanza è composta nel seguente modo: nella prima
@@ -47,3 +38,12 @@ di Chicken McNuggets non ordinabili. È garantito essere un numero finito.
 11
 1679
 ```
+
+## Assunzioni
+
+Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `small`:
+
+* `small`: $n \leq 5$, $\max(S) \leq 50$
+* `big`: $n \leq 250$, $\max(S) \leq 1000$
+
+Il tempo limite per testcase è di $1$ secondo.
