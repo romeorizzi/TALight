@@ -1,1 +1,1 @@
-/home/andrea/Scrivania/UNIVR/Turing_Machine/TALight/TAL_lib/python/turing_machine_lib.py
+/Users/andrearossetti/TALight/TAL_lib/python/turing_machine_lib.py
