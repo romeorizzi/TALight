@@ -58,8 +58,9 @@ In ogni testase, l'unica riga dell'output deve contenere la piastrellatura $i$ d
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include tutti i testcase:
 
-* `small`: $n \leq 10$
-* `big`: $n \leq 1000$
+* `small`: $n < 10$
+* `medium`: $n < 20$
+* `big`: $n < 1000$
 
 Il tempo limite per testcase è di $1$ secondo.
 

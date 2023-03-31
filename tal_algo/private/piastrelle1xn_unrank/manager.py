@@ -8,11 +8,11 @@ from time import time
 from tc import TC
 from sol import unrank
 
-DATA = ((20, (0, 10)), (80, (10**2, 10**3)))
+DATA = ((10, (0, 10)), (10, (0, 10)), (80, (10**2, 10**3)))
 
 TL = 1
 
-MAPPER = {"small": 1, "big": 2}
+MAPPER = {"small": 1, "medium": 1, "big": 2}
 
 
 def mexp(b, e):

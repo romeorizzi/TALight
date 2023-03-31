@@ -42,9 +42,9 @@ per piastrellare il bagno di quel testcase in modulo $10^9+7$.
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `huge` che include tutti i testcase:
 
-* `small`: $n \leq 10$
-* `big`: $n \leq 10^6$
-* `huge`: $n \leq 10^{18}$
+* `small`: $n < 10$
+* `big`: $n < 10^6$
+* `huge`: $n < 10^{18}$
 
 Il tempo limite per testcase è di $1$ secondo.
 

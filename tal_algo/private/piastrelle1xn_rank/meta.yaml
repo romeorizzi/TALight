@@ -4,5 +4,5 @@ services:
         evaluator: [python, manager.py]
         args:
             size:
-                regex: ^(small|big)$
+                regex: ^(small|medium|big)$
                 default: big

@@ -10,12 +10,11 @@ from functools import lru_cache
 from sys import setrecursionlimit
 setrecursionlimit(10000)
 
-#DATA = ((20, (0, 10)), (80, (10**2, 10**3)))
-DATA = ((20, (0, 10)), (80, (10, 20)))
+DATA = ((10, (0, 10)), (10, (0, 10)), (80, (10**2, 10**3)))
 
 TL = 1
 
-MAPPER = {"small": 1, "big": 2}
+MAPPER = {"small": 1, "medium": 1, "big": 2}
 
 
 @lru_cache(maxsize=None)
