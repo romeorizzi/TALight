@@ -49,7 +49,11 @@ def gen_tc(n, k):
 
 
 def check_tc(v):
-    return sol(v) == int(input())
+    risp = int(input())
+    corr_answ = sol(v)
+    if risp != corr_answ:
+        return False, f"On input:\n{v}\nyou answered:\n{risp}\nwhile the correct answer was:\n{corr_answ}"
+    return True
 
 
 if __name__ == "__main__":

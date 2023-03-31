@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-
-
+from sys import stderr
+from random import randrange
 import numpy as np
 
 
@@ -24,4 +24,9 @@ if __name__ == "__main__":
     T = int(input())
     for t in range(T):
         n = int(input())
-        print(sol(n))
+        print(f"{n=}",file=stderr)
+        dice = randrange(0,6)
+        if dice == 0:
+            print(sol(n)+1)
+        else:
+            print(sol(n))
