@@ -1,1 +1,1 @@
-/Users/andrearossetti/TALight/TAL_lib/python/turing_machine_lib.py
+../../../../../TAL_lib/python/turing_machine_lib.py
