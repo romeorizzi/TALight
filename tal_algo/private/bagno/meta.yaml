@@ -1,8 +1,0 @@
-public_folder: public
-services:
-    solve:
-        evaluator: [python, manager.py]
-        args:
-            size:
-                regex: ^(small|big|huge)$
-                default: big
