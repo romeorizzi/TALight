@@ -183,8 +183,8 @@ class DPTableGenerators(unittest.TestCase):
 
 
 class PathGenerators(unittest.TestCase):
-    def test_list_opt_paths(self):
-
+    
+    def test_yield_opt_paths(self):
         testcases = [
             {
                 "instance": Instance(
@@ -249,8 +249,8 @@ class PathGenerators(unittest.TestCase):
                                     budget=i.cost, diag=i.diag)
                 any2end = dp_opt_from(i.grid, cell=i.end,
                                       budget=i.cost, diag=i.diag)
-                paths = build_opt_paths(
-                    i, opt_beg2any=beg2any, opt_any2end=any2end)
+                paths = list(yield_opt_paths(
+                    i, opt_beg2any=beg2any, opt_any2end=any2end))
                 self.assertEqual(sorted(testcase["solution"]), sorted(paths))
 
 

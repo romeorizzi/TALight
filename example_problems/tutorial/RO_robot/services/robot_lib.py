@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from typing import Dict, Final, List, Tuple, TypeVar
+import itertools
 
 import numpy as np
 
@@ -80,6 +81,7 @@ _T = TypeVar("_T")
 _Cell = Tuple[int, int]
 _Path = list[_Cell]
 _Mat = List[List[_T]]
+
 
 @dataclass
 class Instance:
@@ -523,9 +525,8 @@ def opt_paths_mid_to_end(
     return paths
 
 
-def build_opt_paths(
-        p: Instance, opt_beg2any: np.ndarray, opt_any2end: np.ndarray
-) -> list[_Path]:
+def yield_opt_paths(p: Instance, opt_beg2any: np.ndarray, opt_any2end: np.ndarray):
+    assert opt_beg2any.shape == opt_any2end.shape
 
     # list all cost combinations for the subpaths with associated complete path value
     midx, midy = p.mid
@@ -542,18 +543,17 @@ def build_opt_paths(
     assert len(solutions) > 0
 
     # find all paths that produce the optimal value as sum
-    paths = list[_Path]()
     for c0, c1 in solutions:
-        paths_beg_to_mid = opt_paths_beg_to_mid(p, opt_beg2any=opt_beg2any, cost=c0)
-        paths_mid_to_end = opt_paths_mid_to_end(p, opt_any2end=opt_any2end, cost=c1)
+        paths_beg_to_mid = opt_paths_beg_to_mid(
+            p, opt_beg2any=opt_beg2any, cost=c0)
+        paths_mid_to_end = opt_paths_mid_to_end(
+            p, opt_any2end=opt_any2end, cost=c1)
         # merge all possible subpaths combinations
         for p0 in paths_beg_to_mid:
             for p1 in paths_mid_to_end:
                 # the checkpoint cell <mid> appears in both paths,
                 # so we remove it from the end of the beg->mid path
-                paths.append(p0[:-1] + p1)
-
-    return paths
+                yield p0[:-1] + p1
 
 
 def conceal(dptable: _Mat):
@@ -649,6 +649,7 @@ def solver(input_to_oracle):
     beg: Final = parse_cell(instance["cell_from"])
     end: Final = parse_cell(instance["cell_to"])
     mid: Final = parse_cell(instance["cell_through"])
+    CAP_FOR_NUM_OPT_SOLS: Final[int] = instance["CAP_FOR_NUM_OPT_SOLS"]
 
     expected_dptable_shape = (budget + 1, *grid.shape)
 
@@ -686,8 +687,10 @@ def solver(input_to_oracle):
         mid=mid,
         end=end,
     )
-    list_opt_paths = build_opt_paths(problem, DPtable_opt_to, DPtable_opt_from)
 
+    list_opt_paths = list(itertools.islice(
+        yield_opt_paths(problem, DPtable_opt_to, DPtable_opt_from),
+        stop=CAP_FOR_NUM_OPT_SOLS))
     opt_path = list_opt_paths[0] if len(list_opt_paths) > 0 else []
 
     # convert dptable to standard python (nested) lists
@@ -734,13 +737,13 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_feasibility(SEF):
             return False
 
-        if 'opt_path' == self.goals:
+        if 'opt_path' in self.goals:
             path = self.goals['opt_path'].answ
             print(path)
             if not check_path_feasible(path, diag=self.I.diag):
                 return SEF.feasibility_NO('opt_path', f"Path {path} cannot be followed by valid moves")
 
-        if 'list_opt_path' == self.goals:
+        if 'list_opt_path' in self.goals:
             g = self.goals['list_opt_path']
             for path in g.answ:
                 if not check_path_feasible(path, diag=self.I.diag):
@@ -763,5 +766,14 @@ class verify_submission_problem_specific(verify_submission_gen):
             return False
 
         # TODO: consistency checks
+        if 'opt_val' in self.goals:
+            opt_val = self.goals['opt_val']
+
+            if 'opt_path' in self.goals:
+                opt_path = [parse_cell(x) for x in self.goals['opt_path']]
+
+            if 'list_opt_paths' in self.goals:
+                list_opt_paths = [[parse_cell(x) for x in p]
+                                  for p in self.goals['list_opt_paths']]
 
         return True
