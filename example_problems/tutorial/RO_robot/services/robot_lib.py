@@ -17,6 +17,7 @@ instance_objects_spec = [
     ("cell_from", "list_of_str"),
     ("cell_to", "list_of_str"),
     ("cell_through", "list_of_str"),
+    ("CAP_FOR_NUM_OPT_SOLS", int),
 ]
 additional_infos_spec = [
     ("partialDP_to", "matrix_of_int"),
@@ -72,8 +73,8 @@ answer_objects_implemented = [
 ]
 
 limits = {
-    'CAP_FOR_NUM_SOLS': 100,
-    'CAP_FOR_NUM_OPT_SOLS': 100
+    'CAP_FOR_NUM_SOLS': 10,
+    'CAP_FOR_NUM_OPT_SOLS': 10
 }
 
 _T = TypeVar("_T")
@@ -649,7 +650,8 @@ def solver(input_to_oracle):
     beg: Final = parse_cell(instance["cell_from"])
     end: Final = parse_cell(instance["cell_to"])
     mid: Final = parse_cell(instance["cell_through"])
-    CAP_FOR_NUM_OPT_SOLS: Final[int] = instance["CAP_FOR_NUM_OPT_SOLS"]
+    CAP_FOR_NUM_OPT_SOLS: Final[int] = min(
+        instance["CAP_FOR_NUM_OPT_SOLS"], limits["CAP_FOR_NUM_OPT_SOLS"])
 
     expected_dptable_shape = (budget + 1, *grid.shape)
 
@@ -688,9 +690,10 @@ def solver(input_to_oracle):
         end=end,
     )
 
+    # extract only the required limited number of solutions
     list_opt_paths = list(itertools.islice(
         yield_opt_paths(problem, DPtable_opt_to, DPtable_opt_from),
-        stop=CAP_FOR_NUM_OPT_SOLS))
+        CAP_FOR_NUM_OPT_SOLS))
     opt_path = list_opt_paths[0] if len(list_opt_paths) > 0 else []
 
     # convert dptable to standard python (nested) lists

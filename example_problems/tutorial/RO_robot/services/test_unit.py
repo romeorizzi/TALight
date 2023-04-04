@@ -183,7 +183,7 @@ class DPTableGenerators(unittest.TestCase):
 
 
 class PathGenerators(unittest.TestCase):
-    
+
     def test_yield_opt_paths(self):
         testcases = [
             {
@@ -218,7 +218,7 @@ class PathGenerators(unittest.TestCase):
                                    [1, 0,  1],
                                    [-1, 1,  1]]),
                     cost=0, diag=False,
-                    beg=(0, 0), mid=(0, 0), end=(2, 2),
+                    beg=(0, 0), mid=(1, 1), end=(2, 2),
                 ),
                 "solution": [
                     [(0, 0), (0, 1), (1, 1), (1, 2), (2, 2)],
