@@ -14,7 +14,7 @@ DATA = ((10, (0, 10)), (10, (0, 10)), (80, (10**2, 10**3)))
 
 TL = 1
 
-MAPPER = {"small": 1, "medium": 1, "big": 2}
+MAPPER = {"small": 1, "medium": 2, "big": 3}
 
 
 @lru_cache(maxsize=None)
