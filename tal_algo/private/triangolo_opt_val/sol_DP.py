@@ -8,13 +8,11 @@ def display_triangle(Tr,out=stderr):
         print(" ".join(map(str,Tr[i])), file=out)
 
 def max_val(Tr):
-    display_triangle(Tr)
     n = len(Tr)
     if n > 1:
         for r in reversed(range(n-1)):
              for c in range(r+1):
                   Tr[r][c] += max(Tr[r+1][c],Tr[r+1][c+1])
-    display_triangle(Tr)
     return Tr[0][0]
 
 if __name__ == "__main__":
@@ -24,5 +22,5 @@ if __name__ == "__main__":
         Tr = []
         for i in range(n):
             Tr.append(list(map(int,input().strip().split())))
-        #display_triangle(Tr)
+        #display_triangle(Tr,stderr)
         print(max_val(Tr))

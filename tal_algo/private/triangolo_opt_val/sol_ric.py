@@ -18,7 +18,6 @@ def max_val_ric(r,c):
 
 
 def max_val(Tr):
-    #display_triangle(Tr)
     n = len(Tr)
     return max_val_ric(0,0)
 
@@ -29,5 +28,5 @@ if __name__ == "__main__":
         Tr = []
         for i in range(n):
             Tr.append(list(map(int,input().strip().split())))
-        #display_triangle(Tr)
+        #display_triangle(Tr,stderr)
         print(max_val(Tr))

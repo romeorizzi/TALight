@@ -11,7 +11,7 @@ def max_val(Tr):
     """L'idea è di considerare una famiglia di sottoproblemi S, uno per ogni elemento del triangolo in input fornito come una coppia (riga,colonna).
        Per ogni r in [0,n) e c in [0,r] vorremmo che:
           S[r][c] = il massimo valore di un cammino a scendere dal vertice (0,0) del triangolo fino all'elemento (r,c)."""
-    #display_triangle(Tr)
+    #display_triangle(Tr,stderr)
     n = len(Tr)
     S = []
     #print(f"{n=}",file=stderr)
@@ -33,5 +33,5 @@ if __name__ == "__main__":
         Tr = []
         for i in range(n):
             Tr.append(list(map(int,input().strip().split())))
-        #display_triangle(Tr)
+        #display_triangle(Tr,stderr)
         print(max_val(Tr))

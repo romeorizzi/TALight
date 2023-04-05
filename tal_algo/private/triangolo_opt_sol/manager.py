@@ -74,12 +74,17 @@ def eval_sol(Tr,sol):
     return True, val_sol
 
 def check_tc(Tr):
-    risp = int(input())
-    corr_answ = max_val(Tr)
-    if risp > corr_answ:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou answered:\n{risp}\nwhile the correct answer was:\n{corr_answ}"
-    if risp < corr_answ:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou answered:\n{risp}\nwhile the correct answer is:\n{corr_answ}\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
+    risp_val = int(input())
+    risp_sol = input().strip()
+    ok,val_of_risp_sol = eval_sol(Tr,risp_sol)
+    if not ok:
+        return False,val_of_risp_sol
+    if val_of_risp_sol != risp_val:
+        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, you returned a feasible solution of value {val_of_risp_sol}, namely:\n{risp_sol}"
+    opt_val = max_val(Tr)
+    assert risp_val <= opt_val
+    if risp_val < opt_val:
+        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {corr_answ}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
     return True
 
 
