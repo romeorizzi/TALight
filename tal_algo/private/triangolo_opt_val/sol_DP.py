@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+from sys import stderr
 from functools import lru_cache
 
-def display_triangle(Tr):
+def display_triangle(Tr,out=stderr):
     n = len(Tr)
     for i in range(n):
-        print(" ".join(map(str,Tr[i])))
+        print(" ".join(map(str,Tr[i])), file=out)
 
 def max_val(Tr):
     display_triangle(Tr)
@@ -19,7 +20,7 @@ def max_val(Tr):
 if __name__ == "__main__":
     T = int(input())
     for t in range(T):
-        n = int(input().strip())
+        n = int(input())
         Tr = []
         for i in range(n):
             Tr.append(list(map(int,input().strip().split())))

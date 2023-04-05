@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from sys import stderr,stdout
 from os import environ
 from random import randrange, randint
 
@@ -21,27 +22,27 @@ def triangle_as_str(Tr):
         risp += "\n" + " ".join(map(str,Tr[i]))
     return risp
 
-def display_triangle(Tr):
-    print(triangle_as_str(Tr))
+def display_triangle(Tr,out=stderr):
+    print(triangle_as_str(Tr), file=out)
         
 def gen_tc(min_n,max_n):
     n = randint(min_n, max_n)
     Tr = [[randint(0, 9) for j in range(i+1)] for i in range(n)]
     print(n)
-    display_triangle(Tr)
+    display_triangle(Tr,stdout)
     return (Tr,)
 
 def max_val(Tr, r=0,c=0):
-    #display_triangle(Tr)
+    #display_triangle(Tr,stderr)
     
     @lru_cache(maxsize=None)
     def max_val_ric_memo(r,c):
         assert 0 <= c <= r < n
         if r == n-1:
-            #print(f"called with {r=},{c=} returns {Tr[r][c]=}")
+            #print(f"called with {r=},{c=} returns {Tr[r][c]=}", file=out)
             return Tr[r][c]
         risp = Tr[r][c] + max(max_val_ric_memo(r+1,c),max_val_ric_memo(r+1,c+1))
-        #print(f"called with {r=},{c=} returns {risp=}")
+        #print(f"called with {r=},{c=} returns {risp=}", file=out)
         return risp
 
     n = len(Tr)
