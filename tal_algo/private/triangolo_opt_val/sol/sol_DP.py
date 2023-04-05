@@ -9,10 +9,9 @@ def display_triangle(Tr,out=stderr):
 
 def max_val(Tr):
     n = len(Tr)
-    if n > 1:
-        for r in reversed(range(n-1)):
-             for c in range(r+1):
-                  Tr[r][c] += max(Tr[r+1][c],Tr[r+1][c+1])
+    for r in reversed(range(n-1)):
+         for c in range(r+1):
+              Tr[r][c] += max(Tr[r+1][c],Tr[r+1][c+1])
     return Tr[0][0]
 
 if __name__ == "__main__":

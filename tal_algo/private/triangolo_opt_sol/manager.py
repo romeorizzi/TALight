@@ -84,7 +84,7 @@ def check_tc(Tr):
     opt_val = max_val(Tr)
     assert risp_val <= opt_val
     if risp_val < opt_val:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {corr_answ}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
+        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
     return True
 
 
