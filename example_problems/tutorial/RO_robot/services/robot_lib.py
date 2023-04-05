@@ -425,11 +425,8 @@ def dp_num_opt_from(
     return np.flip(result, (1, 2))
 
 
-def opt_paths_beg_to_mid(
-        p: Instance, opt_beg2any: np.ndarray, cost: int
-) -> list[_Path]:
+def yield_opt_paths_beg_to_mid(p: Instance, opt_beg2any: np.ndarray, cost: int):
     assert cost >= 0
-    paths = []
 
     def build(path: list[_Cell], c: int):
         x, y = path[-1]
@@ -438,72 +435,65 @@ def opt_paths_beg_to_mid(
         if (x, y) == p.beg:
             # NOTE: the build process is reversed, so flip the path order
             path.reverse()
-            paths.append(path)
-            return
+            yield path
 
+        # the value of any optimal path that reaches this cell
+        opt = opt_beg2any[c][x][y] - cellgain(p.grid[x][y])
         # remove the cost of the current cell
-        opt = opt_beg2any[c][x][y]
         c1 = c - cellcost(p.grid[x][y])
         assert c1 >= 0, "Underflowed minimum cost"
 
         # if the result path is optimal, keep building from the cell in the previuos row
         if x > p.beg[0]:
-            if opt_beg2any[c1][x - 1][y] + cellgain(p.grid[x - 1][y]) == opt:
-                build(path + [(x - 1, y)], c1)
+            if opt_beg2any[c1][x - 1][y] == opt:
+                yield from build(path + [(x - 1, y)], c1)
 
         # if the result path is optimal, keep building from the cell in the previuos column
         if y > p.beg[1]:
-            if opt_beg2any[c1][x][y - 1] + cellgain(p.grid[x][y - 1]) == opt:
-                build(path + [(x, y - 1)], c1)
+            if opt_beg2any[c1][x][y - 1] == opt:
+                yield from build(path + [(x, y - 1)], c1)
 
         # if the result path is optimal, keep building from the cell in the previuos diagonal
         if p.diag and x > p.beg[0] and y > p.beg[1]:
-            if opt_beg2any[c1][x - 1][y - 1] + cellgain(p.grid[x - 1][y - 1]) == opt:
-                build(path + [(x - 1, y - 1)], c1)
+            if opt_beg2any[c1][x - 1][y - 1] == opt:
+                yield from build(path + [(x - 1, y - 1)], c1)
 
     # NOTE: for this case the build process is reversed,
     # starting from the <mid> cell and moving towards the <beg> cell
-    build([p.mid], cost)
-    return paths
+    yield from build([p.mid], cost)
 
 
-def opt_paths_mid_to_end(
-        p: Instance, opt_any2end: np.ndarray, cost: int
-) -> list[_Path]:
+def yield_opt_paths_mid_to_end(p: Instance, opt_any2end: np.ndarray, cost: int):
     assert cost >= 0
-    paths = []
 
     def build(path: list[_Cell], c: int):
         x, y = path[-1]
 
         # check if we have reached the end
         if (x, y) == p.end:
-            # NOTE: the build process is reversed, so flip the path order
-            paths.append(path)
-            return
+            yield path
 
         # remove the cost of the current cell
-        opt = opt_any2end[c][x][y]
+        opt = opt_any2end[c][x][y] - cellgain(p.grid[x][y])
         c1 = c + cellcost(p.grid[x][y])
         assert c1 <= cost, "Overflowed maximum cost"
 
         # if the result path is optimal, keep building from the cell in the previuos row
         if x < p.end[0]:
-            if opt_any2end[c1][x + 1][y] + cellgain(p.grid[x + 1][y]) == opt:
-                build(path + [(x + 1, y)], c1)
+            if opt_any2end[c1][x + 1][y] == opt:
+                yield from build(path + [(x + 1, y)], c1)
 
         # if the result path is optimal, keep building from the cell in the previuos column
         if y < p.end[1]:
-            if opt_any2end[c1][x][y + 1] + cellgain(p.grid[x][y + 1]) == opt:
-                build(path + [(x, y + 1)], c1)
+            if opt_any2end[c1][x][y + 1] == opt:
+                yield from build(path + [(x, y + 1)], c1)
 
         # if the result path is optimal, keep building from the cell in the previuos diagonal
         if p.diag and x < p.end[0] and y < p.end[1]:
-            if opt_any2end[c1][x + 1][y + 1] + cellgain(p.grid[x + 1][y + 1]) == opt:
-                build(path + [(x + 1, y + 1)], c1)
+            if opt_any2end[c1][x + 1][y + 1] == opt:
+                yield from build(path + [(x + 1, y + 1)], c1)
 
-    build([p.mid], cost)
-    return paths
+    yield from build([p.mid], cost)
 
 
 def yield_opt_paths(p: Instance, opt_beg2any: np.ndarray, opt_any2end: np.ndarray):
@@ -525,16 +515,13 @@ def yield_opt_paths(p: Instance, opt_beg2any: np.ndarray, opt_any2end: np.ndarra
 
     # find all paths that produce the optimal value as sum
     for c0, c1 in solutions:
-        paths_beg_to_mid = opt_paths_beg_to_mid(
-            p, opt_beg2any=opt_beg2any, cost=c0)
-        paths_mid_to_end = opt_paths_mid_to_end(
-            p, opt_any2end=opt_any2end, cost=c1)
+        beg2mid = yield_opt_paths_beg_to_mid(p, opt_beg2any=opt_beg2any, cost=c0)
+        mid2end = yield_opt_paths_mid_to_end(p, opt_any2end=opt_any2end, cost=c1)
         # merge all possible subpaths combinations
-        for p0 in paths_beg_to_mid:
-            for p1 in paths_mid_to_end:
-                # the checkpoint cell <mid> appears in both paths,
-                # so we remove it from the end of the beg->mid path
-                yield p0[:-1] + p1
+        for p0, p1 in itertools.product(beg2mid, mid2end):
+            # the checkpoint cell <mid> appears in both paths,
+            # so we remove it from the end of the beg->mid path
+            yield p0[:-1] + p1
 
 
 def conceal(dptable: _Mat):
