@@ -62,8 +62,9 @@ Spiegazione: nel primo testcase, la soluzione ottima ha valore 7 ed è specifica
 
 ## Assunzioni
 
-Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `small` e `medium`:
+Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
+* `tiny`: $n \leq 6$
 * `small`: $n \leq 10$
 * `medium`: $n \leq 20$
 * `big`: $n \leq 100$
