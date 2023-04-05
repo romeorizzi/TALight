@@ -34,6 +34,6 @@ if __name__ == "__main__":
         #display_triangle(Tr)
         dice = randrange(0,6)
         if dice == 0:
-            print(max_val(Tr)+1)
+            print(max_val(Tr)-1)
         else:
             print(max_val(Tr))
