@@ -11,51 +11,31 @@ from RO_std_eval_lib import std_eval_feedback
 
 
 instance_objects_spec = [
-    ("grid", "matrix_of_int"),
-    ("budget", int),
-    ("diag", bool),
-    ("cell_from", "list_of_str"),
-    ("cell_to", "list_of_str"),
-    ("cell_through", "list_of_str"),
-    ("CAP_FOR_NUM_OPT_SOLS", int),
+    ('grid','matrix_of_int'),
+    ('budget',int),
+    ('diag',bool),
+    ('cell_from','list_of_str'),
+    ('cell_to','list_of_str'),
+    ('cell_through','list_of_str'),
+    ('CAP_FOR_NUM_SOLS',int),
+    ('CAP_FOR_NUM_OPT_SOLS',int),
 ]
 additional_infos_spec = [
-    ("partialDP_to", "matrix_of_int"),
-    ("partialDP_from", "matrix_of_int"),
+    ('partialDP_to', 'matrix_of_int'),
+    ('partialDP_from', 'matrix_of_int'),
 ]
 answer_objects_spec = {
-    # the number of feasible paths
-    "num_paths": "int",
-
-    # the number of feasible paths that collect the maximum total prize
-    "num_opt_paths": "int",
-
-    # the maximum total prize a feasible path can collect
-    "opt_val": "int",
-
-    # a path collecting the maximum possible total prize
-    "opt_path": "list_of_cell",
-
-    # the list of all optimum paths
-    "list_opt_paths": "list_of_list_of_cell",
-
-    # the DP table meant to tell the number of paths from top-left cell to the generic cell
-    "DPtable_num_to": "matrix_of_matrix_of_int",
-
-    # the DP table meant to tell the number of paths from the generic cell to the bottom-right cell"
-    "DPtable_num_from": "matrix_of_matrix_of_int",
-
-    # the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
-    "DPtable_opt_to": "matrix_of_matrix_of_int",
-
-    # the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
-    "DPtable_opt_from": "matrix_of_matrix_of_int",
-
-    # the DP table meant to tell the number of optimal paths from top-left cell to the generic cell"
-    "DPtable_num_opt_to": "matrix_of_matrix_of_int",
-
-    # the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell.
-    "DPtable_num_opt_from": "matrix_of_matrix_of_int",
+    'num_paths':'int', # the number of feasible paths
+    'num_opt_paths':'int', # the number of feasible paths that collect the maximum total prize
+    'opt_val':'int', # the maximum total prize a feasible path can collect
+    'opt_path':'list_of_cell', # a path collecting the maximum possible total prize
+    'list_opt_paths':'list_of_list_of_cell', # the list of all optimum paths
+    'DPtable_num_to':'matrix_of_matrix_of_int', # the DP table meant to tell the number of paths from top-left cell to the generic cell
+    'DPtable_num_from':'matrix_of_matrix_of_int', # the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
+    'DPtable_opt_to':'matrix_of_matrix_of_int',# the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
+    'DPtable_opt_from':'matrix_of_matrix_of_int', # the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
+    'DPtable_num_opt_to':'matrix_of_matrix_of_int', # the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
+    'DPtable_num_opt_from':'matrix_of_matrix_of_int', # the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell
 }
 
 answer_objects_implemented = [
@@ -718,6 +698,10 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_format(SEF):
             return False
 
+        print("---------1--------------")
+        print(self.goals)
+        print("---------2--------------")
+        print(self.long_answer_dict)
         # TODO: format checks
 
         return True
@@ -742,7 +726,6 @@ class verify_submission_problem_specific(verify_submission_gen):
 
         if 'opt_path' in self.goals:
             path = self.goals['opt_path'].answ
-            print(path)
             if not check_path_feasible(path, diag=self.I.diag):
                 return SEF.feasibility_NO('opt_path', f"Path {path} cannot be followed by valid moves")
 
