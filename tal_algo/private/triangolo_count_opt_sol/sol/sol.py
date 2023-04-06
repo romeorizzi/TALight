@@ -35,7 +35,7 @@ def num_opt_sols(Tr, r=0,c=0):
             risp += num_opt_sols_ric_memo(r+1,c)
         if max_val(Tr, r,c) == Tr[r][c] + max_val(Tr, r+1,c+1):
             risp += num_opt_sols_ric_memo(r+1,c+1)
-        return risp % 1000000007
+        return risp
     n = len(Tr)
     return num_opt_sols_ric_memo(r,c)
 
