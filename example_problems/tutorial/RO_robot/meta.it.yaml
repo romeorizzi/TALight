@@ -60,51 +60,47 @@ services:
       # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
       num_paths:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: 18
         explain: "il numero di percorsi ammissibili, come filtrato dai vincoli aggiuntivi (gli argomenti che lo influenzano, dopo 'grid', sono 'diag', 'budget', 'cell_from', 'cell_to', 'cell_through')"
       num_opt_paths:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: 2
         explain: "il numero di percorsi ammissibili che raccolgono il massimo premio totale possibile"
       opt_val:
         regex: ^(0|[1-9][0-9]*)$
-        default: 0
+        default: 10
         explain: "il massimo totale in premi che un percorso fattibile può raccogliere"
       opt_path:
         regex: ^(.*)$
-        default: "[]"
+        default: "[[0, 0], [0, 1], [1, 1], [2, 1], [2, 2], [2, 3], [3, 3], [3, 4]]"
         explain: "un percorso che raccoglie il massimo premio totale possibile"
       list_opt_paths:
         regex: ^(.*)$
-        default: "[]"
+        default: "[[[0, 0], [0, 1], [1, 1], [2, 1], [2, 2], [2, 3], [3, 3], [3, 4]], [[0, 0], [0, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3], [3, 4]], [[0, 0], [0, 1], [1, 1], [2, 1], [2, 2], [2, 3], [3, 3], [3, 4]]]"
         explain: "la lista di tutti i percorsi di interesse ottimi"
       DPtable_num_to:
         regex: ^(.*)$
-        default: "[]"
-        # default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        # example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        default: "[[[1, 1, 1, 1, 1], [0, 1, 0, 0, 1], [0, 1, 1, 1, 2], [0, 0, 1, 2, 4]], [[1, 1, 1, 1, 1], [1, 2, 2, 1, 2], [1, 3, 5, 6, 8], [1, 1, 6, 12, 20]]]"
         explain: "la tabella di programmazione dinamica che dice il numero di percorsi dalla cella in alto a sinista alla generica cella"
       DPtable_num_from:
         regex: ^(.*)$
-        default: "[]"
-        # default: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
-        #example: "[ [0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
+        default: "[[[4, 4, 1, 1, 1], [0, 3, 0, 0, 1], [3, 3, 3, 2, 1], [0, 0, 1, 1, 1]], [[20, 14, 7, 4, 1], [6, 7, 3, 3, 1], [5, 4, 3, 2, 1], [1, 1, 1, 1, 1]]]"
         explain: "la tabella di programmazione dinamica che dice il numero di percorsi dalla cella generica alla cella in basso a destra"
       DPtable_opt_to:
         regex: ^(.*)$
-        default: "[]"
+        default: "[[[0, 1, 1, 4, 4], [-1, 3, -1, -1, 4], [-1, 3, 5, 6, 6], [-1, -1, 5, 7, 8]], [[0, 1, 1, 4, 4], [0, 3, 3, 4, 4], [0, 3, 5, 6, 6], [0, 3, 5, 7, 8]]]"
         explain: "la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella in alto a sinistra alla cella generica"
       DPtable_opt_from:
         regex: ^(.*)$
-        default: "[]"
+        default: "[[[8, 8, 4, 4, 1], [-1, 7, -1, -1, 1], [5, 5, 5, 3, 1], [-1, -1, 2, 2, 1]], [[8, 8, 6, 6, 1], [7, 7, 5, 3, 1], [5, 5, 5, 3, 1], [2, 2, 2, 2, 1]]]"
         explain: "la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella generica alla cella in basso a destra"
       DPtable_num_opt_to:
         regex: ^(.*)$
-        default: "[]"
+        default: "[[[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[1, 1, 1, 1, 1], [0, 1, 0, 1, 2], [0, 1, 1, 1, 1], [0, 1, 1, 1, 1]]]"
         explain: "la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella in alto a sinistra alla cella generica"
       DPtable_num_opt_from:
         regex: ^(.*)$
-        default: "[]"
+        default: "[[[1, 1, 1, 1, 1], [2, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[2, 2, 0, 0, 1], [0, 2, 1, 0, 1], [1, 1, 1, 1, 1], [0, 0, 1, 1, 1]]]"
         explain: "la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella generica alla cella in basso a destra"
       
       # sezione modalità API, sempre per far pervenire le risposte del problem-solver:

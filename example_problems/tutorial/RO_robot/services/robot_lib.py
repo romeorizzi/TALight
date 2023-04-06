@@ -28,14 +28,14 @@ answer_objects_spec = {
     'num_paths':'int', # the number of feasible paths
     'num_opt_paths':'int', # the number of feasible paths that collect the maximum total prize
     'opt_val':'int', # the maximum total prize a feasible path can collect
-    'opt_path':'list_of_cell', # a path collecting the maximum possible total prize
-    'list_opt_paths':'list_of_list_of_cell', # the list of all optimum paths
-    'DPtable_num_to':'matrix_of_matrix_of_int', # the DP table meant to tell the number of paths from top-left cell to the generic cell
-    'DPtable_num_from':'matrix_of_matrix_of_int', # the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
-    'DPtable_opt_to':'matrix_of_matrix_of_int',# the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
-    'DPtable_opt_from':'matrix_of_matrix_of_int', # the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
-    'DPtable_num_opt_to':'matrix_of_matrix_of_int', # the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
-    'DPtable_num_opt_from':'matrix_of_matrix_of_int', # the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell
+    'opt_path':'matrix_of_int', # a path collecting the maximum possible total prize
+    'list_opt_paths':'matrix_of_list_of_int', # the list of all optimum paths
+    'DPtable_num_to':'matrix_of_list_of_int', # the DP table meant to tell the number of paths from top-left cell to the generic cell
+    'DPtable_num_from':'matrix_of_list_of_int', # the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
+    'DPtable_opt_to':'matrix_of_list_of_int',# the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
+    'DPtable_opt_from':'matrix_of_list_of_int', # the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
+    'DPtable_num_opt_to':'matrix_of_list_of_int', # the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
+    'DPtable_num_opt_from':'matrix_of_list_of_int', # the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell
 }
 
 answer_objects_implemented = [
@@ -685,10 +685,9 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_format(SEF):
             return False
 
-        print("---------1--------------")
-        print(self.goals)
-        print("---------2--------------")
+        print("---------Stampo i dati di default---------")
         print(self.long_answer_dict)
+        
         # TODO: format checks
 
         return True
