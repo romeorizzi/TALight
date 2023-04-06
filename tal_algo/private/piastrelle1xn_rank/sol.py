@@ -23,5 +23,5 @@ if __name__ == "__main__":
     T = int(input())
     for t in range(T):
         piast = input().strip()
-        print(f"{piast=}",file=stderr)
+        #print(f"{piast=}",file=stderr)
         print(rank(piast))

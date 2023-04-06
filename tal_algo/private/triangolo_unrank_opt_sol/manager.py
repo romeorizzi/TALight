@@ -25,13 +25,6 @@ def triangle_as_str(Tr):
 def display_triangle(Tr,out=stderr):
     print(triangle_as_str(Tr), file=out)
         
-def gen_tc(min_n,max_n):
-    n = randint(min_n, max_n)
-    Tr = [[randint(0, 9) for j in range(i+1)] for i in range(n)]
-    print(n)
-    display_triangle(Tr,stdout)
-    return (Tr,)
-
 def max_val(Tr, r=0,c=0):
     #display_triangle(Tr,stderr)
     
@@ -73,7 +66,41 @@ def opt_sol(Tr):
             sol += "R"; r += 1; c += 1
     return sol
 
-def eval_sol(Tr,sol):
+def unrank_safe(Tr,rnk):
+    n = len(Tr)
+    sol = ""; c = 0
+    for r in range(n-1):
+        #print(f"{r=}, {c=}, {rnk=}, num_opt_sols(Tr,r,c)",file=stderr)
+        assert 0 <= rnk < num_opt_sols(Tr,r,c)
+        if max_val(Tr, r,c) > Tr[r][c] + max_val(Tr,r+1,c):
+            sol += "R"; c += 1
+        else:
+            assert max_val(Tr, r,c) == Tr[r][c]+max_val(Tr,r+1,c)
+            if rnk < num_opt_sols(Tr,r+1,c):
+                sol += "L"
+            else:
+                rnk -= num_opt_sols(Tr,r+1,c); sol += "R"; c += 1
+    assert rnk == 0
+    return sol
+
+def rank_unsafe(Tr,sol,stated_opt_val):
+    ok,val_of_sol = eval_sol_unsafe(Tr,sol)
+    if not ok:
+        return False,val_of_sol
+    if stated_opt_val != val_of_sol:
+        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {stated_opt_val} is the optimum value of a solution. However, you then provided a solution whose value is {val_of_sol} rather then {stated_opt_val}.\nThe solution you have provided is:\n{sol}"
+    opt_val = max_val(Tr)
+    assert val_of_sol <= opt_val
+    if val_of_sol < opt_val:
+        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {val_of_sol} is the optimal value. However, the optimal value is {opt_val}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
+    n = len(Tr)
+    rnk = 0; c = 0
+    for r in range(n-1):
+        if sol == "R" and max_val(Tr, r,c) == Tr[r][c]+max_val(Tr,r+1,c):
+            rnk += num_opt_sols(Tr,r+1,c); c += 1
+    return True,rnk
+
+def eval_sol_unsafe(Tr,sol):
     n = len(Tr)
     if len(sol) != n-1:
         return False, f"Your solution:\n{sol}\n has length {len(sol)}. We were expecting a string of length {n-1=} over the alphabet {{'L','R'}} as the input triangle had {n=} rows."
@@ -88,17 +115,22 @@ def eval_sol(Tr,sol):
         val_sol += Tr[r][c]
     return True, val_sol
 
-def check_tc(Tr):
+def gen_tc(min_n,max_n):
+    n = randint(min_n, max_n)
+    Tr = [[randint(0, 9) for j in range(i+1)] for i in range(n)]
+    rnk = randrange(num_opt_sols(Tr))
+    print(n,rnk)
+    display_triangle(Tr,stdout)
+    return (Tr,rnk)
+
+def check_tc(Tr,rnk):
     risp_val = int(input())
-    risp_num_opt_sols = int(input())
-    opt_val = max_val(Tr)
-    if risp_val < opt_val:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
-    if risp_val != opt_val:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}."
-    corr_num_opt_sols = num_opt_sols(Tr)
-    if risp_num_opt_sols != corr_num_opt_sols:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that the number of optimal solutions (of value {risp_val}) is {risp_num_opt_sols}. However, the correct number of optimal solutions is {corr_num_opt_sols}."
+    risp_sol = input().strip()
+    ok, rank_of_risp = rank_unsafe(Tr,risp_sol,risp_val)
+    if not ok:
+        return False,rank_of_risp
+    if rank_of_risp != rnk:
+        return False, f"On input:\n{len(Tr)} {rnk}\n{triangle_as_str(Tr)}\nyou were right in stating that the optimum value of a solution is {risp_val}. However, you then returned the optimal solution:\n{risp_sol}\nwhich is of rank {rank_of_risp}. Instead, the optimal solution of rank {rnk}, as required, was:\n{unrank_safe(Tr,rnk)}"
     return True
 
 

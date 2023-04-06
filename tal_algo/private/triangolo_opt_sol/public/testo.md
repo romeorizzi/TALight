@@ -1,13 +1,4 @@
-# Triangolo (Discesa): solo computo del valore ottimo di una soluzione
-
-Ti viene dato un triangolo di numeri, come ad esempio:
-```
-       4
-      1 5
-     7 2 3
-    1 2 1 2
-   1 5 3 3 3
-```
+# Triangolo (Discesa): costruzione di una soluzione ottima
    
 Ti viene dato un triangolo di numeri interi tutti presi dall'intervallo [0,9]:
 ```
@@ -67,7 +58,7 @@ Per il subtasking sono previste le seguenti `size`, dove il default è `big` che
 * `tiny`: $n \leq 6$
 * `small`: $n \leq 10$
 * `medium`: $n \leq 20$
-* `big`: $n \leq 100$
+* `big`: $n \leq 40$
 
 Il tempo limite per testcase è di $1$ secondo.
 

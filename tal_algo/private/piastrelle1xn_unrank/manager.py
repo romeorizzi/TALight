@@ -8,11 +8,13 @@ from time import time
 from tc import TC
 from sol import unrank
 
-DATA = ((10, (0, 10)), (10, (0, 10)), (80, (10**2, 10**3)))
+############## TESTCASES' PARAMETERS ############################
+TL = 1   # the time limit for each testcase
 
-TL = 1
-
-MAPPER = {"small": 1, "medium": 1, "big": 2}
+MAPPER = {"tiny": 1, "small": 2, "medium": 3, "big": 4, "huge": 5}
+DATA = ((5, (0, 5)), (5, (5, 10)), (10, (16, 26)), (10, (27, 37)), (20, (10**2, 1+10**3)))
+# that is, 5 instances of size "tiny", i.e., with 0 <= n <= 4, ... 
+#################################################################
 
 
 def mexp(b, e):

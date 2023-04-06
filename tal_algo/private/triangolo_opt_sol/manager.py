@@ -11,7 +11,7 @@ from functools import lru_cache
 TL = 1   # the time limit for each testcase
 
 MAPPER = {"tiny": 1, "small": 2, "medium": 3, "big": 4}
-DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (50,100)))
+DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (30,40)))
 # that is, 10 instances of size "tiny", i.e., with 5 <= n <= 6 
 #################################################################
 
