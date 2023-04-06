@@ -52,7 +52,7 @@ def num_opt_sols(Tr, r=0,c=0):
             risp += num_opt_sols_ric_memo(r+1,c)
         if max_val(Tr, r,c) == Tr[r][c] + max_val(Tr, r+1,c+1):
             risp += num_opt_sols_ric_memo(r+1,c+1)
-        return risp % 1000000007
+        return risp
     n = len(Tr)
     return num_opt_sols_ric_memo(r,c)
 
@@ -96,8 +96,10 @@ def rank_unsafe(Tr,sol,stated_opt_val):
     n = len(Tr)
     rnk = 0; c = 0
     for r in range(n-1):
-        if sol == "R" and max_val(Tr, r,c) == Tr[r][c]+max_val(Tr,r+1,c):
-            rnk += num_opt_sols(Tr,r+1,c); c += 1
+        if sol[r] == "R":
+            if max_val(Tr, r,c) == Tr[r][c]+max_val(Tr,r+1,c):
+                rnk += num_opt_sols(Tr,r+1,c)
+            c += 1
     return True,rnk
 
 def eval_sol_unsafe(Tr,sol):
