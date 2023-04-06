@@ -37,6 +37,24 @@ def gen_tc(minn,maxn):
     m, n = randint(minn,maxn), randint(minn,maxn)
     M = [[bool(randrange(0, 10)) for j in range(n)] for i in range(m)]
     M[0][0] = M[m-1][n-1] = True
+    r=0; c=0
+    while r<m-1 and c<n-1:
+        if M[r+1][c]:
+            r += 1
+        elif M[r][c+1]:
+            c += 1
+        elif randint(0,1) == 1:
+            M[r+1][c] = True
+            r += 1
+        else:
+            M[r][c+1] = True
+            c += 1
+    while r<m-1:
+        M[r+1][c] = True
+        r += 1
+    while c<n-1:
+        M[r][c+1] = True
+        c += 1
     print(m, n)
     display_griglia(M)
     return (M,)
