@@ -685,10 +685,159 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_format(SEF):
             return False
 
-        print("---------Stampo i dati di default---------")
-        print(self.long_answer_dict)
-        
-        # TODO: format checks
+        if 'num_paths' in self.goals:
+            g = self.goals['num_paths']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+        if 'num_opt_paths' in self.goals:
+            g = self.goals['num_opt_paths']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+        if 'opt_val' in self.goals:
+            g = self.goals['opt_val']
+            if type(g.answ) != int:
+                return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+        if 'opt_path' in self.goals:
+            g = self.goals['opt_path']
+            # Controllo se si tratta di una lista
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se gli elemnti della lista sono tutti interi
+            for ele in g.answ:
+                for val in ele:
+                    if type(val) != int:
+                        return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        if 'list_opt_paths' in self.goals:
+            g = self.goals['list_opt_paths']
+            # Controllo se si tratta di una lista di liste
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se le liste sono liste di interi
+            for obj in g.answ:
+                if type(obj) != list:
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se gli elemnti della lista sono tutti interi
+            for obj in g.answ:
+                for ele in obj:
+                    for val in ele:
+                        if type(val) != int:
+                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        if 'DPtable_num_to' in self.goals:
+            g = self.goals['DPtable_num_to']
+            # Controllo se si tratta di una lista di liste
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se le liste sono liste di interi
+            for obj in g.answ:
+                if type(obj) != list:
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se gli elemnti della lista sono tutti interi
+            for obj in g.answ:
+                for ele in obj:
+                    for val in ele:
+                        if type(val) != int:
+                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        if 'DPtable_num_from' in self.goals:
+            g = self.goals['DPtable_num_from']
+            # Controllo se si tratta di una lista di liste
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se le liste sono liste di interi
+            for obj in g.answ:
+                if type(obj) != list:
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se gli elemnti della lista sono tutti interi
+            for obj in g.answ:
+                for ele in obj:
+                    for val in ele:
+                        if type(val) != int:
+                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        if 'DPtable_opt_to' in self.goals:
+            g = self.goals['DPtable_opt_to']
+            # Controllo se si tratta di una lista di liste
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se le liste sono liste di interi
+            for obj in g.answ:
+                if type(obj) != list:
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se gli elemnti della lista sono tutti interi
+            for obj in g.answ:
+                for ele in obj:
+                    for val in ele:
+                        if type(val) != int:
+                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        if 'DPtable_opt_from' in self.goals:
+            g = self.goals['DPtable_opt_from']
+            # Controllo se si tratta di una lista di liste
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se le liste sono liste di interi
+            for obj in g.answ:
+                if type(obj) != list:
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se gli elemnti della lista sono tutti interi
+            for obj in g.answ:
+                for ele in obj:
+                    for val in ele:
+                        if type(val) != int:
+                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        if 'DPtable_num_opt_to' in self.goals:
+            g = self.goals['DPtable_num_opt_to']
+            # Controllo se si tratta di una lista di liste
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se le liste sono liste di interi
+            for obj in g.answ:
+                if type(obj) != list:
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se gli elemnti della lista sono tutti interi
+            for obj in g.answ:
+                for ele in obj:
+                    for val in ele:
+                        if type(val) != int:
+                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+        if 'DPtable_num_opt_from' in self.goals:
+            g = self.goals['DPtable_num_opt_from']
+            # Controllo se si tratta di una lista di liste
+            if type(g.answ) != list:
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se le liste sono liste di interi
+            for obj in g.answ:
+                if type(obj) != list:
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+
+            # Controllo se gli elemnti della lista sono tutti interi
+            for obj in g.answ:
+                for ele in obj:
+                    for val in ele:
+                        if type(val) != int:
+                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
 
         return True
 
