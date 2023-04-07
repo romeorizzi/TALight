@@ -711,7 +711,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                 for val in ele:
                     if type(val) != int:
                         return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di interi", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'list_opt_paths' in self.goals:
             g = self.goals['list_opt_paths']
             # Controllo se si tratta di una lista di liste
@@ -729,7 +729,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di liste di interi", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_num_to' in self.goals:
             g = self.goals['DPtable_num_to']
             # Controllo se si tratta di una lista di liste
@@ -747,7 +747,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_num_from' in self.goals:
             g = self.goals['DPtable_num_from']
             # Controllo se si tratta di una lista di liste
@@ -765,7 +765,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_opt_to' in self.goals:
             g = self.goals['DPtable_opt_to']
             # Controllo se si tratta di una lista di liste
@@ -783,7 +783,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_opt_from' in self.goals:
             g = self.goals['DPtable_opt_from']
             # Controllo se si tratta di una lista di liste
@@ -801,7 +801,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_num_opt_to' in self.goals:
             g = self.goals['DPtable_num_opt_to']
             # Controllo se si tratta di una lista di liste
@@ -819,7 +819,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_num_opt_from' in self.goals:
             g = self.goals['DPtable_num_opt_from']
             # Controllo se si tratta di una lista di liste
@@ -837,7 +837,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
 
         return True
 
