@@ -133,6 +133,8 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             print(f"# Unrecoverable Error: {varname} is not of type int. Here is its actual raw content as a string: {repr(yaml_var)}")
             exit(0)
     if typestr in ['bool',bool]:
+        if yaml_var is None:
+            return True
         if yaml_var.lower() in ['true','1']:
             return True
         if yaml_var.lower() in ['false','0']:
@@ -145,6 +147,12 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             exit(0)
     if typestr[:len('matrix_of_')] == 'matrix_of_':
         typestr = 'list_of_list_of_'+typestr[len('matrix_of_'):]
+    if typestr == 'list_of_tuple':
+        return yaml_var
+    if typestr == dict:
+        return yaml_var
+    if typestr == tuple:
+        return yaml_var
     if typestr[:len('list_of_')] == 'list_of_':
         if type(yaml_var) != list:
             print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. Here is its actual raw content as a string: {repr(yaml_var)}")
@@ -195,12 +203,20 @@ class Env:
                 continue
             if val_type == str:
                 self.arg[name] = environ[f"TAL_{name}"]
+                if name == "arcs":
+                    self.arg[name] = list(environ[f"TAL_{name}"])
             elif val_type == bool:
                 self.arg[name] = (environ[f"TAL_{name}"] == "1")
             elif val_type == int:
                 self.arg[name] = int(environ[f"TAL_{name}"])
             elif val_type == float:
                 self.arg[name] = float(environ[f"TAL_{name}"])
+            elif val_type == tuple:
+                self.arg[name] = environ[f"TAL_{name}"]
+            elif val_type == dict:
+                self.arg[name] = environ[f"TAL_{name}"]
+            elif val_type == 'list_of_tuple':
+                self.arg[name] = environ[f"TAL_{name}"]
             elif val_type == 'yaml' or val_type[:len('list_of_')] == 'list_of_' or val_type[:len('matrix_of_')] == 'matrix_of_':
                 try:
                     self.arg[name] = ruamel.yaml.safe_load(environ[f"TAL_{name}"])
@@ -310,5 +326,4 @@ class Lang:
             return eval(f"f'{fstring}'")
         msg_encoded = self.messages_book[msg_code]
         return self.service_server_eval(msg_encoded)
-
 
