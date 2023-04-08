@@ -24,8 +24,8 @@ args_list = [('pwd',str)] + PSL.instance_objects_spec + [
 ]
 
 ENV =Env(args_list)
-TAc =TALcolors(ENV, "None")
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
+TAc =TALcolors(ENV, None)
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now' if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
@@ -38,7 +38,7 @@ RO_io.check_request(ENV['request_dict'], PSL.answer_objects_implemented)
 
 request_dict = ENV["request_dict"] if len(ENV["request_dict"]) != 0 else { key:key for key in PSL.answer_objects_implemented }
 #print(f"request_dict={request_dict}", file=stderr)
-    
+
 all_data = {"input_data_assigned":input_data_assigned,"request":request_dict}
 #print(f"all_data={all_data}", file=stderr)
 all_data["oracle"] = PSL.solver(all_data)
