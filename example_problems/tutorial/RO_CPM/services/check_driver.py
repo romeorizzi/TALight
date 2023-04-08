@@ -33,17 +33,17 @@ args_list += [
     ('task',int),
 ]
 
-ENV =Env(args_list)
-TAc =TALcolors(ENV, ENV["color_implementation"])
-#LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'on_stderr')
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now' if ENV['with_opening_message'] else 'never')
+ENV = Env(args_list)
+TAc = TALcolors(ENV, ENV["color_implementation"])
+#LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'on_stderr')
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg='now' if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
-RO_io.check_access_rights(ENV,TALf, require_pwd = ENV['with_oracle'])
+RO_io.check_access_rights(ENV,TALf, require_pwd=ENV['with_oracle'])
 input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec + PSL.additional_infos_spec,args_list,ENV)
-#print(f"input_data_assigned={input_data_assigned}", file=stderr)
+#print(f"\n\ninput_data_assigned={input_data_assigned}\n\n", file=stderr)
 PSL.check_instance_consistency(input_data_assigned)
 request_dict, answer_dict, name_of, answ_obj, long_answer_dict, goals = RO_io.check_and_standardization_of_request_answer_consistency(ENV, PSL.answer_objects_spec, PSL.answer_objects_implemented)
 all_data = {"input_data_assigned":input_data_assigned,"long_answer":long_answer_dict,"request":name_of}
@@ -57,9 +57,7 @@ unasked_answ_objects = [key for key in all_data["oracle"] if key not in request_
 for key in unasked_answ_objects:
     del all_data["oracle"][key]
 RO_io.checker_reply(all_data,ENV)
-if ENV.LOG_FILES != None:
+if ENV.LOG_FILES is not None:
     RO_io.checker_logs(all_data,ENV,TALf)
-if ENV["yield_certificate_in_output_file"]:    
+if ENV["yield_certificate_in_output_file"]:
     RO_io.checker_certificates(all_data,ENV,TALf)
-
-
