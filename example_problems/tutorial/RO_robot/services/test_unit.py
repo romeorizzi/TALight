@@ -25,9 +25,9 @@ class UilityFunctions(unittest.TestCase):
             (-10, 0),
             (-100, 0),
         ]
-        for i, (cell_content, cell_value) in enumerate(matches):
+        for i, (content, expected_gain) in enumerate(matches):
             with self.subTest(i=i):
-                self.assertEqual(cell_value, cellgain(cell_content))
+                self.assertEqual(expected_gain, cell_gain(content))
 
     def test_cell_cost_function(self):
         matches = [
@@ -37,29 +37,12 @@ class UilityFunctions(unittest.TestCase):
             (-10, 10),
             (-100, 100),
         ]
-        for i, (cell_content, cell_cost) in enumerate(matches):
+        for i, (content, expected_cost) in enumerate(matches):
             with self.subTest(i=i):
-                self.assertEqual(cell_cost, cellcost(cell_content))
+                self.assertEqual(expected_cost, cell_cost(content))
 
 
 class DPTableGenerators(unittest.TestCase):
-
-    def test_cost_table_building(self):
-        grids = [
-                [[1, 2, 3, 4]],
-                [[-1, 1], [1, -1]],
-                [[100, -100], [0, -10000], [1000, 10000]],
-        ]
-        for g in grids:
-            with self.subTest(g=g):
-                costs = build_cost_table(g)
-                rows, cols = shape(costs)
-                for row in range(rows):
-                    for col in range(cols):
-                        if g[row][col] >= 0:
-                            self.assertEqual(costs[row][col], 0)
-                        else:
-                            self.assertEqual(costs[row][col], -g[row][col])
 
     def test_num_to_cell(self):
         grid = [[0, -1, 2],

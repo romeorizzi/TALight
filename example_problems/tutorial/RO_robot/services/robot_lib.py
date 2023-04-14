@@ -192,29 +192,30 @@ def check_instance_consistency(instance):
             exit(0)
 
 
-def cellgain(content_inside_cell: int) -> int:
+def cell_gain(content_inside_cell: int) -> int:
     """The solution gain of a cell."""
     # only cells with positive content have a value
     return max(content_inside_cell, 0)
 
 
-def cellcost(content_inside_cell: int) -> int:
+def cell_cost(content_inside_cell: int) -> int:
     """The solution cost on the budget of a cell."""
     # only cells with negative content have a cost
     return max(-content_inside_cell, 0)
 
 
-def build_cost_table(grid: _Mat) -> _Mat:
-    """Build the cost table associated with a grid."""
+def path_gain(grid: _Mat, path: _Path):
+    """Total gain of a path over a specific grid."""
     assert grid is not None
-    assert check_matrix_shape(grid)
+    assert path is not None
+    return sum(map(lambda x: cell_gain(grid[x[0]][x[1]]), path))
 
-    rows, cols = shape(grid)
-    costs = [[cellcost(grid[row][col]) for col in range(cols)]
-             for row in range(rows)]
 
-    assert shape(costs) == shape(grid)
-    return costs
+def path_cost(grid: _Mat, path: _Path):
+    """Total cost of a path over a specific grid."""
+    assert grid is not None
+    assert path is not None
+    return sum(map(lambda x: cell_cost(grid[x[0]][x[1]]), path))
 
 
 def dp_num_to(grid: np.ndarray, cell: _Cell, budget: int, diag: bool) -> np.ndarray:
@@ -236,14 +237,14 @@ def dp_num_to(grid: np.ndarray, cell: _Cell, budget: int, diag: bool) -> np.ndar
     # NOTE: matrix format [budget][rows][cols]
     mat = np.zeros((budget + 1, rows, cols), dtype=np.intc)
     for b in range(budget + 1):
-        if cellcost(grid[row0][col0]) <= b:
+        if cell_cost(grid[row0][col0]) <= b:
             mat[b][row0][col0] = 1
 
     # NOTE: start iteration from the reference cell
     for b in range(budget + 1):  # iterate on all possible values of budget
         for x in range(row0, rows):
             for y in range(col0, cols):
-                cost_at_prev_cell = b - cellcost(grid[x][y])
+                cost_at_prev_cell = b - cell_cost(grid[x][y])
                 if cost_at_prev_cell >= 0:
                     # move from the top cell if there is a previous row
                     if x > 0:
@@ -304,16 +305,16 @@ def dp_opt_to(grid: np.ndarray, cell: _Cell, budget: int, diag: bool) -> np.ndar
     # NOTE: matrix format [budget][rows][cols]
     mat = np.full((budget + 1, rows, cols), fill_value=-1, dtype=np.intc)
     for b in range(budget + 1):
-        if cellcost(grid[row0][col0]) <= b:
-            mat[b][row0][col0] = cellgain(grid[row0][col0])
+        if cell_cost(grid[row0][col0]) <= b:
+            mat[b][row0][col0] = cell_gain(grid[row0][col0])
 
     # NOTE: start iteration from the reference cell
     for b in range(budget + 1):  # iterate on all possible values of budget
         for x in range(row0, rows):
             for y in range(col0, cols):
-                prev_cost = b - cellcost(grid[x][y])
+                prev_cost = b - cell_cost(grid[x][y])
                 if prev_cost >= 0:
-                    v = cellgain(grid[x][y])
+                    v = cell_gain(grid[x][y])
                     # move from the top cell if there is a previous row
                     if x > 0 and mat[prev_cost][x - 1][y] != -1:
                         mat[b][x][y] = max(mat[b][x][y],
@@ -379,7 +380,7 @@ def dp_num_opt_to(
     # NOTE: matrix format [budget][rows][cols]
     mat = np.zeros((budget + 1, rows, cols), dtype=np.intc)
     for b in range(budget + 1):
-        if cellcost(grid[row0][col0]) <= b:
+        if cell_cost(grid[row0][col0]) <= b:
             mat[b][row0][col0] = 1
 
     # NOTE: start iteration from the reference cell
@@ -388,10 +389,10 @@ def dp_num_opt_to(
             for b in range(budget + 1):
                 # the budget left at a previous cell required to move in the current cell
                 # with the current total budget
-                bud = b - cellcost(grid[x][y])
+                bud = b - cell_cost(grid[x][y])
 
                 # the optimal value of a path that gets at the current
-                opt = dptable[bud][x][y] - cellgain(grid[x][y])
+                opt = dptable[bud][x][y] - cell_gain(grid[x][y])
 
                 if x > 0:  # can move by row
                     if dptable[bud][x - 1][y] == opt:  # and the path is optimal
@@ -438,9 +439,9 @@ def yield_opt_paths_beg_to_mid(p: Instance, opt_beg2any: np.ndarray, cost: int):
             yield path
 
         # the value of any optimal path that reaches this cell
-        opt = opt_beg2any[c][x][y] - cellgain(p.grid[x][y])
+        opt = opt_beg2any[c][x][y] - cell_gain(p.grid[x][y])
         # remove the cost of the current cell
-        c1 = c - cellcost(p.grid[x][y])
+        c1 = c - cell_cost(p.grid[x][y])
         assert c1 >= 0, "Underflowed minimum cost"
 
         # if the result path is optimal, keep building from the cell in the previuos row
@@ -474,8 +475,8 @@ def yield_opt_paths_mid_to_end(p: Instance, opt_any2end: np.ndarray, cost: int):
             yield path
 
         # remove the cost of the current cell
-        opt = opt_any2end[c][x][y] - cellgain(p.grid[x][y])
-        c1 = c + cellcost(p.grid[x][y])
+        opt = opt_any2end[c][x][y] - cell_gain(p.grid[x][y])
+        c1 = c + cell_cost(p.grid[x][y])
         assert c1 <= cost, "Overflowed maximum cost"
 
         # if the result path is optimal, keep building from the cell in the previuos row
@@ -842,12 +843,6 @@ class verify_submission_problem_specific(verify_submission_gen):
         return True
 
     def set_up_and_cash_handy_data(self):
-        if 'opt_sol' in self.goals:
-            self.sum_vals = sum([val for ele, cost, val in zip(
-                self.I.labels, self.I.costs, self.I.vals) if ele in self.goals['opt_sol'].answ])
-            self.sum_costs = sum([cost for ele, cost, val in zip(
-                self.I.labels, self.I.costs, self.I.vals) if ele in self.goals['opt_sol'].answ])
-
         self.beg = parse_cell(self.I.cell_from)
         self.mid = parse_cell(self.I.cell_through)
         self.end = parse_cell(self.I.cell_to)
@@ -862,13 +857,24 @@ class verify_submission_problem_specific(verify_submission_gen):
         if 'opt_path' in self.goals:
             path = self.goals['opt_path'].answ
             if not check_path_feasible(path, diag=self.I.diag):
-                return SEF.feasibility_NO('opt_path', f"Path {path} cannot be followed by valid moves")
+                reason = f"Path {path} cannot be followed by valid moves."
+                return SEF.feasibility_NO('opt_path', reason)
+
+            if path_cost(path) > self.I.budget:
+                reason = f"Path {path} exceeds the maximum budget."
+                return SEF.feasibility_NO('opt_path', reason)
 
         if 'list_opt_path' in self.goals:
             g = self.goals['list_opt_path']
             for path in g.answ:
                 if not check_path_feasible(path, diag=self.I.diag):
-                    return SEF.feasibility_NO('list_opt_path', f"Path {path} cannot be followed by valid moves")
+                    reason = f"Path {path} cannot be followed by valid moves."
+                    return SEF.feasibility_NO('list_opt_path', reason)
+
+                if path_cost(path) > self.I.budget:
+                    reason = f"Path {path} exceeds the maximum budget."
+                    return SEF.feasibility_NO('opt_path', reason)
+                
 
         dptables = [
             'DPtable_num_to', 'DPtable_num_from',
@@ -878,7 +884,8 @@ class verify_submission_problem_specific(verify_submission_gen):
         for dptable in dptables:
             if dptable in self.goals:
                 if shape(self.goals[dptable]) != self.dptable_shape:
-                    return SEF.feasibility_NO(dptable, f"")
+                    reason = f""
+                    return SEF.feasibility_NO(dptable, reason)
 
         return True
 
@@ -886,15 +893,29 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_consistency(SEF):
             return False
 
-        # TODO: consistency checks
-        if 'opt_val' in self.goals:
-            opt_val = self.goals['opt_val']
+        if 'opt_val' in self.goals and 'opt_path' in self.goals:
+            g_val = self.goals['opt_val']
+            g_sol = self.goals['opt_path']
+            opt_path = [parse_cell(x) for x in g_sol]
+            if (gain := path_gain(opt_path)) != g_val.answ:
+                reason = f"""
+                Il valore totale della soluzione immessa in `{g_sol.alias}` è {gain},
+                non {g_val.answ} come hai invece immesso in `{g_val.alias}`.
+                La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.
+                """
+                return SEF.consistency_NO(['opt_val', 'opt_path'], reason)
 
-            if 'opt_path' in self.goals:
-                opt_path = [parse_cell(x) for x in self.goals['opt_path']]
-
-            if 'list_opt_paths' in self.goals:
-                list_opt_paths = [[parse_cell(x) for x in p]
-                                  for p in self.goals['list_opt_paths']]
+        if 'opt_val' in self.goals and 'list_opt_paths' in self.goals:
+            g_val = self.goals['opt_val']
+            g_sol = self.goals['list_opt_paths']
+            list_opt_paths = [[parse_cell(x) for x in p] for p in g_sol]
+            for p in list_opt_paths:
+                if (gain := path_gain(p)) != g_val.answ:
+                    reason = f"""
+                    Il valore totale della soluzione immessa in `{g_sol.alias}` è {gain},
+                    non {g_val.answ} come hai invece immesso in `{g_val.alias}`.
+                    La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.
+                    """
+                    return SEF.consistency_NO(['opt_val', 'list_opt_paths'], reason)
 
         return True
