@@ -35,7 +35,7 @@ def opt_sol(Tr):
             sol += "R"; r += 1; c += 1
     return sol
 
-def eval_sol(Tr,sol):
+def eval_sol_unsafe(Tr,sol):
     n = len(Tr)
     assert len(sol) == n-1
     r = 0; c = 0
@@ -63,9 +63,9 @@ if __name__ == "__main__":
         dice = randrange(0,6)
         if dice == 0:
             opts = opts[1:] + ('L' if opts[0]=='R' else 'R')
-            optv = eval_sol(Tr,opts)
+            optv = eval_sol_unsafe(Tr,opts)
         elif dice == 1:
             opts = opts[:-1] + ('L' if opts[-1]=='R' else 'R')
-            optv = eval_sol(Tr,opts)
+            optv = eval_sol_unsafe(Tr,opts)
         print(optv)
         print(opts)

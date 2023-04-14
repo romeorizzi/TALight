@@ -5,17 +5,18 @@ from os import environ
 from random import randrange, randint
 from tc import TC
 
-DATA = ((10, (10,)), (90, (250,)))
+############## TESTCASES' PARAMETERS ############################
+TL = 1   # the time limit for each testcase
 
-TL = 2
-
-MAPPER = {"small": 1, "big": 2}
+MAPPER = {"tiny": 1, "small": 2, "medium": 3, "big": 4}
+DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (25,30)))
+# that is, 10 instances of size "tiny", i.e., with 5 <= n <= 6 
+#################################################################
 
 
 def sol(M):
     m = len(M)
     n = len(M[0])
-    MOD = 10**9 + 7
     V = [[0] * (n + 1) for i in range(m + 1)]
     V[m - 1][n - 1] = int(M[m - 1][n - 1])
     for i in reversed(range(m)):
@@ -23,7 +24,7 @@ def sol(M):
             if i == m - 1 and j == n - 1:
                 continue
             if M[i][j]:
-                V[i][j] = (V[i + 1][j] + V[i][j + 1]) % MOD
+                V[i][j] = (V[i + 1][j] + V[i][j + 1])
     return V[0][0]
 
 def display_griglia(M):
@@ -32,10 +33,28 @@ def display_griglia(M):
     for i in range(m):
         print("".join(map(lambda x: "." if x else "#", M[i])))
 
-def gen_tc(maxn):
-    m, n = randint(1, maxn), randint(1, maxn)
+def gen_tc(minn,maxn):
+    m, n = randint(minn,maxn), randint(minn,maxn)
     M = [[bool(randrange(0, 10)) for j in range(n)] for i in range(m)]
     M[0][0] = M[m-1][n-1] = True
+    r=0; c=0
+    while r<m-1 and c<n-1:
+        if M[r+1][c]:
+            r += 1
+        elif M[r][c+1]:
+            c += 1
+        elif randint(0,1) == 1:
+            M[r+1][c] = True
+            r += 1
+        else:
+            M[r][c+1] = True
+            c += 1
+    while r<m-1:
+        M[r+1][c] = True
+        r += 1
+    while c<n-1:
+        M[r][c+1] = True
+        c += 1
     print(m, n)
     display_griglia(M)
     return (M,)

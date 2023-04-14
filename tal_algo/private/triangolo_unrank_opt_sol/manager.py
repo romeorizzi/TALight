@@ -2,11 +2,10 @@
 from sys import stderr,stdout
 from os import environ
 from random import randrange, randint
-from functools import lru_cache
 
 from tc import TC
 
-from triangolo_lib import triangle_as_str, display_triangle, max_val, opt_sol, eval_sol_unsafe
+from triangolo_lib import triangle_as_str, display_triangle, max_val, opt_sol, eval_sol_unsafe, num_opt_sols, rank_unsafe, unrank_safe
 
 ############## TESTCASES' PARAMETERS ############################
 TL = 1   # the time limit for each testcase
@@ -20,17 +19,19 @@ DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (30,40)))
 def gen_tc(min_n,max_n):
     n = randint(min_n, max_n)
     Tr = [[randint(0, 9) for j in range(i+1)] for i in range(n)]
-    print(n)
+    rnk = randrange(num_opt_sols(Tr))
+    print(n,rnk)
     display_triangle(Tr,stdout)
-    return (Tr,)
+    return (Tr,rnk)
 
-def check_tc(Tr):
-    risp = int(input())
-    corr_answ = max_val(Tr)
-    if risp > corr_answ:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou answered:\n{risp}\nwhile the correct answer was:\n{corr_answ}"
-    if risp < corr_answ:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou answered:\n{risp}\nwhile the correct answer is:\n{corr_answ}\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
+def check_tc(Tr,rnk):
+    risp_val = int(input())
+    risp_sol = input().strip()
+    ok, rank_of_risp = rank_unsafe(Tr,risp_sol,risp_val)
+    if not ok:
+        return False,rank_of_risp
+    if rank_of_risp != rnk:
+        return False, f"On input:\n{len(Tr)} {rnk}\n{triangle_as_str(Tr)}\nyou were right in stating that the optimum value of a solution is {risp_val}. However, you then returned the optimal solution:\n{risp_sol}\nwhich is of rank {rank_of_risp}. Instead, the optimal solution of rank {rnk}, as required, was:\n{unrank_safe(Tr,rnk)}"
     return True
 
 

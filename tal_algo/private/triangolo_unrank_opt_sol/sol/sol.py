@@ -49,14 +49,31 @@ def opt_sol(Tr):
             sol += "R"; r += 1; c += 1
     return sol
 
+def unrank(Tr,rnk):
+    n = len(Tr)
+    sol = ""; c = 0
+    for r in range(n-1):
+        #print(f"{r=}, {c=}, {rnk=}, {num_opt_sols(Tr,r,c)=}",file=stderr)
+        assert 0 <= rnk < num_opt_sols(Tr,r,c)
+        if max_val(Tr, r,c) > Tr[r][c] + max_val(Tr,r+1,c):
+            sol += "R"; c += 1
+        else:
+            assert max_val(Tr, r,c) == Tr[r][c]+max_val(Tr,r+1,c)
+            if rnk < num_opt_sols(Tr,r+1,c):
+                sol += "L"
+            else:
+                rnk -= num_opt_sols(Tr,r+1,c); sol += "R"; c += 1
+    assert rnk == 0
+    return sol
+
 if __name__ == "__main__":
     T = int(input())
     for t in range(T):
         #print(f"testcase {t}",file=stderr)
-        n = int(input())
+        n,rnk = map(int,input().strip().split())
         Tr = []
         for i in range(n):
             Tr.append(list(map(int,input().strip().split())))
         #display_triangle(Tr,stderr)
         print(max_val(Tr))
-        print(num_opt_sols(Tr))
+        print(unrank(Tr,rnk))

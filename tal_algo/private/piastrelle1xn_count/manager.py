@@ -8,11 +8,13 @@ from sys import stderr
 from time import time
 from tc import TC
 
-DATA = ((10, (0, 10)), (90, (10**5, 10**6)), (100, (10**17, 10**18)))
+############## TESTCASES' PARAMETERS ############################
+TL = 1   # the time limit for each testcase
 
-TL = 1
-
-MAPPER = {"small": 1, "big": 2, "huge": 3}
+MAPPER = {"tiny": 1, "small": 2, "medium": 3, "big": 4, "huge": 5}
+DATA = ((5, (0, 5)), (5, (5, 10)), (10, (16, 26)), (50, (10**5, 1+10**6)), (30, (10**17, 1+10**18)))
+# that is, 5 instances of size "tiny", i.e., with 0 <= n <= 4, ... 
+#################################################################
 
 
 def mexp(b, e, m):

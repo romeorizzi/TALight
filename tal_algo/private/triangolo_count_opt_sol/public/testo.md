@@ -1,13 +1,4 @@
-# Triangolo (Discesa): solo computo del valore ottimo di una soluzione
-
-Ti viene dato un triangolo di numeri, come ad esempio:
-```
-       4
-      1 5
-     7 2 3
-    1 2 1 2
-   1 5 3 3 3
-```
+# Triangolo (Discesa): contare il numero di soluzioni ottime
    
 Ti viene dato un triangolo di numeri interi tutti presi dall'intervallo [0,9]:
 ```
@@ -20,7 +11,7 @@ Ti viene dato un triangolo di numeri interi tutti presi dall'intervallo [0,9]:
    
 Consideriamo ammissibile un percorso che discenda dal vertice in alto (quì di valore 4) visitando precisamente uno dei valori per ciascuna riga senza mai compiere salti eccessivi, nè verso sinistra nè verso destra. In pratica, nel passare da una riga alla successiva, non essendo presente un elemento immediatamente sottostante, l'unica scelta consentita è quella di portarsi verso sinistra oppure verso destra, ma solo fino al primo elemento della riga successiva che si incontra in tale direzione.
 Una soluzione ottima è un percorso ammissibile di massimo valore. 
-Si richiede di restituire il valore delle soluzioni ottime nonchè il loro numero. Poichè il numero delle soluzioni può crescere esponenzialmente, chiediamo di restituire il resto della divisione di tale numero per $1\,000\,000\,007$.
+Si richiede di restituire il valore delle soluzioni ottime nonchè il loro numero. ATTENZIONE: questo numero potrebbe essere molto grande, assicurati di impiegare tipi di variabili sufficientemente capienti per evitare errori di overflow!
 
 
 ## Input
@@ -52,7 +43,7 @@ L'output atteso consta di due righe per ogni testcase: la prima riga deve conten
 1 1 1
 1 1 1 1
 ```
-Spiegazione: due testcase, il primo dei quali è un triangolo di una sola riga (e quindi di un solo valore intero, il 7). Il secondo triangolo ha invece 5 righe.
+Spiegazione: tre testcase. Il primo è un triangolo di una sola riga (e quindi di un solo valore intero, il 7). Il secondo triangolo ha 5 righe. Il terzo ha $4$ righe e tutti i $10$ valori che lo compongono sono pari ad $1$.
 
 ### Output
 ```
@@ -75,7 +66,7 @@ Per il subtasking sono previste le seguenti `size`, dove il default è `big` che
 * `tiny`: $n \leq 6$
 * `small`: $n \leq 10$
 * `medium`: $n \leq 20$
-* `big`: $n \leq 100$
+* `big`: $n \leq 40$
 
-Il tempo limite per testcase è di $2$ secondi.
+Il tempo limite per testcase è di $1$ secondo.
 

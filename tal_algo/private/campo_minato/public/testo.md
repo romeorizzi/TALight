@@ -6,7 +6,7 @@ nella cella $(0, 0)$ (quella più in alto a sinistra), termina nella cella
 $(n-1,m-1)$ (quella più in basso a destra)$, passa solo da celle bianche e
 si sposta solo in celle in basso o a destra.
 
-Computa quanti sono i percorsi validi, modulo $10^9+7$ (dato che questo numero potrebbe essere molto grande, ti chiediamo di restituire solo il resto della sua divisione per $1000000007$).
+Computa quanti sono i percorsi validi. ATTENZIONE: questo numero potrebbe essere molto grande, assicurati di impiegare tipi di variabili sufficientemente capienti per evitare errori di overflow!
 
 ## Input
 La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
@@ -17,7 +17,7 @@ bianche e i cancelletti sono le celle nere.
 
 ## Output
 L'output deve contenere una riga per ogni testase, contenente il numero di
-percorsi validi nella griglia modulo $10^9+7$.
+percorsi validi nella griglia. Siccome questo numero potrebbe essere molto grande, assicurati di impiegare tipi di variabili sufficientemente capienti per evitare errori di overflow!
 
 \pagebreak
 ## Esempio
@@ -60,10 +60,12 @@ percorsi validi nella griglia modulo $10^9+7$.
 
 La cella di partenza e quella di arrivo sono sempre bianche (transitabili).
 
-Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `small`:
+Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
-* `small`: $m, n \leq 10$
-* `big`: $m, n \leq 250$
+* `tiny`: $n \leq 6$
+* `small`: $n \leq 10$
+* `medium`: $n \leq 20$
+* `big`: $n \leq 30$
 
-Il tempo limite per testcase è di $2$ secondi.
+Il tempo limite per testcase è di $1$ secondo.
 
