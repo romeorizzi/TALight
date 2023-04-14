@@ -4,18 +4,22 @@ public_folder: public
 services:
   append_1:
     description: Given a binary string of 0s and 1s, append a 1 to the end of the tape.
-    evaluator: [python, services/append_1/append_1_driver.py]
+    evaluator: [python, services/append_1_driver.py]
     args:
       seed:
         explain: Specifies the numeric code (any integer in the range [0, 100000]) to use with a pre-written pseudorandom instance.
         regex: ^(random_seed|100000|\d{1,5})$
         default: random_seed
+      max_lengh:
+        explain: Specifies the maximum length of the output string.
+        regex: ^(1?[1-9]|20)$
+        default: 10
       lang:
         regex: ^(en|it)$
         default: it
   check_1:
     description: Given a binary string of 0s and 1s, append a 0 to the end of the tape if there were no 1s, otherwise append a 1.
-    evaluator: [python, services/append_1/check_1_driver.py]
+    evaluator: [python, services/check_1_driver.py]
     args:
       seed:
         explain: Specifies the numeric code (any integer in the range [0, 100000]) to use with a pre-written pseudorandom instance.
@@ -26,7 +30,7 @@ services:
         default: it
   change_bin:
     description: Given a binary string of 0s and 1s, invert the value of all the bits.
-    evaluator: [python, services/change_bin/change_bin_driver.py]
+    evaluator: [python, services/change_bin_driver.py]
     args:
       seed:
         explain: Specifies the numeric code (any integer in the range [0, 100000]) to use with a pre-written pseudorandom instance.
