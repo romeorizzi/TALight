@@ -38,6 +38,7 @@ __pycache__/
 **/target/CACHEDIR.TAG
 **/target/debug/**
 **/target/release/**
+**/target/.rustc_info.json
 
 # CMS
 .inode
