@@ -12,7 +12,7 @@ from triangolo_lib import triangle_as_str, display_triangle, eval_sol_unsafe, ma
 TL = 1   # the time limit for each testcase
 
 MAPPER = {"tiny": 1, "small": 2, "medium": 3, "big": 4}
-DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (30,40)))
+DATA = ((10, (5, 7)), (10, (8, 10)), (10, (25, 28)), (70, (30, 40)))
 # that is, 10 instances of size "tiny", i.e., with 5 <= n <= 6 
 #################################################################
 
@@ -30,11 +30,11 @@ def check_tc(Tr):
     if not ok:
         return False,val_of_risp_sol
     if val_of_risp_sol != risp_val:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, you returned a feasible solution of value {val_of_risp_sol}, namely:\n{risp_sol}"
+        return False, f"On input:\n{len(Tr)}\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, you returned a feasible solution of value {val_of_risp_sol}, namely:\n{risp_sol}"
     opt_val = max_val(Tr)
     assert risp_val <= opt_val
     if risp_val < opt_val:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
+        return False, f"On input:\n{len(Tr)}\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
     return True
 
 

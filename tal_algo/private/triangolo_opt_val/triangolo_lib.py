@@ -6,6 +6,8 @@ WARNING = """this library is common to a few problems:
 ../triangolo_count_opt_sol
 ../triangolo_rank_opt_sol
 ../triangolo_unrank_opt_sol
+../triangolo_game_val
+../triangolo_game_play
 Please, keep this in mind in case you want to modify it."""
 
 from sys import stderr, stdout
@@ -38,6 +40,25 @@ def max_val(Tr, r=0,c=0):
 
     n = len(Tr)
     return max_val_ric_memo(r,c)
+
+def game_val(Tr, chooser, r=0,c=0):
+    #display_triangle(Tr, stderr)
+    
+    @lru_cache(maxsize=None)
+    def game_val_ric_memo(r,c):
+        assert 0 <= c <= r < n
+        if r == n-1:
+            #print(f"called with {r=},{c=} returns {Tr[r][c]=}", file=stderr)
+            return Tr[r][c]
+        if chooser[r] == 1:
+            risp = Tr[r][c] + max(game_val_ric_memo(r+1,c), game_val_ric_memo(r+1,c+1))
+        else:
+            risp = Tr[r][c] + min(game_val_ric_memo(r+1,c), game_val_ric_memo(r+1,c+1))
+        #print(f"called with {r=},{c=} returns {risp=}", file=stderr)
+        return risp
+
+    n = len(Tr)
+    return game_val_ric_memo(r,c)
 
 def num_opt_sols(Tr, r=0,c=0):
     @lru_cache(maxsize=None)

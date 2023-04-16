@@ -12,7 +12,7 @@ from triangolo_lib import triangle_as_str, display_triangle, max_val, opt_sol, n
 TL = 1   # the time limit for each testcase
 
 MAPPER = {"tiny": 1, "small": 2, "medium": 3, "big": 4}
-DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (30,40)))
+DATA = ((10, (5, 7)), (10, (8, 10)), (10, (25, 28)), (70, (30, 40)))
 # that is, 10 instances of size "tiny", i.e., with 5 <= n <= 6 
 #################################################################
 
@@ -29,12 +29,12 @@ def check_tc(Tr):
     risp_num_opt_sols = int(input())
     opt_val = max_val(Tr)
     if risp_val < opt_val:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
+        return False, f"On input:\n{len(Tr)}\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
     if risp_val != opt_val:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}."
+        return False, f"On input:\n{len(Tr)}\n{triangle_as_str(Tr)}\nyou claimed that {risp_val} is the optimal value. However, the optimal value is {opt_val}."
     corr_num_opt_sols = num_opt_sols(Tr)
     if risp_num_opt_sols != corr_num_opt_sols:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou claimed that the number of optimal solutions (of value {risp_val}) is {risp_num_opt_sols}. However, the correct number of optimal solutions is {corr_num_opt_sols}."
+        return False, f"On input:\n{len(Tr)}\n{triangle_as_str(Tr)}\nyou claimed that the number of optimal solutions (of value {risp_val}) is {risp_num_opt_sols}. However, the correct number of optimal solutions is {corr_num_opt_sols}."
     return True
 
 
