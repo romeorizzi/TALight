@@ -36,7 +36,7 @@ __pycache__/
 
 # Rust
 **/target/CACHEDIR.TAG
-**/target/debub/**
+**/target/debug/**
 **/target/release/**
 
 # CMS
