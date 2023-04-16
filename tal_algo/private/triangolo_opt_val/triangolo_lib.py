@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
+
+WARNING = """this library is common to a few problems:
+../triangolo_opt_val
+../triangolo_opt_sol
+../triangolo_count_opt_sol
+../triangolo_rank_opt_sol
+../triangolo_unrank_opt_sol
+Please, keep this in mind in case you want to modify it."""
+
 from sys import stderr,stdout
-from os import environ
 from random import randrange, randint
 
-from tc import TC
-
 from functools import lru_cache
-
-############## TESTCASES' PARAMETERS ############################
-TL = 1   # the time limit for each testcase
-
-MAPPER = {"tiny": 1, "small": 2, "medium": 3, "big": 4}
-DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (30,40)))
-# that is, 10 instances of size "tiny", i.e., with 5 <= n <= 6 
-#################################################################
 
 def triangle_as_str(Tr):
     n = len(Tr)
@@ -119,6 +117,5 @@ def eval_sol_unsafe(Tr,sol):
 
 
 if __name__ == "__main__":
-    size = MAPPER[environ["TAL_size"]]
-    tc = TC(DATA[:size], TL)
-    tc.run(gen_tc, check_tc)
+    print(WARNING)    
+    

@@ -1,6 +1,7 @@
 public_folder: public
 services:
     solve:
+#        evaluator: [manager/target/release/manager]
         evaluator: [python, manager.py]
         args:
             size:

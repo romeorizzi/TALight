@@ -21,6 +21,9 @@
 *.tar
 *.7z
 
+# signatures and cryptography
+*.sig
+
 # MacOS X
 .DS_Store
 
@@ -31,8 +34,10 @@ __pycache__/
 *$py.class
 *.class
 
-# signatures and cryptography
-*.sig
+# Rust
+target/CACHEDIR.TAG
+target/debub/**
+target/release/**
 
 # CMS
 .inode
