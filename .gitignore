@@ -35,20 +35,20 @@ __pycache__/
 *.class
 
 # Rust
-target/CACHEDIR.TAG
-target/debub/**
-target/release/**
+**/target/CACHEDIR.TAG
+**/target/debub/**
+**/target/release/**
 
 # CMS
 .inode
-**/input
-**/output
+**/input/
+**/output/
 
 # management of this report in action
 instances_catalogue
-my_solutions
-my_certificates
-exam_sessions
+my_solutions/
+my_certificates/
+exam_sessions/
 TEMA_OGGI*
 
 # Visual Studio
