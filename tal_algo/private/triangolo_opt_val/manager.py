@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr,stdout
+from sys import stderr, stdout
 from os import environ
 from random import randrange, randint
 from functools import lru_cache
@@ -30,7 +30,7 @@ def check_tc(Tr):
     if risp > corr_answ:
         return False, f"On input:\n{triangle_as_str(Tr)}\nyou answered:\n{risp}\nwhile the correct answer was:\n{corr_answ}"
     if risp < corr_answ:
-        return False, f"On input:\n{triangle_as_str(Tr)}\nyou answered:\n{risp}\nwhile the correct answer is:\n{corr_answ}\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
+        return False, f"On input:\n{triangle_as_str(Tr)}\nyou answered:\n{risp}\nwhile the correct answer is:\n{corr_answ}.\nIndeed, consider the following descending path:\n{opt_sol(Tr)}"
     return True
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr,stdout
+from sys import stderr, stdout
 from os import environ
 from random import randrange, randint
 
