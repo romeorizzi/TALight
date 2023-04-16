@@ -20,11 +20,10 @@ Dato il triangolo ed il rango, si richiede di restituire il percorso ottimo di q
 ## Input
 La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
 istanze del problema. Ogni istanza è composta nel seguente modo: la prima
-riga fornisce $n$, il numero di righe del triangolo.
-Seguono le n righe del triangolo allineate tutte a sinistra.
+riga fornisce due interi: $n$ che è il numero di righe del triangolo, e $r$ che è un numero naturale minore del numero di cammini ottimi per il triangolo che verrà dato nelle successive $n$ righe dell'input. Puoi assumere che le righe del triangolo siano tutte allineate a sinistra.
 
 ## Output
-L'output atteso consta di due righe per ogni testcase: la prima riga deve contenere il massimo valore di un percorso ammissibile, la seconda conterrà codifica di un percorso ammissibile di massimo valore. Tale codifica è una stringa di lunghezza $n-1$ sull'alfabeto $\{L,R\}$ (sinistra/destra, si specifichino le scelte come a partire dal vertice in alto).
+L'output atteso consta di due righe per ogni testcase: la prima riga deve contenere il massimo valore di un percorso ammissibile, la seconda conterrà una stringa di lunghezza $n-1$ sull'alfabeto $\{L,R\}$ (sinistra/destra, specificando le scelte come a partire dal vertice in alto) che codifica il cammino di massimo valore di rango $r$.
 
 \pagebreak
 ## Esempio
