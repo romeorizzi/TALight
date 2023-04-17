@@ -46,10 +46,11 @@ if __name__ == "__main__":
     T = int(input())
     for t in range(T):
         #print(f"testcase {t}", file=stderr)
-        n,rnk = map(int,input().strip().split())
+        n = int(input())
         Tr = []
         for i in range(n):
             Tr.append(list(map(int, input().strip().split())))
+        rnk = int(input())
         #display_triangle(Tr, stderr)
         print(max_val_ric_memo())
         print(unrank(rnk))

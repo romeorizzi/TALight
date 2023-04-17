@@ -48,15 +48,15 @@ if __name__ == "__main__":
         for i in range(n):
             Tr.append(list(map(int, input().strip().split())))
         #display_triangle(Tr,stderr)
-        optv = max_val_ric_memo()
-        opts = opt_sol()
+        opt_val = max_val_ric_memo()
+        opt_sol = opt_sol()
         dice = randrange(0, 6)
         if dice == 0:
-            opts = opts[1:] + ('L' if opts[0]=='R' else 'R')
-            optv = eval_sol_unsafe(opts)
+            opt_sol = opt_sol[1:] + ('L' if opt_sol[0]=='R' else 'R')
+            opt_val = eval_sol_unsafe(opt_sol)
         elif dice == 1:
-            opts = opts[:-1] + ('L' if opts[-1]=='R' else 'R')
-            optv = eval_sol_unsafe(opts)
-        print(optv)
-        print(opts)
+            opt_sol = opt_sol[:-1] + ('L' if opt_sol[-1]=='R' else 'R')
+            opt_val = eval_sol_unsafe(opt_sol)
+        print(opt_val)
+        print(opt_sol)
         max_val_ric_memo.cache_clear()

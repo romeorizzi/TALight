@@ -5,7 +5,7 @@ from random import randrange, randint
 
 from tc import TC
 
-from triangolo_lib import triangle_as_str, display_triangle, max_val, opt_sol, eval_sol_unsafe, num_opt_sols, rank_unsafe, unrank_safe
+from triangolo_lib import Triangolo
 
 ############## TESTCASES' PARAMETERS ############################
 TL = 1   # the time limit for each testcase
@@ -16,22 +16,22 @@ DATA = ((10, (5, 7)), (10, (8, 10)), (10, (25, 28)), (70, (30, 40)))
 #################################################################
 
 
-def gen_tc(min_n,max_n):
+def gen_tc(min_n, max_n):
     n = randint(min_n, max_n)
-    Tr = [[randint(0, 9) for j in range(i+1)] for i in range(n)]
-    rnk = randrange(num_opt_sols(Tr))
-    print(n,rnk)
-    display_triangle(Tr,stdout)
-    return (Tr,rnk)
+    Tr = Triangolo([[randint(0, 9) for j in range(i+1)] for i in range(n)])
+    Tr.display(stdout)
+    rnk = randrange(Tr.num_opt_sols_ric_memo())
+    print(rnk)
+    return (Tr, rnk)
 
-def check_tc(Tr,rnk):
+def check_tc(Tr, rnk):
     risp_val = int(input())
     risp_sol = input().strip()
-    ok, rank_of_risp = rank_unsafe(Tr,risp_sol,risp_val)
+    ok, rank_of_risp = Tr.rank_unsafe(risp_sol, risp_val)
     if not ok:
-        return False,rank_of_risp
+        return False, rank_of_risp
     if rank_of_risp != rnk:
-        return False, f"On input:\n{len(Tr)} {rnk}\n{triangle_as_str(Tr)}\nyou were right in stating that the optimum value of a solution is {risp_val}. However, you then returned the optimal solution:\n{risp_sol}\nwhich is of rank {rank_of_risp}. Instead, the optimal solution of rank {rnk}, as required, was:\n{unrank_safe(Tr,rnk)}"
+        return False, f"On input:\n{Tr.n} {rnk}\n{Tr.as_str(with_n = False)}\nyou were right in stating that the optimum value of a solution is {risp_val}. However, you then returned the optimal solution:\n{risp_sol}\nwhich is of rank {rank_of_risp}. Instead, the optimal solution of rank {rnk}, as required, was:\n{Tr.unrank_safe(rnk)}"
     return True
 
 

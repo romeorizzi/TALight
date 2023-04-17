@@ -21,8 +21,8 @@ Dato il triangolo ed una soluzione ottima entro esso, si richiede di restituire 
 La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
 istanze del problema. Ogni istanza è composta nel seguente modo: la prima
 riga fornisce $n$, il numero di righe del triangolo.
-Nella seconda riga troviamo la codifica di un percorso ammissibile di massimo valore. Tale codifica è una stringa di lunghezza $n-1$ sull'alfabeto $\{L,R\}$ (sinistra/destra, specificando le scelte come a partire dal vertice in alto).
 Seguono le $n$ righe del triangolo allineate tutte a sinistra.
+L'ultima riga fornisce la codifica di un percorso ammissibile che è garantito essere un percorso di valore massimo. Tale codifica è una stringa di lunghezza $n-1$ sull'alfabeto $\{L,R\}$ (sinistra/destra, specificando le scelte come a partire dal vertice in alto).
 
 ## Output
 L'output atteso consta di tre righe per ogni testcase: la prima riga deve contenere il massimo valore di un percorso ammissibile, la seconda conterrà il numero di percorsi ottimi, la terza ritorna il rango della soluzione ottima ricevuta in input.
@@ -35,21 +35,21 @@ L'output atteso consta di tre righe per ogni testcase: la prima riga deve conten
 ```
 3
 1
-
 7
+
 5
-LLLL
 4
 1 5
 7 2 3
 1 2 1 2
 1 5 3 3 3
+LLLL
 4
-LRR
 1
 1 1
 1 1 1
 1 1 1 1
+LRR
 ```
 Spiegazione: tre testcase. Nel primo $n=1$ e la stringa vuota codifica l'unica soluzione ottima (che avrà $rank=0$), il triangolo assegnato ha una sola riga e consta di un singolo valore intero, il 7. Il secondo triangolo ha 5 righe. Il terzo ha $4$ righe e tutti i $10$ valori che lo compongono sono pari ad $1$ (le soluzioni ottime sono $8$ e la soluzione ottima proposta (il percorso codificato dalle scelte "LRR") ha rango $3$, essendo il quarto secondo l'ordinamento lessicografico). 
 

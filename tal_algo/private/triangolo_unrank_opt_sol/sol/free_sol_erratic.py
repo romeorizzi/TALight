@@ -2,21 +2,19 @@
 from sys import stderr
 from random import randrange
 
-from triangolo_lib import max_val, unrank_safe, display_triangle
+from triangolo_lib import Triangolo
 
 if __name__ == "__main__":
     T = int(input())
     for t in range(T):
-        n,rnk = map(int,input().strip().split())
-        Tr = []
-        for i in range(n):
-            Tr.append(list(map(int,input().strip().split())))
-        #display_triangle(Tr,stderr)
-        #print(max_val(Tr), file=stderr)
-        #print(num_opt_sols(Tr), file=stderr)
-        print(max_val(Tr))
-        opt_path = unrank_safe(Tr,rnk)
-        dice = randrange(0,6)
+        Tr = Triangolo() # loads the triangle instance from stdin
+        rnk = int(input())
+        #Tr.display(stderr)
+        #print(Tr.max_val_ric_memo())
+        #print(Tr.num_opt_sols_ric_memo())
+        print(Tr.max_val_ric_memo())
+        opt_path = Tr.unrank_safe(rnk)
+        dice = randrange(0, 6)
         if dice == 0:
             print(opt_path[:-1] + 'L')
         elif dice == 1:
