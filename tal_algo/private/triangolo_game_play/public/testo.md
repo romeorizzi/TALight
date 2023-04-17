@@ -26,20 +26,19 @@ Nel caso di problemi interattivi come questo è assolutamente importante nel tuo
 
 
 ## Input
-La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
-istanze del problema.
+La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$ istanze del problema.
 Ogni istanza si compone del seguente preambolo:
 una prima riga fornisce $n$, il numero di righe del triangolo.
-Una seconda riga offre, separati da spazio, gli $n-1$ bit che specificano il giocatore di turno su ciascuna riga, partendo dalla prima e con esclusione dell'ultima dove la pallina si arresta.
 Seguono le $n$ righe del triangolo, puoi assumere che esse siano tutte allineate a sinistra.
-Poi ha luogo la partita, dove le mosse dei giocatori si avvicendano rispettando i turni.
+L'ultima riga del preambolo riporta, separati da spazio, gli $n-1$ bit che specificano il giocatore di turno su ciascuna riga, partendo dalla prima e con esclusione dell'ultima dove la pallina si arresta.
+Poi ha luogo la partita, dove le mosse dei giocatori si avvicendano rispettando i turni. In input riceverai solo le mosse dell'avversario, quando il turno spetta a lui.
 Per specificare ogni sua mossa, il tuo avversario sul server scrive 'R' oppure 'L' a seconda se intende far scivolare la pallina verso destra oppure verso sinistra.
 
 
 ## Output
 L'output deve contenere varie righe per ogni testcase.
-Subito dopo aver scritto ricevuto la descrizione del gioco, scrivi su una prima riga il valore del gioco ricevuto.
-Poi ha luogo la partita, dove le mosse dei giocatori si avvicendano rispettando i turni.
+Subito dopo aver ricevuto la descrizione del gioco, scrivi su una prima riga il valore del gioco ricevuto.
+Poi ha luogo la partita, dove le mosse dei giocatori si avvicendano rispettando i turni. In output dovrai scrivere le tue mosse solo quando è il tuo turno.
 Per specificare ogni tua mossa, scrivi 'R' oppure 'L' a seconda se intendi far scivolare la pallina verso destra oppure verso sinistra, sapendo che il tuo avversario sul server adopera il tuo stesso linguaggio.
 Al termine della partita, per completare correttamente il testcase, scrivi due ulteriori righe di reportistica: la prima conterrà la codifica del cammino che ha avuto luogo, la seconda ne conterrà il valore.
 
@@ -51,24 +50,24 @@ Al termine della partita, per completare correttamente il testcase, scrivi due u
 ```
 3
 1
-
 7
+
 5
-1 0 1 0
 4
 2 6
 7 2 3
 1 2 1 2
 1 5 3 3 3
+1 0 1 0
 L
 R
 5
-1 0 1 0
 4
 2 6
 7 2 3
 1 2 1 2
 1 5 3 3 3
+1 0 1 0
 L
 L
 ```
@@ -102,18 +101,18 @@ Per specificare il mittente, inseriamo i caratteri '>' e '<' all'inizio di ciasc
 ```
 >3
 >1
->
 >7
+>
 <7
 <
 <7
 >5
->1 0 1 0
 >4
 >2 6
 >7 2 3
 >1 2 1 2
 >1 5 3 3 3
+>1 0 1 0
 <17
 <R
 >L
@@ -122,12 +121,12 @@ Per specificare il mittente, inseriamo i caratteri '>' e '<' all'inizio di ciasc
 <RLLR
 <17
 >5
->1 0 1 0
 >4
 >2 6
 >7 2 3
 >1 2 1 2
 >1 5 3 3 3
+>1 0 1 0
 <17
 <R
 >L

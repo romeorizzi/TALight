@@ -10,8 +10,7 @@ if __name__ == "__main__":
         Tr = Triangolo() # loads the triangle instance from stdin
         rnk = int(input())
         #Tr.display(stderr)
-        #print(Tr.max_val_ric_memo())
-        #print(Tr.num_opt_sols_ric_memo())
+        #print(Tr.max_val_ric_memo(), file=stderr)
         print(Tr.max_val_ric_memo())
         opt_path = Tr.unrank_safe(rnk)
         dice = randrange(0, 6)

@@ -22,11 +22,11 @@ class Triangolo:
         self.is_game = game
         if T is None:
             self.n = int(input())
-            if game:
-                self.chooser = list(map(int,input().strip().split()))
             self.T = []
             for i in range(self.n):
                 self.T.append(list(map(int,input().strip().split())))
+            if game:
+                self.chooser = list(map(int,input().strip().split()))
         else:
             self.T = T
             self.n = len(T)
@@ -34,15 +34,15 @@ class Triangolo:
 
     def as_str(self, with_n = True):
         ret = f"{str(self.n)}\n" if with_n else ""
-        if self.is_game:
-            ret += " ".join(map(str, self.chooser)) + "\n"
         ret += str(self.T[0][0])
         for i in range(1,self.n):
             ret += "\n" + " ".join(map(str, self.T[i]))
+        if self.is_game:
+            ret += "\n" + " ".join(map(str, self.chooser))
         return ret
 
     def display(self, out=stderr, with_n = True):
-        print(self.as_str(with_n=with_n), file=out)
+        print(self.as_str(with_n), file=out)
         
     @lru_cache(maxsize=None)
     def max_val_ric_memo(self, r=0, c=0):
@@ -66,14 +66,14 @@ class Triangolo:
 
     @lru_cache(maxsize=None)
     def game_val_ric_memo(self, r=0, c=0):
-        assert 0 <= c <= r < n
+        assert 0 <= c <= r < self.n
         if r == self.n-1:
             #print(f"called with {r=},{c=} returns {self.T[r][c]=}", file=stderr)
             return self.T[r][c]
-        if chooser[r] == 1:
-            risp = self.T[r][c] + max(game_val_ric_memo(r+1, c), game_val_ric_memo(r+1, c+1))
+        if self.chooser[r] == 1:
+            risp = self.T[r][c] + max(self.game_val_ric_memo(r+1, c), self.game_val_ric_memo(r+1, c+1))
         else:
-            risp = self.T[r][c] + min(game_val_ric_memo(r+1, c), game_val_ric_memo(r+1, c+1))
+            risp = self.T[r][c] + min(self.game_val_ric_memo(r+1, c), self.game_val_ric_memo(r+1, c+1))
         #print(f"called with {r=},{c=} returns {risp=}", file=stderr)
         return risp
 
@@ -81,7 +81,7 @@ class Triangolo:
     def play(self, player = 0, opt_play = True):
         r = 0; c = 0; path = ""; path_val = Tr[0][0]
         while r < self.n-1:
-            if self.chooser[r] == 1:
+            if self.chooser[r] != player:
                 next_move = input().strip()
             else:
                 if Tr[r][c] == Tr.game_val(r, c) - Tr.game_val(r+1, c):

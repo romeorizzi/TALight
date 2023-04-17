@@ -2,24 +2,19 @@
 from sys import stderr
 import random
 
-from triangolo_lib import game_val, display_triangle
+from triangolo_lib import Triangolo
 
 if __name__ == "__main__":
     T = int(input())
     for t in range(T):
-        n = int(input())
-        chooser = list(map(int,input().strip().split()))
-        Tr = []
-        for i in range(n):
-            Tr.append(list(map(int, input().strip().split())))
-        #print(f"{chooser=}", file=stderr)
-        #display_triangle(Tr, stderr)
-        #print(f"{game_val(Tr, chooser)=}", file=stderr)
+        Tr = Triangolo(game = True) # loads the triangle game instance from stdin
+        #Tr.display(stderr)
+        #print(f"{Tr.game_val()=}", file=stderr)
         dice = random.randrange(0,6)
         if dice == 0:
-            print(game_val(Tr, chooser) + random.randint(-1, 1), flush=True)
+            print(Tr.game_val() + random.randint(-1, 1), flush=True)
         else:
-            print(game_val(Tr, chooser), flush=True)
+            print(Tr.game_val(), flush=True)
         r = 0; c = 0; path = ""; path_val = Tr[r][c]
         while r < n-1:
             if chooser[r] == 0:

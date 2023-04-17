@@ -21,11 +21,11 @@ La sfida è massimizzare il valore del percorso che verrà a prodursi nel gioco,
 
 
 ## Input
-La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
-istanze del problema. Ogni istanza è composta nel seguente modo: la prima
-riga fornisce $n$, il numero di righe del triangolo.
-La seconda riga offre, separati da spazio, gli $n-1$ bit che specificano il giocatore di turno su ciascuna riga, partendo dalla prima e con esclusione dell'ultima dove la pallina si arresta.
-Seguono le n righe del triangolo, puoi assumere che esse siano tutte allineate a sinistra.
+La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$ istanze del problema.
+Ogni istanza è composta nel seguente modo:
+la prima riga fornisce $n$, il numero di righe del triangolo.
+Seguono le $n$ righe del triangolo, puoi assumere che esse siano tutte allineate a sinistra.
+Infine, l'ultima riga dell'input riporta, separati da spazio, gli $n-1$ bit che specificano il giocatore di turno su ciascuna riga, partendo dalla prima e con esclusione dell'ultima dove la pallina si arresta.
 
 ## Output
 L'output deve contenere una riga per ogni testcase, contenente il massimo valore che puoi garantire di portare a casa su quel testcase. Gioca conservativo, la casa farà lo stesso.
@@ -37,15 +37,15 @@ L'output deve contenere una riga per ogni testcase, contenente il massimo valore
 ```
 2
 1
-
 7
+
 5
-1 0 1 0
 4
 2 6
 7 2 3
 1 2 1 2
 1 5 3 3 3
+1 0 1 0
 ```
 
 Spiegazione: due testcase, il primo dei quali è un triangolo di una sola riga (e quindi di un solo valore intero, il $7$). Il secondo triangolo ha invece $5$ righe e così la seconda riga che descrive il testcase consta di quattro bit (nel caso del primo testcase quella riga era vuota).

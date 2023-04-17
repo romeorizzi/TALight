@@ -6,7 +6,7 @@ from functools import lru_cache
 
 from tc import TC
 
-from triangolo_lib import triangle_as_str, display_triangle, game_val
+from triangolo_lib import Triangolo
 
 ############## TESTCASES' PARAMETERS ############################
 TL = 1   # the time limit for each testcase
@@ -19,15 +19,13 @@ DATA = ((10, (5, 7)), (10, (8, 10)), (10, (25, 28)), (70, (30, 40)))
 
 def gen_tc(min_n, max_n):
     n = randint(min_n, max_n)
-    Tr = [[randint(0, 9) for j in range(i+1)] for i in range(n)]
-    chooser = [randint(0, 1) for _ in range(n-1)]
-    print(Tr.as_str())
-    #print(Tr.as_str(), file=stderr)
-    return (Tr, chooser)
+    Tr = Triangolo(T = [[randint(0, 9) for j in range(i+1)] for i in range(n)], chooser = [randint(0, 1) for _ in range(n-1)], game = True)
+    Tr.display(stdout)
+    return (Tr,)
 
-def check_tc(Tr, chooser):
+def check_tc(Tr):
     risp_val = int(input())
-    corr_val = Tr.game_val()
+    corr_val = Tr.game_val_ric_memo()
     #print(f"{corr_val=}, {risp_val=}", file=stderr)
     if risp_val != corr_val:
         return False, f"On input:\nTr.as_str()\nyou stated that the value of the game is {risp_val} while the correct value is {corr_val}"

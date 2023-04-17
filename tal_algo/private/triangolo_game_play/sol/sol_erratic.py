@@ -20,12 +20,12 @@ if __name__ == "__main__":
     T = int(input())
     for t in range(T):
         n = int(input())
-        chooser = list(map(int,input().strip().split()))
         Tr = []
         for i in range(n):
             Tr.append(list(map(int, input().strip().split())))
-        #print(f"{chooser=}", file=stderr)
+        chooser = list(map(int,input().strip().split()))
         #display_triangle(Tr, stderr)
+        #print(f"{chooser=}", file=stderr)
         #print(f"{game_val_ric_memo()=}", file=stderr)
         dice = random.randrange(0,6)
         if dice == 0:

@@ -20,10 +20,11 @@ if __name__ == "__main__":
     T = int(input())
     for t in range(T):
         n = int(input())
-        chooser = list(map(int,input().strip().split()))
         Tr = []
         for i in range(n):
             Tr.append(list(map(int, input().strip().split())))
+        chooser = list(map(int,input().strip().split()))
         #display_triangle(Tr, stderr)
+        #print(chooser, file=stderr)
         print(game_val_ric_memo())
         game_val_ric_memo.cache_clear()

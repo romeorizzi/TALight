@@ -5,7 +5,7 @@ def display_triangle(Tr, out=stderr):
     for i in range(n):
         print(" ".join(map(str, Tr[i])), file=out)
 
-def game_val_ric(chooser, r=0, c=0):
+def game_val_ric(r=0, c=0):
     assert 0 <= c <= r < n
     if r == n-1:
         #print(f"called with {r=},{c=} returns {Tr[r][c]=}")
@@ -23,9 +23,10 @@ if __name__ == "__main__":
     T = int(input())
     for t in range(T):
         n = int(input())
-        chooser = list(map(int, input().strip().split()))
         Tr = []
         for i in range(n):
             Tr.append(list(map(int, input().strip().split())))
+        chooser = list(map(int, input().strip().split()))
         #display_triangle(Tr, stderr)
-        print(game_val_ric(chooser))
+        #print(chooser, file=stderr)
+        print(game_val_ric())
