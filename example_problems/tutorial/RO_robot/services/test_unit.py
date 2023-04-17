@@ -5,15 +5,24 @@ from robot_lib import *
 
 
 class InputParsing(unittest.TestCase):
-    def test_cell_parsing(self):
-        cells = [
+    def test_raw_cell_parsing(self):
+        testcases = [
             (["10", "a"], (9, 0)),
             (["99", "A"], (98, 0)),
             (["11", "z"], (10, 25)),
         ]
-        for i, (cell, expect) in enumerate(cells):
-            with self.subTest(i=i):
-                self.assertEqual(expect, parse_cell(cell))
+        for i, (text, cell) in enumerate(testcases):
+            with self.subTest(i=i, text=text, cell=cell):
+                self.assertEqual(cell, parse_raw_cell(text))
+
+    def test_raw_path_parsing(self):
+        testcases = [
+            ([["1", "a"], ["1", "b"], ["2", "b"]], [(0, 0), (0, 1), (1, 1)]),
+            ([["1", "a"], ["2", "a"], ["2", "b"]], [(0, 0), (1, 0), (1, 1)]),
+        ]
+        for i, (text, path) in enumerate(testcases):
+            with self.subTest(i=i, text=text, path=path):
+                self.assertListEqual(path, parse_raw_path(text))
 
 
 class UilityFunctions(unittest.TestCase):

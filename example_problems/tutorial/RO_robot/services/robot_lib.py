@@ -11,31 +11,38 @@ from RO_std_eval_lib import std_eval_feedback
 
 
 instance_objects_spec = [
-    ('grid','matrix_of_int'),
-    ('budget',int),
-    ('diag',bool),
-    ('cell_from','list_of_str'),
-    ('cell_to','list_of_str'),
-    ('cell_through','list_of_str'),
-    ('CAP_FOR_NUM_SOLS',int),
-    ('CAP_FOR_NUM_OPT_SOLS',int),
+    ('grid', 'matrix_of_int'),
+    ('budget', int),
+    ('diag', bool),
+    ('cell_from', 'list_of_str'),
+    ('cell_to', 'list_of_str'),
+    ('cell_through', 'list_of_str'),
+    ('CAP_FOR_NUM_SOLS', int),
+    ('CAP_FOR_NUM_OPT_SOLS', int),
 ]
 additional_infos_spec = [
     ('partialDP_to', 'matrix_of_int'),
     ('partialDP_from', 'matrix_of_int'),
 ]
 answer_objects_spec = {
-    'num_paths':'int', # the number of feasible paths
-    'num_opt_paths':'int', # the number of feasible paths that collect the maximum total prize
-    'opt_val':'int', # the maximum total prize a feasible path can collect
-    'opt_path':'matrix_of_int', # a path collecting the maximum possible total prize
-    'list_opt_paths':'matrix_of_list_of_int', # the list of all optimum paths
-    'DPtable_num_to':'matrix_of_list_of_int', # the DP table meant to tell the number of paths from top-left cell to the generic cell
-    'DPtable_num_from':'matrix_of_list_of_int', # the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
-    'DPtable_opt_to':'matrix_of_list_of_int',# the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
-    'DPtable_opt_from':'matrix_of_list_of_int', # the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
-    'DPtable_num_opt_to':'matrix_of_list_of_int', # the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
-    'DPtable_num_opt_from':'matrix_of_list_of_int', # the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell
+    'num_paths': 'int',  # the number of feasible paths
+    # the number of feasible paths that collect the maximum total prize
+    'num_opt_paths': 'int',
+    'opt_val': 'int',  # the maximum total prize a feasible path can collect
+    'opt_path': 'list_of_list_of_str',  # a path collecting the maximum possible total prize
+    'list_opt_paths': 'list_of_list_of_list_of_str',  # the list of all optimum paths
+    # the DP table meant to tell the number of paths from top-left cell to the generic cell
+    'DPtable_num_to': 'matrix_of_list_of_int',
+    # the DP table meant to tell the number of paths from the generic cell to the bottom-right cell
+    'DPtable_num_from': 'matrix_of_list_of_int',
+    # the DP table meant to tell the maximum value of a feasible path path moving from top-left cell to the generic cell
+    'DPtable_opt_to': 'matrix_of_list_of_int',
+    # the DP table meant to tell the maximum value of a feasible path moving from the generic cell to the bottom-right cell
+    'DPtable_opt_from': 'matrix_of_list_of_int',
+    # the DP table meant to tell the number of optimal paths from top-left cell to the generic cell
+    'DPtable_num_opt_to': 'matrix_of_list_of_int',
+    # the DP table meant to tell the number of optimal paths from the generic cell to the bottom-right cell
+    'DPtable_num_opt_from': 'matrix_of_list_of_int',
 }
 
 answer_objects_implemented = [
@@ -78,11 +85,16 @@ def _map(x, y):
     return f"({str(x + 1)},{chr(ord('A') + y)})"
 
 
-def parse_cell(coords: list[str]) -> _Cell:
+def parse_raw_cell(coords: list[str]) -> _Cell:
+    """Parse a cell from the raw textual representation."""
     # the format specification is [row, col]
     row, col = coords
     row, col = int(row) - 1, ord(col.lower()) - ord("a")
     return (row, col)
+
+def parse_raw_path(cells: list[list[str]]) -> _Path:
+    """Parse a path from the raw textual representation."""
+    return [parse_raw_cell(x) for x in cells]
 
 
 def check_matrix_shape(f: _Mat) -> bool:
@@ -186,7 +198,7 @@ def check_instance_consistency(instance):
 
     # TODO: validate cells coordinates
     for argname in ["cell_from", "cell_to", "cell_through"]:
-        cell = parse_cell(instance[argname])
+        cell = parse_raw_cell(instance[argname])
         if cell[0] > rows or cell[1] > cols:
             print(f"Invalid {argname} {cell}")
             exit(0)
@@ -516,8 +528,10 @@ def yield_opt_paths(p: Instance, opt_beg2any: np.ndarray, opt_any2end: np.ndarra
 
     # find all paths that produce the optimal value as sum
     for c0, c1 in solutions:
-        beg2mid = yield_opt_paths_beg_to_mid(p, opt_beg2any=opt_beg2any, cost=c0)
-        mid2end = yield_opt_paths_mid_to_end(p, opt_any2end=opt_any2end, cost=c1)
+        beg2mid = yield_opt_paths_beg_to_mid(
+            p, opt_beg2any=opt_beg2any, cost=c0)
+        mid2end = yield_opt_paths_mid_to_end(
+            p, opt_any2end=opt_any2end, cost=c1)
         # merge all possible subpaths combinations
         for p0, p1 in itertools.product(beg2mid, mid2end):
             # the checkpoint cell <mid> appears in both paths,
@@ -615,9 +629,9 @@ def solver(input_to_oracle):
     grid: Final = np.array(instance["grid"])
     diag: Final = instance["diag"]
     budget: Final = instance["budget"]
-    beg: Final = parse_cell(instance["cell_from"])
-    end: Final = parse_cell(instance["cell_to"])
-    mid: Final = parse_cell(instance["cell_through"])
+    beg: Final = parse_raw_cell(instance["cell_from"])
+    end: Final = parse_raw_cell(instance["cell_to"])
+    mid: Final = parse_raw_cell(instance["cell_through"])
     CAP_FOR_NUM_OPT_SOLS: Final[int] = min(
         instance["CAP_FOR_NUM_OPT_SOLS"], limits["CAP_FOR_NUM_OPT_SOLS"])
 
@@ -690,17 +704,20 @@ class verify_submission_problem_specific(verify_submission_gen):
             g = self.goals['num_paths']
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto",
+                          f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
         if 'num_opt_paths' in self.goals:
             g = self.goals['num_opt_paths']
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto",
+                          f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
         if 'opt_val' in self.goals:
             g = self.goals['opt_val']
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto",
+                          f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
         if 'opt_path' in self.goals:
             g = self.goals['opt_path']
             # Controllo se si tratta di una lista
@@ -712,7 +729,8 @@ class verify_submission_problem_specific(verify_submission_gen):
                 for val in ele:
                     if type(val) != int:
                         return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di interi", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di interi",
+                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'list_opt_paths' in self.goals:
             g = self.goals['list_opt_paths']
             # Controllo se si tratta di una lista di liste
@@ -730,7 +748,8 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di liste di interi", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di liste di interi",
+                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_num_to' in self.goals:
             g = self.goals['DPtable_num_to']
             # Controllo se si tratta di una lista di liste
@@ -748,7 +767,8 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
+                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_num_from' in self.goals:
             g = self.goals['DPtable_num_from']
             # Controllo se si tratta di una lista di liste
@@ -766,7 +786,8 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
+                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_opt_to' in self.goals:
             g = self.goals['DPtable_opt_to']
             # Controllo se si tratta di una lista di liste
@@ -784,7 +805,8 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
+                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_opt_from' in self.goals:
             g = self.goals['DPtable_opt_from']
             # Controllo se si tratta di una lista di liste
@@ -802,7 +824,8 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
+                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_num_opt_to' in self.goals:
             g = self.goals['DPtable_num_opt_to']
             # Controllo se si tratta di una lista di liste
@@ -820,7 +843,8 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
+                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
         if 'DPtable_num_opt_from' in self.goals:
             g = self.goals['DPtable_num_opt_from']
             # Controllo se si tratta di una lista di liste
@@ -838,66 +862,90 @@ class verify_submission_problem_specific(verify_submission_gen):
                     for val in ele:
                         if type(val) != int:
                             return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale", f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
+                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
 
         return True
 
     def set_up_and_cash_handy_data(self):
-        self.beg = parse_cell(self.I.cell_from)
-        self.mid = parse_cell(self.I.cell_through)
-        self.end = parse_cell(self.I.cell_to)
+        self.beg = parse_raw_cell(self.I.cell_from)
+        self.mid = parse_raw_cell(self.I.cell_through)
+        self.end = parse_raw_cell(self.I.cell_to)
 
         rows, cols = shape(self.I.grid)
-        self.dptable_shape = (rows, cols, self.I.budget)
+        self.expected_dp_shape = (self.I.budget, rows, cols)
 
     def verify_feasibility(self, SEF: std_eval_feedback):
         if not super().verify_feasibility(SEF):
             return False
 
         if 'opt_path' in self.goals:
-            path = self.goals['opt_path'].answ
+            g = self.goals['opt_path']
+            print("opt_path answ:", g.answ)
+            path = parse_raw_path(g.answ)
+            if path[0] != self.beg:
+                reason = f"Il percorso non comincia dalla cella {self.beg}."
+                return SEF.feasibility_NO(g, reason)
+
+            if path[-1] != self.end:
+                reason = f"Il percorso non termina alla cella {self.end}."
+                return SEF.feasibility_NO(g, reason)
+            
+            if self.mid not in path:
+                reason = f"Il percorso non passa dalla cella {self.mid}."
+                return SEF.feasibility_NO(g, reason)
+
             if not check_path_feasible(path, diag=self.I.diag):
-                reason = f"Path {path} cannot be followed by valid moves."
-                return SEF.feasibility_NO('opt_path', reason)
+                reason = f"Il percorso {path} usa movimenti non validi."
+                return SEF.feasibility_NO(g, reason)
 
-            if path_cost(path) > self.I.budget:
-                reason = f"Path {path} exceeds the maximum budget."
-                return SEF.feasibility_NO('opt_path', reason)
+            if path_cost(self.I.grid, path) > self.I.budget:
+                reason = f"Il costo del percorso {path} supera il budget."
+                return SEF.feasibility_NO(g, reason)
 
-        if 'list_opt_path' in self.goals:
-            g = self.goals['list_opt_path']
-            for path in g.answ:
-                if not check_path_feasible(path, diag=self.I.diag):
-                    reason = f"Path {path} cannot be followed by valid moves."
-                    return SEF.feasibility_NO('list_opt_path', reason)
+        if 'list_opt_paths' in self.goals:
+            g = self.goals['list_opt_paths']
+            paths = [parse_raw_path(x) for x in g.answ]
+            for path in paths:
+                if path[0] != self.beg:
+                    reason = f"Il percorso non comincia dalla cella {self.beg}."
+                    return SEF.feasibility_NO(g, reason)
 
-                if path_cost(path) > self.I.budget:
-                    reason = f"Path {path} exceeds the maximum budget."
-                    return SEF.feasibility_NO('opt_path', reason)
+                if path[-1] != self.end:
+                    reason = f"Il percorso non termina alla cella {self.end}."
+                    return SEF.feasibility_NO(g, reason)
                 
+                if self.mid not in path:
+                    reason = f"Il percorso non passa dalla cella {self.mid}."
+                    return SEF.feasibility_NO(g, reason)
 
-        dptables = [
-            'DPtable_num_to', 'DPtable_num_from',
-            'DPtable_opt_to', 'DPtable_opt_from',
-            'DPtable_num_opt_to', 'DPtable_num_opt_from'
-        ]
-        for dptable in dptables:
-            if dptable in self.goals:
-                if shape(self.goals[dptable]) != self.dptable_shape:
-                    reason = f""
-                    return SEF.feasibility_NO(dptable, reason)
+                if not check_path_feasible(path, diag=self.I.diag):
+                    reason = f"Il percorso {path} usa movimenti non validi."
+                    return SEF.feasibility_NO(g, reason)
+
+                if path_cost(self.I.grid, path) > self.I.budget:
+                    reason = f"Il costo del percorso {path} supera il budget."
+                    return SEF.feasibility_NO(g, reason)
 
         return True
+    
 
     def verify_consistency(self, SEF: std_eval_feedback):
         if not super().verify_consistency(SEF):
             return False
 
+        if 'num_paths' in self.goals and 'num_opt_paths' in self.goals:
+            g_all = self.goals['num_paths']
+            g_opt = self.goals['num_opt_paths']
+            if g_opt.answ > g_all.answ:
+                reason = f"La soluzione in `{g_opt.alias}` non può essere maggiore di `{g_all.alias}`."
+                return SEF.consistency_NO(['num_paths', 'num_opt_paths'], reason)
+
         if 'opt_val' in self.goals and 'opt_path' in self.goals:
             g_val = self.goals['opt_val']
             g_sol = self.goals['opt_path']
-            opt_path = [parse_cell(x) for x in g_sol]
-            if (gain := path_gain(opt_path)) != g_val.answ:
+            opt_path = parse_raw_path(g_sol.answ)
+            if (gain := path_gain(self.I.grid, opt_path)) != g_val.answ:
                 reason = f"""
                 Il valore totale della soluzione immessa in `{g_sol.alias}` è {gain},
                 non {g_val.answ} come hai invece immesso in `{g_val.alias}`.
@@ -908,9 +956,9 @@ class verify_submission_problem_specific(verify_submission_gen):
         if 'opt_val' in self.goals and 'list_opt_paths' in self.goals:
             g_val = self.goals['opt_val']
             g_sol = self.goals['list_opt_paths']
-            list_opt_paths = [[parse_cell(x) for x in p] for p in g_sol]
+            list_opt_paths = [parse_raw_path(p) for p in g_sol.answ]
             for p in list_opt_paths:
-                if (gain := path_gain(p)) != g_val.answ:
+                if (gain := path_gain(self.I.grid, p)) != g_val.answ:
                     reason = f"""
                     Il valore totale della soluzione immessa in `{g_sol.alias}` è {gain},
                     non {g_val.answ} come hai invece immesso in `{g_val.alias}`.
