@@ -3,12 +3,10 @@ from sys import stderr
 from functools import lru_cache
 
 def display_triangle(Tr,out=stderr):
-    n = len(Tr)
     for i in range(n):
-        print(" ".join(map(str,Tr[i])), file=out)
+        print(" ".join(map(str, Tr[i])), file=out)
 
 def game_val(Tr, chooser):
-    n = len(Tr)
     for r in reversed(range(n-1)):
         for c in range(r+1):
             if chooser[r] == 1:

@@ -29,12 +29,12 @@ def max_val(Tr, r=0,c=0):
     #display_triangle(Tr, stderr)
     
     @lru_cache(maxsize=None)
-    def max_val_ric_memo(r,c):
+    def max_val_ric_memo(r, c):
         assert 0 <= c <= r < n
         if r == n-1:
             #print(f"called with {r=},{c=} returns {Tr[r][c]=}", file=stderr)
             return Tr[r][c]
-        risp = Tr[r][c] + max(max_val_ric_memo(r+1,c), max_val_ric_memo(r+1,c+1))
+        risp = Tr[r][c] + max(max_val_ric_memo(r+1, c), max_val_ric_memo(r+1, c+1))
         #print(f"called with {r=},{c=} returns {risp=}", file=stderr)
         return risp
 
@@ -45,30 +45,30 @@ def game_val(Tr, chooser, r=0,c=0):
     #display_triangle(Tr, stderr)
     
     @lru_cache(maxsize=None)
-    def game_val_ric_memo(r,c):
+    def game_val_ric_memo(r, c):
         assert 0 <= c <= r < n
         if r == n-1:
             #print(f"called with {r=},{c=} returns {Tr[r][c]=}", file=stderr)
             return Tr[r][c]
         if chooser[r] == 1:
-            risp = Tr[r][c] + max(game_val_ric_memo(r+1,c), game_val_ric_memo(r+1,c+1))
+            risp = Tr[r][c] + max(game_val_ric_memo(r+1, c), game_val_ric_memo(r+1, c+1))
         else:
-            risp = Tr[r][c] + min(game_val_ric_memo(r+1,c), game_val_ric_memo(r+1,c+1))
+            risp = Tr[r][c] + min(game_val_ric_memo(r+1, c), game_val_ric_memo(r+1, c+1))
         #print(f"called with {r=},{c=} returns {risp=}", file=stderr)
         return risp
 
     n = len(Tr)
-    return game_val_ric_memo(r,c)
+    return game_val_ric_memo(r, c)
 
 def num_opt_sols(Tr, r=0,c=0):
     @lru_cache(maxsize=None)
-    def num_opt_sols_ric_memo(r,c):
+    def num_opt_sols_ric_memo(r, c):
         assert 0 <= c <= r < n
         if r == n-1:
             return 1
         risp = 0
         if max_val(Tr, r, c) == Tr[r][c] + max_val(Tr, r+1, c):
-            risp += num_opt_sols_ric_memo(r+1,c)
+            risp += num_opt_sols_ric_memo(r+1, c)
         if max_val(Tr, r, c) == Tr[r][c] + max_val(Tr, r+1, c+1):
             risp += num_opt_sols_ric_memo(r+1, c+1)
         return risp
@@ -79,7 +79,7 @@ def opt_sol(Tr):
     n = len(Tr)
     sol = ""; r = 0; c = 0
     while r+1 < n:
-        if max_val(Tr,r+1,c) >= max_val(Tr, r+1, c+1):
+        if max_val(Tr, r+1, c) >= max_val(Tr, r+1, c+1):
             sol += "L"; r += 1
         else:
             sol += "R"; r += 1; c += 1

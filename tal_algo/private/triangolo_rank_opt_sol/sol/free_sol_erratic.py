@@ -19,6 +19,6 @@ if __name__ == "__main__":
         print(num_opt_sols(Tr))
         dice = randrange(0,6)
         if dice == 0:
-            print(randrange(-1, 1 + num_opt_sols(Tr))
+            print(randrange(-1, 1 + num_opt_sols(Tr)))
         else:
             print(rank_safe(Tr, opt_path_given))

@@ -3,40 +3,30 @@ from sys import stderr
 from random import randrange
 from functools import lru_cache
 
-def display_triangle(Tr,out=stderr):
-    n = len(Tr)
+def display_triangle(Tr, out=stderr):
     for i in range(n):
-        print(" ".join(map(str,Tr[i])), file=out)
+        print(" ".join(map(str, Tr[i])), file=out)
 
 
-def max_val(Tr, r=0,c=0):
-    #display_triangle(Tr,stderr)
-    
-    @lru_cache(maxsize=None)
-    def max_val_ric_memo(r,c):
-        assert 0 <= c <= r < n
-        if r == n-1:
-            #print(f"called with {r=},{c=} returns {Tr[r][c]=}", file=stderr)
-            return Tr[r][c]
-        risp = Tr[r][c] + max(max_val_ric_memo(r+1,c),max_val_ric_memo(r+1,c+1))
-        #print(f"called with {r=},{c=} returns {risp=}", file=stderr)
-        return risp
+@lru_cache(maxsize=None)
+def max_val_ric_memo(r=0, c=0):
+    assert 0 <= c <= r <= n
+    if r == n:
+        return 0
+    return Tr[r][c] + max(max_val_ric_memo(r+1, c), max_val_ric_memo(r+1, c+1))
 
-    n = len(Tr)
-    return max_val_ric_memo(r,c)
 
-def opt_sol(Tr):
-    n = len(Tr)
+def opt_sol():
     sol = ""; r = 0; c = 0
     while r+1 < n:
-        if max_val(Tr,r+1,c) >= max_val(Tr,r+1,c+1):
+        if max_val_ric_memo(r+1, c) >= max_val_ric_memo(r+1, c+1):
             sol += "L"; r += 1
         else:
             sol += "R"; r += 1; c += 1
     return sol
 
-def eval_sol_unsafe(Tr,sol):
-    n = len(Tr)
+
+def eval_sol_unsafe(sol):
     assert len(sol) == n-1
     r = 0; c = 0
     val_sol = Tr[r][c]
@@ -56,16 +46,17 @@ if __name__ == "__main__":
         n = int(input())
         Tr = []
         for i in range(n):
-            Tr.append(list(map(int,input().strip().split())))
+            Tr.append(list(map(int, input().strip().split())))
         #display_triangle(Tr,stderr)
-        optv = max_val(Tr)
-        opts = opt_sol(Tr)
-        dice = randrange(0,6)
+        optv = max_val_ric_memo()
+        opts = opt_sol()
+        dice = randrange(0, 6)
         if dice == 0:
             opts = opts[1:] + ('L' if opts[0]=='R' else 'R')
-            optv = eval_sol_unsafe(Tr,opts)
+            optv = eval_sol_unsafe(opts)
         elif dice == 1:
             opts = opts[:-1] + ('L' if opts[-1]=='R' else 'R')
-            optv = eval_sol_unsafe(Tr,opts)
+            optv = eval_sol_unsafe(opts)
         print(optv)
         print(opts)
+        max_val_ric_memo.cache_clear()

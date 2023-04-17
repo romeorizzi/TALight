@@ -2,35 +2,27 @@
 from sys import stderr
 
 def display_triangle(Tr,out=stderr):
-    n = len(Tr)
     for i in range(n):
-        print(" ".join(map(str,Tr[i])), file=out)
+        print(" ".join(map(str, Tr[i])), file=out)
 
 
-def max_val(Tr, r=0,c=0):
-    #display_triangle(Tr,stderr)
-    
-    def max_val_ric_memo(r,c):
-        assert 0 <= c <= r < n
-        if r == n-1:
-            #print(f"called with {r=},{c=} returns {Tr[r][c]=}", file=stderr)
-            return Tr[r][c]
-        risp = Tr[r][c] + max(max_val_ric_memo(r+1,c),max_val_ric_memo(r+1,c+1))
-        #print(f"called with {r=},{c=} returns {risp=}", file=stderr)
-        return risp
+def max_val_ric(r=0, c=0):
+    assert 0 <= c <= r <= n
+    if r == n:
+        return 0
+    return Tr[r][c] + max(max_val_ric(r+1, c), max_val_ric(r+1, c+1))
 
-    n = len(Tr)
-    return max_val_ric_memo(r,c)
 
-def opt_sol(Tr):
-    n = len(Tr)
+def opt_sol():
     sol = ""; r = 0; c = 0
     while r+1 < n:
-        if max_val(Tr,r+1,c) >= max_val(Tr,r+1,c+1):
+        if max_val_ric(r+1, c) >= max_val_ric(r+1, c+1):
             sol += "L"; r += 1
         else:
             sol += "R"; r += 1; c += 1
     return sol
+
+
 
 if __name__ == "__main__":
     T = int(input())
@@ -41,5 +33,5 @@ if __name__ == "__main__":
         for i in range(n):
             Tr.append(list(map(int,input().strip().split())))
         #display_triangle(Tr,stderr)
-        print(max_val(Tr))
-        print(opt_sol(Tr))
+        print(max_val_ric())
+        print(opt_sol())
