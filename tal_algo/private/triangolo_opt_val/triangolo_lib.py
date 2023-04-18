@@ -42,7 +42,7 @@ class Triangolo:
         return ret
 
     def display(self, out=stderr, with_n = True):
-        print(self.as_str(with_n), file=out)
+        print(self.as_str(with_n), file=out, flush=True)
         
     @lru_cache(maxsize=None)
     def max_val_ric_memo(self, r=0, c=0):
@@ -79,18 +79,18 @@ class Triangolo:
 
 
     def play(self, player = 0, opt_play = True):
-        r = 0; c = 0; path = ""; path_val = Tr[0][0]
+        r = 0; c = 0; path = ""; path_val = self.T[r][c]
         while r < self.n-1:
             if self.chooser[r] != player:
                 next_move = input().strip()
             else:
-                if Tr[r][c] == Tr.game_val(r, c) - Tr.game_val(r+1, c):
+                if self.T[r][c] == self.game_val_ric_memo(r, c) - self.game_val_ric_memo(r+1, c):
                     next_move = 'L'
                 else:
                     next_move = 'R'
                 print(next_move, flush=True);
             r += 1; c += 1 if next_move == 'R' else 0;
-            path += next_move; path_val += Tr[r][c]
+            path += next_move; path_val += self.T[r][c]
         return path, path_val
 
         

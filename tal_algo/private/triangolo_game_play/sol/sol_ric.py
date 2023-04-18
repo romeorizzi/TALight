@@ -5,7 +5,7 @@ def display_triangle(Tr, out=stderr):
     for i in range(n):
         print(" ".join(map(str, Tr[i])), file=out)
 
-def game_val_ric(chooser, r=0, c=0):
+def game_val_ric(r=0, c=0):
     assert 0 <= c <= r < n
     if r == n-1:
         #print(f"called with {r=},{c=} returns {Tr[r][c]=}")
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 next_move = input().strip()
                 #print(f"server move = {next_move}", file=stderr)
             else:
-                if Tr[r][c] == game_val_ric(chooser, r, c) - game_val_ric(chooser, r+1, c):
+                if Tr[r][c] == game_val_ric(r, c) - game_val_ric(r+1, c):
                     next_move = 'L'
                 else:
                     next_move = 'R'

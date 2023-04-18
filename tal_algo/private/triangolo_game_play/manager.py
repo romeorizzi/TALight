@@ -27,16 +27,16 @@ def check_tc(Tr):
     risp_val = int(input())
     corr_val = Tr.game_val_ric_memo()
     #print(f"{corr_val=}, {risp_val=}", file=stderr)
+    path, path_val = Tr.play(player = 0)
+    risp_path = input().strip()
+    risp_path_val = int(input())
+    assert path_val <= risp_val
     if risp_val != corr_val:
         return False, f"On input:\nTr.as_str()\nyou stated that the value of the game is {risp_val} while the correct value is {corr_val}"
-    path, path_val = Tr.play(player = 0)
-    assert path_val <= risp_val
     if path_val < risp_val:
         return False, f"On input:\nTr.as_str()\nyou stated that the value of the game is {risp_val}. This is correct. However, your play produced the path:\n{path}\nwhose value is only {path_val}"
-    risp_path = input().strip()
     if risp_path != path:
         return False, f"On input:\nTr.as_str()\nyou stated that the value of the game is {risp_val}. This is correct. Moreover, your play resulted in the path:\n{path}\nwhose value is {path_val} >= {risp_val}. However, you finally reported the path:\n{path}\ninstead of the actual path that was formed during the game."
-    risp_path_val = int(input())
     if risp_path_val != path_val:
         return False, f"On input:\nTr.as_str()\nyou stated that the value of the game is {risp_val}. This is correct. Moreover, we agree that, thanks to your smart play, the  actual path that was formed during the game was:\n{path}\n. Also, the value of this path is {path_val} >= {risp_val}, as required! However, in the very end you stated that the value of this path is {risp_path_val} instead of {path_val}. Please, correct this inconsistency!"
     return True

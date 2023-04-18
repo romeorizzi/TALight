@@ -23,7 +23,7 @@ if __name__ == "__main__":
         Tr = []
         for i in range(n):
             Tr.append(list(map(int, input().strip().split())))
-        chooser = list(map(int,input().strip().split()))
+        chooser = list(map(int, input().strip().split()))
         #display_triangle(Tr, stderr)
         #print(f"{chooser=}", file=stderr)
         #print(f"{game_val_ric_memo()=}", file=stderr)
