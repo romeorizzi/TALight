@@ -3,7 +3,10 @@
 from functools import lru_cache
 from os import environ
 from random import randrange, randint
+
 from tc import TC
+
+from campo_minato_lib import CampoMinato
 
 ############## TESTCASES' PARAMETERS ############################
 TL = 1   # the time limit for each testcase
