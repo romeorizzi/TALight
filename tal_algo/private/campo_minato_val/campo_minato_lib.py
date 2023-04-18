@@ -59,7 +59,7 @@ class CampoMinato:
         return self.num_paths_from_ric_memo(r+1, c) + self.num_paths_from_ric_memo(r, c+1)
 
     @lru_cache(maxsize=None)
-    def num_paths_to_ric_memo(r = 0, c = 0):
+    def num_paths_to_ric_memo(r = self.m -1, c = self.n -1):
         assert -1 <= r <= self.m
         assert -1 <= c <= self.n
         if r == -1:
