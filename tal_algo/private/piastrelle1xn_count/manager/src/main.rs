@@ -1,7 +1,7 @@
 use std::io;
 use rand::Rng;
 use std::{env, time::Duration}; 
-use manager::*;
+use tc::*;
 
 //############## TESTCASES' PARAMETERS ############################
 const TL: Duration = Duration::from_secs(1);   // the time limit for each testcase
