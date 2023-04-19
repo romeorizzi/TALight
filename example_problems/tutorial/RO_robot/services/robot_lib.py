@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from typing import Dict, Final, List, Tuple, TypeVar
 import itertools
+import re
 
 import numpy as np
 
@@ -29,7 +30,8 @@ answer_objects_spec = {
     # the number of feasible paths that collect the maximum total prize
     'num_opt_paths': 'int',
     'opt_val': 'int',  # the maximum total prize a feasible path can collect
-    'opt_path': 'list_of_list_of_str',  # a path collecting the maximum possible total prize
+    # a path collecting the maximum possible total prize
+    'opt_path': 'list_of_list_of_str',
     'list_opt_paths': 'list_of_list_of_list_of_str',  # the list of all optimum paths
     # the DP table meant to tell the number of paths from top-left cell to the generic cell
     'DPtable_num_to': 'matrix_of_list_of_int',
@@ -67,7 +69,7 @@ limits = {
 _T = TypeVar("_T")
 
 _Cell = Tuple[int, int]
-_Path = list[_Cell]
+_Path = List[_Cell]
 _Mat = List[List[_T]]
 
 
@@ -85,14 +87,15 @@ def _map(x, y):
     return f"({str(x + 1)},{chr(ord('A') + y)})"
 
 
-def parse_raw_cell(coords: list[str]) -> _Cell:
+def parse_raw_cell(coords: List[str]) -> _Cell:
     """Parse a cell from the raw textual representation."""
     # the format specification is [row, col]
     row, col = coords
     row, col = int(row) - 1, ord(col.lower()) - ord("a")
     return (row, col)
 
-def parse_raw_path(cells: list[list[str]]) -> _Path:
+
+def parse_raw_path(cells: List[List[str]]) -> _Path:
     """Parse a path from the raw textual representation."""
     return [parse_raw_cell(x) for x in cells]
 
@@ -178,7 +181,7 @@ def check_path_feasible(path: List[_Cell], diag: bool) -> bool:
     return True
 
 
-def check_instance_consistency(instance):
+def check_instance_consistency(instance: Dict):
     grid = instance['grid']
     rows, cols = shape(grid)
     # TODO: ask whether this check is necessary for the type 'matrix_of_int'
@@ -441,7 +444,7 @@ def dp_num_opt_from(
 def yield_opt_paths_beg_to_mid(p: Instance, opt_beg2any: np.ndarray, cost: int):
     assert cost >= 0
 
-    def build(path: list[_Cell], c: int):
+    def build(path: List[_Cell], c: int):
         x, y = path[-1]
 
         # check if we have reached the end
@@ -479,7 +482,7 @@ def yield_opt_paths_beg_to_mid(p: Instance, opt_beg2any: np.ndarray, cost: int):
 def yield_opt_paths_mid_to_end(p: Instance, opt_any2end: np.ndarray, cost: int):
     assert cost >= 0
 
-    def build(path: list[_Cell], c: int):
+    def build(path: List[_Cell], c: int):
         x, y = path[-1]
 
         # check if we have reached the end
@@ -514,7 +517,7 @@ def yield_opt_paths(p: Instance, opt_beg2any: np.ndarray, opt_any2end: np.ndarra
 
     # list all cost combinations for the subpaths with associated complete path value
     midx, midy = p.mid
-    solutions = list[tuple[int, int, int]]()
+    solutions = []
     for c0, c1 in zip(range(p.cost + 1), reversed(range(p.cost + 1))):
         value = opt_beg2any[c0][midx][midy] + opt_any2end[c1][midx][midy]
         solutions.append((c0, c1, value))
@@ -565,7 +568,7 @@ def query_num(num_beg2any: np.ndarray, num_any2end: np.ndarray, through: _Cell):
     x, y = through
     budget = num_beg2any.shape[0]  # dptable matrix is [budget][row][col]
 
-    solutions = list[int]()
+    solutions = []
     for b0, b1 in zip(range(budget), reversed(range(budget))):
         num_A_to_B = num_beg2any[b0][x][y]
         num_B_to_C = num_any2end[b1][x][y]
@@ -580,7 +583,7 @@ def query_opt(opt_beg2any: np.ndarray, opt_any2end: np.ndarray, through: _Cell):
     x, y = through
     budget = opt_beg2any.shape[0]  # dptable matrix is [budget][row][col]
 
-    solutions = list[int]()
+    solutions = []
     for b0, b1 in zip(range(budget), reversed(range(budget))):
         opt_A_to_B = opt_beg2any[b0][x][y]
         opt_B_to_C = opt_any2end[b1][x][y]
@@ -602,7 +605,7 @@ def query_num_opt(
     x, y = through
     budget = num_opt_beg2any.shape[0]  # dptable matrix is [budget][row][col]
 
-    solutions = list[tuple[int, int]]()
+    solutions = []
     for b0, b1 in zip(range(budget), reversed(range(budget))):
         opt_A_to_B = opt_beg2any[b0][x][y]
         num_opt_A_to_B = num_opt_beg2any[b0][x][y]
@@ -623,7 +626,7 @@ def query_num_opt(
 def solver(input_to_oracle):
     assert input_to_oracle is not None
 
-    instance: Final[dict] = input_to_oracle["input_data_assigned"]
+    instance: Final[Dict] = input_to_oracle["input_data_assigned"]
 
     # extract and parse inputs
     grid: Final = np.array(instance["grid"])
@@ -706,164 +709,81 @@ class verify_submission_problem_specific(verify_submission_gen):
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
             SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto",
                           f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+            
         if 'num_opt_paths' in self.goals:
             g = self.goals['num_opt_paths']
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
             SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto",
                           f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+            
         if 'opt_val' in self.goals:
             g = self.goals['opt_val']
             if type(g.answ) != int:
                 return SEF.format_NO(g, f"Come `{g.alias}` hai immesso `{g.answ}` dove era invece richiesto di immettere un intero.")
             SEF.format_OK(g, f"Come `{g.alias}` hai immesso un intero come richiesto",
                           f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")
+            
         if 'opt_path' in self.goals:
             g = self.goals['opt_path']
             # Controllo se si tratta di una lista
             if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di celle (esempio [['1', 'A'], ...]). Hai invece immesso `{g.answ}`.")
 
-            # Controllo se gli elemnti della lista sono tutti interi
+            # Controllo se gli elemnti della lista sono celle
             for ele in g.answ:
-                for val in ele:
-                    if type(val) != int:
-                        return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di interi",
+                if type(ele) != list or len(ele) != 2 or type(ele[0]) != str or type(ele[1]) != str:
+                    return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista `{g.alias}` deve essere una cella. L'elemento `{ele}` da te inserito non è un cella.")
+                if not str.isdigit(ele[0]) or not str.isalpha(ele[1]) or len(ele[1]) > 1:
+                    return SEF.format_NO(g, f"Ogni cella in `{g.alias}` deve avere coordinate valide (esempio ['1', 'A']). L'elemento `{ele}` da te inserito non è una cella valida.")
+
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di celle",
                           f"resta da stabilire l'ammissibilità di `{g.alias}`")
+            
         if 'list_opt_paths' in self.goals:
             g = self.goals['list_opt_paths']
             # Controllo se si tratta di una lista di liste
             if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste di celle (esempio [[['1', 'A'], ...], ['1', 'A'], ...]]). Hai invece immesso `{g.answ}`.")
 
-            # Controllo se le liste sono liste di interi
+            # Controllo se le liste sono liste di celle
             for obj in g.answ:
                 if type(obj) != list:
-                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste di celle (esempio [[['1', 'A'], ...], ['1', 'A'], ...]]). Hai invece immesso `{g.answ}`.")
 
-            # Controllo se gli elemnti della lista sono tutti interi
+            # Controllo se gli elemnti della lista sono tutte celle
             for obj in g.answ:
                 for ele in obj:
-                    for val in ele:
-                        if type(val) != int:
-                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di liste di interi",
+                    if type(ele) != list or len(ele) != 2 or type(ele[0]) != str or type(ele[1]) != str:
+                        return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere una cella. L'elemento `{ele}` da te inserito non è una cella.")
+                    if not str.isdigit(ele[0]) or not str.isalpha(ele[1]) or len(ele[1]) > 1:
+                        return SEF.format_NO(g, f"Ogni cella in `{g.alias}` deve avere coordinate valide (esempio ['1', 'A']). L'elemento `{ele}` da te inserito non è una cella valida.")
+                        
+            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una lista di liste di celle",
                           f"resta da stabilire l'ammissibilità di `{g.alias}`")
-        if 'DPtable_num_to' in self.goals:
-            g = self.goals['DPtable_num_to']
-            # Controllo se si tratta di una lista di liste
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
 
-            # Controllo se le liste sono liste di interi
-            for obj in g.answ:
-                if type(obj) != list:
-                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
+        dptable_goal_names = [f"DPtable_{x}" for x in
+                              ['num_to', 'num_from', 'opt_to', 'opt_from', 'num_opt_to', 'num_opt_from']]
+        for name in dptable_goal_names:
+            if name in self.goals:
+                g = self.goals[name]
+                # Controllo se si tratta di una lista di liste
+                if type(g.answ) != list:
+                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una matrice tridimensionale di interi (esempio [[[0, ...]], [[1, ...]]]). Hai invece immesso `{g.answ}`.")
 
-            # Controllo se gli elemnti della lista sono tutti interi
-            for obj in g.answ:
-                for ele in obj:
-                    for val in ele:
-                        if type(val) != int:
-                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
-                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
-        if 'DPtable_num_from' in self.goals:
-            g = self.goals['DPtable_num_from']
-            # Controllo se si tratta di una lista di liste
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
+                # Controllo se le liste sono liste di interi
+                for obj in g.answ:
+                    if type(obj) != list:
+                        return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una matrice tridimensionale di interi (esempio [[0, 0], ...,]]). Hai invece immesso `{g.answ}`.")
 
-            # Controllo se le liste sono liste di interi
-            for obj in g.answ:
-                if type(obj) != list:
-                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se gli elemnti della lista sono tutti interi
-            for obj in g.answ:
-                for ele in obj:
-                    for val in ele:
-                        if type(val) != int:
-                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
-                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
-        if 'DPtable_opt_to' in self.goals:
-            g = self.goals['DPtable_opt_to']
-            # Controllo se si tratta di una lista di liste
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se le liste sono liste di interi
-            for obj in g.answ:
-                if type(obj) != list:
-                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se gli elemnti della lista sono tutti interi
-            for obj in g.answ:
-                for ele in obj:
-                    for val in ele:
-                        if type(val) != int:
-                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
-                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
-        if 'DPtable_opt_from' in self.goals:
-            g = self.goals['DPtable_opt_from']
-            # Controllo se si tratta di una lista di liste
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se le liste sono liste di interi
-            for obj in g.answ:
-                if type(obj) != list:
-                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se gli elemnti della lista sono tutti interi
-            for obj in g.answ:
-                for ele in obj:
-                    for val in ele:
-                        if type(val) != int:
-                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
-                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
-        if 'DPtable_num_opt_to' in self.goals:
-            g = self.goals['DPtable_num_opt_to']
-            # Controllo se si tratta di una lista di liste
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se le liste sono liste di interi
-            for obj in g.answ:
-                if type(obj) != list:
-                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se gli elemnti della lista sono tutti interi
-            for obj in g.answ:
-                for ele in obj:
-                    for val in ele:
-                        if type(val) != int:
-                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
-                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
-        if 'DPtable_num_opt_from' in self.goals:
-            g = self.goals['DPtable_num_opt_from']
-            # Controllo se si tratta di una lista di liste
-            if type(g.answ) != list:
-                return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di liste (esempio [[[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]], [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se le liste sono liste di interi
-            for obj in g.answ:
-                if type(obj) != list:
-                    return SEF.format_NO(g, f"Come `{g.alias}` è richiesto si inserisca una lista di interi (esempio [[0, 0], ..., [{len(self.I.grid)-1}, {len(self.I.grid[0])-1}]]). Hai invece immesso `{g.answ}`.")
-
-            # Controllo se gli elemnti della lista sono tutti interi
-            for obj in g.answ:
-                for ele in obj:
-                    for val in ele:
-                        if type(val) != int:
-                            return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da tè inserito non è un itero.")
-            SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
-                          f"resta da stabilire l'ammissibilità di `{g.alias}`")
+                # Controllo se gli elemnti della lista sono tutti interi
+                for obj in g.answ:
+                    for ele in obj:
+                        for val in ele:
+                            if type(val) != int:
+                                return SEF.format_NO(g, f"Ogni oggetto che collochi nella lista di liste `{g.alias}` deve essere un intero. L'elemento `{ele}` da te inserito non è un itero.")
+                SEF.format_OK(g, f"Come `{g.alias}` hai immesso una matrice tridimensionale",
+                              f"resta da stabilire l'ammissibilità di `{g.alias}`")
 
         return True
 
@@ -890,7 +810,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             if path[-1] != self.end:
                 reason = f"Il percorso non termina alla cella {self.end}."
                 return SEF.feasibility_NO(g, reason)
-            
+
             if self.mid not in path:
                 reason = f"Il percorso non passa dalla cella {self.mid}."
                 return SEF.feasibility_NO(g, reason)
@@ -914,7 +834,7 @@ class verify_submission_problem_specific(verify_submission_gen):
                 if path[-1] != self.end:
                     reason = f"Il percorso non termina alla cella {self.end}."
                     return SEF.feasibility_NO(g, reason)
-                
+
                 if self.mid not in path:
                     reason = f"Il percorso non passa dalla cella {self.mid}."
                     return SEF.feasibility_NO(g, reason)
@@ -928,7 +848,6 @@ class verify_submission_problem_specific(verify_submission_gen):
                     return SEF.feasibility_NO(g, reason)
 
         return True
-    
 
     def verify_consistency(self, SEF: std_eval_feedback):
         if not super().verify_consistency(SEF):
@@ -946,11 +865,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             g_sol = self.goals['opt_path']
             opt_path = parse_raw_path(g_sol.answ)
             if (gain := path_gain(self.I.grid, opt_path)) != g_val.answ:
-                reason = f"""
-                Il valore totale della soluzione immessa in `{g_sol.alias}` è {gain},
-                non {g_val.answ} come hai invece immesso in `{g_val.alias}`.
-                La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.
-                """
+                reason = f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {gain}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}."
                 return SEF.consistency_NO(['opt_val', 'opt_path'], reason)
 
         if 'opt_val' in self.goals and 'list_opt_paths' in self.goals:
@@ -959,11 +874,7 @@ class verify_submission_problem_specific(verify_submission_gen):
             list_opt_paths = [parse_raw_path(p) for p in g_sol.answ]
             for p in list_opt_paths:
                 if (gain := path_gain(self.I.grid, p)) != g_val.answ:
-                    reason = f"""
-                    Il valore totale della soluzione immessa in `{g_sol.alias}` è {gain},
-                    non {g_val.answ} come hai invece immesso in `{g_val.alias}`.
-                    La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.
-                    """
+                    reason = f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {gain}, non {g_val.answ} come hai invece immesso in `{g_val.alias}`. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}."
                     return SEF.consistency_NO(['opt_val', 'list_opt_paths'], reason)
 
         return True
