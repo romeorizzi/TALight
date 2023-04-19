@@ -5,7 +5,8 @@
  *  Soluzione in python per specchio
  *  Romeo Rizzi, 2022-05-25
 """
-from sys import stderr
+from sys import stderr, setrecursionlimit
+setrecursionlimit(100000)
 
 T = int(input())
 for _ in range(T):

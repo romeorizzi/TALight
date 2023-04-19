@@ -1,26 +1,31 @@
 #!/usr/bin/env python3
 from os import environ
-from sys import stderr
+from sys import stderr, setrecursionlimit
 from random import randrange, randint
 from functools import lru_cache
 
 from tc import TC
 
-from rand_trees import random_tree_any_degree, random_tree_degree_at_most_2, random_binary_tree
+from rand_trees import random_tree_any_degree, random_tree_at_most_2_children, random_binary_tree
+
+setrecursionlimit(100000)
 
 ############## TESTCASES' PARAMETERS ############################
 TL = 1   # the time limit for each testcase
 
-MAPPER = {"esempi_testo": 1, "small": 2, "medium": 3, "big": 4, "huge_binary": 5, "huge_max_2_children": 6, "huge": 7}
-DATA = ((2,  (random_tree_any_degree,  5,  6)),
-        (20, (random_tree_any_degree,  8, 10)),
-        (20, (random_tree_any_degree, 95, 100)),
-        (20, (random_tree_any_degree, 9500, 10000)),
-        (14, (random_binary_tree, 95000, 100000)),
-        (14, (random_tree_degree_at_most_2, 95000, 100000)),
-        (20, (random_tree_any_degree, 95000, 100000))
-       )
-# that is, 10 instances of size "tiny", i.e., with 5 <= n <= 6 
+HARDCODED = (
+             [4, 2, 0, 3, 0, 0, 1, 0, 0, 0, 0],
+             [4, 0, 0, 0, 2, 3, 1, 0, 0, 0, 0]
+            )
+DATA = tuple((1, (lambda x : x, h)) for h in HARDCODED)
+DATA = DATA + (
+               (21, (random_tree_any_degree,  8, 10)),
+               (22, (random_tree_any_degree, 95, 100)),
+               (16, (random_binary_tree, 95000, 100000)),
+               (16, (random_tree_at_most_2_children, 95000, 100000)),
+               (23, (random_tree_any_degree, 95000, 100000))
+              ) 
+MAPPER = {"esempi_testo": 2, "small": len(HARDCODED) +1, "medium": len(HARDCODED) +2, "big_binary": len(HARDCODED) +3, "big_max_2_children": len(HARDCODED) +4, "big": len(HARDCODED) +5}
 #################################################################
 
 def as_str(tree):
@@ -41,9 +46,8 @@ def specchia(input_tree):
     reverso_write_mirrored_tree()
     return list(reversed(mirrored_tree_reversed))
 
-def gen_tc(randtree_generator, minn, maxn):
-    n = randint(minn, maxn)
-    tree = randtree_generator(n)
+def gen_tc(*args):
+    tree = args[0](*args[1:])
     print(" ".join(map(str, tree)))
     #print(f'PRINTED: {" ".join(map(str, tree))}', file=stderr)
     return (tree,)

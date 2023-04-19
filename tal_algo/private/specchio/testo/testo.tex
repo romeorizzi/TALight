@@ -109,26 +109,26 @@ Il vostro programma deve restituire su \verb'stdout' una sola riga, costituita d
 \section*{Subtask}
 \begin{description}
 \item[\textbf{\hspace{1ex}[2 istanze] esempi\_testo:}] i due esempi del testo.
-\item [\textbf{[20 istanze] small:}] $N \le 10$.
-\item [\textbf{[20 istanze] medium:}] $N \le 100$.
-\item [\textbf{[14 istanze] huge\_binary:}] $N \le 10\,000$.
-\item [\textbf{[14 istanze] huge\_max\_2\_children:}] $N \le 100\,000$.
-\item [\textbf{[20 istanze] huge:}] $N \le 100\,000$.
+\item [\textbf{[21 istanze] small:}] $N \le 10$.
+\item [\textbf{[22 istanze] medium:}] $N \le 100$.
+\item [\textbf{[16 istanze] big\_binary:}] $N \le 100\,000$.
+\item [\textbf{[16 istanze] big\_max\_2\_children:}] $N \le 100\,000$.
+\item [\textbf{[23 istanze] big:}] $N \le 100\,000$.
 \end{description}
 
 In generale, quando si richiede la valutazione di un subtask vengono valutati anche i subtask che li precedono, ma si evita di avventurarsi in subtask successivi  fuori dalla portata del tuo programma che potrebbe andare in crash o comportare tempi lunghi per ottenere la valutazione completa della sottomissione. Ad esempio, chiamando:
 
 \begin{verbatim}
-    rtal -s wss://ta.di.univr.it/algo  connect -a size=big  specchio -- python my_solution.py
+    rtal -s wss://ta.di.univr.it/algo  connect -a size=medium  specchio -- python my_solution.py
 \end{verbatim}
 
 \noindent
 vengono valutati, nell'ordine, i subtask:\\
 
-{\tt esempi\_testo}, {\tt small}, {\tt medium}, {\tt big}.\\
+{\tt esempi\_testo}, {\tt small}, {\tt medium}.\\
 
 \noindent
-Il valore di default per l'argomento {\tt size} è {\tt huge}.\\
+Il valore di default per l'argomento {\tt size} è {\tt big}.\\
 
 \noindent
 Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.

@@ -59,24 +59,23 @@ L'output deve contenere una riga per ogni testase. Tale riga è costituita da un
 Sono previsti i seguenti subtask.
 
 * **[2 istanze] esempi_testo:** i due esempi del testo
-* **[20 istanze] small:** $n \leq 10$
-* **[20 istanze] medium:** $n \leq 100$
-* **[20 istanze] big:** $n \leq 10\,000$
-* **[14 istanze] huge_binary:** ogni nodo ha zero oppure due figli every node has either zero or two children, $n \leq 100\,000$
-* **[14 istanze] huge_max_2_children:** every node has at most two children, $n \leq 100\,000$
-* **[20 istanze] huge:** $n \leq 100\,000$
+* **[21 istanze] small:** $n \leq 10$
+* **[22 istanze] medium:** $n \leq 100$
+* **[16 istanze] big_binary:** ogni nodo ha zero oppure due figli every node has either zero or two children, $n \leq 100\,000$
+* **[16 istanze] big_max_2_children:** every node has at most two children, $n \leq 100\,000$
+* **[23 istanze] big:** $n \leq 100\,000$
 
 In generale, quando si richiede la valutazione di un subtask vengono valutati anche i subtask che li precedono, ma si evita di avventurarsi in subtask successivi  fuori dalla portata del tuo programma che potrebbe andare in crash o comportare tempi lunghi per ottenere la valutazione completa della sottomissione. Ad esempio, chiamando:
 
 ```
-    rtal -s wss://ta.di.univr.it/algo  connect -a size=big  specchio -- python my_solution.py
+    rtal -s wss://ta.di.univr.it/algo  connect -a size=medium  specchio -- python my_solution.py
 ```
 
 vengono valutati, nell'ordine, i subtask:
 
-**esempi_testo**, **small**, **medium**, **big**.
+**esempi_testo**, **small**, **medium**.
 
-Il valore di default per l'argomento **size** è **huge**.
+Il valore di default per l'argomento **size** è **big**.
 
 Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 

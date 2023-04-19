@@ -4,7 +4,7 @@
 from sys import stderr
 import random
 
-def random_tree(n: int, degree_at_most_2: bool):
+def random_tree(minn: int, maxn: int, degree_at_most_2: bool):
   def randomParenth(a: int, b: int, degree_at_most_2):
     nonlocal s
     if a >= b:
@@ -36,6 +36,7 @@ def random_tree(n: int, degree_at_most_2: bool):
     return root_right
 
 
+  n = random.randint(minn, maxn)
   s = [None] * (2*n)
   tree = [None] * n
   randomParenth(0, 2*n-3, degree_at_most_2)
@@ -47,16 +48,16 @@ def random_tree(n: int, degree_at_most_2: bool):
   tree[0] = num_children
   return [tree[i] for i in range(n)]
 
-def random_tree_any_degree(n: int):
-  return  random_tree(n, degree_at_most_2 = False)
+def random_tree_any_degree(minn: int, maxn: int):
+  return  random_tree(minn, maxn, degree_at_most_2 = False)
 
-def random_tree_degree_at_most_2(n: int):
-  return  random_tree(n, degree_at_most_2 = True)
+def random_tree_at_most_2_children(minn: int, maxn: int):
+  return  random_tree(minn, maxn, degree_at_most_2 = True)
 
-def random_binary_tree(n: int):
-  tree = random_tree(n, degree_at_most_2 = True)
+def random_binary_tree(minn: int, maxn: int):
+  tree = random_tree(minn, maxn, degree_at_most_2 = True)
   pruned_tree = [x for x in tree if x != 1]
-  return [2, 0] * ((n - len(pruned_tree))//2) + pruned_tree 
+  return [2, 0] * ((len(tree) - len(pruned_tree))//2) + pruned_tree 
 
 
 def print_tree_edges(prufer, m):
@@ -113,7 +114,7 @@ def generate_random_free_labeled_tree(n):
 if __name__ == "__main__":
   N = int(input("N = "))
   print(f"{random_tree_any_degree(N)=}")
-  print(f"{random_tree_degree_at_most_2(N)=}")
+  print(f"{random_tree_at_most_2_children(N)=}")
   print(f"{random_binary_tree(N)=}")
 
   generate_random_free_labeled_tree(n)
