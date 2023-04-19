@@ -4,7 +4,7 @@ import numpy.testing as npt
 from robot_lib import *
 
 
-class InputParsing(unittest.TestCase):
+class InputParsingTest(unittest.TestCase):
     def test_raw_cell_parsing(self):
         testcases = [
             (["10", "a"], (9, 0)),
@@ -51,7 +51,7 @@ class UilityFunctions(unittest.TestCase):
                 self.assertEqual(expected_cost, cell_cost(content))
 
 
-class DPTableGenerators(unittest.TestCase):
+class DPTableGeneratorsTest(unittest.TestCase):
 
     def test_num_to_cell(self):
         grid = [[0, -1, 2],
@@ -174,7 +174,18 @@ class DPTableGenerators(unittest.TestCase):
         npt.assert_array_equal(actual, expect)
 
 
-class PathGenerators(unittest.TestCase):
+class DPTableQueryTest(unittest.TestCase):
+    
+    def test_query_opt(self):
+        grid = [[0, 1, 0, 3, 0], [-1, 2,-1,-1, 0], [0, 0, 2, 1, 0], [0,-1, 0, 1, 1] ]
+        grid = np.array(grid)
+        beg2any = dp_opt_to(grid, (0,0), budget=0, diag=False)
+        any2end = dp_opt_from(grid, (3,4), budget=0, diag=False)
+        opt = query_opt(grid, opt_beg2any=beg2any, opt_any2end=any2end, through=(2,2))
+        self.assertEqual(opt, 8)
+
+
+class PathGeneratorsTest(unittest.TestCase):
 
     def test_yield_opt_paths_beg2mid(self):
         testcases = [

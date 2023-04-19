@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import Dict, Final, List, Tuple, TypeVar
 import itertools
-import re
 
 import numpy as np
 
@@ -578,7 +577,7 @@ def query_num(num_beg2any: np.ndarray, num_any2end: np.ndarray, through: _Cell):
     return sum(solutions)
 
 
-def query_opt(opt_beg2any: np.ndarray, opt_any2end: np.ndarray, through: _Cell):
+def query_opt(grid: np.ndarray, opt_beg2any: np.ndarray, opt_any2end: np.ndarray, through: _Cell):
     assert opt_beg2any.shape == opt_any2end.shape
     x, y = through
     budget = opt_beg2any.shape[0]  # dptable matrix is [budget][row][col]
@@ -590,7 +589,9 @@ def query_opt(opt_beg2any: np.ndarray, opt_any2end: np.ndarray, through: _Cell):
         solutions.append(opt_A_to_B + opt_B_to_C)
 
     # pick the best solution
-    return max(solutions)
+    # NOTE: all solutions include the gain of the <through> cell two times,
+    # we need to remove it once
+    return max(solutions) - cell_gain(grid[x][y])
 
 
 def query_num_opt(
@@ -662,7 +663,7 @@ def solver(input_to_oracle):
     assert DPtable_num_opt_from.shape == expected_dptable_shape
 
     num_paths = query_num(DPtable_num_to, DPtable_num_from, mid)
-    opt_val = query_opt(DPtable_opt_to, DPtable_opt_from, mid)
+    opt_val = query_opt(grid, DPtable_opt_to, DPtable_opt_from, mid)
     num_opt_paths = query_num_opt(DPtable_opt_to, DPtable_opt_from,
                                   DPtable_num_opt_to, DPtable_num_opt_from, mid)
 
