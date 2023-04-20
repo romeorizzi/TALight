@@ -18,13 +18,14 @@ Dato il triangolo ed il rango, si richiede di restituire il percorso ottimo di q
 
 
 ## Input
-La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
-istanze del problema. Ogni istanza è composta nel seguente modo: la prima
+La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$ istanze del problema.
+Ogni istanza è composta nel seguente modo: la prima
 riga fornisce $n$, il numero di righe del triangolo.
-Seguono le n righe del triangolo allineate tutte a sinistra.
+Seguono le $n$ righe del triangolo allineate tutte a sinistra.
+L'ultima riga fornisce $r$, un numero naturale minore del numero di cammini ottimi per il triangolo.
 
 ## Output
-L'output atteso consta di due righe per ogni testcase: la prima riga deve contenere il massimo valore di un percorso ammissibile, la seconda conterrà codifica di un percorso ammissibile di massimo valore. Tale codifica è una stringa di lunghezza $n-1$ sull'alfabeto $\{L,R\}$ (sinistra/destra, si specifichino le scelte come a partire dal vertice in alto).
+L'output atteso consta di due righe per ogni testcase: la prima riga deve contenere il massimo valore di un percorso ammissibile, la seconda conterrà una stringa di lunghezza $n-1$ sull'alfabeto $\{L,R\}$ (sinistra/destra, specificando le scelte come a partire dal vertice in alto) che codifica il cammino di massimo valore di rango $r$.
 
 \pagebreak
 ## Esempio
@@ -32,19 +33,22 @@ L'output atteso consta di due righe per ogni testcase: la prima riga deve conten
 ### Input
 ```
 3
-1 0
+1
 7
-5 0
+0
+5
 4
 1 5
 7 2 3
 1 2 1 2
 1 5 3 3 3
-4 3
+0
+4
 1
 1 1
 1 1 1
 1 1 1 1
+3
 ```
 Spiegazione: tre testcase. Nel primo $n=1$ e $rank=0$, il triangolo assegnato ha una sola riga e consta di un singolo valore intero, il 7 (si noti che questo triangolo ha una sola soluzione ottima, il che ci ha forzati a richiedere la soluzione di rango $0$). Il secondo triangolo ha 5 righe. Il terzo ha $4$ righe e tutti i $10$ valori che lo compongono sono pari ad $1$ (le soluzioni ottime sono $8$ e chiediamo di produrre quella di rango $3$, ossia la quarta secondo l'ordinamento lessicografico). 
 
@@ -66,9 +70,9 @@ Spiegazione: nel primo testcase, la soluzione ottima ha valore 7 ed è unica; es
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
-* `tiny`: $n \leq 6$
+* `tiny`: $n \leq 7$
 * `small`: $n \leq 10$
-* `medium`: $n \leq 20$
+* `medium`: $n \leq 28$
 * `big`: $n \leq 40$
 
 Il tempo limite per testcase è di $1$ secondo.

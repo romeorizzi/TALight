@@ -55,9 +55,9 @@ Spiegazione: nel primo testcase, la soluzione ottima ha valore 7 ed è specifica
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
-* `tiny`: $n \leq 6$
+* `tiny`: $n \leq 7$
 * `small`: $n \leq 10$
-* `medium`: $n \leq 20$
+* `medium`: $n \leq 28$
 * `big`: $n \leq 40$
 
 Il tempo limite per testcase è di $1$ secondo.
