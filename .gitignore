@@ -1,3 +1,6 @@
+# renditions
+*.pdf
+
 # backups
 *~
 *.bak

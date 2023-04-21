@@ -58,7 +58,7 @@ Un \emph{albero (ordinato)} \`e formato da una \emph{radice} e da un insieme fin
 
 \begin{figure}[h!]
   \centering
-    \includegraphics[scale=0.3]{figs/fig1.pdf}\\
+    \includegraphics[scale=0.3]{figs/fig1.png}\\
     \caption{Un albero.}
 \end{figure}
 
@@ -68,7 +68,7 @@ Supponete ora di guardare l'albero riflesso in uno specchio. L'ordine dei figli 
 
 \begin{figure}[h!]
   \centering
-    \includegraphics[scale=0.3]{figs/fig2.pdf}\\
+    \includegraphics[scale=0.3]{figs/fig2.png}\\
     \caption{L'albero di Figura~1 allo specchio.}
 \end{figure}
 
@@ -83,12 +83,14 @@ Fornire un metodo per passare dalla descrizione di un albero alla descrizione de
 % Input
 \section*{Dati di input}
 
-Il vostro programma legge da \verb'stdin' una sola riga contenente una sequenza di interi non negativi, separati da spazi. La sequenza descrive correttamente un albero: quindi il primo numero \`e il numero di figli della radice, ed \`e seguito dalle descrizioni dei sotto-alberi radicati nei figli della radice, prese una dopo l'altra, nel loro ordine da sinistra a destra.
+La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
+istanze del problema. Ogni istanza consta di una sola riga che codifica, come sopra spiegato, l'albero da rovesciare nello specchio.
+In pratica, la riga contiene una sequenza di interi non negativi, separati da spazi. La sequenza descrive correttamente un albero: quindi il primo numero è il numero di figli della radice, ed è immediatamente seguito dalle descrizioni dei sotto-alberi radicati nei figli della radice, prese una dopo l'altra, nel loro ordine da sinistra a destra.
 
 % Output
 \section*{Dati di output}
 
-Il vostro programma deve restituire su \verb'stdout' una sola riga, costituita da una sequenza di interi non negativi separati da spazi. Tale sequenza è intesa codificare, secondo le stesse regole che per l'input già viste sopra, l'albero rovesciato sinistra-destra, ossia l'albero dato in input visto allo specchio.
+L'output deve contenere una riga per ogni testase. Tale riga è costituita da una sequenza di interi non negativi separati da spazi. Tale sequenza è intesa codificare, secondo le stesse regole che per l'input già viste sopra, l'albero rovesciato sinistra-destra, ossia l'albero dato in input visto allo specchio.
 
 % Esempi
 \section*{Esempio di input/output}
