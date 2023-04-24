@@ -24,9 +24,9 @@ class Triangolo:
             self.n = int(input())
             self.T = []
             for i in range(self.n):
-                self.T.append(list(map(int,input().strip().split())))
+                self.T.append(list(map(int, input().strip().split())))
             if game:
-                self.chooser = list(map(int,input().strip().split()))
+                self.chooser = list(map(int, input().strip().split()))
         else:
             self.T = T
             self.n = len(T)
@@ -45,27 +45,27 @@ class Triangolo:
         print(self.as_str(with_n), file=out, flush=True)
         
     @lru_cache(maxsize=None)
-    def max_val_ric_memo(self, r=0, c=0):
+    def max_val_ric_memo(self, r = 0, c = 0):
         assert 0 <= c <= r <= self.n
         if r == self.n:
             return 0
         return self.T[r][c] + max(self.max_val_ric_memo(r+1, c), self.max_val_ric_memo(r+1, c+1))
 
     @lru_cache(maxsize=None)
-    def num_opt_sols_ric_memo(self, r=0, c=0):
+    def num_opt_sols_ric_memo(self, r = 0, c = 0):
         assert 0 <= c <= r < self.n
-        if r == self.n-1:
+        if r == self.n -1:
             return 1
         risp = 0
         if self.max_val_ric_memo(r, c) == self.T[r][c] + self.max_val_ric_memo(r+1, c):
-            risp += self.num_opt_sols_ric_memo(r+1,c)
+            risp += self.num_opt_sols_ric_memo(r+1, c)
         if self.max_val_ric_memo(r, c) == self.T[r][c] + self.max_val_ric_memo(r+1, c+1):
             risp += self.num_opt_sols_ric_memo(r+1, c+1)
         return risp
 
 
     @lru_cache(maxsize=None)
-    def game_val_ric_memo(self, r=0, c=0):
+    def game_val_ric_memo(self, r = 0, c = 0):
         assert 0 <= c <= r < self.n
         if r == self.n-1:
             #print(f"called with {r=},{c=} returns {self.T[r][c]=}", file=stderr)
