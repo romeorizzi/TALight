@@ -56,7 +56,9 @@ L'output deve contenere una riga per ogni testase. Tale riga è costituita da un
 
 ## Subtask
 
-Sono previsti i seguenti subtask.
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
+
+Per il subtasking sono previste le seguenti `size`:
 
 * **[2 istanze] esempi_testo:** i due esempi del testo
 * **[21 istanze] small:** $n \leq 10$
@@ -75,8 +77,7 @@ vengono valutati, nell'ordine, i subtask:
 
 **esempi_testo**, **small**, **medium**.
 
-Il valore di default per l'argomento **size** è **big**.
+Il valore di default per l'argomento **size** è **big** che include tutti i testcase.
 
-Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 

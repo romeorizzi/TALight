@@ -43,7 +43,6 @@ Per specificare ogni tua mossa, scrivi 'R' oppure 'L' a seconda se intendi far s
 Al termine della partita, per completare correttamente il testcase, scrivi due ulteriori righe di reportistica: la prima conterrà la codifica del cammino che ha avuto luogo, la seconda ne conterrà il valore.
 
 
-\pagebreak
 ## Esempio
 
 ### Input
@@ -136,9 +135,9 @@ Per specificare il mittente, inseriamo i caratteri '>' e '<' all'inizio di ciasc
 <19
 ```
 
+## Subtask
 
-
-## Assunzioni
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
@@ -147,5 +146,4 @@ Per il subtasking sono previste le seguenti `size`, dove il default è `big` che
 * `medium`: $n \leq 28$
 * `big`: $n \leq 40$
 
-Il tempo limite per testcase è di $1$ secondo.
 

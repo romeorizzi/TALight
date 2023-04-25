@@ -71,7 +71,9 @@ Le righe in output saranno pertanto $M$, ma riordinate rispetto alle $M$ rispett
 
 ## Subtask
 
-Sono previsti i seguenti subtask.
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
+
+I testcase sono raggruppati nei seguenti subtask.
 
 * **[1 istanza] esempi_testo:** l'esempio del testo (disegna la casetta)
 * **[8 istanze] smallest:** $N = 2, 3, 4$ ($M \leq 6$) 
@@ -90,8 +92,7 @@ vengono valutati, nell'ordine, i subtask:
 
 **esempi_testo**, **smallest**, **small**, **medium**.
 
-Il valore di default per l'argomento **size** è **huge**.
+Il valore di default per l'argomento **size** è **huge** che include tutti i testcase.
 
-Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 

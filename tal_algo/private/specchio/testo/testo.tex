@@ -109,6 +109,11 @@ L'output deve contenere una riga per ogni testase. Tale riga è costituita da un
 
 % Subtasks
 \section*{Subtask}
+
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
+
+Per il subtasking sono previste le seguenti `size`:
+
 \begin{description}
 \item[\textbf{\hspace{1ex}[2 istanze] esempi\_testo:}] i due esempi del testo.
 \item [\textbf{[21 istanze] small:}] $N \le 10$.
@@ -130,9 +135,7 @@ vengono valutati, nell'ordine, i subtask:\\
 {\tt esempi\_testo}, {\tt small}, {\tt medium}.\\
 
 \noindent
-Il valore di default per l'argomento {\tt size} è {\tt big}.\\
+Il valore di default per l'argomento {\tt size} è {\tt big} che include tutti i testcase.\\
 
-\noindent
-Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 \end{document}
