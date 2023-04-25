@@ -35,21 +35,21 @@ int main() {
       int v = path.top();
       while( !neigh[v].empty() ) {
         if( used[neigh[v].back().second] )
-	  neigh[v].pop_back();
+	        neigh[v].pop_back();
         else {
-	  int next_v = neigh[v].back().first;
-	  int name_e = neigh[v].back().second;
-	  neigh[v].pop_back();
-	  used[name_e] = true; 
-	  path.push(next_v);
-	  v = next_v;
+          int next_v = neigh[v].back().first;
+          int name_e = neigh[v].back().second;
+          neigh[v].pop_back();
+          used[name_e] = true; 
+          path.push(next_v);
+          v = next_v;
         } 
       }
       if ( last_printed_node == NONE )
-	last_printed_node = v;
+        last_printed_node = v;
       else {
-	printf("%d %d\n", last_printed_node, v );
-	last_printed_node = v;
+        printf("%d %d\n", last_printed_node, v );
+        last_printed_node = v;
       }
       path.pop();
     } while( !path.empty() );
