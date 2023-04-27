@@ -23,7 +23,7 @@ def random_seq(seedParam, maxLengh):
         sequence.append(random.randint(0, 1))
     return sequence
 
-#TODO:
+# TODO:
 # X Controllare che l'istruzione inizi e finisca con una parentesi tonda
 # X Togliere gli spazi
 # X Controllare che i nomi degli stati non contengano spazi
@@ -41,6 +41,8 @@ def getRules(text):
     rules = {}
     i = 0
     for line in text.splitlines():
+        if line.startswith('#') or line == '':
+            continue
         # X Controllare che la stringa sia formata solo dai caratteri del mio alfabeto
         for c in line:
             if c not in alphabet and c not in reserved_chars:
@@ -87,7 +89,11 @@ def getRules(text):
         # In ogni elemento di elements, elimino gli spazi
         for el in range(len(elements)):
             elements[el] = elements[el].strip()
-            
+
+        if (elements[0] != '0' and i == 0):
+            print("Lo stato iniziale (lo stato corrente della prima istruzione) deve essere 0")
+            raise TypeError("Bad Format")
+
         # X Controllare che i caratteri letti e scritti siano un singolo carattere
         if(len(elements[1]) != 1 or len(elements[3]) != 1):
             print("Il carattere letto e scritto devono essere un singolo carattere")
@@ -109,7 +115,40 @@ def getRules(text):
             raise TypeError("Bad Format")
         
         rules[elements[0]][elements[1]] = [elements[2], elements[3], elements[4], i]
+        # rules[readstate][readtape] = [writestate, writetape, movement, currline]
         # incremento numero di riga
         i += 1
 
     return rules
+
+def tick(rules, sequence):
+    stepcount = 0
+    lastmove = '-'
+    tapepos = 0
+    currstate = '0'
+    currtickline = 0
+    stopped = False
+    text = sequence.copy()
+    while not stopped:
+        if text[tapepos] not in rules[currstate] and text[tapepos] != ' ':
+            # stampa l'errore con parametri
+            print("ERRORE!\nNon è presente nessuna regola per il caso: stato corrente " + currstate + " e carattere letto " + text[tapepos])
+            raise TypeError("Bad Format")
+        rule = rules[currstate][text[tapepos]] if text[tapepos] != ' ' else rules[currstate]['-']
+        text[tapepos] = " " if rule[1] == '-' else rule[1]
+        lastmove = rule[2]
+        currstate = rule[0]
+        currtickline = rule[3]
+        tapepos += 1 if lastmove == '>' else -1 if lastmove == '<' else 0
+        stepcount += 1
+        if tapepos < 0:
+            text.insert(0, ' ')
+            tapepos = 0
+        if tapepos >= len(text):
+            text.append(' ')
+        # Cambiare questa istruzione
+        if currstate not in rules:
+            stopped = True
+
+    return text
+
