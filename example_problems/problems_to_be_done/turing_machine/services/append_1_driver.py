@@ -20,6 +20,8 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 LANG.print_opening_msg()
 sequence = tr.random_seq(ENV['seed'], ENV['max_lengh'])
 
+print("\nProblema: scrivere le istruzioni per una macchina di Turing che,\ndata una sequenza di caratteri binaria, scorre tutta la sequenza ed aggiunge un 1 alla fine")
+
 #TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
 print("\nSequenza: ", end="")
 #converti gli elementi di sequence in stringhe
@@ -46,10 +48,14 @@ print(rules)
 
 # TODO:
 # X movimento sul nastro
+print("\nSequenza iniziale: ", end="")
+for i in sequence:
+    print(i, end="")
 final_sequence = tr.tick(rules, sequence)
 print("\nSequenza finale: ", end="")
 for i in final_sequence:
-    print(i, end="\n")
+    print(i, end="")
+print("\n")
 new_sequence = sequence.copy()
 new_sequence.append('1')
 if final_sequence == new_sequence:

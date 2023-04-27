@@ -14,7 +14,7 @@ def random_seq(seedParam, maxLengh):
         print("seed: " + str(seed))
     else:
         seed = int(seedParam)
-        print("seed: " + str(seed))
+        print("Seed: " + str(seed))
 
     random.seed(seed)
     length = random.randint(2, maxLengh)
@@ -146,7 +146,6 @@ def tick(rules, sequence):
             tapepos = 0
         if tapepos >= len(text):
             text.append(' ')
-        # Cambiare questa istruzione
         if currstate not in rules:
             stopped = True
 
