@@ -19,7 +19,7 @@ bianche e i cancelletti sono le celle nere.
 L'output deve contenere una riga per ogni testase, contenente il numero di
 percorsi validi nella griglia. Siccome questo numero potrebbe essere molto grande, assicurati di impiegare tipi di variabili sufficientemente capienti per evitare errori di overflow!
 
-\pagebreak
+
 ## Esempio
 
 ### Input

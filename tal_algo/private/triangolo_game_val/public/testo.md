@@ -30,7 +30,7 @@ Infine, l'ultima riga dell'input riporta, separati da spazio, gli $n-1$ bit che 
 ## Output
 L'output deve contenere una riga per ogni testcase, contenente il massimo valore che puoi garantire di portare a casa su quel testcase. Gioca conservativo, la casa farà lo stesso.
 
-\pagebreak
+
 ## Esempio
 
 ### Input
@@ -58,8 +58,9 @@ Spiegazione: due testcase, il primo dei quali è un triangolo di una sola riga (
 Spiegazione: nel secondo tescase, la prima scelta spetta a te, e ti conviene portarti sul $6$, la casa ti porterà quindi sul $2$ della terza riga, e tu a quel punto opterai per andare a sinistra e prenderti il $2$ anche della quarta riga. L'ultima scelta della casa è di andare a destra, per consegnarti un $3$ piuttosto che un $5$. Il valore del cammino percorso sarà $4+6+2+2+3=17$.
 
 
+## Subtask
 
-## Assunzioni
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
@@ -68,5 +69,4 @@ Per il subtasking sono previste le seguenti `size`, dove il default è `big` che
 * `medium`: $n \leq 28$
 * `big`: $n \leq 40$
 
-Il tempo limite per testcase è di $1$ secondo.
 

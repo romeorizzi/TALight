@@ -36,7 +36,7 @@ Per ottenere `AC` devi vincere la partita. È sempre possibile vincere
 la partita per una qualche scelta di che giocatore essere e delle mosse
 da effettuare, indipendentemente da quello che farà l'avversario.
 
-\pagebreak
+
 ## Esempio
 
 Le righe che iniziano con `<` sono quelle inviate dal server, quelle che

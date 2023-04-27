@@ -27,7 +27,7 @@ L'ultima riga fornisce $r$, un numero naturale minore del numero di cammini otti
 ## Output
 L'output atteso consta di due righe per ogni testcase: la prima riga deve contenere il massimo valore di un percorso ammissibile, la seconda conterrà una stringa di lunghezza $n-1$ sull'alfabeto $\{L,R\}$ (sinistra/destra, specificando le scelte come a partire dal vertice in alto) che codifica il cammino di massimo valore di rango $r$.
 
-\pagebreak
+
 ## Esempio
 
 ### Input
@@ -66,7 +66,9 @@ Spiegazione: nel primo testcase, la soluzione ottima ha valore 7 ed è unica; es
 
 
 
-## Assunzioni
+## Subtask
+
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
@@ -75,5 +77,4 @@ Per il subtasking sono previste le seguenti `size`, dove il default è `big` che
 * `medium`: $n \leq 28$
 * `big`: $n \leq 40$
 
-Il tempo limite per testcase è di $1$ secondo.
 

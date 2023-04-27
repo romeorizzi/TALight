@@ -34,7 +34,7 @@ Fornire un metodo per passare dalla descrizione di un albero alla descrizione de
 ## Input
 La prima riga contiene $T$, il numero di testcase da risolvere. Seguono $T$
 istanze del problema. Ogni istanza consta di una sola riga che codifica, come sopra spiegato, l'albero da rovesciare nello specchio.
-In pratica, la riga contiene una sequenza di interi non negativi, separati da spazi. La sequenza descrive correttamente un albero: quindi il primo numero è il numero di figli della radice, ed è seguito dalle descrizioni dei sotto-alberi radicati nei figli della radice, prese una dopo l'altra, nel loro ordine da sinistra a destra.
+In pratica, la riga contiene una sequenza di interi non negativi, separati da spazi. La sequenza descrive correttamente un albero: quindi il primo numero è il numero di figli della radice, ed è immediatamente seguito dalle descrizioni dei sotto-alberi radicati nei figli della radice, prese una dopo l'altra, nel loro ordine da sinistra a destra.
 
 ## Output
 L'output deve contenere una riga per ogni testase. Tale riga è costituita da una sequenza di interi non negativi separati da spazi. Tale sequenza è intesa codificare, secondo le stesse regole che per l'input già viste sopra, l'albero rovesciato sinistra-destra, ossia l'albero dato in input visto allo specchio.
@@ -56,7 +56,9 @@ L'output deve contenere una riga per ogni testase. Tale riga è costituita da un
 
 ## Subtask
 
-Sono previsti i seguenti subtask.
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
+
+Per il subtasking sono previste le seguenti `size`:
 
 * **[2 istanze] esempi_testo:** i due esempi del testo
 * **[21 istanze] small:** $n \leq 10$
@@ -75,8 +77,7 @@ vengono valutati, nell'ordine, i subtask:
 
 **esempi_testo**, **small**, **medium**.
 
-Il valore di default per l'argomento **size** è **big**.
+Il valore di default per l'argomento **size** è **big** che include tutti i testcase.
 
-Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 

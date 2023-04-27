@@ -22,7 +22,7 @@ Seguono le n righe del triangolo allineate tutte a sinistra.
 ## Output
 L'output atteso consta di due righe per ogni testcase: la prima riga deve contenere il massimo valore di un percorso ammissibile, la seconda conterrà codifica di un percorso ammissibile di massimo valore. Tale codifica è una stringa di lunghezza $n-1$ sull'alfabeto $\{L,R\}$ (sinistra/destra, si specifichino le scelte come a partire dal vertice in alto).
 
-\pagebreak
+
 ## Esempio
 
 ### Input
@@ -50,8 +50,9 @@ LLRL
 Spiegazione: nel primo testcase, la soluzione ottima ha valore 7 ed è specificata dalla stringa vuota. Nel secondo testcase una soluzione ottima (un percorso di valore 19) è specificata dalla stringa di navigazione "LLRL" (sinistra, sinistra, destra, sinistra).
 
 
+## Subtask
 
-## Assunzioni
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
@@ -60,5 +61,4 @@ Per il subtasking sono previste le seguenti `size`, dove il default è `big` che
 * `medium`: $n \leq 28$
 * `big`: $n \leq 40$
 
-Il tempo limite per testcase è di $1$ secondo.
 

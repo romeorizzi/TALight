@@ -22,7 +22,7 @@ Seguono le n righe del triangolo allineate tutte a sinistra.
 ## Output
 L'output deve contenere una riga per ogni testase, contenente il massimo valore di un cammino ammissibile.
 
-\pagebreak
+
 ## Esempio
 
 ### Input
@@ -46,7 +46,9 @@ Spiegazione: due testcase, il primo dei quali è un triangolo di una sola riga (
 19
 ```
 
-## Assunzioni
+## Subtask
+
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
@@ -54,6 +56,4 @@ Per il subtasking sono previste le seguenti `size`, dove il default è `big` che
 * `small`: $n \leq 10$
 * `medium`: $n \leq 28$
 * `big`: $n \leq 40$
-
-Il tempo limite per testcase è di $1$ secondo.
 

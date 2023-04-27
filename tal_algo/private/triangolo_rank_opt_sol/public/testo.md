@@ -28,7 +28,7 @@ L'ultima riga fornisce la codifica di un percorso ammissibile che è garantito e
 L'output atteso consta di tre righe per ogni testcase: la prima riga deve contenere il massimo valore di un percorso ammissibile, la seconda conterrà il numero di percorsi ottimi, la terza ritorna il rango della soluzione ottima ricevuta in input.
 
 
-\pagebreak
+
 ## Esempio
 
 ### Input
@@ -70,8 +70,9 @@ Spiegazione: tre testcase. Nel primo $n=1$ e la stringa vuota codifica l'unica s
 Spiegazione: nel primo testcase, la soluzione ottima ha valore 7 ed è unica; essa trova codifica nella stringa vuota. Nel secondo testcase la soluzione ottima è di nuovo unica (un percorso di valore 19. Nel terzo testcase tutti i $2^3=8$ percorsi ammissibili hanno lo stesso valore (4); di queste $8$ soluzioni ottime, le prime $4$ iniziano in $L$ e le altre $4$ iniziano in $R$.
 
 
+## Subtask
 
-## Assunzioni
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
 
 Per il subtasking sono previste le seguenti `size`, dove il default è `big` che include anche i testcase `medium`, `small` e `tiny`:
 
@@ -80,5 +81,4 @@ Per il subtasking sono previste le seguenti `size`, dove il default è `big` che
 * `medium`: $n \leq 28$
 * `big`: $n \leq 40$
 
-Il tempo limite per testcase è di $1$ secondo.
 
