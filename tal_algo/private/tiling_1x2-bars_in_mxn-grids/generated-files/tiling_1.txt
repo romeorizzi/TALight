@@ -1,0 +1,24 @@
+In questo file di testo (file ASCII) trovi un tiling della griglia (4,7):
+    
+    # TO BE DONE: la composizione di questo file
+    # aggiungere righe al file.
+    # conviene crearsi descrizione opportuna del tiling in memoria, entro matrici, e poi renderizzare queste in stringa per mezzo di caratteri ASCII opportuni:
+    # va studiato anche lo schema con cui realizzare tegole (di più caratteri), mi pare che le ratio 3/5 e 3/4 approssimino bene, tipo:
+    #     XXXXX     XXXX     
+    #     X   X     X  X     sembrano entrambe abbastanza quadrati (non saprei dire quale di più)
+    #     XXXXX     XXXX
+    #
+    #     e quindi, se ad esempio scegli la 3/4:
+    #
+    #     XXXXXXXX
+    #     X      X    per la (2,1) orizzontale
+    #     XXXXXXXX
+    #
+    #     XXXX
+    #     X  X
+    #     X  X        per la (1,2) verticale
+    #     X  X
+    #     X  X
+    #     XXXX
+    #
+    #  da progettare anche la forma della rappresentazione più opportuna del tiling in memoria per facilitare la traduzione visuale. Per l'idea astratta del tiling si può avvalersi invece della soluzione del problema nella cartella solutions (in futuro, con l'esperienza in classe, capiremo se non sia opportuno oscurarla offrendo tiling meno regolari e più caotici. Anche per questo è bene separare le varie fasi che portano a renderizzare l'idea del tiling (l'oggetto combinatorico), entro un file di ASCIIART).
