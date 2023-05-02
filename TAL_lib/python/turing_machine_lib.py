@@ -35,6 +35,9 @@ def random_seq(seedParam, maxLengh):
 # X controllare questo tipo di errore: (A,B ,0, AB ,1,>)
 # X Controllare che gli elementi 0 e 2 non contengano spazi compresi tra caratteri alfanumerici
 # X Controllare che gli stati e i caratteri scritti e letti non contengano caratteri speciali
+#   Aggiungere la visualizzazione step by step della stringa di output della macchina di Turing
+
+
 
 def getRules(text):
     text = text.upper()
@@ -121,6 +124,14 @@ def getRules(text):
 
     return rules
 
+def outputPrint(text, stepcount, lastmove, tapepos, currstate, currtickline):
+        
+        print("Step: " + str(stepcount) + " | Last move: " + lastmove + " | Tape position: " + str(tapepos) + " | Current state: " + currstate + " | Rule number: " + str(currtickline))
+        # convert list to string
+        text = ''.join(text)
+        print(text)
+        print("")
+
 def tick(rules, sequence):
     stepcount = 0
     lastmove = '-'
@@ -149,5 +160,11 @@ def tick(rules, sequence):
         if currstate not in rules:
             stopped = True
 
+        outputPrint(text, stepcount, lastmove, tapepos, currstate, currtickline)
+
     return text
+
+
+   
+    
 
