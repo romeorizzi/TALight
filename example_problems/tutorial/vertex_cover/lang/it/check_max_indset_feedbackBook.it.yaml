@@ -1,0 +1,22 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problem={problem}, service={service}\n#  con argomenti: '
+feedback_source: '# Le frasi in italiano utilizzate in questa chiamata del servizio {service} provengono dal file \''{service}_feedbackBook.{ENV["lang"]}.yaml\'' collocato nella cartella \''lang\'' del problema {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+successful-load: 'Istanza caricata con successo.'
+waiting-line: '#? In attesa del grafo.\n'
+insert-edges: 'Dati {ENV["num_vertices"]} vertici etichettati con numeri naturali [0,{ENV["num_vertices"]-1}], dovresti ora inserire {ENV["num_edges"]} archi. Per specificare un arco, inserisci semplicemente i d
+ue endpoint separati da spazi.'
+insert-edge: 'Inserisci i due endpoint dell`arco {i}: inserisci cioè una linea composta da due numeri naturali nell`intervallo [0,{ENV["num_vertices"]-1}], separati da spazi.'
+wrong-edges-number: '\nNumero di archi errato ({len(edges)} invece di {ENV["num_edges"]})\n'
+instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id"]} è stata caricata dal catalogo con successo.'
+this-is-the-instance: '\nEcco l`istanza:\n'
+insert-opt-value: '\nScrivi qui quello che ritieni sia un independent set di taglia massima per questo grafo, se ne hai uno. Altrimenti, se vuoi conoscere la risposta corretta inserisci "C".'
+best-sol: 'Un possibile independent set (massimo) è: '
+size-sol: 'La taglia dell`independent set massimo è: '
+right-best-sol: 'Perfetto, la soluzione che hai fornito è un independent set massimo valido per il grafo.'
+right-sol-not-min: 'La soluzione che hai fornito è un independent set valido per il grafo. Tuttavia non è di taglia massima (la tua taglia è {size_ans}).'
+wrong-sol: 'Spiacente, la soluzione che hai fornito NON è un independent set valido per il grafo. Questi archi collegano i nodi: '
+vertex-cover: 'Spiacente, la soluzione che hai fornito NON è un independent set valido per il grafo: hai fornito un vertex cover.'
+

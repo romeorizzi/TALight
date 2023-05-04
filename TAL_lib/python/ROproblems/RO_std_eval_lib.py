@@ -139,8 +139,7 @@ class std_eval_feedback:
         if RO_io.get_current_status() == 'correction_phase':
             self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note)
         else:
-            self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = True)        
- 
+            self.voice_OK(f"Ottimalità di `{goal.alias}`", positive_enforcement, note, spoilering = True)    
             
     def feedback_when_all_non_spoilering_checks_passed(self):
         if RO_io.get_current_status() == 'correction_phase':

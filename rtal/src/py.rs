@@ -1,3 +1,4 @@
+#![cfg(python)]
 #[allow(dead_code)]
 mod problem;
 mod proto;
@@ -9,12 +10,12 @@ use pyo3::exceptions::PyRuntimeError as PRE;
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
 use pythonize::pythonize;
+use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet};
 use std::net::TcpStream;
 use tracing::warn;
 use tungstenite::{connect, stream::MaybeTlsStream, Message, WebSocket};
-use twox_hash::xxh3::hash128;
-use util::{BinaryDataHeader, BUFFER_SIZE};
+use util::{StreamMessage, BUFFER_SIZE};
 
 fn oneshot_request(
     request: Request,
@@ -57,10 +58,10 @@ fn send_binary_data(
     name: &str,
     data: &[u8],
 ) -> Result<(), String> {
-    let header = BinaryDataHeader {
+    let header = StreamMessage::BinaryDataHeader {
         name: name.to_string(),
         size: data.len(),
-        hash: hash128(data),
+        hash: Sha256::digest(data).into(),
     };
     let serialized_header = match serde_json::to_string(&header) {
         Ok(x) => x,
@@ -88,13 +89,13 @@ fn recv_binary_data(
             Err(x) => return Err(format!("Error while receiving binary header: {}", x)),
         }
     };
-    let header = match serde_json::from_str::<BinaryDataHeader>(&header) {
-        Ok(x) => x,
+    let (name, size, hash) = match serde_json::from_str::<StreamMessage>(&header) {
+        Ok(StreamMessage::BinaryDataHeader { name, size, hash }) => (name, size, hash),
         Err(x) => return Err(format!("Received invalid binary header: {}", x)),
     };
     let mut buffer = Vec::new();
     loop {
-        if buffer.len() >= header.size {
+        if buffer.len() >= size {
             break;
         }
         let mut data = match ws.read_message() {
@@ -104,10 +105,10 @@ fn recv_binary_data(
         };
         buffer.append(&mut data);
     }
-    if hash128(&buffer) != header.hash {
+    if Into::<[u8; 32]>::into(Sha256::digest(&buffer)) != hash {
         return Err(format!("Received corrupted binary data"));
     }
-    Ok((header.name, buffer))
+    Ok((name, buffer))
 }
 
 #[pyclass]

@@ -15,5 +15,8 @@ instance-from-catalogue-successful: 'L`istanza con instance_id={ENV["instance_id
 this-is-the-instance: '\nEcco l`istanza:\n'
 insert-opt-value: '\nScrivi qui quella che ritieni sia la soluzione corretta di questo collage, se ne hai una. Altrimenti, se vuoi conoscere la risposta corretta inserisci 0.'
 best-sol: 'La soluzione è {sheets}.'
+print-sol: 'Ecco la soluzione grafica:'
 right-best-sol: 'Perfetto, la soluzione che hai dato è corretta!'
 wrong-best-sol: 'Spiacente, la soluzione che hai dato NON è corretta.'
+wrong-best-sol-gt: 'La tua soluzione ha un numero di fogli maggiore di quella corretta.'
+wrong-best-sol-lt: 'La tua soluzione ha un numero di fogli minore di quella corretta.'

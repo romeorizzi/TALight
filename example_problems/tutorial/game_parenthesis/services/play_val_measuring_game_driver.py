@@ -81,10 +81,10 @@ PLAYER_2_IS = LANG.render_feedback("Player-2-is", 'Player 2 is')
 def watch(formula,nim, first_to_move, second_to_move):
     assert first_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS] 
     assert second_to_move in [I_AM,YOU_ARE,TALIGHT_IS,PLAYER_1_IS,PLAYER_2_IS]
-    if ENV["watch"] == 'no_watch':
+    if ENV["watch"] == 'none':
         return
     TAc.print('# watch={ENV["watch"]}: ', "blue", end='')
-    if ENV["watch"] == 'watch_winner':
+    if ENV["watch"] == 'winner':
         if formula == '' or formula == ')(':
             formula_grundy_value = 0
         else:
@@ -122,7 +122,7 @@ def watch(formula,nim, first_to_move, second_to_move):
             TAc.print('# The duplicates are removed, if the result formula is the same', "blue")
         else:
             TAc.print(LANG.render_feedback("par-list-none-winning-moves-nim", f'the current configuration <game-parenthesis(\'{formula}\') + nim({nim})> admits no winning move'), "blue")
-    elif ENV['watch'] == 'watch_grundy_val':
+    elif ENV['watch'] == 'grundy_val':
         if formula == '' or formula == ')(':
             formula_grundy_value = 0
         else:

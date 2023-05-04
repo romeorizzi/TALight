@@ -1,0 +1,276 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check:
+    evaluator: [python, services/check_driver.py]
+    description: "Dato un grafo pesato (ai cui archi quindi è assegnato un valore naturale rappresentante la lunghezza) misto (che può presentare quindi sia archi diretti a senso unico che non) ma semplice, nel senso che non può contenere né auto-loops diretti (archi del tipo ((v,v), weight)), né auto-loops non-orientati (archi del tipo ({v,v}, weight)), né sono ammessi due archi orientati aventi sia la stessa coda che la stessa testa, né sono ammessi due archi non orientati aventi gli stessi estremi, il problema del Cammino Minimo tra due nodi s e t chiede di ricavare la sequenza di archi attraverso cui transitare per ragiungere il nodo destinazione t a partire dal nodo sorgente s, in modo che la somma delle lunghezze degli archi del cammino sia la minore possibile. Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnate del Problema del Cammino Minimo. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze attive (sia per un problema specifico che metodologiche); se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere estensibili e aperti a promuovere la collaborazione tra problem-makers/insegnanti (nonchè a relativizzare e superare la separazione tra essi e i problem-solvers/trainees). Dal sistema dove organizzi i tuoi esami/esercitazioni, entro un esercizio centrato su un'istanza del Problema del Cammino Minimo, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto."
+    args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: "Di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema)."
+
+      # sezione con i dati dell'istanza assegnati al problem-solver/studente:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "Numero di nodi del grafo in input. I nodi sono etichettati coi numeri da 0 a n-1. (Parleremo ad esempio del nodo v2, rappresentato tramite il valore 2.)"
+      m:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "Numero di archi del grafo in input. Gli archi sono etichettati coi numeri da 0 a m-1. (Parleremo ad esempio dell'arco e1, rappresentato tramite il valore 1.)"
+      s:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "Nodo sorgente dal quale calcolare l'albero dei cammini minimi. Specificare un numero da 0 a n-1. (Il nodo v0 è il nodo sorgente di dafault.)"
+      t:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 2
+        explain: "Nodo destinazione verso il quale calcolare il cammino minimo. Specificare un numero da 0 a n-1."
+      edges:
+        regex: ^(.*)$
+        default: "[({0,1},8),({0,2},3),((1,2),1)]"
+        explain: "Lista degli archi (si usano le parentesi tonde per quelli diretti, le graffe per quelli non diretti); la terza componente di ogni tripla è il peso dell'arco. Se due archi hanno entrambi per estremi gli stessi nodi u e v, allora devono essere necessariamente diretti ed in senso opposto. Nel running example (default) abbiamo 3 archi non-diretti: e0=v0-v1 di peso 8, e1=v0-v2 di peso 3, e e2=v1-v2 di peso 4, e un arco diretto e3=v1-v2 di peso 1."
+      query_edge:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "Specifica l'arco che andrebbe eventualmente analizzato. Ad esempio, da catalogare in base alla sua appartenenza a tutti gli alberi dei cammini minimi, o nessuno, o alcuni ma non tutti."
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "Se il problem solver invia una lista di soluzioni ammissibili, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque completa se raggiunge questa soglia)"
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "Il numero di soluzioni ottime ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia."
+
+
+      # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'n':3,'m':3,'s':0,'t':2,'edges':'[({0,1},8),({0,2},3),((1,2),1)]','query_edge':0}\" offre un modo alternativo per immettere il Caso d'Esempio 1, quello con ogni argomento lasciato al valore di default."
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+
+      # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
+      opt_dist:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: 'Il minimo costo (=somma delle lunghezze degli archi attraversati) di un cammino da s a t che rispetti i sensi unici.'
+        example: "3 è la risposta corretta per il Caso d'Esempio."
+      opt_dists:
+        regex: ^(.*)$
+        default: "[0, 8, 3]"
+        explain: "Le distanze minime di ciascun nodo dal nodo sorgente."
+        example: "[0, 8, 3] è la risposta corretta per il Caso d'Esempio."
+      opt_path:
+        regex: ^(.*)$
+        default: "[1]"
+        example: "[1] indica la lista di archi [e1]. Questa sequenza di archi costituisce l'unica soluzione ottima per il Caso d'Esempio."
+        explain: "Una soluzione ottima per l'istanza assegnata, ossia uno Shortest Path tra i due nodi selezionati nel grafo assegnato."
+      opt_tree:
+        regex: ^(.*)$
+        default: "[-1, 0, 0]"
+        example: "[-1, 0, 0] indica l'unico albero dei cammini minimi per il Caso d'Esempio. Nel caso specifico, il nodo v0 è il nodo radice, che non ha padre, mentre gli altri due nodi vedono come loro padre il nodo v0."
+        explain: "Codifica un albero dei cammini minimi, precisando il padre di ciascun nodo."
+
+      num_opt_paths:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+        explain: "Il numero di percorsi a lunghezza minima differenti che arrivano al nodo t, partendo dal nodo s."
+        example: "1 è la risposta corretta per il Caso d'Esempio (tutti i valori al loro default)"
+      num_opt_trees:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+        explain: "Il numero di alberi dei cammini minimi differenti che originano dal nodo s."
+        example: "1 è la risposta corretta per il Caso d'Esempio (tutti i valori al loro default)"
+      list_opt_paths:
+        regex: ^(.*)$
+        default: "[[1]]"
+        explain: "La lista di tutti i cammini minimi che, partendo da s, consentono di raggiungere t (in qualsiasi ordine)."
+        example: "Il valore di default è risposta corretta per il Caso d'Esempio."
+      list_opt_trees:
+        regex: ^(.*)$
+        default: "[[-1, 0, 0]]"
+        explain: "La lista di tutti gli alberi dei cammini minimi per il Caso d'Esempio (in qualsiasi ordine)."
+        example: "Il valore di default è risposta corretta per il Caso d'Esempio."
+      edge_profile:
+        regex: ^(.*)$
+        default: "in_all"
+        explain: "Prevista una stringa selezionata tra: [in_all] se l'arco di query appartiene a tutti gli Shortest Path Trees (SPTs), [in_no] se l'arco di query non appartiene a nessuno SPT, [in_some_but_not_in_all] se l'arco di query appartiene ad alcuni SPT, ma esiste almeno uno SPT che non contiene l'arco di query."
+        example: "Il valore di default è risposta corretta per il Caso d'Esempio 1."
+      nodes_relying_on_query_edge:
+        regex: ^(.*)$
+        default: "[1]"
+        example: "Il valore di default è risposta corretta per il Caso d'Esempio 1."
+        explain: "La lista dei nodi che si allontanerebbero dalla sorgente qualora l'arco di query venisse rimosso dal grafo."
+
+      # sezione modalità API, sempre per far pervenire le risposte del problem-solver:
+      answer_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a answer_dict=\"{'opt_path1':[1], 'opt_dist1':3}\""
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati della risposta proveniente dallo studente che il servizio dovrà gestire (valutare e/o fornire feedback contestuale immediato e/o posticipato): (1) usare un diverso e specifico argomento per ogni singolo oggetto risposta che possa essere oggetto della consegna del task/richiesta di esercizio, (2) collezionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento ('answer_dict'). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `answer_dict` è lasciato al suo valore di default (dizionario vuoto, come codificato dalla stringa '{}') allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `answer_dict` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza alla risposta attesa dallo studente. Una risposta può contenere più oggetti (da una lista finita di tipologie di oggetti progettata dal problem maker) ciascuno identificato dal suo nome standard (come `opt_sol` o `opt_val`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti. Quando invece segui l'opzione (2), puoi usare ancora questi nomi standard come chiavi del dizionario `answer_dict`, così che il tipo di ogni oggetto nella risposta dello studente resti univocamente determinato, ma puoi anche rinominare tutti od alcuni dei tipi di oggetto ad uso di una maggiore prossimità al problem solver. Per farlo devi specificare anche l'argomento ancillare `alias_dict` che assume significato solo in tandem a questo. L'argomento `alias_dict` ti consente di introdurre nomi ad-hoc, associandoli come alias di quelli standard. Usa i tuoi nomi ad-hoc sia come chiavi del dizionario `answer_dict` che del dizionario `alias_dict`, come relativi valori nel dizionario `alias_dict` colloca i relativi nomi standard mentre nel dizionario `answer_dict` disponi i tuoi oggetti. In questo modo il feedback dato dal servizio sarà più vicino al contesto affrontato dallo studente."
+
+      alias_dict:
+        regex: ^(.*)$
+        example: "{'opt_path1':'opt_path','opt_dist1':'opt_dist'}"
+        default: "{}"
+        explain: 'questo argomento (una stringa letta come yaml) passa un dizionario che definisce i nomi ad-hok impiegati nel contesto da cui la richiesta proviene per riferirsi a degli oggetti che compongono la risposta richiesta. I nomi ad-hoc devono quindi comparire come chiavi di tale dizionario, mentre il valore associato a ciascuno di essi è il relativo nome standard per ottenere una marcatura semantica degli oggetti di risposta sottomessi alla valutazione.'
+
+      # sezione con gli argomenti che specificano il formato della stringa di feedback e della conformazione generale di: (1) l'output diretto sul terminale o altro supporto adottato (Jupyter notebook, browser, ...) (2) il file di output (certificati di sottomissione scaricati sulla macchina dello studente), (3) logs sul server che assistono nel monitoring e grading della prova o esame.
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      with_positive_enforcement:
+        regex: ^(0|1)$
+        default: 1
+      with_notes:
+        regex: ^(0|1)$
+        default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
+      recall_data_assigned:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+
+      # sezione coi punti da assegnare al singolo task/richiesta da assegnarsi al singolo task/richiesta (tra quelli proposti da un singolo esercizio) che ha comportato la chiamata a questo servizio dal contesto di una prova, esame, o simulazione di esame:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_consistency_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  oracle:
+    evaluator: [python, services/oracle_driver.py]
+    description: "Dato un grafo pesato (ai cui archi quindi è assegnato un valore naturale rappresentante la lunghezza) misto (che può presentare quindi sia archi diretti che non), questo servizio calcola la sequenza di archi attraverso cui transitare per ragiungere il nodo destinazione t a partire dal nodo sorgente s (cammino minimo) o l'albero di cammini minimi. Il servizio ritorna anche il numero di tali cammini/alberi, e la loro lista. Questo servizio non è accessibile allo studente durante l'esame o una sua simulazione."
+    args:
+      pwd:
+        regex: ^(.*)$
+        explain: "Questo servizio non dovrebbe essere accessibile agli studenti almeno durante gli esami. Impostare una password privata in modo da prevenire accessi non autorizzati."
+
+      # sezione con i dati che specificano un'istanza del problema:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "Numero di nodi del grafo in input. I nodi sono etichettati coi numeri da 0 a n-1. (Parleremo ad esempio del nodo v2, rappresentato tramite il valore 2.)"
+      m:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "Numero di archi del grafo in input. Gli archi sono etichettati coi numeri da 0 a m-1. (Parleremo ad esempio dell'arco e1, rappresentato tramite il valore 1.)"
+      s:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "Nodo sorgente dal quale calcolare l'albero dei cammini minimi. Specificare un numero da 0 a n-1. (Il nodo v0 è il nodo sorgente di dafault.)"
+      t:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 2
+        explain: "Nodo destinazione verso il quale calcolare il cammino minimo. Specificare un numero da 0 a n-1."
+      edges:
+        regex: ^(.*)$
+        default: "[({0,1},8),({0,2},3),((1,2),1)]"
+        explain: "Lista degli archi (si usano le parentesi tonde per quelli diretti, le graffe per quelli non diretti); la terza componente di ogni tripla è il peso dell'arco. Se due archi hanno entrambi per estremi gli stessi nodi u e v, allora devono essere necessariamente diretti ed in senso opposto. Nel running example (default) abbiamo 3 archi non-diretti: e0=v0-v1 di peso 8, e1=v0-v2 di peso 3, e e2=v1-v2 di peso 4, e un arco diretto e3=v1-v2 di peso 1."
+      query_edge:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "Specifica l'arco che andrebbe eventualmente analizzato. Ad esempio, da catalogare in base alla sua appartenenza a tutti gli alberi dei cammini minimi, o nessuno, o alcuni ma non tutti."
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "Se il problem solver invia una lista di soluzioni ammissibili, esse non dovranno eccedere questo numero (ma anche, nel fornire valutazione e feedback, la lista sarà considerata comunque completa se raggiunge questa soglia)"
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "Il numero di soluzioni ottime ritornate dal servizio oracle, ove richiestane la lista, si arresterà a questo valore di soglia."
+
+      # sezione modalità API, modo alternativo per far pervenire al servizio l'input ricevuto dal problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'n':3,'m':3,'s':0,'t':2,'edges':'[({0,1},8),({0,2},3),((1,2),1)]','query_edge':0}\" offre un modo alternativo per immettere il Caso d'Esempio 1, quello con ogni argomento lasciato al valore di default."
+        explain: "Ci sono due opzioni per come passare a questo servizio i dati dell'istanza assegnata allo studente: (1) usare un diverso e specifico argomento per ogni singolo oggetto che componga l'istanza, oppure (2) collezionare tutti gli oggetti di pertinenza entro un singolo dizionario da passare tramite questo singolo argomento (`input_data_assigned`). La (2) semplifica l'automatizzazione dei passaggi di consegna quando chiami il servizio da un altro software, attraverso la sua API descritta dal presente meta file. Quando invece `input_data_assigned` è lasciato al suo valore di default (dizionario vuoto) allora il servizio assume che l'opzione (1) sia quella seguita (questa risulta preferibile quando si esplori o sperimenti il servizio, ad esempio dalla CLI). Altrimenti, la stringa assegnata all'argomento `input_data_assigned` viene letta come yaml per ottenere il dizionario con tutti gli oggetti di pertinenza nell'istanza affrontata dallo studente. Ovviamente, per quanto ogni problema TALight vada inteso come estendibile, le parti/oggetti che possano comporre l'istanza, ad ogni dato tempo/versione, saranno sempre prese da un insieme finito ideato ed implementato dall'istruttore e/o problem maker. Ogni tale tipo di oggetto avrà quindi un nome di riferimento standard (come `costs` o `vals`). Questi nomi corrispondono precisamente e rigidamente ai nomi degli argomenti che impieghi quando segui l'opzione (1). Pertanto, l'intera lista di tali nomi standard, con la descrizione del tipo di oggetto che gli corrisponde, ti è rivelata quando esplori la lista completa degli argomenti."
+
+      # sezione che caratterizza la risposta richiesta all'oracolo e quali siamo i nomi ad-hoc da associare a ogni singolo oggetto che la compone (ovviamente resta possibile impiegare i nomi standard):
+      request_dict:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'oracolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una ri-denominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
+        explain1: "[opt_dist] la lunghezza del cammino minimo che parte dal nodo s e consente di raggiungere t (=somma delle lunghezze degli archi inclusi nella soluzione)."
+        explain2: "[opt_dists] la lista di tutte le lunghezze dei cammini minimi che partono dal nodo s e terminano in ogni altro nodo raggiungibile nel grafo."
+        explain3: "[opt_path] un cammino minimo dal nodo s al nodo t, restituito come sequenza degli archi su cui transitare."
+        explain4: "[opt_tree] un SPT, ovvero l'insieme di tutti i cammini minimi che originano da s e terminano in ogni nodo raggiungibile, rappresentato tramite una lista di padri per ciascun nodo raggiungibile."
+        explain5: "[num_opt_paths] il numero di cammini minimi differenti che partono dal nodo s e raggiungono il nodo t."
+        explain6: "[num_opt_trees] il numero di SPTs differenti."
+        explain7: "[list_opt_paths] la lista di tutti i cammini minimi differenti che partono dal nodo s e raggiungono il nodo t."
+        explain8: "[list_opt_trees] la lista di tutti gli SPTs differenti."
+        explain9: "[edge_profile] analisi se il query_edge appartenga a tutti, oppure nessuno, oppure alcuni ma non tutti gli SPTs."
+        explain10: "[nodes_relying_on_query_edge] la lista di nodi che sono influenzati dalla rimozione dell'arco di query."
+        example1: "-a request_dict=\"{'opt_dist': 'opt_dist', 'opt_path': 'opt_path'}\""
+        example2: "-a request_dict=\"{'opt_tree': 'opt_tree1', 'num_opt_paths': 'num_opt_paths1'}\""
+        example3: "se lasci il valore di default (il dizionario vuoto {}) allora ottieni risposta a tutte le possibili domande per cui un solutore è già stato implementato. In tale caso i nomi impiegati nel responso dell'oracolo saranno quelli standard, come quelli nell'Esempio 1"
+
+      # sezione con argomenti per determinare i canali di uscita e scegliere i formati dell'output:
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_data_assigned:
+        regex: ^(0|1)$
+        default: 0
+      recall_request:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currently, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis."
+    args:
+      service:
+        regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
+        default: synopsis
+        explain: "any string without space characters but meant to specify one of the services of the problem %(problem)s"
+      metafile:
+        regex: ^(default|en|it|[a-zA-Z0-9_]+)$
+        default: default
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it|[a-zA-Z0-9_]+)$
+        default: en
+...

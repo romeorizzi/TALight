@@ -1,0 +1,62 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  append_1:
+    description: Data una stringa binaria di 0 e 1, aggiungere un 1 alla fine del nastro.
+    evaluator: [python, services/append_1/append_1_driver.py]
+    args: 
+      seed:
+        explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
+        regex: ^(random_seed|100000|\d{1,5})$
+        default: random_seed
+      lang:
+        regex: ^(en|it)$
+        default: it
+  check_1:
+    description: Data una stringa binaria di 0 e 1 aggiungere, alla fine del nastro, uno 0 se non vi era alcun 1, altrimenti aggiungere un 1
+    evaluator: [python, services/append_1/check_1_driver.py]
+    args: 
+      seed:
+        explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
+        regex: ^(random_seed|100000|\d{1,5})$
+        default: random_seed
+      lang:
+        regex: ^(en|it)$
+        default: it
+  change_bin:
+    description: Data una stringa binaria di 0 e 1, invertire il valore di tutti i bit.
+    evaluator: [python, services/change_bin/change_bin_driver.py]
+    args: 
+      seed:
+        explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
+        regex: ^(random_seed|100000|\d{1,5})$
+        default: random_seed
+      lang:
+        regex: ^(en|it)$
+        default: it
+  help:
+    evaluator: [python, services/help/help_driver.py]
+    args:
+      page:
+        regex: ^(append_1|check_1|change_bin|help|synopsis)$
+        default: help
+      lang:
+        regex: ^(en|it)$
+        default: it
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    description: "La synopsis del servizio viene utilizzata dal risolutore del problema per esplorare i servizi di un problema TALight, compresa la sinossi stessa (come stai facendo ora). Le informazioni su ogni servizio vengono prese dal file meta.yaml che definisce l'interfaccia del problema. Questo è lo stesso file che stabilisce il contratto tra il client rtal e il server rtald, o anche il contratto tra un creatore di problemi che progetta il problema e un creatore di problemi che implementa i suoi servizi. In realtà, meta.yaml è un link simbolico che punta al metafile impostato come predefinito da chi ha distribuito il problema sul server da cui stai ricevendo queste informazioni; tuttavia, utilizzando l'argomento metafile è possibile richiedere altri metafile, offrendo eventualmente le stesse informazioni in altre lingue. Invece, l'argomento lang influenza solo la lingua utilizzata per formattare queste informazioni specifiche del problema in questa scheda. Alla fine di questo foglio di aiuto per la sinossi del servizio stesso, così come per qualsiasi altra scheda di servizio, troverai un elenco pratico di tutti i servizi disponibili per il problema specifico (attualmente, %(problem)s): se vuoi saperne di più su uno di essi, specifica il suo nome nell'argomento 'servizio' nella prossima chiamata del servizio synopsis"
+    args:
+      service:
+        regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
+        default: synopsis
+        explain: qualsiasi stringa senza spazi ma usata per specificare uno dei servizi del problema %(problem)s
+      metafile:
+        regex: ^(default|en|it|[a-zA-Z0-9_]+)$
+        default: default
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it|[a-zA-Z0-9_]+)$
+        default: en
+...

@@ -1,3 +1,6 @@
+# renditions
+*.pdf
+
 # backups
 *~
 *.bak
@@ -21,6 +24,9 @@
 *.tar
 *.7z
 
+# signatures and cryptography
+*.sig
+
 # MacOS X
 .DS_Store
 
@@ -31,19 +37,22 @@ __pycache__/
 *$py.class
 *.class
 
-# signatures and cryptography
-*.sig
+# Rust
+**/target/CACHEDIR.TAG
+**/target/debug/**
+**/target/release/**
+**/target/.rustc_info.json
 
 # CMS
 .inode
-**/input
-**/output
+**/input/
+**/output/
 
 # management of this report in action
 instances_catalogue
-my_solutions
-my_certificates
-exam_sessions
+my_solutions/
+my_certificates/
+exam_sessions/
 TEMA_OGGI*
 
 # Visual Studio

@@ -15,6 +15,8 @@ instance_objects_spec = [
     ("cell_from", tuple[int, str]),
     ("cell_to", tuple[int, str]),
     ("cell_through", tuple[int, str]),
+    ('CAP_FOR_NUM_SOLS',int),
+    ('CAP_FOR_NUM_OPT_SOLS',int),
 ]
 additional_infos_spec = [
     ("partialDP_to", "matrix_of_int"),

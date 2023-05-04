@@ -1,0 +1,8 @@
+Links Utili:
+
+https://etherpad.wikimedia.org/p/MacchineDiTuring
+
+https://www.turingsimulator.net
+https://github.com/VittGam/JSTMSimulator
+http://mdt.di.unipi.it/Documentazione/MiniCorso.aspx
+http://mdt.di.unipi.it/Documentazione/Estensioni2006.aspx

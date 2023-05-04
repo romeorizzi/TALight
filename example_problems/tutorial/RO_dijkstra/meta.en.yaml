@@ -1,0 +1,282 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check:
+    evaluator: [python, services/check_driver.py]
+    description: "Given a weighted mixed graph (in which at each edge is associated a natural number corresponding to its length), the Shortest Path Problem from the node s to thee node t asks to find an edge sequence that allows you to reach the destination node t, starting from the initial root node s. The sum over the edge lengths in the sequence must be the smallest possible. This service checks and gives full (or partial, during exams or training and for non-superusers) feedback to answers of the problem solver/trainee/student to requests of several kinds all concerning a given Shortest Path Problem instance. These didactic variants are suitable for exams but also to more generally assess the competences and comprehension; if these variants do not cover your needs keep in mind the TALight problems aim at being open and foster collaboration among problem makers and instructors. From the system implementing your exams/exercitations, in an exercize centered on an instance of the Shortest Path Problem, compose each single request to the student, whose evaluation and feedback contextual and/or posticipated you intend to demand to this TALight service, simply combining its various arguments listed here below."
+    args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: Usually, what we do on the solution submitted by the problem solver is King Arthur check. However, when a password is given by the instructor using this argument, the oracle's answer will be integrated into the immediate response of the `check` service, in order to provide a more complete feedback (but it will contain spoilers about the problem).
+
+      # section with the instance data assigned to the problem-solver/student:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "Number of vertex in the input graph. Nodes are represented with natural numbers from 0 to n-1."
+      m:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "Number of edges in the input graph. Edges are represented with natural numbers from 0 to m-1."
+      s:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "Starting vertex. This is the root vertex of each Shortest Path Tree. This is a natural number in the interval [0,n-1]"
+      t:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 2
+        explain: "Destination vertex. This is a natural number in the interval [0,n-1]"
+      edges:
+        regex: ^(.*)$
+        default: "[({0,1},8),({0,2},3),((1,2),1)]"
+        explain: "Edges list (round brackets are used for directed edges, curly bruckets for undirected ones); the third value of each triple is the edge weight. If two edges connect the same vertexes, the must be both directed and with opposite directions. In the default example you can see3 undirected edges: e0=v0-v1 with weight 8, e1=v0-v2 with weight 3, e e2=v1-v2 with weight 4, and a single directed edge e3=v1-v2 with weight 1."
+      query_edge:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "This is the edge that has to be analysed, if required. You could be asked to determine if this specific edge appears in every, in no or in some of the Shortest Path Trees."
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "When the problem solver submit a list of solutions, the length of that list mustn't exceed this value."
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "The number of optimal solutions returned by the oracle service won't exceed this value."
+
+  
+      # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'n':3,'m':3,'s':0,'t':2,'edges':'[({0,1},8),({0,2},3),((1,2),1)]','query_edge':0}\" offre un modo alternativo per immettere il Caso d'Esempio 1, quello con ogni argomento lasciato al valore di default."
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `costs` or `vals`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
+
+
+      # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
+      opt_dist:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: 'The lowest cost (=sum over the crossed edges lengths) of a path thath leads to the vertex t, starting from the vertex s that respects all the one-ways.'
+        example: "3 is the correct answer for the running exmple."
+      opt_dists:
+        regex: ^(.*)$
+        default: "[0, 8, 3]"
+        explain: "The smallest distances from the node s to any other node in the graph."
+        example: "[0, 8, 3] is the correct answer for the running exmple."
+      opt_path:
+        regex: ^(.*)$
+        default: "[1]"
+        example: "[1] is the only optimal solution for the running example."
+        explain: "A shortest path from the starting vertex s to the destination vertex t. Represented by a list of edge indexes."
+      opt_tree:
+        regex: ^(.*)$
+        default: "[-1, 0, 0]"
+        example: "[-1, 0, 0] is the only optimal tree for the running example."
+        explain: "A Shortest Path Tree rooted in the vertex s. For each vertex is specified its parent."
+
+      num_opt_paths:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+        explain: "The number of different Shortest Paths that lead to the node t, starting from the node s."
+        example: "1 is the correct answer for the running exmple."
+      num_opt_trees:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+        explain: "The number of different Shortest Path Trees that originate from the node s."
+        example: "1 is the correct answer for the running exmple."
+      list_opt_paths:
+        regex: ^(.*)$
+        default: "[[1]]"
+        explain: "The list of all the different Shortest Paths that lead to the node t, starting from the node s (in any order)."
+        example: "[[1]] is the correct answer for the running exmple."
+      list_opt_trees:
+        regex: ^(.*)$
+        default: "[[-1, 0, 0]]"
+        explain: "The list of all the different Shortest Path Trees that originate from the node s (in any order)."
+        example: "[[-1, 0, 0]] is the correct answer for the running exmple."
+      edge_profile:
+        regex: ^(.*)$
+        default: "in_all"
+        explain: "A string selected among: [in_all] if the query edge appears in each Shortest Path Tree (SPTs), [in_no] if it appears in no one, [in_some_but_not_in_all] if the query edge appears in some SPT, but exists at least one SPT not containing it."
+        example: "in_all is the correct answer for the running exmple."
+      nodes_relying_on_query_edge:
+        regex: ^(.*)$
+        default: "[1]"
+        example: "[1] is the correct answer for the running exmple."
+        explain: "The list of vertexes whose distance from the starting node relies on the query edge (if such edge is removed, the disance of the nodes in this list will increase)."
+
+
+      # API mode section, to transmit the answers of the problem-solver and how to relate with it:
+      answer_dict:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a answer_dict=\"{'opt_path1':[1], 'opt_dist1':3}\""
+        explain: "There are two options for passing to this TALight service the anwer to be evaluated and provided a feedback with. Either you use a separate argument for each possible object type comprising your answer, or you callect them all within one single dictionary that you pass through this one argument (`answer_dict`). The second option is the way to go when calling the service from another software, through its API. When this argument is left to its default value (the empty string) then the first option is assumed, which may be better when experiencing the service from the CLI. Otherwise, the string passed through `answer_dict` is read as yaml to obtain the dictionary containing the answer of the student. An answer may comprise more objects (out from a finite set designed by the problem maker) each one with its type represented by the standard name attached to it (e.g., like `opt_sol` or `opt_val`). These standard names are the same as the names of the arguments to be used when following the first option (hence you can see the whole list of possible answer objects, and their names, by inspecting the complete list of arguments to this service). You can use these standard names as the keys of the dictionary `answer_dict`, so that each object in the answer of the student is clearly tagged with its type. However, the companion argument `alias_dict` allows for more freedom: it allows you to introduce custom names, defined in terms of the standard ones (just an aliasing) and to attach them to the objects comprising your answer, using them as keys in your `answer_dict` dictionary. In this way the feedback provided by the service will be closer to the context faced by the student. Therefore, the argument `answer_dict` expects a dictionary whose keys are either standard names of supported objects or one of the keys in the dictionary `alias_dict`. Moreover, for every key-value pair in `answer_dict`, the value is an object of the type indicated either directly by the key (if key is a standard name) or by the value associate to key by the dictionary `alias_dict`. Put in other words, when using Option (2) you can rename the available objects (for more proximity to the problem solver in its own context) by means of the ancillary argument `alias_dict`, that makes sense only in tandem with this one."
+
+      alias_dict:
+        regex: ^(.*)$
+        example: "{'opt_path1':'opt_path','opt_dist1':'opt_dist'}"
+        default: "{}"
+        explain: 'This argument (a string to be read as yaml) is a dictionary of the objects comprising the solution that the instructor has asked from the problem solver on a given exercise/task/request. The keys are the names that the instructor has assigned to the standard object types involved in the request, the corresponding values should be the standard names for the related answer in order to produce a mapping for answer objects.'
+
+
+      # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine), (3) logs on the server that could help monitoring and grading an exam
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml_with_points:
+        regex: ^(0|1)$
+        default: 0
+      with_positive_enforcement:
+        regex: ^(0|1)$
+        default: 1
+      with_notes:
+        regex: ^(0|1)$
+        default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
+      recall_data_assigned:
+        regex: ^(0|1)$
+        default: 0
+      yield_certificate_in_output_file:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+
+      # section with the points to be assigned to a single task/request (of the possible many ones proposed by a single exercise) that has triggered the call to this service from the context of an exam or exam simulation:
+      pt_formato_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_feasibility_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 1
+      pt_consistency_OK:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+      pt_tot:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 10
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  oracle:
+    evaluator: [python, services/oracle_driver.py]
+    description: "Given a weighted mixed graph (in which at each edge is associated a natural number corresponding to its length), this service computes and returns a shortest path or tree, optimal solution to the shortest path problem, as well as a list of optimal paths or trees, the total number of solutions. This service is able also to compute the minimum distance from the node s to any other node, as well as the edge profiile of the query edge and the list of nodes whose distance relies on the query edge."
+    args:
+      pwd:
+        regex: ^(.*)$
+        explain: this service should not be let available to students at least during the exams. Set a private password in order to prevent unauthorized access.
+
+      # section with a possible instance to the problem:
+      n:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "Number of vertex in the input graph. Nodes are represented with natural numbers from 0 to n-1."
+      m:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 3
+        explain: "Number of edges in the input graph. Edges are represented with natural numbers from 0 to m-1."
+      s:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "Starting vertex. This is the root vertex of each Shortest Path Tree. This is a natural number in the interval [0,n-1]"
+      t:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 2
+        explain: "Destination vertex. This is a natural number in the interval [0,n-1]"
+      edges:
+        regex: ^(.*)$
+        default: "[({0,1},8),({0,2},3),((1,2),1)]"
+        explain: "Edges list (round brackets are used for directed edges, curly bruckets for undirected ones); the third value of each triple is the edge weight. If two edges connect the same vertexes, the must be both directed and with opposite directions. In the default example you can see3 undirected edges: e0=v0-v1 with weight 8, e1=v0-v2 with weight 3, e e2=v1-v2 with weight 4, and a single directed edge e3=v1-v2 with weight 1."
+      query_edge:
+        regex: ^(0|[1-9][0-9]*)$
+        default: 0
+        explain: "This is the edge that has to be analysed, if required. You could be asked to determine if this specific edge appears in every, in no or in some of the Shortest Path Trees."
+      CAP_FOR_NUM_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "When the problem solver submit a list of solutions, the length of that list mustn't exceed this value."
+      CAP_FOR_NUM_OPT_SOLS:
+        regex: ^([1-9][0-9]*)$
+        default: 10
+        explain: "The number of optimal solutions returned by the oracle service won't exceed this value."
+
+
+      # API mode section, the alternative way to transmit to the service the input data received from the problem-solver:
+      input_data_assigned:
+        regex: ^(.*)$
+        default: "{}"
+        example: "-a input_data_assigned=\"{'n':3,'m':3,'s':0,'t':2,'edges':'[({0,1},8),({0,2},3),((1,2),1)]','query_edge':0}\" offre un modo alternativo per immettere il Caso d'Esempio 1, quello con ogni argomento lasciato al valore di default."
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `costs` or `vals`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
+
+
+      # section characterizing the answer requested to the oracle and the ad-hoc naming for the objects comprising it (the standard names can of course be used):
+      request_dict:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "this argument (a string to be read as yaml) is a dictionary specifying which solution objects should comprise the response of the oracle. Leaving the default value (the empty dictionary) then you get answers to every possible question. Otherwise, for every `key`-`value` pair in this dictionary, the oracle service will compute an object whose standard name is `key` (e.g., "opt_sol") and refer to it by the name `value` as prescribed by the caller. The possible `keys` (i.e., solution object types currently supported) are the following:"
+        explain1: "[opt_dist] the length of the shortest path that starts from the node s and ends in the node t."
+        explain2: "[opt_dists] the list of the minimum distances from the starting node s to any other node."
+        explain3: "[opt_path] a shortest path from s to t, returned as an edge index sequence."
+        explain4: "[opt_tree] a SPT."
+        explain5: "[num_opt_paths] the number of different shortest paths."
+        explain6: "[num_opt_trees] the number of different SPTs."
+        explain7: "[list_opt_paths] the list containing all the shortest paths from s to t."
+        explain8: "[list_opt_trees] the list containing all the SPTs with root in s."
+        explain9: "[edge_profile] appearance of the query edge in the SPTs (in all, in no, in some but not in all)."
+        explain10: "[nodes_relying_on_query_edge] the list of nodes whose distance from s relies on the query edge."
+        example1: "-a request_dict=\"{'opt_dist': 'opt_dist', 'opt_path': 'opt_path'}\""
+        example2: "-a request_dict=\"{'opt_tree': 'opt_tree1', 'num_opt_paths': 'num_opt_paths1'}\""
+        example3: "If you leave the default value (the empty dictionary {}) then you get the answers to all possible questions for which a solver has already been implemented. In this case the names used in the response of the oracle will be the standard names like those in Example 1."
+
+
+      # section with the arguments that specify the format of the feedback string and the general conformation of: (1) the direct output on the terminal or other support adopted (Jupyther notebook, browser, ...) (2) the output file (certificates of submission sent to the local machine)
+      color_implementation:
+        regex: ^(ANSI|html|None)$
+        default: ANSI
+      as_yaml:
+        regex: ^(0|1)$
+        default: 0
+      recall_data_assigned:
+        regex: ^(0|1)$
+        default: 0
+      recall_request:
+        regex: ^(0|1)$
+        default: 0
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      with_output_files:
+        regex: ^(0|1)$
+        default: 0
+      esercizio:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+      task:
+        regex: ^(-1|0|[1-9][0-9]*)$
+        default: -1
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    description: "the service synopsis is used by the problem solver to explore the services of a TALight problem, including synopsis itself (like you are doing right now). The information about each service is taken from the meta.yaml file defining the problem interface. This is the same file that stipulates the contract between the rtal client and the rtald server, or also the contract between a problem maker designing the problem and a problem maker that implements its services. Actually, `meta.yaml` is a symlink pointing to the metafile set as default by whom has deployed the problem on the server you are receiving this information from; however, using the argument `metafile` you can ask for other metafiles, possibly offering the same information in other languages. Instead, the argument `lang` only affects the language used when formatting this problem specific information into this sheet. At the bottom of this help sheet for the service synopsis itself, as well as for any other service sheet, you find an handy list of all the services available for the given problem (currenty, %(problem)s): if you want to know more about one of them, specify its name in the argument `service` in your next call to the service synopsis."
+    args:
+      service:
+        regex: ^(synopsis|check|oracle|[a-zA-Z0-9_]+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+      metafile:
+        regex: ^(default|en|it|[a-zA-Z0-9_]+)$
+        default: default
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it|[a-zA-Z0-9_]+)$
+        default: en
+...

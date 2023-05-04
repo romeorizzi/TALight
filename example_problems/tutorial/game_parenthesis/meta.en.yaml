@@ -89,8 +89,8 @@ services:
   play:
     evaluator: [python, services/play_driver.py]
     description: use this service if you want to play a match of the game-parenthesis against our player. You can choose the starting well formed formula and whether to be first or second to move. You can also choose to play against another person. To input the void string at the end of the match, you have to write the formula \')(\'. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect game-parenthesis play -aTALight_first_to_move=1 -aformula="()()()()" -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game-parenthesis play -aTALight_first_to_move=1 -aformula="()()()()" -awatch=watch_winner -- bots/my_game_parenthesis_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect game-parenthesis play -aTALight_first_to_move=1 -aformula="()()()()" -awatch=none']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game-parenthesis play -aTALight_first_to_move=1 -aformula="()()()()" -awatch=winner -- bots/my_game_parenthesis_player.py']
     args:
       formula:
         regex: ^(\(|\)){0,1000}$
@@ -103,8 +103,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
+        regex: ^(none|winner|grundy_val|num_winning_moves|list_winning_moves)$
+        default: none
         explain: The user can choose which informations should be displayed about any well formed formula that will face during the match.
 # vedere il problema lcs
       seed:
@@ -121,8 +121,8 @@ services:
   play_random:
     evaluator: [python, services/play_driver.py]
     description: use this service if you want to play a match of the game-parenthesis against our player. The starting formula is random. You can choose whether to be first or second to move. You can also choose to play against another person. To input the void string at the end of the match, you have to write the formula \')(\'. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
-    example1: [experiment in a direct use, '\n     rtal connect game-parenthesis play_random -aTALight_first_to_move=1 -awatch=no_watch']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game-parenthesis play_random -aTALight_first_to_move=1 -awatch=watch_winner -- bots/my_game_parenthesis_player.py']
+    example1: [experiment in a direct use, '\n     rtal connect game-parenthesis play_random -aTALight_first_to_move=1 -awatch=none']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game-parenthesis play_random -aTALight_first_to_move=1 -awatch=winner -- bots/my_game_parenthesis_player.py']
     args:
       formula:
         regex: ^$
@@ -133,8 +133,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
+        regex: ^(none|winner|grundy_val|num_winning_moves|list_winning_moves)$
+        default: none
         explain: The user can choose which informations should be displayed about any well formed formula that will face during the match.
 # vedere il problema lcs
       seed:
@@ -154,7 +154,7 @@ services:
     evaluator: [python, services/play_val_measuring_game_driver.py]
     description: use this service if you want to play a match of the MeasuringGame(game-parenthesis) against our player. You can choose the starting well formed formula and whether to be first or second to move. You can also choose to play against another person. The MeasuringGame(game-parenthesis) game is defined as the game sum of a game-parenthesis and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a game-parenthesis position. You can ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
     example1: [experiment in a direct use, '\n     rtal connect game-parenthesis play_val_measuring_game -aTALight_first_to_move=1 -aformula="()()()()" -anim=0']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game-parenthesis play_val_measuring_game -aTALight_first_to_move=1 -aformula="()()()" -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_game_parenthesis_player.py']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game-parenthesis play_val_measuring_game -aTALight_first_to_move=1 -aformula="()()()" -anim=0 -awatch=grundy_val -- bots/my_measuring_game_parenthesis_player.py']
     args:
       formula:
         regex: ^(\(|\)){0,1000}$
@@ -171,8 +171,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
+        regex: ^(none|winner|grundy_val|num_winning_moves|list_winning_moves)$
+        default: none
         explain: The user can choose which informations should be displayed about any well formed formula that will face during the match.
       seed:
         regex: ^0$
@@ -189,7 +189,7 @@ services:
     evaluator: [python, services/play_val_measuring_game_driver.py]
     description: use this service if you want to play a match of the MeasuringGame(game-parenthesis) against our player. The starting formula is random. You can choose whether to be first or second to move. You can also choose to play against another person. The MeasuringGame(game-parenthesis) game is defined as the game sum of a game-parenthesis and a Nim game with one single pile. As such, it can be used to assess the Grundy value of a game-parenthesis position. You can ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
     example1: [experiment in a direct use, '\n     rtal connect game-parenthesis play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0']
-    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game-parenthesis play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -awatch=watch_grundy_val -- bots/my_measuring_game_parenthesis_player.py']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e game-parenthesis play_val_measuring_game_random -aTALight_first_to_move=1 -anim=0 -awatch=grundy_val -- bots/my_measuring_game_parenthesis_player.py']
     args:
       formula:
         regex: ^$
@@ -204,8 +204,8 @@ services:
         default: 0
         explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
       watch:
-        regex: ^(no_watch|watch_winner|watch_grundy_val|num_winning_moves|list_winning_moves)$
-        default: no_watch
+        regex: ^(none|winner|grundy_val|num_winning_moves|list_winning_moves)$
+        default: none
         explain: The user can choose which informations should be displayed about any well formed formula that will face during the match.
       seed:
         regex: ^(random_seed|[1-9][0-9]{5,5})$

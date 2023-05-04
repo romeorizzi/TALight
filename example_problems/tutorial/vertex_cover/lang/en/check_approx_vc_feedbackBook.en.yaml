@@ -1,0 +1,29 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service} with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file {service}_feedbackBook.{ENV["lang"]}.yaml contained in the folder \''lang\'' of the problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+successful-load: 'The file you have associated to `instance` filehandler has been successfully loaded.'
+waiting-line: '#? Waiting for the graph.\n'
+insert-edges: 'Given {ENV["num_vertices"]} vertices labelled with the naturals in the interval [0,{ENV["num_vertices"]-1}], you are now expected to enter {ENV["num_edges"]} edges. To specify an edge, simply ente
+r its two endnodes separated by spaces.'
+insert-edge: 'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}], separated by spaces.'
+insert-edge: 'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}],  separated by spaces.'
+wrong-edges-number: '\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'
+edge-not-in-graph: 'Edge {t} is not an edge of the graph. Aborting.\n'
+invalid-input: 'Input must be an integer number or "C". Aborting.\n'
+instance-from-catalogue-successful: 'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'
+this-is-the-instance: '\nThis is the instance:\n'
+insert-opt-value: '\nWrite here your conjectured maximal matching size for this graph if you have one. Otherwise, if you only intend to be told about the approximation, enter "C".'
+best-sol: 'A possible 2-approximated vertex cover is: '
+min-maximal-matching: 'A possible maximal matching is:  '
+size-sol: 'The size of the 2-approximated vertex cover is: '
+right-best-sol: 'We agree, the solution you provided is a valid 2-approximation vertex cover for the graph.'
+right-sol: 'The solution you provided is a valid 2-approximation vertex cover for the graph. You can improve your approximation.'
+new-best-sol: 'Great! The solution you provided is a valid 2-approximation vertex cover for the graph and it`s better than mine!'
+wrong-sol: 'We don`t agree, the solution you provided is not a valid 2-approximation vertex cover for the graph.'
+edge-incident: 'Reason: edge {data} incident to another one.'
+not-vertex-cover: 'Reason: not a vertex cover. Edges not covered: '
+node-already-visited: 'Reason: vertex {data} already visited.'
+edge-not-in-graph: 'Edge {e} not in the graph. Aborting.'

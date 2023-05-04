@@ -29,6 +29,7 @@ const BUFFER_SIZE: usize = 1 << 16;
 pub(crate) struct Client<T: AsyncRead + AsyncWrite + Unpin> {
     ws: WebSocketStream<T>,
     args: CliArgs,
+    address: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -121,8 +122,12 @@ macro_rules! reunite {
 }
 
 impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
-    pub fn new(ws: WebSocketStream<T>, args: CliArgs) -> Client<T> {
-        Client { ws, args }
+    pub fn new(ws: WebSocketStream<T>, args: CliArgs, address: &str) -> Client<T> {
+        Client {
+            ws,
+            args,
+            address: address.to_string(),
+        }
     }
 
     #[instrument(name = "client", skip(self))]
@@ -362,6 +367,7 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
                         tinfo,
                         self.args.timeout,
                         files,
+                        &self.address,
                     )
                     .await
                     {
@@ -390,6 +396,7 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
         token_info: Option<TokenInfo>,
         conn_timeout: f64,
         declared_files: Vec<String>,
+        address: &str,
     ) -> Result<(), String>
     where
         <X as Sink<Message>>::Error: Display,
@@ -460,6 +467,7 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
             evaluator.env("TAL_META_EXP_TOKEN", &token_info.token);
             evaluator.env("TAL_META_EXP_LOG_DIR", &token_info.path);
         }
+        evaluator.env("TAL_META_EXP_ADDRESS", address);
         evaluator.stdin(Stdio::piped());
         evaluator.stdout(Stdio::piped());
         let mut process = match evaluator.spawn() {

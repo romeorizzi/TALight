@@ -24,8 +24,8 @@ args_list = [('pwd',str)] + PSL.instance_objects_spec + [
 ]
 
 ENV =Env(args_list)
-TAc =TALcolors(ENV, "None")
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
+TAc =TALcolors(ENV, None)
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now' if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:

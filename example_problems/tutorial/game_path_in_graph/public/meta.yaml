@@ -1,0 +1,160 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+  check_is_winning:
+    evaluator: [python, services/check_game_value_driver.py]
+    description: use this service to check out your belief about a certain graph to be a winning configuration (i.e., the first player to move has a winning strategy).
+    args:
+      graph:
+        regex: ^(\(\d* \d*\)){0,50}$
+        default: ""
+        explain: The edges of the graph that you believe to be a first-to-move-wins configuration of the game. The nodes are numbered starting from 0.
+        example1: "(0 5)(1 2)"
+      starting_node:
+        regex: ^[0-9]{0,50}$
+        default: 0
+        explain: The node where the game starts. You must insert a number greater or equal to 0.
+      value:
+        regex: ^-2$
+        default: -2
+        explain: You can not modify the value of this argument from its default. Your bet when calling this service is that the graph is a winning one.
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 nothing is printed unless your conjecture is a false one.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  check_is_lost:
+    evaluator: [python, services/check_game_value_driver.py]
+    description: use this service to check out your belief about a certain graph to be a lost one (i.e., the second player to move has a winning strategy).
+    args:
+      graph:
+        regex: ^(\(\d* \d*\)){0,50}$
+        default: ""
+        explain: The edges of the graph that you believe to be a second-to-move-wins configuration of the game. The nodes are numbered starting from 0.
+        example1: "(0 5)(1 2)"
+      starting_node:
+        regex: ^[0-9]{0,50}$
+        default: 0
+        explain: The node where the game starts. You must insert a number greater or equal to 0 if you want to know the winning moves of the graph.
+      value:
+        regex: ^-1$
+        default: -1
+        explain: You can not modify the value of this argument from its default. Your bet when calling this service is that the graph is a lost one.
+      silent:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 nothing is printed unless your conjecture is a false one.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  tell_me_about_graph:
+    evaluator: [python, services/tell_me_about_graph_driver.py]
+    description: use with caution this spoilering service in order to get more or less detailed information about a certain graph of the graph_game.
+    args:
+      graph:
+        regex: ^(\(\d* \d*\)){0,50}$
+        default: ""
+        explain: The edges of any graph of your choice. The nodes are numbered starting from 0.
+        example1:  "(0 5)(1 2)"
+      starting_node:
+        regex: ^[0-9]{0,50}$
+        default: 0
+        explain: The node where the game starts. You must insert a number greater or equal to 0 if you want to know the winning moves of the graph.
+      info_requested:
+        regex: ^(won_or_lost|gimme_a_winning_move|gimme_all_winning_moves)$
+        default: won_or_lost
+        explain: "the options are as follows:"
+        explain1: -won_or_lost= just tell me whether the given graph s is a winning or lost one.
+        explain2: -gimme_a_winning_move= if the given graph s is winning, please, suggest me a winning move.
+        explain3: -gimme_all_winning_moves= give me the whole set of winning moves for the given graph s.
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  play:
+    evaluator: [python, services/play_driver.py]
+    description: use this service if you want to play a match of the graph_game against our player. You can choose the starting graph and whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
+    example1: [experiment in a direct use, '\n     rtal connect graph_game play -aTALight_first_to_move=1 -agraph="(11 2)(5 3)" -awatch=no_watch']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e graph_game play -aTALight_first_to_move=1 -agraph="(11 2)(5 3)" -awatch=watch_winner -- bots/my_graph_game_player.py']
+    args:
+      graph:
+        regex: ^(\(\d* \d*\)){0,50}$
+        default: ""
+        explain: The edges of any graph of your choice. The nodes are numbered starting from 0.
+        example1:  "(0 5)(1 2)"
+      starting_node:
+        regex: ^[0-9]{0,50}$
+        default: 0
+        explain: The node where the game starts. You must insert a number greater or equal to 0.
+      TALight_first_to_move:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
+      watch:
+        regex: ^(no_watch|watch_winner|num_winning_moves|list_winning_moves|print_current_graph)$
+        default: no_watch
+        explain: The user can choose which informations should be displayed about any graph that will face during the match.
+# vedere il problema lcs
+      seed:
+        regex: ^0$
+        default: 0
+        explain: This argument means that the starting graph is not random
+      opponent:
+        regex: ^(computer|person)$
+        default: computer
+        explain: This argument is used to decide if you want to play a match against the computer or another player. In the second case, on each turn a player move on the current configuration and the other on the next. 
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  play_random:
+    evaluator: [python, services/play_driver.py]
+    description: use this service if you want to play a match of the graph_game against our player. The starting graph is random. You can choose whether to be first or second to move. You can also choose to play against another person. You can also ask the service for supporting information (a commentary on the game during play). Finally, as with other interactive TALight services, you can plug in a bot of yours to play in your behalf.
+    example1: [experiment in a direct use, '\n     rtal connect graph_game play_random -aTALight_first_to_move=1 -awatch=no_watch']
+    example2: [test your bot that plays in your behalf, '\n     rtal connect -e graph_game play_random -aTALight_first_to_move=1 -awatch=watch_winner -- bots/my_graph_game_player.py']
+    args:
+      graph:
+        regex: ^$
+        default: ""
+        explain: This argument is void because the graph is random
+      starting_node:
+        regex: ^$
+        default: 0
+        explain: The node where the game starts. In this service the starting node is chosen randomly among the nodes of the generated graph.
+      TALight_first_to_move:
+        regex: ^(0|1)$
+        default: 0
+        explain: If this flag is set to 1 TAlight takes the first move in the match, otherwise you go first.
+      watch:
+        regex: ^(no_watch|watch_winner|num_winning_moves|list_winning_moves|print_current_graph)$
+        default: no_watch
+        explain: The user can choose which informations should be displayed about any graph that will face during the match.
+# vedere il problema lcs
+      seed:
+        regex: ^(random_seed|[1-9][0-9]{5,5})$
+        regex-explained: 'either the string "random_seed" or a decimal number of precisley 6 digits'
+        regex-URL: 'https://extendsclass.com/regex/90e74ec'
+        default: random_seed
+        explain: 'When this argument is left to its default value (random_seed) then the service chooses a seed at random and communicates it to the user besides the generated pseudo-random instance. Otherwise, as seed, you can use any integer from 100000 to 999999.'
+      opponent:
+        regex: ^(computer|person)$
+        default: computer
+        explain: This argument is used to decide if you want to play a match against the computer or another player. In the second case, on each turn a player move on the current configuration and the other on the next. 
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters meaning one of the services of the problem %(problem)s
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: it
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...
