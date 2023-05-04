@@ -10,15 +10,17 @@ from RO_verify_submission_gen_prob_lib import verify_submission_gen
 instance_objects_spec = [
     ('n', int),
     ('labels', 'list_of_str'),
-    ('arcs', 'list_of_tuple'),
-    ('arcs_removed', 'list_of_tuple'),
-    ('arcs_added', 'list_of_tuple'),
+    ('arcs', 'list_of_tuple_of'),
+    ('arcs_removed', 'list_of_tuple_of'),
+    ('arcs_added', 'list_of_tuple_of'),
     ('focus_node', str),
-    ('focus_arc', tuple),
+    ('focus_arc', 'tuple_of'),
 ]
 additional_infos_spec = [
-    ('partial_to', dict),
-    ('partial_from', dict),
+    ('partialDPtable_to', 'yaml'),
+    ('partialDPtable_from', 'yaml'),
+    ('DPtableFrom', 'yaml'), 
+    ('DPtableTo', 'yaml'), 
 ]
 answer_objects_spec = {
     'is_a_DAG': bool,
@@ -29,13 +31,13 @@ answer_objects_spec = {
     'nodes_sensible_to_focus_arc': 'list_of_str',
     'latest_time_for_focus_node': int,
     'critical_path_from_focus_node': 'list_of_str',
-    'min_time_to': dict,
-    'min_time_from': dict,
-    'latest_time_to': dict,
-    'critical_path_to': dict,
-    'critical_nodes_to': dict,
-    'critical_arcs_to': dict,
-    'sensible_to_focus_arc': dict,
+    'min_time_to': 'yaml',
+    'min_time_from': 'yaml',
+    'latest_time_to': 'yaml',
+    'critical_path_to': 'yaml',
+    'critical_nodes_to': 'yaml',
+    'critical_arcs_to': 'yaml',
+    'sensible_to_focus_arc': 'yaml',
 }
 answer_objects_implemented = [
     'is_a_DAG',
@@ -59,7 +61,7 @@ answer_objects_implemented = [
 # Una classe per rappresentare un oggetto graph
 class Graph:
     # Costruttore
-    def __init__(self, arcs, n=0, labels=[], arcs_removed=[], arcs_added=[], focus_node=None, focus_arc=None, partial_to={}, partial_from={}):
+    def __init__(self, arcs, n, labels, arcs_removed, arcs_added, focus_node, focus_arc):
 
         if type(arcs) == str:
             arcs = ast.literal_eval(arcs)
@@ -69,12 +71,6 @@ class Graph:
 
         if type(arcs_added) == str:
             arcs_added = ast.literal_eval(arcs_added)
-
-        if type(partial_to) == str:
-            partial_to = ast.literal_eval(partial_to)
-
-        if type(partial_from) == str:
-            partial_from = ast.literal_eval(partial_from)
 
         # Assegnamo a V il numero dei vertici
         self.V = n
@@ -102,7 +98,7 @@ class Graph:
         self.focus_n = focus_node
         self.focus_a = focus_arc
 
-        if len(labels) == 0:
+        if len(labels) == 0 or labels == '[]':
 
             # aggiunge archi al graph diretto
             for (head, tail, delay) in arcs:
@@ -114,17 +110,31 @@ class Graph:
                 else:
                     self.adjList[head].append([tail, delay])
 
+            
+            for (head, tail, delay) in arcs:
+                head = str(head)
+                tail = str(tail)
+                delay = int(delay)
+                if(tail not in self.adjList.keys()):
+                    self.adjList[tail]=[[tail, 0]]
+
         else:
             n = len(labels)
             self.V = n
-            guard = 0
             # aggiunge archi al graph diretto
             for (head, tail, delay) in arcs:
-                if guard == 0:
-                    self.adjList['0'].append([head, 0])
-                    guard = 1
+                if(head not in self.adjList.keys()):
+                    self.adjList[head]=[[tail, delay]]
+                else:
+                    self.adjList[head].append([tail, delay])
 
-                self.adjList[head].append([tail, delay])
+            
+            for (head, tail, delay) in arcs:
+                head = str(head)
+                tail = str(tail)
+                delay = int(delay)
+                if(tail not in self.adjList.keys()):
+                    self.adjList[tail]=[[tail, 0]]
 
 # Perform DFS on the graph and set the departure time of all vertices of the graph
 
@@ -137,7 +147,8 @@ def DFS(graph, v, discovered, departure, time, trad, trad_rev):
     # do for every edge (v, u)
     l = []
     for key in graph.adjList[trad[v]]:
-        l.append(key[0])
+        if len(key) > 0:
+            l.append(key[0])
     for u in l:
         # if `u` is not yet discovered
         if str(u) in trad_rev.keys() and not discovered[trad_rev[str(u)]]:
@@ -166,8 +177,8 @@ def isDAG(graph):
     trad_rev = {}
 
     for i in range(n):
-        trad[i] = list(graph.adjList.keys())[i][0]
-        trad_rev[list(graph.adjList.keys())[i][0]] = i
+        trad[i] = list(graph.adjList.keys())[i]
+        trad_rev[list(graph.adjList.keys())[i]] = i
 
     # tiene traccia del rilevamento o meno di un vertice
     discovered = [False] * n
@@ -189,7 +200,8 @@ def isDAG(graph):
         # controlla se (u, v) forma un back-edge.
         l = []
         for key in graph.adjList[trad[u]]:
-            l.append(key[0])
+            if len(key) > 0:
+                l.append(key[0])
         for v in l:
 
             # Se il tempo di partenza del vertice `v` è maggiore o uguale
@@ -237,8 +249,9 @@ def topologicalSort(graph):
     #print(stack[::-1])  # return list in reverse order
 
     for arc in graph.adjList[stack[0]]:
-        if arc[0] != stack[-1]:
-            return (True, stack[::-1])
+        if len(arc) > 0:
+            if arc[0] != stack[-1]:
+                return (True, stack[::-1])
     if graph.adjList[stack[0]] == []:
         return (True, stack[::-1])
     return (False, stack[::-1])
@@ -282,7 +295,8 @@ class PriorityQueue(object):
 def getNeighbors(adjList, node):
     neighbors = []
     for neighbor in adjList[node]:
-        neighbors.append(neighbor[0])
+        if len(neighbor) > 0:
+            neighbors.append(neighbor[0])
     return neighbors
 
 
@@ -385,6 +399,8 @@ def get_DP_table_path(G, algo):
     return DP_rows
 
 def path_from(table, start, end):
+    start = str(start)
+    end = str(end)
     if start in table.keys() and end in table.keys():
         return table[end][start]
     else:
@@ -392,6 +408,8 @@ def path_from(table, start, end):
 
 
 def path_to(table, start, end):
+    start = str(start)
+    end = str(end)
     if start in table.keys() and end in table.keys():
         return table[start][end]
     else:
@@ -412,6 +430,7 @@ def critical_arcs_to_node(table, start, end):
 
 #Restituisce il dizionario dei nodi con associato True o False se tale nodo viene raggiunto tramite il focus_arc
 def f_sensible_to_focus_arc(table, start, focus_arc):
+    focus_arc = focus_arc[:-1]
     result = dict()
     for key in table.keys():
         arcs = critical_arcs_to_node(table, start, key)
@@ -495,14 +514,14 @@ def coalesce(a ,b):
 def check_instance_consistency(instance):
     # print(f"instance={instance}", file=stderr)
     labels = instance["labels"]
-
     n = len(instance["labels"])
-    chk_labels = False
+    chk_labels = True
+
     if n == 0:
-        chk_labels = True
+        chk_labels = False
         n = instance["n"]
         labels = []
-        for i in range(1, n+1):
+        for i in range(0, n+1):
             labels.append(str(i))
 
     for arc in instance["arcs"]:
@@ -516,57 +535,88 @@ def check_instance_consistency(instance):
                 exit(0)
 
     for arc in instance["arcs_removed"]:
+
+        if len(arc) > 3:
+            newarc = []
+            newarc.append(str(arc[1]))
+            newarc.append(str(arc[3]))
+            newarc.append(int(arc[5]))
+            arc = tuple(newarc)
+        print(arc)
+
         if (arc not in instance["arcs"]):
             print(
                 'ERRORE: Nell\'arco {} in "arcs_removed" è presente un nodo non definito'.format(arc))
             exit(0)
 
     for arc in instance["arcs_added"]:
+
+        if len(arc) > 3:
+            newarc = []
+            newarc.append(str(arc[1]))
+            newarc.append(str(arc[3]))
+            newarc.append(int(arc[5]))
+            arc = tuple(newarc)
+
         if (arc not in instance["arcs"]):
             print(
-                'ERRORE: Nell\'arco {} in "arcs_added" è presente un nodo non definito'.format(arc))
+                'ERRORE: Nell\'arco {} in "arcs_added" è presente un arco non definito'.format(arc))
             exit(0)
 
     if chk_labels:
-        if str(instance["focus_node"]) not in labels:
+        if int(instance["focus_node"]) > len(labels)-1:
             print('ERRORE: Il nodo "focus_node" {} non è definito'.format(
                 instance["focus_node"]))
             exit(0)
 
-    for arc in instance["focus_arc"]:
-        if (arc not in instance["arcs"] and arc not in instance["arcs_added"]):
-            print(
-                'ERRORE: L\'arco {} non è presente in "arcs_added" nè in "arcs"'.format(arc))
-            exit(0)
+    if len(instance["focus_arc"]) > 3:
+        arc = []
+        arc.append(str(instance["focus_arc"][1]))
+        arc.append(str(instance["focus_arc"][3]))
+        arc.append(int(instance["focus_arc"][5]))
+        arc = tuple(arc)
+    else:
+        arc = instance["focus_arc"]
+
+    if (arc not in instance["arcs"] and arc not in instance["arcs_added"]):
+        print(
+            'ERRORE: L\'arco {} non è presente in "arcs_added" nè in "arcs"'.format(arc))
+        exit(0)
     
 
 def solver(input_to_oracle: dict) -> dict:
+
     instance = input_to_oracle['input_data_assigned']
     n = instance['n']
     labels = instance['labels']
     arcs = instance['arcs']
     arcs_removed = instance['arcs_removed']
     arcs_added = instance['arcs_added']
-    focus_node = instance['focus_node']
+    if len(labels) > 0:
+        focus_node = labels[int(instance['focus_node'])]
+    else:
+        focus_node = instance['focus_node']
     focus_arc = instance['focus_arc']
 
     graph = Graph(arcs, n, labels, arcs_removed, arcs_added, focus_node, focus_arc)
 
+    default_node = list(graph.adjList.keys())[0]
+
     is_a_DAG = isDAG(graph)
     cert_YES = topologicalSort(graph)[1]
     cert_NO = topologicalSort(graph)[1]
-    earliest_time_for_focus_node = delay_sum(graph, path_to(get_DP_table_path(graph,dijkstra_opt), '0', focus_node))
-    critical_path_to_focus_node = path_to(get_DP_table_path(graph,dijkstra_opt), '0', focus_node)
-    nodes_sensible_to_focus_arc = f_nodes_sensible_to_focus_arc(get_DP_table_path(graph,dijkstra_opt), '0', focus_arc)
-    latest_time_for_focus_node = delay_sum(graph, path_to(get_DP_table_path(graph,dijkstra_max), '0', focus_node))
-    critical_path_from_focus_node = path_to(get_DP_table_path(graph,dijkstra_max), '0', focus_node)
+    earliest_time_for_focus_node = delay_sum(graph, path_to(get_DP_table_path(graph,dijkstra_opt), default_node, focus_node))
+    critical_path_to_focus_node = path_to(get_DP_table_path(graph,dijkstra_opt), default_node, focus_node)
+    nodes_sensible_to_focus_arc = f_nodes_sensible_to_focus_arc(get_DP_table_path(graph,dijkstra_opt), default_node, focus_arc)
+    latest_time_for_focus_node = delay_sum(graph, path_to(get_DP_table_path(graph,dijkstra_max), default_node, focus_node))
+    critical_path_from_focus_node = path_to(get_DP_table_path(graph,dijkstra_max), default_node, focus_node)
     min_time_to = get_DP_table_path(graph,dijkstra_opt)
-    min_time_from = f_min_time_from(graph, get_DP_table_path(graph,dijkstra_opt), '0')
-    latest_time_to = f_latest_time_to(graph, get_DP_table_path(graph,dijkstra_max), '0')
-    critical_path_to = f_critical_path_to(graph, get_DP_table_path(graph,dijkstra_opt), '0')
-    critical_nodes_to = f_critical_nodes_to(graph, get_DP_table_path(graph,dijkstra_opt), '0')
-    critical_arcs_to = f_critical_arcs_to(graph, get_DP_table_path(graph,dijkstra_opt), '0')
-    sensible_to_focus_arc = f_sensible_to_focus_arc(get_DP_table_path(graph,dijkstra_opt), '0', focus_arc)
+    min_time_from = f_min_time_from(graph, get_DP_table_path(graph,dijkstra_opt), default_node)
+    latest_time_to = f_latest_time_to(graph, get_DP_table_path(graph,dijkstra_max), default_node)
+    critical_path_to = f_critical_path_to(graph, get_DP_table_path(graph,dijkstra_opt), default_node)
+    critical_nodes_to = f_critical_nodes_to(graph, get_DP_table_path(graph,dijkstra_opt), default_node)
+    critical_arcs_to = f_critical_arcs_to(graph, get_DP_table_path(graph,dijkstra_opt), default_node)
+    sensible_to_focus_arc = f_sensible_to_focus_arc(get_DP_table_path(graph,dijkstra_opt), default_node, focus_arc)
 
     #print(f"input_to_oracle={input_to_oracle}", file=stderr)
     input_data = input_to_oracle["input_data_assigned"]
@@ -584,7 +634,7 @@ class verify_submission_problem_specific(verify_submission_gen):
 
     def __init__(self, sef, input_data_assigned: Dict = {}, long_answer_dict: Dict = {}, oracle_response: Dict = None):
         super().__init__(sef, input_data_assigned, long_answer_dict, oracle_response)
-        self.graph = Graph(input_data_assigned['arcs'], input_data_assigned['n'], input_data_assigned['labels'], input_data_assigned['arcs_removed'], input_data_assigned['arcs_added'], input_data_assigned['focus_node'], input_data_assigned['focus_arc'], input_data_assigned['partial_to'], input_data_assigned['partial_from'])
+        self.graph = Graph(input_data_assigned['arcs'], input_data_assigned['n'], input_data_assigned['labels'], input_data_assigned['arcs_removed'], input_data_assigned['arcs_added'], input_data_assigned['focus_node'], input_data_assigned['focus_arc'])
         self.input_data_assigned = input_data_assigned
 
     def verify_format(self, sef):
@@ -922,91 +972,91 @@ class verify_submission_problem_specific(verify_submission_gen):
             is_a_DAG_g = self.goals['is_a_DAG']
             if is_a_DAG_g.answ != isDAG(self.graph):
                 return sef.optimality_NO(is_a_DAG_g, f"Come is_a_DAG ha inserito '{is_a_DAG_g}', la risposta però è errata.")
-            sef.optimality_OK(is_a_DAG_g, f"'{is_a_DAG_g.answ}' è la risposta corretta.")
+            sef.optimality_OK(is_a_DAG_g, f"'{is_a_DAG_g.answ}' è la risposta corretta.",'')
 
         if 'cert_YES' in self.goals:
             cert_YES_g = self.goals['cert_YES']
             if cert_YES_g.answ != topologicalSort(self.graph)[1] or True != topologicalSort(self.graph)[0]:
                 return sef.optimality_NO(cert_YES_g, f"Come cert_YES ha inserito '{cert_YES_g}', non è però la risposta corretta.")
-            sef.optimality_OK(cert_YES_g, f"'{cert_YES_g.answ}' è la risposta corretta.")
+            sef.optimality_OK(cert_YES_g, f"'{cert_YES_g.answ}' è la risposta corretta.",'')
 
 
         if 'cert_NO' in self.goals:
             cert_NO_g = self.goals['cert_NO']
             if cert_NO_g.answ != topologicalSort(self.graph)[1] or True == topologicalSort(self.graph)[0]:
                 return sef.optimality_NO(cert_NO_g, f"Come cert_NO ha inserito '{cert_NO_g}', non è però la risposta corretta.")
-            sef.optimality_OK(cert_NO_g, f"'{cert_NO_g.answ}' è la risposta corretta.")
+            sef.optimality_OK(cert_NO_g, f"'{cert_NO_g.answ}' è la risposta corretta.",'')
 
         if 'earliest_time_to_focus_node' in self.goals:
             earliest_time_to_focus_node_g = self.goals['earliest_time_to_focus_node']
-            if earliest_time_to_focus_node_g.answ != delay_sum(self.graph, critical_path_to_focus_node(get_DP_table_path(self.graph, dijkstra_opt), '0', self.graph.focus_node)):
+            if earliest_time_to_focus_node_g.answ != delay_sum(self.graph, path_to(get_DP_table_path(graph,dijkstra_opt), '0', self.graph.focus_n)):
                 return sef.optimality_NO(earliest_time_to_focus_node_g, f"Come earliest_time_to_focus_node hai immesso '{earliest_time_to_focus_node_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(earliest_time_to_focus_node_g, f"Come earliest_time_to_focus_node hai immesso la soluzione ottima.")
+            sef.optimality_OK(earliest_time_to_focus_node_g, f"Come earliest_time_to_focus_node hai immesso la soluzione ottima.",'')
 
         if 'latest_time_for_focus_node' in self.goals:
             latest_time_for_focus_node_g = self.goals['latest_time_for_focus_node']
-            if latest_time_for_focus_node_g.answ != delay_sum(self.graph, latest_time_to(get_DP_table_path(self.graph, dijkstra_max), '0', self.graph.focus_node)):
+            if latest_time_for_focus_node_g.answ != delay_sum(self.graph, path_to(get_DP_table_path(self.graph,dijkstra_max), '0', self.graph.focus_n)):
                 return sef.optimality_NO(latest_time_for_focus_node_g, f"Come latest_time_for_focus_node hai immesso '{latest_time_for_focus_node_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(latest_time_for_focus_node_g, f"Come latest_time_for_focus_node hai immesso la soluzione ottima.")
+            sef.optimality_OK(latest_time_for_focus_node_g, f"Come latest_time_for_focus_node hai immesso la soluzione ottima.",'')
 
         if 'critical_path_to_focus_node' in self.goals:
             critical_path_to_focus_node_g = self.goals['critical_path_to_focus_node']
-            if critical_path_to_focus_node(get_DP_table_path(self.graph, dijkstra_opt), '0', self.graph.focus_node) != critical_path_to_focus_node_g.answ:
+            if critical_path_to_focus_node(get_DP_table_path(self.graph, dijkstra_opt), '0', self.graph.focus_n) != critical_path_to_focus_node_g.answ:
                 return sef.optimality_NO(critical_path_to_focus_node_g, f"Nel critical_path_to_focus_node hai immesso '{critical_path_to_focus_node_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(critical_path_to_focus_node_g, f"Nel critical_path_to_focus_node hai immesso la soluzione ottima.")
+            sef.optimality_OK(critical_path_to_focus_node_g, f"Nel critical_path_to_focus_node hai immesso la soluzione ottima.",'')
 
         if 'nodes_sensible_to_focus_arc' in self.goals:
             nodes_sensible_to_focus_arc_g = self.goals['nodes_sensible_to_focus_arc']
-            if sensible_to_focus_arc(get_DP_table_path(self.graph, dijkstra_opt), '0', self.graph.focus_arc) != nodes_sensible_to_focus_arc_g.answ:
+            if sensible_to_focus_arc(get_DP_table_path(self.graph, dijkstra_opt), '0', self.graph.focus_a) != nodes_sensible_to_focus_arc_g.answ:
                 return sef.optimality_NO(nodes_sensible_to_focus_arc_g, f"Nel nodes_sensible_to_focus_arc hai immesso '{nodes_sensible_to_focus_arc_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(nodes_sensible_to_focus_arc_g, f"Nel nodes_sensible_to_focus_arc hai immesso la soluzione ottima.")
+            sef.optimality_OK(nodes_sensible_to_focus_arc_g, f"Nel nodes_sensible_to_focus_arc hai immesso la soluzione ottima.",'')
 
         if 'critical_path_from_focus_node' in self.goals:
             critical_path_from_focus_node_g = self.goals['critical_path_from_focus_node']
-            if latest_time_to(get_DP_table_path(G,dijkstra_max), '0', self.graph.focus_node) != critical_path_from_focus_node_g.answ:
+            if path_to(get_DP_table_path(self.graph,dijkstra_max), '0', self.graph.self.graph.focus_n) != critical_path_from_focus_node_g.answ:
                 return sef.optimality_NO(critical_path_from_focus_node_g, f"Nel critical_path_from_focus_node hai immesso '{critical_path_from_focus_node_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(critical_path_from_focus_node_g, f"Nel critical_path_from_focus_node hai immesso la soluzione ottima.")
+            sef.optimality_OK(critical_path_from_focus_node_g, f"Nel critical_path_from_focus_node hai immesso la soluzione ottima.",'')
 
         if 'min_time_to' in self.goals:
             min_time_to_g = self.goals['min_time_to']
-            if min_time_to(self.graph, get_DP_table_path(G,dijkstra_opt), '0') != min_time_to_g.answ:
+            if min_time_to(self.graph, get_DP_table_path(self.graph,dijkstra_opt), '0') != min_time_to_g.answ:
                 return sef.optimality_NO(min_time_to_g, f"Nel min_time_to hai immesso '{min_time_to_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(min_time_to_g, f"Nel min_time_to hai immesso la soluzione ottima")
+            sef.optimality_OK(min_time_to_g, f"Nel min_time_to hai immesso la soluzione ottima",'')
             
         if 'min_time_from' in self.goals:
             min_time_from_g = self.goals['min_time_from']
             if min_time_from(self.graph, get_DP_table_path(self.graph, dijkstra_opt), '0') != min_time_from_g.answ:
                 return sef.optimality_NO(min_time_from_g, f"Nel min_time_from hai immesso '{min_time_from_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(min_time_from_g, f"Nel min_time_from hai immesso la soluzione ottima")
+            sef.optimality_OK(min_time_from_g, f"Nel min_time_from hai immesso la soluzione ottima",'')
 
         if 'latest_time_to' in self.goals:
             latest_time_to_g = self.goals['latest_time_to']
-            if latest_time_to(self.graph, get_DP_table_path(self.graph, dijkstra_max), '0') != latest_time_to_g.answ:
+            if f_latest_time_to(self.graph, get_DP_table_path(self.graph, dijkstra_max), '0') != latest_time_to_g.answ:
                 return sef.optimality_NO(latest_time_to_g, f"Nel latest_time_to hai immesso '{latest_time_to_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(latest_time_to_g, f"Nel latest_time_to hai immesso la soluzione ottima")
+            sef.optimality_OK(latest_time_to_g, f"Nel latest_time_to hai immesso la soluzione ottima",'')
 
         if 'critical_path_to' in self.goals:
             critical_path_to_g = self.goals['critical_path_to']
             if critical_path_to(self.graph, get_DP_table_path(self.graph, dijkstra_opt), '0') != critical_path_to_g.answ:
                 return sef.optimality_NO(critical_path_to_g, f"Nel critical_path_to hai immesso '{critical_path_to_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(critical_path_to_g, f"Come critical_path_to hai immesso la soluzione ottima.")
+            sef.optimality_OK(critical_path_to_g, f"Come critical_path_to hai immesso la soluzione ottima.",'')
 
         if 'critical_nodes_to' in self.goals:
             critical_nodes_to_g = self.goals['critical_nodes_to']
             if critical_nodes_to(self.graph, get_DP_table_path(self.graph,dijkstra_opt), '0') != critical_nodes_to_g.answ:
                 return sef.optimality_NO(critical_nodes_to_g, f"Nel critical_nodes_to hai immesso '{critical_nodes_to_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(critical_nodes_to_g, f"Come critical_nodes_to hai immesso la soluzione ottima.")
+            sef.optimality_OK(critical_nodes_to_g, f"Come critical_nodes_to hai immesso la soluzione ottima.",'')
 
         if 'critical_arcs_to' in self.goals:
             critical_arcs_to_g = self.goals['critical_arcs_to']
             if critical_arcs_to(self.graph, get_DP_table_path(self.graph,dijkstra_opt), '0') != critical_arcs_to_g.answ:
                 return sef.optimality_NO(critical_arcs_to_g, f"Come chiavi hai immesso '{critical_arcs_to_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(critical_arcs_to_g, f"Nel critical_arcs_to hai immesso la soluzione ottima.")
+            sef.optimality_OK(critical_arcs_to_g, f"Nel critical_arcs_to hai immesso la soluzione ottima.",'')
 
         if 'sensible_to_focus_arc' in self.goals:
             sensible_to_focus_arc_g = self.goals['sensible_to_focus_arc']
             if sensible_to_focus_arc(get_DP_table_path(self.graph,dijkstra_opt), '0', self.focus_arc) != sensible_to_focus_arc_g.answ:
                 return sef.optimality_NO(sensible_to_focus_arc_g, f"Nel sensible_to_focus_arc hai immesso '{sensible_to_focus_arc_g.answ}' ma non è il risultato ottimo.")
-            sef.optimality_OK(sensible_to_focus_arc_g, f"Nel sensible_to_focus_arc hai immesso la soluzione ottima.")
+            sef.optimality_OK(sensible_to_focus_arc_g, f"Nel sensible_to_focus_arc hai immesso la soluzione ottima.",'')
 
         return True
