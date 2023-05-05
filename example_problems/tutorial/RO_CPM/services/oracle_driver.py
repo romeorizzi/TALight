@@ -38,7 +38,7 @@ RO_io.check_request(ENV['request_dict'], PSL.answer_objects_implemented)
 
 request_dict = ENV["request_dict"] if len(ENV["request_dict"]) != 0 else { key:key for key in PSL.answer_objects_implemented }
 #print(f"request_dict={request_dict}", file=stderr)
-    
+
 all_data = {"input_data_assigned":input_data_assigned,"request":request_dict}
 #print(f"all_data={all_data}", file=stderr)
 all_data["oracle"] = PSL.solver(all_data)
