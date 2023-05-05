@@ -166,11 +166,8 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
 
     if typestr[:len('list_of_')] == 'list_of_':
         if type(yaml_var) != list:
-            try:
-                yaml_var = list(yaml_var)
-            except Exception as e:
-                print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. Here is its actual raw content as a string: {repr(yaml_var)}")
-                exit(0)
+            print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. Here is its actual raw content as a string: {repr(yaml_var)}")
+            exit(0)
         enforced_list = []
         if 'tuple_of' in typestr:
             new_tuple = []
