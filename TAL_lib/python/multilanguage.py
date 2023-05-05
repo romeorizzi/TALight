@@ -19,7 +19,7 @@ class TALcolors:
         self.color_implementation = color_implementation
         if color_implementation == "ANSI" and environ["TAL_META_TTY"]=='0':
             self.color_implementation = None
-        if self.color_implementation != None:
+        if self.color_implementation != None: # già corretto con l'official
             self.termcolor_is_installed = False
             if environ["TAL_META_TTY"]=='1' or color_implementation=="html":
                 try:
@@ -133,6 +133,8 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             print(f"# Unrecoverable Error: {varname} is not of type int. Here is its actual raw content as a string: {repr(yaml_var)}")
             exit(0)
     if typestr in ['bool',bool]:
+        if yaml_var is None: # verificare con assert yaml_var is not None
+            return True
         if yaml_var.lower() in ['true','1']:
             return True
         if yaml_var.lower() in ['false','0']:
@@ -166,11 +168,8 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
 
     if typestr[:len('list_of_')] == 'list_of_':
         if type(yaml_var) != list:
-            try:
-                yaml_var = list(yaml_var)
-            except Exception as e:
-                print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. Here is its actual raw content as a string: {repr(yaml_var)}")
-                exit(0)
+            print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. Here is its actual raw content as a string: {repr(yaml_var)}")
+            exit(0)
         enforced_list = []
         if 'tuple_of' in typestr:
             new_tuple = []
