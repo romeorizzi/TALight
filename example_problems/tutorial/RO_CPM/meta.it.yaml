@@ -43,7 +43,7 @@ services:
         explain: "per consegne che richiedano di focalizzare l'attenzione su un singolo nodo, si fornisca la posizione (indice partendo da 0) del nodo nelle labels (dove `labels` sia stato lasciato al valore di default di lista vuota, indicare il numero del node)"
       focus_arc:
         regex: ^(.*)$
-        default: (1,2,5)
+        default: (1,2,3)
         explain: "per consegne che richiedano di focalizzare l'attenzione su un singolo arco/vincolo si specifichi l'arco in `arcs`+`arcs_added`"
 
       # sezione con informazioni aggiuntive fornite al trainee dal problem poser e che il presente servizio deve prendere in considerazione:
@@ -54,9 +54,7 @@ services:
       partialDPtable_from:
         regex: ^(.*)$
         default: "{}"
-        explain: "see the above explanation for the argument `partialDP_to`. For the same general functional (maximum path total length) but now referring to any maximal path starting in the generic node, we would have: `partialDPtable_from` = \"{'1':11,'2':6,'3':0}\", which, with Example 2 for the argument `labels` would become \"{'A':11,'B':6,'C':0}\"."
-
-      # sezione con informazioni aggiuntive fornite al trainee dal problem poser e che il presente servizio deve prendere in considerazione:
+        explain: "see the above explanation for the argument `partialDPtable_to`. For the same general functional (maximum path total length) but now referring to any maximal path starting in the generic node, we would have: `partialDPtable_from` = \"{'1':11,'2':6,'3':0}\", which, with Example 2 for the argument `labels` would become \"{'A':11,'B':6,'C':0}\"."
       DPtable_to:
         regex: ^(.*)$
         default: "{}"
