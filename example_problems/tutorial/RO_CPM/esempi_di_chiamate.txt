@@ -30,6 +30,7 @@ rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_da
 
 
 
+
 # ESEMPI DI ERRORE
 
 # formato errato del focus_arc
@@ -40,3 +41,4 @@ rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_da
 
 # focus_node non è un indice esistente
 rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(B,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':13, 'arcs_added':[(A,B,2)], 'arcs_removed':[(A,B,1)]}"
+
