@@ -75,7 +75,7 @@ services:
       # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
       is_a_DAG:
         regex: ^(.*)$
-        default: ""
+        default: "'True'"
         explain: 'catalog the oriented graph as either a DAG or not:'
         explain1: '[True] according to the problem solver it is a DAG'
         explain2: '[False] according to the problem solver it is NOT a DAG'
