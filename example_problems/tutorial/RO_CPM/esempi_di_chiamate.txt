@@ -6,11 +6,11 @@ rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a n=3 -a arcs='[(0,1,8),(
 
 rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a n=3 -a arcs='[(0,1,8),(0,2,3),(1,2,1)]' -a focus_arc='(0,2,3)' -a focus_node='2'
 
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a n=3 -a arcs='[(A,B,8),(A,C,3),(B,C,1)]' -a focus_arc='(A,C,3)' -a focus_node=2 -a labels='[A,B,C]' -a arcs_added='(B,C,2)' -a arcs_removed='(B,C,1)'
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a n=3 -a arcs='[(A,B,8),(A,C,3),(B,C,1)]' -a focus_arc='(A,C,3)' -a focus_node=2 -a labels='[A,B,C]' -a arcs_added='[(B,C,2)]' -a arcs_removed='[(B,C,1)]'
 
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(A,B,8),(A,C,3),(B,C,1)], 'focus_arc':'(A,C,3)', 'focus_node':2, 'labels':[A,B,C], 'arcs_added':'(B,C,2)', 'arcs_removed':'(B,C,1)'}" -a with_oracle
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(A,B,8),(A,C,3),(B,C,1)], 'focus_arc':'(A,C,3)', 'focus_node':2, 'labels':[A,B,C], 'arcs_added':[(B,C,2)], 'arcs_removed':[(B,C,1)]}" -a with_oracle
 
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(0,1,8),(0,2,3),(1,2,1)], 'focus_arc':'(0,2,3)', 'focus_node':2, 'arcs_added':'(1,2,2)', 'arcs_removed':'(1,2,1)'}" -a with_oracle
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(0,1,8),(0,2,3),(1,2,1)], 'focus_arc':'(0,2,3)', 'focus_node':2, 'arcs_added':[(1,2,2)], 'arcs_removed':[(1,2,1)]}" -a with_oracle
 
 
 
@@ -20,23 +20,25 @@ rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM check -a pwd=tmppwd -a input_dat
 CLI:
 rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd
 
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(A,B,8),(A,C,3),(B,C,1)], 'focus_arc':'(A,C,3)', 'focus_node':2, 'labels':[A,B,C], 'arcs_added':'(B,C,2)', 'arcs_removed':'(B,C,1)'}"
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(A,B,8),(A,C,3),(B,C,1)], 'focus_arc':'(A,C,3)', 'focus_node':2, 'labels':[A,B,C], 'arcs_added':[(B,C,2)], 'arcs_removed':[(B,C,1)]}"
 
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(0,1,8),(0,2,3),(1,2,1)], 'focus_arc':'(0,2,3)', 'focus_node':2, 'arcs_added':'(1,2,2)', 'arcs_removed':'(1,2,1)'}"
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(0,1,8),(0,2,3),(1,2,1)], 'focus_arc':'(0,2,3)', 'focus_node':2, 'arcs_added':[(1,2,2)], 'arcs_removed':[(1,2,1)]}"
 
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':4, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(B,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':2, 'arcs_added':'(A,B,2)', 'arcs_removed':'(A,B,1)'}"
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':4, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(B,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':2, 'arcs_added':[(A,B,2)], 'arcs_removed':[(A,B,1)]}"
 
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(B,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':1, 'arcs_added':'(A,B,2)', 'arcs_removed':'(A,B,1)'}"
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(B,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':1, 'arcs_added':[(A,B,2)], 'arcs_removed':[(A,B,1)]}"
+
 
 
 
 # ESEMPI DI ERRORE
 
 # formato errato del focus_arc
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':4, 'arcs':[(3,1,8),(3,2,3),(1,2,1),(2,3,5)], 'focus_arc':'(3,2)', 'focus_node':2, 'arcs_added':'(1,2,2)', 'arcs_removed':'(1,2,1)'}"
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':4, 'arcs':[(3,1,8),(3,2,3),(1,2,1),(2,3,5)], 'focus_arc':'(3,2)', 'focus_node':2, 'arcs_added':[(1,2,2)], 'arcs_removed':[(1,2,1)]}"
 
 # nodo non definito in un arco
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(X,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':1, 'arcs_added':'(A,B,2)', 'arcs_removed':'(A,B,1)'}"
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(X,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':1, 'arcs_added':[(A,B,2)], 'arcs_removed':[(A,B,1)]}"
 
 # focus_node non è un indice esistente
-rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(B,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':13, 'arcs_added':'(A,B,2)', 'arcs_removed':'(A,B,1)'}"
+rtal connect -x _0123456789_Romeo_Rizzi  RO_CPM oracle -a pwd=tmppwd -a input_data_assigned="{'n':3, 'arcs':[(C,A,8),(C,B,3),(A,B,1),(B,C,5)], 'focus_arc':'(C,B,3)', 'labels':[A,B,C], 'focus_node':13, 'arcs_added':[(A,B,2)], 'arcs_removed':[(A,B,1)]}"
+

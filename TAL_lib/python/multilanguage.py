@@ -350,4 +350,3 @@ class Lang:
             return eval(f"f'{fstring}'")
         msg_encoded = self.messages_book[msg_code]
         return self.service_server_eval(msg_encoded)
-

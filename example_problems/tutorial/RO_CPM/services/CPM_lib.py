@@ -19,8 +19,8 @@ instance_objects_spec = [
 additional_infos_spec = [
     ('partialDPtable_to', 'yaml'),
     ('partialDPtable_from', 'yaml'),
-    ('DPtableFrom', 'yaml'), 
-    ('DPtableTo', 'yaml'), 
+    ('DPtable_from', 'yaml'), 
+    ('DPtable_to', 'yaml'), 
 ]
 answer_objects_spec = {
     'is_a_DAG': bool,
@@ -81,9 +81,10 @@ class Graph:
         # Un elenco di elenchi per rappresentare un elenco di adiacenze
         self.adjList = dict()
 
-        # gestione degli archi rimossi sul grafo D'
-        for arc in arcs_removed:            
-            arcs.remove(arc)
+        # gestione degli archi rimossi sul grafo D' 
+        for arc in arcs_removed:        
+            if arc in arcs:
+                arcs.remove(arc)
 
         # gestione degli archi aggiunti sul grafo D'
         for arc in arcs_added:
@@ -542,11 +543,10 @@ def check_instance_consistency(instance):
             newarc.append(str(arc[3]))
             newarc.append(int(arc[5]))
             arc = tuple(newarc)
-        print(arc)
 
         if (arc not in instance["arcs"]):
             print(
-                'ERRORE: Nell\'arco {} in "arcs_removed" è presente un nodo non definito'.format(arc))
+                'ERRORE: Nell\'arco {} in "arcs_removed" è presente un arco non definito'.format(arc))
             exit(0)
 
     for arc in instance["arcs_added"]:
@@ -558,10 +558,16 @@ def check_instance_consistency(instance):
             newarc.append(int(arc[5]))
             arc = tuple(newarc)
 
-        if (arc not in instance["arcs"]):
-            print(
-                'ERRORE: Nell\'arco {} in "arcs_added" è presente un arco non definito'.format(arc))
-            exit(0)
+        if chk_labels:
+            if arc[0] not in labels or arc[1] not in labels:
+                print(
+                 'ERRORE: Nell\'arco {} in "arcs_removed" è presente un nodo non definito'.format(arc))
+                exit(0)
+        else:
+            if int(arc[0]) > n or int(arc[1]) > n:
+                print(
+                 'ERRORE: Nell\'arco {} in "arcs_removed" è presente un nodo non definito'.format(arc))
+                exit(0)
 
     if chk_labels:
         if int(instance["focus_node"]) > len(labels)-1:
@@ -598,25 +604,25 @@ def solver(input_to_oracle: dict) -> dict:
         focus_node = instance['focus_node']
     focus_arc = instance['focus_arc']
 
-    graph = Graph(arcs, n, labels, arcs_removed, arcs_added, focus_node, focus_arc)
+    graph_res = Graph(arcs, n, labels, arcs_removed, arcs_added, focus_node, focus_arc)
 
-    default_node = list(graph.adjList.keys())[0]
+    default_node = list(graph_res.adjList.keys())[0]
 
-    is_a_DAG = isDAG(graph)
-    cert_YES = topologicalSort(graph)[1]
-    cert_NO = topologicalSort(graph)[1]
-    earliest_time_for_focus_node = delay_sum(graph, path_to(get_DP_table_path(graph,dijkstra_opt), default_node, focus_node))
-    critical_path_to_focus_node = path_to(get_DP_table_path(graph,dijkstra_opt), default_node, focus_node)
-    nodes_sensible_to_focus_arc = f_nodes_sensible_to_focus_arc(get_DP_table_path(graph,dijkstra_opt), default_node, focus_arc)
-    latest_time_for_focus_node = delay_sum(graph, path_to(get_DP_table_path(graph,dijkstra_max), default_node, focus_node))
-    critical_path_from_focus_node = path_to(get_DP_table_path(graph,dijkstra_max), default_node, focus_node)
-    min_time_to = get_DP_table_path(graph,dijkstra_opt)
-    min_time_from = f_min_time_from(graph, get_DP_table_path(graph,dijkstra_opt), default_node)
-    latest_time_to = f_latest_time_to(graph, get_DP_table_path(graph,dijkstra_max), default_node)
-    critical_path_to = f_critical_path_to(graph, get_DP_table_path(graph,dijkstra_opt), default_node)
-    critical_nodes_to = f_critical_nodes_to(graph, get_DP_table_path(graph,dijkstra_opt), default_node)
-    critical_arcs_to = f_critical_arcs_to(graph, get_DP_table_path(graph,dijkstra_opt), default_node)
-    sensible_to_focus_arc = f_sensible_to_focus_arc(get_DP_table_path(graph,dijkstra_opt), default_node, focus_arc)
+    is_a_DAG = isDAG(graph_res)
+    cert_YES = topologicalSort(graph_res)[1]
+    cert_NO = topologicalSort(graph_res)[1]
+    earliest_time_for_focus_node = delay_sum(graph_res, path_to(get_DP_table_path(graph_res,dijkstra_opt), default_node, focus_node))
+    critical_path_to_focus_node = path_to(get_DP_table_path(graph_res,dijkstra_opt), default_node, focus_node)
+    nodes_sensible_to_focus_arc = f_nodes_sensible_to_focus_arc(get_DP_table_path(graph_res,dijkstra_opt), default_node, focus_arc)
+    latest_time_for_focus_node = delay_sum(graph_res, path_to(get_DP_table_path(graph_res,dijkstra_max), default_node, focus_node))
+    critical_path_from_focus_node = path_to(get_DP_table_path(graph_res,dijkstra_max), default_node, focus_node)
+    min_time_to = get_DP_table_path(graph_res,dijkstra_opt)
+    min_time_from = f_min_time_from(graph_res, get_DP_table_path(graph_res,dijkstra_opt), default_node)
+    latest_time_to = f_latest_time_to(graph_res, get_DP_table_path(graph_res,dijkstra_max), default_node)
+    critical_path_to = f_critical_path_to(graph_res, get_DP_table_path(graph_res,dijkstra_opt), default_node)
+    critical_nodes_to = f_critical_nodes_to(graph_res, get_DP_table_path(graph_res,dijkstra_opt), default_node)
+    critical_arcs_to = f_critical_arcs_to(graph_res, get_DP_table_path(graph_res,dijkstra_opt), default_node)
+    sensible_to_focus_arc = f_sensible_to_focus_arc(get_DP_table_path(graph_res,dijkstra_opt), default_node, focus_arc)
 
     #print(f"input_to_oracle={input_to_oracle}", file=stderr)
     input_data = input_to_oracle["input_data_assigned"]
