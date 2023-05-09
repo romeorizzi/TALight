@@ -75,10 +75,10 @@ services:
       # sezione risposte del problem-solver/studente che il servizio è chiamato a valutare e/o fornire di feedback opportuno:
       is_a_DAG:
         regex: ^(.*)$
-        default: "'True'"
+        default: "'true'"
         explain: 'catalog the oriented graph as either a DAG or not:'
-        explain1: '[True] according to the problem solver it is a DAG'
-        explain2: '[False] according to the problem solver it is NOT a DAG'
+        explain1: '[true] according to the problem solver it is a DAG'
+        explain2: '[false] according to the problem solver it is NOT a DAG'
       cert_YES:
         regex: ^(.*)$
         default: "[]"
@@ -134,7 +134,7 @@ services:
       critical_arcs_to:
         regex: ^(.*)$
         default: "{}"
-        explain: "the DP table that for each activity/node v gives the list of those arcs/constraints in every plan that executes v at its earliest time possible. For example, w.r.t. the usual reference, `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,2),(2,3)]}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,3)]}\"."
+        explain: "the DP table that for each activity/node v gives the list of the tight arcs/constraints in every plan that executes v at its earliest time possible. For example, w.r.t. the usual reference, `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,2),(2,3)]}\". However, if `arcs_added` = \"(1,3,20)\", then we would get `critical_arcs_to` = \"{'1':[],'2':[(1,2)],'3':[(1,3)]}\"."
       sensible_to_focus_arc:
         regex: ^(.*)$
         default: "{}"
