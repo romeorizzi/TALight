@@ -8,14 +8,7 @@ reserved_chars = '<>(),'
 
 
 def random_seq(seedParam, maxLengh):
-    if seedParam=='random_seed':
-        random.seed()
-        seed = random.randrange(0,1000000)
-        print("seed: " + str(seed))
-    else:
-        seed = int(seedParam)
-        print("Seed: " + str(seed))
-
+    seed = int(seedParam)
     random.seed(seed)
     length = random.randint(2, maxLengh)
     sequence = []
@@ -124,6 +117,8 @@ def getRules(text):
 
     return rules
 
+# TODO: ^ che scorre sul tape_position come una stringa vuota
+
 def outputPrint(text, stepcount, lastmove, tapepos, currstate, currtickline):
         
         print("Step: " + str(stepcount) + " | Last move: " + lastmove + " | Tape position: " + str(tapepos) + " | Current state: " + currstate + " | Rule number: " + str(currtickline))
@@ -131,6 +126,14 @@ def outputPrint(text, stepcount, lastmove, tapepos, currstate, currtickline):
         text = ''.join(text)
         print(text)
         print("")
+
+# Delete only the spaces at the left
+def deleteSpaces(text):
+    for i in range(len(text)):
+        if text[i] != ' ':
+            return text[i:]
+    return text
+        
 
 def tick(rules, sequence):
     stepcount = 0
@@ -158,9 +161,13 @@ def tick(rules, sequence):
         if tapepos >= len(text):
             text.append(' ')
         if currstate not in rules:
+            if text[-1] == " ":
+                text.pop()
             stopped = True
 
         outputPrint(text, stepcount, lastmove, tapepos, currstate, currtickline)
+        
+    text = deleteSpaces(text)
 
     return text
 

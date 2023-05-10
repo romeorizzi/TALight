@@ -7,6 +7,41 @@ from TALinputs import TALinput
 import random
 import turing_machine_lib as tr
 
+def iterationSeq(line):
+    for i in range(int(line)):
+        print("Sequenza numero " + str(i) + "\n")
+        sequence = tr.random_seq(ENV['seed'] + i, ENV['max_lengh'])
+        validation(sequence)
+
+
+def validation(sequence):
+
+    # TODO:
+    # X movimento sul nastro
+    #converti gli elementi di sequence in stringhe
+    for i in range(len(sequence)):
+        sequence[i] = str(sequence[i])
+
+    print("\nSequenza iniziale: ", end="")
+    for i in sequence:
+        print(i, end="")
+    print("\n")
+    final_sequence = tr.tick(rules, sequence)
+    print("Sequenza finale: ", end="")
+    for i in final_sequence:
+        print(i, end="")
+    print("\n")
+    new_sequence = sequence.copy()
+    new_sequence.append('1')
+    if final_sequence == new_sequence:
+        print("Risultato corretto! Bravo!\n")
+    else:
+        print("Risultato errato: il risultato finale dovrebbe essere la sequenza binaria iniziale con un 1 aggiunto alla fine\n")
+        print("Risultato atteso: ", end="")
+        for i in new_sequence:
+            print(i, end="")
+        print("\n")
+
 
 
 # METADATA OF THIS TAL_SERVICE:
@@ -22,7 +57,6 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 
 # START CODING YOUR SERVICE: 
 LANG.print_opening_msg()
-sequence = tr.random_seq(ENV['seed'], ENV['max_lengh'])
 
 print("\nProblema: scrivere le istruzioni per una macchina di Turing che,\ndata una sequenza di caratteri binaria, scorre tutta la sequenza ed aggiunge un 1 alla fine")
 
@@ -60,39 +94,28 @@ while True:
                     print("\nErrore! Inserisci una sequenza binaria corretta:")
                     break
             else:
-                sequence = list(line)
+                validation(list(line))
                 break
         break
     elif line.lower() == 'n':
+        print("\nSu quante sequenze vuoi testare la tua soluzione?")
+        while True:
+            line = input()
+            if line == '':
+                break
+            for c in line:
+                if c not in '0123456789':
+                    print("\nErrore! Inserisci un numero:")
+                    break
+            else:
+                iterationSeq(line)
+                break
         break
     else:
         print("\nInserisci una risposta valida (s/n)")
 
-# TODO:
-# X movimento sul nastro
-#converti gli elementi di sequence in stringhe
-for i in range(len(sequence)):
-    sequence[i] = str(sequence[i])
-
-print("\nSequenza iniziale: ", end="")
-for i in sequence:
-    print(i, end="")
-print("\n")
-final_sequence = tr.tick(rules, sequence)
-print("Sequenza finale: ", end="")
-for i in final_sequence:
-    print(i, end="")
-print("\n")
-new_sequence = sequence.copy()
-new_sequence.append('1')
-if final_sequence == new_sequence:
-    print("Risultato corretto! Bravo!\n")
-else:
-    print("Risultato errato: il risultato finale dovrebbe essere la sequenza binaria iniziale con un 1 aggiunto alla fine\n")
-
-
- 
 exit(0)
+
 
 
 

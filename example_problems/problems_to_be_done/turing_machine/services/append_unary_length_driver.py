@@ -7,6 +7,7 @@ from TALinputs import TALinput
 import random
 import turing_machine_lib as tr
 
+
 def iterationSeq(line):
     for i in range(int(line)):
         print("Sequenza numero " + str(i) + "\n")
@@ -31,18 +32,16 @@ def validation(sequence):
     for i in final_sequence:
         print(i, end="")
     print("\n")
-    new_sequence = sequence.copy()
-    for i in range(len(sequence)):
-        if sequence[i] == "1":
-            new_sequence[i] = "0"
-        else:
-            new_sequence[i] = "1"
+    length = len(sequence)
+    new_sequence = ["#"]
+    for i in range(length):
+        new_sequence.append("1")
     if final_sequence == new_sequence:
         print("Risultato corretto! Bravo!\n")
     else:
         print(len(final_sequence))
         print(len(new_sequence))
-        print("Risultato errato: il risultato finale dovrebbe essere la sequenza binaria iniziale con un 1 al posto degli 0 e viceversa\n")
+        print("Risultato errato: il risultato finale dovrebbe essere la sequenza formata da uno # seguito da tanti 1 quanti la lunghezza della stringa iniziale\n")
         print("Risultato atteso: ", end="")
         for i in new_sequence:
             print(i, end="")
@@ -66,12 +65,12 @@ LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
 # START CODING YOUR SERVICE: 
 LANG.print_opening_msg()
 
-print("\nProblema: scrivere le istruzioni per una macchina di Turing che,\ndata una sequenza di caratteri binaria, scorre tutta la sequenza e cambia gli 1 con uno 0 e gli 0 con un 1")
+print("\nProblema: scrivere le istruzioni per una macchina di Turing che,\ndata una sequenza di caratteri binaria,\nscorre tutta la sequenza e aggiunge uno # alla fine della stringa,\npoi una sequenza di 1 lunga quanto la stringa data, eliminando la stringa iniziale")
 
 #TAc.print(LANG.render_feedback("instance-seed",f"Instance (of seed {seed}): "), "yellow", ["bold"])
 #TAc.print(LANG.render_feedback("long-sol","Too long solution: "), "yellow", ["bold"])
-#catch input while the string isn't stop
 
+#catch input while the string isn't stop
 print("\nInserisci la tua soluzione, un'istruzione per ogni riga premendo invio.\nQuando hai finito, scrivi stop e premi invio")
 text = ""
 while True:
@@ -129,6 +128,18 @@ exit(0)
 
 
 # Possibile soluzione
-# (0, 0, 0, 1, >)
-# (0, 1, 0, 0, >)
-# (0, -, F, -, -)
+# (0, 0, 0, 0, >)
+# (0, 1, 0, 1, >)
+# (0, -, A, #, <)
+# (A, 0, A, 0, <)
+# (A, 1, A, 1, <)
+# (A, #, A, #, <)
+# (A, -, B, -, >)
+# (B, 0, C, -, >)
+# (B, 1, C, -, >)
+# (C, 0, C, 0, >)
+# (C, 1, C, 1, >)
+# (C, #, C, #, >)
+# (C, -, A, 1, <)
+# (B, #, F, #, -)
+# stop

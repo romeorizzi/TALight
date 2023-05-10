@@ -25,6 +25,10 @@ services:
         explain: Specifies the numeric code (any integer in the range [0, 100000]) to use with a pre-written pseudorandom instance.
         regex: ^(random_seed|100000|\d{1,5})$
         default: random_seed
+      max_lengh:
+        explain: Specifies the maximum length of the output string.
+        regex: ^(1?[1-9]|20)$
+        default: 10
       lang:
         regex: ^(en|it)$
         default: it
@@ -36,6 +40,25 @@ services:
         explain: Specifies the numeric code (any integer in the range [0, 100000]) to use with a pre-written pseudorandom instance.
         regex: ^(random_seed|100000|\d{1,5})$
         default: random_seed
+      max_lengh:
+        explain: Specifies the maximum length of the output string.
+        regex: ^(1?[1-9]|20)$
+        default: 10
+      lang:
+        regex: ^(en|it)$
+        default: it
+  append_unary_length:
+    description: Given a binary string of 0s and 1s, append at the end a "#" and a sequence of 1s long like the given string, deleting the initial string.
+    evaluator: [python, services/append_unary_length_driver.py]
+    args:
+      seed:
+        explain: Specifies the numeric code (any integer in the range [0, 100000]) to use with a pre-written pseudorandom instance.
+        regex: ^(random_seed|100000|\d{1,5})$
+        default: random_seed
+      max_lengh:
+        explain: Specifies the maximum length of the output string.
+        regex: ^(1?[1-9]|20)$
+        default: 10
       lang:
         regex: ^(en|it)$
         default: it

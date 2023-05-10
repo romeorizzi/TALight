@@ -25,6 +25,10 @@ services:
         explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
         regex: ^(random_seed|100000|\d{1,5})$
         default: random_seed
+      max_lengh:
+        explain: Specifica la lungehzza massima della stringa di output
+        regex: ^(1?[1-9]|20)$
+        default: 10  
       lang:
         regex: ^(en|it)$
         default: it
@@ -36,6 +40,10 @@ services:
         explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
         regex: ^(random_seed|100000|\d{1,5})$
         default: random_seed
+      max_lengh:
+        explain: Specifica la lungehzza massima della stringa di output
+        regex: ^(1?[1-9]|20)$
+        default: 10
       lang:
         regex: ^(en|it)$
         default: it
@@ -45,6 +53,21 @@ services:
       page:
         regex: ^(append_1|check_1|change_bin|help|synopsis)$
         default: help
+      lang:
+        regex: ^(en|it)$
+        default: it
+  append_unary_length:
+    description: Data una stringa binaria di 0 e 1, aggiungere alla fine uno "#" e una sequenza di 1 lunga quanto la stringa data, eliminando la stringa iniziale.
+    evaluator: [python, services/append_unary_length_driver.py]
+    args:
+      seed:
+        explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
+        regex: ^(random_seed|100000|\d{1,5})$
+        default: random_seed
+      max_lengh:
+        explain: Specifica la lungehzza massima della stringa di output
+        regex: ^(1?[1-9]|20)$
+        default: 10
       lang:
         regex: ^(en|it)$
         default: it
