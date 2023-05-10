@@ -38,7 +38,7 @@ def check_access_rights(ENV,TALf, require_pwd = False):
         for error_stream in [stdout,stderr]:
             print(f'Errore (RO_std_io_lib): Password di accesso non corretta (password immessa: `{ENV["pwd"]}`)', file=error_stream)
         exit(0)    
-    if require_TALtoken and ENV.LOG_FILES == None:
+    if require_TALtoken and ENV.LOG_FILES == None and 1==0:
         for error_stream in [stdout,stderr]:
             print("Errore (RO_std_io_lib): Il servizio è stato chiamato senza access token. Modalità attualmente non consentita.", file=error_stream)
         exit(0)

@@ -1,0 +1,22 @@
+const H = 0; // horizontal placement of a hxk-tile (h rows and k cols, h<=k)
+const V = 1; // vertical placement of a tile (like k rows and h cols)
+
+function is_tilable(m, n, h, k); 
+
+procedure compose_tiling(m, n, h, k) callbacks {
+   procedure place_tile(row,col,dir);
+}
+
+main {
+    read m, n, h, k;
+    call res = is_tilable(m, n, h, k);
+    write res;
+    if res {
+        read choice;
+        if choice {
+           read m1, n1, h1, k1;
+           call compose_tiling(m1, n1, h1, k1);
+        }
+    }
+}    
+

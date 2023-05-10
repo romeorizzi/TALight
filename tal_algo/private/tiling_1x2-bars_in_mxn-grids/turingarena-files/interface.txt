@@ -1,0 +1,22 @@
+const H = 0; // horizontal placement of a tile
+const V = 1; // vertical placement of a tile
+
+function is_tilable(m, n); 
+
+procedure compose_tiling(m, n) callbacks {
+   procedure place_tile(row,col,dir);
+}
+
+main {
+    read m, n;
+    call res = is_tilable(m, n);
+    write res;
+    if res {
+        read choice;
+        if choice {
+           read m1, n1;
+           call compose_tiling(m1, n1);
+        }
+    }
+}    
+

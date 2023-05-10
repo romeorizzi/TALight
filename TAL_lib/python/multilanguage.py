@@ -145,13 +145,51 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             exit(0)
     if typestr[:len('matrix_of_')] == 'matrix_of_':
         typestr = 'list_of_list_of_'+typestr[len('matrix_of_'):]
+    if typestr == 'tuple_of':
+        new_tuple = []
+        yaml_var = yaml_var.split(',')
+        for item in yaml_var:
+            if item == '[' or item == ']' or item == '(' or item == ')':
+                continue
+            elif type(item) == str and '(' in item:
+                item = item.replace('(', '')
+                item = item.replace("'", '')
+                new_tuple.append(item)
+            elif type(item) == str and ')' in item:
+                item = item.replace(')', '')
+                item = item.replace("'", '')
+                new_tuple.append(int(item))
+                new_tuple = tuple(new_tuple)
+            else:
+                new_tuple.append(str(item))
+        return new_tuple
+
     if typestr[:len('list_of_')] == 'list_of_':
         if type(yaml_var) != list:
             print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. Here is its actual raw content as a string: {repr(yaml_var)}")
             exit(0)
         enforced_list = []
-        for item, i in zip(yaml_var,range(1,1+len(yaml_var))):
-            enforced_list.append(enforce_type_of_yaml_var(yaml_var=item,typestr=typestr[len('list_of_'):], varname=varname + f" is indeed a list. Its {i}-th item", original_typestr=original_typestr))
+        if 'tuple_of' in typestr:
+            new_tuple = []
+            for item in yaml_var:
+                if item == '[' or item == ']' or item == '(' or item == ')':
+                    continue
+                elif type(item) == str and '(' in item:
+                    item = item.replace('(', '')
+                    item = item.replace("'", '')
+                    new_tuple.append(item)
+                elif type(item) == str and ')' in item:
+                    item = item.replace(')', '')
+                    item = item.replace("'", '')
+                    new_tuple.append(int(item))
+                    new_tuple = tuple(new_tuple)
+                    enforced_list.append(new_tuple)
+                    new_tuple = []
+                else:
+                    new_tuple.append(str(item))
+        else:
+            for item, i in zip(yaml_var,range(1,1+len(yaml_var))):
+                enforced_list.append(enforce_type_of_yaml_var(yaml_var=item,typestr=typestr[len('list_of_'):], varname=varname + f" is indeed a list. Its {i}-th item", original_typestr=original_typestr))
         return enforced_list
     else:
         print(f"I can not parse the typestring {typestr}")
@@ -201,6 +239,8 @@ class Env:
                 self.arg[name] = int(environ[f"TAL_{name}"])
             elif val_type == float:
                 self.arg[name] = float(environ[f"TAL_{name}"])
+            elif val_type == 'tuple_of':
+                self.arg[name] = environ[f"TAL_{name}"]
             elif val_type == 'yaml' or val_type[:len('list_of_')] == 'list_of_' or val_type[:len('matrix_of_')] == 'matrix_of_':
                 try:
                     self.arg[name] = ruamel.yaml.safe_load(environ[f"TAL_{name}"])
@@ -310,5 +350,4 @@ class Lang:
             return eval(f"f'{fstring}'")
         msg_encoded = self.messages_book[msg_code]
         return self.service_server_eval(msg_encoded)
-
 
