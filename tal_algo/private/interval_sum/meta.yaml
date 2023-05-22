@@ -4,5 +4,5 @@ services:
         evaluator: [python, manager.py]
         args:
             size:
-                regex: ^(esempi_testo|array_small|array_medium|mat_small|mat_medium|array_big|mat_big)$
-                default: mat_big
+                regex: ^(esempi_testo|small|medium|big)$
+                default: big

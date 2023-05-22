@@ -90,6 +90,16 @@ class Graph:
         for arc in arcs_added:
             arcs.append(arc)
 
+        # cast del peso degli archi ad int
+        new_arcs = []
+        for arc in arcs:
+            new_arc = []
+            new_arc.append(arc[0])
+            new_arc.append(arc[1])
+            new_arc.append(int(arc[2]))
+            new_arcs.append(tuple(new_arc))
+        arcs = new_arcs
+
         # archi aggiornati del grafo D'
         self.E1 = arcs
 
@@ -581,10 +591,22 @@ def check_instance_consistency(instance):
         arc.append(str(instance["focus_arc"][3]))
         arc.append(int(instance["focus_arc"][5]))
         arc = tuple(arc)
+    elif len(instance["focus_arc"]) == 3:
+        arc = []
+        arc.append(str(instance["focus_arc"][0]))
+        arc.append(str(instance["focus_arc"][1]))
+        arc.append(int(instance["focus_arc"][2]))
+        arc = tuple(arc)
     else:
         arc = instance["focus_arc"]
 
-    if (arc not in instance["arcs"] and arc not in instance["arcs_added"]):
+    if len(instance["focus_arc"]) < 3:
+        print(
+            'ERRORE: L\'arco {} non è nel formato corretto'.format(arc))
+        exit(0)
+    elif (arc not in instance["arcs"] and arc not in instance["arcs_added"]):
+        print(instance["arcs"])
+        print(instance["arcs_added"])
         print(
             'ERRORE: L\'arco {} non è presente in "arcs_added" nè in "arcs"'.format(arc))
         exit(0)

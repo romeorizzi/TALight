@@ -1,50 +1,33 @@
 #!/usr/bin/env python3
 
-WARNING = """this library is common to a few problems:
-../interval_sum
-../interval_sum_dyn
-Please, keep this in mind in case you want to modify it."""
-
 from sys import stdin, stdout, stderr
 from random import randrange, randint
 
-class Field:
+class Array:
     
-    def __init__(self, M = None):
-        if M == None:
-            self.n1, self.n2 = map(int, input().strip().split())
-            self.M = []
-            for _ in range(self.n1):
-                self.M.append(list(map(int, input().strip().split())))
+    def __init__(self, A = None):
+        if A == None:
+            self.n = int(input())
+            self.A = []
+            for _ in range(self.n):
+                self.A.append(int(input()))
         else:
-            self.M = M
-            self.n1 = len(M)
-            self.n2 = len(M[0])
-        self.sum_from_O = [ [0] * (1 + self.n2) for _ in range(1 + self.n1) ]
-        for i in range(1, 1 + self.n1):
-            for j in range(1, 1 + self.n2):
-                self.sum_from_O[i][j] = self.sum_from_O[i - 1][j] + self.sum_from_O[i][j - 1] + self.M[i -1][j -1] - self.sum_from_O[i - 1][j - 1]
-                #print(self.sum_from_O[i][j], end = " ", file = stderr)
-            #print(file = stderr)
+            self.A = A
+            self.n = len(A)
+        self.sum_of_first = [0] * (1 + self.n)
+        for i in range(1, 1 + self.n):
+            self.sum_of_first[i] = self.sum_of_first[i - 1] + self.A[i - 1]
+            #print(self.sum_of_first[i], file = stderr)
 
-    def sum(self, a1, b1, a2, b2):
-        assert 0 <= a1 < b1 <= self.n1
-        assert 0 <= a2 < b2 <= self.n2
-        return self.sum_from_O[b1][b2] - self.sum_from_O[b1][a2] - self.sum_from_O[a1][b2] +  self.sum_from_O[a1][a2]
+    def sum(self, a, b):
+        assert 0 <= a < b <= self.n
+        return self.sum_of_first[b] - self.sum_of_first[a]
             
-    def as_str(self, with_n1_n2 = True):
-        ret = f"{str(self.n1)} {str(self.n2)}\n" if with_n1_n2 else ""
-        ret +=  " ".join(map(str, self.M[0]))
-        for i in range(1, self.n1):
-            ret += "\n" + " ".join(map(str, self.M[i]))
+    def as_str(self, with_n = True):
+        ret = f"{self.n}\n" if with_n else ""
+        for i in range(self.n):
+            ret +=  f"{self.A[i]}\n"
         return ret
 
-    def display(self, out=stderr, with_n1_n2 = True):
-        print(self.as_str(with_n1_n2), file=out, flush=True)
-
-
-
-
-if __name__ == "__main__":
-    print(WARNING)    
-    
+    def display(self, out=stderr, with_n = True):
+        print(self.as_str(with_n), file=out, end="", flush=True)

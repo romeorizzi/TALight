@@ -34,13 +34,14 @@ class TC:
                         msg = ret[1]
                     else:
                         result = ret
-                    if time() - start > self.tl:
-                        print(f"Case #{tcn:03}: TLE", file=output)
+                    delay = time() - start
+                    if delay > self.tl:
+                        print(f"Case #{tcn:03}: TLE ({delay:.3f}/{self.tl:.3f} secs) time limit exceeded", file=output)
                     elif result:
-                        print(f"Case #{tcn:03}: AC", file=output)
+                        print(f"Case #{tcn:03}: AC ({delay:.3f}/{self.tl:.3f} secs) correct answer", file=output)
                         tc_ok += 1
                     else:
-                        print(f"Case #{tcn:03}: WA", file=output)
+                        print(f"Case #{tcn:03}: WA ({delay:.3f}/{self.tl:.3f} secs) wrong answer", file=output)
                     if msg is not None:
                         print(file=output)
                         print(msg, file=output)

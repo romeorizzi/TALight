@@ -158,7 +158,7 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             elif type(item) == str and ')' in item:
                 item = item.replace(')', '')
                 item = item.replace("'", '')
-                new_tuple.append(int(item))
+                new_tuple.append(str(item))
                 new_tuple = tuple(new_tuple)
             else:
                 new_tuple.append(str(item))
