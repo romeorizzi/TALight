@@ -21,7 +21,7 @@ Seguono $n$ righe di cui l'$i$-esima riporta l'$i$-esimo elemento del vettore.
 Seguono le $q$ query, ognuna posta su una diversa riga composta dai due numeri $a$ e $b$ separati da spazio.
 
 ## Output
-Scrivi su `stdout` le $q$ righe di risposta al testcase prima di passare a leggere quello successivo. L'$i$-esima di tali righe offre la risposta all'$i$-esima query del testcase.
+Dopo aver letto l'intero input, scrivi su `stdout` le $q$ righe di risposta al testcase prima di passare a leggere quello successivo. L'$i$-esima di tali righe offre la risposta all'$i$-esima query del testcase.
 
 
 ## Esempio
