@@ -35,17 +35,24 @@ class CampoMinato:
 
     def as_str(self, with_m_n = True):
         ret = f"{str(self.m)} {str(self.n)}\n" if with_m_n else ""
-        risp = "".join(map(lambda x: "." if x else "#", self.M[0]))
+        ret += "".join(map(lambda x: "." if x else "#", self.M[0]))
         for i in range(1, self.m):
-            risp += "\n" + "".join(map(lambda x: "." if x else "#", self.M[i]))
-        return risp
+            ret += "\n" + "".join(map(lambda x: "." if x else "#", self.M[i]))
+        return ret
+
+    def from_string(self, string):
+        self.M = []
+        for line in string.split("\n")[1:]:
+            self.M.append(list(map(lambda x: True if x == "." else False, line)))
+        self.m = len(self.M)
+        self.n = len(self.M[0])
 
     def display(self, out=stderr, with_m_n = True):
         print(self.as_str(with_m_n), file=out, flush=True)
 
         
     @lru_cache(maxsize=None)
-    def num_paths_from_ric_memo(r = 0, c = 0):
+    def num_paths_from_ric_memo(self, r = 0, c = 0):
         assert 0 <= r <= self.m
         assert 0 <= c <= self.n
         if r == self.m:
@@ -59,7 +66,7 @@ class CampoMinato:
         return self.num_paths_from_ric_memo(r+1, c) + self.num_paths_from_ric_memo(r, c+1)
 
     @lru_cache(maxsize=None)
-    def num_paths_to_ric_memo(r = self.m -1, c = self.n -1):
+    def num_paths_to_ric_memo(self, r, c):
         assert -1 <= r <= self.m
         assert -1 <= c <= self.n
         if r == -1:
@@ -73,17 +80,17 @@ class CampoMinato:
         return self.num_paths_to_ric_memo(r-1, c) + self.num_paths_to_ric_memo(r, c-1)
 
 
-    def one_path_from(r = 0, c = 0):
+    def one_path_from(self, r = 0, c = 0):
         assert 0 <= r < self.m
         assert 0 <= c < self.n
         if r == self.m-1 and c == self.n-1:
             return ""
-        if r < self.m-1 and self.num_paths_from_ric_memo(M, r+1, c) > 0:
+        if r < self.m-1 and self.num_paths_from_ric_memo(r+1, c) > 0:
             return "S" + self.one_path_from(r+1, c)
         return "E" + self.one_path_from(r, c+1)
 
 
-    def eval_path_unsafe(path):
+    def eval_path_unsafe(self, path):
         if len(path) != self.m + self.n - 2:
             return False, f"Your solution:\n{path}\n has length {len(path)}. We were expecting a string of length {self.m + self.n - 2 =} over the alphabet {{'S','E'}} as the input grid had {self.m=} rows and {self.n=} columns."
         r = 0; c = 0
@@ -105,7 +112,7 @@ class CampoMinato:
         return True, val_sol
 
 
-    def unrank_safe(rnk):
+    def unrank_safe(self, rnk):
         path = "";  r = 0; c = 0
         while r+c < self.m + self.n -2:
             #print(f"{r=}, {c=}, {rnk=}, num_paths_from_ric_memo((M,r,c)",file=stderr)
@@ -120,7 +127,7 @@ class CampoMinato:
         assert rnk == 0
         return path
 
-    def rank_safe(path):
+    def rank_safe(self, path):
         ok, val_of_path = self.eval_path_unsafe( path)
         if not ok:
             return False,val_of_path
