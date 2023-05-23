@@ -7,4 +7,5 @@ if __name__ == "__main__":
     for t in range(T):
         n, m = map(int, input().strip().split())
         M = list(map(lambda x: [y == "." for y in x], [input() for i in range(n)]))
-        print(num_paths_from(M))
+        print(num_paths_from(M), flush=True)
+        #stdout.flush()

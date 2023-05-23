@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-
-from functools import lru_cache
+from sys import stderr, stdout
 from os import environ
 from random import randrange, randint
 
@@ -18,11 +17,11 @@ DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (25,30)))
 
 
 def gen_tc(minn, maxn):
-    m, n = randint(minn,maxn), randint(minn,maxn)
+    m, n = randint(minn, maxn), randint(minn, maxn)
     M = [[bool(randrange(0, 10)) for j in range(n)] for i in range(m)]
     M[0][0] = M[m-1][n-1] = True
-    r=0; c=0
-    while r<m-1 and c<n-1:
+    r = 0; c = 0
+    while r<m-1 and c < n-1:
         if M[r+1][c]:
             r += 1
         elif M[r][c+1]:
