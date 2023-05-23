@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from sys import stderr
+from sys import stderr, stdout
 import os
 stderr = open(os.devnull, 'w') # comment this line to print-debug
 
@@ -27,6 +27,7 @@ if __name__ == "__main__":
         for i in range(1, 1 + q):
             a, b = map(int, input().strip().split() )
             corr_answ = interval_sum(a, b)
-            print(corr_answ, flush=True)
+            print(corr_answ)
             print(f"corr_answ = interval_sum({a}, {b}) = {corr_answ}", file = stderr)
+        stdout.flush()
 

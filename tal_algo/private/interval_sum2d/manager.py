@@ -41,11 +41,11 @@ HARDCODED = (
             )
 DATA = tuple((1, ("hardcoded", M, Q)) for M, Q in HARDCODED)
 DATA = DATA + (( 8, ("rand_gen",   1,    10,    20)),
-               (10, ("rand_gen",   1,   100,   100)),
+               (10, ("rand_gen",   1,   100,   200)),
                (10, ("rand_gen",  10,    10,    20)),
                (10, ("rand_gen",  30,    30,   300)),
-               (30, ("rand_gen",   1, 10000,  1000)),
-               (30, ("rand_gen", 100,   100,   500))
+               (30, ("rand_gen",   1, 10000,  2000)),
+               (30, ("rand_gen", 100,   100,  2000))
               )
 MAPPER = {"esempi_testo": 2, "array_small": 3, "array_medium": 4, "mat_small": 5, "mat_medium": 6, "array_big": 7, "mat_big": 8}
 
@@ -82,7 +82,8 @@ def check_tc(F, Q):
     #print(Q, file = stderr)
     wrongs = ""
     for q in range(len(Q)):
-        print(Q[q][0], Q[q][1], Q[q][2], Q[q][3], flush=True)
+        print(Q[q][0], Q[q][1], Q[q][2], Q[q][3])
+    stdout.flush()
     for q in range(len(Q)):
         #print(Q[q][0], Q[q][1], Q[q][2], Q[q][3], file = stderr)
         risp_val = int(input())

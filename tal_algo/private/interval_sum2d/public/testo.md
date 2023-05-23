@@ -90,11 +90,11 @@ Per il subtasking sono previste le seguenti `size`:
 
 * **[ 2 istanze] esempi_testo:** i due esempi del testo
 * **[ 5 istanze] array_small**: $n_1 = 1$, $n_2 = 10$, $q = 20$
-* **[ 5 istanze] array_medium**: $n_1 = 1$, $n_2 = 100$, $q = 100$
+* **[ 5 istanze] array_medium**: $n_1 = 1$, $n_2 = 100$, $q = 200$
 * **[ 5 istanze] mat_small**: $n_1, n_2 = 10$, $q = 20$
 * **[10 istanze] mat_medium**: $n_1, n_2 = 30$, $q = 300$
-* **[11 istanze] array_big**: $n_1 = 1$, $n_2 = 10\,000$, $q = 1000$
-* **[12 istanze] mat_big**: $n_1, n_2 = 100$, $q = 500$
+* **[11 istanze] array_big**: $n_1 = 1$, $n_2 = 10\,000$, $q = 2000$
+* **[12 istanze] mat_big**: $n_1, n_2 = 100$, $q = 2000$
 
 In generale, quando si richiede la valutazione di un subtask vengono valutati anche i subtask che li precedono, ma si evita di avventurarsi in subtask successivi  fuori dalla portata del tuo programma che potrebbe andare in crash o comportare tempi lunghi per ottenere la valutazione completa della sottomissione. Ad esempio, chiamando:
 

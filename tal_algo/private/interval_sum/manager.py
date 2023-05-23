@@ -72,7 +72,8 @@ def check_tc(A, Q):
     #print(Q, file = stderr)
     wrongs = ""
     for q in range(len(Q)):
-        print(Q[q][0], Q[q][1], flush=True)
+        print(Q[q][0], Q[q][1])
+    stdout.flush()
     for q in range(len(Q)):
         #print(Q[q][0], Q[q][1], file = stderr)
         risp_val = int(input())
