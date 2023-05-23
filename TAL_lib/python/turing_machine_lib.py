@@ -10,7 +10,7 @@ reserved_chars = '<>(),'
 def random_seq(seedParam, maxLengh):
     seed = int(seedParam)
     random.seed(seed)
-    length = random.randint(2, maxLengh)
+    length = random.randint(1, 20)
     sequence = []
     for i in range(length):
         sequence.append(random.randint(0, 1))
