@@ -4,18 +4,22 @@ public_folder: public
 services:
   append_1:
     description: Data una stringa binaria di 0 e 1, aggiungere un 1 alla fine del nastro.
-    evaluator: [python, services/append_1/append_1_driver.py]
+    evaluator: [python, services/append_1_driver.py]
     args: 
       seed:
         explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
         regex: ^(random_seed|100000|\d{1,5})$
         default: random_seed
+      max_lengh:
+        explain: Specifica la lungehzza massima della stringa di output
+        regex: ^(1?[1-9]|20)$
+        default: 10
       lang:
         regex: ^(en|it)$
         default: it
   check_1:
     description: Data una stringa binaria di 0 e 1 aggiungere, alla fine del nastro, uno 0 se non vi era alcun 1, altrimenti aggiungere un 1
-    evaluator: [python, services/append_1/check_1_driver.py]
+    evaluator: [python, services/check_1_driver.py]
     args: 
       seed:
         explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
@@ -30,7 +34,7 @@ services:
         default: it
   change_bin:
     description: Data una stringa binaria di 0 e 1, invertire il valore di tutti i bit.
-    evaluator: [python, services/change_bin/change_bin_driver.py]
+    evaluator: [python, services/change_bin_driver.py]
     args: 
       seed:
         explain: Specifica il codice numerico (qualsiasi numero intero nell'intervallo [0, 100000]) da utilizzare con un'istanza pseudo-casuale già scritta.        
