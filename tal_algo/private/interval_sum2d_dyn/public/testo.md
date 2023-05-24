@@ -6,7 +6,7 @@ Dovete gestire nel dinamico un vettore di $n$ numeri interi. Inizialmente tutti 
    vect = [0, 0, 0, 0, 0, 0, 0]
 ```
 
-nel dinamico dovete servire richieste di due tipologie (query e updates), che si avvicenderanno in sequenze arbitrarie:
+nel dinamico dovete servire due tipi di richieste (query e updates), che si avvicenderanno in sequenze arbitrarie:
 
 1. [updates] mantenere aggiornato il vettore a fronte di primitive di aggiornamento del tipo:
 
@@ -25,7 +25,7 @@ dove $0<=i < n$ e $d$ è un qualsiasi numero intero. A fronte di questa richiest
    sum(a, b) = sum(vect[a:b]) 
 ```
 
-dove $0<=a < b <= n$ tali query devono ritornare il valore della somma $\sum_{j=a}^{b-1} vect[j]$.
+dove $0<=a < b <= n$ una tale query deve ritornare il valore $\sum_{j=a}^{b-1} vect[j]$.
 
 Più in generale, nel caso di una matrice $M$, di dimensioni $n_1\times n_2$, avremo updates del tipo $increase(i, j, delta)$ e query del tipo $sum(a_1, b_1, a_2, b_2) = \sum_{i=a_1}^{b_1 -1} \sum_{j=a_2}^{b_2 -1} M[i_1, i_2]$.
 
@@ -107,17 +107,17 @@ Puoi assumere che i numeri contenuti nella matrice/vettore siano sempre interi p
 
 ## Subtask
 
-Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ secondo.
+Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $2$ secondi.
 
 Per il subtasking sono previste le seguenti `size`:
 
 * **[ 2 istanze] esempi_testo:** i due esempi del testo
 * **[ 8 istanze] array_small**: $n_1 = 1$, $n_2 = 10$, $r = 20$
-* **[10 istanze] array_medium**: $n_1 = 1$, $n_2 = 100$, $r = 200$
-* **[10 istanze] mat_small**: $n_1, n_2 = 10$, $r = 30$
+* **[ 5 istanze] array_medium**: $n_1 = 1$, $n_2 = 100$, $r = 200$
+* **[ 5 istanze] mat_small**: $n_1, n_2 = 10$, $r = 30$
 * **[10 istanze] mat_medium**: $n_1, n_2 = 30$, $r = 300$
-* **[30 istanze] array_big**: $n_1 = 1$, $n_2 = 10\,000$, $r = 1000$
-* **[30 istanze] mat_big**: $n_1, n_2 = 100$, $r = 1000$
+* **[10 istanze] array_big**: $n_1 = 1$, $n_2 = 10\,000$, $r = 1000$
+* **[10 istanze] mat_big**: $n_1, n_2 = 100$, $r = 1000$
 
 In generale, quando si richiede la valutazione di un subtask vengono valutati anche i subtask che li precedono, ma si evita di avventurarsi in subtask successivi  fuori dalla portata del tuo programma che potrebbe andare in crash o comportare tempi lunghi per ottenere la valutazione completa della sottomissione. Ad esempio, chiamando:
 

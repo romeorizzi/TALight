@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 
-WARNING = """this library is common to a few problems:
-../interval_sum_dyn
-Please, keep this in mind in case you want to modify it."""
-
 from sys import stdin, stdout, stderr
 from random import randrange, randint
 
@@ -26,60 +22,44 @@ for n in range(1, MAXN + 1):
 
 
 
-def matrix_as_str(M):
-    ret =  " ".join(map(str, M[0]))
-    for i in range(1, len(M)):
-        ret += "\n" + " ".join(map(str, M[i]))
-    return ret
+def array_as_str(A):
+    return " ".join(map(str, A))
 
-def display_matrix(M, out=stderr):
-    print(matrix_as_str(M), file=out)
+def display_array(A, out=stderr):
+    print(array_as_str(A), file=out)
 
 
 class Fenwick:
 # Python implementation of BIT (Binary Indexed Tree, also called Fenwick tree)
     
-    def __init__(self, n1, n2):
-        self.n1, self.n2 = n1, n2
-        self.M = [ [0] * self.n2 for _ in range(self.n1) ]
-        self.Fenwick = [ [0]*(self.n2+1) for _ in range(1 + self.n1) ]
+    def __init__(self, n):
+        self.n = n
+        self.A = [0] * self.n
+        self.Fenwick = [0]*(self.n+1)
 
-    def sum_from_00_to(self, i, j):
-        """returns the total sum over M[0..i][0..j]"""
+    def sum_from_00_to(self, i):
+        """returns the total sum over A[0..i]"""
         assert i >= -1
-        assert j >= -1
         ans = 0
-        i += 1; j += 1   # indexes in Fenwick trees start from 1 rather than from 0 like in the represented vector/matrix M
+        i += 1   # indexes in Fenwick trees start from 1 rather than from 0 like in the represented array A
         while i > 0:
-            jj = j
-            while jj > 0:
-                ans += self.Fenwick[i][jj]
-                jj -= LSB[jj]  # Move to the parent node of node jj in the Fenwick tree Fenwick[i]
-            i -= LSB[i]  # Move to the Fenwick-parent row of row i
+            ans += self.Fenwick[i]
+            i -= LSB[i]
         return ans
 
-    def sum(self, a1, b1, a2, b2):
-        """returns the total sum over M[a1..b1)[a2..b2)"""
-        assert 0 <= a1 < b1 <= self.n1
-        assert 0 <= a2 < b2 <= self.n2
-        return self.sum_from_00_to(b1-1, b2-1) - self.sum_from_00_to(b1 -1, a2 -1) - self.sum_from_00_to(a1 -1, b2 -1) +  self.sum_from_00_to(a1 -1, a2 -1)
+    def sum(self, a, b):
+        """returns the total sum over A[a..b)"""
+        assert 0 <= a < b <= self.n
+        return self.sum_from_00_to(b - 1) - self.sum_from_00_to(a - 1)
 
     
-    def update(self, i, j, delta):
-        """Updates M[i][j] to M[i][j] + delta (Also updates the Fenwick trees structure accordingly)"""
-        assert i <= self.n1 
-        assert j <= self.n2
-        self.M[i][j] += delta
-        i += 1; j += 1   # indexes in Fenwick trees start from 1 rather than from 0 like in the represented vector/matrix M
-        while i <= self.n1:
-            jj = j
-            while jj <= self.n2:
-                self.Fenwick[i][jj] += delta
-                jj += LSB[jj]  # Move to the parent node of node jj in the Fenwick tree Fenwick[i]
-            i += LSB[i]  # Move to the Fenwick-parent row of row i
+    def update(self, i, delta):
+        """Updates A[i] to A[i] + delta (Also updates the Fenwick trees structure accordingly)"""
+        assert i <= self.n
+        self.A[i] += delta
+        i += 1   # indexes in Fenwick trees start from 1 rather than from 0 like in the represented array A
+        while i <= self.n:
+            self.Fenwick[i] += delta
+            i += LSB[i]
 
 
-
-if __name__ == "__main__":
-    print(WARNING)    
-    

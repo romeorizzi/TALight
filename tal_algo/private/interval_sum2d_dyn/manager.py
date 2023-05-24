@@ -9,7 +9,7 @@ from tc import TC
 from interval_sum_dyn_lib import Fenwick, matrix_as_str
 
 ############## TESTCASES' PARAMETERS ############################
-TL = 5   # the time limit for each testcase
+TL = 2   # the time limit for each testcase
 
 HARDCODED = (
              (1, 7, 15,
@@ -51,11 +51,11 @@ HARDCODED = (
             )
 DATA = tuple((1, ("hardcoded", n1, n2, r, R)) for n1, n2, r, R in HARDCODED)
 DATA = DATA + (( 8, ("rand_gen",   1,    10,    20)),
-               (10, ("rand_gen",   1,   100,   200)),
-               (10, ("rand_gen",  10,    10,    30)),
+               ( 5, ("rand_gen",   1,   100,   200)),
+               ( 5, ("rand_gen",  10,    10,    30)),
                (10, ("rand_gen",  30,    30,   300)),
-               (30, ("rand_gen",   1, 10000,  1000)),
-               (30, ("rand_gen", 100,   100,  1000))
+               (10, ("rand_gen",   1, 10000,   500)),
+               (10, ("rand_gen", 100,   100,   500))
               )
 MAPPER = {"esempi_testo": 2, "array_small": 3, "array_medium": 4, "mat_small": 5, "mat_medium": 6, "array_big": 7, "mat_big": 8}
 

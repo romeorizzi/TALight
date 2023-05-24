@@ -44,8 +44,8 @@ DATA = DATA + (( 8, ("rand_gen",   1,    10,    20)),
                (10, ("rand_gen",   1,   100,   200)),
                (10, ("rand_gen",  10,    10,    20)),
                (10, ("rand_gen",  30,    30,   300)),
-               (30, ("rand_gen",   1, 10000,  2000)),
-               (30, ("rand_gen", 100,   100,  2000))
+               (30, ("rand_gen",   1, 10000,  3000)),
+               (30, ("rand_gen", 100,   100,  3000))
               )
 MAPPER = {"esempi_testo": 2, "array_small": 3, "array_medium": 4, "mat_small": 5, "mat_medium": 6, "array_big": 7, "mat_big": 8}
 
