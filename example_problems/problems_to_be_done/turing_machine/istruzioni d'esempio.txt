@@ -1,0 +1,48 @@
+Esempi di istruzioni accettate dalla libreria
+
+Alfabeto: <>()#,-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+Struttura: (stato_corrente, carattere_letto, stato_successivo, carattere_scritto, movimento)
+
+Note:
+
+Gli stati e i caratteri scritti e letti NON sono case sensitive Es: (A,-,B,1,<) equivalente a (a,-,b,1,<)
+
+Gli stati possono avere più caratteri (alfanumeirci compreso lo sharp).
+I caratteri letti e scritti sono formati da un solo carattere (alfanumerico compreso lo sharp).
+Il nome degli stati non possono avere spazi.
+
+Il trattino indica:
+1. carattere letto vuoto: (A,-,B,1,<)
+2. carattere scritto vuoto: (A,0,-,1,>)
+3. nessun movimento del nastro: (A,0,B,1,-)
+Il trattino non è accettato come carattere negli stati (sia corrente che successivo).
+
+Il movimento è indicato SOLO dai simboli <>-
+1. movimento a destra del nastro: (A,0,B,1,>)
+2. movimento a sinistra del nastro: (A,0,B,1,<)
+
+Lo sharp indica un carattere non alfanumerico utilizzabile anche per dividere il nastro in più settori.
+
+Le parentesi tonde indicano l'inizio '(' e la fine ')' di un'istruzione.
+
+La virgola separa gli elementi della quintupla.
+
+Esempi accettati:
+1. (A,0,B,1,>)
+2. (A,0,B,1,<)
+3. (A,0,B,1,-)
+4. (A,0,-,1,>)
+5. (A,-,B,1,<)
+6. (stato0,A,stato1,B,<)
+7. (stato1,A,fine,B,<)
+8. (stato#0,A,stato#1,B,<)
+
+Esempi errati:
+1. (A,1,-,0,>)  
+2. (-,1,B,0,>)
+3. (A,0,B,1,A)
+4. (A,0,B,1,#)
+5. (A,0,B,1 <)
+6. (stato 0,A,stato 1,B,<)
+7. (stato-1,A,stato-0,B,<)

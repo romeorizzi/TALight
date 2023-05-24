@@ -16,19 +16,22 @@ except Exception as e:
 
 class TALcolors:
     def __init__(self, ENV, color_implementation ="ANSI"):
-        if color_implementation=="None":
-           self.color_implementation = None
-        else:
+        self.color_implementation = color_implementation
+        if color_implementation == "ANSI" and environ["TAL_META_TTY"]=='0':
+            self.color_implementation = None
+        if self.color_implementation != None:
+            self.termcolor_is_installed = False
             if environ["TAL_META_TTY"]=='1' or color_implementation=="html":
                 try:
                     self.termcolor = import_module('termcolor')
+                    termcolor_is_installed = True
                 except Exception as e:
                     self.color_implementation = None
                     for out in ['stderr','stdout']:
                         print(f"# Recoverable Error: {e}", file=out)
                         print("# --> We proceed using no colors. Don't worry.\n# (To enjoy colors install the python package termcolor on the machine where rtald is running.)", file=out)
                     return
-            if 'termcolor' in sys.modules:
+            if self.termcolor_is_installed:
                 if color_implementation=="ANSI":
                     self.color_implementation = 'ANSI'
                 elif color_implementation=="html":
@@ -142,13 +145,51 @@ def enforce_type_of_yaml_var(yaml_var, typestr, varname, original_typestr=None):
             exit(0)
     if typestr[:len('matrix_of_')] == 'matrix_of_':
         typestr = 'list_of_list_of_'+typestr[len('matrix_of_'):]
+    if typestr == 'tuple_of':
+        new_tuple = []
+        yaml_var = yaml_var.split(',')
+        for item in yaml_var:
+            if item == '[' or item == ']' or item == '(' or item == ')':
+                continue
+            elif type(item) == str and '(' in item:
+                item = item.replace('(', '')
+                item = item.replace("'", '')
+                new_tuple.append(item)
+            elif type(item) == str and ')' in item:
+                item = item.replace(')', '')
+                item = item.replace("'", '')
+                new_tuple.append(str(item))
+                new_tuple = tuple(new_tuple)
+            else:
+                new_tuple.append(str(item))
+        return new_tuple
+
     if typestr[:len('list_of_')] == 'list_of_':
         if type(yaml_var) != list:
             print(f"# Unrecoverable Error: {varname} is not a 'list_of_' something. Here is its actual raw content as a string: {repr(yaml_var)}")
             exit(0)
         enforced_list = []
-        for item, i in zip(yaml_var,range(1,1+len(yaml_var))):
-            enforced_list.append(enforce_type_of_yaml_var(yaml_var=item,typestr=typestr[len('list_of_'):], varname=varname + f" is indeed a list. Its {i}-th item", original_typestr=original_typestr))
+        if 'tuple_of' in typestr:
+            new_tuple = []
+            for item in yaml_var:
+                if item == '[' or item == ']' or item == '(' or item == ')':
+                    continue
+                elif type(item) == str and '(' in item:
+                    item = item.replace('(', '')
+                    item = item.replace("'", '')
+                    new_tuple.append(item)
+                elif type(item) == str and ')' in item:
+                    item = item.replace(')', '')
+                    item = item.replace("'", '')
+                    new_tuple.append(int(item))
+                    new_tuple = tuple(new_tuple)
+                    enforced_list.append(new_tuple)
+                    new_tuple = []
+                else:
+                    new_tuple.append(str(item))
+        else:
+            for item, i in zip(yaml_var,range(1,1+len(yaml_var))):
+                enforced_list.append(enforce_type_of_yaml_var(yaml_var=item,typestr=typestr[len('list_of_'):], varname=varname + f" is indeed a list. Its {i}-th item", original_typestr=original_typestr))
         return enforced_list
     else:
         print(f"I can not parse the typestring {typestr}")
@@ -198,6 +239,8 @@ class Env:
                 self.arg[name] = int(environ[f"TAL_{name}"])
             elif val_type == float:
                 self.arg[name] = float(environ[f"TAL_{name}"])
+            elif val_type == 'tuple_of':
+                self.arg[name] = environ[f"TAL_{name}"]
             elif val_type == 'yaml' or val_type[:len('list_of_')] == 'list_of_' or val_type[:len('matrix_of_')] == 'matrix_of_':
                 try:
                     self.arg[name] = ruamel.yaml.safe_load(environ[f"TAL_{name}"])
@@ -214,11 +257,11 @@ class Env:
 
 class Lang:
     def __init__(self, ENV, TAc, service_server_eval, book_strictly_required=False, print_opening_msg = 'delayed'):
-        assert print_opening_msg in ['delayed','never','now']
+        assert print_opening_msg in ['delayed','never','now','on_stderr']
         self.service_server_eval = service_server_eval
         self.ENV=ENV
         self.TAc=TAc
-        self.to_be_printed_opening_msg = True
+        self.to_be_printed_opening_msg = print_opening_msg != 'never' 
 
         # BEGIN: MESSAGE BOOK LOADING (try to load the message book)
         self.messages_book = None
@@ -266,10 +309,12 @@ class Lang:
         # END: MESSAGE BOOK LOADING
         if print_opening_msg == 'now':
             self.print_opening_msg()
-        elif print_opening_msg == 'never':
-            self.to_be_printed_opening_msg = False
+        elif print_opening_msg == 'on_stderr':
+            self.print_opening_msg(stderr)
         
-    def print_opening_msg(self):
+    def print_opening_msg(self, fout=stdout):
+        if self.to_be_printed_opening_msg == False:
+            return
         self.to_be_printed_opening_msg = False
         problem=self.ENV.problem
         service=self.ENV.service
@@ -284,14 +329,13 @@ class Lang:
                 self.opening_msg += f"{arg_name}={arg_val}, "
         self.opening_msg = self.opening_msg[:-2] + ".\n"
         self.opening_msg += self.render_feedback("feedback_source",f'# The phrases used in this call of the service are the ones hardcoded in the service server (file {self.ENV.exe_fullname}).', {"problem":problem, "service":service, "ENV":self.ENV, "lang":self.ENV["lang"]})
-        self.TAc.print(self.opening_msg, "green")
+        self.TAc.print(self.opening_msg, "green", file=fout)
 
     def render_feedback(self, msg_code, rendition_of_the_hardcoded_msg, trans_dictionary=None, obj=None):
         """If a message_book is open and contains a rule for <msg_code>, then return the server evaluation of the production of that rule. Otherwise, return the rendition of the hardcoded message received with parameter <rendition_of_the_hardcoded_msg>"""
         #print("render_feedback has received msg_code="+msg_code+"\nrendition_of_the_hardcoded_msg="+rendition_of_the_hardcoded_msg+"\ntrans_dictionary=",end="")
         #print(trans_dictionary)
-        if self.to_be_printed_opening_msg:
-            self.print_opening_msg()
+        self.print_opening_msg()
         if self.messages_book != None and msg_code not in self.messages_book:
             self.TAc.print(f"Warning to the problem maker: the msg_code={msg_code} is not present in the selected messages_book. We overcome this inconvenience by using the hardcoded phrase which follows next.","red", file=stderr)
         if self.messages_book == None or msg_code not in self.messages_book:
@@ -306,8 +350,4 @@ class Lang:
             return eval(f"f'{fstring}'")
         msg_encoded = self.messages_book[msg_code]
         return self.service_server_eval(msg_encoded)
-    
-    def suppress_opening_msg(self):
-        self.to_be_printed_opening_msg = False
-
 

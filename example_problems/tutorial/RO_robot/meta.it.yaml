@@ -6,6 +6,11 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "l'input al problem solver è una griglia rettangolare mxn dove un robot parte dalla cella (1,'A') in alto a sinistra e deve portarsi nella cella (m,'A'+(n-1)) in basso a destra evitando di passare per le celle proibite, denotate da un numero negativo nella griglia (di fatto, una matrice di interi). Le celle di valore zero non hanno alcun effetto sul robot mentre le celle di valore positivo rappresentano premi da accumulare (si sommano). Ad ogni passo il robot può spostarsi alla cella immediatamente sottostante oppure alla immediata destra di quella dove si trova attualmente. Se l'argomento 'diag' del servizio è settato ad 1 allora il robot può anche muoversi diagonalmente, ossia passare direttamente dalla cella (i,j) alla cella (i+1,j+1). La prima richiesta è quella di contare quanti sono i cammini diversi che non passino per alcuna cella proibita. Il concetto di proibizione può però essere rilassato assegnado al robot un budget di spesa; un cammino sarà ammissibile se la somma dei numeri negativi incontrati lungo il percorso, invertita in segno, non eccede il budged di spesa. Tra i cammini ammissibili si potrà poi richiedere quello che raccoglie un massimo ammontare complessivo di premi. E al problem solver si potrà richiedere di calcolare il numero di cammini ottimi o anche di listarli.  Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnategli di questo Problema Robot in una delle sue molte varianti possibili. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze attive (sia per un problema specifico che metodologiche); se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere estensibili e aperti a promuovere la collaborazione tra problem-makers/insegnanti (nonchè a relativizzare e superare la separazione tra essi e i problem-solvers/trainees). Dal sistema dove organizzi i tuoi esami/esercitazioni, entro un esercizio centrato su un'istanza del Problema Robot, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Solo per dare una prima idea, potrai imporre vincoli aggiuntivi su singoli elementi che ridefiniscano l'ammissibilità delle soluzioni e puoi controllare/validare tabelle di programmazione dinamica sottomesse dallo studente  (anche per varianti della domanda standard che mettano in gioco la competenza della programmazione dinamica). Viene inoltre gestita la situazione in cui il risolutore di problemi potrebbe aver ricevuto una tabella DP parziale e il suo compito era di completarla (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti)."
     args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: our standard check and validation on the solution submitted by the student is a King Arthur check. However, when an instructor password is provided through this argument, then also the response produced by the oracle is accomodated into the immidiate reply of the service `check`, so that a more complete (but solution spoilering) feedback is offered.
+
       # sezione con i dati dell'istanza assegnati al problem-solver/studente:
       grid:
         regex: ^(.*)$
@@ -140,6 +145,9 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
       recall_data_assigned:
         regex: ^(0|1)$
         default: 0
@@ -231,18 +239,24 @@ services:
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'orcolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione 'key'-'value' nel dizionario, il servizio 'oracle' computerà un oggetto il cui tipo è 'key' (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato 'value' (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per 'key' sono i seguenti:"
-        explain1: "[num_paths] il numero di percorsi ammissibili, come filtrato dai vincoli aggiuntivi (gli argomenti che lo influenzano, dopo 'grid', sono 'diag', 'budget', 'cell_from', 'cell_to', 'cell_through')"
-        explain2: "[num_opt_paths] il numero di percorsi ammissibili che raccolgono il massimo premio totale possibile"
-        explain3: "[opt_val] il massimo totale in premi che un percorso fattibile può raccogliere"
-        explain4: "[opt_path] un percorso che raccoglie il massimo premio totale possibile"
-        explain5: "[list_opt_paths] la lista di tutti i percorsi di interesse ottimi"
-        explain6: "[DPtable_num_to] la tabella di programmazione dinamica che dice il numero di percorsi dalla cella in alto a sinista alla generica cella"
-        explain7: "[DPtable_num_from] la tabella di programmazione dinamica che dice il numero di percorsi dalla cella generica alla cella in basso a destra"
-        explain8: "[DPtable_opt_to] la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella in alto a sinistra alla cella generica"
-        explain9: "[DPtable_opt_from] la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella generica alla cella in basso a destra"
-        explain10: "[DPtable_num_opt_to] la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella in alto a sinistra alla cella generica"
-        explain11: "[DPtable_num_opt_from] la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella generica alla cella in basso a destra."
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'oracolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
+        explain1: '[num_paths] il numero di percorsi ammissibili, come filtrato dai vincoli aggiuntivi (gli argomenti che lo influenzano, dopo `grid`, sono `diag`, `budget`, `cell_from`, `cell_to`, `cell_through`)'
+        explain2: '[num_opt_paths] il numero di percorsi ammissibili che raccolgono il massimo premio totale possibile'
+        explain3: '[opt_val] il massimo totale in premi che un percorso fattibile può raccogliere'
+        explain4: '[opt_path] un percorso che raccoglie il massimo premio totale possibile'
+        explain5: '[list_opt_paths] la lista di tutti i percorsi di interesse ottimi'
+        explain6: '[DPtable_num_to] la tabella di programmazione dinamica che dice il numero di percorsi dalla cella in alto a sinista alla generica cella'
+        explain7: '[DPtable_num_from] la tabella di programmazione dinamica che dice il numero di percorsi dalla cella generica alla cella in basso a destra'
+        explain8: '[DPtable_opt_to] la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella in alto a sinistra alla cella generica'
+        explain9: '[DPtable_opt_from] la tabella di programmazione dinamica che dice il massimo valore di un percorso ammissibile che vada dalla cella generica alla cella in basso a destra'
+        explain10: '[DPtable_num_opt_to] la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella in alto a sinistra alla cella generica'
+        explain11: '[DPtable_num_opt_from] la tabella di programmazione dinamica che dice il numero di percorsi ottimi dalla cella generica alla cella in basso a destra'
+
+      # sezione con argomenti che modificano i setup
+      request_setups:
+        regex: ^(.*)$
+        default: "{}"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario con le eventuali personalizzazioni di alcuni settaggi rispetto ai loro valori standard predefiniti dal problema. Ad esempio i valori di `MAX_NUM_SOLS_IN_LIST` o `MAX_NUM_OPT_SOLS_IN_LIST` che sanciscono il numero massimo di soluzioni (ottime) da restituire quando ad oracle venga richiesta la lista di tali oggetti"
 
       # sezione con argomenti per determinare i canali di uscita e scegliere i formati dell'output:
       color_implementation:

@@ -94,3 +94,9 @@ class TALfilesHelper():
         fullpath = os.path.join(self.__all_instances_path, instance_filename)
         return self.get_file_str_from_path(fullpath)
 
+    def get_catalogue_instancefile_as_str_from_id_collection_and_ext(self, collection, id, format_extension):
+        """Returns, in the form of a string, the contents of the instance file of a given id within the catalogue of instances stored on the server."""
+        instance_filename = f'instance_{str(id).zfill(3)}.{format_extension}'
+        fullpath = os.path.join(self.__catalogue_path, collection, instance_filename)
+        return self.get_file_str_from_path(fullpath)
+

@@ -460,6 +460,7 @@ where
 {
     let mut closing = false;
     let mut buffer = [0; BUFFER_SIZE];
+    let mut last_print_client = None;
     let client_ended = Request::ConnectStop {};
     let client_ended = match client_ended.forge() {
         Ok(x) => x,
@@ -471,7 +472,14 @@ where
                 match msg {
                     Some(Ok(Message::Binary(x))) if !closing => {
                         if echo {
-                            print!("< {}", String::from_utf8_lossy(&x));
+                            match last_print_client {
+                                None | Some(true) => {
+                                    println!("[SERVER]");
+                                    last_print_client = Some(false);
+                                }
+                                _ => {}
+                            }
+                            print!("{}", String::from_utf8_lossy(&x));
                         }
                         let mut close = false;
                         if let Err(x) = pipeout.write_all(&x).await {
@@ -526,7 +534,14 @@ where
                     }
                 };
                 if echo {
-                    print!("> {}", String::from_utf8_lossy(&buffer[..size]));
+                    match last_print_client {
+                        None | Some(false) => {
+                            println!("[CLIENT]");
+                            last_print_client = Some(true);
+                        }
+                        _ => {}
+                    }
+                    print!("{}", String::from_utf8_lossy(&buffer[..size]));
                 }
                 if let Err(x) = wsout.send(Message::Binary(buffer[..size].into())).await {
                     break Err(format!("Cannot send data to server: {}", x));

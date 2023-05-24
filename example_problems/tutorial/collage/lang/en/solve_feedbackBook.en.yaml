@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file {service}_feedbackBook.{ENV["lang"]}.yaml contained in the folder \''lang\'' of the problem {problem}.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+random-type: 'A random mode will be chosen from the one with the same adjacent colors and without the same adjacent colors'
+color-limit-exceed: 'Error: the maximum number of colors must be lower or equal than {MAX_NUM_COL}'
+wrong-sequence-length: 'Error: the lenght of the sequence ({ENV["seq_len"]}) exceeded the limit ({MAX_SEQ_LEN}).'
+successful-load: 'The file you have associated to `instance` filehandler has been successfully loaded.'
+waiting-line: '#? Waiting for the color stripes.\nFormat: numbers separated by spaces\n'
+insert-line: 'Enter sequence containing {ENV["seq_len"]} stripes:'
+val-out-of-range: 'The value {el} falls outside the valid range [1,{MAX_NUM_COL}].'
+wrong-elements-number: 'Expected {ENV["seq_len"]} elements for line, but received {len(l)}."'
+instance-from-catalogue-successful: 'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'
+this-is-the-instance: '\nThis is the instance:\n'
+all-solutions-title: 'Here are the solutions for the given instance:'
+solutions: 'Solution for service {key}: {content[key]}'

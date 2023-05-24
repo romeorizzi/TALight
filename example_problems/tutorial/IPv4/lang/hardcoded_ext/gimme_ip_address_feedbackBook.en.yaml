@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}\n#  with arguments: '
+feedback_source: '# The phrases used in this call of service {service} come from the file \''{service}_feedbackBook.{lang}.yaml\'' placed in the \''lang\'' folder of problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+out-of-range_number_in_ip_address: '\nERROR\nAll numbers in an IP address should belong to the closed interval [0,255]'
+title_info_table: f'\nNetwork addresses that can be guested within the ip address {".".join(Ip)}:'
+prompt_ip_address: '\nEnter your ip address: '
+...

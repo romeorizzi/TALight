@@ -1,0 +1,132 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+
+  gimme_ip_address:
+    description: "Il problem solver dara' in input un indirizzo ip. Il servizio ritornera' gli indirizzi di rete che lo possono contenere"
+    evaluator: [python, services/gimme_ip_address_driver.py]
+    args:
+      ip_address: 
+        regex: /([0-9]{1,3}\.){3}[0-9]{1,3}/gm
+        default: 145.33.04.2
+        regex-explained: "L'indirizzo ip e' un insieme di 4 numeri divisi da dei punti."      
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      interactive:
+        regex: ^(0|1)$
+        default: 1
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+
+  how_many_ips:
+    description: "Il problem solver dara' in input una subnet mask. Il servizio stampera' la quantita' di indirizzi ip configurabili all'interno di essa"
+    evaluator: [python, services/how_many_ips_driver.py]
+    args:
+      subnet_mask:
+        regex:  ^((\d)+\.){3}(\d)+$
+        default: 255.255.0.0
+        regex-explained: Una subnet mask e' un insieme di 4 numeri divisi da punti. 
+        explain: Una subnet mask comprende 4 numeri separati da punti. Ongi numero puo' essere 0 o 255
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      interactive:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+  
+  first_ip:
+    description: "Il servizio chiedera' al problem solver di inserire il primo indirizzo ip, dopo avergli dato la subnet mask e l'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      primo indirizzo ip --> 169.21.3.0)"
+    evaluator: [python, services/first_ip_driver.py]
+    args:
+        subnet_mask:
+          regex: ^(0|255)[.]{3}$
+          default: 255.255.255.0
+        net_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.0
+        ip_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.0
+          regex-explained: "L'indirizzo ip e' un insieme di 4 numeri divisi da dei punti."      
+        with_opening_message:
+          regex: ^(0|1)$
+          default: 0
+        interactive:
+          regex: ^(0|1)$
+          default: 1
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: hardcoded
+
+  last_ip:
+    description: "Il servizio chiedera' al problem solver l'ultimo indirizzo ip, dopo avergli dato la subnet mask e l'indirizzo di rete (esempio: indirizzo di rete --> 169.21.3.0      ultimo indirizzo ip --> 169.21.3.255)"
+    evaluator: [python, services/last_ip_driver.py]
+    args:
+        subnet_mask:
+          regex: ^(0|255)[.]{3}$
+          default: 255.255.255.0
+        net_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.0
+        ip_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.255
+          regex-explained: "L'indirizzo ip e' un insieme di 4 numeri divisi da dei punti."      
+        with_opening_message:
+          regex: ^(0|1)$
+          default: 0
+        interactive:
+          regex: ^(0|1)$
+          default: 1
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: hardcoded
+
+  
+  random_ip:
+    description: "Il servizio chiedera' al problem solver un indirizzo di rete, dopo avergli dato la subnet mask e l'indirizzo di rete(example: network address --> 169.21.3.0      ip address --> 169.21.3.231)"
+    evaluator: [python, services/random_ip_driver.py]
+    args:
+        subnet_mask:
+          regex: ^(0|255)[.]{3}$
+          default: 255.255.255.0
+        net_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.0
+        ip_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.231
+          regex-explained: "L'indirizzo ip e' un insieme di 4 numeri divisi da dei punti."      
+        with_opening_message:
+          regex: ^(0|1)$
+          default: 0
+        interactive:
+          regex: ^(0|1)$
+          default: 1      
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: hardcoded
+         
+         
+  
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...

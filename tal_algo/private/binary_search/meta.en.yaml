@@ -1,0 +1,45 @@
+%YAML 1.2
+---
+public_folder: public
+description: "You get told a positive integer number N and must guess an integer number in the interval [1,N]. At every move, either you submit your answer (! 42) or you probe a number (? 33). In the first case the game has come to an end (with success or failure) or a new match is started. In the second case you will be told whether the secret number is actually bigger or smaller than you guess, or just equal to it."
+services:
+    solve:
+        evaluator: [python, manager.py]
+        description: "this is the standard solution service. When called, it first prints the total number of testcases, which will be dealt with one after the other. At each test case, the first to speak is the servive that prints N, the upper bound on the secret number s which is due to belong to the interval [1,N]. To pose your guess n, write '? n' where n is any natural. When you have identified the secret number s, write '! s'. The maximum number of queries is always 61 and when it gets exceeded then the query call returns -1 and we move immediately to the next test case."
+        args:
+            size:
+                regex: ^(small|big|huge)$
+                default: huge
+                explain: task addressed in case the service request is a submission
+            n:
+                regex: ^(free|[1-9][0-9]{0,1000})$
+                default: free
+                explain: allows you to specify the length of the secret binary string
+            s:
+                regex: ^(free|[0-1]{0,1000})$
+                default: free
+                explain: allows you to specify the actual secret value (useful when debugging your solution)
+            seed:
+                regex: ^(random_seed|[1-9][0-9]{5,5})$
+                default: random_seed
+                explain: specify the numeric code to reproduce the very same set of instances as in a previous run. Called with seed=random_seed, the service chooses its seed at random (and communicates it to the user).
+        files:
+            - source
+    synopsis:
+        evaluator: [python, services/synopsis/synopsis_driver.py]
+        args:
+            service:
+                regex: ^((\S)+)$
+                default: synopsis
+                explain: any string without space characters but meant to specify one of the services of problem %(problem)s
+            with_problem_info:
+                regex: ^(0|1)$
+                default: 1
+                explain: set this argument to 0 to skip the general information about the problem. When set to 1 (default) this information appears at the top, above the information sheet for the specific service required
+            lang:
+                regex: ^(hardcoded|hardcoded_ext|en|it)$
+                default: it
+            metafile:
+                regex: ^(main|en|it)$
+                default: main
+...

@@ -1,0 +1,22 @@
+
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file {service}_feedbackBook.{ENV["lang"]}.yaml contained in the folder \''lang\'' of the problem {problem}.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+rainbow-size: '# We have this number of stripes in the rainbow: '
+rainbow-colors: '# Rainbow is made of this number of colors: '
+print-rainbow: '\n# The sequence is:\n'
+best-sol-question: '\n# Which is the minimum number of sheets for this collage?'
+summary: '\n# SUMMARY OF THE RESULTS FOR GOAL "{goal}":\n'
+right-ans: '# TestCase {i}: Correct answer! Took time {t["measured_time"]} on your machine.\n'
+wrong-ans: '# NO! You gave the wrong solution for the instance with this parameters:\n#seq_len = {t["seq_len"]}, num_col = {t["num_col"]}, seed = {t["seed"]}.\n'
+out-of-time-ans: '# The evaluation has been stopped since your solution took too much time on this or previous instances. The parameters of this instance are:\n#seq_len = {t["seq_len"]}, num_col = {t["num_col"]}, seed = {t["seed"]}.\n'
+right-in-time: '# OK! Your solution achieved goal "{goal}".\n'
+right-not-in-time: '# OK! Though all answers produced by your solution are correct, still it exceeded the time limit on some instances. As such, you did not achieve goal "{goal}".\n'
+wrong-answ: '# NO! Your solution gave wrong answers on at least one instance. Your solution does NOT achieve goal "{goal}".\n'
+summary-of-results: '# SUMMARY OF RESULTS:'
+short-summary-of-results: '# SUMMARY OF RESULTS:'
+goal-passed: '# Goal {goal}: PASSED (passed instances: {num_instances_passed[goal]}/{num_instances[goal]} instances)'
+goal-NOT-passed: '# Goal {goal}: NOT passed (passed instances: {num_instances_passed[goal]}/{num_instances[goal]} instances, correct answers: {num_instances_correct_ans[goal]}/{num_instances[goal]}, wrong answers: {num_instances_wrong_ans[goal]}/{num_instances[goal]} instances)'

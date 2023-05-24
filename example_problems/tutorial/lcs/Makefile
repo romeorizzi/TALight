@@ -12,15 +12,15 @@ instances_catalogue: $(GEN_DIR)GEN $(GEN_DIR)randgen_1_basic.py $(GEN_DIR)TAL_ma
 .PHONY: clean
 clean:
 	@if [ -e instances_catalogue ]; then \
-		echo "Removing the instances_catalogue directory ..." \
-		rm -r rm -rf instances_catalogue ; \
+		echo "Removing the instances_catalogue directory ..." ; \
+		rm -rf instances_catalogue ; \
 	fi
 	@if [ -e services/__pycache__ ]; then \
-		echo "Cleaning the cache ..." \
+		echo "Cleaning the cache ..." ; \
 		rm -r services/__pycache__ ; \
 	fi
 	@if [ -e output ]; then echo "***THIS IS LET TO YOU: Consider removing the output folder"; fi
-	@if [ -n "$(shell find . -maxdepth 1 -name 'my_*' | head -1)" ]; then \
+	@if [ -n "$(shell find . -maxdepth 1 -name 'my_*' | head ..." ; ]; then \
 		echo "***THIS IS LET TO YOU: Consider removing some or all of the following folders whose names comply the template 'my_*'"; \
 		find . -maxdepth 1 -name 'my_*' ; \
 	fi

@@ -13,6 +13,8 @@ instance_objects_spec = [
     ('UB','list_of_int'),
     ('forced_out','list_of_str'),
     ('forced_in','list_of_str'),
+    ('CAP_FOR_NUM_SOLS',int),
+    ('CAP_FOR_NUM_OPT_SOLS',int),
 ]
 additional_infos_spec=[
     ('partialDPtable','matrix_of_int')

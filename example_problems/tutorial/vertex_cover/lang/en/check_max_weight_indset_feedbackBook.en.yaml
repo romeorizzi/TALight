@@ -1,0 +1,25 @@
+
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service} with arguments: '
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file {service}_feedbackBook.{ENV["lang"]}.yaml contained in the folder \''lang\'' of the problem {problem}.'
+
+# NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+successful-load: 'The file you have associated to `instance` filehandler has been successfully loaded.'
+waiting-line: '#? Waiting for the graph.\n'
+insert-edges: 'Given {ENV["num_vertices"]} vertices labelled with the naturals in the interval [0,{ENV["num_vertices"]-1}], you are now expected to enter {ENV["num_edges"]} edges. To specify an edge, simply ente
+r its two endnodes separated by spaces.'
+insert-edge: 'Insert the two endpoints of edge {i}, that is, enter a line with two naturals in the interval [0,{ENV["num_vertices"]-1}], separated by spaces.'
+wrong-edges-number: '\nWrong number of edges ({len(edges)} instead of {ENV["num_edges"]})\n'
+insert-weights: 'Enter nodes weights. Format: integers separated by spaces:'
+wrong-weights-number: '\nWrong number of weights ({len(l)} instead of {ENV["num_vertices"]})\n'
+instance-from-catalogue-successful: 'The instance with instance_id={ENV["instance_id"]} has been successfully retrieved from the catalogue.'
+this-is-the-instance: '\nThis is the instance:\n'
+insert-opt-value: '\nWrite here your conjectured maximum weight independent set for this graph if you have one. Otherwise, if you only intend to be told about the independent set, enter "C".'
+best-sol: 'The maximum weighted independent set is: '
+size-sol: 'The size of the maximum weight independent set is: '
+weight-sol: 'The weight of the maximum weight independent set is: '
+right-best-sol: 'We agree, the solution you provided is a valid maximum weight independent set for the graph.'
+right-sol-not-min: 'The solution you provided is a valid independent set for the graph (not maximum).'
+wrong-sol: 'We don`t agree, the solution you provided is not a valid maximum weight independent set for the graph. These edges connect nodes: '
+vertex-cover: 'We don`t agree, the solution you provided is not a valid maximum weight independent set for the graph: you provided a vertex cover.'

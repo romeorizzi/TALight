@@ -6,6 +6,11 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "dato un insieme di oggetti, ciascuno col suo valore e peso, e una soglia sul massimo peso consentito (Knapsack_Capacity), il Problema dello Zaino (Knapsack Problem) chiede di trovare un sottoinsieme di oggetti il cui peso complessivo non superi la soglia, e che massimizzi il valore totale raccolto. Questo servizio controlla e fornisce feedback contestuale completo (oppure parziale, durante esami o allenamenti e per utenze non protette) a risposte del problem solver/trainee/studente a richieste di vario tipo tutte concernenti istanze assegnate del Problema dello Zaino. Queste varianti didattiche sono adatte non solo per esami ma più in generale per la verifica a promozione di comprensione reale e competenze attive (sia per un problema specifico che metodologiche); se le varianti offerte non ti bastano, resta consapevole che i problemi TALight mirano ad essere estensibili e aperti a promuovere la collaborazione tra problem-makers/insegnanti (nonchè a relativizzare e superare la separazione tra essi e i problem-solvers/trainees). Dal sistema dove organizzi i tuoi esami/esercitazioni, entro un esercizio centrato su un'istanza del Problema dello Zaino, componi ogni tua richiesta allo studente, la cui verifica a feedback contestuale e/o posticipato intendi demandare a questo servizio TALight, semplicemente combinandone i vari argomenti specificati sotto. Solo per dare una prima idea, potrai imporre vincoli aggiuntivi su singoli elementi che ridefiniscano l'ammissibilità delle soluzioni e puoi controllare/validare tabelle di programmazione dinamica sottomesse dallo studente  (anche per varianti della domanda standard che mettano in gioco la competenza della programmazione dinamica). Con queste, il servizio può inoltre fornire feedback contestuale in caso si sia deciso di fornire allo studente/trainee delle tabelle parzialmente precompialte per evitargli di rimanere soverchiato dalle dimensioni della tabella (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti)."
     args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: our standard check and validation on the solution submitted by the student is a King Arthur check. However, when an instructor password is provided through this argument, then also the response produced by the oracle is accomodated into the immidiate reply of the service `check`, so that a more complete (but solution spoilering) feedback is offered.
+
       # sezione con i dati dell'istanza assegnati al problem-solver/studente:
       Knapsack_Capacity:
         regex: ^(0|[1-9][0-9]*)$
@@ -77,12 +82,12 @@ services:
         example: "['A', 'B'] è una delle due soluzioni ottime per il Caso d'Esempio 1, e la sola soluzione ottima per il Caso d'Esempio 2"
         explain: 'una soluzione ottima, ossia un sottoinsieme di oggetti a massimo valore totale, tra quelli il cui peso totale non ecceda la soglia `Knapsack_Capacity`'
       opt_val:
-        regex: ^(0|[1-9][0-9]*)$
+        regex: ^(.*)$
         default: 30
         explain: 'il massimo valore totale di una soluzione ammissibile (=insieme di oggetti il cui peso totale non ecceda `Knapsack_Capacity`)'
         example: 30 è la risposta corretta per i Casi d'Esempio 1 e 2
       num_opt_sols:
-        regex: ^(0|[1-9][0-9]*)$
+        regex: ^(.*)$
         default: 2
         example1: 2 è la risposta corretta per il Caso d'Esempio 1
         example2: 1 è la risposta corretta per il Caso d'Esempio 2
@@ -91,7 +96,7 @@ services:
         regex: ^(.*)$
         default: "[['A', 'B'], ['D']]"
         explain: "la lista di tutte le soluzioni ottime (in qualsiasi ordine)"
-        example: "il valore di default è risposta corretta per il Caso d'Esempio 1 (ma scambiare le due soluzioni nell'elenco, o gli elementi all'interno di una stessa sottolista, non farebbe differenza); per il Caso d'Esempio 2, busta omettere la seconda ed ultima soluzione della lista"
+        example: "il valore di default è risposta corretta per il Caso d'Esempio 1 (ma scambiare le due soluzioni nell'elenco, o gli elementi all'interno di una stessa sottolista, non farebbe differenza); per il Caso d'Esempio 2, basta omettere la seconda ed ultima soluzione della lista"
       DPtable_opt_val:
         regex: ^(.*)$
         default: "[[0, 0, 0, 0, 0, 0], [0, 0, 13, 13, 13, 13], [0, 0, 13, 17, 17, 30], [0, 0, 13, 17, 19, 30] ]"
@@ -131,6 +136,9 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
       recall_data_assigned:
         regex: ^(0|1)$
         default: 0
@@ -224,7 +232,7 @@ services:
       request_dict:
         regex: ^(.*)$
         default: "{}"
-        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'orcolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
+        explain: "questo argomento (una stringa letta come yaml) passa un dizionario che specifica quali oggetti soluzione debbano essere ricompresi nel responso dell'oracolo. Lasciando il valore di default (dizionario vuoto) l'oracolo fornirà ogni tipologia di oggetto prevista e per la quale un solutore sia già stato implementato. Altrimenti, per ogni associazione `key`-`value` nel dizionario, il servizio `oracle` computerà un oggetto il cui tipo è `key` (che è sempre tenuto ad essere un nome standard, ad esempio 'opt_sol') e che verrà chiamato `value` (ad esempio 'opt_sol1') nei riferimenti ad esso. Questo semplice meccanismo consente una rinominazione prescritta dal chiamante. Attualmente i possibili valori per `key` sono i seguenti:"
         explain1: '[opt_sol] una soluzione ottima, ossia un sottoinsieme di oggetti a massimo valore totale, tra quelli il cui peso totale non ecceda la soglia `Knapsack_Capacity`'
         explain2: '[opt_val] il massimo valore totale di una soluzione ammissibile (=insieme di oggetti il cui peso totale non ecceda `Knapsack_Capacity`)'
         explain3: '[num_opt_sols] il numero di soluzioni ottime differenti'

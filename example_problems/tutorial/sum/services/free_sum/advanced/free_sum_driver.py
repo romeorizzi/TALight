@@ -10,7 +10,6 @@ args_list = [
     ('num_questions',int),
     ('numbers',str),
     ('obj',str),
-    ('META_TTY',bool),
 ]
 
 ENV =Env(args_list)

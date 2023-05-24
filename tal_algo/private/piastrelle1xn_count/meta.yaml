@@ -1,0 +1,11 @@
+public_folder: public
+services:
+    solve:
+#        evaluator: [manager/target/release/manager]
+# webassembly da compilare compile with: cargo build --release --target wasm32-wasi (c'è comunque un problema per il mancato passaggio delle variabili di ambiente)
+#        evaluator: [wasmtime, manager/target/wasm32-wasi/release/manager.wasm]
+        evaluator: [python, manager.py]
+        args:
+            size:
+                regex: ^(tiny|small|medium|big|huge)$
+                default: huge

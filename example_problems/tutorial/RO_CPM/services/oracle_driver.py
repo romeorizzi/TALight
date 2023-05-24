@@ -24,14 +24,13 @@ args_list = [('pwd',str)] + PSL.instance_objects_spec + [
 ]
 
 ENV =Env(args_list)
-TAc =TALcolors(ENV, "None")
-LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now'if ENV['with_opening_message'] else 'never')
+TAc =TALcolors(ENV, None)
+LANG=Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'now' if ENV['with_opening_message'] else 'never')
 TALf = TALfilesHelper(TAc, ENV)
 
 # START CODING YOUR SERVICE:
 
-TOKEN_REQUIRED = True
-RO_io.check_access_rights(ENV,TALf, require_pwd = True, TOKEN_REQUIRED = TOKEN_REQUIRED)
+RO_io.check_access_rights(ENV,TALf, require_pwd = True)
 input_data_assigned = RO_io.dict_of_instance(PSL.instance_objects_spec,args_list,ENV)
 #print("\n"f"input_data_assigned={input_data_assigned}", file=stderr)
 PSL.check_instance_consistency(input_data_assigned)
@@ -39,13 +38,15 @@ RO_io.check_request(ENV['request_dict'], PSL.answer_objects_implemented)
 
 request_dict = ENV["request_dict"] if len(ENV["request_dict"]) != 0 else { key:key for key in PSL.answer_objects_implemented }
 #print(f"request_dict={request_dict}", file=stderr)
-    
-call_data = {"input_data_assigned":input_data_assigned,"request":request_dict}
-#print(f"call_data={call_data}", file=stderr)
-call_data["oracle"] = PSL.solver(call_data)
 
-RO_io.oracle_outputs(call_data,ENV)
+all_data = {"input_data_assigned":input_data_assigned,"request":request_dict}
+#print(f"all_data={all_data}", file=stderr)
+all_data["oracle"] = PSL.solver(all_data)
+unasked_answ_objects = [key for key in all_data["oracle"] if key not in request_dict.values()]
+for key in unasked_answ_objects:
+    del all_data["oracle"][key]
+RO_io.oracle_outputs(all_data,ENV)
 if ENV.LOG_FILES != None:
-    RO_io.oracle_logs(call_data,ENV,TALf)
+    RO_io.oracle_logs(all_data,ENV,TALf)
 if ENV["with_output_files"]:    
-    RO_io.oracle_output_files(call_data,ENV,TALf)
+    RO_io.oracle_output_files(all_data,ENV,TALf)

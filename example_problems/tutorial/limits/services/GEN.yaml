@@ -1,0 +1,27 @@
+%YAML 1.2
+---
+group 1:
+  points_per_instance : 10
+  num_instances: 4
+  source : instance_randgen_1
+  m : 5
+  n : 5
+  alphabet : DNA
+group 2:
+  points_per_instance : 10
+  num_instances: 4
+  source : instance_randgen_1
+  m : 10
+  n : 10
+  alphabet : uppercase
+group 3:
+  points_per_instance : 2
+  num_instances: 1
+  source : public_examples
+  id: {1} 
+group 4:
+  points_per_instance : 2
+  num_instances: 1
+  source : public_examples
+  id: {1} 
+...

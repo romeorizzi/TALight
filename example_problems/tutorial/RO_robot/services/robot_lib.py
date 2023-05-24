@@ -11,14 +11,14 @@ from RO_std_eval_lib import std_eval_feedback
 
 
 instance_objects_spec = [
-    ('grid', 'matrix_of_int'),
-    ('budget', int),
-    ('diag', bool),
-    ('cell_from', 'list_of_str'),
-    ('cell_to', 'list_of_str'),
-    ('cell_through', 'list_of_str'),
-    ('CAP_FOR_NUM_SOLS', int),
-    ('CAP_FOR_NUM_OPT_SOLS', int),
+    ("grid", "matrix_of_ints"),
+    ("budget", int),
+    ("diag", bool),
+    ("cell_from", tuple[int, str]),
+    ("cell_to", tuple[int, str]),
+    ("cell_through", tuple[int, str]),
+    ('CAP_FOR_NUM_SOLS',int),
+    ('CAP_FOR_NUM_OPT_SOLS',int),
 ]
 additional_infos_spec = [
     ('partialDP_to', 'matrix_of_int'),

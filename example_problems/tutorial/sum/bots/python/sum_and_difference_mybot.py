@@ -9,4 +9,4 @@ while True:
     s,d = map(int, line.split() )
     x1 = (s + d) // 2
     x2 = (s - d) // 2
-    print(f"{x1} {x2}")
+    BOT.print(f"{x1} {x2}")

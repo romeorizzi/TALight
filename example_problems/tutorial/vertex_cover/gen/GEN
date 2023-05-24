@@ -1,0 +1,90 @@
+# generator parameters: 
+
+# num_vertices, num_edges, weighted, seed 
+#     num_vertices (int) number of vertices of the graph
+#     num_edges (int) number of edges of the graph
+#     weighted (int) weighted nodes or not
+#     approx (int) tell if we want exact or approximated solution
+#     seed (int) seed generating the small triangle
+
+add_format: simple.txt
+add_format: with_info.txt
+
+#collection: instances_hardcoded
+#COPY: instances_hardcoded/instance_001.simple.txt
+#COPY: instances_hardcoded/instance_001.with_info.txt
+#COPY: instances_hardcoded/instance_002.simple.txt
+#COPY: instances_hardcoded/instance_002.with_info.txt
+
+collection: minimum_vc
+#                randgen,    num_vertices,  num_edges,  seed,     weighted,   approx,
+GEN:  randgen_1_basic.py     8              12          987654    0           0
+GEN:  randgen_1_basic.py     10             15          134259    0           0
+GEN:  randgen_1_basic.py     15             23          743201    0           0
+GEN:  randgen_1_basic.py     16             25          329483    0           0
+GEN:  randgen_1_basic.py     20             30          673210    0           0
+GEN:  randgen_1_basic.py     23             40          494021    0           0
+GEN:  randgen_1_basic.py     25             42          458390    0           0
+GEN:  randgen_1_basic.py     30             45          203927    0           0
+GEN:  randgen_1_basic.py     50             75          644884    0           0
+GEN:  randgen_1_basic.py     50             78          100001    0           0
+GEN:  randgen_1_basic.py     52             80          434355    0           0
+GEN:  randgen_1_basic.py     55             83          556677    0           0
+GEN:  randgen_1_basic.py     60             92          311080    0           0
+GEN:  randgen_1_basic.py     70             115         456462    0           0
+GEN:  randgen_1_basic.py     80             120         968444    0           0
+
+collection: minimum_weight_vc
+#                randgen,    num_vertices,  num_edges,  seed,     weighted,   approx,
+GEN:  randgen_1_basic.py     8              13          345678    1           0
+GEN:  randgen_1_basic.py     10             18          129473    1           0
+GEN:  randgen_1_basic.py     12             20          372493    1           0
+GEN:  randgen_1_basic.py     15             23          194372    1           0
+GEN:  randgen_1_basic.py     20             35          382910    1           0
+GEN:  randgen_1_basic.py     22             35          538493    1           0
+GEN:  randgen_1_basic.py     25             40          309302    1           0
+GEN:  randgen_1_basic.py     30             48          148920    1           0
+GEN:  randgen_1_basic.py     40             60          484022    1           0
+GEN:  randgen_1_basic.py     45             65          329488    1           0
+GEN:  randgen_1_basic.py     50             78          167743    1           0
+GEN:  randgen_1_basic.py     55             95          124124    1           0
+GEN:  randgen_1_basic.py     60             100         454522    1           0
+GEN:  randgen_1_basic.py     70             110         774788    1           0
+GEN:  randgen_1_basic.py     80             125         464563    1           0
+
+collection: approx_vc
+#                randgen,    num_vertices,  num_edges,  seed,     weighted,   approx,
+GEN:  randgen_1_basic.py      10             15         938321    0           1
+GEN:  randgen_1_basic.py      20             30         149816    0           1
+GEN:  randgen_1_basic.py      30             45         345978    0           1
+GEN:  randgen_1_basic.py      40             60         225876    0           1
+GEN:  randgen_1_basic.py      50             75         731560    0           1
+GEN:  randgen_1_basic.py      60             90         106790    0           1
+GEN:  randgen_1_basic.py      70             105        604879    0           1
+GEN:  randgen_1_basic.py      80             120        123456    0           1
+GEN:  randgen_1_basic.py      90             145        556677    0           1
+GEN:  randgen_1_basic.py      105            155        124244    0           1
+GEN:  randgen_1_basic.py      115            170        124124    0           1
+GEN:  randgen_1_basic.py      120            190        456462    0           1
+GEN:  randgen_1_basic.py      130            220        290487    0           1
+GEN:  randgen_1_basic.py      150            250        160578    0           1
+GEN:  randgen_1_basic.py      180            300        271280    0           1
+
+collection: approx_weighted_vc
+#                randgen,    num_vertices,  num_edges,  seed,     weighted,   approx,
+GEN:  randgen_1_basic.py      10             15         837123    1           1
+GEN:  randgen_1_basic.py      20             30         669123    1           1
+GEN:  randgen_1_basic.py      30             45         936811    1           1
+GEN:  randgen_1_basic.py      40             60         333948    1           1
+GEN:  randgen_1_basic.py      50             75         342403    1           1
+GEN:  randgen_1_basic.py      60             90         924340    1           1
+GEN:  randgen_1_basic.py      70             105        403432    1           1
+GEN:  randgen_1_basic.py      80             120        193847    1           1
+GEN:  randgen_1_basic.py      90             140        434355    1           1
+GEN:  randgen_1_basic.py      105            160        167743    1           1
+GEN:  randgen_1_basic.py      115            180        454522    1           1
+GEN:  randgen_1_basic.py      120            185        774788    1           1
+GEN:  randgen_1_basic.py      130            200        968444    1           1
+GEN:  randgen_1_basic.py      150            250        210380    1           1
+GEN:  randgen_1_basic.py      180            290        231089    1           1
+

@@ -1,0 +1,22 @@
+%YAML 1.2
+---
+open-channel: '# I will serve: problem={problem}, service={service}'
+feedback_source: '# This feedback in english comes from the dictionary of the phrases .yaml file {service}_feedbackBook.{ENV["lang"]}.yaml contained in the folder \''lang\'' of the problem {problem}.'
+
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+random-type: 'A random mode will be chosen from the one with the same adjacent colors and without the same adjacent colors'
+wrong-sequence-lenght: 'Error: the lenght of the sequence ({ENV["seq_len"]}) exceeded the limit ({MAX_SEQ_LEN}).'
+successful-load: 'The file you have associated to `instance` filehandler has been successfully loaded.'
+waiting-line: '#? waiting for the color sequence.\nFormat: numbers separated by spaces\n'
+insert-line: 'Enter sequence containing {ENV["seq_len"]} elements:'
+val-out-of-range: 'The value {el} falls outside the valid range [1,{MAX_NUM_COL}].'
+wrong-elements-number: 'Expected {ENV["seq_len"]} elements for line, but received {len(l)}.'
+this-is-the-instance: '\nThis is the instance:\n'
+insert-opt-value: '\nWrite here your conjectured optimal value for this collage if you have one. Otherwise, if you only intend to be told about the optimal value, enter 0.'
+best-sol: 'The solution value is {sheets}.'
+print-sol: 'Here is the graphical solution:'
+right-best-sol: 'We agree, the solution value you provided is the right one.'
+wrong-best-sol: 'We don\''t agree, the solution value you provided is not the right one.'
+wrong-best-sol-gt: 'Your solution has more sheets than the right one.'
+wrong-best-sol-lt: 'Your solution has less sheets than the right one.'
+

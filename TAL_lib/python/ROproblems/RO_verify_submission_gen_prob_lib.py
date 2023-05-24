@@ -2,15 +2,18 @@
 from sys import stderr
 from typing import Optional, List, Dict, Callable
 from types import SimpleNamespace
+from copy import deepcopy
+import RO_std_io_lib as RO_io
 
 class verify_submission_gen:
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, oracle_response:Dict = None):
         self.I = SimpleNamespace(**input_data_assigned)
         self.goals = SEF.load(long_answer_dict)
         self.long_answer_dict = long_answer_dict
+        self.oracle_response = oracle_response
 
     def verify_format(self, SEF):
-        """In realtà questo tipo di controllo è attualmente demandato alla funzione check_and_standardization_of_request_answer_consistency  del modluo RO_std_io_lib.py
+        """In realtà questo tipo di controllo è attualmente demandato alla funzione check_and_standardization_of_request_answer_consistency  del modulo RO_std_io_lib.py
            Preferisco tuttavia richiamarlo quì perchè:
               1. non è del tutto chiaro (anche in relazione all'esperienza d'uso che avviene dentro i fogli Jupyther, il messaggio prodotto dalla funzione check_and_standardization_of_request_answer_consistenc  al momento è troppo severo, e d'altronde sono messaggi del modulo multilanguage che in questo momento non intedo toccare, ma posso duplicare il codice di quella parte e forse quella è la soluzione migliore, ma a quel punto la domanda è perchè non portare quì il controllo di tipo  togliendolo da  check_and_standardization_of_request_answer_consisten) quale possa essere il suo miglior collocamento
               2. come promemoria che vogliamo inventarci modi per portare a fattor comune controlli da problemi diversi.
@@ -29,15 +32,30 @@ class verify_submission_gen:
     def verify_consistency(self, SEF):
         return True
                 
+    def verify_optimality(self, SEF):
+        return True
+                
     def set_up_and_cash_handy_data(self):
-        pass
+        pass       
 
     def verify_submission(self, SEF):
         if not self.verify_format(SEF):
-            return SEF.completed_feedback
+            return whole_feedback_dict(SEF.non_spoilering_feedback)
         self.set_up_and_cash_handy_data()
         if not self.verify_feasibility(SEF):
-            return SEF.completed_feedback
+            return whole_feedback_dict(SEF.non_spoilering_feedback)
         if not self.verify_consistency(SEF):
-            return SEF.completed_feedback
-        return SEF.feedback_when_all_checks_passed()
+            return whole_feedback_dict(SEF.non_spoilering_feedback)
+        feedback_dict = whole_feedback_dict(SEF.feedback_when_all_non_spoilering_checks_passed())
+        
+        also_optimal = self.verify_optimality(SEF)
+        if not also_optimal: return whole_feedback_dict(SEF.non_spoilering_feedback)
+        else: feedback_dict = whole_feedback_dict(SEF.feedback_when_all_optimality_checks_passed())
+        
+        return feedback_dict
+
+def whole_feedback_dict(non_spoilering_feedback):
+    feedback_dict = {}
+    feedback_dict['non_spoilering'] = non_spoilering_feedback
+    feedback_dict['spoilering'] = deepcopy(non_spoilering_feedback)
+    return feedback_dict

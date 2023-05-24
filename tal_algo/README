@@ -1,0 +1,38 @@
+# Uso del client (per richieste al server a servizio del corso):
+
+   rtal -s wss://ta.di.univr.it/algo list
+
+per listare i problemi serviti, oppure:
+
+   rtal -s wss://ta.di.univr.it/algo --help
+
+o
+
+   rtal -s wss://ta.di.univr.it/algo connect --help
+
+per dell'aiuto sui comandi che consentono di interagire col problema.
+
+
+# Chiamata al server in locale (utile ai problem-makers per testare o a studenti avanzati che hanno voluto installarsi la piattaforma in locale e avviano il server in locale):
+       rtal connect -x fragola gioco -- python sol.py
+
+# Avvio del server in locale:
+   rtald -a tal_algo/exams/demo/tokens.yaml -d tal_algo/public
+oppure:
+   rtald -a tal_algo/exams/demo/tokens.yaml -d tal_algo/private
+
+
+# il server nel cloud serve i problemi symlincati nel folder algo del github repo TALight
+
+se ad esempio:
+ls -l TALight/algo/
+total 0
+lrwxrwxrwx 1 romeo romeo 25 Mar  5 08:47 gioco -> ../tal_algo/private/gioco
+lrwxrwxrwx 1 romeo romeo 27 Mar  5 08:47 griglia -> ../tal_algo/private/griglia
+lrwxrwxrwx 1 romeo romeo 34 Feb 23 15:26 pills -> ../example_problems/tutorial/pills
+
+vedete che i primi due problemi sono presi da tal_algo, dove abbiamo deciso di raccogliere/organizzare i problemi che verranno predisposti per questa edizione del corso. Questi problemi vengono sviluppati secondo la strutturazione impostata da Dario per il corso di Sfide di Programmazione.
+Invece il terzo problema (pills) è preso da problemi di esempio che avevamo sviluppato per TALight stesso.
+La strutturazione offerta da Dario ci aiuterà a procedere più spediti, ma potrà essere migliorata durante il corso anche perchè andrà adattata dal corso di Sfide a quello di Algoritmi.
+
+

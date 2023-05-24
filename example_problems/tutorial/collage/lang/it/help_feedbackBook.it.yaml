@@ -1,0 +1,72 @@
+%YAML 1.2
+---
+open-channel: '# Servirò: problema={problem}, servizio={service}'
+feedback_source: '# Questo feedback in italiano proviene dal dizionario delle frasi ricomprese nel .yaml file ({self.messages_book_file}) contenuto nella cartella dove il servizio {self.ENV.service} è implementato.'
+#NOW THE PROBLEM SERVICE SPECIFIC SECTION:
+help-pages: "Indice delle pagine di Help:"
+services-list: "Lista dei Servizi:"
+collage: [
+    ["\nPROBLEMA COLLAGE", "red", ["bold", "underline"]],
+    ["   (pagina del servizio HELP)\n\n", "red", ["bold"]],
+    ["il problem COLLAGE:\n", "red"],
+     "   questo è un problema della suite del tutorial di TALight e, oltre che per il testing interno, è principalmente inteso come un primo problema da provare/proporre per ottenere una prima idea su come un problema TALight voglia porsi, come appaia all'esperienza d'uso, e soprattutto come il problem solver possa interagire coi suoi servizi. Si tornerà inoltre a questo problema per ripartire da esso nella nostra introduzione/tutorial agli aspetti solo tecnici sotto TALight del problem making.\n\n",
+    ["competenze coinvolte/stimolate:\n", "red"],
+    ["  modeling (introduzone al concetto di variabili)\n", "green"],
+    "     problema semplice di sue sole variabili\n",
+    ["  sistemi lineari\n", "green"],
+    "     di due sole variabili\n",
+    ["  equazioni di secondo grado\n", "green"],
+    "     sviluppo opzionale, come al solito in TALight e connaturato alla sua impostazione didattica\n",
+    ["  computer programming e linguaggi di programmazione, primo livello\n", "green"],
+    "     opzionale, e con un linguaggio o ambiente di programmazione qualsiasi a libera scelta, come solito in TALight (il docente può scegliere di limitare queste libertà)\n\n",
+    ["servizi offerti:\n", "red"],
+    ["  free_sum\n", "green"],
+    "     solo scrivi il numero naturale assegnato come somma di due numeri naturali a tua scelta (con possibilità di considerare anche altri obiettivi ricevendo feedback anche relativament ad alcuni di essi)\n",
+    ["  sum_and_difference\n", "green"],
+    "     ti vengono date la somma e la differnza di due numri naturali e la commessa è di ricostruire i due numeri\n",
+    ["  sum_and_product\n", "green"],
+    "     ti vengono dati la somma e il prodotto di due numri naturali e la commessa è di ricostruire i due numeri\n",
+    ["  help\n", "green"],
+    "     questa che stai leggendo è una pagina del servizio help\n",
+    ["  synopsis\n", "green"],
+    "     dà informazioni sul ruolo ed uso per ciacuno dei servizi offerti\n\n",
+]
+check_sol: [
+    ["\nPROBLEMA COLLAGE, SERVIZIO check_sol", "red", ["bold", "underline"]],
+    ["   (pagina del servizio HELP)\n\n", "red", ["bold"]],
+    ["protocollo del servizio -le regole:\n", "red"],
+     "   1. che il mittente sia il service server oppure il service client, le righe che iniziano con '#' vengono considerate commenti e non sortiscono effetto alcuno ai fini dell'interazione.\n",
+     "   2. tutte le altre linee che il server ti invia cominciano col carattere '?' seguito da spazio, poi un numero naturale s che chiude la riga. Ogniqualvolta ricevi una tale riga sei tenuto a rispondere con una riga che contenga due numeri naturali, x e y, separati da spazio.\n\n",
+    ["goal:", "red"],
+     " fai un punto per ogni risposta (x,y) con x+y=s. Idealmente, vorresti massimizzare il numero di punti raccolti. Quando x+y non dà s, e il numero totale di risposte consegnate non ha ancora raggiunto il tetto, allora ti verrà riproposta la precedente domanda (lo stesso numero s viene riproposto) per darti possibilità di riscatto.\n\n",
+    ["argomenti:\n", "red"],
+    ["   numbers: ", "green"],
+     "usa questo parametro per selezionare la taglia del numero s\n",
+    ["   obj: ", "green"],
+     "usa questo parametro per specify whether the goal is achieved by any pair of numbers x and y with x+y=s or only by those that also maximize the product x*y\n",
+    ["   num_questions: ", "green"],
+     "questo parametro stabilisce il numero di domande che verranno poste\n",
+    ["   lang: ", "green"],
+     "questo parametro consente di selezionare la lingua in cui il servizio esprime il proprio feedback. Seleziona la tua lingua preferita tra quelle attualmente disponibili (con 'hardcoded' i messaggi di feedback saranno quelli nel codice del service server, ossia il programma scritto dal problem maker per supportare il servizio).\n\n",
+]
+synopsis: [ 
+    ["\nPROBLEMA COLLAGE, SERVIZIO SYNOPSIS", "red", ["bold", "underline"]],
+    ["   (pagina del servizio HELP)\n\n", "red", ["bold"]],
+    ["scopo/ruolo del servizio SYNOPSIS:\n", "red"],
+    "   1. suggerire concisamente l'uso inteso e le possibili utilità/ruoli di un servizio offerto sul problema.\n",
+    "   2. specificare ed illustrare la sintassi corretta per l'uso dei suoi argomenti.\nIl servizio synopsis mira ad offrire un'informazione rigidamente strutturata automaticamente raccolta da dove i servizi vengono organizzati dal problem maker.\n\n",
+    ["argomenti:\n", "red"],
+    ["   service: ", "green"],
+    "usa questo argomento per selezionare il servizio sul quale desideri ricevere informazioni.\n\n",
+]
+help: [ 
+    ["\nPROBLEMA COLLAGE, SERVIZIO HELP", "red", ["bold", "underline"]],
+    ["   (pagina del servizio HELP)\n\n", "red", ["bold"]],
+    ["scopo/ruolo del servizio HELP:\n", "red"],
+     "   offrire delle pagine di primo aiuto (sul tipo delle pagine di 'man' dalla shell) al problem solver disorientato sui servizi offerti e sul loro uso. Con l'eccezione di poche pagine (come quella per il servizio synopsis o quella per il servizio help (Hey, ciao, this is me! Sono io quella pagina! ;)) ) queste pagine intendono essere specifiche al problema e così devono essere composte dal problem maker e/o collaboratori oppure deployers del servizio in cloud. Queste pagine possono venir tradotte in varie lingue ed offrire spiegazioni più ampie o di maggior dettaglio di quelle offerte dal servizio synopsis che mira a fornire informazioni più strutturate (e sostanzialmente autogenerate). Ma anche le pagine di help dovrebbero presentarsi dirette e concise in quanto principalmente intese a stimolare e sostenere un'esplorazione autonoma sul problema viata dai servizi e da un loro uso anche creativo e comunque automotivato. Spiegazioni più lunghe e più ampi e selvaggi materiali vengono condivisi tramite la cartella `public` del problema. L'intero contenuto (spesso collocato in altri folders ma poi symlincato da `public`) può infatti essere interamente scariato in locale dal problem solver con accesso al servizio che pubblica la collezione di problemi. Suggeriamo inoltre di rendere disponibili link a risorse per eventuali approfondimenti sia dal testo del problema che da altre raccolte disposte entro 'public'.\n\n",
+    ["arguments:\n", "red"],
+    ["   page: ", "green"],
+     "usa questo parametro per selezionare la pagina di aiuto/spiegazione desiderata tra quelle che il problem maker ha predisposto per te.\n",
+    ["   lang: ", "green"],
+     "questo parametro ti consente di selezionare la lingua in cui il server del servizio ti rivolgerà del feedback di supporto. Seleziona quella che preferisci tra quelle già disponibili (impostando 'hardcoded' ottieni i messaggi di feedback come hardcoded nel service server program scritto dal problem maker).\n\n",
+]

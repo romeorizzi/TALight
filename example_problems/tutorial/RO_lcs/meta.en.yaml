@@ -6,6 +6,11 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "though this TALight problem can be of direct use, like any other problem in the RO_* collection is mainly meant to supply immidiate and contextual feedback during exams (real or simulations), in exercitations (authonomous or driven), and other didactic endeavours. All the problems offered in the RO_* colection offer an oracle service and a check service like this one. The purpose of the check service is to immidiately and contextually evaluate the tentative answers of the student in order to support him clarifying what is a correct solution and how he should approach a problem. In the context of an exercise on the Longest Common Subsequence (LCS) Problem deployed from another software system (like the exam-RO-public project) or by other means of the liking, the problem solver is mainly given two strings s and t with the mission to find a longest sequence that is a subsequence o both. The arguments of this service give the flexibility that allows to cover several possible variants of this basic question, customizing it for an exam or a didactic experience. These didactic variants are suitable not only for exams but more generally for the verification and promotion of real understanding and active skills (both for a specific problem and methodological); if the variants offered are not enough for you, be aware that TALight problems aim to be extensible and open to promote collaboration between problem-makers/teachers (as well as to relativize and overcome the separation between them and problem-solvers/trainees). Beyond the instance received by the student, the service receives also the objects that comprise the answer of the student on one of the many possible questions/requests comprising the whole exercise. Given all these data, the service can closely support the student/problem solver in her steps, to make sure she properly connects to the exam, to the subject, and to the proper methodology. From the system where you organize your exams/exercises, design an exercise centered on an instance of LCS Problem composing a a suitable list of requests to the student, whose verification with contextual and/or postponed feedback you might delegate to this TALight service. Just to give a first idea, you will be able to impose additional constraints on single elements that redefine the admissibility of the solutions and you can check/validate dynamic programming tables submitted by the student (also for variants of the standard question that involve the competence of dynamic programming). The situation where the problem-solver may have received a partial DP table and her task was to to complete it is also covered (particularly useful to allow realistically a compilation by hand of the tables on sufficiently interesting instances)."
     args:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema).
+
       # section with the instance data assigned to the problem-solver/student:
       s:
         regex: ^([A-Z]*)$
@@ -17,14 +22,14 @@ services:
         default: 'MAMMACHIOCCIA'
         explain: is the second string
         example1: "the second string is s='MAMMACHIOCCIA' in our running Example 1"
-      start_with:
-        regex: ^(\*|[A-Z])$
-        default: '*'
-        explain: the common subsequence is required to start with this character. Using the mask character * vanifies this constraint
-      end_with:
-        regex: ^(\*|[A-Z])$
-        default: '*'
-        explain: the common subsequence is required to end with this character. Using the mask character * vanifies this constraint
+      beginning:
+        regex: ^([A-Z]*)$
+        default: ''
+        explain: "the common subsequence is required to begin with the string 'beginning' as its prefix. Leaving the default value (the empty string) for this parameter nullifies this constraint"
+      ending:
+        regex: ^([A-Z]*)$
+        default: ''
+        explain: "the common subsequence is required to end with the string 'ending' as its suffix. Leaving the default value (the empty string) for this parameter nullifies this constraint"
       forbidden_s_interval_first_pos:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000
@@ -75,14 +80,14 @@ services:
         regex: ^(.*)$
         default: "{}"
         example: "-a input_data_assigned=\"{'s':'ACCIPICCHIA','t':'MAMMACHIOCCIA'}\"  would be an alternative way to introduce our running Example 1 input data to the problem solver"
-        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `s`, or `t`, or `start_with`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
+        explain: "There are two options for passing to this service the instance data assigned to the student: (1) use a separate and specific argument for each single object comprising the instance, or (2) callect all the objects of pertinence within one single dictionary passed through this one argument (`input_data_assigned`). Option (2) is the way to go when calling the service from another software, through its API described by the present meta file. When this argument is left to its default value (the empty dictionary), then Option (1) is assumed (which may be more convenient when exploring the service or experimenting with it, for example from the CLI. Otherwise, the string assigned to `input_data_assigned` is read as yaml to obtain the dictionary containing the instance faced by the the student. Clearly, though each TALight problem is meant to be extensible, the parts/objects that might compose an instance, at any given time/version, will always be taken from a finite set designed and implemented by the instructor and/or problem maker. Each such object will hence have a standard name attached to it (e.g., like `s`, or `t`, or `beginning`). These standard names are the same as the names of the arguments to be used when following Option (1). Therefore, the whole list of such standard names, together with a description of the type of object corresponding to them, is what you get exposed to when exploring the list of arguments of this service that describe the instance as posed to the problem solver."
 
       # section with the answer of the problem-solver/student to be evaluated and provided a feedback with:
       opt_val:
         regex: ^(.*)$
         default: 7
         example: 7 is actually the correct answer for running Example 1
-        explain: "the maximum length of a string which is a feasible solution. In order to be a feasible solution, a string must be both a subsequence of string `s` and a subsequence of string `t`, but it must also respect any other additional constraint given. (A subsequence of a string is any string that can be obtained from it by dropping off some of its characters. The additional constraints, if any, get imposed by the arguments `start_with`,`end_with`,`forbidden_s_interval_first_pos`,`forbidden_s_interval_last_pos`,`reduce_s_to_its_prefix_of_length`,`reduce_t_to_its_prefix_of_length`,`reduce_s_to_its_suffix_of_length`,`reduce_t_to_its_suffix_of_length`. These additional contraints can be combined in any way as long as the optimum solution value for the question formulated by the problem poser to the problem solver appears as one of the entries of the DP tables considered)"
+        explain: "the maximum length of a string which is a feasible solution. In order to be a feasible solution, a string must be both a subsequence of string `s` and a subsequence of string `t`, but it must also respect any other additional constraint given. (A subsequence of a string is any string that can be obtained from it by dropping off some of its characters. The additional constraints, if any, get imposed by the arguments `beginning`,`ending`,`forbidden_s_interval_first_pos`,`forbidden_s_interval_last_pos`,`reduce_s_to_its_prefix_of_length`,`reduce_t_to_its_prefix_of_length`,`reduce_s_to_its_suffix_of_length`,`reduce_t_to_its_suffix_of_length`. These additional contraints can be combined in any way as long as the optimum solution value for the question formulated by the problem poser to the problem solver appears as one of the entries of the DP tables considered)"
       opt_sol:
         regex: ^(.*)$
         default: "ACICCIA"
@@ -132,6 +137,9 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
       recall_data_assigned:
         regex: ^(0|1)$
         default: 0
@@ -164,7 +172,7 @@ services:
 
   oracle:
     evaluator: [python, services/oracle_driver.py]
-    description: "given a set of objects, each one with its weight and cost, and a total budget (Knapsack_Capacity), this service computes and returns an optimal solution to the knapsack problem: a maximum value subset of the objects not exceeding the budget. Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
+    description: "a string is a sequence of characters. Given two strings s and t, is service computes and returns their longest common subsequence (i.e., an optimal solution to the LCS problem). Using the arguments of the service it is possible to impose further constraints on the feasible solutions and to pose several didactic variations of the challenge, as suitable both for training sessions and exams. The service can also be asked to return dynamic programming tables."
     args:
       pwd:
         regex: ^(.*)$
@@ -179,14 +187,14 @@ services:
         regex: ^([A-Z]*)$
         default: 'MAMMACHIOCCIA'
         explain: is the second string
-      start_with:
-        regex: ^(\*|[A-Z])$
-        default: '*'
-        explain: the common subsequence is required to start with this character. Using the mask character * vanifies this constraint
-      end_with:
-        regex: ^(\*|[A-Z])$
-        default: '*'
-        explain: the common subsequence is required to end with this character. Using the mask character * vanifies this constraint
+      beginning:
+        regex: ^([A-Z]*)$
+        default: ''
+        explain: "the common subsequence is required to begin with the string 'beginning' as its prefix. Leaving the default value (the empty string) for this parameter nullifies this constraint"
+      ending:
+        regex: ^([A-Z]*)$
+        default: ''
+        explain: "the common subsequence is required to end with the string 'ending' as its suffix. Leaving the default value (the empty string) for this parameter nullifies this constraint"
       forbidden_s_interval_first_pos:
         regex: ^(0|[1-9][0-9]*)$
         default: 1000

@@ -20,11 +20,7 @@ args_list = [
 
 ENV = Env(args_list)
 TAc = TALcolors(ENV)
-LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"))
-
-# START CODING YOUR SERVICE:
-if ENV["verbose"] < 2:
-  LANG.suppress_opening_msg()
+LANG = Lang(ENV, TAc, lambda fstring: eval(f"f'{fstring}'"), print_opening_msg = 'never' if ENV["verbose"] < 2 else 'delayed')
 
 
 # INITIALIZATION

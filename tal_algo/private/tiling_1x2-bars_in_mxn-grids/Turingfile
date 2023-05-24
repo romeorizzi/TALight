@@ -1,0 +1,5 @@
+[problem]
+title = "Tiling 1x2 grid MxN"
+
+[scoring]
+goals = ["decision_m1", "decision_small", "decision", "decision_huge", "construction_m1", "construction_small", "construction"]

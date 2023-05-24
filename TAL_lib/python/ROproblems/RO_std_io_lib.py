@@ -1,19 +1,61 @@
 #!/usr/bin/env python3
-from sys import stderr
+import os
+from sys import stderr, stdout
 from typing import Optional, List, Dict, Callable
 import termcolor 
 from ansi2html import Ansi2HTMLConverter
 ansi2html = Ansi2HTMLConverter(inline = True)
 
+try:
+    import ruamel.yaml
+except Exception as e:
+    print(e)
+    for out in [stdout, stderr]:
+        TAc.print(LANG.render_feedback("ruamel-missing", 'Internal error (RO_std_io_lib): if you are invoking a cloud service, please, report it to those responsible for the service hosted; otherwise, install the python package \'ruamel\' on your machine.'), "red", ["bold"], file=out)
+    exit(1)
+
 from multilanguage import enforce_type_of_yaml_var
 
-def check_access_rights(ENV,TALf, require_pwd = False, TOKEN_REQUIRED = True):
+def check_access_rights(ENV,TALf, require_pwd = False):
+    current_status_filename = os.path.join(os.path.expanduser("~"),'TALight','exam_sessions','current_status.yaml')
+    if not os.path.exists(current_status_filename):
+        for error_stream in [stdout,stderr]:
+            print(f'Errore (RO_std_io_lib): Non trovo il file: `{current_status_filename}`)', file=error_stream)
+        exit(1)
+    with open(current_status_filename, 'r') as stream:
+        try:
+            current_status_yaml = ruamel.yaml.safe_load(stream)
+        except:
+            TAc.print(LANG.render_feedback("current_status-unparsable", f'Error: the file \'{current_status_filename}\' could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
+            exit(1)
+    if current_status_yaml['current_status'] in ['during_exam','exam_simulation']:
+        require_TALtoken = True
+    else:
+        require_pwd = False
+        require_TALtoken = False
+
     if require_pwd and ENV["pwd"] != 'tmppwd':
-        print(f'Errore: Password di accesso non corretta (password immessa: `{ENV["pwd"]}`)')
+        for error_stream in [stdout,stderr]:
+            print(f'Errore (RO_std_io_lib): Password di accesso non corretta (password immessa: `{ENV["pwd"]}`)', file=error_stream)
         exit(0)    
-    if TOKEN_REQUIRED and ENV.LOG_FILES == None:
-        print("Errore: Il servizio è stato chiamato senza access token. Modalità attualmente non consentita.")
-        exit(0)    
+    if require_TALtoken and ENV.LOG_FILES == None and 1==0:
+        for error_stream in [stdout,stderr]:
+            print("Errore (RO_std_io_lib): Il servizio è stato chiamato senza access token. Modalità attualmente non consentita.", file=error_stream)
+        exit(0)
+
+def get_current_status():
+    current_status_filename = os.path.join(os.path.expanduser("~"),'TALight','exam_sessions','current_status.yaml')
+    if not os.path.exists(current_status_filename):
+        for error_stream in [stdout,stderr]:
+            print(f'Errore (RO_std_io_lib): Non trovo il file: `{current_status_filename}`)', file=error_stream)
+        exit(1)
+    with open(current_status_filename, 'r') as stream:
+        try:
+            current_status_yaml = ruamel.yaml.safe_load(stream)
+        except:
+            TAc.print(LANG.render_feedback("current_status-unparsable", f'Error: the file \'{current_status_filename}\' could not be loaded as a .yaml file.'), "red", ["bold"], file=out)
+            exit(1)
+    return current_status_yaml['current_status']
 
             
 def dict_of_instance(instance_objects,args_list,ENV):
@@ -27,22 +69,26 @@ def dict_of_instance(instance_objects,args_list,ENV):
         if obj_name in ENV["input_data_assigned"]:
             obj_val = ENV["input_data_assigned"][obj_name]
             #print(f"TROVATO: obj_name={obj_name}, obj_type={obj_type}", file=stderr)
-        elif obj_type == str:
-            obj_val = ""
-        elif obj_type in [bool, int]:
-            print(f"Error: the service argument {obj_name} has not been set")
-            print(f"Error: the service argument {obj_name} has not been set", file=stderr)
-            exit(0)
-        elif obj_type[:len('matrix_of_')] == 'matrix_of_' or obj_type[:len('list_of_')] == 'list_of_':
-            obj_val = []
-        input_data_assigned[obj_name] = enforce_type_of_yaml_var(obj_val,obj_type, varname=obj_name)
+            input_data_assigned[obj_name] = enforce_type_of_yaml_var(obj_val,obj_type, varname=obj_name)
+        else:
+            input_data_assigned[obj_name] = ENV[obj_name] # each instance object left unspecified within the dictionary passed on the input_data_assigned argument is set to its value on its single object argument (ultimately, its default value in case neither this had been explicitly set with the call)
+#        elif obj_type == str:
+#            obj_val = ""
+#        elif obj_type in [bool, int]:
+#            pass
+#            for error_stream in [stdout,stderr]:
+#                print(f"Error (RO_std_io_lib): the value for the service argument {obj_name} has not been specified within the non-empty dictionary passed on the input_data_assigned argument", file=error_stream)
+#            exit(0)
+#        elif obj_type[:len('matrix_of_')] == 'matrix_of_' or obj_type[:len('list_of_')] == 'list_of_':
+#            obj_val = []
     return input_data_assigned
 
 
 def check_request(request_dict, implemented):
     for std_name, ad_hoc_name in request_dict.items():
         if std_name not in implemented:
-            print(f'Error: the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `request_dict` dictionary passed as argument to the TALight service.')    
+            for error_stream in [stdout,stderr]:
+                print(f'Error (RO_std_io_lib): the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `request_dict` dictionary passed as argument to the TALight service.', file=error_stream)    
             exit(0)
         
 
@@ -66,9 +112,18 @@ def check_and_standardization_of_request_answer_consistency(ENV:dict, answer_obj
         #print("CASE: the instance objects have been passed as a dictionary, through the `ENV["input_data_assigned"]` variable", file=stderr)
         answer_dict = ENV['answer_dict']
         alias_dict = ENV['alias_dict']
+        for ad_hoc_name, std_name in alias_dict.items():
+            if ad_hoc_name != std_name and ad_hoc_name in answer_object_type_spec:
+                for error_stream in [stdout,stderr]:
+                    print(f'Error (RO_std_io_lib): the argument `alias_dict` is not allowed to associate to a standard name ({std_name}) an alias ({ad_hoc_name}) which is actually another standard name.', file=error_stream)    
+                exit(0)
     else:
         #print("CASE: the instance objects have been passed one by one", file=stderr)
         answer_dict={}; alias_dict={}
+        if len(ENV["alias_dict"]) != 0:
+            for error_stream in [stdout,stderr]:
+                print(f'Error (RO_std_io_lib): when the argument `answer_dict` is left to its default value (empty dictionary), then also the argument `alias_dict` should be left to its default value (empty dictionary).', file=error_stream)    
+            exit(0)
         for std_name in implemented:
             #print(f"type(ENV[{std_name}])={type(ENV[std_name])}, answer_object_type_spec[{std_name}]={answer_object_type_spec[std_name]}, ENV[{std_name}]={ENV[std_name]}", file=stderr)
             type_spec = answer_object_type_spec[std_name]
@@ -77,7 +132,8 @@ def check_and_standardization_of_request_answer_consistency(ENV:dict, answer_obj
                 alias_dict[std_name] = std_name
     for std_name in alias_dict.values():
         if std_name not in implemented:
-            print(f'Error: the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `alias_dict` dictionary passed as argument to the TALight service.')    
+            for error_stream in [stdout,stderr]:
+                print(f'Error (RO_std_io_lib): the solution object type {std_name} is not available at present (not yet implemented or turned off). The value `{std_name}` appeared in the `alias_dict` dictionary passed as argument to the TALight service.', file=error_stream)    
             exit(0)
     request_dict = {}
     answ_dict = {}    
@@ -90,7 +146,8 @@ def check_and_standardization_of_request_answer_consistency(ENV:dict, answer_obj
         else:
             std_name = ad_hoc_name
         if std_name not in implemented:
-            print(f'Error: the key `{ad_hoc_name}` in the `answer_dict` dictionary passed as argument to the service is neither a standard name nor has been remapped through the `alias_dict` dictionary.')    
+            for error_stream in [stdout,stderr]:
+                print(f'Error (RO_std_io_lib): the key `{ad_hoc_name}` in the `answer_dict` dictionary passed as argument to the service is neither a standard name nor has been remapped through the `alias_dict` dictionary.', file=error_stream)    
             exit(0)
         #print(f"now checking variable of ad_hoc_name={ad_hoc_name} and value={answer_dict[ad_hoc_name]}. Its std_name={std_name} deserves a format {answer_object_type_spec[std_name]}, while it actually is {type(answer_dict[ad_hoc_name])}",file=stderr)
         answer_dict[ad_hoc_name] = enforce_type_of_yaml_var(answer_dict[ad_hoc_name],answer_object_type_spec[std_name], varname=ad_hoc_name)
@@ -162,6 +219,7 @@ def oracle_output_files(call_data,ENV,TALf):
             display_dict(call_data['input_data_assigned'])
 
 def oracle_logs(call_data,ENV,TALf):
+    print(f"ENV.LOG_FILES={ENV.LOG_FILES}",file=stderr)
     content_LOG_file = "INSTANCE: "+repr(call_data['input_data_assigned'])+"\n\nREQUEST: "+repr(call_data['request'])+"\n\nORACLE_ANSWER: "+repr(call_data['oracle'])
     #print(f"content_LOG_file =`{content_LOG_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
@@ -171,7 +229,11 @@ def oracle_logs(call_data,ENV,TALf):
 
 def checker_reply(all_data,ENV):
     #print(f"all_data={all_data}", file=stderr)
-    feedback_dict = all_data["feedback"]
+    if ENV['with_oracle']:
+        feedback_dict = all_data["feedback"]['spoilering']
+    else:
+        feedback_dict = all_data["feedback"]['spoilering']
+        #feedback_dict = all_data["feedback"]['non_spoilering']       
     #print(f"feedback_dict={feedback_dict}", file=stderr)
     if ENV["recall_data_assigned"]:
         feedback_dict["input_data_assigned"] = all_data["input_data_assigned"]
@@ -182,18 +244,13 @@ def checker_reply(all_data,ENV):
         print(feedback_dict["feedback_string"])
     
 def checker_logs(all_data,ENV,TALf):
-    feedback_dict = all_data["feedback"]
+    feedback_dict = all_data["feedback"]['spoilering']
     oracle_dict = all_data["oracle"]
+    #print(f"feedback_dict={feedback_dict}",file=stderr)
     pt_safe = feedback_dict['pt_safe']
     pt_maybe = feedback_dict['pt_maybe']
     pt_min = pt_safe
-    pt_max = feedback_dict['pt_available']
-    if 'exception' not in oracle_dict: 
-        for key in oracle_dict:
-            if ENV[key] == oracle_dict[key]: # here, to get a closer approximation, you can allow the use of a function defined by the problem maker within the problem_specific_lib 
-                pt_min = pt_max
-            #else:   # this cannot be said right now (in general)
-            #    pt_max = pt_safe
+    pt_max = feedback_dict['pt_available'] - feedback_dict['pt_out']
     content_LOG_file = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nORACLE: "+repr(oracle_dict)+"\n\nINSTANCE: "+repr(all_data["input_data_assigned"])
     #print(f"content_LOG_file =`{content_LOG_file}`", file=stderr)
     filename_spec = f'problem_{ENV["esercizio"]}_' if ENV["esercizio"] != -1 else ''
@@ -203,7 +260,10 @@ def checker_logs(all_data,ENV,TALf):
     TALf.str2log_file(content=content_LOG_file, filename=filename_spec, timestamped = False)
     
 def checker_certificates(all_data,ENV,TALf):
-    feedback_dict = all_data["feedback"]
+    if ENV['with_oracle']:
+        feedback_dict = all_data["feedback"]['spoilering']
+    else:
+        feedback_dict = all_data["feedback"]['non_spoilering']       
     pt_safe = feedback_dict['pt_safe']
     pt_maybe = feedback_dict['pt_maybe']
     content_receipt_file  = "FEEDBACK: "+repr(feedback_dict)+"\n\nSTUDENT_ANSWER: "+repr(all_data["long_answer"])+"\n\nINSTANCE: "+repr(all_data["input_data_assigned"])

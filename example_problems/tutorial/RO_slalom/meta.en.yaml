@@ -6,9 +6,13 @@ services:
     evaluator: [python, services/check_driver.py]
     description: "TRANSLATE: dato un albero T con costi sui nodi, un node cover è un sottoinsieme S dei nodi di T tale che ogni arco abbia almeno un estremo in S. Un semplice algoritmo greedy che guarda alle foglie di T computa un NC di cardinalità minima, mentre per tovare un NC di costo (=somma dei costi dei nodi in S) minimo occorre avvalersi della programmazione dinamica (DP), ponendosi una domanda (meglio 2) per ogni sottoalbero (spiegato sotto). Questo servizio controlla che la soluzione S sottoposta sia ben formata, ammissibile, e (non in sede d'esame) ottima. Può essere invocato direttamente come qualsiasi altro problema TALight ma, come tutti i problemi della suite RO_* è pensato per fornire supporto alla sottomissione con feedback immediato e contestuale durante esercitazioni o ad un esame benchè gestito da altra piattaforma tecnologica (come quella nel repo esami-RO-public). Il servizio di check al problema RO_knapsack è più ampio di quanto suggerito sopra, potendo essere parametrizzato tramite gli argomenti di chiamata (inoltre, ogni problema TALight è inteso per essere open ed estendibile). Ad esempio, può offre feedback su tabelle di DP sottomesse dallo studente come da specifiche dal docente. In particolare, sono previste le seguenti tabelle. Appeso l'albero al nodo 1 come sua radice, per ogni nodo v restano definiti il sottoalbero dei discendenti di v (incluso v che ne è la radice) e il minimo costo di un NC di tale sottoalbero soggetto al vincolo di contenere (forced_in[v]) il nodo v, oppure di non contenerlo (forced_out[v], come risposta alla seconda domanda). Il servizio può controllare la correttezza di una tabella di DP che offra tutte queste risposte facilmente computabili ricorsivamente. Il servizio può inoltre fornire feedback contestuale in caso si sia deciso di fornire allo studente/trainee delle tabelle parzialmente precompialte per evitargli di rimanere soverchiato dalle dimensioni della tabella (particolarmente utile per consentire realisticamente una compilazione a mano delle tabelle su istanze sufficientemente interessanti, e/o per assicurarsi innanzitutto che sia presente la comprensione del significato delle tabelle)."
     args:
-      # sezione con i dati dell'istanza assegnati al problem-solver/studente:
-      n:
+      pwd:
+        regex: ^(.*)$
+        default: ""
+        explain: di base, il controllo e validazione che effettuiamo sulla soluzione sottomessa dal problem solver è un King Arthur check. Tuttavia, quando una password da istruttore è fornita tramite questo argomento, allora anche il responso prodotto dall'oracolo viene integrato nella risposta immediata del servizio `check`, per fornire un feedback più completo (ma anche spoilerante del problema).
+
       # section with the instance data assigned to the problem-solver/student:
+      n:
         regex: ^([1-9][0-9]*)$
         default: 5
         explain: "number of nodes of the input tree T. The nodes ara labelled with the naturals from 1 to n" 
@@ -149,6 +153,9 @@ services:
       with_notes:
         regex: ^(0|1)$
         default: 1
+      with_oracle:
+        regex: ^(0|1)$
+        default: 0
       recall_data_assigned:
         regex: ^(0|1)$
         default: 0

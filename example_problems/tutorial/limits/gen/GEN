@@ -1,0 +1,64 @@
+# generator parameters: 
+# set_cardinality, seed
+# set_cardinality (int)  cardinality of the set
+# seed (int)
+
+add_format: txt
+
+
+collection: instances_hardcoded
+COPY: instances_hardcoded/instance_001_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_002_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_003_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_004_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_005_handmade_fin_set.txt
+COPY: instances_hardcoded/instance_001_handmade_max_sup.txt
+COPY: instances_hardcoded/instance_002_handmade_max_sup.txt
+
+collection: instances_card_at_most_10
+#                randgen,    set_cardinality,  seed
+GEN:  randgen_fin_set.py        5       742697
+GEN:  randgen_fin_set.py        6       992610
+GEN:  randgen_fin_set.py        7       937061
+GEN:  randgen_fin_set.py        7       616564
+GEN:  randgen_fin_set.py        8       213412
+GEN:  randgen_fin_set.py        8       985509
+GEN:  randgen_fin_set.py        9       394797
+GEN:  randgen_fin_set.py        9       211537
+GEN:  randgen_fin_set.py        10       648678
+
+collection: instances_card_at_most_20
+#                randgen,    set_cardinality,  seed
+GEN:  randgen_fin_set.py        15       232422
+GEN:  randgen_fin_set.py        15       232423
+GEN:  randgen_fin_set.py        15       277426
+GEN:  randgen_fin_set.py        15       277420
+GEN:  randgen_fin_set.py        20       967236
+GEN:  randgen_fin_set.py        20       399265
+GEN:  randgen_fin_set.py        20       713209
+GEN:  randgen_fin_set.py        20       597750
+GEN:  randgen_fin_set.py        20       945742
+
+collection: instances_with_parameter
+#                randgen,    set_cardinality,  seed
+GEN:  randgen_max_sup.py        657870
+GEN:  randgen_max_sup.py        446048
+GEN:  randgen_max_sup.py        872478
+GEN:  randgen_max_sup.py        902130
+GEN:  randgen_max_sup.py        543622
+GEN:  randgen_max_sup.py        507385
+GEN:  randgen_max_sup.py        979450
+GEN:  randgen_max_sup.py        430079
+GEN:  randgen_max_sup.py        415564
+
+collection: instances_without_parameter
+#                randgen,    set_cardinality,  seed
+GEN:  randgen_max_sup.py        853887
+GEN:  randgen_max_sup.py        764655
+GEN:  randgen_max_sup.py        758743
+GEN:  randgen_max_sup.py        364386
+GEN:  randgen_max_sup.py        975478
+GEN:  randgen_max_sup.py        227126
+GEN:  randgen_max_sup.py        764702
+GEN:  randgen_max_sup.py        450212
+GEN:  randgen_max_sup.py        600519

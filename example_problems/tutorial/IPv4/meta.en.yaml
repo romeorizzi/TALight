@@ -1,0 +1,131 @@
+%YAML 1.2
+---
+public_folder: public
+services:
+
+  gimme_ip_address:
+    description: "The problem solver enters an ip address. The service returns information on the network addresses contained in the given IP address."
+    evaluator: [python, services/gimme_ip_address_driver.py]
+    args:
+      ip_address: 
+        regex: /([0-9]{1,3}\.){3}[0-9]{1,3}/gm
+        default: 145.33.04.2
+        regex-explained: "The ip address is a series of 4 numbers separated by dots."      
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      interactive:
+        regex: ^(0|1)$
+        default: 1
+        explain: "when set to 1, the service promts the user for the input ip address"
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+
+  how_many_ips:
+    description: "This service takes a subnet mask to show the amount of ip addresses that can be configured."
+    evaluator: [python, services/how_many_ips_driver.py]
+    args:
+      subnet_mask:
+        regex:  ^((\d)+\.){3}(\d)+$
+        default: 255.255.0.0
+        regex-explained: A subnet mask comprises four fields separated by dots. Each field is a number in the digital representation.
+        explain: a subnet mask comprises four fields separated by dots. Each field is a number that can have a value of 0 or 255.
+      with_opening_message:
+        regex: ^(0|1)$
+        default: 0
+      interactive:
+        regex: ^(0|1)$
+        default: 0
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+  
+  first_ip:
+    description: "The services asks to problem solver the first ip address, after giving him the subnet Mask and the net address (example: network address --> 169.21.3.0      first ip address --> 169.21.3.0)"
+    evaluator: [python, services/first_ip_driver.py]
+    args:
+        subnet_mask:
+          regex: ^(0|255)[.]{3}$
+          default: 255.255.255.0
+        net_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.0
+        ip_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.0
+          regex-explained: "The ip address is a series of 4 numbers separated by dots."      
+        with_opening_message:
+          regex: ^(0|1)$
+          default: 0
+        interactive:
+          regex: ^(0|1)$
+          default: 1
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: hardcoded
+
+  last_ip:
+    description: "The services asks to problem solver the last IP address, after giving him the subnet Mask and the net address (example: network address --> 169.21.3.0      last ip address --> 169.21.3.255)"
+    evaluator: [python, services/last_ip_driver.py]
+    args:
+        subnet_mask:
+          regex: ^(0|255)[.]{3}$
+          default: 255.255.255.0
+        net_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.0
+        ip_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.255
+          regex-explained: "The ip address is a series of 4 numbers separated by dots."      
+        with_opening_message:
+          regex: ^(0|1)$
+          default: 0
+        interactive:
+          regex: ^(0|1)$
+          default: 1
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: hardcoded
+
+  random_ip:
+    description: "The services asks to problem solver an IP address, after giving him the subnet Mask and the net address (example: network address --> 169.21.3.0      ip address --> 169.21.3.231)"
+    evaluator: [python, services/random_ip_driver.py]
+    args:
+        subnet_mask:
+          regex: ^(0|255)[.]{3}$
+          default: 255.255.255.0
+        net_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.0
+        ip_address: 
+          regex: ([0-9]{1,3}\.){3}[0-9]{1,3}
+          default: 169.21.3.231
+          regex-explained: "The ip address is a series of 4 numbers separated by dots."      
+        with_opening_message:
+          regex: ^(0|1)$
+          default: 0
+        interactive:
+          regex: ^(0|1)$
+          default: 1      
+        lang: 
+          regex: ^(hardcoded|hardcoded_ext|en|it)$
+          default: hardcoded
+         
+  
+
+  synopsis:
+    evaluator: [python, services/synopsis/synopsis_driver.py]
+    args:
+      service:
+        regex: ^((\S)+)$
+        default: synopsis
+        explain: any string without space characters but meant to specify one of the services of the problem %(problem)s
+      lang:
+        regex: ^(hardcoded|hardcoded_ext|en|it)$
+        default: hardcoded
+      metafile:
+        regex: ^(main|en|it)$
+        default: main
+...

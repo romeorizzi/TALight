@@ -1,0 +1,8 @@
+public_folder: public
+services:
+    solve:
+        evaluator: [python, manager.py]
+        args:
+            size:
+                regex: ^(esempi_testo|small|medium|big_binary|big_max_2_children|big)$
+                default: big

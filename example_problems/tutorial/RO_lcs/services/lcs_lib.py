@@ -9,8 +9,8 @@ from RO_utils import display_matrix
 instance_objects_spec = [
     ('s',str),
     ('t',str),
-    ('start_with',str),
-    ('end_with',str),
+    ('beginning',str),
+    ('ending',str),
     ('forbidden_s_interval_first_pos',int),
     ('forbidden_s_interval_last_pos',int),
     ('reduce_s_to_its_prefix_of_length',int),
@@ -145,23 +145,23 @@ def solver(input_to_oracle):
 
     first_pos_in_s = max(0,len(s)-I['reduce_s_to_its_suffix_of_length'])
     first_pos_in_t = max(0,len(t)-I['reduce_t_to_its_suffix_of_length'])
-    if I['start_with'] != '*':
-        while first_pos_in_s < len(s) and (s[first_pos_in_s] != I['start_with'] or I['forbidden_s_interval_first_pos'] <= first_pos_in_s <= I['forbidden_s_interval_last_pos']):
+    for char in I['beginning']:
+        while first_pos_in_s < len(s) and (s[first_pos_in_s] != char or I['forbidden_s_interval_first_pos'] <= first_pos_in_s <= I['forbidden_s_interval_last_pos']):
             first_pos_in_s += 1
-        while first_pos_in_t < len(t) and t[first_pos_in_t] != I['start_with']:
+        while first_pos_in_t < len(t) and t[first_pos_in_t] != char:
             first_pos_in_t += 1
     last_pos_in_s = min(len(s),I['reduce_s_to_its_prefix_of_length']) -1
     last_pos_in_t = min(len(t),I['reduce_t_to_its_prefix_of_length']) -1
-    if I['end_with'] != '*':
-        while last_pos_in_s >= 0 and (s[last_pos_in_s] != I['end_with'] or I['forbidden_s_interval_first_pos'] <= last_pos_in_s <= I['forbidden_s_interval_last_pos']):
+    for char in I['ending']:
+        while last_pos_in_s >= 0 and (s[last_pos_in_s] != char or I['forbidden_s_interval_first_pos'] <= last_pos_in_s <= I['forbidden_s_interval_last_pos']):
             last_pos_in_s -= 1
-        while last_pos_in_t >= 0 and t[last_pos_in_t] != I['end_with']:
+        while last_pos_in_t >= 0 and t[last_pos_in_t] != char:
             last_pos_in_t -= 1
 
     if last_pos_in_t < first_pos_in_t or last_pos_in_s < first_pos_in_s:
         opt_val = 0 ; opt_sol = []
     elif (first_pos_in_t > 0 and last_pos_in_t < len(t)-1) or (first_pos_in_s > 0 and last_pos_in_s < len(s)-1) or (first_pos_in_t > 0 and last_pos_in_s < len(s)-1) or (first_pos_in_s > 0 and last_pos_in_t < len(t)-1):
-        return {'exception': ("the question posed violates the policy of this problem",policy)}
+        return {'exception': ("the question posed delivers a problem that would exit the intended solution approach, violating our policy of reference",policy)}
     else:
         if I['forbidden_s_interval_first_pos'] > I['forbidden_s_interval_last_pos']:
             if first_pos_in_s > 0 or first_pos_in_t > 0:
@@ -178,7 +178,7 @@ def solver(input_to_oracle):
             opt_sol = ''.join(reconstruct_opt_lcs_pref_of_len(last_pos_in_s +1,last_pos_in_t +1))[::-1]  #the slice at the end reverses the string
         else:
             if first_pos_in_s > 0 or last_pos_in_s < len(s)-1 or first_pos_in_t > 0 or last_pos_in_t < len(t)-1:
-                return {'exception': ("the question posed violates the policy of this problem",policy)}
+                return {'exception': ("the question posed delivers a problem that would exit the intended solution approach, violating our policy of reference",policy)}
             best_so_far_val = max_len_on_suffixes_from_pos[I['forbidden_s_interval_last_pos']+1][0]
             best_so_far_sol = ''.join(reconstruct_opt_lcs_suff_from_pos(first_pos_in_s,first_pos_in_t))
             if best_so_far_val < max_len_on_prefixes_of_len[I['forbidden_s_interval_first_pos']][len(t)]:
@@ -198,8 +198,8 @@ def solver(input_to_oracle):
 
 
 class verify_submission_problem_specific(verify_submission_gen):
-    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict):
-        super().__init__(SEF,input_data_assigned, long_answer_dict)
+    def __init__(self, SEF,input_data_assigned:Dict, long_answer_dict:Dict, oracle_response:Dict = None):
+        super().__init__(SEF,input_data_assigned, long_answer_dict, oracle_response)
 
     def verify_format(self, SEF):
         if not super().verify_format(SEF):
@@ -211,8 +211,8 @@ class verify_submission_problem_specific(verify_submission_gen):
             SEF.format_OK(g, f"come `{g.alias}` hai immesso un intero come richiesto", f"ovviamente durante lo svolgimento dell'esame non posso dirti se l'intero immesso sia poi la risposta corretta, ma il formato è corretto")            
         if 'opt_sol' in self.goals:
             g = self.goals['opt_sol']
-            if not bool(re.match("",g.answ)):
-                return SEF.format_NO(g, f"Come `{g.alias}` và inserita una stringa sull'alfabeto delle 26 lettere inglesi maiuscole. Invece hai immesso '{g.answ}'.")
+            if not bool(re.match("^[A-Za-z0-9_-]*$",g.answ)):
+                return SEF.format_NO(g, f"Come `{g.alias}` và inserita una stringa sull'alfabeto delle 26 lettere inglesi (maiuscole+minuscole) e cifre decimali. Invece hai immesso '{g.answ}'.")
             SEF.format_OK(g, f"come `{g.alias}` hai immesso una stringa sul corretto alfabeto (le 26 lettere inglesi maiuscole).", f"resta da stabilire l'ammissibilità di `{g.alias}`")
         return True
             
@@ -237,10 +237,10 @@ class verify_submission_problem_specific(verify_submission_gen):
                 SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza del suffisso di t di lunghezza {self.I.reduce_t_to_its_prefix_of_length}")
             if self.I.forbidden_s_interval_first_pos <= self.I.forbidden_s_interval_last_pos and not is_subseq(g.answ,s[:self.I.forbidden_s_interval_first_pos]+s[self.I.forbidden_s_interval_last_pos+1:]):
                 SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non è una sottosequenza di s che eviti l'intervallo escluso s[{self.I.forbidden_s_interval_first_pos},{self.I.forbidden_s_interval_last_pos}]")
-            if self.I.start_with != '*' and g.answ[0] != self.I.start_with:
-                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non inizia con carattere {self.I.start_with}")
-            if self.I.end_with != '*' and g.answ[0] != self.I.end_with:
-                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non termina con carattere {self.I.end_with}")
+            if g.answ[0:len(self.I.beginning)] != self.I.beginning:
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non inizia col prefisso {self.I.beginning}")
+            if g.answ[len(self.I.ending):] != self.I.ending:
+                SEF.format_NO(g, f"la stringa `{g.alias}` che hai immesso non termina col suffisso {self.I.ending}")
             SEF.feasibility_OK(g, f"come `{g.alias}` hai immesso un sottoinsieme degli oggetti dell'istanza originale", f"resta da stabilire l'ottimalità di `{g.alias}`")
         return True
                 
@@ -248,8 +248,30 @@ class verify_submission_problem_specific(verify_submission_gen):
         if not super().verify_consistency(SEF):
             return False
         if 'opt_val' in self.goals and 'opt_sol' in self.goals:
-            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol'];
+            g_val = self.goals['opt_val']; g_sol = self.goals['opt_sol']
             if len(g_sol.answ) != g_val.answ:
                 return SEF.consistency_NO(['opt_val','opt_sol'], f"La lunghezza della soluzione immessa in `{g_sol.alias}` è {len(g_sol.answ)} e NON {g_val.answ}. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
-            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = len({g_sol.alias}).", "")
+            SEF.consistency_OK(['opt_val','opt_sol'], f"{g_val.alias}={g_val.answ} = len({g_sol.alias}).", f"resta da stabilire l'ottimalità di `{g_val.alias}` e `{g_sol.alias}`")
+        return True
+
+    def verify_optimality(self, SEF):
+        if not super().verify_optimality(SEF):
+            return False
+        true_opt_val = SEF.oracle_dict['opt_val']
+        true_opt_sol = SEF.oracle_dict['opt_sol']
+        if 'opt_val' in self.goals:
+            g_val = self.goals['opt_val']
+            if true_opt_val != g_val.answ:
+                return SEF.optimality_NO(g_val, f"Il valore ottimo corretto è {true_opt_val} {'>' if true_opt_val != g_val.answ else '<'} {g_val.answ}, che è il valore invece immesso in `{g_val.alias}`. Una soluzione di valore ottimo è {true_opt_sol}.")
+            else:
+                SEF.optimality_OK(g_val, f"{g_val.alias}={g_val.answ} è effettivamente il valore ottimo.", "")
+        if 'opt_sol' in self.goals:
+            g_sol = self.goals['opt_sol']
+            g_sol_answ = self.goals['opt_sol'].answ
+            g_val_answ = len(g_sol_answ)
+            assert g_val_answ <= true_opt_val
+            if g_val_answ < true_opt_val:
+                return SEF.optimality_NO(g_sol, f"Il valore totale della soluzione immessa in `{g_sol.alias}` è {g_val_answ} < {true_opt_val}, valore corretto per una soluzione ottima quale {true_opt_sol}. La soluzione (ammissibile) che hai immesso è `{g_sol.alias}`={g_sol.answ}.")
+            else:
+                SEF.optimality_OK(g_sol, f"Confermo l'ottimailtà della soluzione {g_sol.alias}={g_sol.answ}.", "")
         return True
