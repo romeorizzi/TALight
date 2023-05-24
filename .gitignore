@@ -61,7 +61,6 @@ TEMA_OGGI*
 
 # VS code
 .vscode/
-.venv/
 
 # IntelliJ
 .idea/
