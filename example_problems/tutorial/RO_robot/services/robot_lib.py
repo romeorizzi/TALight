@@ -11,7 +11,7 @@ from RO_std_eval_lib import std_eval_feedback
 
 
 instance_objects_spec = [
-    ("grid", "matrix_of_ints"),
+    ("grid", "matrix_of_int"),
     ("budget", int),
     ("diag", bool),
     ("cell_from", tuple[int, str]),
@@ -86,15 +86,15 @@ def _map(x, y):
     return f"({str(x + 1)},{chr(ord('A') + y)})"
 
 
-def parse_raw_cell(coords: List[str]) -> _Cell:
+def parse_raw_cell(cell: tuple[int, str]) -> _Cell:
     """Parse a cell from the raw textual representation."""
     # the format specification is [row, col]
-    row, col = coords
+    row, col = cell
     row, col = int(row) - 1, ord(col.lower()) - ord("a")
     return (row, col)
 
 
-def parse_raw_path(cells: List[List[str]]) -> _Path:
+def parse_raw_path(cells: List[tuple[int, str]]) -> _Path:
     """Parse a path from the raw textual representation."""
     return [parse_raw_cell(x) for x in cells]
 
@@ -191,7 +191,7 @@ def check_instance_consistency(instance: Dict):
     for row in range(len(grid)):
         for col in range(len(grid[row])):
             if (c := grid[row][col]) < -1:
-                print(f"Error: value {c} in {_map(row, col)} is not allowed")
+                print(f"Error: value {c} in {(row, col)} is not allowed")
                 exit(0)
 
     if grid[0][0] == -1 or grid[-1][-1] == -1:
