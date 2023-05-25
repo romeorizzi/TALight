@@ -13,7 +13,6 @@ matita dal foglio.
 
 In generale, sono dati $N$ vertici, numerati da $1$ a
 $N$, e $M$ lati che li collegano. Sapresti indicare in quale sequenza attraversare i lati, e per ciascuno di essi in quale direzione, in modo che il vertice cui ci conduce ciascun lato coincida col vertice da cui ci preleva il lato successivo (senza alzare quindi la matita)? La sfida è di riuscire ad attraversare ciascun lato una ed una volta sola.
-Ti è possibile riuscire a farlo tornando infine al vertice di partenza?
 
 ## Input
 Si legga l'input da `stdin`.
@@ -35,7 +34,7 @@ Le righe in output saranno pertanto $M$, ma riordinate rispetto alle $M$ rispett
 
 ### Input
 ```
-1
+2
 5 8 1 5
 1 4
 2 3
@@ -45,7 +44,13 @@ Le righe in output saranno pertanto $M$, ma riordinate rispetto alle $M$ rispett
 3 4
 1 5
 5 2
-
+6 6 1 6
+2 1
+2 3
+2 5
+2 6
+4 3
+4 5
 ```
 
 ### Output
@@ -58,6 +63,12 @@ Le righe in output saranno pertanto $M$, ma riordinate rispetto alle $M$ rispett
 2 4
 4 1
 1 5
+1 2
+2 3
+3 4
+4 5
+5 2
+2 6
 ```
 
 ## Note
@@ -75,11 +86,11 @@ Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ second
 
 I testcase sono raggruppati nei seguenti subtask.
 
-* **[1 istanza] esempi_testo:** l'esempio del testo (disegna la casetta)
+* **[2 istanze] esempi_testo:** i due esempi del testo (nel primo disegna la casetta)
 * **[8 istanze] smallest:** $N = 2, 3, 4$ ($M \leq 6$) 
 * **[10 istanze] small:** $N = 5, 6$ ($M \leq 12$)
 * **[30 istanze] medium:** $N \leq 100$, $M \leq 500$
-* **[21 istanze] big:** $N \leq 1\,000$, $M \leq 5\,000$
+* **[20 istanze] big:** $N \leq 1\,000$, $M \leq 5\,000$
 * **[30 istanze] huge:** $N \leq 10\,000$, $M \leq 50\,000$
 
 In generale, quando si richiede la valutazione di un subtask vengono valutati anche i subtask che li precedono, ma si evita di avventurarsi in subtask successivi  fuori dalla portata del tuo programma che potrebbe andare in crash o comportare tempi lunghi per ottenere la valutazione completa della sottomissione. Ad esempio, chiamando:

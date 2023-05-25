@@ -33,7 +33,6 @@ matita dal foglio.}
 
 In generale, sono dati $N$ vertici, numerati da $1$ a
 $N$, e $M$ lati che li collegano. Sapresti indicare in quale sequenza attraversare i lati, e per ciascuno di essi in quale direzione, in modo che il vertice cui ci conduce ciascun lato coincida col vertice da cui ci preleva il lato successivo (senza alzare quindi la matita)? La sfida è di riuscire ad attraversare ciascun lato una ed una volta sola.
-Ti è possibile riuscire a farlo tornando infine al vertice di partenza?
 
 \section*{Input}
 Si legga l'input da `stdin`.
@@ -42,7 +41,7 @@ istanze del problema. Per ogni istanza, la prima riga contiene quattro numeri in
 $M$, $A$ e $B$ separati da uno spazio:
 il numero di vertici, il numero di lati che si richiede di attraversare (ogni lato una ed una volta sola, dovrai decidere tu in quale direzione), il vertice di
 partenza, e quello di arrivo.
-Le successive $M$ righe offrono, uno per riga, gli $M$ lati del puzzle, ciascun rappresentato da una
+Le successive $M$ righe offrono, uno per riga, gli $M$ lati del puzzle, ciascuno rappresentato da una
 coppia non-ordinata di interi nell'intervallo $[1,N]$, separati da uno spazio (questi interi sono i nomi dei vertici collegati dal lato in questione). Per ciascun lato "$X$ $Y$" dovrai scegliere se attraversarlo da $X$ ad $Y$ oppure da $Y$ ad $X$, oltre che stabilire in quale ordine vadano attraversati i lati.
 
 \section*{Output}  
@@ -57,13 +56,13 @@ Le righe in output saranno pertanto $M$, ma riordinate rispetto alle $M$ rispett
     \noindent
     \begin{tabular}{p{11cm}|p{5cm}}
     \toprule
-    \textbf{File \texttt{input.txt}}
-    & \textbf{File \texttt{output.txt}}
+    \textbf{(leggi da \texttt{stdin})}
+    & \textbf{(scrivi su \texttt{stdout})}
     \\
     \midrule
     \scriptsize
     \begin{verbatim}
-1
+2
 5 8 1 5
 1 4
 2 3
@@ -73,6 +72,13 @@ Le righe in output saranno pertanto $M$, ma riordinate rispetto alle $M$ rispett
 3 4
 1 5
 5 2
+6 6 1 6
+2 1
+2 3
+2 5
+2 6
+4 3
+4 5
 \end{verbatim}
     &
     \scriptsize
@@ -85,6 +91,12 @@ Le righe in output saranno pertanto $M$, ma riordinate rispetto alle $M$ rispett
 2 4
 4 1
 1 5
+1 2
+2 3
+3 4
+4 5
+5 2
+2 6
 \end{verbatim}
     \\
     \bottomrule
@@ -112,11 +124,11 @@ Il tempo limite per istanza (ossia per ciascun testcase) è sempre di $1$ second
 I testcase sono raggruppati nei seguenti subtask.
 
 \begin{description}
-  \item[\textbf{\hspace{1ex}[1 istanza] esempi\_testo:}] l'esempio del testo (disegna la casetta)
+  \item[\textbf{\hspace{1ex}[2 istanze] esempi\_testo:}] i due esempi del testo (nel primo disegna la casetta)
   \item [\textbf{[8 istanze] smallest:}] $N = 2, 3, 4$ ($M \leq 6$)
   \item [\textbf{[10 istanze] small:}] $N = 5, 6$ ($M \leq 12$)
   \item [\textbf{[30 istanze] medium:}] $N \leq 100$, $M \leq 500$
-  \item [\textbf{[21 istanze] big:}] $N \leq 1\,000$, $M \leq 5\,000$
+  \item [\textbf{[20 istanze] big:}] $N \leq 1\,000$, $M \leq 5\,000$
   \item [\textbf{[30 istanze] huge:}] $N \leq 10\,000$, $M \leq 50\,000$
 \end{description}
 

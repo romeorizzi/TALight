@@ -101,6 +101,7 @@ class Matita_Graph(Graph):
             last_printed_node = v
             reversed_path_as_stack.pop()
             #print(f"{reversed_path_as_stack=}", file = stderr)
+        stdout.flush()
         #print(f"exiting solve on a graph with {self.n=},  {self.m=}", file = stderr)
         
     def check_Eulerian_path(self, path, path_node_names_start_from = 1):

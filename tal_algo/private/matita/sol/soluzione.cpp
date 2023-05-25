@@ -53,10 +53,6 @@ int main() {
       }
       path.pop();
     } while( !path.empty() );
-    /*
-    for(int i=0; i<=n; i++)
-      delete *neigh[i];
-    */
   }
   return 0;
 }
