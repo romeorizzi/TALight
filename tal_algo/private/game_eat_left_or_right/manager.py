@@ -6,11 +6,11 @@ from random import randrange, randint
 from tc import TC
 from sys import setrecursionlimit, stderr
 
-DATA = ((10, (8, 20)), (30, (24, 10**6)), (10, (50, 10**6)))
+DATA = ((10, (6,)), (10, (20,)), (20, (100,)))
 
-TL = 5
+TL = 1
 
-MAPPER = {"small": 1, "big": 3}
+MAPPER = {"small": 1, "medium": 2, "big": 3}
 
 
 def sol(V):
@@ -34,23 +34,25 @@ def sol(V):
     return f
 
 
-def gen_tc(n, maxv):
-    V = [randrange(0, maxv) for i in range(n)]
+def gen_tc(n):
+    V = [randrange(0, 10**5) for i in range(n)]
     if sum(V) % 2:
         V[randrange(0, n)] += 1
+    print(n, file = stderr)
     print(n)
+    print(*V, file = stderr)
     print(*V)
     return (V,)
 
 
 def check_tc(V):
-    p = 1 - int(input())
-    assert p in (0, 1)
-    t = 0
+    p = 3 - int(input())
+    assert p in (1, 2)
+    t = 1
     i = 0
     j = len(V)
     f = sol(V)
-    score = [0, 0]
+    score = [None, 0, 0]
     while i < j:
         if p == t:
             if f(i, j)[1] == "L":
@@ -68,8 +70,10 @@ def check_tc(V):
             else:
                 j -= 1
                 score[t] += V[j]
-        t = 1 - t
-    return score[1 - p] > score[p]
+        t = 3 - t
+    if score[3 - p] <= score[p]:
+        return False, f"You collected only {score[3 - p]} while your adversary collected {score[p]}. This is not good enough for a victory!"
+    return True
 
 
 if __name__ == "__main__":

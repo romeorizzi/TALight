@@ -7,18 +7,17 @@ if __name__ == "__main__":
     T = int(input())
     for t in range(T):
         n = int(input())
-        V = list(map(int, input().split()))
+        V = list(map(int, input().strip().split()))
         f = sol(V)
         fullscore = sum(V)
         i, j = 0, n
         if f(i, j)[0] > fullscore / 2:
-            p = 0
-            print(0)
-        else:
             p = 1
-            print(1)
+        else:
+            p = 2
+        print(p)
         stdout.flush()
-        t = 0
+        t = 1
         while i < j:
             if p == t:
                 if f(i, j)[1] == "L":
@@ -32,4 +31,4 @@ if __name__ == "__main__":
                     i += 1
                 else:
                     j -= 1
-            t = 1 - t
+            t = 3 - t
