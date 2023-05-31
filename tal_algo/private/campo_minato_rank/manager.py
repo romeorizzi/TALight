@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from functools import lru_cache
+from sys import stderr, stdout
 from os import environ
 from random import randrange, randint
 
@@ -15,7 +15,12 @@ MAPPER = {"tiny": 1, "small": 2, "medium": 3, "big": 4}
 DATA = ((10, (5,6)), (10, (8,10)), (10, (18,20)), (70, (25,30)))
 # that is, 10 instances of size "tiny", i.e., with 5 <= n <= 6 
 #################################################################
-
+def campo_rank_display(campo, k):
+    ret = f"{str(campo.m)} {str(campo.n)} {str(k)}\n"
+    ret += "".join(map(lambda x: "." if x else "#", campo.M[0]))
+    for i in range(1, campo.m):
+        ret += "\n" + "".join(map(lambda x: "." if x else "#", campo.M[i]))
+    return ret
 
 def gen_tc(minn, maxn):
     m, n = randint(minn,maxn), randint(minn,maxn)
@@ -40,15 +45,18 @@ def gen_tc(minn, maxn):
         M[r][c+1] = True
         c += 1
     campo = CampoMinato(M)
-    campo.display(stdout)
-    return (campo,)
+    routes = campo.num_paths_from_ric_memo(0, 0)
+    k = randint(0, routes-1)
+    print(campo_rank_display(campo, k), file=stdout, flush=True)
+    return (campo, k)
 
 
-def check_tc(campo):
-    risp = int(input())
-    corr_answ = campo.one_path_from()
+def check_tc(campo, k):
+    print()
+    risp = input().strip()
+    corr_answ = campo.rank_safe(k)
     if risp != corr_answ:
-        return False, f"On input:\n{campo.as_str()}\nyou answered:\n{risp}\nwhile the correct answer was:\n{corr_answ}"
+        return False, f"On input:\n{campo_rank_display(campo, k)}\nyou answered:\n{risp}\nwhile the correct answer was:\n{corr_answ}"
     return True
 
 
