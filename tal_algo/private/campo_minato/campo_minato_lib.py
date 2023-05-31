@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 WARNING = """this library is common to a few problems:
-../campo_minato
+../campo_minato_count
 ../campo_minato_through
 Please, keep this in mind in case you want to modify it."""
 
@@ -65,7 +65,7 @@ class CampoMinato:
         print(self.as_str(with_m_n), file=out, flush=True)
 
     @lru_cache(maxsize=None)
-    def num_paths_from_ric_memo(self, r=0, c=0):
+    def num_paths_from_ric_memo(self, r = 0, c = 0):
         assert 0 <= r <= self.m
         assert 0 <= c <= self.n
         if r == self.m:
@@ -79,7 +79,7 @@ class CampoMinato:
         return self.num_paths_from_ric_memo(r + 1, c) + self.num_paths_from_ric_memo(r, c + 1)
 
     @lru_cache(maxsize=None)
-    def num_paths_to_ric_memo(self, r, c):
+    def num_paths_to_ric_memo(self, r = 0, c = 0):
         assert -1 <= r <= self.m
         assert -1 <= c <= self.n
         if r == -1:

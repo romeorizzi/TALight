@@ -45,7 +45,7 @@ def gen_tc(minn, maxn):
 
 def check_tc(campo):
     risp = int(input())
-    corr_answ = campo.one_path_from()
+    corr_answ = campo.num_paths_to_ric_memo(campo.m-1, campo.n-1)
     if risp != corr_answ:
         return False, f"On input:\n{campo.as_str()}\nyou answered:\n{risp}\nwhile the correct answer was:\n{corr_answ}"
     return True
