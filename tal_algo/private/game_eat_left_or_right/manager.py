@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-
-from functools import lru_cache
 from os import environ
-from random import randrange, randint
-from tc import TC
 from sys import setrecursionlimit, stderr
+from random import randrange, randint
+from functools import lru_cache
 
-DATA = ((10, (6,)), (10, (20,)), (20, (100,)))
+from tc import TC
 
 TL = 1
+
+DATA = ((10, (6,)), (10, (20,)), (20, (100,)))
 
 MAPPER = {"small": 1, "medium": 2, "big": 3}
 

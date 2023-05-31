@@ -21,7 +21,7 @@ istanze del problema. Per ogni istanza, la prima riga contiene quattro numeri in
 $M$, $A$ e $B$ separati da uno spazio:
 il numero di vertici, il numero di lati che si richiede di attraversare (ogni lato una ed una volta sola, dovrai decidere tu in quale direzione), il vertice di
 partenza, e quello di arrivo.
-Le successive $M$ righe offrono, uno per riga, gli $M$ lati del puzzle, ciascun rappresentato da una
+Le successive $M$ righe offrono, uno per riga, gli $M$ lati del puzzle, ciascuno rappresentato da una
 coppia non-ordinata di interi nell'intervallo $[1,N]$, separati da uno spazio (questi interi sono i nomi dei vertici collegati dal lato in questione). Per ciascun lato "$X$ $Y$" dovrai scegliere se attraversarlo da $X$ ad $Y$ oppure da $Y$ ad $X$, oltre che stabilire in quale ordine vadano attraversati i lati.
 
 
