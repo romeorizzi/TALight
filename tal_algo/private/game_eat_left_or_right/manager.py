@@ -20,8 +20,8 @@ def gen_tc(n):
         V[randrange(0, n)] += 1
     print(n)
     print(*V)
-    print(n, file = stderr)
-    print(*V, file = stderr)
+    //print(n, file = stderr)
+    //print(*V, file = stderr)
     return (V,)
 
 
