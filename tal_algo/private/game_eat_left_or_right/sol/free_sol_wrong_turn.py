@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
+from sys import stderr
 
-from manager import sol
-from sys import stdout
+from game_eat_left_or_right_lib import sol
 
 if __name__ == "__main__":
     T = int(input())
     for t in range(T):
+        #print(f"testcase {t}", file=stderr)
         n = int(input())
         V = list(map(int, input().strip().split()))
         f = sol(V)
         fullscore = sum(V)
         i, j = 0, n
         if f(i, j)[0] > fullscore / 2:
-            p = 1
+            my_turn = 2 # sbagliando, scelgo di giocare per primo
         else:
-            p = 2
-        print(p)
-        stdout.flush()
-        t = 1
+            my_turn = 1 # sbagliando, scelgo di giocare per secondo
+        print(my_turn, flush=True)
         while i < j:
-            if p == t:
+            if my_turn == 1:
                 if f(i, j)[1] == "L":
                     print("L", flush=True)
                     i += 1
@@ -31,4 +30,4 @@ if __name__ == "__main__":
                     i += 1
                 else:
                     j -= 1
-            t = 3 - t
+            my_turn = 3 - my_turn
