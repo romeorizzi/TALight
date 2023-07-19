@@ -1,0 +1,12 @@
+> 2     # numero di testcase/istanze/partite
+> 2 2   # la prima partita inizia dalla configurazione (m=2, n=2)
+< 2     # il problem solver (o il programma che gioca per lui) sceglie di muovere per secondo
+> 1 2   # il server effettua una mossa consentita, consegnando all'avversario la configurazione (m=1, n=2)
+< 1 1   # il problem solver consegna all'avversario la configurazione (m=1, n=1) e vince questa partita
+> 4 6   # la seconda partita inizia dalla configurazione (m=4, n=6)
+< 1     # il problem solver sceglie di muovere per primo
+< 4 4   # con una mossa consentita, il problem solver consegna all'avversario la configurazione (m=4, n=4).
+> 2 4   # con una mossa consentita, il server consegna all'avversario la configurazione (m=2, n=4)
+< 2 2   # con una mossa consentita, il problem solver consegna all'avversario la configurazione (m=2, n=2).
+> 2 1   # con una mossa consentita, il server consegna all'avversario la configurazione (m=2, n=1)
+< 1 1   # il problem solver consegna all'avversario la configurazione (m=1, n=1) e vince questa partita

@@ -1,0 +1,10 @@
+public_folder: public
+services:
+  solve:
+    evaluator: [python, manager.py]
+    args:
+      size:
+        regex: ^(tiny|small|medium|skewed|big)$
+        default: big
+    files:
+      - source

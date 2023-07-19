@@ -1,0 +1,45 @@
+public_folder: public
+services:
+  solve:
+    evaluator: [python, services/manager.py]
+    args:
+      size:
+        regex: ^(esempi_testo|small_c|small_r|small_u|medium_c|medium_r|medium_u|big_c|big_r|big_u)$
+        default: big_u
+    files:
+      - source
+
+  is_transparentFBF:
+    description: this service checks whether an input string of "(" and ")" characters is a transparent FBF.
+    evaluator: [python, services/is_transparentFBF_driver.py]
+    args:
+      FBF:
+        regex: ^(\(|\)){0,50}$
+        example: "(()))))("
+        explain: insert any string of at most 50 characters, where each character is either an open parenthesis or a closed parenthesis.
+
+  check_num_transparentFBFs:
+    description: call this service to check that the number of transparent FBFs with <n_pairs> pairs of parenthes is what you think (<risp>).
+    evaluator: [python, services/check_num_transparentFBFs_driver.py]
+    args:
+      n_pairs:
+        regex: ^(10|[0-9])$
+      risp:
+        regex: ^(0|[1-9][0-9]{0,10})$
+        explain: what you conjecture to be the number of well-formed formulas on <n_pairs> pairs of parentheses.
+
+  check_rank:
+    evaluator: [python, services/check_rank_driver.py]
+    args:
+      input_FBF:
+        regex: ^(\(|\)){0,10}$
+      right_rank:
+        regex: ^(0|[1-9]|[0-9]{0,10})$
+
+  check_unrank:
+    evaluator: [python, services/check_unrank_driver.py]
+    args:
+      input_rank:
+        regex: ^(0|[1-9]|[0-9]{0,10})$
+      right_FBF:
+        regex: ^(\(|\)){0,10}$

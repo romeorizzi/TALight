@@ -1,0 +1,46 @@
+public_folder: public
+services:
+  solve:
+    evaluator: [python3, services/manager.py]
+    args:
+      size:
+        regex: ^(esempi_testo|small_c|small_r|small_u|medium_c|medium_r|medium_u|big_c|big_r|big_u)$
+        default: big_u
+    files:
+      - source
+
+  list:
+    evaluator: [python3, services/list_driver.py]
+    args:
+      S:
+        regex: ^(((0|([1-9][0-9]{0,5}))\s*){0,15})$
+
+  check_count:
+    description: call this service to check that the number of increasing shadows of a sequence <S> of naturals is what you think (<risp>).
+    evaluator: [python3, services/check_count_driver.py]
+    args:
+      S:
+        regex: ^(((0|([1-9][0-9]{0,5}))\s*){0,25})$
+      risp:
+        regex: ^(0|[1-9][0-9]{0,15})$
+        explain: what you conjecture to be the number of increasing shadows of S.
+
+  check_rank:
+    evaluator: [python3, services/check_rank_driver.py]
+    args:
+      S:
+        regex: ^(((0|([1-9][0-9]{0,5}))\s*){0,25})$
+      input_shadow:
+        regex: ^(((0|([1-9][0-9]{0,5}))\s*){0,25})$
+      right_rank:
+        regex: ^(0|[1-9]|[0-9]{0,10})$
+
+  check_unrank:
+    evaluator: [python3, services/check_unrank_driver.py]
+    args:
+      S:
+        regex: ^(((0|([1-9][0-9]{0,5}))\s*){0,25})$
+      input_rank:
+        regex: ^(0|[1-9]|[0-9]{0,10})$
+      right_shadow:
+        regex: ^(((0|([1-9][0-9]{0,5}))\s*){0,25})$
