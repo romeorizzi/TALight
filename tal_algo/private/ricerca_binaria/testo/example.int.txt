@@ -1,0 +1,19 @@
+5      # numero di testcase/istanze/partite
+1 7 1  #   il server comunica il setting del primo testcase (n=1, k=7, b=1)
+!1     # il problem solver dà risposta x=1 e chiude il testcase 1 (fà punto).
+1 1 0  #   avvio testcase 2: (n=1, k=1, b=0)
+!2     # nessun punto: la risposta del problem solver è fuori range.
+2 1 1  #   avvio testcase 3: (n=2, k=1, b=1)
+?2     # il problem solver pone la query "x=2?"
+<      # il server risponde "x<2"
+!2     # nessun punto: l'unico strumento potrebbe essere un mentitore seriale.
+2 1 1  #   avvio testcase 4: (n=2, k=1, b=1)
+?2     # il problem solver pone la query "x=2?"
+<      # il server risponde "x<2"
+!1     # nessun punto: il server gioca adattivo e decide che lo strumento non mente.
+7 1 0  #   avvio testcase 5: (n=7, k=1, b=0)
+?4     # il problem solver (o il programma che gioca per lui) pone la query "x=4?"
+<      # il server risponde "x<4"
+?2     # il problem solver pone la query "x=2?"
+>      # il server risponde "x>2"
+!3     # si chiude la comunicazione. La risposta x=3 fà punto solo perchè b=0.

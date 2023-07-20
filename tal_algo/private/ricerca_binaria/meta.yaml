@@ -1,0 +1,28 @@
+public_folder: public
+services:
+    solve:
+        evaluator: [./manager.rs]
+        args:
+            size:
+                regex: ^(small0|small1|small2|small3|medium0|medium1|medium2|medium3|big0|big1|big2|big3)$
+                default: big3
+        files:
+            - source
+    umano:
+        evaluator: [./manager.rs]
+        args:
+            t:
+                regex: ^[1-9][0-9]*$
+                default: 1
+            n:
+                regex: ^[1-9][0-9]*$
+                default: 16
+            k:
+                regex: ^[1-9][0-9]*$
+                default: 1
+            extra:
+                regex: ^[1-9][0-9]*$
+                default: 0
+            bugiardi:
+                regex: ^(0|1|2)$
+                default: 0
