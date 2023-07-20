@@ -215,9 +215,9 @@ class CC_Graph:
         #print(f"entering check_connected_components on a graph with {self.n=},  {self.m=}", file = stderr)
         context = f"\nYou returned the list of nodes:\n   {S_risp}\nas an optimal set S for the input graph instance:\n{self.as_str()}"
         if len(S_risp) < s_risp:
-            return False, "An obvious inconsistency: you answered that the optimal cardinality was {s_risp} but returned a set of only {len(S_risp)} < {s_risp} nodes." + context
+            return False, f"An obvious inconsistency: you answered that the optimal cardinality was {s_risp} but returned a set of only {len(S_risp)} < {s_risp} nodes." + context
         if len(S_risp) > s_risp:
-            return False, "An obvious inconsistency: you answered that the optimal cardinality was {s_risp} but returned a set of {len(S_risp)} > {s_risp} nodes." + context
+            return False, f"An obvious inconsistency: you answered that the optimal cardinality was {s_risp} but returned a set of {len(S_risp)} > {s_risp} nodes." + context
         CC_true = self.connected_components()
         component_of_node = [None] * self.n
         for i, C in enumerate(CC_true):
