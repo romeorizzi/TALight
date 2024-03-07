@@ -69,7 +69,7 @@ async fn tcp_listener(args: CliArgs) -> Result<(), Box<dyn Error>> {
 #[cfg(unix)]
 async fn uds_listener(args: CliArgs) -> Result<(), Box<dyn Error>> {
     umask(Mode::empty());
-    drop(unlink(args.bind_address.as_str()));
+    let _ = unlink(args.bind_address.as_str());
     let listener = UnixListener::bind(args.bind_address.clone())?;
     info!("Server up and running!");
     loop {
