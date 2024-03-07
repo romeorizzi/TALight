@@ -71,6 +71,11 @@ pub async fn load_all(root: &Path) -> HashMap<String, Problem> {
             (true, _) => {}
             (_, true) => match tokio::fs::read_link(entry.path()).await {
                 Ok(x) => {
+                    let x = if x.is_relative() {
+                        entry.path().parent().unwrap().to_path_buf()
+                    } else {
+                        x.to_path_buf()
+                    };
                     if !x.is_dir() {
                         warn!("{:?} is not a directory", x);
                         continue;
