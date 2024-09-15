@@ -446,28 +446,75 @@ impl<T: AsyncRead + AsyncWrite + Unpin> Client<T> {
                 problem.name, service_name
             ));
         }
+
+        fn add_env_arg(evaluator: &mut Command, key: &str, value: &str) {
+            evaluator.arg("--env");
+            evaluator.arg(format!("{}={}", key, value));
+        }
+        fn get_arg_from_path(key: &str, path: &Path) -> Result<String, String> {
+            if let Some(str) = path.to_str() {
+                Ok(str.to_string())
+            } else {
+                Err(format!("Invalid UTF-8 in path {}", key))
+            }
+        }
         let mut evaluator = Command::new(&service.evaluator[0]);
         evaluator.current_dir(&problem.root);
-        if service.evaluator.len() > 1 {
-            evaluator.args(&service.evaluator[1..]);
+        if service.evaluator[0].eq(&String::from("wasmtime")) {
+            for (k, v) in args {
+                add_env_arg(&mut evaluator, &format!("TAL_{}", k), &v);
+            }
+            add_env_arg(&mut evaluator, "TAL_META_DIR", &get_arg_from_path("TAL_META_DIR", &problem.root)
+                .unwrap_or_else(|e| {return e;}));
+            add_env_arg(&mut evaluator, "TAL_META_CODENAME", &problem.name);
+            add_env_arg(&mut evaluator, "TAL_META_SERVICE", &service_name);
+            add_env_arg(&mut evaluator, "TAL_META_TTY", if tty { "1" } else { "0" });
+            let infile_path = get_arg_from_path("TAL_META_INPUT_FILES", &infile_dir.path())
+                .unwrap_or_else(|e| {return e;});
+            add_env_arg(&mut evaluator, "TAL_META_INPUT_FILES", &infile_path);
+            let outfile_path = get_arg_from_path("TAL_META_OUTPUT_FILES", &outfile_dir.path())
+                .unwrap_or_else(|e| {return e;});
+            add_env_arg(&mut evaluator, "TAL_META_OUTPUT_FILES", &outfile_path);
+            let mut logfile_path = String::from("");
+            if let Some(ref token_info) = token_info {
+                logfile_path = get_arg_from_path("TAL_META_LOG_FILES", &logfile_dir.path())
+                    .unwrap_or_else(|e| {return e;});
+                add_env_arg(&mut evaluator, "TAL_META_LOG_FILES", &logfile_path);
+                add_env_arg(&mut evaluator, "TAL_META_EXP_TOKEN", &token_info.token);
+                add_env_arg(&mut evaluator, "TAL_META_EXP_LOG_DIR", &get_arg_from_path("TAL_META_EXP_LOG_DIR", &token_info.path)
+                    .unwrap_or_else(|e| {return e;}));
+            }
+            add_env_arg(&mut evaluator, "TAL_META_EXP_ADDRESS", address);
+            evaluator.args(&vec!["--dir", &outfile_path, "--dir", &infile_path]);
+            if !logfile_path.eq("") {
+                evaluator.args(&vec!["--dir", &logfile_path]);
+            }
+            if service.evaluator.len() > 1 {
+                evaluator.args(&service.evaluator[1..]);
+            }
         }
-        for (k, v) in args {
-            evaluator.env(format!("TAL_{}", k), v);
+        else {
+            if service.evaluator.len() > 1 {
+                evaluator.args(&service.evaluator[1..]);
+            }
+            for (k, v) in args {
+                evaluator.env(format!("TAL_{}", k), v);
+            }
+            evaluator.env("TAL_META_DIR", &problem.root);
+            evaluator.env("TAL_META_CODENAME", &problem.name);
+            evaluator.env("TAL_META_SERVICE", &service_name);
+            evaluator.env("TAL_META_TTY", if tty { "1" } else { "0" });
+            evaluator.env("TAL_META_INPUT_FILES", infile_dir.path());
+            evaluator.env("TAL_META_OUTPUT_FILES", outfile_dir.path());
+            if token_info.is_some() {
+                evaluator.env("TAL_META_LOG_FILES", logfile_dir.path());
+            }
+            if let Some(ref token_info) = token_info {
+                evaluator.env("TAL_META_EXP_TOKEN", &token_info.token);
+                evaluator.env("TAL_META_EXP_LOG_DIR", &token_info.path);
+            }
+            evaluator.env("TAL_META_EXP_ADDRESS", address);
         }
-        evaluator.env("TAL_META_DIR", &problem.root);
-        evaluator.env("TAL_META_CODENAME", &problem.name);
-        evaluator.env("TAL_META_SERVICE", &service_name);
-        evaluator.env("TAL_META_TTY", if tty { "1" } else { "0" });
-        evaluator.env("TAL_META_INPUT_FILES", infile_dir.path());
-        evaluator.env("TAL_META_OUTPUT_FILES", outfile_dir.path());
-        if token_info.is_some() {
-            evaluator.env("TAL_META_LOG_FILES", logfile_dir.path());
-        }
-        if let Some(ref token_info) = token_info {
-            evaluator.env("TAL_META_EXP_TOKEN", &token_info.token);
-            evaluator.env("TAL_META_EXP_LOG_DIR", &token_info.path);
-        }
-        evaluator.env("TAL_META_EXP_ADDRESS", address);
         evaluator.stdin(Stdio::piped());
         evaluator.stdout(Stdio::piped());
         let mut process = match evaluator.spawn() {
