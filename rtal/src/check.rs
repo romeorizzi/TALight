@@ -6,9 +6,12 @@ use std::fs::metadata;
 use std::path::PathBuf;
 use tokio::runtime::Runtime;
 use tracing::{error, warn};
+use std::{env, fs};
+use std::process::{Stdio, Command};
 
 #[cfg(target_family = "unix")]
 use std::os::unix::fs::MetadataExt;
+use crate::problem::Service;
 
 #[derive(Parser, Debug, Clone)]
 #[clap(version)]
@@ -37,6 +40,74 @@ fn init_logging() {
     {
         println!("Cannot enable logging service: {}", x);
     }
+}
+
+fn deploy_wasm(service: &Service, service_name: &str, service_root: &PathBuf) -> Result<(), String> {
+    if service.evaluator.len() < 2 {
+        return Err(format!("{}: Missing wasmtime argument in evaluator vector", service_name));
+    }
+    let mut wasm_file = PathBuf::from(&service_root);
+    wasm_file.push(&service.evaluator[1]);
+    if !wasm_file.exists() {
+        let src = match &service.wasm_evaluator_source {
+            Some(src) => src,
+            None => return Err(format!("{}: Missing wasm_evaluator_source field", service_name))
+        };
+        let mut source_path = PathBuf::from(&service_root);
+        source_path.push(src);
+        if !source_path.exists() {
+            return Err(format!("{}: wasm_evaluator_source file doesn't exist", service_name));
+        }
+        let wasi = format!("--sysroot={}/share/wasi-sysroot", env::var("WASI_SDK_PATH").unwrap_or_default());
+        let (command_string, command_args) = match source_path.extension().and_then(|ext| ext.to_str()) {
+            Some("rs") => {
+                let mut cargo_path = PathBuf::from(&service_root);
+                cargo_path.push("Cargo.toml");
+                if source_path.components().any(|comp| comp == std::path::Component::Normal("src".as_ref()))
+                    && cargo_path.exists() {
+                    ("cargo", vec!["build", "--target", "wasm32-wasip1", "--release"])
+                } else {
+                    ("rustc", vec![src, "-o", &service.evaluator[1], "--target", "wasm32-wasip1"])
+                }
+            }
+            Some("cpp") | Some("cc") => {
+                ("clang++", vec!["--target=wasm32-wasip1", &wasi, src, "-o", &service.evaluator[1]])
+            }
+            Some("c") => {
+                ("clang", vec!["--target=wasm32-wasip1", &wasi, src, "-o", &service.evaluator[1]])
+            }
+            _ => return Err(format!("{}: wasm_evaluator_source doesn't have a valid extension", service_name))
+        };
+        let status = Command::new(command_string)
+            .args(&command_args)
+            .current_dir(&service_root)
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .status();
+        if status.is_err() {
+            return Err(format!("{}: Cannot compile to wasm", service_name));
+        }
+        if command_string == "cargo" {
+            let mut target_path = PathBuf::from(&service_root);
+            target_path.push("target/wasm32-wasip1/release");
+            if let Ok(entries) = fs::read_dir(&target_path) {
+                for entry in entries.flatten() {
+                    if entry.path().extension().and_then(|ext| ext.to_str()) == Some("wasm") {
+                        let mut dest_path = PathBuf::from(&service_root);
+                        dest_path.push(&service.evaluator[1]);
+                        if fs::copy(entry.path(), dest_path).is_err() {
+                            return Err(format!("{}: Cannot move .wasm to main folder", service_name));
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        if !wasm_file.exists() {
+            return Err(format!("{}: Could not generate evaluator", service_name));
+        }
+    }
+    Ok(())
 }
 
 fn main() {
@@ -99,6 +170,11 @@ fn main() {
                 }
                 _ => {}
             };
+            if service.evaluator.get(0) == Some(&String::from("wasmtime")) {
+                if let Err(e) = deploy_wasm(service, name, &dir) {
+                    error!(e);
+                }
+            }
         } else {
             error!("Evaluator of service \"{}\" is empty", name);
         }
