@@ -42,19 +42,17 @@ fn init_logging() {
     }
 }
 
-fn deploy_wasm(service: &Service, service_name: &str, service_root: &PathBuf) -> Result<(), String> {
-    if service.evaluator.len() < 2 {
-        return Err(format!("{}: Missing wasmtime argument in evaluator vector", service_name));
-    }
-    let mut wasm_file = PathBuf::from(&service_root);
-    wasm_file.push(&service.evaluator[1]);
-    if !wasm_file.exists() {
-        let src = match &service.wasm_evaluator_source {
-            Some(src) => src,
-            None => return Err(format!("{}: Missing wasm_evaluator_source field", service_name))
+fn deploy_wasm(service: &Service, service_name: &str, service_root: &PathBuf, wasm_src: &str) -> Result<(), String> {
+    let wasm_filename =
+        if service.evaluator.len() > 1 && service.evaluator[0].eq("wasmtime") {
+            service.evaluator[1].to_owned()
+        } else {
+            format!("{}.wasm", service_name)
         };
+    let wasm_file = PathBuf::from(&service_root).join(&wasm_filename);
+    if !wasm_file.exists() {
         let mut source_path = PathBuf::from(&service_root);
-        source_path.push(src);
+        source_path.push(wasm_src);
         if !source_path.exists() {
             return Err(format!("{}: wasm_evaluator_source file doesn't exist", service_name));
         }
@@ -67,16 +65,16 @@ fn deploy_wasm(service: &Service, service_name: &str, service_root: &PathBuf) ->
                     && cargo_path.exists() {
                     ("cargo", vec!["build", "--target", "wasm32-wasip1", "--release"])
                 } else {
-                    ("rustc", vec![src, "-o", &service.evaluator[1], "--target", "wasm32-wasip1"])
+                    ("rustc", vec![wasm_src, "-o", &wasm_filename, "--target", "wasm32-wasip1"])
                 }
             }
             Some("cpp") | Some("cc") => {
-                ("clang++", vec!["--target=wasm32-wasip1", &wasi, src, "-o", &service.evaluator[1]])
+                ("clang++", vec!["--target=wasm32-wasip1", &wasi, wasm_src, "-o", &wasm_filename])
             }
             Some("c") => {
-                ("clang", vec!["--target=wasm32-wasip1", &wasi, src, "-o", &service.evaluator[1]])
+                ("clang", vec!["--target=wasm32-wasip1", &wasi, wasm_src, "-o", &wasm_filename])
             }
-            _ => return Err(format!("{}: wasm_evaluator_source doesn't have a valid extension", service_name))
+            _ => return Err(format!("{}: wasm_evaluator_source doesn't have a valid extension (.rs, .c, .cpp|.cc)", service_name))
         };
         let status = Command::new(command_string)
             .args(&command_args)
@@ -94,7 +92,7 @@ fn deploy_wasm(service: &Service, service_name: &str, service_root: &PathBuf) ->
                 for entry in entries.flatten() {
                     if entry.path().extension().and_then(|ext| ext.to_str()) == Some("wasm") {
                         let mut dest_path = PathBuf::from(&service_root);
-                        dest_path.push(&service.evaluator[1]);
+                        dest_path.push(&wasm_filename);
                         if fs::copy(entry.path(), dest_path).is_err() {
                             return Err(format!("{}: Cannot move .wasm to main folder", service_name));
                         }
@@ -170,8 +168,8 @@ fn main() {
                 }
                 _ => {}
             };
-            if service.evaluator.get(0) == Some(&String::from("wasmtime")) {
-                if let Err(e) = deploy_wasm(service, name, &dir) {
+            if let Some(src) = &service.wasm_evaluator_source {
+                if let Err(e) = deploy_wasm(service, name, &dir, src) {
                     error!(e);
                 }
             }
